@@ -566,7 +566,23 @@ class _EditionCorrectionEntry(_OccurrenceCorrectionEntry):
     _edition = field_validator("edition")(_require_trimmed)
 
 
-class ErrataFieldEntry(_EditionCorrectionEntry):
+def edition_order(edition: str) -> tuple[int, str]:
+    """Numeric order for SCB's decimal edition ids, total for any string."""
+    return len(edition), edition
+
+
+class ErrataFieldEntry(_OccurrenceCorrectionEntry):
+    """One correction, applied to each listed SCB edition as if entered once per edition.
+
+    An SCB edition's scopes are a function of its period text (`scb_edition_scopes`),
+    so an entry with `editions` pins each edition's text and no scopes. Without
+    editions (SOS, thin providers) it pins the original's scopes instead.
+    """
+
+    editions: list[str] | None = Field(default=None, min_length=1)
+    expected_period_text: dict[str, str] | None = None
+    expected_scope: TemporalScope | None = None
+    expected_period: TemporalScope | None = None
     expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
     authority_records: list[RecordExpectation] | None = Field(
         default=None, min_length=1
@@ -615,6 +631,30 @@ class ErrataFieldEntry(_EditionCorrectionEntry):
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
+        if self.editions is not None:
+            for edition in self.editions:
+                _require_trimmed(edition)
+            if self.editions != sorted(set(self.editions), key=edition_order):
+                raise ValueError("editions must be unique and in numeric order")
+            if (
+                self.expected_period_text is None
+                or list(self.expected_period_text) != self.editions
+            ):
+                raise ValueError(
+                    "expected_period_text must pin each listed edition's text, in editions order"
+                )
+            if self.expected_scope is not None or self.expected_period is not None:
+                raise ValueError(
+                    "an edition's scopes follow from its period text; drop expected_scope and expected_period"
+                )
+        elif (
+            self.expected_period_text is not None
+            or self.expected_scope is None
+            or self.expected_period is None
+        ):
+            raise ValueError(
+                "without editions, guard expected_scope and expected_period and no period text"
+            )
         if (self.authority_records is None) != (self.expected_evidence_sha256 is None):
             raise ValueError("name authority requires complete peers and evidence hash")
         if self.authority_records is not None and (
@@ -627,12 +667,16 @@ class ErrataFieldEntry(_EditionCorrectionEntry):
             SourceFields.model_fields
         )
         if self.field == "column_name":
-            if not full_fields or self.edition is None:
+            if not full_fields or self.editions is None:
                 raise ValueError(
                     "column corrections require complete source fields and an exact edition"
                 )
         elif self.field == "source_attribution":
-            if not full_fields or self.edition is None or self.expected_records is None:
+            if (
+                not full_fields
+                or self.editions is None
+                or self.expected_records is None
+            ):
                 raise ValueError(
                     "source attribution corrections require complete original records and an exact edition"
                 )

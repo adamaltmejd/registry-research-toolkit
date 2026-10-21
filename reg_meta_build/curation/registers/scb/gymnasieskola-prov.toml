@@ -150,11 +150,9 @@ noted = "2026-10-15"
 variable = "342.1579"
 variant = "342.1133"
 column = "TERMIN"
-edition = "7471"
+editions = ["7471"]
 expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Endast värdet \"HT15\" vilket innebär höstterminen 2015." }]
-expected_period_text = "Hösttermin 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-07-01", end = "2015-12-31" }] }
+expected_period_text = { 7471 = "Hösttermin 2015" }
 field = "definition"
 value = "Anger vilken termin uppgifterna avser."
 evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
@@ -164,11 +162,9 @@ noted = "2026-10-19"
 variable = "342.1579"
 variant = "342.1133"
 column = "TERMIN"
-edition = "9854"
+editions = ["9854"]
 expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Endast värdet \"VT16\" vilket innebär vårterminen 2016." }]
-expected_period_text = "Vårtermin 2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-06-30" }] }
+expected_period_text = { 9854 = "Vårtermin 2016" }
 field = "definition"
 value = "Anger vilken termin uppgifterna avser."
 evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
@@ -178,221 +174,9 @@ noted = "2026-10-19"
 variable = "342.1579"
 variant = "342.1133"
 column = "TERMIN"
-edition = "10080"
+editions = ["10080", "11517", "11832", "12580", "13224", "13640", "14449", "18495", "19482", "19483", "19487", "19489", "19492", "19502", "20008", "20169"]
 expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-07-01", end = "2016-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "11517"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-06-30" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "11832"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-07-01", end = "2017-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "12580"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-06-30" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "13224"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-07-01", end = "2018-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "13640"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2019"
-expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-06-30" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "14449"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2019"
-expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2019-07-01", end = "2019-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "19483"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-07-01", end = "2020-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "19487"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2021-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "18495"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-06-30" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "19492"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-07-01", end = "2022-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "19482"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-06-30" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "19502"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-07-01", end = "2023-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "19489"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-06-30" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "20008"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Hösttermin 2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-07-01", end = "2024-12-31" }] }
-field = "definition"
-value = "Anger vilken termin uppgifterna avser."
-evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
-noted = "2026-10-19"
-
-[[errata.field]]
-variable = "342.1579"
-variant = "342.1133"
-column = "TERMIN"
-edition = "20169"
-expected_fields = [{ name = "definition", status = "value", value = "Anger det ordningsnummer som aktuell termin har i elevens utbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Termin" }, { name = "operational_definition", status = "value", value = "Produktionsvariabel" }]
-expected_period_text = "Vårtermin 2025"
-expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-06-30" }] }
+expected_period_text = { 10080 = "Hösttermin 2016", 11517 = "Vårtermin 2017", 11832 = "Hösttermin 2017", 12580 = "Vårtermin 2018", 13224 = "Hösttermin 2018", 13640 = "Vårtermin 2019", 14449 = "Hösttermin 2019", 18495 = "Vårtermin 2022", 19482 = "Vårtermin 2023", 19483 = "Hösttermin 2020", 19487 = "Hösttermin 2021", 19489 = "Vårtermin 2024", 19492 = "Hösttermin 2022", 19502 = "Hösttermin 2023", 20008 = "Hösttermin 2024", 20169 = "Vårtermin 2025" }
 field = "definition"
 value = "Anger vilken termin uppgifterna avser."
 evidence = "SCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."

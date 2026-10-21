@@ -1297,11 +1297,9 @@ expected_fields_sha256 = "b7340b2f33326bdc2ba8a8e3a3268e8ce8aefd6a53030f14787b65
 variable = "336.16740"
 variant = "336.1108"
 column = "F5"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Antal personer under 18 år i hushållet." }, { name = "description", status = "value", value = "Antal personer under 18 år i hushållet." }, { name = "name", status = "value", value = "Antal barn i hushållet" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du hemmaboende barn i Sverige i åldern 0-18 år?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1311,11 +1309,9 @@ value = "Antal barn i hushållet — Enkätfråga: \"Har du hemmaboende barn i S
 variable = "336.16740"
 variant = "336.1108"
 column = "F7"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Antal personer under 18 år i hushållet." }, { name = "description", status = "value", value = "Antal personer under 18 år i hushållet." }, { name = "name", status = "value", value = "Antal barn i hushållet" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du hemmaboende barn i Sverige i åldern 0-18 år?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1325,11 +1321,9 @@ value = "Antal barn i hushållet — Enkätfråga: \"Har du hemmaboende barn i S
 variable = "336.29973"
 variant = "336.1108"
 column = "F4"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Boendesituation" }, { name = "description", status = "value", value = "Beskriver om personen bor ensam eller tillsammans med make/maka/sambo." }, { name = "name", status = "value", value = "Boendesituation" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Bor du för närvarande med make/maka/sambo i Sverige?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1339,11 +1333,9 @@ value = "Boendesituation — Enkätfråga: \"Bor du för närvarande med make/ma
 variable = "336.29973"
 variant = "336.1108"
 column = "F6"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Boendesituation" }, { name = "description", status = "value", value = "Beskriver om personen bor ensam eller tillsammans med make/maka/sambo." }, { name = "name", status = "value", value = "Boendesituation" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Bor du för närvarande med make/maka/sambo i Sverige?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1353,11 +1345,9 @@ value = "Boendesituation — Enkätfråga: \"Bor du för närvarande med make/ma
 variable = "336.30006"
 variant = "336.1108"
 column = "F6_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Faders högsta utbildningsnivå" }, { name = "description", status = "value", value = "Faders högsta utbildningsnivå" }, { name = "name", status = "value", value = "Faders högsta utbildningsnivå" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Pappa\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1367,11 +1357,9 @@ value = "Faders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina fö
 variable = "336.30006"
 variant = "336.1108"
 column = "F9_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Faders högsta utbildningsnivå" }, { name = "description", status = "value", value = "Faders högsta utbildningsnivå" }, { name = "name", status = "value", value = "Faders högsta utbildningsnivå" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Pappa\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1381,11 +1369,9 @@ value = "Faders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina fö
 variable = "336.30007"
 variant = "336.1108"
 column = "F6_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Moders högsta utbildningsnivå" }, { name = "description", status = "value", value = "Moders högsta utbildningsnivå" }, { name = "name", status = "value", value = "Moders högsta utbildningsnivå" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Mamma\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1395,11 +1381,9 @@ value = "Moders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina fö
 variable = "336.30007"
 variant = "336.1108"
 column = "F9_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Moders högsta utbildningsnivå" }, { name = "description", status = "value", value = "Moders högsta utbildningsnivå" }, { name = "name", status = "value", value = "Moders högsta utbildningsnivå" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Mamma\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1409,11 +1393,9 @@ value = "Moders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina fö
 variable = "336.30036"
 variant = "336.1108"
 column = "F14"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbildning 3 månader i annat land" }, { name = "description", status = "value", value = "Beskriver om doktoranden inom ramen för forskarutbildningen har studerat minst tre månader i annat land än Sverige." }, { name = "name", status = "value", value = "Utbildning 3 månader i annat land" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du eller kommer du inom ramen för din forskarutbildning tillfälligt studera minst 3 månader i annat land än Sverige?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1423,11 +1405,9 @@ value = "Utbildning 3 månader i annat land — Enkätfråga: \"Har du eller kom
 variable = "336.30036"
 variant = "336.1108"
 column = "F19"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbildning 3 månader i annat land" }, { name = "description", status = "value", value = "Beskriver om doktoranden inom ramen för forskarutbildningen har studerat minst tre månader i annat land än Sverige." }, { name = "name", status = "value", value = "Utbildning 3 månader i annat land" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du eller kommer du inom ramen för din forskarutbildning tillfälligt studera minst 3 månader i annat land än Sverige?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1437,11 +1417,9 @@ value = "Utbildning 3 månader i annat land — Enkätfråga: \"Har du eller kom
 variable = "336.30035"
 variant = "336.1108"
 column = "F13"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Andel avklarade forskarstudier" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Andel avklarade forskarstudier" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du räknar med hela vårterminen 2013, hur stor andel av dina studier på forskarnivå kommer du då ha genomfört?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1451,11 +1429,9 @@ value = "Andel avklarade forskarstudier — Enkätfråga: \"Om du räknar med he
 variable = "336.30035"
 variant = "336.1108"
 column = "F18"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Andel avklarade forskarstudier" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Andel avklarade forskarstudier" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du räknar med hela vårterminen 2013, hur stor andel av dina studier på forskarnivå kommer du då ha genomfört?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1465,11 +1441,9 @@ value = "Andel avklarade forskarstudier — Enkätfråga: \"Om du räknar med he
 variable = "336.30080"
 variant = "336.1108"
 column = "F29_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning inte stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning inte stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du inte för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Annat\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1479,11 +1453,9 @@ value = "Anledning inte stanna i Sverige — annat"
 variable = "336.30080"
 variant = "336.1108"
 column = "F29_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning inte stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning inte stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du inte för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Jag har små möjligheter att få uppehållstillstånd/medborgarskap\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1493,11 +1465,9 @@ value = "Anledning inte stanna i Sverige — små möjligheter till uppehållsti
 variable = "336.30080"
 variant = "336.1108"
 column = "F29_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning inte stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning inte stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du inte för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Jag/min familj trivs inte socialt\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1507,11 +1477,9 @@ value = "Anledning inte stanna i Sverige — jag/min familj trivs inte socialt"
 variable = "336.30080"
 variant = "336.1108"
 column = "F29_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning inte stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning inte stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du inte för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Språkliga barriärer på arbetsmarknaden\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1521,11 +1489,9 @@ value = "Anledning inte stanna i Sverige — språkliga barriärer på arbetsmar
 variable = "336.30080"
 variant = "336.1108"
 column = "F29_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning inte stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning inte stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du inte för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Svenska arbetsmarknaden är inte intressant för mig\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1535,11 +1501,9 @@ value = "Anledning inte stanna i Sverige — svenska arbetsmarknaden är inte in
 variable = "336.30080"
 variant = "336.1108"
 column = "F29_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning inte stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning inte stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du inte för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Svenska arbetsmarknaden är relativt svår att komma in på\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1549,11 +1513,9 @@ value = "Anledning inte stanna i Sverige — svenska arbetsmarknaden är svår a
 variable = "336.30073"
 variant = "336.1108"
 column = "F28_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Annat\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1563,11 +1525,9 @@ value = "Anledning stanna i Sverige — annat"
 variable = "336.30073"
 variant = "336.1108"
 column = "F28_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Inga eller små språkliga barriärer på arbetsmarknaden\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1577,11 +1537,9 @@ value = "Anledning stanna i Sverige — inga eller små språkliga barriärer p�
 variable = "336.30073"
 variant = "336.1108"
 column = "F28_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Jag/min familj trivs socialt\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1591,11 +1549,9 @@ value = "Anledning stanna i Sverige — jag/min familj trivs socialt"
 variable = "336.30073"
 variant = "336.1108"
 column = "F28_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Svenska arbetsmarknaden är intressant för mig\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1605,11 +1561,9 @@ value = "Anledning stanna i Sverige — svenska arbetsmarknaden är intressant"
 variable = "336.30073"
 variant = "336.1108"
 column = "F28_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Av vilka anledningar har du för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Svenska arbetsmarknaden är relativt lätt att komma in på\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1619,11 +1573,9 @@ value = "Anledning stanna i Sverige — svenska arbetsmarknaden är lätt att ko
 variable = "336.30073"
 variant = "336.1108"
 column = "F28_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Anledning stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Anledning stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfårga: \"Av vilka anledningar har du för avsikt att  stanna i Sverige efter avslutad utbildning?\"\nSvar: \"Jag har goda möjligheter att få uppehållstillstånd/medborgarskap\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1633,11 +1585,9 @@ value = "Anledning stanna i Sverige — goda möjligheter till uppehållstillst�
 variable = "336.30103"
 variant = "336.1108"
 column = "F10_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen annat sätt" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen annat sätt" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Annat sätt\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1647,11 +1597,9 @@ value = "Ansökan till forskarutbildningen annat sätt — Enkätfråga: \"På v
 variable = "336.30103"
 variant = "336.1108"
 column = "F14_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen annat sätt" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen annat sätt" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Annat sätt\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1661,11 +1609,9 @@ value = "Ansökan till forskarutbildningen annat sätt — Enkätfråga: \"På v
 variable = "336.30023"
 variant = "336.1108"
 column = "F10_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen efter uppmaning från någon." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen efter uppmaning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Jag uppmanades av handledare/lärare att ansöka till utbildning på forskarnivå\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1675,11 +1621,9 @@ value = "Ansökan till forskarutbildningen efter uppmaning — uppmanad av handl
 variable = "336.30023"
 variant = "336.1108"
 column = "F14_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen efter uppmaning från någon." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen efter uppmaning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Jag uppmanades av handledare/lärare att ansöka till utbildning på forskarnivå\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1689,11 +1633,9 @@ value = "Ansökan till forskarutbildningen efter uppmaning — uppmanad av handl
 variable = "336.30024"
 variant = "336.1108"
 column = "F10_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen via information" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen via information" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Jag ansökte efter att ha informerats om utbildning på forskarnivå av annan person\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1703,11 +1645,9 @@ value = "Ansökan till forskarutbildningen via information — informerad av ann
 variable = "336.30024"
 variant = "336.1108"
 column = "F14_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen via information" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen via information" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Jag ansökte efter att ha informerats om utbildning på forskarnivå av annan person\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1717,11 +1657,9 @@ value = "Ansökan till forskarutbildningen via information — informerad av ann
 variable = "336.30022"
 variant = "336.1108"
 column = "F10_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen via utannonsering" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen via utannonsering" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Jag ansökte via utannonsering av forskarutbildning på universitetet/högskolan\"." }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1731,11 +1669,9 @@ value = "Ansökan till forskarutbildningen via utannonsering — utannonsering p
 variable = "336.30022"
 variant = "336.1108"
 column = "F14_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Ansökan till forskarutbildningen via utannonsering" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ansökan till forskarutbildningen via utannonsering" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\"\nSvar: \"Jag ansökte via utannonsering av forskarutbildning på universitetet/högskolan\"." }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1745,11 +1681,9 @@ value = "Ansökan till forskarutbildningen via utannonsering — utannonsering p
 variable = "336.30072"
 variant = "336.1108"
 column = "F21"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om personen har avsikt att stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Avsikt stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du för avsikt att stanna i Sverige efter avslutad utbildning?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1759,11 +1693,9 @@ value = "Avsikt stanna i Sverige — Enkätfråga: \"Har du för avsikt att stan
 variable = "336.30072"
 variant = "336.1108"
 column = "F27"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om personen har avsikt att stanna i Sverige." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Avsikt stanna i Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du för avsikt att stanna i Sverige efter avslutad utbildning?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1773,11 +1705,9 @@ value = "Avsikt stanna i Sverige — Enkätfråga: \"Har du för avsikt att stan
 variable = "336.30069"
 variant = "336.1108"
 column = "F20_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om person blivit diskriminerad eller känt sig diskriminerad av någon anledning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Diskriminerad" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du någon gång under forskarutbildningen känt dig ojämlikt behandlad eller diskriminerad av andra forskarstuderande, handledare eller lärare på grund av etnisk tillhörighet eller religion?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1787,11 +1717,9 @@ value = "Diskriminerad — på grund av etnisk tillhörighet eller religion (F20
 variable = "336.30069"
 variant = "336.1108"
 column = "F26_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om person blivit diskriminerad eller känt sig diskriminerad av någon anledning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Diskriminerad" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du någon gång under forskarutbildningen känt dig ojämlikt behandlad eller diskriminerad av andra forskarstuderande, handledare eller lärare på grund av etnisk tillhörighet eller religion?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1801,11 +1729,9 @@ value = "Diskriminerad — på grund av etnisk tillhörighet eller religion (F26
 variable = "336.30069"
 variant = "336.1108"
 column = "F20_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om person blivit diskriminerad eller känt sig diskriminerad av någon anledning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Diskriminerad" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du någon gång under forskarutbildningen känt dig ojämlikt behandlad eller diskriminerad av andra forskarstuderande, handledare eller lärare på grund av könstillhörighet?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1815,11 +1741,9 @@ value = "Diskriminerad — på grund av könstillhörighet (F20)"
 variable = "336.30069"
 variant = "336.1108"
 column = "F26_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om person blivit diskriminerad eller känt sig diskriminerad av någon anledning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Diskriminerad" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du någon gång under forskarutbildningen känt dig ojämlikt behandlad eller diskriminerad av andra forskarstuderande, handledare eller lärare på grund av könstillhörighet?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1829,11 +1753,9 @@ value = "Diskriminerad — på grund av könstillhörighet (F26)"
 variable = "336.30069"
 variant = "336.1108"
 column = "F20_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om person blivit diskriminerad eller känt sig diskriminerad av någon anledning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Diskriminerad" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du någon gång under forskarutbildningen känt dig ojämlikt behandlad eller diskriminerad av andra forskarstuderande, handledare eller lärare på grund av språksvårigheter?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1843,11 +1765,9 @@ value = "Diskriminerad — på grund av språksvårigheter (F20)"
 variable = "336.30069"
 variant = "336.1108"
 column = "F26_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om person blivit diskriminerad eller känt sig diskriminerad av någon anledning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Diskriminerad" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du någon gång under forskarutbildningen känt dig ojämlikt behandlad eller diskriminerad av andra forskarstuderande, handledare eller lärare på grund av språksvårigheter?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1857,11 +1777,9 @@ value = "Diskriminerad — på grund av språksvårigheter (F26)"
 variable = "336.30026"
 variant = "336.1108"
 column = "F11"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Erbjudande om forskarutbildning i annat land." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Erbjudande i annat land" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du fått erbjudande om utbildning på forskarnivå i annat land än Sverige?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1871,11 +1789,9 @@ value = "Erbjudande i annat land — Enkätfråga: \"Har du fått erbjudande om 
 variable = "336.30026"
 variant = "336.1108"
 column = "F15"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Erbjudande om forskarutbildning i annat land." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Erbjudande i annat land" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Har du fått erbjudande om utbildning på forskarnivå i annat land än Sverige?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1885,11 +1801,9 @@ value = "Erbjudande i annat land — Enkätfråga: \"Har du fått erbjudande om 
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_10"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Annan finansiering\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1899,11 +1813,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_10"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Annan finansiering\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1913,11 +1825,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_07"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Anställning utanför högskolan (med tid för egen forskning)\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1927,11 +1837,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_07"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Anställning utanför högskolan (med tid för egen forskning)\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1941,11 +1849,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Doktorandanställning\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1955,11 +1861,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Doktorandanställning\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1969,11 +1873,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_09"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Egen finsansiering\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1983,11 +1885,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_09"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Egen finsansiering\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1997,11 +1897,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Annan anställning inom högskolan\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2011,11 +1909,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Annan anställning inom högskolan\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2025,11 +1921,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_08"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSVar: \"Anställning utanför högskolan (utan tid för egen forskning)\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2039,11 +1933,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_08"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSVar: \"Anställning utanför högskolan (utan tid för egen forskning)\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2053,11 +1945,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Stipendium från annat land än Sverige\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2067,11 +1957,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Stipendium från annat land än Sverige\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2081,11 +1969,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Stipendium från Sverige (t.ex. SI)\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2095,11 +1981,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Stipendium från Sverige (t.ex. SI)\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2109,11 +1993,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Studiemedel CSN\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2123,11 +2005,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Studiemedel CSN\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2137,11 +2017,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F10_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Utbildningsbidrag\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2151,11 +2029,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30008"
 variant = "336.1108"
 column = "F7_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver försörjningssituation vid en doktorandanställning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Försörjningssituation doktorandanställning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\"\nSvar: \"Utbildningsbidrag\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2165,11 +2041,9 @@ value = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur f
 variable = "336.30049"
 variant = "336.1108"
 column = "F18_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enklätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt brister i handledningen som varit till hinder i ditt forskningsarbete?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2179,11 +2053,9 @@ value = "Handledares insats — Enklätfråga: \"I vilken grad har du inom dina 
 variable = "336.30049"
 variant = "336.1108"
 column = "F24_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enklätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt brister i handledningen som varit till hinder i ditt forskningsarbete?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2193,11 +2065,9 @@ value = "Handledares insats — Enklätfråga: \"I vilken grad har du inom dina 
 variable = "336.30049"
 variant = "336.1108"
 column = "F17_07"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare diskuterat dina framtidsplaner efter forskarutbildningen med dig?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2207,11 +2077,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_07"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare diskuterat dina framtidsplaner efter forskarutbildningen med dig?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2221,11 +2089,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F17_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare diskuterat metodfrågor med dig?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2235,11 +2101,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare diskuterat metodfrågor med dig?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2249,11 +2113,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F17_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare diskuterat teori med dig?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2263,11 +2125,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare diskuterat teori med dig?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2277,11 +2137,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F17_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare gett dig råd kring vilken tidigare forskning du behöver läsa in dig på?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2291,11 +2149,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare gett dig råd kring vilken tidigare forskning du behöver läsa in dig på?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2305,11 +2161,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F17_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare gett konstruktiv kritik på ditt forskningsarbete?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2319,11 +2173,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare gett konstruktiv kritik på ditt forskningsarbete?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2333,11 +2185,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare låtit dina egna intressen styra valet av avhandlingsämne?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2347,11 +2197,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F17_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare visat intresse för dina studier på forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2361,11 +2209,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F23_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har din/dina handledare visat intresse för dina studier på forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2375,11 +2221,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handl
 variable = "336.30049"
 variant = "336.1108"
 column = "F18_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 allvarligt övervägt att byta handledare?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2389,11 +2233,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har du inom dina f
 variable = "336.30049"
 variant = "336.1108"
 column = "F24_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 allvarligt övervägt att byta handledare?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2403,11 +2245,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har du inom dina f
 variable = "336.30049"
 variant = "336.1108"
 column = "F24_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledares insats gentemot elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledares insats" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 fått handledning i den omfattning du önskat?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2417,11 +2257,9 @@ value = "Handledares insats — Enkätfråga: \"I vilken grad har du inom dina f
 variable = "336.30048"
 variant = "336.1108"
 column = "F16"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledningstimmar som givits till elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledningstimmar" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur många timmar handledning får du i genomsnitt per månad under vårterminen 2013?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2431,11 +2269,9 @@ value = "Handledningstimmar — Enkätfråga: \"Hur många timmar handledning f�
 variable = "336.30048"
 variant = "336.1108"
 column = "F22"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver handledningstimmar som givits till elev, aspirant eller praktikant." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Handledningstimmar" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur många timmar handledning får du i genomsnitt per månad under vårterminen 2013?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2445,11 +2281,9 @@ value = "Handledningstimmar — Enkätfråga: \"Hur många timmar handledning f�
 variable = "336.30034"
 variant = "336.1108"
 column = "F12"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Huvudsakligt motiv till att studera vid en forskarutbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Huvudsakligt motiv till forskarutbildning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Vilket var ditt huvudsakliga motiv med forskarutbildning?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2459,11 +2293,9 @@ value = "Huvudsakligt motiv till forskarutbildning — Enkätfråga: \"Vilket va
 variable = "336.30034"
 variant = "336.1108"
 column = "F17"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Huvudsakligt motiv till att studera vid en forskarutbildning." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Huvudsakligt motiv till forskarutbildning" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Vilket var ditt huvudsakliga motiv med forskarutbildning?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2473,11 +2305,9 @@ value = "Huvudsakligt motiv till forskarutbildning — Enkätfråga: \"Vilket va
 variable = "336.30065"
 variant = "336.1108"
 column = "F18_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver möjlighet att påverka en verksamhet eller företelse." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Möjlighet att påverka verksamhet" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 haft möjlighet att påverka verksamheten på institutionen?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2487,11 +2317,9 @@ value = "Möjlighet att påverka verksamhet — Enkätfråga: \"I vilken grad ha
 variable = "336.30065"
 variant = "336.1108"
 column = "F24_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver möjlighet att påverka en verksamhet eller företelse." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Möjlighet att påverka verksamhet" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 haft möjlighet att påverka verksamheten på institutionen?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2501,11 +2329,9 @@ value = "Möjlighet att påverka verksamhet — Enkätfråga: \"I vilken grad ha
 variable = "336.30038"
 variant = "336.1108"
 column = "F15_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med den information du fick om dina rättigheter och skyldigheter som forskarstuderande?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2515,11 +2341,9 @@ value = "Nöjd eller missnöjd — vid start: information om rättigheter och sk
 variable = "336.30038"
 variant = "336.1108"
 column = "F21_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med den information du fick om dina rättigheter och skyldigheter som forskarstuderande?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2529,11 +2353,9 @@ value = "Nöjd eller missnöjd — vid start: information om rättigheter och sk
 variable = "336.30038"
 variant = "336.1108"
 column = "F15_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med det stöd och den stimulans du fick från andra på grund/avancerad nivå att gå vidare till utbildning på forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2543,11 +2365,9 @@ value = "Nöjd eller missnöjd — vid start: stöd och stimulans från andra at
 variable = "336.30038"
 variant = "336.1108"
 column = "F21_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med det stöd och den stimulans du fick från andra på grund/avancerad nivå att gå vidare till utbildning på forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2557,11 +2377,9 @@ value = "Nöjd eller missnöjd — vid start: stöd och stimulans från andra at
 variable = "336.30038"
 variant = "336.1108"
 column = "F15_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med det stöd och den stimulans du fick från dina lärare på grund/avancerad nivå för att gå vidare till forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2571,11 +2389,9 @@ value = "Nöjd eller missnöjd — vid start: stöd och stimulans från lärare 
 variable = "336.30038"
 variant = "336.1108"
 column = "F21_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med det stöd och den stimulans du fick från dina lärare på grund/avancerad nivå för att gå vidare till forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2585,11 +2401,9 @@ value = "Nöjd eller missnöjd — vid start: stöd och stimulans från lärare 
 variable = "336.30038"
 variant = "336.1108"
 column = "F15_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med förhandsinformationen du fick om utbildning på forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2599,11 +2413,9 @@ value = "Nöjd eller missnöjd — vid start: förhandsinformation om utbildning
 variable = "336.30038"
 variant = "336.1108"
 column = "F21_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med förhandsinformationen du fick om utbildning på forskarnivå?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2613,11 +2425,9 @@ value = "Nöjd eller missnöjd — vid start: förhandsinformation om utbildning
 variable = "336.30038"
 variant = "336.1108"
 column = "F15_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med institutionens/universitetets/högskolans introduktion för nyantagna till forskarutbildningen?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2627,11 +2437,9 @@ value = "Nöjd eller missnöjd — vid start: introduktion för nyantagna (F15)"
 variable = "336.30038"
 variant = "336.1108"
 column = "F21_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med institutionens/universitetets/högskolans introduktion för nyantagna till forskarutbildningen?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2641,11 +2449,9 @@ value = "Nöjd eller missnöjd — vid start: introduktion för nyantagna (F21)"
 variable = "336.30038"
 variant = "336.1108"
 column = "F15_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med tydligheten i forskarutbildningens antagningskrav?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2655,11 +2461,9 @@ value = "Nöjd eller missnöjd — vid start: tydlighet i antagningskraven (F15)
 variable = "336.30038"
 variant = "336.1108"
 column = "F21_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om man i någon grad är missnöjd eller missnöjd med en företelse eller verksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nöjd eller missnöjd" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Om du tänker på hur det var i samband med att du började på din utbildning på forskarnivå i Sverige, hur nöjd eller missnöjd är du då med tydligheten i forskarutbildningens antagningskrav?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2669,11 +2473,9 @@ value = "Nöjd eller missnöjd — vid start: tydlighet i antagningskraven (F21)
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_08"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Annat\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2683,11 +2485,9 @@ value = "Orsak till val av Sverige — annat"
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Att den svenska arbetsmarknaden lockar/det finns karriärmöjligheter?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2697,11 +2497,9 @@ value = "Orsak till val av Sverige — svenska arbetsmarknaden lockar/karriärm�
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_07"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Att Sverige är ett tryggt land?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2711,11 +2509,9 @@ value = "Orsak till val av Sverige — Sverige är ett tryggt land"
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_02"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Att utbildningen är avgiftsfri?" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2725,11 +2521,9 @@ value = "Orsak till val av Sverige — utbildningen är avgiftsfri"
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Att utbildningens kvalitet har ett gott rykte?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2739,11 +2533,9 @@ value = "Orsak till val av Sverige — utbildningens kvalitet har gott rykte"
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_05"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Att utbildningens studiemiljö har ett gott rykte?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2753,11 +2545,9 @@ value = "Orsak till val av Sverige — studiemiljön har gott rykte"
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_03"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\n\nSvar: \"Möjligheten att få utbildningsbidrag/ doktorandtjänst under utbildningstiden?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2767,11 +2557,9 @@ value = "Orsak till val av Sverige — möjlighet till utbildningsbidrag/doktora
 variable = "336.30027"
 variant = "336.1108"
 column = "F16_01"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak till att välja Sverige i något avseende." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till val av Sverige" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur viktigt var följande för dig i ditt beslut att välja just Sverige för dina studier på forskarnivå?\"\nSvar: \"Att utbildningen är på engelska?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2781,11 +2569,9 @@ value = "Orsak till val av Sverige — utbildningen är på engelska"
 variable = "336.30067"
 variant = "336.1108"
 column = "F19"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Tidsåtgång för studier" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Tidsåtgång för studier" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur uppfattar du den tid dina forskarstudier tar i anspråk?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2795,11 +2581,9 @@ value = "Tidsåtgång för studier — Enkätfråga: \"Hur uppfattar du den tid 
 variable = "336.30067"
 variant = "336.1108"
 column = "F25"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Tidsåtgång för studier" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Tidsåtgång för studier" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur uppfattar du den tid dina forskarstudier tar i anspråk?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2809,11 +2593,9 @@ value = "Tidsåtgång för studier — Enkätfråga: \"Hur uppfattar du den tid 
 variable = "336.30020"
 variant = "336.1108"
 column = "F12"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om inkomstnivån är tillräcklig för angivet syfte." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Tillräcklig inkomstnivå" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur lätt eller svårt tycker du att det har varit att få ekonomin att gå ihop under vårterminen 2013?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2823,11 +2605,9 @@ value = "Tillräcklig inkomstnivå — Enkätfråga: \"Hur lätt eller svårt ty
 variable = "336.30020"
 variant = "336.1108"
 column = "F8"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver om inkomstnivån är tillräcklig för angivet syfte." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Tillräcklig inkomstnivå" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"Hur lätt eller svårt tycker du att det har varit att få ekonomin att gå ihop under vårterminen 2013?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2837,11 +2617,9 @@ value = "Tillräcklig inkomstnivå — Enkätfråga: \"Hur lätt eller svårt ty
 variable = "336.30066"
 variant = "336.1108"
 column = "F18_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver upplevda krav från någon person, verksamhet eller företelse." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Upplevda krav" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt att kraven på dig som doktorand varit tydliga?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2851,11 +2629,9 @@ value = "Upplevda krav — Enkätfråga: \"I vilken grad har du inom dina forska
 variable = "336.30066"
 variant = "336.1108"
 column = "F24_06"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver upplevda krav från någon person, verksamhet eller företelse." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Upplevda krav" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt att kraven på dig som doktorand varit tydliga?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2865,11 +2641,9 @@ value = "Upplevda krav — Enkätfråga: \"I vilken grad har du inom dina forska
 variable = "336.30064"
 variant = "336.1108"
 column = "F18_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver upplevelse av stress eller press." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Upplevelse av stress" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt press/stress som gett negativa konsekvenser?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2879,11 +2653,9 @@ value = "Upplevelse av stress — Enkätfråga: \"I vilken grad har du inom dina
 variable = "336.30064"
 variant = "336.1108"
 column = "F24_04"
-edition = "5579"
+editions = ["5579"]
 expected_fields = [{ name = "definition", status = "value", value = "Beskriver upplevelse av stress eller press." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Upplevelse av stress" }, { name = "operational_definition", status = "value", value = "Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt press/stress som gett negativa konsekvenser?\"" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5579 = "2013" }
 evidence = "Complete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 noted = "2026-10-02"
 field = "name"

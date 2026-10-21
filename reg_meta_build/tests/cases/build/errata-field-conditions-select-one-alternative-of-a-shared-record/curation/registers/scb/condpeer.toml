@@ -13,12 +13,10 @@ slug = "people"
 variable = "12.5"
 variant = "12.10"
 column = "INVARN8"
-edition = "2020"
+editions = ["2020"]
 expected_records = {{expected_records key=member:82}}
 expected_fields = {{expected_fields key=member:82 member=Date9 fields=prose}}
-expected_period_text = {{period_text key=member:82 member=Date9}}
-expected_scope = {{edition_scope key=member:82 member=Date9}}
-expected_period = {{period_scope key=member:82 member=Date9}}
+expected_period_text = { 2020 = {{period_text key=member:82 member=Date9}} }
 evidence = "The Date9 row's name is the Date8 row's."
 noted = "2026-09-30"
 field = "name"
@@ -27,12 +25,10 @@ value = "Date8"
 variable = "12.5"
 variant = "12.10"
 column = "INVARN8"
-edition = "2020"
+editions = ["2020"]
 expected_records = {{expected_records key=member:82}}
 expected_fields = {{expected_fields key=member:82 member=Date9 fields=prose}}
-expected_period_text = {{period_text key=member:82 member=Date9}}
-expected_scope = {{edition_scope key=member:82 member=Date9}}
-expected_period = {{period_scope key=member:82 member=Date9}}
+expected_period_text = { 2020 = {{period_text key=member:82 member=Date9}} }
 evidence = "The Date9 row's description is the Date8 row's."
 noted = "2026-09-30"
 field = "description"

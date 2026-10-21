@@ -25,6 +25,7 @@ from reg_meta_build.source_records import (
     SourceParentObservation,
     SourceRecord,
     SourceSubject,
+    TemporalScope,
     value_field,
 )
 
@@ -299,6 +300,29 @@ def _parent_facts(
     )
 
 
+def scb_edition_scopes(
+    register_id: int, edition_name: str
+) -> tuple[TemporalScope, TemporalScope, SourcePeriodIssue | None]:
+    """An SCB edition's scopes, a function of its register and period text alone.
+
+    `[[errata.field]]` relies on this: it pins an edition's text, not its scopes.
+    """
+    edition_scope, edition_period_scope, issue_kind = source_scopes(edition_name)
+    if register_id in _PROJECTION_REGISTERS:
+        # Forecast editions (Y-202): a projection range (e.g. "2024-2070") is
+        # a vintage convention, not pooled delivery evidence — it carries no
+        # resolvable range and keeps the pre-Y-202 unsupported behavior.
+        if edition_scope.kind == "pooled":
+            edition_scope = edition_scope.model_copy(
+                update={"pooled_start": None, "pooled_end": None}
+            )
+        if edition_period_scope.kind == "pooled":
+            edition_period_scope = edition_period_scope.model_copy(
+                update={"pooled_start": None, "pooled_end": None}
+            )
+    return edition_scope, edition_period_scope, issue_kind
+
+
 def clean_scb_row(
     header: Sequence[str],
     row_number: int,
@@ -312,21 +336,9 @@ def clean_scb_row(
 
     interpreted = _interpret_registerinformation_row(text, row_number)
     original_column = text("Kolumnnamn")
-    edition_scope, edition_period_scope, issue_kind = source_scopes(
-        interpreted.edition_name
+    edition_scope, edition_period_scope, issue_kind = scb_edition_scopes(
+        interpreted.register_id, interpreted.edition_name
     )
-    if interpreted.register_id in _PROJECTION_REGISTERS:
-        # Forecast editions (Y-202): a projection range (e.g. "2024-2070") is
-        # a vintage convention, not pooled delivery evidence — it carries no
-        # resolvable range and keeps the pre-Y-202 unsupported behavior.
-        if edition_scope.kind == "pooled":
-            edition_scope = edition_scope.model_copy(
-                update={"pooled_start": None, "pooled_end": None}
-            )
-        if edition_period_scope.kind == "pooled":
-            edition_period_scope = edition_period_scope.model_copy(
-                update={"pooled_start": None, "pooled_end": None}
-            )
     semantic_key = (
         f"register:{interpreted.register_id}",
         f"variant:{interpreted.register_variant_id}",

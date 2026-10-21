@@ -411,7 +411,23 @@ def checked_correction_fixture(tmp_path, *, period=False):
         )
         field = "occurrence_period"
     else:
-        entry = ErrataFieldEntry(**base, field="name", value="Reviewed label")
+        entry = ErrataFieldEntry(
+            **{
+                key: value
+                for key, value in base.items()
+                if key
+                not in {
+                    "edition",
+                    "expected_period_text",
+                    "expected_scope",
+                    "expected_period",
+                }
+            },
+            editions=["99"],
+            expected_period_text={"99": selected.original_period_text},
+            field="name",
+            value="Reviewed label",
+        )
         field = "field"
     reg = next(r for r in tree.registers if r.register_info.slug == "sample")
     reg = reg.model_copy(

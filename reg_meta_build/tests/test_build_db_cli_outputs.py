@@ -38,16 +38,13 @@ CHECKOUT_SLUGS = CHECKOUT_CURATION.parent / "fqid_slugs"
 # scoped build has curation cases to decide and dump.
 ERRATA = (
     '\n[[errata.field]]\nvariable = "{variable}"\nvariant = "{variant}"\n'
-    'column = "{column}"\nedition = "110"\nfield = "name"\n'
+    'column = "{column}"\neditions = ["110"]\nfield = "name"\n'
     'value = "{value}"\n'
     'expected_fields = [{{name = "name", status = "value", value = "{name}"}}, '
     '{{name = "definition", status = "value", value = "A generic family label"}}, '
     '{{name = "description", status = "absent"}}, '
     '{{name = "operational_definition", status = "absent"}}]\n'
-    'expected_period_text = "2020"\n'
-    'expected_scope = {{kind = "intervals", intervals = [{{start = "2020", end = "2020"}}]}}\n'
-    'expected_period = {{kind = "intervals", '
-    'intervals = [{{start = "2020-01-01", end = "2020-12-31"}}]}}\n'
+    'expected_period_text = {{110 = "2020"}}\n'
     'evidence = "Reviewed fixture source label"\nnoted = "2026-10-01"\n'
 )
 

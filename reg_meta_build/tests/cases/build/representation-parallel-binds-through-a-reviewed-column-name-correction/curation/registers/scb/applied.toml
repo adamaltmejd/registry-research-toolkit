@@ -17,11 +17,9 @@ columns_ref = "reviewed parallel source-native quantity"
 variable = "4.1"
 variant = "4.40"
 column = "OldSecond"
-edition = "411"
+editions = ["411"]
 expected_fields = {{expected_fields key=member:402}}
-expected_period_text = {{period_text key=member:402}}
-expected_scope = {{edition_scope key=member:402}}
-expected_period = {{period_scope key=member:402}}
+expected_period_text = { 411 = {{period_text key=member:402}} }
 evidence = "Exact supplied literal correction"
 noted = "2026-09-30"
 field = "column_name"

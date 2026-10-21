@@ -154,6 +154,7 @@ from .source_records import (
     TemporalScope,
     value_field,
 )
+from .sources.scb_records import scb_edition_scopes
 from .source_value_bindings import (
     bind_code_lists,
     marker_binding_fingerprints,
@@ -5687,9 +5688,57 @@ def _variant_label(register: RegisterCuration, record: SourceRecord) -> str | No
     )
 
 
+@dataclass(frozen=True, slots=True)
+class _OriginalCoordinate:
+    """One original an occurrence correction names: its edition and period guards."""
+
+    edition: str | None
+    period_text: str | None
+    scope: TemporalScope
+    period: TemporalScope
+
+
+def _original_coordinates(
+    register: RegisterCuration, entry: _OccurrenceCorrectionEntry
+) -> tuple[_OriginalCoordinate, ...]:
+    """Each edition an entry corrects, checked on its own as if entered alone.
+
+    A field entry's listed editions pin only their period text; an SCB edition's
+    scopes follow from it as the reader derives them.
+    """
+    if isinstance(entry, ErrataFieldEntry):
+        if entry.editions is None:
+            assert entry.expected_scope is not None
+            assert entry.expected_period is not None
+            return (
+                _OriginalCoordinate(
+                    None, None, entry.expected_scope, entry.expected_period
+                ),
+            )
+        assert entry.expected_period_text is not None
+        register_id = int(register.register_info.native_id or 0)
+        return tuple(
+            _OriginalCoordinate(
+                edition, text, *scb_edition_scopes(register_id, text.strip())[:2]
+            )
+            for edition, text in entry.expected_period_text.items()
+        )
+    return (
+        _OriginalCoordinate(
+            entry.edition if isinstance(entry, _EditionCorrectionEntry) else None,
+            entry.expected_period_text
+            if isinstance(entry, _EditionCorrectionEntry)
+            else None,
+            entry.expected_scope,
+            entry.expected_period,
+        ),
+    )
+
+
 def _select_occurrence_correction(
     register: RegisterCuration,
     entry: _OccurrenceCorrectionEntry,
+    original: _OriginalCoordinate,
     family: tuple[SourceRecord, ...],
 ) -> tuple[SourceRecord, ...]:
     return tuple(
@@ -5704,11 +5753,10 @@ def _select_occurrence_correction(
             else entry.column
         )
         and (
-            not isinstance(entry, _EditionCorrectionEntry)
-            or entry.edition is None
+            original.edition is None
             or (
                 record.subject.native.edition_id is not None
-                and str(record.subject.native.edition_id) == entry.edition
+                and str(record.subject.native.edition_id) == original.edition
             )
         )
         and (
@@ -5721,19 +5769,17 @@ def _select_occurrence_correction(
                     "column_name",
                     "representation",
                 }
-                and not (
-                    entry.field == "name" and entry.expected_scope.kind == "intervals"
-                )
+                and not (entry.field == "name" and original.scope.kind == "intervals")
             )
             or (
-                record.edition_scope == entry.expected_scope
-                and record.edition_period_scope == entry.expected_period
-                and record.original_period_text == entry.expected_period_text
+                record.edition_scope == original.scope
+                and record.edition_period_scope == original.period
+                and record.original_period_text == original.period_text
             )
         )
         and (
             not isinstance(entry, ErrataOccurrencePeriodEntry)
-            or _occurrence_correction_matches(entry, (record,))
+            or _occurrence_correction_matches(entry, original, (record,))
         )
         and (
             not isinstance(entry, ErrataFieldEntry)
@@ -5752,24 +5798,24 @@ def _select_occurrence_correction(
 
 
 def _occurrence_correction_matches(
-    entry: _OccurrenceCorrectionEntry, selected: tuple[SourceRecord, ...]
+    entry: _OccurrenceCorrectionEntry,
+    original: _OriginalCoordinate,
+    selected: tuple[SourceRecord, ...],
 ) -> bool:
-    period_text = (
-        entry.expected_period_text
-        if isinstance(entry, _EditionCorrectionEntry)
-        else None
-    )
+    """Whether one original's selected records hold every guard but `expected_records`.
+
+    A field entry's `expected_records` pins all its editions' originals at once,
+    so the caller checks it over the union.
+    """
     if not selected or any(
-        record.original_period_text != period_text
-        or record.edition_scope != entry.expected_scope
-        or record.edition_period_scope != entry.expected_period
+        record.original_period_text != original.period_text
+        or record.edition_scope != original.scope
+        or record.edition_period_scope != original.period
         for record in selected
     ):
         return False
     if isinstance(entry, ErrataFieldEntry) and entry.expected_records is not None:
-        return tuple(entry.expected_records) == capture_expectations(
-            selected, fields=tuple(SourceFields.model_fields), parents=True
-        )
+        return True
     expected = {field.name: field for field in entry.expected_fields}
     return all(
         all(
@@ -5957,7 +6003,29 @@ def compile_occurrence_corrections(
                     statuses["not_evaluated_in_subset"].append(case_id)
                     continue
                 family = families.get(entry.variable.rsplit(".", 1)[-1], ())
-                selected = _select_occurrence_correction(register, entry, family)
+                originals = tuple(
+                    (
+                        original,
+                        _select_occurrence_correction(
+                            register, entry, original, family
+                        ),
+                    )
+                    for original in _original_coordinates(register, entry)
+                )
+                chosen = {id(record) for _, rows in originals for record in rows}
+                selected = tuple(record for record in family if id(record) in chosen)
+                original_of = {
+                    record_ref(record): original
+                    for original, rows in originals
+                    for record in rows
+                }
+                # Each listed edition holds its guards on its own; one that does
+                # not stales the whole entry, named in the report.
+                stale_editions = tuple(
+                    original.edition
+                    for original, rows in originals
+                    if not _occurrence_correction_matches(entry, original, rows)
+                )
                 expected = {field.name: field for field in entry.expected_fields}
                 chosen_refs = {record_ref(record) for record in selected}
                 by_edition: dict[int | None, set[SourceRecordRef]] = defaultdict(set)
@@ -5998,7 +6066,17 @@ def compile_occurrence_corrections(
                         or {"coverage_from", "coverage_to"}.issubset(expected)
                     )
                     and not overbroad
-                    and _occurrence_correction_matches(entry, selected)
+                    and not stale_editions
+                    and (
+                        not isinstance(entry, ErrataFieldEntry)
+                        or entry.expected_records is None
+                        or tuple(entry.expected_records)
+                        == capture_expectations(
+                            selected,
+                            fields=tuple(SourceFields.model_fields),
+                            parents=True,
+                        )
+                    )
                 )
                 # A carry adds a period the original does not claim; one that
                 # reaches the original's own scope would claim that period twice.
@@ -6157,13 +6235,19 @@ def compile_occurrence_corrections(
                         authority_family = families.get(
                             entry.authority.variable.rsplit(".", 1)[-1], ()
                         )
+                        (authority_original,) = _original_coordinates(
+                            register, entry.authority
+                        )
                         authority = _select_occurrence_correction(
-                            register, entry.authority, authority_family
+                            register,
+                            entry.authority,
+                            authority_original,
+                            authority_family,
                         )
                         valid = (
                             valid
                             and _occurrence_correction_matches(
-                                entry.authority, authority
+                                entry.authority, authority_original, authority
                             )
                             and len({record_ref(r) for r in authority}) == 1
                         )
@@ -6189,7 +6273,14 @@ def compile_occurrence_corrections(
                             "guarded prose/scopes match but the coding fingerprint differs"
                             + current_pins(None, (), coding_pin)
                             if coding_pin is not None
-                            else "literal source coordinate has no originals or differs from the guarded prose/scopes"
+                            else (
+                                f"edition {', '.join(map(str, stale_editions))}: "
+                                if isinstance(entry, ErrataFieldEntry)
+                                and entry.editions is not None
+                                and stale_editions
+                                else ""
+                            )
+                            + "literal source coordinate has no originals or differs from the guarded prose/scopes"
                             + current_pins(family_pin, ()),
                             refs=tuple(record_ref(record) for record in selected),
                             overbroad=overbroad,
@@ -6417,13 +6508,13 @@ def compile_occurrence_corrections(
                             replacement=FieldExpectation(
                                 name=entry.field, status="value", value=entry.value
                             ),
-                            when_scope=entry.expected_scope
+                            when_scope=original_of[ref].scope
                             if entry.field == "name"
-                            and entry.expected_scope.kind == "intervals"
+                            and original_of[ref].scope.kind == "intervals"
                             else None,
-                            when_period=entry.expected_period
+                            when_period=original_of[ref].period
                             if entry.field == "name"
-                            and entry.expected_scope.kind == "intervals"
+                            and original_of[ref].scope.kind == "intervals"
                             else None,
                             when=(
                                 FieldExpectation(
