@@ -365,7 +365,8 @@ def resolve_parents(
                         {
                             "slug": slug,
                             "name": name,
-                            "description": _text(fields, "description"),
+                            "description": declaration.naming.description
+                            or _text(fields, "description"),
                             "display_group": declaration.naming.display_group,
                             "panel_entity_key": declaration.naming.panel_entity_key,
                             "panel_time_key": declaration.naming.panel_time_key,

@@ -91,6 +91,11 @@ class SlugEntry:
     slug: str | None
     provider: str | None = None
     display_group: str | None = None
+    # Curated variant description (register_variant only). MUTABLE and outside
+    # the slug snapshot, like display_group; it replaces the source's
+    # Registervariantbeskrivning, which a curated split variant only inherits
+    # from its parent (#1708).
+    description: str | None = None
     # A4.4c panel-shape coordinates (register_variant only). MUTABLE — these do
     # NOT enter the slug snapshot (snapshot_payload copies only `slug`).
     # `panel_entity_key`: a bare variable-slug str (simple) or a tuple of
@@ -247,6 +252,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
             base
             | {
                 "display_group",
+                "description",
                 "panel_entity_key",
                 "panel_time_key",
                 "panel_time_grain",
@@ -348,6 +354,17 @@ def _validate_entry(
         # so every built label is clean regardless of source cruft; a
         # whitespace-only label collapses to no label.
         display_group = display_group.strip() or None
+    description = entry.get("description")
+    if description is not None and (
+        not isinstance(description, str)
+        or not description.strip()
+        or description != description.strip()
+    ):
+        raise curation_error(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `description` must be a non-blank, trimmed string.",
+            "Write the description as plain text or remove it.",
+        )
     # A4.4c panel-shape fields (register_variant only — the unknown-field guard
     # above already rejects them on other kinds via `_allowed_fields`).
     panel_entity_key = _validate_panel_entity_key(
@@ -366,6 +383,7 @@ def _validate_entry(
         slug=slug,
         provider=provider,
         display_group=display_group,
+        description=description,
         panel_entity_key=panel_entity_key,
         panel_time_key=panel_time_key,
         panel_time_grain=panel_time_grain,

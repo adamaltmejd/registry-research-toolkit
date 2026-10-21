@@ -537,7 +537,11 @@ split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quart
 delivery lines separate from their annual parent variants. The same checked split can
 preserve a source-labelled range separately from annual editions, with a scoped
 `data_warning` when aggregation or physical delivery semantics are unverified; it never
-assigns annual availability to the range.
+assigns annual availability to the range. A split variant has no native row and inherits
+its parent's Registervariantbeskrivning, so what the split is (a survey wave, a
+half-year, a school-year line) and what stays unverified about it belongs in the split
+variant's curated `[[variant]] description`, which replaces the inherited text, rather
+than in a warning repeated on every state (#1708).
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
 reviewed native family, including blank columns, every source field, parent fact and

@@ -3,7 +3,7 @@
     "test_curation_compile_editions.py::test_named_edition_split_rebinds_parents_and_is_order_independent[None]",
     "test_curation_compile_editions.py::test_split_variant_naming_accepts_source_parent_and_keeps_states"
   ],
-  "fails_if": "`compile_edition_splits` stops rebinding the '2007-12-31' edition's rows to the declared split variant, so both 2007 editions stay in the flow variant and conflict",
+  "fails_if": "`compile_edition_splits` stops rebinding the '2007-12-31' edition's rows to the declared split variant, so both 2007 editions stay in the flow variant and conflict; or a split variant's curated `description` is dropped and it keeps the parent's inherited source description",
   "sources": {
     "description": "Variant 2 of register 1 delivers SHARED (variable 5) twice for 2007: edition '2007' (CVID 20, integer) and edition '2007-12-31' (CVID 21, string).",
     "scb": {

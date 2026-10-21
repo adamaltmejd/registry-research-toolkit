@@ -32,6 +32,27 @@
           "2007-12-31"
         ]
       ]
+    },
+    {
+      "table": "variants",
+      "where": {
+        "register": "sample"
+      },
+      "fields": [
+        "variant",
+        "description"
+      ],
+      "note": "The split variant's curated description replaces the Registervariantbeskrivning it inherits from its parent (the `var_row` default `Alla individer`); the parent keeps the source text.",
+      "rows": [
+        [
+          "flow",
+          "Alla individer"
+        ],
+        [
+          "stock",
+          "The 31 December stock edition of the flow variant."
+        ]
+      ]
     }
   ]
 }

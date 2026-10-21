@@ -184,6 +184,7 @@ slug = "bostadstyp"
 native_id = "164.235.maj"
 slug = "maj"
 display_group = "Partisympatiundersökningen: maj"
+description = "Majundersökningen i Partisympatiundersökningen (PSU). SCB redovisar maj- och novemberundersökningarna som separata utgåvor, var och en med egen svarsdomän, men anger bara helårsgränser för datumen; undersökningsdatum, vilken tabell som levererar respektive omgång och statistisk jämförbarhet mellan omgångarna är inte fastställda."
 panel_entity_key = "uppgiftslamnarens-personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -192,6 +193,7 @@ panel_time_grain = "delivery"
 native_id = "164.235.november"
 slug = "november"
 display_group = "Partisympatiundersökningen: november"
+description = "Novemberundersökningen i Partisympatiundersökningen (PSU). SCB redovisar maj- och novemberundersökningarna som separata utgåvor, var och en med egen svarsdomän, men anger bara helårsgränser för datumen; undersökningsdatum, vilken tabell som levererar respektive omgång och statistisk jämförbarhet mellan omgångarna är inte fastställda."
 panel_entity_key = "uppgiftslamnarens-personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -203,7 +205,6 @@ editions = ["2000 maj", "2001 maj", "2002 maj", "2003 maj", "2004 maj", "2005 ma
 source_editions = ["2000 november", "2001 november", "2002 november", "2003 november", "2004 november", "2005 november", "2006 november", "2007 november", "2008 november", "2009 november", "2010 november", "2011 november", "2012 november", "2013 november", "2014 november", "2015 november", "2016 november", "2017 november", "2018 november", "2019 november", "2020 november", "2021 november", "2022 november"]
 evidence = "Accepted PSU edition parents explicitly distinguish May and November waves. Preserve exact source contexts and annual bounds, without merging competing wave-specific response lists. Complete accepted-source and bound-coding replay, changed/removed original and code-label drift negatives, and scoped writer checks: Batch50-PSU-wave-context-source-proof.json."
 noted = "2026-10-02"
-data_warning = "The source labels May and November survey editions separately but gives only annual date bounds. The two waves are listed separately, each with its own response domain; survey-day dates, which physical table holds each wave and statistical equivalence between them are not established."
 
 [[identity.edition_split]]
 variant = "164.235"
@@ -212,7 +213,6 @@ editions = ["2000 november", "2001 november", "2002 november", "2003 november", 
 source_editions = ["2000 maj", "2001 maj", "2002 maj", "2003 maj", "2004 maj", "2005 maj", "2006 maj", "2007 maj", "2008 maj", "2009 maj", "2010 maj", "2011 maj", "2012 maj", "2013 maj", "2014 maj", "2015 maj", "2016 maj", "2017 maj", "2018 maj", "2019 maj", "2020 maj", "2021 maj", "2022 maj", "2023 maj", "2024 maj", "2025 maj"]
 evidence = "Accepted PSU edition parents explicitly distinguish May and November waves. Preserve exact source contexts and annual bounds, without merging competing wave-specific response lists. Complete accepted-source and bound-coding replay, changed/removed original and code-label drift negatives, and scoped writer checks: Batch50-PSU-wave-context-source-proof.json."
 noted = "2026-10-02"
-data_warning = "The source labels May and November survey editions separately but gives only annual date bounds. The two waves are listed separately, each with its own response domain; survey-day dates, which physical table holds each wave and statistical equivalence between them are not established."
 
 [[acknowledge]]
 code = "missing_coding_period"

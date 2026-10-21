@@ -95,6 +95,7 @@ slug = "typ-av-undervisning"
 native_id = "391.1508.lasar"
 slug = "kursdeltagare-lasar"
 display_group = "Kursdeltagare: läsår"
+description = "Läsårsutgåvorna 1997/1998–2001/2002 av kursdeltagarregistret för Statens skolor för vuxna. SCB beskriver läsårsregistren skilt från terminsregistren, och utgåvorna behåller källans exakta läsårs- och terminsdatum. Elevernas läsårsuppgifter ligger i den egna varianten Elever. Vilken tabell som levererar dem, hur de summeras och statistisk jämförbarhet med terminsregistren är inte fastställda."
 panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -107,7 +108,6 @@ editions = ["1997/1998", "1998/1999", "1999/2000", "2000/2001", "2001/2002"]
 source_editions = ["1997 höstterminen", "1998 höstterminen", "1998 vårterminen", "1999 höstterminen", "1999 vårterminen", "2000 höstterminen", "2000 vårterminen", "2001 höstterminen", "2001 vårterminen", "2002 vårterminen"]
 evidence = "Complete accepted source edition parents explicitly distinguish these delivery contexts. Full source census and source/writer/guard proof: Batch50-KAA-SSV-full-context-census.json and Batch50-KAA-SSV-context-source-proof.json. Preserve original periods and all source claims."
 noted = "2026-10-02"
-data_warning = "The source explicitly describes course-participant school-year registers separately from semester registers. Retain those distinct source edition contexts with their exact supplied school-year and semester dates, original fields and response lists. The pupil school-year variant remains separate. No physical-table assignment, aggregation or statistical equivalence is inferred."
 
 [[acknowledge]]
 code = "missing_coding_period"
