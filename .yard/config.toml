@@ -6,7 +6,7 @@ approve = "manual"
 
 [target]
 ref = "main"
-protected_paths = ["AGENTS.md", "CLAUDE.md", ".agents/", ".claude/", ".codex/", ".pi/", ".github/"]
+protected_paths = ["AGENTS.md", ".agents/", ".claude/", ".codex/", ".github/"]
 
 # Package registries only: PyPI for uv, crates.io for the maturin build of
 # crates/reg-core-py. Models and MCP use their own routes.
