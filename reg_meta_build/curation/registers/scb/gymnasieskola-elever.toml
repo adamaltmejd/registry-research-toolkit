@@ -114,7 +114,6 @@ panel_time_grain = "delivery"
 "233.16306.utbild-start" = "utbild-start"
 "233.30471.direkt" = "direkt"
 "233.30471.direkt9" = "direkt9"
-"233.67.utlbakgr" = "utlbakgr-67"
 "233.67.utlbakgr2" = "utlbakgr"
 "233.67.utlsvbakg" = "utlsvbakg"
 "233.67.utl-bakg" = "utl-bakg"
@@ -145,6 +144,6 @@ expected_evidence_sha256 = "2b65b1f30dd0624f62b2cdb8af6cffcceb5e7a80805cefcff3b6
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "233.67"
-columns = { UtlBakGr = "233.67.utlbakgr", UtlBakGr2 = "233.67.utlbakgr2", UtlSvBakg = "233.67.utlsvbakg", Utl_BakG = "233.67.utl-bakg" }
-columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+columns = { UtlBakGr = "233.67.utlbakgr2", UtlBakGr2 = "233.67.utlbakgr2", UtlSvBakg = "233.67.utlsvbakg", Utl_BakG = "233.67.utl-bakg" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json. Exception, shared-column succession fold 2026-10-21 (maintainer-approved high-confidence worklist batch): UtlBakGr2 (2014-2016) and UtlBakGr (2017-2024) carry the identical full operational definition (born-abroad or both parents abroad; missing birth country gives 'Uppgift saknas'), the same 3 codes, and are never co-delivered; both fold into the UtlBakGr2 owner. Utl_BakG and UtlSvBakg stay separate; Y-211/Y-276 sequential-rename policy."
 expected_evidence_sha256 = "4b348f29eb945e08262a5ebf2183bf440f9f0ec1f010698b8dc145218d10e86d"
