@@ -572,27 +572,27 @@ owner and public key without introducing an artificial split.
 
 An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
 explicit source editions. Optional `expected_fields` pin chosen reviewed source facts
-using the existing field-expectation contract. A guard over every `SourceFields` field is
-spelled `expected_fields_sha256` instead: `field_projection_sha256` (source_curation.py)
-of the field expectations in field-name order, each matched original's projection
-hashing to it. It goes stale on exactly the source changes the verbose list would, and a
-stale one prints the current digest; the build ledger shows the fields themselves. A new
-`SourceFields` field changes every such digest, a schema change the verbose form did not
-have. An entry may instead pin the complete selected originals with
-`expected_evidence_sha256`. Digest-guarded entries require finite editions and no field
-guards; fresh compilation hydrates full originals and replay checks every original fact.
-This admits multiple original prose claims for one exact physical column and edition
-under one owner without selecting or correcting either claim. The guard forms are
-exclusive. Guarded entries require a finite edition list. Complete-record guards retain
-all fields, parent facts and original multiplicity; missing, added or changed originals
-refuse both compilation and replay. Field guards require unique known fields, and the
-compiled
-complete family also guards every supplied field during replay. This supports a reused
-column whose explicitly documented amount or rate role changes between editions without
-normalizing units or borrowing another owner's meaning. Physical source multiplicity
-remains governed by the prepared-source pins and ordered inventory. A complete native
-default column map may retain that owner alongside exact guarded scoped overrides; only
-matched source members take a split owner, and all declared owners remain covered.
+using the existing field-expectation contract. A guard over every `SourceFields` field
+is spelled `expected_fields_sha256` instead: `field_projection_sha256`
+(source_curation.py) of the field expectations in field-name order, each matched
+original's projection hashing to it. It goes stale on exactly the source changes the
+verbose list would, and a stale one prints the current digest; the build ledger shows
+the fields themselves. A new `SourceFields` field changes every such digest, a schema
+change the verbose form did not have. An entry may instead pin the complete selected
+originals with `expected_evidence_sha256`. Digest-guarded entries require finite
+editions and no field guards; fresh compilation hydrates full originals and replay
+checks every original fact. This admits multiple original prose claims for one exact
+physical column and edition under one owner without selecting or correcting either
+claim. The guard forms are exclusive. Guarded entries require a finite edition list.
+Complete-record guards retain all fields, parent facts and original multiplicity;
+missing, added or changed originals refuse both compilation and replay. Field guards
+require unique known fields, and the compiled complete family also guards every supplied
+field during replay. This supports a reused column whose explicitly documented amount or
+rate role changes between editions without normalizing units or borrowing another
+owner's meaning. Physical source multiplicity remains governed by the prepared-source
+pins and ordered inventory. A complete native default column map may retain that owner
+alongside exact guarded scoped overrides; only matched source members take a split
+owner, and all declared owners remain covered.
 
 An SCB `[[identity.unassigned]]` withholds an entire native family's catalog ownership
 when none of its physical fields has a supported owner. It requires the complete
@@ -863,8 +863,8 @@ digest must reproduce. A code-list claim id names its list's dataset rather than
 revision, so an `expected_diagnostic_sha256` over a coding diagnostic, whose detail
 lists claim ids, also survives an unrelated delivery. A coding `source_authority` pins
 content the same way: its original members' captured facts (`records_sha256`) and the
-coding fingerprints, with no delivery revision or row locator, so a re-snapshot leaves it
-fresh (#1436). A stale authority prints the build's current `source_authority` as its
+coding fingerprints, with no delivery revision or row locator, so a re-snapshot leaves
+it fresh (#1436). A stale authority prints the build's current `source_authority` as its
 re-pin source.
 
 Projection digests. Two pins hash a curator-readable projection rather than delivered
