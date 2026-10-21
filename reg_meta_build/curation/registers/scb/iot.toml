@@ -5506,37 +5506,40 @@ valid_to = "1995-12-31"
 reason = "User-approved bounded source limitation,2026-10-01: No exact historical parish codebook is established for this1993–1995 window. Retain geography source facts without projecting a later geographic regime."
 evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
 
-# #1302: _INKLGP disposable-income columns held by SWECOV (IoT2015..IoT2019); undocumented, so name = column.
+# #1302: _INKLGP disposable-income columns held by SWECOV (IoT2015..IoT2019). SCB's
+# Registerinformation has no row for them; SCB's LISA variable list documents the LISA
+# equivalents (DispInk04_INKLGP, DispInkHB04_INKLGP, DispInkKEHB04_INKLGP): GP = income
+# earned in another Nordic country, which the base variables include only from 2020.
 
 [[errata.column]]
 variant = "individer-och-dodsbon"
 column = "CDISP04_INKLGP"
-name = "CDISP04_INKLGP"
-definition = "CDISP04_INKLGP"
+name = "Delkomponent till disponibel inkomst, 2004 års definition, inklusive lön intjänad i annat nordiskt land"
+definition = "Disponibel inkomst (individens delkomponent), 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISP04; för 2015–2019 är detta en annan definition än CDISP04. Motsvarar DispInk04_INKLGP i LISA (SCB:s LISA-variabellista)."
 data_type = "integer"
 holdings_period = "2015-2019"
 source = "steward-holdings"
-evidence = "SWECOV holds CDISP04_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "SWECOV holds CDISP04_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInk04_INKLGP as 'Disponibel inkomst (individens delkomponent) - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISP04_INKLGP beside CDISP04 in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
 noted = "2026-10-12"
 
 [[errata.column]]
 variant = "individer-och-dodsbon"
 column = "CDISP04H_INKLGP"
-name = "CDISP04H_INKLGP"
-definition = "CDISP04H_INKLGP"
+name = "Disponibel inkomst för hushållet, 2004 års definition, inklusive lön intjänad i annat nordiskt land"
+definition = "Disponibel inkomst för hushållet, 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISP04H; för 2015–2019 är detta en annan definition än CDISP04H. Motsvarar DispInkHB04_INKLGP i LISA (SCB:s LISA-variabellista)."
 data_type = "integer"
 holdings_period = "2015-2019"
 source = "steward-holdings"
-evidence = "SWECOV holds CDISP04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "SWECOV holds CDISP04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInkHB04_INKLGP as 'Disponibel inkomst för hushållet - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISP04H_INKLGP beside CDISP04H in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
 noted = "2026-10-12"
 
 [[errata.column]]
 variant = "individer-och-dodsbon"
 column = "CDISPKE04H_INKLGP"
-name = "CDISPKE04H_INKLGP"
-definition = "CDISPKE04H_INKLGP"
+name = "Disponibel inkomst per konsumtionsenhet för hushållet, 2004 års definition, inklusive lön intjänad i annat nordiskt land"
+definition = "Disponibel inkomst per konsumtionsenhet för hushållet, 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISPKE04H; för 2015–2019 är detta en annan definition än CDISPKE04H. Motsvarar DispInkKEHB04_INKLGP i LISA (SCB:s LISA-variabellista)."
 data_type = "integer"
 holdings_period = "2015-2019"
 source = "steward-holdings"
-evidence = "SWECOV holds CDISPKE04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "SWECOV holds CDISPKE04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInkKEHB04_INKLGP as 'Disponibel inkomst per konsumtionsenhet för hushållet - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISPKE04H_INKLGP beside CDISPKE04H in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
 noted = "2026-10-12"
