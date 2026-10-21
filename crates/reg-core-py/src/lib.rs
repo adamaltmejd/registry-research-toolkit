@@ -148,6 +148,10 @@ mod reg_core_py {
     }
 
     /// The days two inclusive ISO intervals share, else `None` (`reg_core::intersect`).
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "PyO3 extracts a Python sequence into an owned Vec, not a slice"
+    )]
     #[pyfunction]
     fn intersect(a: Interval, b: Interval) -> Option<Interval> {
         reg_core::intersect(&a, &b)
@@ -161,6 +165,10 @@ mod reg_core_py {
 
     /// The parts of `whole` (ascending, disjoint) that `covered` leaves
     /// (`reg_core::gaps`).
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "PyO3 extracts a Python sequence into an owned Vec, not a slice"
+    )]
     #[pyfunction]
     fn gaps(
         py: Python<'_>,
@@ -171,12 +179,20 @@ mod reg_core_py {
     }
 
     /// The intervals two ascending, disjoint lists share (`reg_core::overlap`).
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "PyO3 extracts a Python sequence into an owned Vec, not a slice"
+    )]
     #[pyfunction]
     fn overlap(py: Python<'_>, a: Vec<Interval>, b: Vec<Interval>) -> PyResult<Bound<'_, PyTuple>> {
         interval_tuple(py, reg_core::overlap(&a, &b))
     }
 
     /// The period spelling of ascending, disjoint intervals (`reg_core::render`).
+    #[expect(
+        clippy::needless_pass_by_value,
+        reason = "PyO3 extracts a Python sequence into an owned Vec, not a slice"
+    )]
     #[pyfunction]
     fn render(intervals: Vec<Interval>) -> String {
         reg_core::render(&intervals)

@@ -1941,8 +1941,8 @@ def _inventory_period_records(
     variant stay ambiguous. `licensed` days (a mapping warning's, #1684) need
     no owner coverage.
     """
+    from reg_core_py import merge
     from reg_meta_build._resolved_common import remaining_windows
-    from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
 
     independent = edition == YEAR_INDEPENDENT_EDITION
@@ -1982,7 +1982,7 @@ def _inventory_period_records(
             if independent:
                 active.extend(column_records)
                 continue
-            windows = _merge(
+            windows = merge(
                 [
                     (r["valid_from"], r["valid_to"])
                     for r in column_records
@@ -2137,8 +2137,8 @@ def _inventory_mapping_records(
     (`inventory_coverage.warning_gap_problem`, the rule extend-db refuses by);
     the owner must then cover the rest. A mismatch is
     `inventory_coverage_warning_invalid`. An unwarned gap stays stale."""
-    from reg_meta_build.inventory import _merge
-    from reg_meta_build.inventory_coverage import uncovered_days, warning_gap_problem
+    from reg_core_py import gaps, merge
+    from reg_meta_build.inventory_coverage import warning_gap_problem
 
     owner = mapping.variable.rsplit("/", 1)[1]
     selected = [
@@ -2164,7 +2164,7 @@ def _inventory_mapping_records(
         # folded by NFC casefold and with its own alias-window admission, and is
         # the authority. Read `_load_windows` here if the two ever disagree on a
         # SWECOV decision (a case-only twin or a filtered alias window).
-        covered = _merge(
+        covered = merge(
             [
                 (r["valid_from"], r["valid_to"])
                 for r in selected
@@ -2174,12 +2174,13 @@ def _inventory_mapping_records(
                 and r["valid_to"] is not None
             ]
         )
-        if gaps := uncovered_days(served, covered):
+        # An edition's segments may abut, so the gaps are merged again.
+        if uncovered := merge(gaps(served, covered)):
             clip = None if warning.window is None else _warning_window(warning, edition)
             stated = served if clip is None else (clip,)
-            if warning_gap_problem(served, gaps, stated):
+            if warning_gap_problem(served, uncovered, stated):
                 return [], "inventory_coverage_warning_invalid"
-            licensed = gaps
+            licensed = uncovered
     admitted, issue = _inventory_period_records(
         selected, edition, assess_ranges=True, licensed=licensed
     )
@@ -2236,7 +2237,7 @@ def _union_mapping_records(
     marked `union`: each covers only its own part, so the whole-edition owner check
     does not apply to them. Ordering clips each variant to its own states.
     """
-    from reg_meta_build.inventory import _merge
+    from reg_core_py import merge
     from reg_meta_build.inventory_coverage import _covers
 
     if edition == YEAR_INDEPENDENT_EDITION:
@@ -2262,7 +2263,7 @@ def _union_mapping_records(
         ]
         windows = [
             (max(lo, b_lo), min(hi, b_hi))
-            for lo, hi in _merge([(r["valid_from"], r["valid_to"]) for r in owned])
+            for lo, hi in merge([(r["valid_from"], r["valid_to"]) for r in owned])
             for b_lo, b_hi in bounds
             if lo <= b_hi and b_lo <= hi
         ]
@@ -2273,7 +2274,7 @@ def _union_mapping_records(
     clipped.sort()
     if any(hi >= next_lo for (_, hi), (next_lo, _) in pairwise(clipped)):
         return [], "union_mapping_overlap"
-    merged = tuple(_merge(clipped))
+    merged = tuple(merge(clipped))
     if not all(_covers(interval, merged) for interval in bounds):
         return [], "union_mapping_gap"
     return pieces, None
@@ -2296,7 +2297,7 @@ def _warning_window(warning: MappingWarning, reach: object) -> tuple[str, str] |
     """A windowed mapping warning's window clipped to what the mapping serves in
     one table (`reach`: its window, its member's period or the table edition), or
     None where it misses (a year-independent reach is always missed)."""
-    from reg_meta_build.inventory import _intersect
+    from reg_core_py import intersect
 
     assert warning.window is not None
     if reach == YEAR_INDEPENDENT_EDITION:
@@ -2305,7 +2306,7 @@ def _warning_window(warning: MappingWarning, reach: object) -> tuple[str, str] |
     parts = [
         clipped
         for segment in edition_bounds_of(reach)
-        if (clipped := _intersect(segment, window))
+        if (clipped := intersect(segment, window))
     ]
     # simplify: across an interrupted edition the clip is its hull, which the
     # inventory refuses (a warning window lies in one served segment). Emit one
