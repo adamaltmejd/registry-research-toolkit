@@ -1,0 +1,14 @@
+{
+  "note": "Three partition owners of variable 5 share the source name 'Svar' in one variant (#1736). The rule appends each owner's own operational definition; owner c carries a reviewed [[errata.field]] name, which wins over the rule.",
+  "fails_if": "the sibling-name pre-pass stops appending the operational definition (a and b publish 'Svar' and are refused as duplicate_variable_name), or applies it over an explicit name correction (c becomes 'Svar — Alternativ C')",
+  "sources": {
+    "description": "Variable 5, named 'Svar', delivers A (CVID 21), B (CVID 22) and C (CVID 23) in edition 2020, with operational definitions 'Alternativ A', 'Alternativ B' and 'Alternativ C'.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "A", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Alternativ A"},
+        {"colname": "B", "cvid": 22, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Alternativ B"},
+        {"colname": "C", "cvid": 23, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Alternativ C"}
+      ]
+    }
+  }
+}

@@ -1813,6 +1813,23 @@ is a located `variable_name_over_search_cap` error, never a catalog `data_warnin
 family of subquestions under one label to `<label> — <short subquestion>`, and leaves
 the full question in the definition fields; the cap does not move.
 
+A variable name is unique within a variant (#1736). When several owners of one native
+variable (partition, column-owner or split owners) carry the same source name in one
+variant, a formation pre-pass appends each occurrence's own operational definition:
+`<name> — <operational definition>`. The pre-pass reads source names, before any derived
+step, so an explicit `[[errata.field]]` name correction on an occurrence wins and that
+occurrence keeps the corrected name. A rule-generated name over the search cap is the
+`variable_name_over_search_cap` error above. Whatever still collides after formation is
+a located `duplicate_variable_name` error on every variable involved. This covers
+siblings that share one operational definition or have none, distinct native variables
+and colliding corrections. Each of those variables is withheld and none is chosen, so a
+diagnostic build stays writable. Curation names them with `[[errata.field]]`, except
+split owners of one source record that also share its texts (an SOS split by data type
+or description): a correction on an alternative of a shared record may only choose a
+literal another alternative delivers, so these have no naming path yet (open on #1736).
+`validate_built_db` refuses an artifact in which two variables with states in one
+variant share a name.
+
 ## Strict and diagnostic builds
 
 Strict publication is the default. Every unhandled source discrepancy requiring a

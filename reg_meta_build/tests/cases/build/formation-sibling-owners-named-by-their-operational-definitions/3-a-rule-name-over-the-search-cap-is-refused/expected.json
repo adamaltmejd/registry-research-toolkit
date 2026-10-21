@@ -1,0 +1,15 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject", "fields"],
+      "rows": [
+        ["variable_name_over_search_cap", "scb/sample/a", ["name"]]
+      ],
+      "note": "Only a's 201-character rule name is refused; b's rule name is under the cap."
+    }
+  ]
+}

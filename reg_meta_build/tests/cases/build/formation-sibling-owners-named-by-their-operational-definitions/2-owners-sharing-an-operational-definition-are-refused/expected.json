@@ -1,0 +1,16 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "duplicate_variable_name"},
+      "fields": ["severity", "subject", "fields"],
+      "rows": [
+        ["error", "scb/sample/a", ["name"]],
+        ["error", "scb/sample/b", ["name"]]
+      ],
+      "note": "Each owner of the tie is refused, located on its own variable."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "name", "operational_definition"],
+      "rows": [
+        ["a", "Svar — Alternativ A", "Alternativ A"],
+        ["b", "Svar — Alternativ B", "Alternativ B"],
+        ["c", "Svar, annat", "Alternativ C"]
+      ],
+      "note": "a and b take the source name with their own operational definition appended; c keeps its reviewed correction."
+    }
+  ]
+}

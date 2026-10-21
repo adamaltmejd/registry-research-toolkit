@@ -8,7 +8,7 @@ Actual edition co-delivery controls the existing code/label and shape guards.
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from itertools import combinations, product
 from typing import TYPE_CHECKING, Literal
 
@@ -20,6 +20,7 @@ from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_curation import ResolutionDiagnostic
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_records import SourceField
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -73,6 +74,67 @@ def _latest_shapes(
         ranked.append((latest, (shape[0], shape[1])))
     maximum = max(rank for rank, _ in ranked)
     return {shape for rank, shape in ranked if rank == maximum}
+
+
+def _text(field: SourceField | None) -> str | None:
+    if field is None or field.status != "value" or not isinstance(field.value, str):
+        return None
+    return field.value.strip() or None
+
+
+def name_sibling_owners(
+    occurrences: tuple[EffectiveOccurrence, ...],
+) -> tuple[EffectiveOccurrence, ...]:
+    """Name sibling owners that share a source name by their operational definition.
+
+    A variable name is unique within a variant (#1736). When two or more owners of
+    one native variable carry the same source name in one variant, each of those
+    occurrences gets its own operational definition appended,
+    `<name> — <operational definition>`. The collision is read on the source name, so
+    an explicit `[[errata.field]]` name correction (an effective name that differs
+    from the source one) wins and is left unchanged. An occurrence without an
+    operational definition keeps its name; owners the rule cannot separate are
+    refused later as `duplicate_variable_name`.
+    """
+    source_names: dict[int, str] = {}
+    owners: dict[tuple[NativeKey, NativeKey, str], set[NativeKey]] = defaultdict(set)
+    for index, occurrence in enumerate(occurrences):
+        if (
+            occurrence.use != "catalog"
+            or occurrence.variable_key is None
+            or occurrence.variant_key is None
+        ):
+            continue
+        names = {_text(record.fields.name) for record in occurrence.source_records}
+        if len(names) != 1 or (name := names.pop()) is None:
+            continue
+        source_names[index] = name
+        for family in {native_variable_key(r) for r in occurrence.source_records}:
+            if family is not None:
+                owners[family, occurrence.variant_key, name].add(
+                    occurrence.variable_key
+                )
+    named = list(occurrences)
+    for index, name in source_names.items():
+        occurrence = occurrences[index]
+        assert occurrence.variant_key is not None
+        shared = any(
+            len(owners[family, occurrence.variant_key, name]) > 1
+            for family in {native_variable_key(r) for r in occurrence.source_records}
+            if family is not None
+        )
+        operational = _text(occurrence.fields.operational_definition)
+        if not shared or operational is None or _text(occurrence.fields.name) != name:
+            continue
+        named[index] = replace(
+            occurrence,
+            fields=occurrence.fields.model_copy(
+                update={
+                    "name": SourceField(status="value", value=f"{name} — {operational}")
+                }
+            ),
+        )
+    return tuple(named)
 
 
 def resolve_sibling_pairs(

@@ -1,0 +1,15 @@
+{
+  "note": "A strict build over register 1 (#1736). Owners a and b of variable 5 share the source name 'Svar' and the operational definition 'Samma alternativ', so the rule gives both 'Svar — Samma alternativ'. That tie is a located error on each owner, and neither name is published.",
+  "fails_if": "the build stops refusing two variables with one name in one variant (no duplicate_variable_name, or only for one of the two owners, so the strict build completes)",
+  "registers": ["1"],
+  "diagnostic": false,
+  "sources": {
+    "description": "Variable 5, named 'Svar', delivers A (CVID 21) and B (CVID 22) in edition 2020, both with the operational definition 'Samma alternativ'.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "A", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Samma alternativ"},
+        {"colname": "B", "cvid": 22, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Samma alternativ"}
+      ]
+    }
+  }
+}

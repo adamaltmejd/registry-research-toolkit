@@ -9,7 +9,7 @@ the complete selected corpus before invoking this resolver.
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import curation_error
@@ -50,7 +50,11 @@ from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_naming import check_naming_target, native_provider_keys
 from reg_meta_build.source_representations import resolve_representation_cases
-from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
+from reg_meta_build.source_siblings import (
+    SiblingResolution,
+    name_sibling_owners,
+    resolve_sibling_pairs,
+)
 from reg_meta_build.source_value_bindings import (
     bind_occurrence_code_lists,
 )
@@ -362,6 +366,9 @@ def resolve_source_scope(
         c for c in cases if c.decision.kind == "correct_occurrences"
     )
     corrected = apply_occurrence_cases(evidence, occurrence_cases)
+    corrected = replace(
+        corrected, occurrences=name_sibling_owners(corrected.occurrences)
+    )
     enumerated_columns = {
         entry.column
         for register in coding_registers
@@ -690,6 +697,7 @@ def resolve_source_scope(
             )
         late[key].append(case)
     variables = {}
+    formed_at: dict[NativeKey, tuple[str, tuple[SourceRecordRef, ...]]] = {}
     coverage: list[CoverageObligation] = []
     strict_refusals = 0
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
@@ -909,6 +917,7 @@ def resolve_source_scope(
                 )
             withheld["variable", fqid].extend(causes)
         else:
+            formed_at[key] = fqid, refs
             for variant, causes in formed.withheld_variant_states.items():
                 withheld["variant_states", fqid, variant].extend(causes)
             for (variant, column), causes in formed.withheld_representations.items():
@@ -919,6 +928,46 @@ def resolve_source_scope(
                 withheld[
                     "succession_representation", fqid, column.lower(), variant
                 ].extend(causes)
+    # A variable name is unique within a variant (#1736). The pre-pass already
+    # named sibling owners by their operational definitions; every variable whose
+    # name still collides is withheld, none of them chosen, so a diagnostic build
+    # stays valid for `validate_built_db`.
+    holders: dict[tuple[str, str, str, str], set[NativeKey]] = defaultdict(set)
+    for key, variable in variables.items():
+        if variable is None or variable.name is None:
+            continue
+        register = variable.register_ref
+        for state in variable.states:
+            holders[
+                register.provider, register.slug, state.variant.slug, variable.name
+            ].add(key)
+    clashes: dict[NativeKey, list[str]] = defaultdict(list)
+    clashing_names: dict[NativeKey, str] = {}
+    for (_, _, variant, name), keys in sorted(holders.items()):
+        if len(keys) > 1:
+            for key in keys:
+                others = sorted(formed_at[other][0] for other in keys - {key})
+                clashes[key].append(f"{variant} (with {', '.join(others)})")
+                clashing_names[key] = name
+    for key, where in sorted(clashes.items(), key=lambda item: repr(item[0])):
+        fqid, refs = formed_at[key]
+        clash = ResolutionDiagnostic(
+            code="duplicate_variable_name",
+            severity="error",
+            subject=fqid,
+            detail=f"The name {clashing_names[key]!r} is not unique in variant "
+            + "; ".join(where)
+            + ". Owners of one native variable that share a source name are "
+            "named by their own operational definitions; owners that share one or "
+            "have none, and distinct variables, need an [[errata.field]] name "
+            "correction.",
+            refs=refs,
+            fields=("name",),
+            withheld_output=(fqid,),
+        )
+        emit(clash)
+        variables[key] = None
+        withheld["variable", fqid].append(clash)
     annotated = apply_alias_cases(
         evidence, tuple(aliases), variables=variables, variants=variants
     )
