@@ -51,7 +51,13 @@ import {
 // carries — which is what a source-wide period rewrite has to be looked at against.
 // The header still rolls up all errors under `/sources/{i}` as a badge (fixes are
 // reached via the ValidationPanel's catalog link). See reg_webapp/DESIGN.md.
-const { sourceIndex, source, issues, providerQualified, studyWindow } = $props<{
+const {
+  sourceIndex,
+  source,
+  issues,
+  providerQualified,
+  studyWindow,
+}: {
   sourceIndex: number;
   source: SafeSource;
   issues: ValidationIssue[];
@@ -65,7 +71,7 @@ const { sourceIndex, source, issues, providerQualified, studyWindow } = $props<{
    * never an inheritance (crates/reg-core/DESIGN.md): each source keeps its own
    * concrete period, so divergence is shown rather than hidden. */
   studyWindow: ProjectStudyWindow | null;
-}>();
+} = $props();
 
 /** Instance-scoped ids, so every card's period fields keep real `<label for>`
  * pairs on a page that renders one card per source. */
