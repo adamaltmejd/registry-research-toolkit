@@ -1,0 +1,13 @@
+{
+  "exit_code": 10,
+  "files": {
+    "focused.json": {
+      "includes": {
+        "error": {
+          "code": "scb_native_id_invalid"
+        }
+      },
+      "contains": ["Registerinformation.csv at row 2, field RegVerID: 'v1'"]
+    }
+  }
+}
