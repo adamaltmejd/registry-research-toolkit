@@ -1,22 +1,11 @@
 // Unit tests for the SHARED binding-resolution path (catalog.resolveBindingAt) —
 // the single source of truth for the subject-page staged picker's resolve-once-at-
-// pick-time adds (the #991 write-once model). Mocks `./api`'s getStates so the
-// resolve branches (period-unset / no-states / derived / ambiguous) are covered
-// without a backend. Kept out of the PURE catalog.*.test.ts files so they need no
-// module mock.
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getStates } from "./api";
+// pick-time adds (the #991 write-once model). Stubs the `states` read at the HTTP
+// boundary, so the resolve is covered without a backend.
+import { describe, expect, it } from "vitest";
+import { stubApi } from "./api-test-helpers";
 import { bindingFieldsFromResolution, resolveBindingAt } from "./catalog";
 import { state } from "./catalog-test-helpers";
-
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getStates: vi.fn() };
-});
-
-beforeEach(() => {
-  vi.mocked(getStates).mockReset();
-});
 
 describe("resolveBindingAt", () => {
   it(">1 co-existing delivery column → ambiguous (deferred to the picker chooser)", async () => {
@@ -33,9 +22,16 @@ describe("resolveBindingAt", () => {
         valid_to: "2020-12-31",
       }),
     ];
-    // Fails if resolveBindingAt stops reading the `period` states facet or
-    // resolves co-existing columns to one type.
-    vi.mocked(getStates).mockResolvedValue(states);
+    // Fails if resolveBindingAt stops reading the states at the pick's period and
+    // variant (any other request is a 404) or resolves co-existing columns to one
+    // type.
+    stubApi((url) =>
+      url.pathname === "/api/states/scb/lisa/yrke" &&
+      url.searchParams.get("period") === "2015" &&
+      url.searchParams.get("variant") === "v1"
+        ? { items: states, next_cursor: null }
+        : undefined,
+    );
     const r = await resolveBindingAt("scb/lisa/yrke", "2015", "v1");
     expect(r.kind).toBe("ambiguous");
     if (r.kind === "ambiguous") {

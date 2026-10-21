@@ -1,10 +1,50 @@
 // Typed builders for the API wire shapes the unit and browser suites hand-write: one
 // spelling of each, typed by the codegen'd `./api` types with no cast, so a wire
 // change fails HERE rather than passing through every suite. Each suite keeps its
-// own defaults as a thin wrapper (`state`, `vstate`, `columnState`). Pure: import
-// from any test.
+// own defaults as a thin wrapper (`state`, `vstate`, `columnState`). The builders
+// are pure; `stubApi` stubs the HTTP boundary those shapes cross. Import from any
+// test.
+import { onTestFinished, vi } from "vitest";
 import type { RegisterShow, RootShow, VariableStateModel } from "./api";
 import { variant } from "./variants-test-helpers";
+
+/** Stub `fetch` at the HTTP boundary, the one process boundary the SPA's reads
+ * cross, instead of mocking `./api`: the request URL, query and envelope are then
+ * the real ones. `route` gets each request as a URL (pathname under `/api`, its
+ * search params) and returns what the Rust server would answer — the `data` of its
+ * `{data, meta}` envelope, or a whole `Response` (an error status). Returning
+ * `undefined` answers 404 `not_found`, so a request a case did not expect fails
+ * where it is made; throwing fails the request as a network error would. Returns
+ * the spy, whose calls are the requests sent. Unstubbed when the test ends. */
+export function stubApi(
+  route: (url: URL) => unknown,
+): ReturnType<typeof vi.fn<typeof fetch>> {
+  const spy = vi.fn<typeof fetch>(async (input) => {
+    const url = new URL(String(input), "http://localhost");
+    const answer = await route(url);
+    if (answer instanceof Response) {
+      return answer;
+    }
+    if (answer === undefined) {
+      return apiError(404, "not_found", `no route for ${url.pathname}`);
+    }
+    return Response.json({ data: answer, meta: {} });
+  });
+  vi.stubGlobal("fetch", spy);
+  onTestFinished(() => {
+    vi.unstubAllGlobals();
+  });
+  return spy;
+}
+
+/** An error response in the Rust server's envelope. */
+export function apiError(
+  status: number,
+  code: string,
+  message: string,
+): Response {
+  return Response.json({ error: { code, message }, meta: {} }, { status });
+}
 
 /** A `VariableStateModel` with neutral defaults; `over` sets what a case reads. */
 export function variableState(
