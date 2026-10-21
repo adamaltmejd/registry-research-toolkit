@@ -210,7 +210,20 @@ def apply_occurrence_cases(
         decision = case.decision
         assert isinstance(decision, OccurrenceCorrectionDecision)
         for index, effect in enumerate(decision.effects):
-            correction = AppliedCorrection(case.case_id, index, decision.provenance)
+            correction = AppliedCorrection(
+                case.case_id,
+                index,
+                decision.published
+                if isinstance(
+                    effect,
+                    (
+                        CheckedFieldChange,
+                        CheckedPeriodChange,
+                        CuratedOccurrenceAddition,
+                    ),
+                )
+                else None,
+            )
             if isinstance(effect, CheckedFieldChange):
                 fields[effect.ref].append((effect, correction))
             elif isinstance(effect, CheckedPeriodChange):

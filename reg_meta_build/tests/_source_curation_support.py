@@ -153,4 +153,5 @@ def curation_decision() -> CodingDecision:
         selection="omit_state",
         reason="Retained source evidence does not justify a semantic winner.",
         provenance="illustrative fixture",
+        published="curated:coding.choice",
     )

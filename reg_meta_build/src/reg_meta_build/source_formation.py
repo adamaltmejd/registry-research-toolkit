@@ -1150,7 +1150,7 @@ def form_native_variable(
                             line
                             for occurrence in segment.effective_occurrences
                             for correction in occurrence.corrections
-                            for line in correction.provenance.splitlines()
+                            for line in (correction.attribution or "").splitlines()
                             if line.startswith(STORAGE_DETAIL_PREFIXES)
                         }
                     )

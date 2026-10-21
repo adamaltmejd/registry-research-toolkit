@@ -126,7 +126,7 @@ def test_formation_coverage_claims_carry_the_delivered_type_and_attributions():
     Fails if formation stops minting the delivered type claim or the correction
     attributions, so the gate (whose refusals `test_delivery_coverage_obligations.py`
     pins against hand-built claims) silently accepts a retyped state or one that lost
-    its correction's provenance."""
+    its correction's attribution."""
     edition = TemporalScope(
         kind="intervals", intervals=(ScopeInterval(start="2020", end="2020"),)
     )
@@ -134,15 +134,15 @@ def test_formation_coverage_claims_carry_the_delivered_type_and_attributions():
         source_occurrence(_record(edition, TemporalScope(kind="not_applicable"))),
         corrections=(
             AppliedCorrection(
-                case_id="fix-one", effect_index=0, provenance="Rows: fixture:fix-one"
+                case_id="fix-one", effect_index=0, attribution="errata:field"
             ),
         ),
     )
     formed = _form(corrected, ())
     assert formed.variable is not None
-    assert formed.variable.states[0].provenance == "Rows: fixture:fix-one"
+    assert formed.variable.states[0].provenance == "errata:field"
     (obligation,) = formed.coverage
     assert (obligation.variant, obligation.column) == ("people", "VALUE")
     assert (obligation.valid_from, obligation.valid_to) == ("2020-01-01", "2020-12-31")
     assert obligation.data_type_claim == ("value", "integer")
-    assert obligation.attributions == ("Rows: fixture:fix-one",)
+    assert obligation.attributions == ("errata:field",)

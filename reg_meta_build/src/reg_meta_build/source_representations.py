@@ -34,7 +34,6 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
-from reg_meta_build.source_occurrences import published_provenance
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
@@ -541,15 +540,8 @@ def form_representations(
                     ("state.value_set", "state.classification"),
                     "Parallel representations do not establish one common coding.",
                 )
-            attribution = tuple(
-                sorted(
-                    {
-                        published
-                        for c, d in selected_pairs
-                        if (published := published_provenance(d.provenance, c.case_id))
-                    }
-                )
-            )
+            # The decision's constant head, never its case (#1708).
+            attribution = ("curated:representations",) if selected_pairs else ()
             provenance = "\n\n".join(
                 sorted(
                     {s.provenance for s in represented if s.provenance}

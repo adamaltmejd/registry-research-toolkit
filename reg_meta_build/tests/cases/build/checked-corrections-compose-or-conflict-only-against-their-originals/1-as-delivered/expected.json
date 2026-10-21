@@ -52,7 +52,7 @@
       ]
     },
     {
-      "note": "compose's record uses all three corrections, the two equal column assignments included (the old test: len(occurrence.corrections) == 3). Field corrections cite no source locator, so the state publishes no provenance and the ledger is where they show (#1708).",
+      "note": "compose's record uses all three corrections, the two equal column assignments included (the old test: len(occurrence.corrections) == 3). The state publishes one constant `errata:field` head for all three (#1708), so the ledger is where the count shows.",
       "table": "case_uses",
       "where": {"case_id": {"contains": "compose.toml"}},
       "fields": ["case_id", "key", "variable"],
