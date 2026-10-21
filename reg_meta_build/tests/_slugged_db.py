@@ -101,9 +101,9 @@ def build_slugged_db(
         kol = delivery_column_name or default_kol
         stored_slug = variable_slug or derive_variable_slug(kol)
         cur = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (?, CAST(? AS TEXT), ?, ?)",
-            (register[2], var_id, v_name, stored_slug),
+            "INSERT INTO variable (register_id, provider_key, name, source_name, slug) "
+            "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
+            (register[2], var_id, v_name, v_name, stored_slug),
         )
         variable_id = cur.lastrowid
         # A2.7: this fixture mirrors a SHIPPED DB (no `variable_instance`; the
@@ -203,10 +203,18 @@ def add_variable(
     # text; pass it to prove the read-stack surfaces it.
     conn.execute(
         "INSERT INTO variable "
-        "(register_id, provider_key, name, source_register_id, slug, "
+        "(register_id, provider_key, name, source_name, source_register_id, slug, "
         "operational_definition) "
-        "VALUES (?, CAST(? AS TEXT), ?, ?, ?, ?)",
-        (register_id, var_id, name, source_register_id, slug, operational_definition),
+        "VALUES (?, CAST(? AS TEXT), ?, ?, ?, ?, ?)",
+        (
+            register_id,
+            var_id,
+            name,
+            name,
+            source_register_id,
+            slug,
+            operational_definition,
+        ),
     )
 
 

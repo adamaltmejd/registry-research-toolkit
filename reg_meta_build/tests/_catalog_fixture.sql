@@ -46,16 +46,16 @@ INSERT INTO object_type (
     (200, 'Företag', 'Juridisk person');
 
 INSERT INTO variable (
-    variable_id, register_id, provider_key, slug, name, definition, description, operational_definition, source_register_text, measurement_unit, source_register_id, source_label, deprecated, is_sensitive, is_identifier
+    variable_id, register_id, provider_key, slug, name, source_name, definition, description, operational_definition, source_register_text, measurement_unit, source_register_id, source_label, deprecated, is_sensitive, is_identifier
 ) VALUES
-    (1, 1, '44', 'kon', 'Kön', 'Personens kön', 'Kön enligt folkbokföring', NULL, '', '', NULL, NULL, 0, 0, 0),
-    (2, 1, '100', 'testcol', 'TestVar', 'En testvariabel', 'Beskrivning av test', NULL, '', '', NULL, NULL, 0, 1, 0),
-    (3, 1, '200', 'aaocol', 'ÅÄÖVar', 'Variabel med svenska tecken', 'Åäö i beskrivning', NULL, '', '', NULL, NULL, 0, 1, 0),
-    (4, 2, '44', 'kon', 'Kön', 'Ägarkön', 'Kön på ägare', NULL, 'TESTREG', '', 1, 'TESTREG', 0, 0, 0),
-    (5, 2, '300', 'uniqcol', 'UniqueVar', 'Unik variabel', 'Bara i reg 2', NULL, '', '', NULL, NULL, 0, 0, 1),
-    (6, 2, '301', 'parencol', 'ParenVar', 'Variabel med parentes-källa', 'Test av parentesupplösning', NULL, 'Testregistret (TESTREG) : Folkbokföringsuppgifter', '', 1, 'TESTREG', 0, 0, 0),
-    (7, 2, '302', 'extcol', 'ExternVar', 'Variabel från externt system', 'Från myndighet utanför MetaPlus', NULL, 'Försäkringskassan', '', NULL, 'Försäkringskassan', 0, 0, 0),
-    (8, 2, '303', 'lopnr', 'LopNr', 'Löpnummer', 'Objektets identifierare', NULL, '', '', NULL, NULL, 0, 0, 1);
+    (1, 1, '44', 'kon', 'Kön', 'Kön', 'Personens kön', 'Kön enligt folkbokföring', NULL, '', '', NULL, NULL, 0, 0, 0),
+    (2, 1, '100', 'testcol', 'TestVar', 'TestVar', 'En testvariabel', 'Beskrivning av test', NULL, '', '', NULL, NULL, 0, 1, 0),
+    (3, 1, '200', 'aaocol', 'ÅÄÖVar', 'ÅÄÖVar', 'Variabel med svenska tecken', 'Åäö i beskrivning', NULL, '', '', NULL, NULL, 0, 1, 0),
+    (4, 2, '44', 'kon', 'Kön', 'Kön', 'Ägarkön', 'Kön på ägare', NULL, 'TESTREG', '', 1, 'TESTREG', 0, 0, 0),
+    (5, 2, '300', 'uniqcol', 'UniqueVar', 'UniqueVar', 'Unik variabel', 'Bara i reg 2', NULL, '', '', NULL, NULL, 0, 0, 1),
+    (6, 2, '301', 'parencol', 'ParenVar', 'ParenVar', 'Variabel med parentes-källa', 'Test av parentesupplösning', NULL, 'Testregistret (TESTREG) : Folkbokföringsuppgifter', '', 1, 'TESTREG', 0, 0, 0),
+    (7, 2, '302', 'extcol', 'ExternVar', 'ExternVar', 'Variabel från externt system', 'Från myndighet utanför MetaPlus', NULL, 'Försäkringskassan', '', NULL, 'Försäkringskassan', 0, 0, 0),
+    (8, 2, '303', 'lopnr', 'LopNr', 'LopNr', 'Löpnummer', 'Objektets identifierare', NULL, '', '', NULL, NULL, 0, 0, 1);
 
 INSERT INTO value_code (
     code_id, code, label, mapping_count

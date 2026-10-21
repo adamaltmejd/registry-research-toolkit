@@ -27,8 +27,8 @@ def test_drifting_advisory_tolerates_nonnumeric_provider_key(tmp_path: Path):
     _write(d / "scb.toml", "")
     conn = build_slugged_db()
     vid = conn.execute(
-        "INSERT INTO variable (register_id, provider_key, name) "
-        "VALUES (1, 'BefolkningPerKommun', 'Befolkning')"
+        "INSERT INTO variable (register_id, provider_key, name, source_name) "
+        "VALUES (1, 'BefolkningPerKommun', 'Befolkning', 'Befolkning')"
     ).lastrowid
     for yr, col in (("2000", "BefKom"), ("2010", "BefKommun")):
         conn.execute(

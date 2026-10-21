@@ -82,7 +82,7 @@ class _VarSignals:
 
     fqid: str
     register_id: int
-    norm_name: str | None  # TRIM+casefold of variable.name; None when name NULL
+    norm_name: str | None  # TRIM+casefold of variable.source_name; None when NULL
     classification_ids: frozenset[int]
     value_set_ids: frozenset[int]
     # value_set_id → whether ANY of this variable's states for that value set
@@ -96,7 +96,7 @@ def _load_var_signals(conn: sqlite3.Connection) -> dict[str, _VarSignals]:
     slugged variable. Keyed by FQID. `norm_name` is None when the name is NULL
     (so a NULL==NULL name never counts as agreement)."""
     rows = conn.execute(
-        "SELECT v.variable_id, v.register_id, v.name, "
+        "SELECT v.variable_id, v.register_id, v.source_name, "
         "p.slug AS provider_slug, r.slug AS register_slug, v.slug AS variable_slug "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
@@ -106,7 +106,7 @@ def _load_var_signals(conn: sqlite3.Connection) -> dict[str, _VarSignals]:
 
     by_var_id: dict[int, dict] = {}
     for row in rows:
-        name = row["name"]
+        name = row["source_name"]
         norm_name = (
             name.strip().casefold() if isinstance(name, str) and name.strip() else None
         )

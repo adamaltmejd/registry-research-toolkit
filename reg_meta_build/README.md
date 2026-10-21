@@ -4,7 +4,7 @@ Maintainer-only builder for `reg_meta.db` and the separate `reg_meta_docs.db` do
 index. End users query published databases through the hosted MCP or a local `reg-meta`
 server (see the [root README](../README.md)).
 
-The current builder output uses schema `12.1.0`. Exact reviewed source crosswalks
+The current builder output uses schema `12.2.0`. Exact reviewed source crosswalks
 without established variable endpoints remain in `source_relationship` as
 `retained_unattached`, with raw declarations and register-scoped warnings. This builder
 format is separate from reader query behavior; publication requires the coordinated

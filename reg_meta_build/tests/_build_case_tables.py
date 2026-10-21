@@ -146,7 +146,8 @@ def _variables(outcome: Outcome) -> list[dict]:
     """Each built variable's distinct delivery columns; one null row when it has none."""
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column, v.provider_key, v.name, v.definition, "
+        "s.delivery_column_name AS column, v.provider_key, v.name, v.source_name, "
+        "v.definition, "
         "v.description, v.measurement_unit, v.operational_definition, "
         "v.is_identifier, v.is_sensitive, v.deprecated, "
         "sr.slug AS source_register, v.source_label, v.source_register_text "

@@ -51,8 +51,9 @@ class TestPopulateVariableSlugs(PopulateVariableSlugsHelpers):
         Repeating a column (`["Syss", "Syss"]`) yields a constant, NON-drifting
         variable (COUNT(DISTINCT)=1)."""
         vid = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (?, ?, ?)",
-            (register_id, str(var_id), name),
+            "INSERT INTO variable (register_id, provider_key, name, source_name) "
+            "VALUES (?, ?, ?, ?)",
+            (register_id, str(var_id), name, name),
         ).lastrowid
         assert vid is not None
         for i, col in enumerate(cols):
@@ -360,8 +361,9 @@ class TestAutoDerivationMarker:
         """Variable + one variable_state era per column. A single col → constant
         (no drift); repeated/distinct cols exercise the drift arm."""
         vid = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (?, ?, ?)",
-            (register_id, str(var_id), name),
+            "INSERT INTO variable (register_id, provider_key, name, source_name) "
+            "VALUES (?, ?, ?, ?)",
+            (register_id, str(var_id), name, name),
         ).lastrowid
         assert vid is not None
         for i, col in enumerate(cols):
@@ -454,8 +456,8 @@ class TestAutoDerivationMarker:
         # that text key is `cases/cli/precheck-slugs/`).
         conn = build_slugged_db(variable=None)
         vid = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, 'BefolkningPerKommun', 'Befolkning')"
+            "INSERT INTO variable (register_id, provider_key, name, source_name) "
+            "VALUES (1, 'BefolkningPerKommun', 'Befolkning', 'Befolkning')"
         ).lastrowid
         assert vid is not None
         for yr, col in (("2000", "BefKom"), ("2010", "BefKommun")):
@@ -524,8 +526,8 @@ class TestAutoDerivationMarker:
         # a non-SCB provider_key is an arbitrary name, so guard it. A4.4b review.)
         conn = build_slugged_db(variable=None)
         vid = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, 'FOO.BAR', 'Foo')"
+            "INSERT INTO variable (register_id, provider_key, name, source_name) "
+            "VALUES (1, 'FOO.BAR', 'Foo', 'Foo')"
         ).lastrowid
         assert vid is not None
         conn.execute(

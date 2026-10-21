@@ -175,9 +175,7 @@ def _resolve_vintage_fixture(conn: sqlite3.Connection) -> int:
             "SELECT predecessor_slug, successor_slug, effective_year FROM classification_replaced_by"
         )
     )
-    result = resolve_variable_successions(
-        metadata, tuple(variables), classifications, {}
-    )
+    result = resolve_variable_successions(metadata, tuple(variables), classifications)
     added = result.successions[len(metadata.successions) :]
     conn.executemany(
         "INSERT INTO variable_replaced_by VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",

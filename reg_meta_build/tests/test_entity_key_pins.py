@@ -101,8 +101,8 @@ def _db_with_split_sibling_entity_key(
     # stored slug (`lopnr`) is the panel-referenced one, deliberately != the
     # auto-derivable column slug.
     ek_vid = conn.execute(
-        "INSERT INTO variable (register_id, provider_key, name, slug) "
-        "VALUES (1, '50', 'Löpnummer', ?)",
+        "INSERT INTO variable (register_id, provider_key, name, source_name, slug) "
+        "VALUES (1, '50', 'Löpnummer', 'Löpnummer', ?)",
         (entity_key_slug,),
     ).lastrowid
     conn.execute(
@@ -113,8 +113,8 @@ def _db_with_split_sibling_entity_key(
     )
     # Split sibling sharing provider_key `50`: column `Kon` → disc `kon`.
     sib_vid = conn.execute(
-        "INSERT INTO variable (register_id, provider_key, name, slug) "
-        "VALUES (1, '50', 'Kön', ?)",
+        "INSERT INTO variable (register_id, provider_key, name, source_name, slug) "
+        "VALUES (1, '50', 'Kön', 'Kön', ?)",
         ("kon" if entity_key_slug is not None else None,),
     ).lastrowid
     conn.execute(

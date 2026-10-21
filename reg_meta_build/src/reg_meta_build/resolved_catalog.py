@@ -660,7 +660,13 @@ class ResolvedVariable(_ResolvedModel):
     register_ref: ResolvedRegister = Field(alias="register")
     slug: str
     provider_key: str
+    # `name` is the display name; `source_name` the name the variable was formed
+    # under (after any `[[errata.field]]` correction), which name-keyed grouping
+    # and matching read. They differ only where the collision ladder (#1736)
+    # named the variable apart from siblings sharing its source name; absent, it
+    # is `name`.
     name: str | None
+    source_name: str | None = None
     definition: str | None
     description: str | None
     operational_definition: str | None
@@ -676,7 +682,7 @@ class ResolvedVariable(_ResolvedModel):
 
     _text = field_validator("provider_key")(_require_trimmed)
 
-    @field_validator("name")
+    @field_validator("name", "source_name")
     @classmethod
     def _name(cls, value: str | None) -> str | None:
         return _require_trimmed(value) if value is not None else None
@@ -704,6 +710,11 @@ class ResolvedVariable(_ResolvedModel):
             raise ValueError(
                 "a variable without a common name needs positive delivery names"
             )
+        if self.name is None and self.source_name is not None:
+            raise ValueError("a variable without a name has no source name")
+        if self.source_name is None:
+            # Frozen: the default is filled in place, once, at validation.
+            object.__setattr__(self, "source_name", self.name)
         previous: dict[tuple[str, str], ResolvedState] = {}
         for state in sorted(
             self.states,

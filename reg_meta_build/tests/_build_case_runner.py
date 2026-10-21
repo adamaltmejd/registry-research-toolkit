@@ -74,7 +74,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "description operational_definition source_register_text "
         "value_set_version_label",
         "state_codes": "register variable variant column valid_from valid_to code label",
-        "variables": "register variable column provider_key name definition "
+        "variables": "register variable column provider_key name source_name definition "
         "description measurement_unit operational_definition is_identifier "
         "is_sensitive deprecated source_register source_label source_register_text",
         "variants": "register variant name panel_entity_key panel_time_key "

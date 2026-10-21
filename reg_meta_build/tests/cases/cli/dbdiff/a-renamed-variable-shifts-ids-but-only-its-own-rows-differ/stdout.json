@@ -6,8 +6,8 @@
       {
         "table": "variable",
         "identical": false,
-        "count_a": 26,
-        "count_b": 26,
+        "count_a": 27,
+        "count_b": 27,
         "sample_a_not_b": [
           {
             "net": 1,

@@ -493,7 +493,6 @@ class ScopeOutcome:
     parent_variants: dict[NativeKey, ResolvedVariant] = field(default_factory=dict)
     parent_editions: dict[NativeKey, ResolvedEdition] = field(default_factory=dict)
     variables: dict[NativeKey, ResolvedVariable | None] = field(default_factory=dict)
-    ladder_sources: dict[str, str] = field(default_factory=dict)
     withheld: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]] = field(
         default_factory=dict
     )
@@ -750,7 +749,6 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
         parent_variants=result.parents.variants,
         parent_editions=result.parents.editions,
         variables=result.variables,
-        ladder_sources=result.ladder_sources,
         withheld=result.withheld_dependencies,
         added_lines=tuple(added_lines),
         evidence=tuple(evidence),
@@ -1381,7 +1379,6 @@ def _resolve(
     seen_scopes, seen_cases, seen_coding = set(), set(), set()
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
-    ladder_sources: dict[str, str] = {}
     books = {}
     withheld_books: dict[str, tuple[ResolutionDiagnostic, ...]] = {}
     data_warnings = {}
@@ -1856,7 +1853,6 @@ def _resolve(
                     if variable_key in variables:
                         raise ValueError("repeated variable family across scopes")
                     variables[variable_key] = variable
-                ladder_sources.update(outcome.ladder_sources)
                 for dependency, causes in outcome.withheld.items():
                     if dependency in withheld:
                         raise ValueError("repeated withheld dependency across scopes")
@@ -2095,14 +2091,12 @@ def _resolve(
                     withheld=withheld,
                     unselected=unselected,
                     slice_registers=slice_registers,
-                    ladder_sources=ladder_sources,
                 )
                 months = resolve_month_groups(
                     panel.variables,
                     edge_groups=edges.groups,
                     curated_groups=selected.metadata.variable_groups,
                     evidence=refs,
-                    ladder_sources=ladder_sources,
                 )
                 for value in (*edges.diagnostics, *months.diagnostics):
                     issue(value)
@@ -2206,7 +2200,7 @@ def _resolve(
                 for value in withheld_successions:
                     issue(value)
                 final_metadata = resolve_variable_successions(
-                    lineage.metadata, lineage.variables, successions, ladder_sources
+                    lineage.metadata, lineage.variables, successions
                 )
                 # Mandatory in both modes, whatever else the ledger holds: losing
                 # supported delivery is our bug, and no curation error may stand in

@@ -23,7 +23,7 @@
         "code": "stale_curation_entry",
         "detail": {
           "contains": [
-            "expected_evidence_sha256 = \"c0e1ce92dd21e0235e3aa184b30c2bf10b9c4b4023a1ac23f8cd85a3e9ccc2c7\"",
+            "expected_evidence_sha256 = \"0bb630ea7cba075c420e6dbab43f0235bdf0a46560fc9c27b121449ff5effe83\"",
             "expected_diagnostic_sha256 = \"d8b592aebab3ebfcf51df390f877b0b7d92a7280a24fd62edec040d28c8eaf2e\""
           ]
         }

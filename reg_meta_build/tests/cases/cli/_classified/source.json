@@ -1,5 +1,5 @@
 {
-  "description": "The classified artifact of the same-as-candidates and classification-residue cases. Three registers, ULF (11), PAR (12) and HUB (13), each with one variant. Every delivered column carries a code list (Vardemangder, keyed by cvid = var_id * 100 + the year's last two digits); variables with the same code list share one value set. The codes_file CSVs are the classification books that curation/classifications/ declares. Same-as signals: DIAG, ALDER, CIV, HUBA and HUBB are bound to their variables by [[binding.variable]]; the KOMMUN-coded MUNIC and REGION share an unbound 3-code value set. Residue signals (all in ULF): the 8- and 9-code lists X, S1, S2, T, ONE and SNI and the books that contain their codes; FAM_R holds the S1, S2 and T codes under other labels; SNI2002 and SNI2007 form a vintage chain.",
+  "description": "The classified artifact of the same-as-candidates and classification-residue cases. Three registers, ULF (11), PAR (12) and HUB (13), each with one variant. Every delivered column carries a code list (Vardemangder, keyed by cvid = var_id * 100 + the year's last two digits); variables with the same code list share one value set. The codes_file CSVs are the classification books that curation/classifications/ declares. Same-as signals: DIAG, ALDER, CIV, HUBA and HUBB are bound to their variables by [[binding.variable]]; the KOMMUN-coded MUNIC and REGION share an unbound 3-code value set. Residue signals (all in ULF): the 8- and 9-code lists X, S1, S2, T, ONE and SNI and the books that contain their codes; FAM_R holds the S1, S2 and T codes under other labels; SNI2002 and SNI2007 form a vintage chain. PAR's SEKDIAG shares PDIAG's name `Diagnos` in one variant, so the build's collision ladder names both apart by column (`Diagnos (PDIAG)`, `Diagnos (SEKDIAG)`) while each keeps `Diagnos` as its source name; its own 2-code list binds to nothing.",
   "scb": {
     "registerinformation": [
       {"cvid": 110120, "var_id": 1101, "colname": "DIAG", "varname": "Diagnos", "year": "2020", "regver_id": 2020, "register": ["ULF", 11, 110]},
@@ -31,6 +31,7 @@
       {"cvid": 120520, "var_id": 1205, "colname": "REGION", "varname": "Region", "year": "2020", "regver_id": 2020, "register": ["PAR", 12, 120]},
       {"cvid": 120620, "var_id": 1206, "colname": "HA", "varname": "Hubbvariabel PAR", "year": "2020", "regver_id": 2020, "register": ["PAR", 12, 120]},
       {"cvid": 120720, "var_id": 1207, "colname": "HB", "varname": "Kön", "year": "2020", "regver_id": 2020, "register": ["PAR", 12, 120]},
+      {"cvid": 120820, "var_id": 1208, "colname": "SEKDIAG", "varname": "Diagnos", "year": "2020", "regver_id": 2020, "register": ["PAR", 12, 120]},
       {"cvid": 130620, "var_id": 1306, "colname": "HA", "varname": "Hubbvariabel HUB", "year": "2020", "regver_id": 2020, "register": ["HUB", 13, 130]},
       {"cvid": 130720, "var_id": 1307, "colname": "HB", "varname": "Kön", "year": "2020", "regver_id": 2020, "register": ["HUB", 13, 130]}
     ],
@@ -212,6 +213,8 @@
       "Hubb B|1|2402|Hubb B 2|120720|900175",
       "Hubb B|1|2403|Hubb B 3|120720|900176",
       "Hubb B|1|2404|Hubb B 4|120720|900177",
+      "Sekundär|1|2901|Sekundär 1|120820|900186",
+      "Sekundär|1|2902|Sekundär 2|120820|900187",
       "Hubb A|1|2301|Hubb A 1|130620|900178",
       "Hubb A|1|2302|Hubb A 2|130620|900179",
       "Hubb A|1|2303|Hubb A 3|130620|900180",

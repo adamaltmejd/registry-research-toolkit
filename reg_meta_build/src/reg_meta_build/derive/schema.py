@@ -147,7 +147,7 @@ def get_coded_variables(
     # the member join used to require.
     rows = conn.execute(
         "WITH coded AS ("
-        "SELECT v.name, v.register_id, vs.state_id, coding.value_set_id "
+        "SELECT v.source_name AS name, v.register_id, vs.state_id, coding.value_set_id "
         "FROM variable v "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
         "JOIN (SELECT state_id, value_set_id FROM variable_state WHERE value_set_id IS NOT NULL "
@@ -156,10 +156,11 @@ def get_coded_variables(
         "AND w.register_variant_id = vs.register_variant_id "
         "AND w.valid_from <= vs.valid_to AND w.valid_to >= vs.valid_from "
         "WHERE w.coding_metadata = 'per_column') coding ON coding.state_id = vs.state_id "
-        # The ranking key is the common name. A variable without one (its
+        # The ranking key is the common source name, before the ladder names
+        # colliding columns apart (#1764). A variable without one (its
         # deliveries name it differently) has no key to rank under; grouping its
         # NULL would merge unrelated variables into one nameless row (#1177).
-        "WHERE v.name IS NOT NULL AND "
+        "WHERE v.source_name IS NOT NULL AND "
         + scope_predicate(
             scope,
             "variable",
