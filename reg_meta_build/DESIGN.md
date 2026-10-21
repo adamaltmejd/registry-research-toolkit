@@ -424,7 +424,9 @@ curation, not deliveries. `prepare-sources --curation-dir` reads them and record
 as a `curation` inventory entry with its SHA-256, so the prepared root carries them like
 any other source. `build-db` and `check-curation` refuse a prepared root whose pinned
 authored sources differ from the curation tree (`prepared_authored_source_stale`): an
-edit to one of these files needs a fresh prepare, and a stale root cannot build.
+edit to one of these files needs a fresh prepare, and a stale root cannot build. In
+curation comments and evidence, an `inputs:` prefix names a path in that repository
+(`inputs:catalog/docs/markdown/lisa/SektorKod.md`).
 
 Raw archives can remain compressed outside Git; the original SCB exports are release
 `scb-raw-2026-03` of the inputs repository. The lossless compact SCB snapshot keeps
