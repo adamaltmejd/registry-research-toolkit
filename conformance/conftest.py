@@ -1,4 +1,4 @@
-"""Conformance admission and session-built artifacts; package marker meanings stay intact."""
+"""Conformance admission and session-built artifacts, served by the Rust server."""
 
 from __future__ import annotations
 
@@ -32,8 +32,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--server-cmd",
         default=None,
-        help="run conformance HTTP cases against a server started from this "
-        "command template ({db}, {port}); see conformance/README.md",
+        help="the Rust server's command template ({db}, {catalog}, {port}) every "
+        "HTTP and MCP case runs against (required); see conformance/README.md",
     )
     parser.addoption(
         "--mcp-cmd",
@@ -44,6 +44,12 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
+    # The suite's boundary is the Rust server; there is no in-process adapter.
+    if config.getoption("--server-cmd") is None:
+        raise pytest.UsageError(
+            "conformance runs against the Rust server: pass --server-cmd "
+            "(scripts/gate.py rust)"
+        )
     directory = config.getoption("--artifact-dir")
     holdings_input = config.getoption("--holdings-input")
     if holdings_input is not None and (
@@ -115,14 +121,12 @@ def artifact_dir(request):
 
 @pytest.fixture(scope="session")
 def http_servers(request, tmp_path_factory):
-    """Server processes for `--server-cmd`, one per artifact; None runs in-process.
+    """Server processes for `--server-cmd`, one per artifact.
 
     Every server is stopped at session end, whether or not the cases passed."""
-    template = request.config.getoption("--server-cmd")
-    if template is None:
-        yield None
-        return
-    pool = ServerPool(template, tmp_path_factory.mktemp("servers"))
+    pool = ServerPool(
+        request.config.getoption("--server-cmd"), tmp_path_factory.mktemp("servers")
+    )
     try:
         yield pool
     finally:
