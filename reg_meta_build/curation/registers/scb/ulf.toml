@@ -1574,167 +1574,30 @@ value = "Antal personer"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:736\",\"variable:10681\",\"member:72275\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:736\",\"variable:10681\",\"member:72275\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:735\",\"variable:10681\",\"member:73447\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:734\",\"variable:10681\",\"member:74902\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:733\",\"variable:10681\",\"member:76311\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:732\",\"variable:10681\",\"member:77424\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:731\",\"variable:10681\",\"member:78549\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:730\",\"variable:10681\",\"member:80041\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:729\",\"variable:10681\",\"member:81513\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:10681\",\"member:82732\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:10681\",\"member:83844\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:723\",\"variable:10681\",\"member:85408\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:722\",\"variable:10681\",\"member:87327\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:10681\",\"member:88843\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:10681\",\"member:90310\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:10681\",\"member:92601\"]}",
+]
 fields = ["coding"]
 valid_from = "1990-01-01"
-valid_to = "1990-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "7df365a0b55698ddd03134afb244a85eeeb77dc569dc0c9380e81a2747a2d39e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:735\",\"variable:10681\",\"member:73447\"]}"]
-fields = ["coding"]
-valid_from = "1991-01-01"
-valid_to = "1991-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "08a5f23069da7550c583e9d3d6cf13c62971a0cf6a4ed37aabb21adfa068b8bb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:734\",\"variable:10681\",\"member:74902\"]}"]
-fields = ["coding"]
-valid_from = "1992-01-01"
-valid_to = "1992-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "6129c65a926d7f160e4c0aa1cd0d0e26c38d11a2e1e98847ada8b170730cdf37"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:733\",\"variable:10681\",\"member:76311\"]}"]
-fields = ["coding"]
-valid_from = "1993-01-01"
-valid_to = "1993-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a80da73b176dac88ed0e8afe5df58108f57c072d269388fe30f36f9334fb4abc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:732\",\"variable:10681\",\"member:77424\"]}"]
-fields = ["coding"]
-valid_from = "1994-01-01"
-valid_to = "1994-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4bab6bd81c1a9b7f3d2868f209d47b3789659ce7779c256f68c85fc4f5b8604a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:731\",\"variable:10681\",\"member:78549\"]}"]
-fields = ["coding"]
-valid_from = "1995-01-01"
-valid_to = "1995-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b90b43862f147c0a0d4a3aad76daf8be9b716e1e42aafeddf5287ae0745ba717"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:730\",\"variable:10681\",\"member:80041\"]}"]
-fields = ["coding"]
-valid_from = "1996-01-01"
-valid_to = "1996-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "cd790d42e282157e4585741c5e8d697142c61a5093b6a571fd774f778b349bbd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:729\",\"variable:10681\",\"member:81513\"]}"]
-fields = ["coding"]
-valid_from = "1997-01-01"
-valid_to = "1997-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "0ce08a5368582cac1b48e7d1f33b6538d661cb7b19cd6bf25c44242fcfdf7ec1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:10681\",\"member:82732\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "beb1c6c621b43ae90e1f38f54aedf5ae255fbe896c23a32a1ccb252ce8e39c81"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:10681\",\"member:83844\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
-valid_to = "1999-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4c5774dd3ab7068d14c5370b15946f70d11f0d7c1041469cb9b4744d3786e5f8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:723\",\"variable:10681\",\"member:85408\"]}"]
-fields = ["coding"]
-valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bb66c813a5a1dca5c869c3ef52c61b1993a30a9de99cbb5ccd592c4c9613d955"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:722\",\"variable:10681\",\"member:87327\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "5f7bb604966381f192a3ef11f98f406ea9ce121641e21777f6b345694eefcc60"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:721\",\"variable:10681\",\"member:88843\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "108992e0abcfb68a380a65fe6e0de3c2967dc7467f276ec327aa287669012e02"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:720\",\"variable:10681\",\"member:90310\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "71f5858a8bf0d8a5eb4821512604482853374f6ad2bfa160eea1052443c56139"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/fodelseland-alfabetiskt"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:717\",\"variable:10681\",\"member:92601\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a392d9f0a9eb4fc872509a0d27cc44cd3611f509b275a0a327f60b177a8b9e9b"
+expected_evidence_sha256 = "02297d9bba923746c161bf1c332efd877da9f047f65b10fb56f75e4cdc065ba9"
+expected_diagnostic_sha256 = "77dad45cce2ad16f91a2fec4d6ff0a21801cf9dcb014f594a8410d62481bb86a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1745,7 +1608,8 @@ valid_from = "1992-01-01"
 valid_to = "1992-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ea76510041ae749c4a55db159132327b9d2633652b858ca0872740c973821f9f"
+expected_evidence_sha256 = "b3f2c01c57324e5d0d44ee5ee533daa7feec0d4d3c25d04041d98e98fdbab902"
+expected_diagnostic_sha256 = "b050b91a7cf97c13a42fab9e86fa75001480a818894886d3264d045458221bfc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1756,117 +1620,83 @@ valid_from = "1992-01-01"
 valid_to = "1992-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "dcd5d614a1e8bb50959a7b2d90bdbefd3bea3f6d38e4b19a64b31ffee4aaf8a0"
+expected_evidence_sha256 = "77af846eb390e27fe5d85744da97d0e87c9c9b957eb17510e009f092897d09cc"
+expected_diagnostic_sha256 = "600bf2b002abf14b0b9702d2fa8c967e662bc422d89c18cc9ec0a76407ee569e"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/restid-tillsyn-barn-1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12751\",\"member:734177\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12751\",\"member:734177\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12751\",\"member:766141\"]}",
+]
 fields = ["coding"]
 valid_from = "1982-01-01"
-valid_to = "1982-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "73e334c981c1fc910e32e3abd95f21dac4e52d4abe73164c7b450ec5cf700ca6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/restid-tillsyn-barn-1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12751\",\"member:766141\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
 valid_to = "1983-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "9151193d1deb8ac3b6dd2f1aae1f68cc9577bc9e9230afb7ee9f27bf2fbac61f"
+expected_evidence_sha256 = "2d1700b1f0efca4edc97a8a97c7c0cb6d18234c27d728a1bde388785460fade8"
+expected_diagnostic_sha256 = "52018544b0ed606e9ca585e22d5eb01e4d69143637fe8d6d18741e0569126b81"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/restid-tillsyn-barn-2"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12752\",\"member:734165\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12752\",\"member:734165\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12752\",\"member:766153\"]}",
+]
 fields = ["coding"]
 valid_from = "1982-01-01"
-valid_to = "1982-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "df9f43855a01445d970a98d6aafcbfa28f8b76e22d9363296174758c9927c4eb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/restid-tillsyn-barn-2"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12752\",\"member:766153\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
 valid_to = "1983-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "92a967d5c7f9fce623f3f69318ad74af548d2d5a134849e798363a33127a3453"
+expected_evidence_sha256 = "6db7348198388105d310d2ac93feb8dfb5246aaabb16793fee1e27eca3867ed2"
+expected_diagnostic_sha256 = "ba6c4495e04bb8d52c0fe0ac4b8a62575f0ef5852e67c81409410fa2decfcdd8"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/restid-tillsyn-barn-3"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12753\",\"member:734149\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12753\",\"member:734149\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12753\",\"member:766169\"]}",
+]
 fields = ["coding"]
 valid_from = "1982-01-01"
-valid_to = "1982-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "902f3346525be848b230822cdab6d0e145828c72e55ad828527b086c7a946168"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/restid-tillsyn-barn-3"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12753\",\"member:766169\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
 valid_to = "1983-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "9a7f64d457b79b8057ed5bd880284a6a0c0283d73fccc25ec97014792e95fb24"
+expected_evidence_sha256 = "e328d786e53626b3fca9549a20ff9a21cc005fead35a284119b43feeef7894b1"
+expected_diagnostic_sha256 = "6ba68250478f430d508830c14c6e10c13eb84cdab7aba7f402eb05373bb7b78f"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/restid-tillsyn-barn-4"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12754\",\"member:734254\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12754\",\"member:734254\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12754\",\"member:766065\"]}",
+]
 fields = ["coding"]
 valid_from = "1982-01-01"
-valid_to = "1982-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c4f6321f917bc4be0d87455daa7b3e80b54dccfe8770b8f60fa4e3b8c3bdd28a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/restid-tillsyn-barn-4"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12754\",\"member:766065\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
 valid_to = "1983-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "184fb75a3c09314a3081d3d855c79f09d91d7233a7dd35f4e47ef6b07dfdcead"
+expected_evidence_sha256 = "537d0ac929a58136c0f8bedbfc44a788e4712bb9dfb2ee32e4e7ee412840e516"
+expected_diagnostic_sha256 = "609942c3c4ceef3fcae686ac324c9e8480516adfa84186dfdaa4e5c11a380b34"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/restid-tillsyn-barn-5"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12755\",\"member:734242\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:12755\",\"member:734242\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12755\",\"member:766077\"]}",
+]
 fields = ["coding"]
 valid_from = "1982-01-01"
-valid_to = "1982-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4ca64db830d8d78bc8b73d8c91143865f74d0e5148faf5f39b66eef8ba882cb9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/restid-tillsyn-barn-5"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:12755\",\"member:766077\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
 valid_to = "1983-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b5d9b83f334c18e208ffa0eca672150477f6ae4b2eb9fbdcec6c43a1447992c9"
+expected_evidence_sha256 = "f2e00032ce79add52142c1eed99bbb5c014fca695ba1bc66ddc890960b6e2794"
+expected_diagnostic_sha256 = "33e0fc9fb00529426f1b7aff176abc515ef2b416dc54667e2f390f2213e56fce"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1877,7 +1707,8 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8abb494535f25c20f0cf9ab61f44bda96b8b52ec62d8b33dfbeb7515c82d1052"
+expected_evidence_sha256 = "5c17ba0dd065ad4390e266cc71a324ab047d6e75d88036c6af801537db834e0e"
+expected_diagnostic_sha256 = "14460e3eb31c2a2477b32bf522ff32afaac03bde3b2e450c350d478fda9994e5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1888,271 +1719,110 @@ valid_from = "1977-01-01"
 valid_to = "1977-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3cb893db26d31ddbbd353f09973a9945f84f7b7591934bc5d535a9edc6bf6969"
+expected_evidence_sha256 = "c1eef6cb4c6a433a8edb0b9ff5bdb4d99638b887cc34c9ce4bd80af507d4176e"
+expected_diagnostic_sha256 = "e4ce7e817861f6902bbf08c4bc4085a48c948ef0db6651fdeb714b9590a54d26"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/stold-av-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13359\",\"member:794190\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13359\",\"member:794190\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13359\",\"member:807284\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13359\",\"member:817392\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13359\",\"member:858908\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "0b1c4e5a2e1581de6264057f28147db9ab15cadbced79112ca31f8756975ccf9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-av-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13359\",\"member:807284\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "16e48bf5897bf661dd4754e1a7881dc2159dc5d23c19321c9d018996a5494605"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-av-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13359\",\"member:817392\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "164fa90824c3c55ffb11018d1caed8827da7b619b41843f0525fb74406945771"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-av-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13359\",\"member:858908\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "5a30f0fcf9b69ea59c3264ffab6116b506e0eaaddfa84fca488e211adc503be1"
+expected_evidence_sha256 = "2019965359fe5dae8727179b874a00cc35d3f99078505ed8fbb0d9617b76ae7f"
+expected_diagnostic_sha256 = "ff681abbeb32feb0ae24f9a1973af47cc788b12e0e81f20d23dbd9c8dc8d318a"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/stold-av-cykel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13360\",\"member:794201\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13360\",\"member:794201\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13360\",\"member:807273\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13360\",\"member:817403\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13360\",\"member:858905\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "9cbb455a93ef98f02b03998178c169e8b10c0bb6cd29da06b9b8f40273b70b8a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-av-cykel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13360\",\"member:807273\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "6fbf50151c847877b9ac0199673ff4c5755e7518736cbcd5d21e61bbd759f6d1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-av-cykel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13360\",\"member:817403\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ce7e01f6d1c839d83984ef189a6e87860782ebce0ef10b693c32341c2ad28b23"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-av-cykel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13360\",\"member:858905\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b28ba40347afb13e62b79066f23e98bc28d08b8c2ca98ecb96bc1e19229c585a"
+expected_evidence_sha256 = "7e51c5b81585a6052e6448007995efe71af49ce2372d319ebb30c47a3e779155"
+expected_diagnostic_sha256 = "ceb645f127f43b726b962ee3a92ac22d04f223c598a0ab9247c64b37566206cb"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/stold-fran-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13367\",\"member:794175\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13367\",\"member:794175\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13367\",\"member:807299\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13367\",\"member:817377\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13367\",\"member:858916\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "fc59b256acb565ac19540f899a3d4459e7d6ed1d833d1150fd3c65b120a2c15c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-fran-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13367\",\"member:807299\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "df928ce8f557e900008fe707744339d4bfc3651ae466232243a43e66b4182615"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-fran-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13367\",\"member:817377\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bd009e692a38962ce1ea1cb0e14f0ed54c803358e6955ccb655f905829fedd43"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-fran-bil"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13367\",\"member:858916\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e64fe9bdab2f83b5e2db10eb3158d8132837d1e033c1ffea4d6233d0ff1b1aea"
+expected_evidence_sha256 = "b39461852f769c43bd3e5b160b62e03a85ba5e52a37605f69f2c750aa4cab3c7"
+expected_diagnostic_sha256 = "4607f423dbc2508f83513c5cf96f839a17cab61b07e174584bda11b51a30c8d7"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/stold-i-bostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13368\",\"member:794191\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13368\",\"member:794191\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13368\",\"member:807283\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13368\",\"member:817393\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13368\",\"member:858907\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "af15c51bb5ce3e19750f1024c8f64affab4649886553ad6949f25bb52a2d4404"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-i-bostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13368\",\"member:807283\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a327c6d3790ca614106511982f32b5014b645408dc324342ad0673c11fd81ba9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-i-bostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13368\",\"member:817393\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a2a0a458c7b61f4f3b5e7245fa26ddc8935b6979923fccc27a7a55ce18c6d1f8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-i-bostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13368\",\"member:858907\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "77dcbc355e7d9c9000119c10707cc8680e8146fcb8d9314b9d9040d6391f703c"
+expected_evidence_sha256 = "7c961d7a7f007df7e264feabf27c76d444cd2a7956fa084b06d18e7d8d7b5548"
+expected_diagnostic_sha256 = "bc59a80b3134de005fe062a07b1d42e5d899d870b0d6310fa5ed10295abb9a7c"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/stold-i-fritidsbostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13369\",\"member:794150\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13369\",\"member:794150\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13369\",\"member:807324\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13369\",\"member:817352\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13369\",\"member:858919\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "cf4eae467df5d4d8931fdc84876d1ae71473ecdf09ccd37eb2b7f2a532748a15"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-i-fritidsbostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13369\",\"member:807324\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "fd4c0cae4198f7c4e5164a6f0bc8c13d9030aae5ae9e993719c364892e46210b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-i-fritidsbostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13369\",\"member:817352\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c5c9034f67a6103e77945951ce75b343d3a269d9e75e5f22a8f5e232b12a135a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-i-fritidsbostad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13369\",\"member:858919\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "27fbf26b111cbded56e0665fe7e4d8f0216ba35b6a615cebc835357112792699"
+expected_evidence_sha256 = "43ca124df580e08c3e36dbd88475eb75730769e7ebb44b3c2fef1b712c1874a8"
+expected_diagnostic_sha256 = "35fb1baaed469bbab345d05dac4317f76d4ca58db018e0712dde32dfd7b0fa1c"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/stold-pa-vind"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13370\",\"member:794195\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:13370\",\"member:794195\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13370\",\"member:807279\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13370\",\"member:817397\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13370\",\"member:858906\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bf9ddc5f6fe20f2a5616bd6a367e835b0a4795b293a3ba41d56392a31f90ed1f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-pa-vind"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:13370\",\"member:807279\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ffc5999994be0c53aed29d4c402bdbb2eea7f30e34976037ffe02458ba2068db"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-pa-vind"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:13370\",\"member:817397\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "198b7dabf9c609d431201d8f2307da9dae19d1851036b8ab20e3c8f01c5e57ae"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/stold-pa-vind"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:13370\",\"member:858906\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3c4061c328f1a7ae6814e05c52b26db1d39a3c95e39878b1618e16b371bf1864"
+expected_evidence_sha256 = "942005da9ea1fb1d94fe88e9df8b5af7389f3cf11a54224710cc817f2e0f910e"
+expected_diagnostic_sha256 = "98a16559bd138c1a486e260e99ee1b6ee88b5e505611b80dc07eee7da5ff6ce5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2163,7 +1833,8 @@ valid_from = "1986-01-01"
 valid_to = "1986-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "dc51caf04ec3ee015d645f76b7b21d554b0cd10ae200fd053f97efdb8bcbce20"
+expected_evidence_sha256 = "cd2e44fc44c4736c06fa22be0fe3893c0432b0111c3cf919996d0f50c0230047"
+expected_diagnostic_sha256 = "e1842d0b6ca1b731491f1f908a531ab921d22b1a3337fd3140a63fdcb438ca75"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2174,7 +1845,8 @@ valid_from = "1975-01-01"
 valid_to = "1975-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "15364c928c12ab8a1113fdaceffe0f8e62fdd11bdd2f9ac461f7d214e707d225"
+expected_evidence_sha256 = "e706465ef9043779f293cefca2add8b808be0570a2812e29bffca31c00d17d2d"
+expected_diagnostic_sha256 = "e1468b073124422d431dee0b00c7f75d78e2ffd8a836c9862c9921de3333fff8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2185,29 +1857,23 @@ valid_from = "1979-01-01"
 valid_to = "1979-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "75d250f3b3137279bc10aff30cd9e0320aa9cbbb1ac61536dd2446f42eb53730"
+expected_evidence_sha256 = "65f25809b095069b82034859089e9ad6bed12de47c03f8c0cd700d416a6e4500"
+expected_diagnostic_sha256 = "34c1a88ba879bfdd5cfc2475912e6915b63c3b63f17db9c3914af76e2636c478"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/sy1515"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19264\",\"variable:14514\",\"member:924916\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19264\",\"variable:14514\",\"member:924916\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19219\",\"variable:14514\",\"member:922356\"]}",
+]
 fields = ["coding"]
 valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "0165ac9625cee40e157feafb3ea2baefcbd4cedd701368ef451b15afd8b3eb5e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/sy1515"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:458\",\"edition:19219\",\"variable:14514\",\"member:922356\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "f9d51abaac8caf3cd814469871f1c28e5122cec3527e357a65f83f77d874c19a"
+expected_evidence_sha256 = "bd1a322cf5e8ad0891ef153b549ce58833e330f89e3fe10d5871c5a664973be6"
+expected_diagnostic_sha256 = "167a1095e059ac4580d35527ea40a049c2fe47d27c8159c7563befa4a47553cf"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2218,7 +1884,8 @@ valid_from = "2001-01-01"
 valid_to = "2001-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "441deed437ff9e2bfd9dbd7808e33c671ed116f3e3bf0a4c7bfba129d37ee999"
+expected_evidence_sha256 = "fc4a5015394e92dbfc4ec07c92846d26fb96104d8e746da0d27943694cb49644"
+expected_diagnostic_sha256 = "a18f6cf511bc3bafce331cdaf1aee48980bc7c711fe8c3e2ac83e82d1b46b28a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2229,7 +1896,8 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e84054d5df1254d18108d3a687273323490a54206c27166c0f85356ad08fadcb"
+expected_evidence_sha256 = "1158b27e2e99d87cc20f96e7c058e6f06565cf4d9541daef330b2939574b16e8"
+expected_diagnostic_sha256 = "e97e55b7e65738ea60a3ecd4ee5cf326597267bd00492bdd35d9d6be359a9b36"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2240,7 +1908,8 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e951af318a574d3996cd9e781a3d119fb497da8c6e8e00eeae706ff3599ef52b"
+expected_evidence_sha256 = "b2aa026f7c424708acfb62f88c414dacb45aae2dd6b05c055b7ee12dc33cfd71"
+expected_diagnostic_sha256 = "fdebdbe9279386397967e9a91ce74ac653df40bfff81d10821ed8786b9ec318c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2251,139 +1920,46 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "85e208205b6b9445c50ef0e2edc1e1a316f4bd210faa4bb2c29198644626b2b5"
+expected_evidence_sha256 = "d024ea29531df606b51c0feca4d80d44c91f1851dccf2ebfe40a2f58b614b9e2"
+expected_diagnostic_sha256 = "f539699b6ed31f2c033a904b9f31809713d16018daf6476a10f8ed25e9b98913"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/annan-stold"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:8988\",\"member:785932\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:8988\",\"member:785932\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:8988\",\"member:807737\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:8988\",\"member:817093\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:8988\",\"member:858979\"]}",
+]
 fields = ["coding"]
 valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "329bc64289376e13a27fdaf89191175ddb002fd69ed5a85773c085237615cca3"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/annan-stold"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:8988\",\"member:807737\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "01d45f73bf664549d71c785809ee4ae980e23fa885bb7c0ec65ee3b2c9c6bd30"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/annan-stold"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:8988\",\"member:817093\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "160837a45db6dbb2f0129ecf51e98608be8f0a66c8320903821072b6af238c1c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/annan-stold"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:8988\",\"member:858979\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ce81a18ed5a98a94bd00d6a6f938cad5102483fd04b9d0310115a326b80861e8"
+expected_evidence_sha256 = "9dc1effedd0afe0c3a77596234c581cbf5743edb6195d60c562815c645106dcb"
+expected_diagnostic_sha256 = "85eeb9d8f9ed17fcd81c057d5892137e534a06119fbb268a2342cc5435a9787e"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:746\",\"variable:9412\",\"member:60156\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:746\",\"variable:9412\",\"member:60156\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15419\",\"variable:9412\",\"member:727360\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:9412\",\"member:732991\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:9412\",\"member:766698\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:9412\",\"member:785226\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:9412\",\"member:808150\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:9412\",\"member:816690\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:9412\",\"member:859350\"]}",
+]
 fields = ["coding"]
 valid_from = "1980-01-01"
-valid_to = "1980-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "51879f845d31c111da9346c768f06f5b7289df64db88b060e00bda11398d2892"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15419\",\"variable:9412\",\"member:727360\"]}"]
-fields = ["coding"]
-valid_from = "1981-01-01"
-valid_to = "1981-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "63acf6e69e05b43f0787cd56bb1389e60a0f003ad783e36308ac19af6a27be1f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:15494\",\"variable:9412\",\"member:732991\"]}"]
-fields = ["coding"]
-valid_from = "1982-01-01"
-valid_to = "1982-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "77b36e96fc532be2001f0078737243ab08aaf6e1cd393748585913c6b76c9f95"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16007\",\"variable:9412\",\"member:766698\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
-valid_to = "1983-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e7dfcb2ff4d6aa4a6cc3bfe851f8480cbd8659286f2cb218d1e4b71063fc38b3"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16298\",\"variable:9412\",\"member:785226\"]}"]
-fields = ["coding"]
-valid_from = "1984-01-01"
-valid_to = "1984-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "62af2d5adf3bb7d67a26caea3108d6a920867c8e113e9541062543833f75f08d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:16497\",\"variable:9412\",\"member:808150\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "5ef917311166a4efc694483b72b41d401bba8a0876702493a0f26f31b45df9e1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:17596\",\"variable:9412\",\"member:816690\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-12-31"
-reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
-evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "33b8a308e8096b56fb1a9907891a52a371347c8070efc5df4ae47ceac3908d33"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/arbetsloshetstillfallen"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:18408\",\"variable:9412\",\"member:859350\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-12-31"
 reason = "The supplied ULF edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 52-family source review (2752 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-ULF-coding-gap-source-audit.json and Batch48-ULF-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4116937bc7e277b4aa229db31f6f1b9ec2f3857d9e972964ef8863f4f10e5ad0"
+expected_evidence_sha256 = "389107c31fc8df183ece30464e8f3aec7f4e555237ee614d61ea7c73d4bb2b4b"
+expected_diagnostic_sha256 = "8bf7ed4d51606b98ed066076ca89de3adaea18ed0b3551f24071516d54dab732"
 
 [[coding.extend]]
 variable = "237.11553"
@@ -2460,90 +2036,62 @@ witness = ["1989-01-01", "1989-12-31"]
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/yrkeskod-fob80-nyk-arbetslosa-pof"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14307\",\"member:82539\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14307\",\"member:82539\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14307\",\"member:83933\"]}",
+]
 fields = ["coding"]
 valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-expected_evidence_sha256 = "741a7b0586bd29b8a9a2de3c22171d0dd6893de83b65a040fbf9a2315c34da65"
-reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
-evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/yrkeskod-fob80-nyk-arbetslosa-pof"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14307\",\"member:83933\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
 valid_to = "1999-12-31"
-expected_evidence_sha256 = "315f4ec910631519a29c119a228d67731447ce9bfe98f94639b409f8fba846a9"
 reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "e82b90096092995b10dc7fc95107777ede67f05ca17f5885499cd420b85a4853"
+expected_diagnostic_sha256 = "0a96f6c39a96bce3d0258a122cf2ff35eda2b88f76978f3cac0c4048281e80b1"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/sy4356"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14316\",\"member:82541\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14316\",\"member:82541\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14316\",\"member:83935\"]}",
+]
 fields = ["coding"]
 valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-expected_evidence_sha256 = "308faeb655bfd12011658b67fe799b2deac647e2a0e019eb3b49c49f5658cd42"
-reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
-evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/sy4356"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14316\",\"member:83935\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
 valid_to = "1999-12-31"
-expected_evidence_sha256 = "07dd0592a9e3fde66a613082d707d3145d2bcd582bf1ce1af26c613e4b4cf4a9"
 reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "368b04b227492f9075aecf7616b6473bdf82c8c3c2fba88962536cc7cebe8356"
+expected_diagnostic_sha256 = "077eae2784562ef5b57f9e928ebf2c47f6dbaee43470bf6c2b796ead4cf916e5"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/sy4364"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14319\",\"member:82542\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14319\",\"member:82542\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14319\",\"member:83936\"]}",
+]
 fields = ["coding"]
 valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-expected_evidence_sha256 = "a5ff9fbd610e95c6720dcf62effef4d713fb7b0997dd6217287e1e0149fac1ca"
-reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
-evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/sy4364"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14319\",\"member:83936\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
 valid_to = "1999-12-31"
-expected_evidence_sha256 = "9b3673c2de00a23faf33460cd77dc9a2bdd76b0b1eca1723a228813837f4f2f3"
 reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "85b5b84de05ad56f0609f8ab6fcc128566297414a2724db76da9a83b12a8183b"
+expected_diagnostic_sha256 = "579ad54bfffaadffc5a2e2078de49dcfaeae806b8d3b551f77190b569d9f81f3"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ulf/sy4365"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14320\",\"member:82543\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:728\",\"variable:14320\",\"member:82543\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14320\",\"member:83937\"]}",
+]
 fields = ["coding"]
 valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-expected_evidence_sha256 = "8b85b98790d9fde236de11738a08fc8044dfd43fd4b00cde2e8910251363a6cf"
-reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
-evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ulf/sy4365"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:237\",\"variant:457\",\"edition:727\",\"variable:14320\",\"member:83937\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
 valid_to = "1999-12-31"
-expected_evidence_sha256 = "3ec6a1078ce54c4b5dd1b18690cfa0c58ba9c770862b212fad3e779d62a2fa64"
 reason = "The1998/1999 occurrence supplies no own stored-code association. The source names FoB80/NYK while later bindings are labelled Nordisk yrkesklassificering1983, and one complete occupational history also has a different unpadded Yrke3 domain. Historical version and stored encoding are not established; preserve every original and known later list, leaving this exact value set unavailable rather than choosing a classification version or copying padded/alphanumeric codes into numeric source storage."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "a5cb678cd6c034b155e471c09ecdb95e02468166d3c3807a8d0061498549a5bd"
+expected_diagnostic_sha256 = "2fa5c2a6a39e16b5b0eaed2c960a38e6ea50c84182d96eff49f44223545ba918"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2552,9 +2100,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "e63e4ed987c65ff9536b3518ca2c8170de84d1ee8056a61c25d3404117411961"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "0dac12be2a73af423f613145fc1e6e32db3a2e3eaa422ef96369a40c2a6178b1"
+expected_diagnostic_sha256 = "4c32c0b514e4f2df849317b9d6796de6a520cbc0cba7d508581d0852fcbb1578"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2563,9 +2112,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "46c09811cd3cf87d6921133c121cc89b9dfff39ec2b0a1eca26394cc9cc73831"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "d2a7cd88ee5582b0de9d92a70ec505120baaf90357b349b03e0148a406d44c7c"
+expected_diagnostic_sha256 = "09ffa44b11a4b72d4f02303a57b21bb9bbb000bffc6b66a9d19c8fe3c7d58727"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2574,9 +2124,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "c6ffec6b36446ef040d292430d121c7a79d7c1a4e8a78522cd7f7478577e093b"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "a8bc0d7e91cf06bc1a8ee971c7ac75ece44c939d798529f60a9f829bada19cbc"
+expected_diagnostic_sha256 = "b2615c49067bc01a7fda6515f7a108c411c67009b7de10d1065ccc60344d9db6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2585,9 +2136,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "b05af13adbd56de8f8db42432ca34c5c78aa78406a0ebf4cc2bce26a4af87272"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "e79a6e4b234ecf4637a1b0b962d8919f1984b158c1fea615411113d177fb1185"
+expected_diagnostic_sha256 = "a8c9cbce4aa2feefd39cfda8c2937bfaca0b7c980c14c4177a5b8e7ed10721a3"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2596,9 +2148,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "3c251cf04e6cbbde65d64a999f1816ac4d1ab4c11695b88fa365cf4611998132"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "1574f388c8d2e11db53fb587bde650048a6ff83d24e00fa3a206200a635b1ea1"
+expected_diagnostic_sha256 = "ec15c2f0910ae9568295e6541862d09c7dcde77de83f610079c4968d24667cce"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2607,9 +2160,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "739bc9b3a9e386d7cac1891ee48dc11ab956785cb16a38091fec4224169bd429"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "5e854fe2b15135745eafda527dc577c2bde94ffe5d899fedb225ced07e6e9baa"
+expected_diagnostic_sha256 = "06f1c0212ca00732f1a5746c133848e86bf44f4f5d6fe6fef333e53f4b89fbae"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2618,9 +2172,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "2289513b8d95cc290212897d93fec09d2c4240cbd97ed02a0aa6d9a18cb055f6"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "1f301ca3ba4c37baaf20fffcc247099ef803ec859f6866bfba5e27815c5f252f"
+expected_diagnostic_sha256 = "c2d1ee41d2cf0f5d5442393c5113e1a9c07b226acae3e1b6d61d7becbf81fff7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2629,9 +2184,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "14b9bc562c01ad50c30fb042c3e07755b2d86106dd88c39ae26edbab666c27d5"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "196e2cc45b4f00d7ddd5998bceb5b5727b5b585a0c21d2e3506d465d14af44bd"
+expected_diagnostic_sha256 = "08a3a6f48bf13324f187cb6adf5ab4aed5253e47561634b570034f3705cbb02f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2640,9 +2196,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "0c9660c90406663770b89992438571f2bce8f3ca7a21672a3578067cd506cf10"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "76babc2cbed5633c020151a2b899d6a8f19eb63561e7e4e4c1c98cf2dfacfab6"
+expected_diagnostic_sha256 = "01ccb28b2b9d4a77854044f0c748c08e121ffda213924ae96a025eb0dc9881a3"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2651,9 +2208,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "73bfe27a022e2794ab34234cc0904d705f5e48fd9c22d5e5c6c5c6526fca5ec7"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "b1969b0ddf4fbee038160a3b59d9399734ed104b37b08ead7ab69523a5be6393"
+expected_diagnostic_sha256 = "b676e537477be54b23d65693cbdc622e0a030090a445de7315fe173a414f5dac"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2662,9 +2220,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "903592fb40a624d5fd5f3715cf17ec44f5ca243a8bfc94d1221f966314e9e01a"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "7ac3f854ea0aae0bb97d13c663017d297500b6228eb233a50269c04591622b63"
+expected_diagnostic_sha256 = "418efe993e756f5bf478d873a7ded4fc21cf167655d6c578b6fc8334f5f3616c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2673,9 +2232,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "6f7ee2caaab5501818dc7fc8c9a0fe01e271845553f2334687739b8502990b5e"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "af11998e7a38861f26a3dd25dea03574932109ff0e7a209f3c1e64d4ed7e546d"
+expected_diagnostic_sha256 = "c2b0d98179ba8bab7e4e2600f4e8f042a24b60750e28a7dc463485fc64e7da9b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2684,9 +2244,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "ad81c27127a1602d2f93bebbdfafdb15398ea3c7346b5612d2a8940dde320eb3"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "1aab24b38510c91e06366a198f111d4fe08d3d732e7fd2178c9e8b97c5e112ab"
+expected_diagnostic_sha256 = "328a41db2a1ecfdb94a2d64c929f1d42145ba87412457b8dc5d2b95723f46ea6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2695,9 +2256,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "2a78b5f0f52fa39e406953c09646057a966c724be48ea55ea38ec82edfd3bca5"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "7ef29302f5343687e4d2e8a461f9b7a463bcffca380a7fe43d12ab9429ba9808"
+expected_diagnostic_sha256 = "114cf9760d2c35af390a734af70cd0f824bf6f1ad07e75a573db4a22860aec47"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2706,9 +2268,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "baf30af14eb4b6e932ee9901ea2889213ef21ad9e22cb56777f4ab2febca4c4c"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "32e3d1c463a1027d6335ee0a5a808110aa9329445936ed00595163d9f405d0e7"
+expected_diagnostic_sha256 = "48bd14c918f2d39c0b92ee711868a7bfde46c7a92049cb643970813f54f2c629"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2717,9 +2280,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "885f8d84a515e7163945cad0a070c0f83d0a90947bee0eb443f5a8409efa3a38"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "2c7be815d3f888491260443874208ab3f6fe442d957202fdd2414eb4b41922f9"
+expected_diagnostic_sha256 = "cb3b9361e451db9a05e03a620651ff0a29f54b0820c3cd9706e1b1f912db92ec"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2728,9 +2292,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "0be068abebae1728bd28f7b16fb397f0d7ba3b63a28e326c6be7d258a17f2d2d"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "0c91fbd66d989aabd3940b20a3337c186b67e205b460bd949de77aadd08cd3fc"
+expected_diagnostic_sha256 = "8eb34dd6fd74698297ea82fd7d0ccb96d5d469887c96bf9d2217c4e00d49e30b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2739,9 +2304,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "33985300a4e7443168eb22b010eca199ec437b2c3f9c26004152743f6c302b67"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "18bfdd46d5ac485c8d1b6021c466cbc751223741b48b63db7bf0a7d27b95cbd9"
+expected_diagnostic_sha256 = "25a9936a6f7501ece90c815a7ecd4c734465683b099a1ccc3aea7dbf923e452e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2750,9 +2316,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "edc349edad34f12f5d9d9d42b5f2d8c408862797c245811c6393f6bdd76f406d"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "665252083924b3cacf916b498ca4ffcd26b95c72f2815d5bf1980951cb88f4c5"
+expected_diagnostic_sha256 = "030241dcad77106720bc80d591ab7367aa0a1f051abf0cd81080743215e2277c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2761,9 +2328,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "9ee0132d960c41c43f5c422495d81357ee534fe60c74c50de744accdc87b1574"
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
+expected_evidence_sha256 = "26cfd8dec01e0af90cd462f7b071c41108c61ae2316ad521c74fa16db83a48d0"
+expected_diagnostic_sha256 = "21d2d4a7910378ea09cc5f91c3edbce8454692cbe1fad95d51b196e9163f10f4"
 
 # Shared-column succession fold 2026-10-21 (maintainer-approved high-confidence
 # worklist batch): SSYK12UP_1 and SSYK12UP are one SSYK 2012 occupation column.

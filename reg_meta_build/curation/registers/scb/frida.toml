@@ -10785,205 +10785,78 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "1807c5b03017eb4f46a0ec6a4a930e1db3c34db67997c226152e376ab47f25f5"
+expected_evidence_sha256 = "834e2d4af4e2481b16dca3b661757f6b3616b80f8fdeba415ac6f5c8591057a1"
+expected_diagnostic_sha256 = "4420a215eb3619678f159f94372303212f71a0a6c3f2aa6d9acc40c39a4f7b59"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12270\",\"variable:26138\",\"member:526093\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12270\",\"variable:26138\",\"member:526093\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12269\",\"variable:26138\",\"member:526087\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12117\",\"variable:26138\",\"member:508530\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12116\",\"variable:26138\",\"member:508507\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "33ab897172446711f41c8b5cfac599f1c569bd0899517ed36b5d4fddb8143a71"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12269\",\"variable:26138\",\"member:526087\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "424883d7c04847f79ced10ca921d4d3c5c300f890f88a50015f69474cedb6161"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12117\",\"variable:26138\",\"member:508530\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "bfeffe1158c697586e0e7a9659110056ddd11103418799fdbda1c0faccd581e7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12116\",\"variable:26138\",\"member:508507\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "adfdaacf7d8b74df67b4d69afb98dccddf501d1df7b8039a688153089f830daa"
+expected_evidence_sha256 = "0c76ec48a395ecae88ea8ae207818c3d7e2bccc812b65e03253046470bb6b7ff"
+expected_diagnostic_sha256 = "01d910cb33d3c1e32ee8c763b183ae6e8368dacc89a1b5010cb8861a45adbfa3"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12112\",\"variable:26138\",\"member:508406\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12114\",\"variable:26138\",\"member:508461\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12112\",\"variable:26138\",\"member:508406\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12111\",\"variable:26138\",\"member:508382\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12110\",\"variable:26138\",\"member:508359\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12108\",\"variable:26138\",\"member:508161\"]}",
+]
 fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "c1f9fb289338020d05b35b7678486972e21efd9740b7c63e2f952c7c5edf9485"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12111\",\"variable:26138\",\"member:508382\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "edadfe665761863fe8212ee2d3efc8694298ac76f989f45639df96eaf8a8bb63"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12110\",\"variable:26138\",\"member:508359\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "207de158db089f270f3dd339080adc64c30cf6ef6a214d3e31cf8ba2ea794eaf"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12108\",\"variable:26138\",\"member:508161\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
+valid_from = "2010-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "a25944039ae10450cef10c59441e5d294a1a8d781f90429302bbd1227d0b20e3"
+expected_evidence_sha256 = "84bb105ed8bada484113dae0058116927c8ed7805519b2eac12b1d35b935a976"
+expected_diagnostic_sha256 = "53b26d69714396e205e931b7f134cde8be18391a30923ca3be35817336dbb916"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:12114\",\"variable:26138\",\"member:508461\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "7576403510798c316587125a4e205c3813f3de273f2ab9175c02afd37180b3a1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:16490\",\"variable:26138\",\"member:806877\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:16490\",\"variable:26138\",\"member:806877\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18301\",\"variable:26138\",\"member:849036\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18807\",\"variable:26138\",\"member:894627\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:19338\",\"variable:26138\",\"member:931183\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:20063\",\"variable:26138\",\"member:1004159\"]}",
+]
 fields = ["coding"]
 valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "89ced55e8ff7e70cfc66d1a4dba250fd5887230214c8344ac743f60dc8dc8a39"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18301\",\"variable:26138\",\"member:849036\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "96b12dfa36d1fc0b76eb5b95450a33a4e0bf3340a903e5d55b86da889c7a4175"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18807\",\"variable:26138\",\"member:894627\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "ed4c63e0841f488f81fad6303469575827dda95c84c705c3a473fa2caad85bca"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:19338\",\"variable:26138\",\"member:931183\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "810b7b94969375822a9b274830ef60c29e5bcf0f8070ee7adf14ed8f31f89fa7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/branslebenamning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:20063\",\"variable:26138\",\"member:1004159\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "1f321df809a47ab1de299482e4a6f9dd58ea218c3f02ea52b6caf7e230a3e88d"
+expected_evidence_sha256 = "98121ca8335a9ee9532991e7ce5bfb94f8aa2858489c2d62765bb4c6419d4277"
+expected_diagnostic_sha256 = "2cc275c7717a3ed0eaca689688764425fe01fabababfafdbd24d82a3bccbd5c6"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/bbvbr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18301\",\"variable:26157\",\"member:849039\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18301\",\"variable:26157\",\"member:849039\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18807\",\"variable:26157\",\"member:894624\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:19338\",\"variable:26157\",\"member:931186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:20063\",\"variable:26157\",\"member:1004156\"]}",
+]
 fields = ["coding"]
 valid_from = "2020-06-05"
-valid_to = "2020-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "031fd3e41ed0e125f47ca59245d20fd8796a35a1021cc1f9230ad99051102920"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bbvbr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:18807\",\"variable:26157\",\"member:894624\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "754827e4e096e97461f83e663615decba4a566c2f55004ba88ff28f17d431953"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bbvbr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:19338\",\"variable:26157\",\"member:931186\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "d5c2e5a9147b1f976db5ac9badcf44a05cd748fd5c830c87fa8c2cb09479e0e9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bbvbr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:938\",\"edition:20063\",\"variable:26157\",\"member:1004156\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "a0e0691a7a0f8a2a9454dc201bb1d9739db012c5762c23b0e3cc209ed4be7776"
+expected_evidence_sha256 = "075037d715cb5ea48775a6ca29a66b638cb497056729e9478eec463945363e02"
+expected_diagnostic_sha256 = "48cd25ddbdf1137a539aa39d2500f1c236ca71034a86ddc042ce428fcddf1a84"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -10994,183 +10867,76 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "569d9338fd957252ba7338c09fedc1187f9a742744016ce8430bada8ac0e0af5"
+expected_evidence_sha256 = "5082abbd754610f9bf69665e4a0bc722bcaa91ee8ca4955bdde5e76555266ddb"
+expected_diagnostic_sha256 = "d4237ab515748bd5db2cb0c543898ae08d04a01e72e17896526fc51aba5a9ad2"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/uppdragstagare-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12146\",\"variable:29775\",\"member:513173\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12146\",\"variable:29775\",\"member:513173\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29775\",\"member:513017\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29775\",\"member:512861\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29775\",\"member:512705\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:8693\",\"variable:29775\",\"member:426948\"]}",
+]
 fields = ["coding"]
 valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "bf5935c620d161dc35aa202d00fad938fa9cd071aed82072b5af01ebb0bdd0ad"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29775\",\"member:513017\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "9090abab73d2ea859fa06f6f1e9697663ec08454c5a47ea9327862f1c8f265b7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29775\",\"member:512861\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "f4b1227ff291a5fb5ba486267667994a5f5a9faa6e146be1afb25344532625ea"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29775\",\"member:512705\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
-valid_to = "2014-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "105da7c943d05cb74105400bd6356ab8f0fa931fd53d506df75059e860ef67a7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:8693\",\"variable:29775\",\"member:426948\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "4608788a356cba617f175966da4a3871bb5bf1ec9d4cd2b2c35839e6e7c16e4d"
+expected_evidence_sha256 = "10e290a2876fbd221370b63ced8079f503d85399cfe5800041b4a37b406c0b6a"
+expected_diagnostic_sha256 = "6071d2358290451c332d01c0c5045c5cef9c95a11d688d4e7e301a73e20d6d52"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/uppdragstagare-ej-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12146\",\"variable:29776\",\"member:513174\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12146\",\"variable:29776\",\"member:513174\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29776\",\"member:513018\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29776\",\"member:512862\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29776\",\"member:512706\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:8693\",\"variable:29776\",\"member:426947\"]}",
+]
 fields = ["coding"]
 valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "e7a2298a07bcf58315de7d0f22e9b6831b32b18c7aa2826b96dc1458990aae01"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-ej-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29776\",\"member:513018\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "faa2db51fe3390f5f043d7a9786d6eccf0b9584c197f5fd06d0b20b478387769"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-ej-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29776\",\"member:512862\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "1b49947ffbac10edc7304819575db2dcd92099eb09d200b425fb3b9780d165dc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-ej-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29776\",\"member:512706\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
-valid_to = "2014-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "8bc792536c556d51cb2cf9311bc6a66ab8e41e08c22ffc7061d01cbe5fa6b5fc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/uppdragstagare-ej-bitratt-arsredovisning"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:8693\",\"variable:29776\",\"member:426947\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "78398d9155b34c4342863ec6fb48794b5714e92433596e5dbfca5ad02afc3c62"
+expected_evidence_sha256 = "8a5410dddb91726b1f566a07b045c0cef4cd82c6919963300e1aba1a2508bd9f"
+expected_diagnostic_sha256 = "09c6168c353990ff584dd29c777f2ff9ffb9941749e0e599d26598e0da27a8f9"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/v8044"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29787\",\"member:513028\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29787\",\"member:513028\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29787\",\"member:512872\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29787\",\"member:512716\"]}",
+]
 fields = ["coding"]
 valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "93e0c3f02493aefdceaa40d0b907756636927364da71b9c94f26c2384325b679"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/v8044"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29787\",\"member:512872\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "a0a39ee4688a7ddf951fb749c3b5ef0cefa5497d0d823ba2c696d102fa0105ea"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/v8044"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29787\",\"member:512716\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "e2bb5f0a78fd5c6be13ddccff57c76acc4808fdf85275aa57b208fca53cdc2a3"
+expected_evidence_sha256 = "ee7537f3723ca13c2c1eb2410e2fb24c1ddf0af805c948c4cf5d21b4639eabaa"
+expected_diagnostic_sha256 = "6127fa274334d02fa86efd7a98f97150d2803314676b35f8b063c0fc1d669c31"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/v8045"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29796\",\"member:513029\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12145\",\"variable:29796\",\"member:513029\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29796\",\"member:512873\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29796\",\"member:512717\"]}",
+]
 fields = ["coding"]
 valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "da9bff168f6ac83455881aa033e393a85100ce5307d7eac863066e353d18137f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/v8045"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12144\",\"variable:29796\",\"member:512873\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "48e704d24e4a5fdcf0c95a50fc0f6559b31438580f6c4afa3769a23cd7618549"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/v8045"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12143\",\"variable:29796\",\"member:512717\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "269cbcb76434e279caa335bef3468d23c89a544a2937846743e44647e7e65744"
+expected_evidence_sha256 = "5edb56e9c719b371e65849a9db4b23ead4c78200dbe5ffaba9a515bed39a5112"
+expected_diagnostic_sha256 = "a9ccdf66038fcd3c4532267472380b9406838ebc757ac72d34e480899047a884"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11181,282 +10947,124 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "57fc323374a03878e638092dbd8953156be230081040bec398353f72f9990606"
+expected_evidence_sha256 = "2987e8b579a4d1aec9bc35075a12068ebda1a103ec56027a0d873a9be65307bf"
+expected_diagnostic_sha256 = "ffb342f84e1881351d688ca6a0712afd0a95ebc8e589ec327fb0c6a9dc46d53d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/anstalld-fran-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:6056\",\"member:739488\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:6056\",\"member:739488\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:6056\",\"member:737317\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "0d5353c453eb1690b208995caca3c15b3124b8e81eac8964970db9001b349cd1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/anstalld-fran-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:6056\",\"member:737317\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "cce66140175bd7132c2faea4f8f707c191dcbc352dd536414cd019b93efb434c"
+expected_evidence_sha256 = "d526abad48f842d7c1a93d22ba3dbc94fd3a38e13d6c7b452d1a8f621260015f"
+expected_diagnostic_sha256 = "8853dcdb9038a2fc72c48144b78676703f9f4a305524248fa432c0b73a990bef"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/anstalld-till-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:6057\",\"member:739487\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:6057\",\"member:739487\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:6057\",\"member:737318\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "89f461149b71a826370041b6616d6ceec5243904afe3a5514823aea4c4bfae89"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/anstalld-till-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:6057\",\"member:737318\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "0b2833c7742a6ea69708a2087d6346f1909d9eadc378b459b5a33eef53482bcb"
+expected_evidence_sha256 = "78ecd5a2bf95ad3e24b9ceb0df99110e0b55582a9eb50dc4e4691aa4510dbf73"
+expected_diagnostic_sha256 = "ad310ab666b51444c10b9bdc8754d274fb21b3ce23eac9816a087a0880a72707"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/institutionell-sektorkod-lsum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15779\",\"variable:6088\",\"member:754649\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15779\",\"variable:6088\",\"member:754649\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15778\",\"variable:6088\",\"member:754255\"]}",
+]
 fields = ["coding"]
 valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "f1cec3f55d833af7294df6906237008cb046ec194bdded8b5d1d4d445b5f4446"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/institutionell-sektorkod-lsum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15778\",\"variable:6088\",\"member:754255\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
 valid_to = "2001-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "7f859ecd30997de01e9254c4455e0336b2301416ae3cdc37efea3bf0017f66bd"
+expected_evidence_sha256 = "496bb3dadcbbd88dee9ca4537400b9d5fa7f5f829462bd4ee2b30fdf279e0287"
+expected_diagnostic_sha256 = "afc287ea53a7a6e6e9985116e612313e41d478a6e9e516adf5c466c6680d06dc"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12285\",\"variable:685\",\"member:529710\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12285\",\"variable:685\",\"member:529710\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12284\",\"variable:685\",\"member:529228\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12283\",\"variable:685\",\"member:529227\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12282\",\"variable:685\",\"member:528726\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12281\",\"variable:685\",\"member:528725\"]}",
+]
 fields = ["coding"]
 valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "0e7ee0c27d37db5e6e8f78efd51c3e1f2ad80dfc4fa8838477b71800dab21778"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12284\",\"variable:685\",\"member:529228\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "73bdd655d0895161c8a9db89167298082feaa1623981f13eb5497f238ba34233"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12283\",\"variable:685\",\"member:529227\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "5d35ba9a112f1272be834415f1e75b8e7404fbd3e374318d13cdd395957a8164"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12282\",\"variable:685\",\"member:528726\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "01d056581f4479ab9052e1fca7dd9a10a50433492a6371c90aa9534ca946ef6d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:948\",\"edition:12281\",\"variable:685\",\"member:528725\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied FRIDA delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Same-native lists vary across editions, including tax checkbox encodings and fuel descriptions. They do not establish this exact historical stored encoding; no later values or missing-value tokens are borrowed."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-coding48-source-proof.json."
-expected_evidence_sha256 = "3610512b8966fc18319f6f5869a7882c892c27ed8173ef77749a8af83a272b99"
+expected_evidence_sha256 = "252bd4fc8f89c8af60124a985d8ab673f19d826fd523db4e2205de81847b878a"
+expected_diagnostic_sha256 = "62e556b47cd0d9f09144a4baeb4196d948d6c9f5d25e2b2d3cd86d69a42d7934"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/bsni200"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13724\",\"variable:19053\",\"member:621760\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13724\",\"variable:19053\",\"member:621760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13723\",\"variable:19053\",\"member:621159\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13722\",\"variable:19053\",\"member:621156\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13721\",\"variable:19053\",\"member:620555\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:11620\",\"variable:19053\",\"member:536629\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:5087\",\"variable:19053\",\"member:315734\"]}",
+]
 fields = ["coding"]
 valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "f3d011c2b12b52bd9aa2a63d24ceda7f9b582f5a42d62c688244c19ad932adc5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bsni200"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13723\",\"variable:19053\",\"member:621159\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "55e9ed37640c4a5cf3b74661c6b0b7e61a66d057babd74270f02a42b83833cc9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bsni200"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13722\",\"variable:19053\",\"member:621156\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "b599db03b459961fb72a5cd28487116815aef87afeedbabc09dd63d5dae2d867"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bsni200"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:13721\",\"variable:19053\",\"member:620555\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "ebdcbbed1c8903c60deea1ca15a490cdd156aa763778dbc5d3cd17402925610e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bsni200"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:11620\",\"variable:19053\",\"member:536629\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "bfedf012c7c6c6e3da79cfa2adb3d1d63053ee23c9860c1ccc2c87d3b21f978b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bsni200"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:237\",\"edition:5087\",\"variable:19053\",\"member:315734\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "47ccab90077f34426d747b41656b0d8c2ef918db0cf69c78b10f912238d8a077"
+expected_evidence_sha256 = "2553825e28b7b24a2aa7b3cd9fef6393f877ed8e657a2931fd238e1bebb5f50b"
+expected_diagnostic_sha256 = "94de80831f18f61ca84ab3bc3580bca2b5f1acfce575a23ab66d2867ac7e9003"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/bngr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15628\",\"variable:2702\",\"member:744059\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15628\",\"variable:2702\",\"member:744059\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15620\",\"variable:2702\",\"member:742303\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15613\",\"variable:2702\",\"member:740724\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:2702\",\"member:739599\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:2702\",\"member:541444\"]}",
+]
 fields = ["coding"]
 valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "f4e0dffeac3e5d086dc29654ffd974d97139140333fe37c10440a914ea202e30"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bngr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15620\",\"variable:2702\",\"member:742303\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "4f6c0c109c84b77b465d8f4a40de2d7173b35676b7cd10f17c894b20ce9c23d6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bngr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15613\",\"variable:2702\",\"member:740724\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "54818cb4c9c940b8946793112441a33359b664b10e1f8da9725c019cb117952f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bngr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15604\",\"variable:2702\",\"member:739599\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "a83cea2ff4b828d4ef6d930cf681203b354616a52ce945f2c32462d9f7fb799a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/bngr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:12398\",\"variable:2702\",\"member:541444\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "cbf42ea4471885ea2b30f4c9ee68459db64e45de6877fccdab7cf31b0e2a0f3b"
+expected_evidence_sha256 = "b38b5f3b265963c3b2622a43d1ffcdfb479f4dc1b8ee999e67543f7ab2046aa8"
+expected_diagnostic_sha256 = "8c01ee3dccc4e0c0f395fbcac490ba4e01c648a270c35bbe635bf12731629387"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/frida/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15779\",\"variable:4027\",\"member:754807\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15779\",\"variable:4027\",\"member:754807\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15778\",\"variable:4027\",\"member:754090\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15628\",\"variable:4027\",\"member:744058\"]}",
+]
 fields = ["coding"]
 valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "d07bcda52c9f5e3fef12cfa1982a1e8055c235bff784ce82a5b1e0cd5bfe2283"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15778\",\"variable:4027\",\"member:754090\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
-evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "74ca9dce6db61776773ee515d6b0aaaae80a18f27fd13d68826de912f5501a24"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/frida/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:121\",\"variant:957\",\"edition:15628\",\"variable:4027\",\"member:744058\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
 valid_to = "2002-12-31"
 reason = "The exact supplied historical industry window has no own coding association. Complete native-family review finds contrary classification labels: BSNI2002 can be linked to SNI92 or SNI2007 lists, and a SNI2002 operation can have an SNI2007 association. Preserve every source code, label, operation, column and classification claim. The continuity policy cannot identify an agreed historical domain where source claims contradict each other; leave only this missing window’s coding unavailable rather than choose a book or recode values."
 evidence = "Complete sixteen-native-family review (397 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch49-FRIDA-industry16-source-proof.json."
-expected_evidence_sha256 = "b7917940750f5230de9af0b0b368fcc972b7d4615041928a60f86afb1e1246e6"
+expected_evidence_sha256 = "718a25a985fbda87cd81dbf848e148539276a7a7a65fc2ca3555da9d4ca30fb9"
+expected_diagnostic_sha256 = "d8b73748956699a12959ef899dd7558b512dc0c53bccc7105507ffca89291a92"
 
 
 [[coding.extend]]

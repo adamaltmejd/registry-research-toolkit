@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import curation_error
+from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
@@ -28,6 +29,7 @@ from reg_meta_build.source_coordinates import (
     source_register_key,
 )
 from reg_meta_build.source_curation import (
+    RUN_ACKNOWLEDGED_CODES,
     AcknowledgeDecision,
     ClassificationDecision,
     CodingDecision,
@@ -37,9 +39,12 @@ from reg_meta_build.source_curation import (
     SourceEvidence,
     SourceWarningDecision,
     acknowledged_diagnostic,
+    acknowledged_warning,
     acknowledgement_hashes_sha256,
     current_pins,
+    digest_set_sha256,
     evaluate_cases,
+    issue_run_sha256,
 )
 from reg_meta_build.source_effects import (
     OccurrenceCorrections,
@@ -254,9 +259,34 @@ def resolve_source_scope(
         ],
         tuple[CurationCase, AcknowledgeDecision, list[ResolutionDiagnostic]],
     ] = {}
+    # Run acknowledgements by code, subject and fields; their windows never overlap.
+    runs: dict[
+        tuple[str, str, tuple[str, ...]],
+        list[
+            tuple[
+                CurationCase,
+                AcknowledgeDecision,
+                frozenset[SourceRecordRef],
+                list[ResolutionDiagnostic],
+            ]
+        ],
+    ] = defaultdict(list)
     for case in acknowledgements:
         decision = case.decision
         assert isinstance(decision, AcknowledgeDecision)
+        if decision.code in RUN_ACKNOWLEDGED_CODES:
+            run_key = decision.code, decision.subject, decision.fields
+            for other, prior, _, _ in runs[run_key]:
+                if _windows_meet(decision, prior):
+                    raise curation_error(
+                        "register_duplicate_entry",
+                        f"{case.case_id}: its window overlaps the run of "
+                        f"{decision.code} {decision.subject!r} that "
+                        f"{other.case_id} already acknowledges.",
+                        "Keep one [[acknowledge]] entry for each run of periods.",
+                    )
+            runs[run_key].append((case, decision, frozenset(decision.refs), []))
+            continue
         issue_key = (
             decision.code,
             decision.subject,
@@ -302,6 +332,17 @@ def resolve_source_scope(
     def emit(
         issue: ResolutionDiagnostic, *, source_register: NativeKey | None = None
     ) -> None:
+        if runs and issue.severity == "error":
+            for _, decision, run_refs, matched in runs.get(
+                (issue.code, issue.subject, issue.fields), ()
+            ):
+                if (
+                    _window_within(issue, decision)
+                    and run_refs.issuperset(issue.refs)
+                    and scope_owns(issue, source_register, decision)
+                ):
+                    matched.append(issue)
+                    return
         if held and issue.severity == "error":
             key = (
                 issue.code,
@@ -1155,6 +1196,53 @@ def resolve_source_scope(
                 valid_to=decision.valid_to,
             )
         )
+    for case, decision, _, matched in (run for group in runs.values() for run in group):
+        distinct = tuple(dict.fromkeys(matched))
+        current_run = issue_run_sha256(distinct) if distinct else None
+        current_evidence = (
+            None
+            if decision.expected_evidence_sha256 is None or not distinct
+            else digest_set_sha256(
+                acknowledgement_hashes_sha256(
+                    (token for ref in issue.refs for token in hashes_of(ref)),
+                    (token for ref in issue.refs for token in guarded_coding[ref]),
+                )
+                for issue in distinct
+            )
+        )
+        evidence_matches = current_evidence == decision.expected_evidence_sha256
+        if (
+            distinct
+            and current_run == decision.expected_diagnostic_sha256
+            and evidence_matches
+        ):
+            for issue in distinct:
+                acknowledged[issue] = acknowledged_warning(issue, case.case_id)
+            for issue in matched:
+                record(acknowledged[issue])
+            continue
+        for issue in matched:
+            record(issue)
+        if not distinct:
+            reason = "matches no issue."
+        elif not evidence_matches:
+            reason = "has changed original or coding evidence."
+        else:
+            reason = "matches a different run of issues than its expected_diagnostic_sha256 pins."
+        record(
+            ResolutionDiagnostic(
+                code="stale_curation_entry",
+                severity="error",
+                case_id=case.case_id,
+                subject=decision.subject,
+                detail=f"The acknowledgement of {decision.code!r} {reason}"
+                + current_pins(current_evidence, (), run_sha256=current_run),
+                refs=decision.refs,
+                fields=decision.fields,
+                valid_from=decision.valid_from,
+                valid_to=decision.valid_to,
+            )
+        )
     # Dependents of acknowledged output inherit the warning, not the error.
     withheld_dependencies = {
         key: tuple(dict.fromkeys(acknowledged.get(cause, cause) for cause in causes))
@@ -1175,6 +1263,29 @@ def resolve_source_scope(
         dict(Counter(issue.code for issue in acknowledged)),
         strict_refusals,
     )
+
+
+def _window_within(issue: ResolutionDiagnostic, decision: AcknowledgeDecision) -> bool:
+    """An undated issue lies only in an undated run; a dated one inside its window."""
+    if decision.valid_from is None or decision.valid_to is None:
+        return issue.valid_from is None and issue.valid_to is None
+    return (
+        issue.valid_from is not None
+        and issue.valid_to is not None
+        and covers_window(
+            ((decision.valid_from, decision.valid_to),),
+            issue.valid_from,
+            issue.valid_to,
+        )
+    )
+
+
+def _windows_meet(first: AcknowledgeDecision, second: AcknowledgeDecision) -> bool:
+    """Whether one issue could lie in both runs; ISO dates compare as text."""
+    if first.valid_from is None or second.valid_from is None:
+        return first.valid_from is None and second.valid_from is None
+    assert first.valid_to is not None and second.valid_to is not None
+    return first.valid_from <= second.valid_to and second.valid_from <= first.valid_to
 
 
 def _attribute_unresolved_names(

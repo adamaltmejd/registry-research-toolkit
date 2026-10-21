@@ -343,387 +343,90 @@ expected_fields = [{ "name" = "operational_definition", "status" = "value", "val
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13971\",\"variable:104\",\"member:639364\"]}"]
-fields = ["coding"]
-valid_from = "1996-07-01"
-valid_to = "1996-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "bb9881283ac6b546177be944bf6f702f491756bb20c27b0de734bc58d74fcb36"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13972\",\"variable:104\",\"member:639368\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13972\",\"variable:104\",\"member:639368\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13971\",\"variable:104\",\"member:639364\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14008\",\"variable:104\",\"member:640556\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13973\",\"variable:104\",\"member:639376\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14020\",\"variable:104\",\"member:640822\"]}",
+]
 fields = ["coding"]
 valid_from = "1996-01-01"
-valid_to = "1996-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "cd3baae5dc3f7375649058a8f50eceedba0957f0fb92cba9cd9924f83b6914a5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13973\",\"variable:104\",\"member:639376\"]}"]
-fields = ["coding"]
-valid_from = "1997-01-01"
 valid_to = "1997-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "31057609f3c5841d511b5bb7c274bbdf9b2052331cce1136d06562565f30342e"
+expected_evidence_sha256 = "bdb207209fc30e1245ea6b61601ccca584738a6cb64540d7ee971253d483c625"
+expected_diagnostic_sha256 = "d0dcae940be4cfa618fef0619df9879a878d6b9d46f16cad0567cddfbcd25ee9"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14138\",\"variable:104\",\"member:644122\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14138\",\"variable:104\",\"member:644122\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14145\",\"variable:104\",\"member:644224\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14137\",\"variable:104\",\"member:644095\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14144\",\"variable:104\",\"member:644217\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14136\",\"variable:104\",\"member:644090\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14143\",\"variable:104\",\"member:644192\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14135\",\"variable:104\",\"member:644063\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14142\",\"variable:104\",\"member:644185\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14134\",\"variable:104\",\"member:644058\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14141\",\"variable:104\",\"member:644160\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14133\",\"variable:104\",\"member:644031\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14140\",\"variable:104\",\"member:644153\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14132\",\"variable:104\",\"member:644026\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14139\",\"variable:104\",\"member:644128\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14122\",\"variable:104\",\"member:643882\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14131\",\"variable:104\",\"member:643996\"]}",
+]
 fields = ["coding"]
 valid_from = "1979-07-01"
-valid_to = "1979-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "a0e7559559575de6a186fe578db17d2df2c942363331e06e177a93a642630bbe"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14137\",\"variable:104\",\"member:644095\"]}"]
-fields = ["coding"]
-valid_from = "1980-07-01"
-valid_to = "1980-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "291ecdfc9b716a790cf03bce7c43b067b2a2b1131e2e52cce9e8ea5285ae4a25"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14136\",\"variable:104\",\"member:644090\"]}"]
-fields = ["coding"]
-valid_from = "1981-07-01"
-valid_to = "1981-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "abad00231d9e87619e5fb8e5b5542b10859cef3d9fa0cad9d4359586e9b5ea70"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14135\",\"variable:104\",\"member:644063\"]}"]
-fields = ["coding"]
-valid_from = "1982-07-01"
-valid_to = "1982-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "564e00505e7cf41f7e6df240c040471b12c57d6ac2d78b774c3242f308f03072"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14134\",\"variable:104\",\"member:644058\"]}"]
-fields = ["coding"]
-valid_from = "1983-07-01"
-valid_to = "1983-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "1f41804093d1c239d0e7ee168e1b45a5a99cd2f05ac6148fee2747e51461bfef"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14133\",\"variable:104\",\"member:644031\"]}"]
-fields = ["coding"]
-valid_from = "1984-07-01"
-valid_to = "1984-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "2d866b42ec7ae67bff44637eec860f6916e6231c3f04dffb775b73bda750d42f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14132\",\"variable:104\",\"member:644026\"]}"]
-fields = ["coding"]
-valid_from = "1985-07-01"
-valid_to = "1985-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "3d2f26c8efc77974ada17b22f4751bedd61ce68bf47bc6d0aa235c67b83028f0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14122\",\"variable:104\",\"member:643882\"]}"]
-fields = ["coding"]
-valid_from = "1986-07-01"
-valid_to = "1986-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "ce4ceab4595747c8c3e877b2033ff18d87c1139820a34f2cc7c078701fea9fa7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14008\",\"variable:104\",\"member:640556\"]}"]
-fields = ["coding"]
-valid_from = "1996-07-01"
-valid_to = "1996-12-31"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "5194c43b75814b62decb7024e1c41f29519dc8c61f42ea0579d31518723e10a7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14145\",\"variable:104\",\"member:644224\"]}"]
-fields = ["coding"]
-valid_from = "1980-01-01"
-valid_to = "1980-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "a82096084a7ecc4ad33a9960ba1c584f8d9f7722d4099ba6ef30a8c7bbe118f4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14144\",\"variable:104\",\"member:644217\"]}"]
-fields = ["coding"]
-valid_from = "1981-01-01"
-valid_to = "1981-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "4e27695c8885deb84d1751399d1f296d0eb6d781e6255ffe68c6913b61e96a3a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14143\",\"variable:104\",\"member:644192\"]}"]
-fields = ["coding"]
-valid_from = "1982-01-01"
-valid_to = "1982-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "268b2bae46278b0a560490924b8ea551ddb77790df0a754a113cd78ab8402737"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14142\",\"variable:104\",\"member:644185\"]}"]
-fields = ["coding"]
-valid_from = "1983-01-01"
-valid_to = "1983-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "fd092f5cf51a190a3405ebdcd67d198299de7a7254bddb7611a866a174f89cbd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14141\",\"variable:104\",\"member:644160\"]}"]
-fields = ["coding"]
-valid_from = "1984-01-01"
-valid_to = "1984-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "cc21066f8671d3ad56fc6dfb2cacc339e3f9320d1d7192d5cafca1a490925e77"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14140\",\"variable:104\",\"member:644153\"]}"]
-fields = ["coding"]
-valid_from = "1985-01-01"
-valid_to = "1985-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "191ebb310daf5947173b4af2c089caf8a4497d421e033c7e7c2d63f06c775e49"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14139\",\"variable:104\",\"member:644128\"]}"]
-fields = ["coding"]
-valid_from = "1986-01-01"
-valid_to = "1986-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "559021a3a56affb2c7a77d0186a36d61be290b2c4fbd7f9bed24d52d365cedf6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14131\",\"variable:104\",\"member:643996\"]}"]
-fields = ["coding"]
-valid_from = "1987-01-01"
 valid_to = "1987-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "276041e2660a3ab1e655217e138c367cf9f18ecf8479fd16bd5b285a103f77cc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/skolkod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14020\",\"variable:104\",\"member:640822\"]}"]
-fields = ["coding"]
-valid_from = "1997-01-01"
-valid_to = "1997-06-30"
-reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "5c14da01b8c41c826077b11dd5dac99cb66d6b83bb64dd195d1cf255a1b79e32"
+expected_evidence_sha256 = "30d73715443ea1cdd0f188a9e9d2c9869265a9bb6d890913eedcbc67d15def6e"
+expected_diagnostic_sha256 = "81544378cf2dd2aae7e412bd060f74de7a698c7292cf7f895bdd3c27313ec92f"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13997\",\"variable:257\",\"member:640281\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13970\",\"variable:257\",\"member:639336\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14007\",\"variable:257\",\"member:640527\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13997\",\"variable:257\",\"member:640281\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14031\",\"variable:257\",\"member:641078\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13974\",\"variable:257\",\"member:639386\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14019\",\"variable:257\",\"member:640793\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13996\",\"variable:257\",\"member:640250\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13976\",\"variable:257\",\"member:639487\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13995\",\"variable:257\",\"member:640231\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13977\",\"variable:257\",\"member:639504\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13994\",\"variable:257\",\"member:640214\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13993\",\"variable:257\",\"member:640195\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13992\",\"variable:257\",\"member:640177\"]}",
+]
 fields = ["coding"]
 valid_from = "1997-07-01"
-valid_to = "1998-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "4c09b9428c3acf221afeb4f3a2093d458e50c369a54d7981da859348868edb61"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13996\",\"variable:257\",\"member:640250\"]}"]
-fields = ["coding"]
-valid_from = "1998-07-01"
-valid_to = "1999-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "6c50b2f7e66b76859eb00e92752de5725b521116cb55afbcb0f3f7116f0b102e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13995\",\"variable:257\",\"member:640231\"]}"]
-fields = ["coding"]
-valid_from = "1999-07-01"
-valid_to = "2000-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "b87b564945cb78a46bf33ac466adf6117c955f9b7fccfdd017def7b0f62045f0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13994\",\"variable:257\",\"member:640214\"]}"]
-fields = ["coding"]
-valid_from = "2000-07-01"
-valid_to = "2001-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "3fa47a4654b817f22458eb3061bbd7eee3cfdbd5e729ca018f9afac0a64a95a2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13993\",\"variable:257\",\"member:640195\"]}"]
-fields = ["coding"]
-valid_from = "2001-07-01"
-valid_to = "2002-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "2c89c3f3399f47ce5cdbada8c017689480307b819b6a859b1d27b413694c7713"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13992\",\"variable:257\",\"member:640177\"]}"]
-fields = ["coding"]
-valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "2de70e17d8ef0bd6d852fa3f437fc3b61b3f64dcf677b561f273368f4a9c44a5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13970\",\"variable:257\",\"member:639336\"]}"]
-fields = ["coding"]
-valid_from = "1997-07-01"
-valid_to = "1997-12-31"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "2846dc6796d00ea979a6e7dfeb3b5b0eb27e588b73bf2d8bca3d7a2ebfc077fb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13974\",\"variable:257\",\"member:639386\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
-valid_to = "1998-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "0c7c36114eb8ba6994720bcaf0b5ab170945819a4c1c20634ba7fb774941a486"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13976\",\"variable:257\",\"member:639487\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
-valid_to = "1999-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "59c86a840b9f13cc291cc8342fab27c838e025f675c301d0ef8c0e84f0395f5c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1107\",\"edition:13977\",\"variable:257\",\"member:639504\"]}"]
-fields = ["coding"]
-valid_from = "2000-01-01"
-valid_to = "2000-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "986721dfde345037c4b2b2c2252dc6bf3613c14312210f31e711696ce90ce8dc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14031\",\"variable:257\",\"member:641078\"]}"]
-fields = ["coding"]
-valid_from = "1997-07-01"
-valid_to = "1998-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "5a6288a3dc345e8c5c6a4f65a69718e11a56521125d06af6d028a1f6604f7c54"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14007\",\"variable:257\",\"member:640527\"]}"]
-fields = ["coding"]
-valid_from = "1997-07-01"
-valid_to = "1997-12-31"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "a93aa88f0a2312c1ecd02fa45e4de1e118ebae53bf7a43ba85992e26a2db51d5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:498\",\"edition:14019\",\"variable:257\",\"member:640793\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
-valid_to = "1998-06-30"
-reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "94378f389974bfeeb5dc1267bb926115968add008ca65985b5447c5516795a43"
+expected_evidence_sha256 = "495817d884a4df6f69f71d571a0f09fe56643045cacaa78d4a9fffc2cc0b550d"
+expected_diagnostic_sha256 = "0e1c5914e63f25507cc340142ebc61eb82466875715bd1619d3686458d464289"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/komvux/gymnasieforbund-id"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1215\",\"edition:11333\",\"variable:8552\",\"member:462259\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1215\",\"edition:11333\",\"variable:8552\",\"member:462259\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1222\",\"edition:7320\",\"variable:8552\",\"member:404645\"]}",
+]
 fields = ["coding"]
 valid_from = "2014-07-01"
-valid_to = "2014-12-31"
+valid_to = "2015-06-30"
 reason = "The supplied gymnasium-association identifier row has no own response list for this exact window. Retain the source definition and physical column; historical stored identifiers remain unavailable. Later association lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "bcefddd16cd44c8ef7aea8e502ee1fc4699f2a4882955a378af5eb3554108fd6"
+expected_evidence_sha256 = "2298b7383c20a2f76e803aac1825828db5c604a392da6bc7dff74f8b6309f6fd"
+expected_diagnostic_sha256 = "07b4a53a0ccdc3d7e28d318944845260fe009059f30d43419e39f5b5bbd96aff"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -734,15 +437,5 @@ valid_from = "2016-07-01"
 valid_to = "2016-12-31"
 reason = "The supplied gymnasium-association identifier row has no own response list for this exact window. Retain the source definition and physical column; historical stored identifiers remain unavailable. Later association lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "99d788e142c93adede83027c354687b51760e0d64f7272c321b4c279df73f5f4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/komvux/gymnasieforbund-id"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:249\",\"variant:1222\",\"edition:7320\",\"variable:8552\",\"member:404645\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
-valid_to = "2015-06-30"
-reason = "The supplied gymnasium-association identifier row has no own response list for this exact window. Retain the source definition and physical column; historical stored identifiers remain unavailable. Later association lists do not establish this historical domain."
-evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "8140b83f3b07fb5d111dc7331ed138cb6ec5061ef50d0d49e7d946e10a02ca0e"
+expected_evidence_sha256 = "b9831325413d12372eb06d622a45bc57eead9a747552f13a71c050cd95af235b"
+expected_diagnostic_sha256 = "a760178b8f30cfbd78490c1a626f01b683621b207ecf6d4e5caaed75eb243358"

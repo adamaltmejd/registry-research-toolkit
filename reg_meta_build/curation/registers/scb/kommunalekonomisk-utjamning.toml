@@ -253,79 +253,22 @@ display_group = "Utjämning av LSS-kostnader mellan kommuner"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4654\",\"variable:22449\",\"member:291292\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4654\",\"variable:22449\",\"member:291292\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3951\",\"variable:22449\",\"member:248285\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3110\",\"variable:22449\",\"member:184303\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3125\",\"variable:22449\",\"member:185135\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3126\",\"variable:22449\",\"member:185177\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3815\",\"variable:22449\",\"member:235180\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4265\",\"variable:22449\",\"member:270918\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "c62fb2241aee21bf88ea865a7e612d2ba61cd23327907a0ba4d6ce1158372833"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3951\",\"variable:22449\",\"member:248285\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a533a86b8c2502369f3b844750c10317db29031d530a0eb7be1aa34d1013fdaa"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3110\",\"variable:22449\",\"member:184303\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "66c92f662e332b780bb0273b4b015950234f54764b518e477cc33216fc07bf3b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3125\",\"variable:22449\",\"member:185135\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "b0a0f06bc299abe8a7637a2447d87c6f605290eb7b6e6b098cd3cc7c996bd983"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3126\",\"variable:22449\",\"member:185177\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "589f73ce0525f07b9f8e73b8d3eafe131561ece6a0cd02ebe1af6733e889497b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3815\",\"variable:22449\",\"member:235180\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "1ad412cb25c9a002a98ed9b1bbb6f985d6ee84a92bf68437b2653d5761a78532"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/lanskod-fyrstallig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4265\",\"variable:22449\",\"member:270918\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The source definition gives a four-digit county/region coding range (0001, 0003–0010, 0012–0014, 0017–0025), but supplies no own associated code-to-label list for this exact window. Retain that explicit partial coding knowledge, all source fields/dates and every known source association. Do not substitute a modern county or municipality dictionary; keep the unavailable exact response domain empty."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "914184e1066c0f534c65b704bfe8bb82ade4df0d984b313e75d6fa6ac346d0a4"
+expected_evidence_sha256 = "af1b2f0f2c6668e00d11921c90730b3615a20956e12e8e50e3628e017c72303a"
+expected_diagnostic_sha256 = "46d5a5dfe4cbd183190dfc35e5a766b6853c4b42100741a6c6ac3bfbfdb88902"
 
 
 
@@ -337,79 +280,22 @@ expected_evidence_sha256 = "914184e1066c0f534c65b704bfe8bb82ade4df0d984b313e75d6
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4654\",\"variable:22467\",\"member:291274\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4654\",\"variable:22467\",\"member:291274\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3951\",\"variable:22467\",\"member:248296\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3110\",\"variable:22467\",\"member:184335\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3125\",\"variable:22467\",\"member:185146\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3126\",\"variable:22467\",\"member:185156\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3815\",\"variable:22467\",\"member:235159\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4265\",\"variable:22467\",\"member:270897\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "62bb2ccad7b0a12fda2942120730ab878b31aff33c9f1f37efcebda78d1e92ea"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3951\",\"variable:22467\",\"member:248296\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "6849d03006d539078925cd06194bb4825acecf3c13def187b3528f2a1e33f978"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3110\",\"variable:22467\",\"member:184335\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "ecb68cb3427379ed57dba9c959e6f9127830fbf6c2d611f56252e336921e72aa"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3125\",\"variable:22467\",\"member:185146\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a4d04d394e55d6cc77b86e3e2dbc034bc63145804015f0a6fcdadc6fa697ada9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3126\",\"variable:22467\",\"member:185156\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "8480c60009658eb35103c817f4f2e5d328452335a780176bdb53dfac30b9d001"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3815\",\"variable:22467\",\"member:235159\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a29e34a865c539697127f0c12eae3b602f1349745307963afbe3af37c82adb26"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/delsektor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4265\",\"variable:22467\",\"member:270897\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a1d78bb06af6972728859990182fd8d18c2f533f2f53a853168d4c991e325acd"
+expected_evidence_sha256 = "a0e0ef8898a41741fc34ba60ddf406f44c4e9e94a615682e03db6b8f22af2ea2"
+expected_diagnostic_sha256 = "007a8c6c8885da30e3c4124354a56762e9bdf4d193646fff57781ae9237d9f1d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -420,7 +306,8 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "e2d2f3646fe4be1301792cd9a223b8996308064f240b1d3399337e1d66dd6793"
+expected_evidence_sha256 = "a0163b0c0a86360dad3d7b73895c09e8d63eef1d49264df6ca49c34eb49ce3a5"
+expected_diagnostic_sha256 = "e9d582c9cfc0cf6e824f17ac3ecf473afeb257c9c3f8715d3b4a6088a2291827"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -845,86 +732,22 @@ expected_diagnostic_sha256 = "46aa7381399a79afaac25861ccd7dc9cc5d99fc10303667357
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4654\",\"variable:22451\",\"member:291291\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4654\",\"variable:22451\",\"member:291291\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3951\",\"variable:22451\",\"member:248286\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3110\",\"variable:22451\",\"member:184308\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3125\",\"variable:22451\",\"member:185136\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3126\",\"variable:22451\",\"member:185178\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3815\",\"variable:22451\",\"member:235181\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4265\",\"variable:22451\",\"member:270919\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
-evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "b57705b5b961859a81868a0d9bc81f2ed23e592e1e77aa8cb176cdd04aa92bc3"
-expected_diagnostic_sha256 = "10f87d42ed7d76974110302f71011d0ab13169f0d0edda3ee21fd34a8900bd1f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3951\",\"variable:22451\",\"member:248286\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
-evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "8f8ac86b53a37ca65080b1778f89e1052a3e624eb18a2788e5f2680cb7e3fbff"
-expected_diagnostic_sha256 = "9494dfa0b2d7d933080adffce1b384580f2d2b6914566d252965c7939543b653"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3110\",\"variable:22451\",\"member:184308\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
-evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "6bb8eaa6cccaba8d63ae29dbe4e573c6a496ab1a17bbdeb0c9db28dfdea19fc8"
-expected_diagnostic_sha256 = "d12c629acde5a880d4859d3e74140507d581096758dc2a6424a75ed0fc11ceb2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3125\",\"variable:22451\",\"member:185136\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
-evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "14db6576f57c02296bd8e81f09f4636a0e2aa7f1fb663ee7dcc2b3a4d15f2418"
-expected_diagnostic_sha256 = "4f3a1940da53f8bb97931ce427a34e1535764f6a7967812e9930e7e96ea96db5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3126\",\"variable:22451\",\"member:185178\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
-evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "11e1c04ae6145e5a48b114fcf26d5773f97ed786f0b4d4db6d936a365f555ecc"
-expected_diagnostic_sha256 = "513b8669fa3f7c017085a1245f5d43a7d80589ff73248502ef84ec264b894058"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:3815\",\"variable:22451\",\"member:235181\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
-evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "67d821d1fe170bebbf926c22b91c43339d742aac51a9dfd8b6b1904cc06b2e71"
-expected_diagnostic_sha256 = "0cb8ec772c39ad4521ef20a5f31c3ad2249b52600a02bdca91e1ead3ca992727"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:117\",\"variant:132\",\"edition:4265\",\"variable:22451\",\"member:270919\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied source does not establish the stored response encoding for this exact delivery; keep its effective value set unavailable and retain all known original coding evidence."
 evidence = "Complete native families, full physical-peer closure and recursive prerequisites; exact original and ordered own-coding plus diagnostic fingerprints. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "0a4829008c1e31aaa56b13b2e510316d8670eec8a19bce53c35d2a34de7bd1e6"
-expected_diagnostic_sha256 = "93735a3fbb9b2bfbab648efd0781482b725be5fdb29f06f93e8990bf1aec4cd1"
+expected_evidence_sha256 = "2a252a5e957ab6704c27b988718c98e0bda94fc75b0aa19017d822b996c09ab1"
+expected_diagnostic_sha256 = "d67b0711060da7a3f020325fc71dfd86ec5d3e03d6ea566d4fc1bfb27891459e"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"

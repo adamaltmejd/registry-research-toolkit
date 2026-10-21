@@ -1,0 +1,43 @@
+{
+  "result": {
+    "acknowledged": {"missing_coding_period": null}
+  },
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {"code": "missing_coding_period"},
+      "fields": ["key", "valid_from", "severity", "acknowledged_by"],
+      "rows": [
+        [
+          ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
+          "2020-01-01",
+          "error",
+          null
+        ],
+        [
+          ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
+          "2022-01-01",
+          "error",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {
+          "contains": [
+            "matches a different run of issues than its expected_diagnostic_sha256 pins",
+            "expected_diagnostic_sha256 = \"a6df460a5aeb107b1cc2c76c67222990f5d54e12bcd1f916383245e5690d87f2\""
+          ]
+        }
+      },
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/acknowledge/1"]
+      ],
+      "note": "The printed digest is step 1's identity form of the 2022 issue alone (1005, 2022-01-01..2022-12-31), the digest a curator re-pins after reviewing that 2023 left the run."
+    }
+  ]
+}

@@ -338,9 +338,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2010-12-31"
 valid_to = "2010-12-31"
-expected_evidence_sha256 = "86db91ae8b0177f3a0ed1d912b8abbe2d400c7e0986ee37c35db300b96c26669"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "1fbf36af0702e2222a24f17a9fb3058c3c6f62fa5715e819f0cda7cc30e796cd"
+expected_diagnostic_sha256 = "6edd15f72418466799f8389c4064236500168be1d55e3bd065818e59342e47c3"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -349,9 +350,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2011-12-31"
 valid_to = "2011-12-31"
-expected_evidence_sha256 = "3fe50d148cc50a7f54bd66bd3086ef1b91818f4bac85b27c8026a16226f50393"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "eef6d75493aa0395d4deb7448517cd1ee0e04e0622536d0289019723b6f176aa"
+expected_diagnostic_sha256 = "1a444cb5408dce44b64d1695e77fcd398cf8625824edfcba89fe08c00ceff6e5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -360,9 +362,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-12-31"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "3e65287f52e66c13263be9a9d81bd5507196e82bca618971cf57b1773be334e3"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "847b5fe06e17d01efa3150d3eb36f713437a2121c9966bde17ec30068370b0e7"
+expected_diagnostic_sha256 = "b137794dba0469ce4d27c166f4c3fe6fa749d00f84b12a001ec2cf4589ceaa8d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -371,9 +374,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2013-12-31"
 valid_to = "2013-12-31"
-expected_evidence_sha256 = "1037cba598dfba5fb61b253a5b27fbf02e348672bb16c9ec83cec69137462df8"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "bf4e4bbc0899d8fd53992e878eaea8b5511902e39aee561ef627dc7f21a12446"
+expected_diagnostic_sha256 = "61f367ac9f9b7018444516d90789a2472198f3a7a954d460e94f3155e06936a9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -382,9 +386,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2014-12-31"
 valid_to = "2014-12-31"
-expected_evidence_sha256 = "40e665a227f8262a8d21d553c77caeb6211c6f1f6acd3e9dd0523a7b04caf708"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "b1b977b4d81af83753195a4d0bc437462550eae43bcc7dc30fe0479e09bf33b2"
+expected_diagnostic_sha256 = "26b5bf403ff9754367fef5d20affc867272a7364ce27096bd01bf5ae6d62175c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -393,9 +398,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2015-12-31"
 valid_to = "2015-12-31"
-expected_evidence_sha256 = "aa3eb6ffb1db9506a1df277354117c126a1e119f72192dd7aea286f937485b79"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "4a990f9729817d2ae6c14c92fdf1743985dccd157850dfcb36c21b900e806111"
+expected_diagnostic_sha256 = "c37bdea845c36229221ccce0120910a474ec5478e550e5ba37cd554a1de93552"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -404,9 +410,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2016-12-31"
 valid_to = "2016-12-31"
-expected_evidence_sha256 = "74dc84f6359f48c54e3ec5fef22952dafcfd431b2040854f9c609d35a73b97eb"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "567d9a840bea88ab015668f94e0bb6d60feed306f0caa99239192739ba5c2b97"
+expected_diagnostic_sha256 = "17049b459bf6cbdf7c4ff6c3f4270191b311a2e35b41cc5e3ddd10a6dce2257d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -415,9 +422,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2017-12-31"
 valid_to = "2017-12-31"
-expected_evidence_sha256 = "b88fcb2a10a9e0b45eef68997496fd7907baa53b0504ba4ed26c3c49f2897a8d"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "279a40f2fb940768433c0b0eef2dc20f987a541a96ef66305d0083b458bb949c"
+expected_diagnostic_sha256 = "112a4a93f2b3cccea667931305da5450dfb293d21a5aec81ec3e093cf67fb601"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -426,9 +434,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2018-12-31"
 valid_to = "2018-12-31"
-expected_evidence_sha256 = "c1f7c2e5580c71062587c8163fac43639a90bf764cb68bbc8dc2a665bf3bbc84"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "8a6f973fa8d4020e219b4f122290daae21e5207fcce356ef0fd6431aaa680ebb"
+expected_diagnostic_sha256 = "f69b3026fc6d1c62b1b88a955a76e60fecd0628b095dba4c5ae161b603320acc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -437,9 +446,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2019-12-31"
 valid_to = "2019-12-31"
-expected_evidence_sha256 = "39807efffd116e38aa41818a4465a4c38cbc5e942ec76c2f8deb68a0e4d04e8e"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "fabbfea995c2ffba165b0ffb5e6abed70f37ed13e8d2a4d2f0852cd2a30c05e5"
+expected_diagnostic_sha256 = "c0b9d140bcc257cdf9c11fe9b1d045f6d6f5d91b2cdee3d69b8043230ac21f9d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -448,9 +458,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2017-12-31"
 valid_to = "2017-12-31"
-expected_evidence_sha256 = "b8eaee5d9c0026f2ee339e3ef1d6e03824dc92a254275ce904b71b7a301eb938"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "4ee9109f7b9d5390ec72cc5d7b9b8e03060fa7effcd8ea6c9182e00afe8cf9c1"
+expected_diagnostic_sha256 = "e289118b30a06ba53d65daf22a16e4ad416bb651b5f94815010c87c7bb9b35e1"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -459,9 +470,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2018-12-31"
 valid_to = "2018-12-31"
-expected_evidence_sha256 = "6b79c9c284d057a4a52a4402a8129596a1b6e474f10348171d5f5c95a9ff5b33"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "8a8ac9754bf554b209650a562613f2c2b85e23d231394d21bb9b4c9a20ce5a64"
+expected_diagnostic_sha256 = "61ac98fb9453f06f454462497e5ac307b4c85cd0a1f3ed52a99114fcf80df060"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -470,9 +482,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2019-12-31"
 valid_to = "2019-12-31"
-expected_evidence_sha256 = "cb84f0214a3628cc6a347f73e1ec3325c6c753cff3fe8c5d41d5f64dfecf2b9b"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "f40f4a693c703642574d6251dd2c7217dd946a28240baa227d08c2083982a93f"
+expected_diagnostic_sha256 = "dbc42f01ec54f331ef079794dacf27bbe8e0fc53987521c8abaaf69be3548bc5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -481,9 +494,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-12-31"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "1ec442172e54f4ec89c403004567678dd72df1c2ddcac5ea2debf9f6c91e4f5c"
 reason = "The literal column names SNI2002 while this snapshot operational definition explicitly claims SNI2007. Supplied associations do not establish its historical stored domain. Retain both declarations and leave coding unavailable; do not copy the later SNI2002 domain or choose an unsupported classification."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "2a9073992e0a5421022535404af5d5a25a5e4c458e7355ac0718d94fafeb3b0f"
+expected_diagnostic_sha256 = "a6399e5395d3f18b7d23733bb9f0d28a91b89284c2bb8acb0f2155a09c6be4cb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -492,9 +506,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2013-12-31"
 valid_to = "2013-12-31"
-expected_evidence_sha256 = "2cd25decf4bef288ddc4dca37a2a88bdb177e544eec9a9eaaa03b60c3ad4b932"
 reason = "The literal column names SNI2002 while this snapshot operational definition explicitly claims SNI2007. Supplied associations do not establish its historical stored domain. Retain both declarations and leave coding unavailable; do not copy the later SNI2002 domain or choose an unsupported classification."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "3701b3e4758268055ad0fee57eb24282acdf0f64de61f20369b150eb02c56e1f"
+expected_diagnostic_sha256 = "77f4f967d5567f1047587b12faba14fdbc57b19bcdca23e5eea2efacf0ad8f3b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -503,9 +518,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2014-12-31"
 valid_to = "2014-12-31"
-expected_evidence_sha256 = "c8ca6f14e86e1d0e9ac4a5d54e0ad88c2bf80b359e9801297ccd6c0418648d50"
 reason = "The literal column names SNI2002 while this snapshot operational definition explicitly claims SNI2007. Supplied associations do not establish its historical stored domain. Retain both declarations and leave coding unavailable; do not copy the later SNI2002 domain or choose an unsupported classification."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "a9b5da1496e179bd3c9cb61bae0b296666ad03893c0213c711ac61dfe581bb97"
+expected_diagnostic_sha256 = "5739cebc31dcac3d6ab45677e7be6c469666a629e92f80ff4469e175e363ea03"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -514,9 +530,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2014-12-31"
 valid_to = "2014-12-31"
-expected_evidence_sha256 = "c32adc5ae61ac260d4c1315fe527c3c56dedc3ba17a75e707e7ccd8d4c46eaed"
 reason = "The literal column names SNI2002 while this snapshot operational definition explicitly claims SNI2007. Supplied associations do not establish its historical stored domain. Retain both declarations and leave coding unavailable; do not copy the later SNI2002 domain or choose an unsupported classification."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "478bc49786ccb8f6c224169b113f382c18556b2dc4e9a4d58096d921eab59fc5"
+expected_diagnostic_sha256 = "5304b5762744119aea61da89d9bc0279ccf4a77a012af2d45c2d2b6ba260c8f6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -525,9 +542,10 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 valid_from = "2012-12-31"
 valid_to = "2012-12-31"
-expected_evidence_sha256 = "1889bebb62a82ed3d3b721b92a8cf2df31339d33542a22dd450487cf197da5f8"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
+expected_evidence_sha256 = "63d8e4b8af9585f804f863f4a4572ce1f181a64d465677526128c9a6a6a562c4"
+expected_diagnostic_sha256 = "e56e6e35c6e7b0267bc358c8eaff2f2a7b5deb549adf7c48fc817fadd69d106f"
 
 [[identity.partition]]
 variable = "8.1721"

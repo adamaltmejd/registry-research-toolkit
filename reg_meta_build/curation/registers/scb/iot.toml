@@ -5457,32 +5457,17 @@ source_authority = { "records_sha256" = "3d9c1ffc7f76dae0d625eda76a31431fc3dd3f3
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/iot/forsamling-den-1-11"
+refs = [
+  "{\"semantic_record_key\":[\"register:25\",\"variant:763\",\"edition:13458\",\"variable:24373\",\"member:604052\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:25\",\"variant:763\",\"edition:13457\",\"variable:24373\",\"member:603571\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:25\",\"variant:763\",\"edition:13388\",\"variable:24373\",\"member:599238\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
-refs = ["{\"semantic_record_key\":[\"register:25\",\"variant:763\",\"edition:13458\",\"variable:24373\",\"member:604052\"],\"source\":\"scb-registerinformation\"}"]
 valid_from = "1993-01-01"
-valid_to = "1993-12-31"
-reason = "User-approved bounded source limitation,2026-10-01: No exact historical parish codebook is established for this1993–1995 window. Retain geography source facts without projecting a later geographic regime."
-evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/iot/forsamling-den-1-11"
-fields = ["coding"]
-refs = ["{\"semantic_record_key\":[\"register:25\",\"variant:763\",\"edition:13457\",\"variable:24373\",\"member:603571\"],\"source\":\"scb-registerinformation\"}"]
-valid_from = "1994-01-01"
-valid_to = "1994-12-31"
-reason = "User-approved bounded source limitation,2026-10-01: No exact historical parish codebook is established for this1993–1995 window. Retain geography source facts without projecting a later geographic regime."
-evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/iot/forsamling-den-1-11"
-fields = ["coding"]
-refs = ["{\"semantic_record_key\":[\"register:25\",\"variant:763\",\"edition:13388\",\"variable:24373\",\"member:599238\"],\"source\":\"scb-registerinformation\"}"]
-valid_from = "1995-01-01"
 valid_to = "1995-12-31"
 reason = "User-approved bounded source limitation,2026-10-01: No exact historical parish codebook is established for this1993–1995 window. Retain geography source facts without projecting a later geographic regime."
 evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+expected_diagnostic_sha256 = "8d2017caa467e71be72cdc8d0d53353fc68521bbe3e59ce15c0f972c18f2c203"
 
 # #1302: _INKLGP disposable-income columns held by SWECOV (IoT2015..IoT2019). SCB's
 # Registerinformation has no row for them; SCB's LISA variable list documents the LISA

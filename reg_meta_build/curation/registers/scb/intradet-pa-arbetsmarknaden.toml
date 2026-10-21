@@ -3030,8 +3030,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "22efcaf0e3a09ae1394e0c9a2d0cec42dbbf0ebaf4db678848cfafced95e9243"
-expected_diagnostic_sha256 = "561a768fe56e7f4c403d7cc3e56aefce1b765d5b7889812ac770b76b269fda08"
+expected_evidence_sha256 = "f74cfdf3b8d863007f94e44cbffec723a49d969f6102dec372fab31349eeaba9"
+expected_diagnostic_sha256 = "da17c6d7538ba71a873162204d80e5b24cc94c69f764d0ce213da4c95f721f35"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3042,8 +3042,8 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d7528c23cefbc52fa5ec90aa1e96e93c1b3ae719d4bca1e3d622969bcb1c183b"
-expected_diagnostic_sha256 = "cfd5d9fe6e5a8212d03e5359b38b4265bbab1f09da2bf41712fcffa7525262c4"
+expected_evidence_sha256 = "12f64608e11c0663a374e63e66eb41baf26f4936b9a2366a1804f5aedcf2707a"
+expected_diagnostic_sha256 = "bd254c6f17f0adde81518976a3cfabad6356f04405de24f9b147ea2f25b9d745"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3054,8 +3054,8 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "c14c159c033a89033ecf667ea41701601dd62596e5a36522fda02c44ab26726f"
-expected_diagnostic_sha256 = "24ae62d24ccb27f63c0523585cb2bf53e0bd8ef6047cafe34cfec709ca0d7f23"
+expected_evidence_sha256 = "73b8099d088d9b423863ae8c67abfdb409b16ab739b8f529d7b107404bfe5eaf"
+expected_diagnostic_sha256 = "1bf8114acaf7621353e5c693240721a06a40ff6c6098e329e4b5a43745037f4f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3066,8 +3066,8 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "dffd31c941c97faed74382303c26ea353b45d4780964a8276cd8ab4dfa3a5533"
-expected_diagnostic_sha256 = "4eedcf379fa697dff499ed91afd21879fc50778538da6b2da6b6cd2b5402abcc"
+expected_evidence_sha256 = "56f9ba6d1071b371ac1722af2fd96d16fc43cd61155a59221a72371e688cda08"
+expected_diagnostic_sha256 = "e8883ec6935afc08f7f7ddbdfef3a30490fc0266e42ba6da9f4fb8dce8f56954"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3078,8 +3078,8 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d9de6773e8f704c94bf2fe17f5164d11e3beefe24dfddb5236c85c2118a57904"
-expected_diagnostic_sha256 = "310155d6042b29c2d53a1bbffd324ee0f204c601683d0675653c99a839d900c3"
+expected_evidence_sha256 = "b7c2d5bcc5d002906672ff0d478b92b1546ff4f9a0058c766961a7e6bec18579"
+expected_diagnostic_sha256 = "9daa1b5126bd251332308424ba7d0a10719e984675d045008beb42434bdea2b4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3090,8 +3090,8 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "c3573f281aa18eb5a9b85d8502ff6b8b5d98e2d2606f9d0f41f50eeaa25020db"
-expected_diagnostic_sha256 = "58b0e6630edbf37d2377dddd8d7350d112c981facb0e7127db645f099cdec01a"
+expected_evidence_sha256 = "89efbff14fa2546159f91ca367c2bbdf6883c597a79732d8dbe72d420f527694"
+expected_diagnostic_sha256 = "adf32690779c6f4c0787c3939bc55436186f264195e8f789d2307315e165b9b7"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -3144,8 +3144,8 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "be0b183cd8c5c528f6e14acc6c24b3e746119e17cfef0efc9cde007d75a148c7"
-expected_diagnostic_sha256 = "1e8a7995662d7bd4405a01750427df18ccac049c515541c2318f0a0ad5b0bac4"
+expected_evidence_sha256 = "2e33381e8d20181d9e69403a4151ddf8e1b8091e4ba6d1245629d8d9b007bb33"
+expected_diagnostic_sha256 = "97e2c50037c7ccb86a00c5dc2cc321837fca1b1bce810c5a1aaab94a297e48f4"
 
 # #1261: siblings SCB names with the bare family label get their subquestion as a name.
 [[errata.field]]

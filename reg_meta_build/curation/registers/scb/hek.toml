@@ -5993,79 +5993,35 @@ over = ["Ja(Finns)/Nej"]
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/hek/bkungr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6198\",\"variable:2702\",\"member:393660\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6198\",\"variable:2702\",\"member:393660\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6182\",\"variable:2702\",\"member:391537\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6129\",\"variable:2702\",\"member:382386\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:3897\",\"variable:2702\",\"member:243257\"]}",
+]
 fields = ["coding"]
 valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "d5f1013762d1290b0caafe1ba62d3397b2396973ecb46a46317e7750bdfa9934"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/bkungr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6182\",\"variable:2702\",\"member:391537\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "c834cf776e5c90c860331e9bbe952ed1b290dbb0cc63b438c7d1ba7271fde8f4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/bkungr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6129\",\"variable:2702\",\"member:382386\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "2835d1346c9664537fab0232eb44a3669d9aa618b642759c70fd5cc55d4be24c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/bkungr"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:3897\",\"variable:2702\",\"member:243257\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
 evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "d1a79ffad468ecf807d978f2325a13c92d5c08f3f4a654017b0dcde87302210e"
+expected_evidence_sha256 = "4e49012a8eec7ddc9d59dd84b82d48825a62bdf5c15b019620014387b74cf378"
+expected_diagnostic_sha256 = "a625a04e624d6cd5e26b1cb855cffadf98897dd760dad5929c2f8c8ea8aefd30"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/hek/naringsgren-for-individ"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6198\",\"variable:2702\",\"member:393666\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6198\",\"variable:2702\",\"member:393666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6182\",\"variable:2702\",\"member:391531\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6129\",\"variable:2702\",\"member:382392\"]}",
+]
 fields = ["coding"]
 valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "910d35330e06c6cc9c5d1aa3d71c5d6a04c4d7930a636c3bed49fa33ffd2c695"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/naringsgren-for-individ"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6182\",\"variable:2702\",\"member:391531\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "3929c1c1a187bfc523a792d41dedcbde1d91a24813be0d83e1868dd8b976c0a8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/naringsgren-for-individ"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:6129\",\"variable:2702\",\"member:382392\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact own operations explicitly identify SNI2002 and char(5), but the complete native family supplies no own SNI2002 code list. Preserve that classification statement, all physical columns/periods and raw associations. The accepted canonical reference is sni2002 (classifications/SNI2002.toml), whose777five-digit standard codes are known; missing/nonstandard stored encodings are not. Existing checked-domain authoring requires genuine own members or independently reviewed documentation, neither present here; a global book override would wrongly affect later own SNI2007 histories. Leave the effective domain unavailable rather than fabricate an association, borrow SNI2007 or claim verified conformance. The known source statement remains in the original operation; these windows currently lack a structured classification link because the installed authoring contract cannot add an absent scoped declaration safely."
 evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "00579bd41c53f9812cbe244dee01b1a928183f9cd2276ba9a23188224a07f56d"
+expected_evidence_sha256 = "e777aeec3ccd8bfe23700eb7260e8a8ac926996d5f69e73b615f4bab693a3074"
+expected_diagnostic_sha256 = "3024dfb79276c3b467f3caf27d9869d75a0c1bd756fe827375b6074cf4a17eb7"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -6098,51 +6054,25 @@ valid_from = "1975-01-01"
 valid_to = "1975-12-31"
 reason = "The exact supplied window has no own usable stored response domain. Stratum changes in the complete observed history, and later BAAVK windows lack their own code lists; ordinary neighboring lists cannot establish historical encoding. Preserve every original, physical column, type, period, operation and association; leave only this effective domain unavailable and retain all known domains elsewhere."
 evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "f4a07062e7996e32929f6799f9c3548da8bbdf6c338a0b682020e50f8c8755e7"
+expected_evidence_sha256 = "a2efb3e750ffacdd41ee65df9302494da8213e255e65e03b7be25dce51ddd23d"
+expected_diagnostic_sha256 = "59c34d09209732a573e6b3f87cdd1b89e993efcb8cee41eeff692e691ce8bdfa"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/hek/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:3998\",\"variable:685\",\"member:251236\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:3998\",\"variable:685\",\"member:251236\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:4233\",\"variable:685\",\"member:269674\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:4933\",\"variable:685\",\"member:301601\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:5814\",\"variable:685\",\"member:357299\"]}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The exact supplied window has no own usable stored response domain. Stratum changes in the complete observed history, and later BAAVK windows lack their own code lists; ordinary neighboring lists cannot establish historical encoding. Preserve every original, physical column, type, period, operation and association; leave only this effective domain unavailable and retain all known domains elsewhere."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "d95b8b3444e88acef4a733aedc62999fecddd1014cc2244e6d497ee07e72ab8c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:4233\",\"variable:685\",\"member:269674\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The exact supplied window has no own usable stored response domain. Stratum changes in the complete observed history, and later BAAVK windows lack their own code lists; ordinary neighboring lists cannot establish historical encoding. Preserve every original, physical column, type, period, operation and association; leave only this effective domain unavailable and retain all known domains elsewhere."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "391ceb728928436a76a7671da5fd96b8b65dce7d3cdbc4e738bfd02af3533081"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:4933\",\"variable:685\",\"member:301601\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The exact supplied window has no own usable stored response domain. Stratum changes in the complete observed history, and later BAAVK windows lack their own code lists; ordinary neighboring lists cannot establish historical encoding. Preserve every original, physical column, type, period, operation and association; leave only this effective domain unavailable and retain all known domains elsewhere."
-evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "9afcdc09cd5bd15ada211ef22c7f2e72f5be93bca0be8bbd9858064820092401"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hek/nedsattning-avkastningsskatt-avtal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:97\",\"variant:99\",\"edition:5814\",\"variable:685\",\"member:357299\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The exact supplied window has no own usable stored response domain. Stratum changes in the complete observed history, and later BAAVK windows lack their own code lists; ordinary neighboring lists cannot establish historical encoding. Preserve every original, physical column, type, period, operation and association; leave only this effective domain unavailable and retain all known domains elsewhere."
 evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
-expected_evidence_sha256 = "86edc72b8f99e8ad1c177a372469fdbabe2dd1d9a2bcfd054097d887db65b9af"
+expected_evidence_sha256 = "5bf67fcbd2c6cf55faa6927b026690008623338b508c6168a4ad38b3eb2d3886"
+expected_diagnostic_sha256 = "2a8110da1d27bbe436c15127b5221c8c04662addcbbd916c0caa2fbdcdd9e1ff"
 
 # #1261: siblings SCB names with the bare family label get their subquestion as a name.
 [[errata.field]]

@@ -378,7 +378,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "908aff502e9375c01196826c88c443b664aefc5017b8b483372477ab8c377536"
+expected_evidence_sha256 = "44135a11e5b7d5a7e60e61780247a8ead5855ac156ca2c0fc710be9ca262f682"
+expected_diagnostic_sha256 = "893b0bc56af3a144390c5a3cab6b6004c26736d955e67d03c35d8409092cc4e5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -389,29 +390,23 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "98155a290cc34d38bbd518677ac279fa57130ff5f4fe2e663d7f415b3b50d954"
+expected_evidence_sha256 = "2ab4ceb4191d5a7f40f7583ced4e699504aa371ffa625ca3b6a6714101e9af41"
+expected_diagnostic_sha256 = "213b4366a4f4ed333574c0f218fb5b15bb9f5d56c44aa0a6f2e7f9615bdde600"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/lokal-demokrati/brukarsys-utover-delegering"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28613\",\"member:291546\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28613\",\"member:291546\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28613\",\"member:317309\"]}",
+]
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "140fb8c0fc16234bbe259ce85769559be98a88b499d61f1fef3413ca62eedddc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lokal-demokrati/brukarsys-utover-delegering"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28613\",\"member:317309\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "22e393d563cd4c9b03b31e86f87ecbcbbfd4f86e85912ec0d17f693cb4337f00"
+expected_evidence_sha256 = "0ff5c79255eeb916f0ef60c368a8686fbedc8777cca4193131e2a343628d3e48"
+expected_diagnostic_sha256 = "7fb03e812f7368db1112451b30f58eada6f5c405f274763a435728fc111068ee"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -422,7 +417,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "ec6fb5c111f5fe1e215f6cda992fb998fad983c3b45bda3794f217a2584f23af"
+expected_evidence_sha256 = "af528411487c987e3c616a1ac7fc74c57fa0c600d4418d41c90f9af39f63b199"
+expected_diagnostic_sha256 = "8189ce68221f79bb5d2a513966e53dd16b479ac2df5b1a9d4dd10341bed2ec03"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -433,29 +429,23 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "4dcb8de5e06af10486e60a0654fff9fd8677186d4ff8b7596618fa8443684049"
+expected_evidence_sha256 = "c4b472158a192f781a233552579d23a024510b7270f04ccf884ffbc0be3c4c04"
+expected_diagnostic_sha256 = "ad3fcff2cc35ddbdfcce3b66d84ec6eb03f10e7dc28922048ff893f54bdb240d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/lokal-demokrati/medbkont"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28617\",\"member:317083\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28617\",\"member:317083\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28617\",\"member:317197\"]}",
+]
 fields = ["coding"]
 valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "f0aa7f73e9b039009df0ad04f8ba7d46240a492291d8e0b917fc2bce181092e1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lokal-demokrati/medbkont"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28617\",\"member:317197\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "b8757d62c52ed6d96401bcfe87e21f829227e7b4c94a9b324427f63192e4bdac"
+expected_evidence_sha256 = "bc78bec3f0cc3a25a4fbca44801c05a870792993167352e9da45b585b8cfab90"
+expected_diagnostic_sha256 = "94b72ff973eab50f5d36f18edf118815383c750d8942799bd9011d9f144c6153"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -466,7 +456,8 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "09c4c9f2b9e05cf6b721f657f873523027e8d9fe235240dc24864717e7ab2e03"
+expected_evidence_sha256 = "e43dd276c952fe230e7f9664b5b3d08ae56dde16ac346d5ac696f101dbf5323a"
+expected_diagnostic_sha256 = "d9fc051af557ab844344ec147dd2bb278fecd773955694b0b27441d6bf3718a0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -477,7 +468,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "ad59c4b0d7aeb82aa9826076f03c10f6891170545ad09443476dfb6a58752697"
+expected_evidence_sha256 = "d4f9fddb073013dceee49abc805d712073be3484b9e6b851a15644e019797795"
+expected_diagnostic_sha256 = "750f177cc05e35c2516888c116e87de880f5db554b27ef7f816258c844e6d2a2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -488,7 +480,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "8035c4b590863b3ff317063fda6b63126a677bee5f1a09942efb757fa0f50155"
+expected_evidence_sha256 = "fb589f5aac5f94db1918eb36e2e641216fbc802ae326deb274d87a4194657e36"
+expected_diagnostic_sha256 = "71474807e8c8bb2d1ba134bde97b809e4fb55968f3dfcb040c664e79073d708b"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -1861,8 +1854,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "908aff502e9375c01196826c88c443b664aefc5017b8b483372477ab8c377536"
-expected_diagnostic_sha256 = "3bfc4c536506e36fe33a9b9772b102ee1c7fc6b351aa2dbb9d7cfca745195b47"
+expected_evidence_sha256 = "44135a11e5b7d5a7e60e61780247a8ead5855ac156ca2c0fc710be9ca262f682"
+expected_diagnostic_sha256 = "2ba203d713d67c2c5392dffe64a47dcfe1455f9fbb38f220a775e4ff96709d04"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1873,8 +1866,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "908aff502e9375c01196826c88c443b664aefc5017b8b483372477ab8c377536"
-expected_diagnostic_sha256 = "6282295759efc9fdc65de4abc93057f90c23dab083e1d2a3417029fe7688e66a"
+expected_evidence_sha256 = "44135a11e5b7d5a7e60e61780247a8ead5855ac156ca2c0fc710be9ca262f682"
+expected_diagnostic_sha256 = "3e90f9915b77baa5adf351ee6b54682c5a22e9e64beef4ec161db20842e76d2e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1885,8 +1878,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "4bc23d7e5722e5a43c1a193d433a286d1e3e46f5c526ca886c3bfceed15e64d4"
-expected_diagnostic_sha256 = "d28c4cf977bc8d3f20aaf6b549e4fa1edd10baddf71f8433cccf78e02d9403ff"
+expected_evidence_sha256 = "e58ca8afbbb1d9e2c3847c7463fb2ee313743ea991ee92321db8572b3f88a6f6"
+expected_diagnostic_sha256 = "7106228028d97463cd9df9db92732698c8d10e1db2488082e183849de3441172"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1897,8 +1890,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "d5156f5517ce254504d210cbd316ea6c6c716a2da12df186395320e54139b304"
-expected_diagnostic_sha256 = "3173fbd77b1a78f6905340ae98bc5a0434a2244405f0bed06a3f2c8d3ecb4a63"
+expected_evidence_sha256 = "9799a79cdda4ea38d9d5415bdafcaef435621d9c2ad742705657c5bfcefff7e7"
+expected_diagnostic_sha256 = "f3aeede76dea7293329d350653296ce3847265ff71179015af252dfd49e9a5fc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1909,8 +1902,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "4cdd0def7c711c2f9aec905c148e45ec64c958297902d12aba805834b10d97f6"
-expected_diagnostic_sha256 = "0c3c25a55e0609b6262209aa79b5bed7439352ff2bf424921b6a7e5569b66206"
+expected_evidence_sha256 = "5a26e209a1021b2b029d8a778347a1b294d5118c973dac7ef9bc90eae2e0a09c"
+expected_diagnostic_sha256 = "a3e24f2ec302c1513892e7cd051afc122771e4b76b804ecffdfe5ca5b232f71c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1921,8 +1914,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "89302ed1d34277a7a8d91a2e9340f1c399fa2967d45d5de3b65e37cdce29f9cf"
-expected_diagnostic_sha256 = "c9be22d5dd504cce418088611aa5793ba7206a6946446d1b172c38de3386bd61"
+expected_evidence_sha256 = "ebc04170db8580d726f56ad253062df3d51deaa919183b312ef26e3e04f7d896"
+expected_diagnostic_sha256 = "bb12e3feb6e421fc1d9de9b5470666f9a6460bbdaa77c5da0d16570e580a4bd6"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -1993,8 +1986,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "dccaf675aee69a3606d80b2feb1fc97661cb02e3e226093252225b9691db8e90"
-expected_diagnostic_sha256 = "3dcb8dacc96e201980064ac1f23b0b63b6cfa6aa741f4fd014876e3ff9a500b1"
+expected_evidence_sha256 = "827a3928c2fa564a04c21fbccfbe4f34e5be58f3d4f328f8a3941bf2c1b0d89b"
+expected_diagnostic_sha256 = "ba96d9a9104b8b40caf51df8fc06bd0f4e19aa932f903e0cf67ba803b6bf3297"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2005,8 +1998,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "7804364338dc24c5ca60eca1de2fdf8415067a75a106a722ba431b5b511c756e"
-expected_diagnostic_sha256 = "2ea85e905bb4f85111a3141cc0dad7dfea5099ed21bed8d68ddb75d36716a283"
+expected_evidence_sha256 = "b0ec5b990fbcb4a897fe274cf0c851ddddd8bf6f32838129f07f01c986d9f0a1"
+expected_diagnostic_sha256 = "f30b9c76a8dde62dfa2f1274aee8543bc0a06e400821e4ed1dfea3ca480d8f83"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2017,8 +2010,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "2e10eeba272015823a3c57114b227151afe0b0922d479932eab3d3e5c461d9dc"
-expected_diagnostic_sha256 = "2ece44a62134cfc6db1ab73b7c6312f44bd0fcd3e1bb2ad9f6acabfe77d14eb2"
+expected_evidence_sha256 = "daf40d5698a3d0b63727c6a9d4d161fee62249d36dba1e3de3b458361f882f80"
+expected_diagnostic_sha256 = "31aa528eb4177ef7259e4e99da5338568c5684cc9f737dc0a841777b1642c905"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2029,8 +2022,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "99acc6463390963006cb307dc8ef917a0bc7a48ace678bb86e09c19883fbd535"
-expected_diagnostic_sha256 = "6e93f6014bdb5dccf8b07a15f1a8b22568f17a15791211b3746e81c557563c29"
+expected_evidence_sha256 = "4fdc385538ec54408154c739d396baebed45fce071d91ff99cbe46c259d483f9"
+expected_diagnostic_sha256 = "00deea02fbd37a868efa4e8e45983f13fd02f2558ec13ea158e40d868b20da41"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2041,8 +2034,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "2cb0badda6c024ed4ed10676cf58922bf450b2fad516a80e7b386c4ea2d0a8e0"
-expected_diagnostic_sha256 = "1a3e2bc66563dafbb7c4bdc90a13b0c3ad78aadce9caff3bb74a900b129ffcc1"
+expected_evidence_sha256 = "ea4df4f34914c3e311a519678df32144e247ef7ac5a135dc48e282506590a21d"
+expected_diagnostic_sha256 = "bfb0cf10bac41870c072e7cb3c356f03486152561ea17224edff19c9e4b3b28e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2053,8 +2046,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "b6647d26b92917b60accdaf4047ef7f8b6b0e60563994bf9d63d36e9b210e5ea"
-expected_diagnostic_sha256 = "62d7c897071e7126725667915737a6a1b26cd82c7ace11405b0c671290507882"
+expected_evidence_sha256 = "cbb9baa8779d76126410dbfc5d736bb02ea2b032c2933c1b1ac545b753f5e4d0"
+expected_diagnostic_sha256 = "cdf631b78a174d7580acc70fec2561b02ac7b38a9936562d8981d6917395bf03"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2065,8 +2058,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "9ea2fd9f8d295c4fa404fd64c090703ed8b0001afbc8e9fb6dc311a8da1930d4"
-expected_diagnostic_sha256 = "c35b3ea168efa6084be4c2d3727fa34ee3120bb762741d5398a1399e872f6942"
+expected_evidence_sha256 = "75f561ed4e356d69f3208379d2e6ac6be69a7d16fe1b2380920cf17505ba4896"
+expected_diagnostic_sha256 = "5448aca06c96e02721a84a0b47f2f04525f60c0c86e6f78b21466a2175065a4c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2077,8 +2070,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "0fbcfb35fae10c797535188f58ad625437efacff2e9120fee9b1e43de1dbacb3"
-expected_diagnostic_sha256 = "21615980a5b80e479535ece446d8082faf677ee5b32e92fe6c602c34f27e71ab"
+expected_evidence_sha256 = "7d43922346dcefd34043fdb31ce97085666cb42f015153bb28b3fefd817f3015"
+expected_diagnostic_sha256 = "ddeaf0694f078585824f2bcf5a19045cecaae9b48d9ea87ee1705c89bbb7b1fe"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2089,8 +2082,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "66aca34d8d694c81a95fd4a98430361f280db49fa29d44902f99fdfdcafa1022"
-expected_diagnostic_sha256 = "c4cfe21ccf39e13510067be23934877bc164ccec948b59d2bd8041e4db4325c9"
+expected_evidence_sha256 = "827df9f534e2f8d145112cb5605019c0028b31507cb62f0c6519141785563d18"
+expected_diagnostic_sha256 = "063423a933e6df9f49f056767d31d438ea0d0ae277b083c7399c8ff12d071e37"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2101,8 +2094,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "e388efa885917ac52ca2857b885e6a84ea9e49c38d82659de0bb1a20955d8a4f"
-expected_diagnostic_sha256 = "2bcb52c4ddc9cdc3c874f87a39308a463cbc8bd744a83a1a824f29e46da03634"
+expected_evidence_sha256 = "7fad87878e4335e3b02dc31503284e5bd015c38c1a2b8ee26fcec1dd1c53c706"
+expected_diagnostic_sha256 = "40e21f665ceb95dee574326cdbf328109eb76823506d2603097b539b5a8d7bce"
 
 [[acknowledge]]
 code = "ambiguous_sibling_shape"

@@ -229,98 +229,23 @@ panel_time_grain = "delivery"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:7512\",\"variable:30883\",\"member:416210\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:7512\",\"variable:30883\",\"member:416210\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:10009\",\"variable:30883\",\"member:445928\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:11288\",\"variable:30883\",\"member:460351\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:13318\",\"variable:30883\",\"member:593227\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:14487\",\"variable:30883\",\"member:660587\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:16473\",\"variable:30883\",\"member:805004\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18154\",\"variable:30883\",\"member:840855\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18699\",\"variable:30883\",\"member:882702\"]}",
+]
 fields = ["coding"]
 valid_from = "2014-01-01"
-valid_to = "2014-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "f2267e05214b51a2700d8087a816eb26b226bb7083420cd203c7168afa8e83a0"
-expected_diagnostic_sha256 = "51c35b5a6b36cb6b8c1e899ac35e189d9945bfbeb122ce756b77f5099e6da92a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:10009\",\"variable:30883\",\"member:445928\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "8c18d9f1374922e9c2e0260a6f3218e998521bdbd8da385118243558ec56e4d8"
-expected_diagnostic_sha256 = "fd51d199755c1796ad0032ebc6687852e96aa61bcb4e3b4ce759274cc12424e5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:11288\",\"variable:30883\",\"member:460351\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "75037f4b3eff3db21f58dfdd32d2b0a52670b5633e0cf6663c4f5fd0d2b13040"
-expected_diagnostic_sha256 = "1c7da005640a236a6de880013f53d16751d17c9fe576c2e68ebcbc3eae4dd550"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:13318\",\"variable:30883\",\"member:593227\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "02ae70006975b3b89d7dd8813cc98ed8fade13afbf4ca8a5ffd98d46ea3109b0"
-expected_diagnostic_sha256 = "db5ad32f2400b419b992d1e8a8b53f6c4ea8d9ca60e7c89eca44d09a60829a46"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:14487\",\"variable:30883\",\"member:660587\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "d066982a20b1d5004971a0efb742e8d39deb9d0e7187a0dc4c08debcced6f38a"
-expected_diagnostic_sha256 = "38da58ba55ae047acf0658a4346ece01bb39dd9d9b45b345d8344c85be1d26fd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:16473\",\"variable:30883\",\"member:805004\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "ba5ed9e326a942d1acfcb92c7ee31859f8df19b7896ef84be97c96cf9df8bc69"
-expected_diagnostic_sha256 = "9f22167a5e3a75221db788fe928299543aa966086e2cf2a693597b61d4eff2e3"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18154\",\"variable:30883\",\"member:840855\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "96d06687214d87424930d7830265c0cf5512a5b504297d665b465e1efc1e0f75"
-expected_diagnostic_sha256 = "5bdb67fd5bae3ece56f3efa76b612e70eddb16245b0b6617b9e918d4a4d09d90"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/stativ/ssyk-version-arbetstillstand"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:18699\",\"variable:30883\",\"member:882702\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "0eae3d295e94b0555fcb433f5a934ee5acc2b1b37f32a24a1b8fd927561d4bfb"
-expected_diagnostic_sha256 = "bbc8589f98d03e55860b2de79e8279354bc483de3f260af0ad3084077f3c53a2"
+expected_evidence_sha256 = "b56ddac55a316f57ec7d226a6187a9576685bdf79f8722b69a202891b7dad4b0"
+expected_diagnostic_sha256 = "afe240b34b4633b5408b466683ac634861191a9ed188d39a163acf75ccd8abc2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -331,8 +256,8 @@ valid_from = "2022-01-01"
 valid_to = "2022-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "db1c33c879ff3479fb2f227f06c9d69be09704e53c1ef608dd212a077c968aa9"
-expected_diagnostic_sha256 = "1a9d0d685c0dcfcfc97e5a026699fc055735424ca9b5a9ea59275dfc308f7f61"
+expected_evidence_sha256 = "fdff12746db6e3f190efbb6869e593acd4646d5c49fffdf8f17d06c7aeaa3102"
+expected_diagnostic_sha256 = "447c93a0050ae495bb6a339c803787e40f26794d075af3ef2fb342be1fae1f7a"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -404,13 +329,30 @@ noted = "2026-10-15"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/stativ/sokandekategori-grupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4623\",\"variable:29240\",\"member:290123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4626\",\"variable:29240\",\"member:290354\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4627\",\"variable:29240\",\"member:290504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4667\",\"variable:29240\",\"member:758135\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4820\",\"variable:29240\",\"member:758530\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4822\",\"variable:29240\",\"member:1016014\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4823\",\"variable:29240\",\"member:1016015\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4926\",\"variable:29240\",\"member:1016018\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4936\",\"variable:29240\",\"member:1016019\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4937\",\"variable:29240\",\"member:1016161\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4947\",\"variable:29240\",\"member:1016162\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4952\",\"variable:29240\",\"member:1016163\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4954\",\"variable:29240\",\"member:1016164\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:5294\",\"variable:29240\",\"member:326978\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:5927\",\"variable:29240\",\"member:368993\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4623\",\"variable:29240\",\"member:290123\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4626\",\"variable:29240\",\"member:290354\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4627\",\"variable:29240\",\"member:290504\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4667\",\"variable:29240\",\"member:758135\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4820\",\"variable:29240\",\"member:758530\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4822\",\"variable:29240\",\"member:1016014\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4823\",\"variable:29240\",\"member:1016015\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4926\",\"variable:29240\",\"member:1016018\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4936\",\"variable:29240\",\"member:1016019\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4937\",\"variable:29240\",\"member:1016161\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4947\",\"variable:29240\",\"member:1016162\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4952\",\"variable:29240\",\"member:1016163\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:4954\",\"variable:29240\",\"member:1016164\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:5294\",\"variable:29240\",\"member:326978\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:273\",\"variant:649\",\"edition:5927\",\"variable:29240\",\"member:368993\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "0e7b16a3ec290c7467c25867b148dd667428d45cb6c5aa5f07bb08c58d73406e"
+expected_evidence_sha256 = "f8fe6149cb72418917357bd1346a4fa69df1c9c59ccd77571152eb8c446ac62a"
+expected_diagnostic_sha256 = "e8bb70e9916494c7653044f44f74adbb58af618706cce3c1614e29b1dda61483"
 
 # ── #1603 batch-g A8: carry the documented code list into same-name carried windows where every delivered value is in it (Operator 2026-10-19, extending F7) ──
 

@@ -1052,359 +1052,105 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "177e85530bb9c3b931c47b1e59706a4b6cef3233e2ee11a029c7506234707eb8"
+expected_evidence_sha256 = "42abcae80992db78f0244001d1698a6979c5d5d5bc31e3071bb74a12e75f1c3a"
+expected_diagnostic_sha256 = "c658ee5226487d7c5521c51f1ee27192963d4315eeca307313220fc3e942cf90"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bhelarh"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:12318\",\"variable:37432\",\"member:536191\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:12318\",\"variable:37432\",\"member:536191\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:13106\",\"variable:37432\",\"member:583198\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:14159\",\"variable:37432\",\"member:645421\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:15738\",\"variable:37432\",\"member:749640\"]}",
+]
 fields = ["coding"]
 valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "8a369473207e2d8856522bb59c723a3e8110bab966064513199792c949f815b0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bhelarh"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:13106\",\"variable:37432\",\"member:583198\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a3c39d7fc0d32702462c330085b100cdb71e6ce0a2bdce1bbdb59e76200d5e5c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bhelarh"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:14159\",\"variable:37432\",\"member:645421\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "9c777bfe8905505cbaba043960e81af1d6492e8f750873fff2d91410fbd6eb45"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bhelarh"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1382\",\"edition:15738\",\"variable:37432\",\"member:749640\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a6f75ef71021d097a162db93356ae433a9abb5c149620c09233af80be3b2e274"
+expected_evidence_sha256 = "f8ecbb69e25b724d9e129ac99c1bf1f19838417facf2634e57684132567e365f"
+expected_diagnostic_sha256 = "c526697d977cea3f012be5cd4988fcdc3ca941ff3778acd32385fca2eccde79d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:37438\",\"member:594570\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:37438\",\"member:594570\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:37438\",\"member:581413\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:37438\",\"member:580239\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:37438\",\"member:577555\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:37438\",\"member:573639\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:37438\",\"member:571138\"]}",
+]
 fields = ["coding"]
 valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "e996565b93e593dc9e1c0aaaf7e50f713495869dc86740bf18a378f186fce416"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:37438\",\"member:581413\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "27b973a839177be1b6b4b5b95f5c07b584f5b134ed91a4b83d1aa942d6293ac3"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:37438\",\"member:580239\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a92cbf61f29ccaa2e372eddbe9f79bcaca67d7a49189e344506ac04ef53ed06b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:37438\",\"member:577555\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "87233ebf5242740558349e5da6fa1ed389d9cc5776fe81eb6334adb51fddebde"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:37438\",\"member:573639\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "9cb55f07633bc424e36cdc4489f9e8b22349a732bcaba2e09ca7efb687843996"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:37438\",\"member:571138\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a506803330cc5354b15cff537297096060b650513c650827a8b1fb951135388b"
+expected_evidence_sha256 = "93ad8990f5a4ec1cde901524453507de6899fce07d9cc089b03b20aef424dcdf"
+expected_diagnostic_sha256 = "8601b53950e5dcfe933ea40a29d154b7a2a52e199f1d1de3de307d90903f90a7"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:37438\",\"member:574374\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:37438\",\"member:574374\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:37438\",\"member:644850\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:37438\",\"member:748996\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:37438\",\"member:810111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:37438\",\"member:855836\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:37438\",\"member:896997\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18957\",\"variable:37438\",\"member:907607\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:19844\",\"variable:37438\",\"member:983752\"]}",
+]
 fields = ["coding"]
 valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "7ce1397d1bebef1d2b6da0d1a260fdacc88ee640be4210a34fbe2e16a6e1145e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:37438\",\"member:644850\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "48ccb16d059dc8df3cfc4e85e1c54116786317bb7e122875e2b1200539b05198"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:37438\",\"member:748996\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "c3e133a3a414c6381515ed496540eab69235a607b7646ad4c3e1f1bee2f66414"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:37438\",\"member:810111\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "38f9367ca616b366d782dec47a7b31436eba27a1dbfa4278abc1b38a34501f77"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:37438\",\"member:855836\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "f914960cbc1169b96c432ac52bb1530751a0761908144c1c197bb351667deea3"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:37438\",\"member:896997\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "dedaf2c688e26ddec52c935b39007c57d1c141fc7c95662c464501964d64cba0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18957\",\"variable:37438\",\"member:907607\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "cdc22da0056f30d6d74498f51c78add56bee8c976c8d03daddf90a61341016f8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldmor"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:19844\",\"variable:37438\",\"member:983752\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "993109a6998b54fad70dffc95d5623cec932989ea2aa4f94a7c59cf12efe4b4a"
+expected_evidence_sha256 = "eea5b7eaa98371df9044ff4a66e63e5134ce9c1d0dd679fccab2534cb4b21d4b"
+expected_diagnostic_sha256 = "7e277f820501a88e5f3a5aea02ab05725920017fdbc8de214d9563b087e60cdc"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:37439\",\"member:594571\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:37439\",\"member:594571\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:37439\",\"member:581412\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:37439\",\"member:580240\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:37439\",\"member:577554\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:37439\",\"member:573640\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:37439\",\"member:571137\"]}",
+]
 fields = ["coding"]
 valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "2e9f22d743c02ba53cb3d686a530bba4db5123b0e984944e2072c0817caa55e5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:37439\",\"member:581412\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "688db975d6d886272a3aa33e83419818d7baaff0d9e6dda5d0293085a3aa8aca"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:37439\",\"member:580240\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "12aa62a0bd0f64cd06359caab85c91c47a9fd33b5a20326b1ef1bf75b49f2b43"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:37439\",\"member:577554\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "5e54388c7f21794c736f3fdf2d3d328224eb4b3853a2c2245be60075cd544bd9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:37439\",\"member:573640\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "121c68b9279d4d2db0ded82478a101b1671d86b8a666db5185349de79b53396a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:37439\",\"member:571137\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "16b51c3ec4e881b8d8a712f6257babbbb706a528a4f591f7e167bf0bfabceb2f"
+expected_evidence_sha256 = "d695748dedbad2bef545babe55600cfc645af4c6a9570f2f201c4e7e64e1e762"
+expected_diagnostic_sha256 = "a4369a2f7febbe4cad211869fe9b7d26e050450a91356117a3960488e01d581b"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:37439\",\"member:574373\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:37439\",\"member:574373\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:37439\",\"member:644851\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:37439\",\"member:748995\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:37439\",\"member:810112\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:37439\",\"member:855835\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:37439\",\"member:896998\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18957\",\"variable:37439\",\"member:907606\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:19844\",\"variable:37439\",\"member:984334\"]}",
+]
 fields = ["coding"]
 valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "d1726f29944279ac4996cfdeaaed04af7a5ee1b76c372ad06d17cb3bab804c59"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:37439\",\"member:644851\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "c16ab32959d1e589d02023c41db0b9ef3067f90c17bccf238e70da954f36fd42"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:37439\",\"member:748995\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "0885b119f50dd640ddeb4d18a8735b534c30ac9836d7b62aa6b8dc6c63bbfd43"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:37439\",\"member:810112\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "f831fa954f6aa1c46c9ea16bac16f5f83a77d2f54b6d55879d135875ed94a487"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:37439\",\"member:855835\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "e1e921c72f4203db69af211b0513c7c327a4ad37eb10c458b038d6ea5202b86c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:37439\",\"member:896998\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "6a9b70b3d714f5b6c7313cad591eb5cf8cdd4fe1bda0cfababa197e787b8bde1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18957\",\"variable:37439\",\"member:907606\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "11a6bd37c2081c6b6df7ea1f86ebac9e99cf813f2de555a085067532ebca86fc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bvarldfar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:19844\",\"variable:37439\",\"member:984334\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "8d4844be34706afe3f4f30152e7bd133c441c03f27acec86dfb8d1cd1e105194"
+expected_evidence_sha256 = "a496202dcdaccc49fad5a6f1fcd9135babb3ac4fac6c860126365e57519b0646"
+expected_diagnostic_sha256 = "d1fb92ab4c5ce86d522b9f5e9c8fc84ef1d30813661c76634105d7617f521c16"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1415,7 +1161,8 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "37853223d2fbd0e2870be9557ea83cd8a8198df3ecd4f7f4f512ee15bf8ec5d9"
+expected_evidence_sha256 = "c4d008171f32da4e062c2316780faf8b9dd577fd4a57ddc0c3fb160a76b7e026"
+expected_diagnostic_sha256 = "6141d07cb4922bdf99731a3775e28ef1174ea14feb20b1d3f782957edee2c028"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1426,447 +1173,126 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "ad0a2708479521065c6279d466e4bdb9c8ac1ecf59299e636341955a6c745e88"
+expected_evidence_sha256 = "09044f87e2fa93ca1b9c378956419b468084249764f6258de1236a0fa72aa9f3"
+expected_diagnostic_sha256 = "cf22da2d11ac3f8279c494b3386c3f7eaa3126139cf0869eb527fbb4a870d4f2"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bbabettot"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:15739\",\"variable:37990\",\"member:749674\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:15739\",\"variable:37990\",\"member:749674\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:16505\",\"variable:37990\",\"member:810367\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:18387\",\"variable:37990\",\"member:855313\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:18827\",\"variable:37990\",\"member:896194\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:18964\",\"variable:37990\",\"member:908347\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:19832\",\"variable:37990\",\"member:983364\"]}",
+]
 fields = ["coding"]
 valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "8ab3706017c8b9b53ec02bc8c470bf0a2b2637a5beccf3a742f08dacd0798c49"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bbabettot"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:16505\",\"variable:37990\",\"member:810367\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "71c13b280ce924c66713f47dbb9a445ac7e744328b3a9e59330f548957ff9cc1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bbabettot"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:18387\",\"variable:37990\",\"member:855313\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "6ef86b4f8381b54ad5b749b503812f13f511d5430770c970bb0a139324dc342d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bbabettot"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:18827\",\"variable:37990\",\"member:896194\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "89e2b319ce5da76210359998f9e68e7cd4f3a759fdf3f178181428e6991d9505"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bbabettot"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:18964\",\"variable:37990\",\"member:908347\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "748dc049939b6aa2751c5a400b1802be469fe6916290494bcc2c6e2bf8335f7b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bbabettot"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1386\",\"edition:19832\",\"variable:37990\",\"member:983364\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "2d9e7a0d4b8f2593ee6ccbf3bab4b5e5f39392f601558dc373aefe4bebca5fe8"
+expected_evidence_sha256 = "73c21d76a2904837b199d294b6dfb77919129067498395cb1468c2139c8965a3"
+expected_diagnostic_sha256 = "b72f279d2539e334b272a956da03978e0591158792e27c2544e4d3bfb3e37df1"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/bsfiu"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15748\",\"variable:38696\",\"member:751575\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15748\",\"variable:38696\",\"member:751575\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:38696\",\"member:593857\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:38696\",\"member:582144\"]}",
+]
 fields = ["coding"]
 valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "3c040889174d079680911e35fd52ed192e9462a96711d4e548450a1523ed750d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bsfiu"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:38696\",\"member:593857\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "0f4aa51fe55ae01018b0a7e89e2d9c35d9cfd8ba15511add730fee2fc0d391d1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/bsfiu"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:38696\",\"member:582144\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "2f64cfc6cc43d120eb9df1188aea7b456ecd4f3d2b1c8c48007a2f7761419fa4"
+expected_evidence_sha256 = "c72590bbb1a8f0f0e7ffea07c62dee698b84a2db5dacea12b9b9e552c2a93d9c"
+expected_diagnostic_sha256 = "03a49d28b33dfc62f53b3723b3dee9d39f7e6226a4da6f1a71d65ff7c32421ab"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15748\",\"variable:5639\",\"member:750823\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15748\",\"variable:5639\",\"member:750823\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:5639\",\"member:594637\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:5639\",\"member:581344\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:5639\",\"member:580311\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:5639\",\"member:577479\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:5639\",\"member:573723\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:5639\",\"member:571050\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:11725\",\"variable:5639\",\"member:515738\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:5639\",\"member:574286\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:5639\",\"member:645017\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:5639\",\"member:748839\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:5639\",\"member:810266\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:5639\",\"member:855688\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:5639\",\"member:897144\"]}",
+]
 fields = ["coding"]
 valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "502e59c36531f0d3d5ac0ac45d049f9ef9aef75c17a7c48866483d5b1f6dee79"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:5639\",\"member:594637\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "e2de1303a5da6ee184fbd2f92cd35ddc49ebed5d8c62097e2a77e856d284faff"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:5639\",\"member:581344\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a2f8b08a593051c5740473e521577cf5884cf8a681a84c28a8b047e63b9127e4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:5639\",\"member:580311\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "b96b19e0593ae98eedb762c536eb09cf2fe38454336b3b9d9753cbe158150321"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:5639\",\"member:577479\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "ccec7f15e55d197fb95a4f18ecee04a70fbfa3557d369970b5b50f92f72a8844"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:5639\",\"member:573723\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "f7079ca3da02aa29bbef5b37a3c77f1d579837eb35521457afcff7d3748b2f94"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:5639\",\"member:571050\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
-valid_to = "2014-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a63c0647a6ed620208f70daa3f106e087e7e740d9ede0315f7950cfcea95c194"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:11725\",\"variable:5639\",\"member:515738\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "02c7d19ade63e2139daa0e1f4f988ed29acbef56ed9386edb8077a2cfd4aeb42"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:5639\",\"member:574286\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "87d3af91509841bfcedad7fd3c9dcb90f6b1c06367185f0d093f3de5f19772ba"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:5639\",\"member:645017\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "cb79e728eaf0b4f42b1202ae45d094bca76acc751901589225aa0f47850b4f63"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:5639\",\"member:748839\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "221bfb234a3b03956b8502be23688b02d40d764e9677f6450eb2fe00de6518bb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:5639\",\"member:810266\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "d6de2a29c40018fb4d88b45d40b969268658ba518f98d58f5a8308842ead0a64"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:5639\",\"member:855688\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "7c7d55ea22b08f3179b04bcadd5b5d01edadbfbca0610a2bf8c92ea646686e02"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/posttyp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:5639\",\"member:897144\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "03694b242ba3a2fc4ca805837b475665cb6c782f52ede1b1055e6debe5886c2a"
+expected_evidence_sha256 = "1f870507aaa00669277b025031bf45b189af77e9437019ace276e0dd9099ab04"
+expected_diagnostic_sha256 = "45ae412c2d6ff510d9446601937ffbb8505d2e70795951a73fb506521b4d2164"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:6556\",\"member:594517\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13331\",\"variable:6556\",\"member:594517\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:6556\",\"member:581467\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:6556\",\"member:580185\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:6556\",\"member:577610\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:6556\",\"member:573580\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:6556\",\"member:571198\"]}",
+]
 fields = ["coding"]
 valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "514f438215936e5d29dff340a4ce7bc3b3dac8556912f7097146b2394c3bc75b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13085\",\"variable:6556\",\"member:581467\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "6ef1ade5fbd39660123f9f8ef9fa436911cf76836874e181a83a8488ab08f1d0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:6556\",\"member:580185\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "186a597262e1c1644070d3a454f3f6c3c685d536d97cc9ca1937fc2257aeb690"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:6556\",\"member:577610\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "7b45585473267a5ccb557d16004dc91388422c56fe6696bc7db80bc15d0d4425"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:6556\",\"member:573580\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "d0ad8fe5fe3543c311c76a7978bd5944b01c187a9966925375737a5c2ba65a0f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12967\",\"variable:6556\",\"member:571198\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "598baa42d8ef84e01165226ff31326a5916a048b4e3359a22eb0731492b5bf93"
+expected_evidence_sha256 = "559dacd64ee59d708f772817875eb35bf3e454387bb674bb30a797e8e9eccfe2"
+expected_diagnostic_sha256 = "c158d892f9dcd49886ecdaf477530746a09b77e2e4c32210ef4a98cdfb893913"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:6556\",\"member:574434\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13011\",\"variable:6556\",\"member:574434\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:6556\",\"member:644768\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:6556\",\"member:749077\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:6556\",\"member:810030\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:6556\",\"member:855914\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:6556\",\"member:896919\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18957\",\"variable:6556\",\"member:907685\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:19844\",\"variable:6556\",\"member:984412\"]}",
+]
 fields = ["coding"]
 valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "c30bfced2b1b77917bd08acf2c695bfa05256b6524935d3d99330bdadca2e8bf"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:14148\",\"variable:6556\",\"member:644768\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "9ab7a17eb766f8630b36a9bdb23fa39dc799639f27d8a5853daf0094ab7b8c5c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:15736\",\"variable:6556\",\"member:749077\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "1819467132909b1342731bdb160eb9127fc19f4f855dd798ae37305f8b6ae8a0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:16503\",\"variable:6556\",\"member:810030\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "cdcc1daee59df1f370c9aa49b9290dc9e1c1b10e64588693818cb430ee630df8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18394\",\"variable:6556\",\"member:855914\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "d1617610375b2c563c68005352738b5b441a7c85eef6b338e9c950e396f95e30"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18834\",\"variable:6556\",\"member:896919\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "8d6c0478e67150b714e2c74fde8ce7c3710b77b1821ea48f80d7fdbcad004d75"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:18957\",\"variable:6556\",\"member:907685\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "836bcd1ca8e2b03b569677abf879a9e31748d69879c651b3beb44e3ce8e348cd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/fodelseland-varldsdel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:19844\",\"variable:6556\",\"member:984412\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "931364421aa2faedc03fe97d0866809948c63a25dac2e339da51c4ec99b97afb"
+expected_evidence_sha256 = "357b698273c147ce6bcec6c52fd233e83ec5057c622e604af7457dade7d15721"
+expected_diagnostic_sha256 = "c7b1adafeb2aca7f7cb30e336b5edceb1043f33ab6bd56da6e1cd26f4fa1c65f"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fasit/baltex"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:695\",\"member:580336\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13072\",\"variable:695\",\"member:580336\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:695\",\"member:577452\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:695\",\"member:573995\"]}",
+]
 fields = ["coding"]
 valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "133c1b79f7981778a4cb38717865ba42c34bbf98c2ca352b1bc4e15ecba2ae6a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/baltex"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:13052\",\"variable:695\",\"member:577452\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
-evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "1415e6f3814872a12248ec75e81c133f5af696ba57b66eff4c2261e6d0221219"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fasit/baltex"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:371\",\"variant:1344\",\"edition:12997\",\"variable:695\",\"member:573995\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied FASIT edition has no own coding association for this exact delivery window. Preserve its original metadata and leave the response domain unavailable. Lists in other editions do not independently establish this year’s stored codes; no neighboring-year encoding is guessed."
 evidence = "Accepted complete twelve-native-family review (189 originals), actual same-register support and integer identifier witnesses plus pinned SNI2002/SNI2007 books. Exact full-original/bound-coding digest; all known sibling domains remain intact. Proof: Batch48-FASIT-coding-gap-source-proof.json."
-expected_evidence_sha256 = "9f4474b8716f1c21d62413d9bc996290df52b07cb655c793090a0b53c33a198c"
+expected_evidence_sha256 = "701fd66797c1eca79ab242feb1995e721286404712c3916e08c1fb2c9c9a6a8f"
+expected_diagnostic_sha256 = "85db56d65874999599ee2e2ceb803118b30e747f5b9617405861e800e160daf6"
 
 [[identity.partition]]
 variable = "371.16791"

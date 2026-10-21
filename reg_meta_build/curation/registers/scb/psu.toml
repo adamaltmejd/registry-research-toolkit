@@ -97,134 +97,27 @@ noted = "2026-10-02"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3773\",\"variable:15116\",\"member:231552\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3773\",\"variable:15116\",\"member:231552\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3769\",\"variable:15116\",\"member:231365\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3768\",\"variable:15116\",\"member:231259\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3746\",\"variable:15116\",\"member:230565\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3718\",\"variable:15116\",\"member:228156\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3924\",\"variable:15116\",\"member:246027\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:4791\",\"variable:15116\",\"member:296047\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:5590\",\"variable:15116\",\"member:345108\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:5753\",\"variable:15116\",\"member:351193\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:8581\",\"variable:15116\",\"member:418309\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:11486\",\"variable:15116\",\"member:467086\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:12030\",\"variable:15116\",\"member:501825\"]}",
+]
 fields = ["coding"]
 valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "84f11a090bc12b15ad1af00262d8c6f498fc856dcc1c1e9ce491c2b12e3084b8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3768\",\"variable:15116\",\"member:231259\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "f9d02bc616f6f9f6382f79b34287934847158e654991afb9f5e0f6c5469d811e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3718\",\"variable:15116\",\"member:228156\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "dec080bacc2bc2101641f52beadfa658fcc1e8633cd02ae0fda493485ad553ad"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3769\",\"variable:15116\",\"member:231365\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "74225f9228bffb88e0f013657fa0af72b960426942668091561248b4480253e9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3746\",\"variable:15116\",\"member:230565\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "1a7faadc3f5372bc823fe974a5be0117560fbfa74cb53d5f02ab339cf637a18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3924\",\"variable:15116\",\"member:246027\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "fba772dfb033105dba71c4770b6fad1e16860780f940e5f1d841bfb8b25d4486"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:4791\",\"variable:15116\",\"member:296047\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "aa0b49ca556768483053ceae5a7131540fba07ad0534bea92f2ffaf62237ab0f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:5590\",\"variable:15116\",\"member:345108\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "62ab9f4fee43bcaf2e382b8a0bc901e0cc33e833212579a0ba8606397604e01e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:5753\",\"variable:15116\",\"member:351193\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
-valid_to = "2014-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "bcfa4cf0198e338bc73594644d7895ac45dd826bd9d5852547b12ecf68c0a646"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:8581\",\"variable:15116\",\"member:418309\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "34912d2d7c6eab678613cfbce46b20cd62dd38a792a57692aca4d37d57671053"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:11486\",\"variable:15116\",\"member:467086\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "c7831592024e4412342026491cc4475da4246089ded069cba4d4e9c9babab476"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/nettourv"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:12030\",\"variable:15116\",\"member:501825\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "91517afb11af9adc543a830dda2ad6be22081a643119830dda219e484d0f80cc"
+expected_evidence_sha256 = "630fcf05bb5e4d8a045504720c184a1b682eced97decfcdf103bb2122af39a8f"
+expected_diagnostic_sha256 = "1680f1d7e3d5e9f7d658f495e3b481724aaa1e12b0160c80de4ed3f6d46d0afb"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -273,35 +166,18 @@ expected_evidence_sha256 = "af476e0ffa98c007f554a5aaf6f3a3fd73cf2f6f6dffd644b849
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/psu/fgangvalj"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3773\",\"variable:7593\",\"member:231513\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3773\",\"variable:7593\",\"member:231513\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3768\",\"variable:7593\",\"member:231220\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3718\",\"variable:7593\",\"member:228117\"]}",
+]
 fields = ["coding"]
 valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "a83b1e2407c629cc99de923032fb5c226535397d6f70857015c0c1ee5435caed"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/fgangvalj"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3768\",\"variable:7593\",\"member:231220\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
-evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "039f4e3e7ab069b45c5046ea19d6bf20880d4a848fb82242a4d002633bb81555"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/psu/fgangvalj"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:164\",\"variant:235\",\"edition:3718\",\"variable:7593\",\"member:228117\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "48efaa2b19dec0a8f1221819287322a66ecc7188b045ce958243297aa66391ea"
+expected_evidence_sha256 = "98b67e8eeb0c0cca2f095b133233b3c99d700c14ca59f8c0e720db9c58e337b5"
+expected_diagnostic_sha256 = "b0e2392dbf56f70e2b11c48dbbf4e6b15d58cb5f53ae5b78960ca4ae25c25038"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"

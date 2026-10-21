@@ -1629,98 +1629,36 @@ expected_diagnostic_sha256 = "d9be7c2a7ab85cc2c5f7bb05d9dc77e2a1f0e2d1664528f520
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/pin/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4788\",\"variable:4027\",\"member:295981\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4788\",\"variable:4027\",\"member:295981\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4787\",\"variable:4027\",\"member:295972\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4786\",\"variable:4027\",\"member:295943\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4785\",\"variable:4027\",\"member:295934\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4784\",\"variable:4027\",\"member:295905\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4783\",\"variable:4027\",\"member:295896\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
-evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "ae6293f1757bb3d9474e8c35ed0f14be211702d6fdf8dcc68470b90085b7972f"
-expected_diagnostic_sha256 = "6229678eceedd167a4fba8a29f5ba7bab867b7005c4ee364cefb6a78bc4bd87d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/pin/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4787\",\"variable:4027\",\"member:295972\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
-evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "03d252f4f68e254e6c9741f30f91e91b9f5a7f66f6df72ab6b869af34cc419c3"
-expected_diagnostic_sha256 = "58d44c216b84fa3a4ed99866ec0b7998cbfcbee592d8cce38f3219f2029d0dc7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/pin/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4786\",\"variable:4027\",\"member:295943\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
-evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "efb22bff3dd17e9bda245df3c025b5e7fdd6fa161b5206d324d5091e72711229"
-expected_diagnostic_sha256 = "3e4ae221d450c5a627276bf0316d122cd8d7ab03ed375a76791d9fe8751cc1bc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/pin/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4785\",\"variable:4027\",\"member:295934\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
-evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "00d264153aeba664e17eead514bee4f28d000f96f685b8ac70b8b29a06cba811"
-expected_diagnostic_sha256 = "63a7aec5d57d6ae4ca2ccdce098cf02e6160a5e9a2478e1751ab03bf812a40ae"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/pin/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4784\",\"variable:4027\",\"member:295905\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
-evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "50e16f1dff90412744cf38b565b2162cef55db4c58306bb0d845f76cf8cb4c5d"
-expected_diagnostic_sha256 = "3428d44f4400ecc9679fb58367018c5d57a31c8bf139d19187133969de7715ea"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/pin/naringsgren"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:4783\",\"variable:4027\",\"member:295896\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
 evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "86ae1449906ddf597e38112c7517f43f33669e6ffe95500095cc8f66d2f9bbb7"
-expected_diagnostic_sha256 = "3ac4e9df23ddf882b416a1d9e03ba4a52059894037e316b5af3e17e139080bec"
+expected_evidence_sha256 = "e277e883af50c73e647604e2d3244268ba7771de6ca136e26af5af221d5ae0ea"
+expected_diagnostic_sha256 = "c4c544ffd5f9a7f576ff27424d213a68fee91549aa0c397ace1356ed0382898d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/pin/storleksgrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:20235\",\"variable:4066\",\"member:1023354\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:20235\",\"variable:4066\",\"member:1023354\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:20234\",\"variable:4066\",\"member:1023323\"]}",
+]
 fields = ["coding"]
 valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
-evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "06e58b29fa6605bfa1fc631ff438fc47b95aa9fa3623cad23eb2aea9ae55b6fa"
-expected_diagnostic_sha256 = "310e95ff471b8cea9fd5c57271196668e4b56a0db263726e6a275999a134266e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/pin/storleksgrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:382\",\"variant:372\",\"edition:20234\",\"variable:4066\",\"member:1023323\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "Exact historical coding is unavailable: the source lacks membership for this window or supplies incompatible own lists. Keep every original code/label association and literal declared operation without choosing a winner, borrowing later codes or inventing a stored encoding."
 evidence = "Complete physical-register peer closure, actual support, own coding and finite positive source ownership. Maintainer-approved retained-unmapped and historical coding limitation policies; Batch52-PIN-source-positive-proof.json. No classification assigned from its literal name and no 0/1 imputation domain supplied."
-expected_evidence_sha256 = "2d258d2cc7a6be34ad2bd2172054612af4a8f0dc5dbcb486ca079152475e99d5"
-expected_diagnostic_sha256 = "1abb81976d3de9085f4c76db1e71a9fb67895d100c2c331c10dba0fd5b67348b"
+expected_evidence_sha256 = "8e85acd49dcefabd680c099cff0893fb913662c4fcced81c197509a6b6c08a4a"
+expected_diagnostic_sha256 = "e09f3d06bbb7616223f9621846db8ce682a1f386f722d76b850e7b637d6544c2"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"

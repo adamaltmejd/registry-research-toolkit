@@ -25,6 +25,7 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "Accepted while OTHER stays uncoded."
 evidence = "Synthetic fixture issue."
+expected_diagnostic_sha256 = "7f5aecbf376ac76920e2d733fe6e6aebac8c0dab26ee41c5fb5e6612689e938c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -35,6 +36,7 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "Accepted while the 2021 delivery stays uncoded."
 evidence = "Synthetic fixture issue."
+expected_diagnostic_sha256 = "f8fc07088c88b4b9e9f62a8c7df57335c77c7f88bebfe7dfcb94890d0645dcdb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -45,3 +47,4 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "Accepted while the 2021 delivery stays uncoded."
 evidence = "Synthetic fixture issue."
+expected_diagnostic_sha256 = "d8d95128bbd483a7f34ea288663617e355df0e3c984830ca2a3774442f500d31"

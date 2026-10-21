@@ -1855,112 +1855,25 @@ expected_evidence_sha256 = "c198bbc2213dc7216d3e147a703bc823b65f1f12d9e1bb03195a
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1023\",\"variable:19052\",\"member:31038\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1023\",\"variable:19052\",\"member:31038\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1024\",\"variable:19052\",\"member:31062\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1187\",\"variable:19052\",\"member:98083\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1227\",\"variable:19052\",\"member:99474\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1208\",\"variable:19052\",\"member:98737\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1228\",\"variable:19052\",\"member:99629\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1229\",\"variable:19052\",\"member:99710\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1230\",\"variable:19052\",\"member:99733\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1239\",\"variable:19052\",\"member:100415\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:2646\",\"variable:19052\",\"member:156644\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "64b644dfd0c555103a7f1294510a1cfe1dbbf79dc05dde295b726b184e493b84"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1187\",\"variable:19052\",\"member:98083\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "594a0e67abd5eb3cdcded9252d6f41545e6d341679f1628c0e9b227dfe7dcc39"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1208\",\"variable:19052\",\"member:98737\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "10dc727eb30e8ace4194d00729aa4bdc39fb9fc46dcd280bc635a5ca504b4803"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1229\",\"variable:19052\",\"member:99710\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "f88e766b9e14eced556d4f5179f04cd5d1c144fd8cf15d48280dc3fb242d0cd2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:1239\",\"variable:19052\",\"member:100415\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "897d8021199aff47b4992aae3b032c9434fc811f6180e6f54b34f1d3dd6eb9c7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:2646\",\"variable:19052\",\"member:156644\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
 evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "a6313e439246ca16fde8e35f3a0848d79bad2be5d69929fd879ec5e09d859a85"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1024\",\"variable:19052\",\"member:31062\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "2c36288c16c851c6f81baefe3a3ea05154ee68af39ccb84fe267dd03cf21adfb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1227\",\"variable:19052\",\"member:99474\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "49f2e92a84af34be012409e4a7c883fe0892d8b8388d16827012c9dff27ab64d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1228\",\"variable:19052\",\"member:99629\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "50eb382c844561c2e246ceefbd33ef7e16ee5012703b5ea8bb7ed84544dfa9fe"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/naringsgren-for-statistiken"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:254\",\"edition:1230\",\"variable:19052\",\"member:99733\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The exact NgS1O period has no own bound code membership. Its complete own history names SNI92 in2000–2002 and SNI2007 later. The original parent facts attach both SNI2002 and SNI2007 population-frame names and SNI2007 population definitions even to historical editions; these competing broad frames do not select an exact field domain or historical encoding. Preserve every parent declaration, original statistical-industry field and independently known domain, while leaving only these2003–2008 domains unavailable. Do not extend either neighboring list or infer missing encodings."
-evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json. Exact parent-frame audit: Batch51-Investment-NgS1O-parent-standard-review.json."
-expected_evidence_sha256 = "534910f27d297eb5e6850e7ed140704ac5d8423551b0176bc9e0253888171e08"
+expected_evidence_sha256 = "6897957cf15a0bdcea737d1e239779f39825b211c03e249e1f199c5adfbf6d4b"
+expected_diagnostic_sha256 = "1ba0f172921142405f5db6564d709103365be72c126b48032cb31ab4fbbd40c7"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -2169,41 +2082,21 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "9c9c9ef9b970220391e9c3be4e8b3881233d56998e52906859527428a1cfac71"
-expected_diagnostic_sha256 = "a38c7e76fb8ce4f9d02bc482a84df9c8f0247466f83007caa737fa6080a83f5e"
+expected_evidence_sha256 = "a34e0f67dc3867726c5ae85425ee5e509f2cd8ad853b04d2de1fc4f26c415628"
+expected_diagnostic_sha256 = "386807d648333af9499c4807d1642ae6e20bd398da21e8b44c6ca5f2225c584d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/investeringsenkaten/paminn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:7518\",\"variable:2481\",\"member:414363\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:7518\",\"variable:2481\",\"member:414363\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:12024\",\"variable:2481\",\"member:501653\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:13323\",\"variable:2481\",\"member:593608\"]}",
+]
 fields = ["coding"]
 valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "aada54c1bed4af7383e8acfef5f49c204f27dfb99d6024135afd3597055ea50e"
-expected_diagnostic_sha256 = "af224d4e9399d9e84a861cd6f7de542280335929482dedd8a3daa5986ccc7742"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/paminn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:12024\",\"variable:2481\",\"member:501653\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "0e873a84e10d471d8b047647e3658367cb50a64a7a1fc01c43410dca7d2bf969"
-expected_diagnostic_sha256 = "20ec8d1ad3efe0b69ca47797ffd76277e99bcd52f83df9d5a3b40d675e9ebe7b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/investeringsenkaten/paminn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:183\",\"variant:253\",\"edition:13323\",\"variable:2481\",\"member:593608\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain47-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "961c47599cd561fb05142b603568f7720a2106ec8194cdf153bc065867bbb827"
-expected_diagnostic_sha256 = "8b91c333717f2ca274524c2de4e96bc573fbf0904b67ce9919ce92f74a7ab3d3"
+expected_evidence_sha256 = "d5d4af1728c7512ce2627fbb9743dc566bdbf07030625cca8922ce0f3b53613c"
+expected_diagnostic_sha256 = "b5b66a95d6295b4b677942dd730cf81983b697b2605e7026efebc1b3d2ce28a8"

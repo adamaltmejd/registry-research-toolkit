@@ -1,0 +1,15 @@
+{
+  "note": "Step 1's entry and digest, built after member 1007 gains a code list: the 2023 issue is gone, so the run's issues are no longer the ones its digest pins. The entry is stale at its own location and its 2022 issue stays an error. The detail prints the current digest, which names the one 2022 issue left.",
+  "fails_if": "the run settlement in `resolve_source_scope` (source_scope.py) acknowledges whatever issues lie in the entry's window and refs without comparing `issue_run_sha256` against `expected_diagnostic_sha256`, so a period that leaves the run is not refused and 1005's 2022 issue becomes a warning; or the stale detail stops printing the current run digest",
+  "sources": {
+    "description": "Step 1's deliveries; member 1007 now carries a code list too.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "VALUE", "cvid": 1005, "var_id": 1, "versionname": "2020-2022"},
+        {"colname": "VALUE", "cvid": 1006, "var_id": 1, "year": "2021", "regver_id": 2021},
+        {"colname": "VALUE", "cvid": 1007, "var_id": 1, "year": "2023", "regver_id": 2023}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1006|5001", "Kön|1|1|Man|1007|5002"]
+    }
+  }
+}

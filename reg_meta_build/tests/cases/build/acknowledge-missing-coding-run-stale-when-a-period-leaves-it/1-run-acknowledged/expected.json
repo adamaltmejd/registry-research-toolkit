@@ -1,6 +1,6 @@
 {
   "result": {
-    "acknowledged": {"missing_coding_period": 1}
+    "acknowledged": {"missing_coding_period": 2}
   },
   "projections": [
     {
@@ -12,15 +12,22 @@
           "scb-registerinformation",
           ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
           "2020-01-01",
-          "warning",
-          "curation/registers/scb/sample.toml#/acknowledge/1"
+          "error",
+          null
         ],
         [
           "scb-registerinformation",
           ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
           "2022-01-01",
-          "error",
-          null
+          "warning",
+          "curation/registers/scb/sample.toml#/acknowledge/1"
+        ],
+        [
+          "scb-registerinformation",
+          ["register:1", "variant:10", "edition:2023", "variable:1", "member:1007"],
+          "2023-01-01",
+          "warning",
+          "curation/registers/scb/sample.toml#/acknowledge/1"
         ]
       ]
     },

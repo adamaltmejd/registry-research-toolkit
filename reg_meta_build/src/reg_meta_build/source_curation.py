@@ -417,7 +417,9 @@ class AcknowledgeDecision(_CurationModel):
     It names the issue by the code, subject, refs, fields and period the
     diagnostic already carries. An optional evidence fingerprint additionally pins
     the full originals and bound coding assertions. Matching nothing, or more than
-    one issue, is itself an error.
+    one issue, is itself an error. A `RUN_ACKNOWLEDGED_CODES` entry instead names a
+    run of issues within its window and refs, pinned by `issue_run_sha256`; its
+    evidence pin is the `digest_set_sha256` of each issue's evidence digest.
     """
 
     kind: Literal["acknowledge"] = "acknowledge"
@@ -1879,18 +1881,45 @@ class ResolutionDiagnostic(_CurationModel):
     acknowledged_by: str | None = None
 
 
+_ACKNOWLEDGED_IDENTITY = ("code", "subject", "refs", "fields", "valid_from", "valid_to")
+
+# An acknowledgement of these codes names a run: every error of its code, subject and
+# fields whose period lies in its window and whose refs it lists, pinned as a set.
+RUN_ACKNOWLEDGED_CODES = frozenset({"missing_coding_period"})
+
+
 def _acknowledged_identity(
     item: ResolutionDiagnostic | AcknowledgeDecision,
 ) -> tuple[object, ...]:
     """The issue an acknowledgement names, its digest aside."""
-    return (
-        item.code,
-        item.subject,
-        item.refs,
-        item.fields,
-        item.valid_from,
-        item.valid_to,
+    return tuple(getattr(item, name) for name in _ACKNOWLEDGED_IDENTITY)
+
+
+def digest_set_sha256(digests: Iterable[str]) -> str:
+    """Pin a run's per-issue digests; their order is immaterial, multiplicity is not."""
+    return canonical_sha256(sorted(digests))
+
+
+def issue_run_sha256(issues: Iterable[ResolutionDiagnostic]) -> str:
+    """A run acknowledgement's `expected_diagnostic_sha256`: its issues' identities.
+
+    Each issue contributes the identity an exact acknowledgement names (code,
+    subject, refs, fields, period), so a period that appears in or leaves the run
+    changes the digest. Detail prose and withheld outputs are not pinned.
+    """
+    return digest_set_sha256(
+        canonical_sha256(
+            issue.model_dump(mode="json", include=set(_ACKNOWLEDGED_IDENTITY))
+        )
+        for issue in issues
     )
+
+
+def acknowledged_warning(
+    issue: ResolutionDiagnostic, case_id: str
+) -> ResolutionDiagnostic:
+    """An acknowledged error as its counted warning; it never restores withheld output."""
+    return issue.model_copy(update={"severity": "warning", "acknowledged_by": case_id})
 
 
 def acknowledged_diagnostic(
@@ -1907,20 +1936,23 @@ def acknowledged_diagnostic(
         )
     ):
         return None
-    return issue.model_copy(update={"severity": "warning", "acknowledged_by": case_id})
+    return acknowledged_warning(issue, case_id)
 
 
 def current_pins(
     evidence_sha256: str | None,
     named: Iterable[ResolutionDiagnostic],
     coding_sha256: str | None = None,
+    *,
+    run_sha256: str | None = None,
 ) -> str:
     """A stale acknowledgement's detail suffix: its pins as the build computes them.
 
     The curator's pin source, so a reviewed entry is pinned (or re-pinned) by
     copying them. `named` are the errors the entry's identity selects, digest aside;
     the issue digest is printed only when they are one distinct error (identical
-    copies count once, as the matchers count them).
+    copies count once, as the matchers count them). A run acknowledgement passes its
+    `issue_run_sha256` as `run_sha256` instead.
     """
     distinct = tuple(dict.fromkeys(named))
     pins = []
@@ -1928,7 +1960,9 @@ def current_pins(
         pins.append(f'expected_evidence_sha256 = "{evidence_sha256}"')
     if coding_sha256 is not None:
         pins.append(f'expected_coding_sha256 = "{coding_sha256}"')
-    if len(distinct) == 1:
+    if run_sha256 is not None:
+        pins.append(f'expected_diagnostic_sha256 = "{run_sha256}"')
+    elif len(distinct) == 1:
         pins.append(
             "expected_diagnostic_sha256 = "
             f'"{canonical_sha256(distinct[0].model_dump(mode="json"))}"'

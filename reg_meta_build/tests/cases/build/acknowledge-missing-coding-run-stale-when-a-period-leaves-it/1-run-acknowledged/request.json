@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_source_physical_alternatives_boundary.py::test_one_member_keeps_a_missing_coding_issue_per_period"
+  ],
+  "note": "Pooled member 1005 delivers 2020-2022; the annual 2021 member 1006 wins its year and carries the code list, so 1005 lacks coding in 2020 and in 2022. The annual 2023 member 1007 has no list either. One run entry over 2022-2023 lists 1005 and 1007 and acknowledges both of their issues; 1005's 2020 issue lies outside its window and stays an error although the entry lists its ref.",
+  "fails_if": "the dedupe of identical `missing_coding_period` issues in `resolve_source_scope` keys an issue without its period, so pooled member 1005's 2022 issue is dropped as a repeat of its 2020 one and the run's digest no longer matches; or the run matcher in `emit` (source_scope.py) takes an issue outside the entry's window (1005's 2020 issue becomes a warning and the digest no longer matches) or stops taking every issue inside it (the 2023 issue stays an error)",
+  "sources": {
+    "description": "Pooled member 1005 (2020-2022) beside annual 2021 member 1006, which alone carries the code list, and annual 2023 member 1007 without one.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "VALUE", "cvid": 1005, "var_id": 1, "versionname": "2020-2022"},
+        {"colname": "VALUE", "cvid": 1006, "var_id": 1, "year": "2021", "regver_id": 2021},
+        {"colname": "VALUE", "cvid": 1007, "var_id": 1, "year": "2023", "regver_id": 2023}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1006|5001"]
+    }
+  }
+}

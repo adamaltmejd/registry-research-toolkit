@@ -64,142 +64,38 @@ noted = "2026-10-02"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14199\",\"variable:14652\",\"member:647097\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14199\",\"variable:14652\",\"member:647097\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14205\",\"variable:14652\",\"member:647270\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14200\",\"variable:14652\",\"member:647144\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14206\",\"variable:14652\",\"member:647274\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14202\",\"variable:14652\",\"member:647174\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14208\",\"variable:14652\",\"member:647344\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14203\",\"variable:14652\",\"member:647220\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14209\",\"variable:14652\",\"member:647348\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14204\",\"variable:14652\",\"member:647224\"]}",
+]
 fields = ["coding"]
 valid_from = "1998-01-01"
-valid_to = "1998-06-30"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "168ac6caad82112d3a930720e32e7955ac62b87d445642ab3dc40deacfc35234"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14205\",\"variable:14652\",\"member:647270\"]}"]
-fields = ["coding"]
-valid_from = "1998-07-01"
-valid_to = "1998-12-31"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "8bc603b24fcfbccd6242bb14e0614548e68b1119011ce2f69b0d5d0e6f9750a2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14200\",\"variable:14652\",\"member:647144\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
-valid_to = "1999-06-30"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "da57109e2dd693e8537c6c1a8a06da4c22155ad3043ca86525529b810f0869bf"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14206\",\"variable:14652\",\"member:647274\"]}"]
-fields = ["coding"]
-valid_from = "1999-07-01"
-valid_to = "1999-12-31"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "23a323527f0b7a65f605324d589d81467e3115eb69cd472ea6a0a931a2c936ad"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14202\",\"variable:14652\",\"member:647174\"]}"]
-fields = ["coding"]
-valid_from = "2000-01-01"
-valid_to = "2000-06-30"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "203b9d5c9e83ef1a651d72a9975bef66f934f2f1641ce6c4698a1bb517ebce6c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14208\",\"variable:14652\",\"member:647344\"]}"]
-fields = ["coding"]
-valid_from = "2000-07-01"
-valid_to = "2000-12-31"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "07f90d76f018b143fb6ea22aac38fed989fb5b050595f5409481cd0200280427"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14203\",\"variable:14652\",\"member:647220\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-06-30"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "8fc9043478f968a732e227a3735cb1a1dee78870baaa2104ad95ba2204053134"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14209\",\"variable:14652\",\"member:647348\"]}"]
-fields = ["coding"]
-valid_from = "2001-07-01"
-valid_to = "2001-12-31"
-reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "5db702ec0ca7ede9fb2aec97231a87e36947d8264a3690555b2a19bbe362aa35"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/utbildningsatgard-vux"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14204\",\"variable:14652\",\"member:647224\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
 valid_to = "2002-06-30"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "5266e5e63213c8109c9d97e686979fae3c73bc17d5a3e7e7c5a060d2dda33871"
+expected_evidence_sha256 = "c7d0e931a84ec1c9d1c939120cf3f681b9c15969bd0b9c45205f730db730117e"
+expected_diagnostic_sha256 = "2f918a16efb1d594993fffd7ae21d1359f8d214b67f8cac9d010d58584b49d9c"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ssv/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14207\",\"variable:257\",\"member:647305\"]}"]
-fields = ["coding"]
-valid_from = "1997-07-01"
-valid_to = "1997-12-31"
-reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "4fa2026e7e6b01a2a523b774a80899efae5ed72fcc8303e22bf84af7cfcbc6cc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14199\",\"variable:257\",\"member:647103\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
-valid_to = "1998-06-30"
-reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "a7c274f573b0282fc2bbb44bf37d71fd1e9a1c2174cade77f1db2c05663c062a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14198\",\"variable:257\",\"member:647077\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14207\",\"variable:257\",\"member:647305\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14198\",\"variable:257\",\"member:647077\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1509\",\"edition:14185\",\"variable:257\",\"member:646772\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1508\",\"edition:14199\",\"variable:257\",\"member:647103\"]}",
+]
 fields = ["coding"]
 valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "4366b1fb7fd6cc1af02e4d168380cd3b58b68c554eb52f31349a21c96369cced"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/ssv/fodelseland-rtb"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:391\",\"variant:1509\",\"edition:14185\",\"variable:257\",\"member:646772\"]}"]
-fields = ["coding"]
-valid_from = "1997-07-01"
-valid_to = "1998-06-30"
-reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
-evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "4d74b03b762746c330265a2f228d95d9301d9bea9c0d8d0e776998737281f11b"
+expected_evidence_sha256 = "7038b9ecbcf9fa4555de52d8bc46d141f11243bd8a8fc6f42ed88d1cf011dd18"
+expected_diagnostic_sha256 = "767a5877706f789b8b4da9f1afe463a1ec4dab164b0d31fb4d6a5322df01f7ec"

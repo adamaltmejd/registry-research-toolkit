@@ -1393,7 +1393,8 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "d462f7d2a3df8c5db745e5f8c86b05a247b9e8fe955702d818961162954bfa86"
+expected_evidence_sha256 = "6c392802701be8d8eacf899c41a3e68da59ccb74d66f5b34e36e1be873003b0e"
+expected_diagnostic_sha256 = "6725441e9c5de8ca01d355960a1d06ebe47613ea00ff3450874c632efee4b08a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1404,7 +1405,8 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "95c18c0c5e00341ad7bb2dd9adcffa98ee33592195dc2d7022dbe81a9eab73ff"
+expected_evidence_sha256 = "b7fe452cb456848b87e9a420d5df33bc696ed6ba7e4cae9633243778f866aced"
+expected_diagnostic_sha256 = "91c9d94ca676ebeefb6703105f4138c21c7cad23de10bbb411c8fc269f9b1f46"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1415,7 +1417,8 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "085632f0eafc61dc461084ba1c0c4f13e366176360bc0936ea7d541e051de0bf"
+expected_evidence_sha256 = "fd82f5d6ffbdf185af574e73f78e9c579d7887b7a78a4293638d68440ce2635a"
+expected_diagnostic_sha256 = "db6f41c0b20e62254e84ea6b16a76de744680db9a3ae41a1ee20d6f68251a4a6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1426,7 +1429,8 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "1026dfd8afac88129390a3e5eba28d36b7dc0efdad1f2adc5b2d05df780037b9"
+expected_evidence_sha256 = "08183c9a210dea928b849c25540c4fe12536cc329f76b7ceb0510e4a088197c5"
+expected_diagnostic_sha256 = "f29821608805545255c90d06bb8fea570466fb8bcdae885f9bc5ea21afd007b1"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1437,7 +1441,8 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "3180595fe3554fe46e8d5f5e6516c3f22c51bbc8b81720f203ff240f42a34d11"
+expected_evidence_sha256 = "060af13102ee6a151723b3e871ea154336637dcd1a64f685e5835982c8048660"
+expected_diagnostic_sha256 = "8b36ad892384e395be7b03d5294f7bcc1abe239e633795bff7dd6d6a2bc93378"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1448,7 +1453,8 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "f87432ca6f0d92bb7f7d3e920aa6d459e10699bd7f918497fcf678c8fd70bd13"
+expected_evidence_sha256 = "3cf415664ca559910a962768a5330014f0f3f45e7381e0c7e5896a343a645226"
+expected_diagnostic_sha256 = "d6593f473fd365e12a98297f6f2771529aa625bd505570e3d68acaaa37c955cf"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

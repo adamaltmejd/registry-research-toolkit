@@ -2030,21 +2030,14 @@ noted = "2026-10-02"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/isen/ng"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:132\",\"variant:178\",\"edition:619\",\"variable:1641\",\"member:10785\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:132\",\"variant:178\",\"edition:619\",\"variable:1641\",\"member:10785\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:132\",\"variant:178\",\"edition:1442\",\"variable:1641\",\"member:199376\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "This exact Ng delivery has no own coding association or declared classification. The source has a year-specific SNI92 list for2004 and different named industry standards elsewhere; the supplied generic industry definition cannot establish the2005/2006 stored domain. Retain all known source facts and other domains; keep this encoding unavailable rather than borrow another year or select a book from a neighbouring column."
-evidence = "Complete own-source and bound-claim audit for ISEN native1641. Batch51-ISEN25-source-proof.json; exact full-original guard."
-expected_evidence_sha256 = "d7dcb33f96959249a8adb15d2d2d2c9bf06a8de0ea8d45d0f96a0f548b22f375"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/isen/ng"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:132\",\"variant:178\",\"edition:1442\",\"variable:1641\",\"member:199376\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact Ng delivery has no own coding association or declared classification. The source has a year-specific SNI92 list for2004 and different named industry standards elsewhere; the supplied generic industry definition cannot establish the2005/2006 stored domain. Retain all known source facts and other domains; keep this encoding unavailable rather than borrow another year or select a book from a neighbouring column."
 evidence = "Complete own-source and bound-claim audit for ISEN native1641. Batch51-ISEN25-source-proof.json; exact full-original guard."
-expected_evidence_sha256 = "74aa113d250678cc7a7c0d2fca8e81297495583c320bb3ecc7a21b507aba9bc8"
+expected_evidence_sha256 = "da76c3d7f577c17c07d354402f1884322f53c179dcba0dbe5032bfc4e7967d17"
+expected_diagnostic_sha256 = "1c999af631b7d8770391701e4dd7c22359647ca2405a21d22e9692cd5399911e"

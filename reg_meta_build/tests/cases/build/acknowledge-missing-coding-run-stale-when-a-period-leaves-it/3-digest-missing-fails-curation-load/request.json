@@ -1,0 +1,15 @@
+{
+  "note": "Step 1's entry without its expected_diagnostic_sha256. A run takes every issue in its window and refs, so only the digest refuses a period that appears in or leaves it; the entry is refused at load.",
+  "fails_if": "the curation compiler accepts a `missing_coding_period` acknowledgement without `expected_diagnostic_sha256` instead of refusing it with `acknowledge_run_digest_missing` at its entry, so a run silently acknowledges whatever issues fall in its window",
+  "sources": {
+    "description": "Step 1's deliveries.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "VALUE", "cvid": 1005, "var_id": 1, "versionname": "2020-2022"},
+        {"colname": "VALUE", "cvid": 1006, "var_id": 1, "year": "2021", "regver_id": 2021},
+        {"colname": "VALUE", "cvid": 1007, "var_id": 1, "year": "2023", "regver_id": 2023}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1006|5001"]
+    }
+  }
+}
