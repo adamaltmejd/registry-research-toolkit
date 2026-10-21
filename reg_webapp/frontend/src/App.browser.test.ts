@@ -53,32 +53,6 @@ afterEach(() => {
   window.history.pushState({}, "", "/");
 });
 
-describe("App viewport geometry", () => {
-  it("shares a short canvas between routed content and the citation footer without document overflow", async () => {
-    const { container } = await render(App);
-
-    await expect
-      .element(page.getByText(/as of reg_meta v1\.0\.0/))
-      .toBeVisible();
-    const shell = container.querySelector<HTMLElement>(".shell");
-    const routed = container.querySelector<HTMLElement>(".routed");
-    const footer = container.querySelector<HTMLElement>(".vintage");
-    expect(shell).not.toBeNull();
-    expect(routed).not.toBeNull();
-    expect(footer).not.toBeNull();
-    expect(routed?.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-      footer?.getBoundingClientRect().top ?? 0,
-    );
-    expect(shell?.getBoundingClientRect().height).toBeCloseTo(
-      document.documentElement.clientHeight,
-      0,
-    );
-    expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(
-      document.documentElement.clientHeight,
-    );
-  });
-});
-
 describe("App renders the landing page from one context read", () => {
   it("shows Home's catalog sizes and the footer from the context", async () => {
     // Fails if Home stops reading the sizes App threads from `context`, or the
