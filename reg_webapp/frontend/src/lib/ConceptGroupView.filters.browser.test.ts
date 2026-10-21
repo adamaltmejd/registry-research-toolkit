@@ -64,7 +64,7 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
         },
       ],
       ...overrides,
-    } as unknown as Partial<ConceptGroupShow>);
+    });
   }
 
   function dimensionGraph(): RelationshipGraph {

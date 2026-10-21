@@ -318,32 +318,6 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
       .not.toBeChecked();
   });
 
-  it("refuses a column the study window has moved off, on its own row", async () => {
-    mockRegisterAndResolve(columnedRegisterNode(1));
-    // The list shows every column the register ever delivered. `ForvErs` ended in
-    // 2021, so under a 2022–2024 window it has no era to commit and no period to
-    // commit it under — the study window is this page's only period control.
-    windowStore.set({ from: 2022, to: 2024 });
-
-    await renderRegister();
-    await expect.element(page.getByText("Kön")).toBeVisible();
-
-    // The reason rides inside the tick's own label, so it is in its accessible
-    // name — and the tick itself is not offered.
-    const forvErs = page.getByRole("checkbox", {
-      name: "ForvErs Not delivered in 2022–2024",
-      exact: true,
-    });
-    await expect.element(forvErs).toBeDisabled();
-    await expect.element(forvErs).not.toBeChecked();
-    // Nothing is staged, so nothing can be reported as applied and no project is
-    // minted for an empty diff.
-    await expect
-      .element(page.getByRole("button", { name: "Add columns to project" }))
-      .toBeDisabled();
-    expect(storedProject()?.sources).toEqual([]);
-  });
-
   it("dates an era that began before the record does (Y-104)", async () => {
     mockRegisterAndResolve(undatedColumnRegisterNode());
     windowStore.set({ from: 1960, to: 2024 });

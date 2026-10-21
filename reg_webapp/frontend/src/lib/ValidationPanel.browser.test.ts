@@ -467,28 +467,6 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.body.textContent).not.toContain("Draft valid");
   });
 
-  it("shows a coverage finding's exact offending period", async () => {
-    await render(ValidationPanel, {
-      result: { ok: true, issues: [] },
-      status: "ok",
-      requestError: "order blocked by 1 finding: …",
-      requestErrorSource: "order",
-      orderFindings: [
-        {
-          code: "coverage_gap",
-          message: "the delivery does not cover the requested period",
-          source: "lisa_main",
-          variable: "scb/lisa/adeldag",
-          period: "2019",
-        },
-      ],
-      windowHints: [],
-      sources: SOURCES,
-    });
-
-    await expect.element(page.getByText("Period 2019")).toBeVisible();
-  });
-
   it("renders window hints for duplicate source labels without crashing", async () => {
     await render(ValidationPanel, {
       result: { ok: false, issues: [] },

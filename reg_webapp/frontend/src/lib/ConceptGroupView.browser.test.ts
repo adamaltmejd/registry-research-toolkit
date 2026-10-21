@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { ConceptGroupShow } from "./api";
 import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
@@ -293,7 +292,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         label: "Näringsgren",
         axes: [],
         members,
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue(
       graph([
@@ -396,7 +395,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue(
       graph([
@@ -467,7 +466,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue(
       graph([
@@ -518,7 +517,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue(
       graph([

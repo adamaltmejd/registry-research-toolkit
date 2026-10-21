@@ -381,23 +381,6 @@ describe("PeriodPicker — window slider (#615)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("availability deviation: an explicit ?period past coverage greys the not-delivered span", async () => {
-    // An explicit ?period 2000–2010 (the URL's source of truth) past coverage
-    // 1995–2008 → 2009–2010 is not delivered. Unlike the #671 default seed (which
-    // is clipped INTO coverage and clamped), an explicit out-of-coverage ?period
-    // renders honestly with its gap.
-    const screen = await render(PeriodPicker, {
-      period: "2000..2010",
-      window: WINDOW,
-      coverage: COVERAGE,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered after 2008/))
-      .toBeVisible();
-  });
-
   it("sub-annual ?period with a window: the slider shows the sub-annual cue without advanced modes", async () => {
     // HT2020 is not year-representable → activeYearSelection falls back to the
     // window, so the slider seeds to the window. Without the cue that would read
@@ -546,6 +529,41 @@ describe("PeriodPicker — window slider (#615)", () => {
     await expect
       .element(screen.getByText(/Not delivered after 2008/))
       .toBeVisible();
+  });
+
+  // Coverage that opens after the vintage inverts (Fix D): there is no band, so
+  // the seed is the window or the full track, wholly before the coverage start.
+  // That seed is not a selection the user made, so it must not read as "not
+  // delivered". The only way either gap suppression in PeriodWindowSlider bites.
+  it("INVERTED coverage, no window: the full-track seed reports no gap", async () => {
+    // Fails if the slider stops suppressing the gap when nothing is selected.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 2025, to: null } as Coverage,
+      vintageYear: 2024,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toBeVisible();
+    expect(screen.getByText(/Not delivered/).query()).toBeNull();
+  });
+
+  it("INVERTED coverage, sub-annual ?period: the window projection reports no gap", async () => {
+    // Fails if the slider stops suppressing the gap for a sub-annual ?period,
+    // whose shown span is the window projection, not the selection.
+    const screen = await render(PeriodPicker, {
+      period: "HT2020",
+      window: WINDOW,
+      coverage: { from: 2025, to: null } as Coverage,
+      vintageYear: 2024,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect.element(screen.getByText(/Active period/)).toBeVisible();
+    expect(screen.getByText(/Not delivered/).query()).toBeNull();
   });
 
   it("before /api/context resolves (no vintageYear) the slider falls back to wall-clock (#631)", async () => {

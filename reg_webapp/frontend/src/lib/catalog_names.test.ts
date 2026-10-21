@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ShowNode } from "./api";
-import { getShow } from "./api";
-import { rootShow } from "./api-test-helpers";
+import { rootShow, stubApi } from "./api-test-helpers";
 import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";
 
 // Y-80: the cart holds coordinates, so the words come from the catalog. These
@@ -10,19 +9,14 @@ import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";
 // can never settle in two steps or say half a name that reads like another source.
 // The rendered side of the same contract is SourceEditor.browser.test.ts.
 
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getShow: vi.fn() };
-});
-
 const COORDINATE = "scb/lisa/individer-16plus";
 
-/** `show` for the root, the `scb` provider (which names every register it owns)
- * and the `scb/lisa` register (which carries its variants). */
-function catalog(root: () => Promise<ShowNode>) {
-  return async (ref?: string): Promise<ShowNode> => {
-    if (ref === undefined) return root();
-    if (ref === "scb") {
+/** Serve `show` for the root, the `scb` provider (which names every register it
+ * owns) and the `scb/lisa` register (which carries its variants). */
+function stubCatalog(root: () => ShowNode) {
+  stubApi((url): ShowNode | undefined => {
+    if (url.pathname === "/api/catalog") return root();
+    if (url.pathname === "/api/catalog/scb") {
       return {
         kind: "provider",
         fqid: "scb",
@@ -30,6 +24,7 @@ function catalog(root: () => Promise<ShowNode>) {
         children: [{ fqid: "scb/lisa", name: "LISA", purpose: null }],
       } as unknown as ShowNode;
     }
+    if (url.pathname !== "/api/catalog/scb/lisa") return undefined;
     return {
       kind: "register",
       fqid: "scb/lisa",
@@ -39,17 +34,14 @@ function catalog(root: () => Promise<ShowNode>) {
         { slug: "individer-16plus", name: "Individer, 16 år och äldre" },
       ],
     } as unknown as ShowNode;
-  };
+  });
 }
 
 beforeEach(() => {
   // The cache is a session singleton: start each case from an empty one.
   resetCatalogNames();
-  vi.mocked(getShow).mockReset();
-  vi.mocked(getShow).mockImplementation(
-    catalog(async () =>
-      rootShow({ fqid: "scb", name: "Statistiska Centralbyrån" }),
-    ),
+  stubCatalog(() =>
+    rootShow({ fqid: "scb", name: "Statistiska Centralbyrån" }),
   );
 });
 
@@ -69,9 +61,9 @@ describe("sourceNames (the words behind a source's coordinate)", () => {
     // disambiguate. The coordinate is the honest answer instead.
     // Fails if the names stop waiting on the root `show` read (package C moved
     // every name read to `show`).
-    vi.mocked(getShow).mockImplementation(
-      catalog(() => Promise.reject(new Error("offline"))),
-    );
+    stubCatalog(() => {
+      throw new Error("offline");
+    });
 
     const names = await settledNames();
 
@@ -82,12 +74,10 @@ describe("sourceNames (the words behind a source's coordinate)", () => {
 
   it("names nothing when a multi-provider root does not list this provider", async () => {
     // Fails if a provider missing from the root `show` still yields a name.
-    vi.mocked(getShow).mockImplementation(
-      catalog(async () =>
-        rootShow(
-          { fqid: "sos", name: "Socialstyrelsen" },
-          { fqid: "fk", name: "Försäkringskassan" },
-        ),
+    stubCatalog(() =>
+      rootShow(
+        { fqid: "sos", name: "Socialstyrelsen" },
+        { fqid: "fk", name: "Försäkringskassan" },
       ),
     );
 

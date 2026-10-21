@@ -65,7 +65,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
           coverage: null,
         },
       ],
-    } as unknown as Partial<ConceptGroupShow>);
+    });
   }
 
   /** The graph: a node per member + a succession edge old→new (predecessor→successor,
@@ -132,7 +132,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue(successionGraph());
     router.navigate(
@@ -258,7 +258,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/faceted-succession");
@@ -328,7 +328,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue({
       nodes: [
@@ -394,7 +394,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupShow>),
+      }),
     );
     vi.mocked(getGraph).mockResolvedValue({
       nodes: [

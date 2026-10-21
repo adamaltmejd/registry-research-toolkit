@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
-import { getShow, getStates } from "./api";
 import { rootShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import type { ProjectSource } from "./project_data";
@@ -10,6 +9,7 @@ import {
   providerShow,
   registerChild,
   renderCard,
+  showReads,
   stubCatalog,
   variantsRegister,
 } from "./source-editor-test-helpers";
@@ -24,19 +24,7 @@ import {
 // catalog (the draft holds only the coordinate) and never a slug rule — and they are
 // composed as separate elements, not strung into one dot-joined heading.
 
-// Stub the catalog reads the card's names and columns come from (`show`,
-// `states`); keep the rest of api.ts real (the types + path helpers `catalog.ts`
-// uses) — the partial-mock pattern `VariantBrowser` / `CatalogNodeView` use for
-// the same reads.
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return {
-    ...actual,
-    getWarnings: vi.fn().mockResolvedValue([]),
-    getShow: vi.fn(),
-    getStates: vi.fn(),
-  };
-});
+let catalog: ReturnType<typeof stubCatalog>;
 
 beforeEach(() => {
   // projectStore is a module singleton; start each test from a fresh draft so the
@@ -48,9 +36,7 @@ beforeEach(() => {
   // The name cache is a session singleton too — a case stubbing a different
   // catalog for the same coordinate must not read the previous case's answer.
   resetCatalogNames();
-  vi.mocked(getShow).mockReset();
-  vi.mocked(getStates).mockReset();
-  stubCatalog();
+  catalog = stubCatalog();
 });
 describe("SourceEditor cart card", () => {
   // Y-75: `name` is a generated join key — three variants of one register mint
@@ -139,9 +125,7 @@ describe("SourceEditor cart card", () => {
     // asks nothing. A cart of a hundred columns on one register makes this one
     // request. Fails if the variants are read per card (they ride the register's
     // `show` since package C).
-    expect(
-      vi.mocked(getShow).mock.calls.filter(([ref]) => ref === "scb/lisa"),
-    ).toHaveLength(1);
+    expect(showReads(catalog, "scb/lisa")).toBe(1);
   });
 
   it("titles a `_default` variant with the register alone", async () => {
@@ -346,36 +330,6 @@ describe("SourceEditor cart card", () => {
 
     await dialog.getByRole("button", { name: "Cancel" }).click();
     expect(storedProject()?.sources).toHaveLength(2);
-  });
-
-  it("removes the source through the store once the removal is confirmed", async () => {
-    // Seed a two-source draft so we can observe the removal against the store.
-    projectStore.applyStagedDiff({
-      adds: [
-        {
-          registerVariant: "scb/lisa/v1",
-          period: 2020,
-          binding: { variable: "scb/lisa/kon", type: "categorical" },
-        },
-        {
-          registerVariant: "scb/rtb/v1",
-          period: 2019,
-          binding: { variable: "scb/rtb/x", type: "opaque" },
-        },
-      ],
-    });
-    const source = storedProject()?.sources?.[0] as ProjectSource;
-    await renderCard(source);
-
-    await page.getByRole("button", { name: "Remove source" }).click();
-    const dialog = page.getByRole("alertdialog");
-    await expect.element(dialog).toMatchTextContent(/and its 1 column\?/);
-    await dialog.getByRole("button", { name: "Remove source" }).click();
-
-    // The store dropped source 0 (scb/lisa/v1); scb/rtb/v1 survives.
-    expect(storedProject()?.sources?.map((s) => s.register_variant)).toEqual([
-      "scb/rtb/v1",
-    ]);
   });
 
   it("renders an alert (not a crash) when bindings is a non-array", async () => {

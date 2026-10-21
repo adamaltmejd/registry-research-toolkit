@@ -200,58 +200,6 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(disclosure?.textContent).not.toContain("Corrected interval 2022");
   });
 
-  it("keeps evidence paired with each scoped source edition", async () => {
-    const springEvidence = "The steward holds the spring AliasA delivery.";
-    const autumnEvidence = "The steward holds the autumn AliasB delivery.";
-    await render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon",
-      ...leaf([
-        state({
-          state_id: "2",
-          variant: "individer",
-          variant_label: "Individuals",
-          delivery_column_name: "AliasB",
-          valid_from: "2021-01-01",
-          valid_to: "2021-12-31",
-          period_token: "2021",
-          provenance:
-            "errata:scoped-attributions\n" +
-            JSON.stringify([
-              {
-                class: "omitted-column-in-version",
-                evidence: springEvidence,
-                source_editions: ["VT2021"],
-              },
-              {
-                class: "omitted-column-in-version",
-                evidence: autumnEvidence,
-                source_editions: ["HT2021"],
-              },
-            ]),
-        }),
-      ]),
-      regMetaVersion: SEED.regMetaVersion,
-      steward: SEED.steward,
-      windowMinYear: SEED.windowMinYear,
-      vintageYear: 2024,
-    });
-
-    await page.getByText("Technical details", { exact: true }).click();
-
-    const items = Array.from(
-      document.querySelectorAll<HTMLLIElement>(".correction-list > li"),
-    );
-    expect(items).toHaveLength(2);
-    expect(items[0]?.textContent).toContain("VT2021");
-    expect(items[0]?.textContent).toContain(springEvidence);
-    expect(items[0]?.textContent).not.toContain("HT2021");
-    expect(items[0]?.textContent).not.toContain(autumnEvidence);
-    expect(items[1]?.textContent).toContain("HT2021");
-    expect(items[1]?.textContent).toContain(autumnEvidence);
-    expect(items[1]?.textContent).not.toContain("VT2021");
-    expect(items[1]?.textContent).not.toContain(springEvidence);
-  });
-
   it("keeps correction-only evidence paired without provider attribution", async () => {
     const springEvidence = "The steward holds the spring AliasA delivery.";
     const autumnEvidence = "The steward holds the autumn AliasB delivery.";

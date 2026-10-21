@@ -2,17 +2,15 @@
 // SourceEditor.period.browser.test.ts): catalog stubs, the card render and a seeded
 // source. Browser-only: renders a component; import only from *.browser.test.ts.
 import type { ComponentProps } from "svelte";
-import { vi } from "vitest";
 import { render } from "vitest-browser-svelte";
-import {
-  getShow,
-  getStates,
-  type ProviderShow,
-  type RegisterChild,
-  type RegisterShow,
-  type ShowNode,
+import type {
+  ProviderShow,
+  RegisterChild,
+  RegisterShow,
+  ShowNode,
+  VariableStateModel,
 } from "./api";
-import { registerShow, rootShow } from "./api-test-helpers";
+import { registerShow, rootShow, stubApi } from "./api-test-helpers";
 import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
@@ -69,21 +67,49 @@ function lisaCatalog(): Record<string, ShowNode | Error> {
   };
 }
 
-/** Stub `show` over the LISA catalog with `overrides` laid over it by ref (an
- * `Error` makes that read fail; a ref in neither is a 404-like failure), and the
- * columns' own `states` read (BindingEditor.browser.test.ts owns it) to nothing
- * covering, so the rows show their FQID alone. */
+/** Serve `show` over the LISA catalog with `overrides` laid over it by ref (an
+ * `Error` makes that read fail; a ref in neither is a 404), the columns' own
+ * `states` read (BindingEditor.browser.test.ts owns it) from `states` — by
+ * default nothing covering, so the rows show their FQID alone — and no data
+ * warnings. Returns the fetch spy. */
 export function stubCatalog(
   overrides: Record<string, ShowNode | Error> = {},
-): void {
+  states: (
+    fqid: string,
+    query: URLSearchParams,
+  ) => VariableStateModel[] = () => [],
+) {
   const catalog = { ...lisaCatalog(), ...overrides };
-  vi.mocked(getShow).mockImplementation(async (ref) => {
-    const node = catalog[ref ?? ""];
-    if (node === undefined) throw new Error(`no catalog node ${ref}`);
-    if (node instanceof Error) throw node;
+  return stubApi((url) => {
+    const [, , read, ...ref] = url.pathname.split("/");
+    const fqid = ref.map(decodeURIComponent).join("/");
+    if (read === "states") {
+      return { items: states(fqid, url.searchParams), next_cursor: null };
+    }
+    if (read === "warnings") {
+      return [];
+    }
+    if (read !== "catalog") {
+      return undefined;
+    }
+    const node = catalog[fqid];
+    if (node instanceof Error) {
+      throw node;
+    }
     return node;
   });
-  vi.mocked(getStates).mockResolvedValue([]);
+}
+
+/** The `show` reads `spy` sent for `ref`. */
+export function showReads(
+  spy: ReturnType<typeof stubCatalog>,
+  ref: string,
+): number {
+  return spy.mock.calls.filter(
+    ([input]) =>
+      new URL(String(input), "http://localhost").pathname ===
+      `/api/catalog/${ref}`,
+  ).length;
 }
 
 /** The card under test, always at index 0 of the fresh draft above. Every case
