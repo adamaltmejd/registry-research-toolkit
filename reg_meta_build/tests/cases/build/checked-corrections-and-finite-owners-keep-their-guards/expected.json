@@ -13,7 +13,7 @@
           "2009-01-01",
           "2009-12-31",
           "Reviewed label",
-          "curation/registers/scb/sample.toml#/errata.field/1: Exact supplied definition establishes the reviewed correction."
+          "curation/registers/scb/sample.toml#/errata.field/1"
         ]
       ]
     },
@@ -53,7 +53,7 @@
       "rows": [
         [
           "2009-01-01",
-          "curation/registers/scb/unitfix.toml#/errata.field/1: Exact supplied unit establishes the reviewed correction."
+          "curation/registers/scb/unitfix.toml#/errata.field/1"
         ]
       ]
     },

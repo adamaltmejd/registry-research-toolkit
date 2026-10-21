@@ -33,7 +33,7 @@
       ],
       "rows": [
         [
-          "curation/registers/scb/pinfree.toml#/coding.choice/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/scb/pinfree.toml#/coding.choice/1/period/1"
         ]
       ],
       "note": "Same test: the applied case is `<file>#/coding.choice/1/period/1`; the state carries it as `<case id>: <reason>\\n<source>` (the provenance form choice_application.py::test_choice_changes_only_checked_window_and_feeds_ordinary_formation asserted)."
@@ -83,7 +83,7 @@
       ],
       "rows": [
         [
-          "curation/registers/scb/uncoded.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/scb/uncoded.toml#/coding.uncoded/1/period/1"
         ]
       ],
       "note": "Same test: the uncoded decision is applied and attributed to its entry."
@@ -190,7 +190,7 @@
       "rows": [
         [
           "2019-01-01",
-          "curation/registers/scb/extend.toml#/coding.extend/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1"
         ],
         [
           "2020-01-01",
@@ -705,7 +705,7 @@
       "rows": [
         [
           "2020-01-01",
-          "curation/registers/scb/cardinality.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/scb/cardinality.toml#/coding.uncoded/1/period/1"
         ]
       ],
       "note": "Same test: `len(cases) == 1`: period 1 still applies."
@@ -768,7 +768,7 @@
         [
           "2020-01-01",
           "2020-12-31",
-          "curation/registers/scb/undateduncoded.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/scb/undateduncoded.toml#/coding.uncoded/1/period/1"
         ]
       ],
       "note": "choice_application.py::test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance: the finite uncoded acceptance applies to 2020 only."
@@ -1013,7 +1013,7 @@
       ],
       "rows": [
         [
-          "curation/registers/scb/window.toml#/coding.choice/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/scb/window.toml#/coding.choice/1/period/1"
         ]
       ],
       "note": "Same test: the chosen state's provenance is `<case id>: <reason>\\n<source>`."
@@ -1593,7 +1593,7 @@
       ],
       "rows": [
         [
-          "curation/registers/sos/syn.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+          "curation/registers/sos/syn.toml#/coding.uncoded/1/period/1"
         ]
       ],
       "note": "choice_application.py::test_exact_empty_evidence_can_be_accepted_as_uncoded_without_guessing_members: EMPTY's list has no member active in 2019; uncoded is accepted there and attributed to its entry."

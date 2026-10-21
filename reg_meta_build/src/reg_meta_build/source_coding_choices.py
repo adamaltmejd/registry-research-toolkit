@@ -1109,9 +1109,7 @@ def apply_coding_choices(
                     segments=tuple(
                         replace(
                             segment,
-                            provenance=(
-                                f"{case.case_id}: {decision.reason}\n{decision.provenance}",
-                            ),
+                            provenance=(case.case_id,),
                         )
                         for segment in selected.segments
                     ),

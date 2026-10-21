@@ -929,7 +929,8 @@ CREATE TABLE variable_state (
     -- column carries a distinct SCB `VariabelOperationell_definition`.
     operational_definition TEXT,
     -- NULL for ordinary provider-exported states. Curated corrections carry a
-    -- stable `errata:<class>\\n<evidence>` value; when corrected source editions
+    -- stable `errata:<class>\\n<case pointer>` value, never curator evidence
+    -- (#1708); other curated states carry their case pointers; when corrected source editions
     -- overlap a documented claim, `errata:scoped-attributions` carries JSON
     -- records pairing each edition set with its class/evidence; correction-only
     -- overlaps use `errata:overlapping-attributions`. A source-less interval

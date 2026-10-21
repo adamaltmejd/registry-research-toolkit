@@ -362,7 +362,7 @@ def apply_alias_cases(
                         ResolvedAliasWindow(
                             valid_from=lower,
                             valid_to=upper,
-                            provenance=f"{case.case_id}: {decision.reason}\n{decision.provenance}",
+                            provenance=case.case_id,
                         )
                     )
             variable = resolved[decision.variable_key]

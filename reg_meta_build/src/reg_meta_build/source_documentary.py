@@ -205,7 +205,7 @@ def compile_documentary_bindings(
                     register_ref=f"{register.register_info.provider}/{register.register_info.slug}",
                     declaration=declaration,
                     reason=entry.reason,
-                    provenance=f"{case_id}: {entry.reason}\n{entry.evidence}",
+                    provenance=case_id,
                 )
             )
             continue
@@ -227,7 +227,7 @@ def compile_documentary_bindings(
                     for a in entry.anchors
                 ),
                 unresolved=tuple(entry.unresolved),
-                provenance=f"{case_id}: {entry.evidence}",
+                provenance=case_id,
             )
         )
     return tuple(result), tuple(issues)

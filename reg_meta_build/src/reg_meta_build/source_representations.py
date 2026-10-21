@@ -540,14 +540,7 @@ def form_representations(
                     ("state.value_set", "state.classification"),
                     "Parallel representations do not establish one common coding.",
                 )
-            attribution = tuple(
-                sorted(
-                    {
-                        f"{c.case_id}: {d.reason}\n{d.provenance}"
-                        for c, d in selected_pairs
-                    }
-                )
-            )
+            attribution = tuple(sorted({c.case_id for c, _ in selected_pairs}))
             provenance = "\n\n".join(
                 sorted(
                     {s.provenance for s in represented if s.provenance}

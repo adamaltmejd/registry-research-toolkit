@@ -1,0 +1,52 @@
+{
+  "note": "Published provenance names the source reference, never curator evidence (#1708). Register TEST (1, variant 2) has editions 2018 and 2020; Q (var 5) is documented only in 2018 and an [[errata.delivered]] entry adds it to 2020 with evidence that names SWECOV, an Operator ruling, an issue number and MONA across a blank line. The 2020 state publishes the correction class, the entry's case pointer and the storage-type facts; the delivery-coverage check still finds that attribution as one provenance element, so the build reports no issue; and the report ledger's case event keeps the evidence.",
+  "fails_if": "the state assembly publishes a correction's decision provenance (class plus evidence) instead of `AppliedCorrection.attribution`, or the ledger case event drops the decision's rationale; or `catalog_dependencies.check_delivery_coverage` is not given the same attribution and reports `unexplained_delivery_fact_change` on v5 people/Q 2020",
+  "sources": {
+    "description": "Editions 2018 and 2020; Q documented only in 2018.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "EDITION",
+          "cvid": 1,
+          "var_id": 99,
+          "year": "2018",
+          "regver_id": 1,
+          "register": [
+            "TEST",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "EDITION",
+          "cvid": 2,
+          "var_id": 99,
+          "year": "2020",
+          "regver_id": 2,
+          "register": [
+            "TEST",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "Q",
+          "cvid": 5,
+          "var_id": 5,
+          "year": "2018",
+          "regver_id": 1,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "integer"
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2018|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|Q|2018|2018|0|0|0"
+      ]
+    }
+  }
+}

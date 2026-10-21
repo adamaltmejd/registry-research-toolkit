@@ -57,7 +57,7 @@
       "where": {"register": "compose"},
       "fields": ["provenance"],
       "rows": [
-        ["curation/registers/scb/compose.toml#/errata.field/1: The delivered description is corrected.\n\ncuration/registers/scb/compose.toml#/errata.field/2: A second reviewer also reads the delivered OLD column as VALUE.\n\ncuration/registers/scb/compose.toml#/errata.field/3: The delivered OLD column is VALUE."]
+        ["curation/registers/scb/compose.toml#/errata.field/1\n\ncuration/registers/scb/compose.toml#/errata.field/2\n\ncuration/registers/scb/compose.toml#/errata.field/3"]
       ]
     },
     {

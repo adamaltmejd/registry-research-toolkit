@@ -244,12 +244,10 @@ def _entries(kind: str, registers: Sequence[RegisterCuration]) -> list[_Curation
 
 
 def _state_provenance(class_name: str, evidence: str) -> str:
-    """Stable, human-readable base provenance: class first, evidence after it.
+    """The decision's provenance: class first, evidence after it.
 
-    The first newline separates the class from free-text evidence; subsequent
-    newlines remain part of that evidence. This keeps the catalog value useful
-    as-is for CLI/JSON consumers while letting the SPA present the correction
-    class and supporting evidence separately. The catalog contract also defines
+    The catalog publishes only the class line (`AppliedCorrection.attribution`);
+    the evidence reaches the build ledger. The catalog contract also defines
     `scoped-attributions` and `overlapping-attributions` provenance forms, which
     readers still parse; the build emits neither today, and a curator may not
     claim either name as a correction class.

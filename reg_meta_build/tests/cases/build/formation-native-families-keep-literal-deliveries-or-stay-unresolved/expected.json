@@ -210,7 +210,7 @@
       "where": {
         "variable": "checked",
         "valid_from": "2002-01-01",
-        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery"}
+        "provenance": {"contains": "errata:omitted-column-in-version\ncuration/"}
       },
       "fields": ["variable"],
       "rows": [["checked"]],
@@ -220,7 +220,7 @@
       "table": "states",
       "where": {
         "variable": ["gaturest", "pgaturest"],
-        "provenance": {"contains": "column ownership: Y-167 fixture reference"}
+        "provenance": {"contains": "accepted-column-partitions:"}
       },
       "fields": ["variable", "valid_from"],
       "rows": [
@@ -231,7 +231,7 @@
         ["pgaturest", "2020-01-01"],
         ["pgaturest", "2025-01-01"]
       ],
-      "note": "FDB: every owned state carries the partition's column-ownership reference (the old test's `provenance.endswith('column ownership: Y-167 fixture reference')`)."
+      "note": "FDB: every owned state carries the accepted column partition's case pointer."
     },
     {
       "table": "states",

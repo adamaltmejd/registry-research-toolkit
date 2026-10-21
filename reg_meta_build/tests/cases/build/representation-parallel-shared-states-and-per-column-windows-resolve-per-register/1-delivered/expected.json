@@ -94,12 +94,12 @@
       "where": {
         "register": "twice",
         "provenance": {"contains": [
-          "curation/registers/scb/twice.toml#/representation.parallel/1: Reviewed parallel columns",
-          "curation/registers/scb/twice.toml#/representation.parallel/2: Second review of the same columns"
+          "curation/registers/scb/twice.toml#/representation.parallel/1",
+          "curation/registers/scb/twice.toml#/representation.parallel/2"
         ]}
       },
       "fields": ["valid_from", "valid_to"],
-      "note": "The composed state names both entries, each with its evidence.",
+      "note": "The composed state names both entries' case pointers.",
       "rows": [["2022-01-01", "2022-12-31"]]
     },
     {

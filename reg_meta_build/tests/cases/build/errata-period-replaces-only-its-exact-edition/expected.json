@@ -21,7 +21,7 @@
         [
           "2016-01-01",
           "2016-12-31",
-          "curation/registers/scb/sample.toml#/errata.occurrence_period/1: Exact supplied definition establishes the reviewed correction."
+          "curation/registers/scb/sample.toml#/errata.occurrence_period/1"
         ],
         [
           "2017-01-01",

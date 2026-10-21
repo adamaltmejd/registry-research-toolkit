@@ -150,7 +150,7 @@ class IRVariableState(_IRBase):
     # `operational_definition`, which is only a shared/canonical summary.
     operational_definition: str | None = None
     # NULL for ordinary provider-exported rows. Corrected SCB states carry
-    # `errata:<class>\n<evidence>`; corrections overlapping a documented claim use
+    # `errata:<class>\n<case pointer>` (never curator evidence, #1708); corrections overlapping a documented claim use
     # `errata:scoped-attributions` JSON records that retain exact edition/evidence
     # pairs, and correction-only overlaps use `errata:overlapping-attributions`.
     # `inferred:resolution-gap` marks source-less coverage retained by resolution.

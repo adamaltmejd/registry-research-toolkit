@@ -193,10 +193,7 @@ def _source_bindings(
                     refs,
                     (
                         f"Source classification declaration: {field.value!r}",
-                        *(
-                            f"{c.case_id}: {c.provenance}"
-                            for c in occurrence.corrections
-                        ),
+                        *(c.attribution for c in occurrence.corrections),
                     ),
                     unresolved=code is not None,
                 )
@@ -549,7 +546,7 @@ def apply_classification_cases(
             continue
         literal_column = decision.column_key[-1]
         assert isinstance(literal_column, str)
-        provenance = f"{case.case_id}: {decision.reason}\n{decision.provenance}"
+        provenance = case.case_id
         selected[decision.column_key].append(
             _Binding(
                 decision.valid_from,

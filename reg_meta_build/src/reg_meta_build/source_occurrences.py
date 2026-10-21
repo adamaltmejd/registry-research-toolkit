@@ -17,11 +17,28 @@ if TYPE_CHECKING:
     from reg_meta_build.source_records import SourceFields, SourceRecord, TemporalScope
 
 
+STORAGE_DETAIL_PREFIXES = ("Curated data_type: ", "Documented Datatyp: ")
+
+
 @dataclass(frozen=True)
 class AppliedCorrection:
     case_id: str
     effect_index: int
     provenance: str
+
+    @property
+    def attribution(self) -> str:
+        """The correction's published provenance (#1708): its `errata:<class>` line,
+        its curation case pointer and the storage-type facts a type reconciliation
+        records. The curator's evidence and rationale stay in the build report."""
+        lines = self.provenance.splitlines()
+        return "\n".join(
+            (
+                *(lines[:1] if lines and lines[0].startswith("errata:") else ()),
+                self.case_id,
+                *(line for line in lines if line.startswith(STORAGE_DETAIL_PREFIXES)),
+            )
+        )
 
 
 @dataclass(frozen=True)

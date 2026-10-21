@@ -733,8 +733,17 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
         cases=tuple(
             (
                 evaluation.case_id,
+                # The curator's rationale is published nowhere else (#1708).
                 ledger_line(
-                    "case", evaluation.model_dump(mode="json", exclude={"decision"})
+                    "case",
+                    evaluation.model_dump(mode="json", exclude={"decision"})
+                    | (
+                        evaluation.decision.model_dump(
+                            mode="json", include={"reason", "provenance", "evidence"}
+                        )
+                        if evaluation.decision is not None
+                        else {}
+                    ),
                 ),
             )
             for evaluation in result.evaluations
@@ -1463,7 +1472,7 @@ def _resolve(
                                         ),
                                     ),
                                     withheld_output=("catalog_relationship",),
-                                    case_id=relationship.provenance.split(": ", 1)[0],
+                                    case_id=relationship.provenance,
                                 )
                                 retained_relationship_issues[
                                     relationship.register_ref
