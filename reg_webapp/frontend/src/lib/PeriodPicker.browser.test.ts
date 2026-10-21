@@ -531,6 +531,41 @@ describe("PeriodPicker — window slider (#615)", () => {
       .toBeVisible();
   });
 
+  // Coverage that opens after the vintage inverts (Fix D): there is no band, so
+  // the seed is the window or the full track, wholly before the coverage start.
+  // That seed is not a selection the user made, so it must not read as "not
+  // delivered". The only way either gap suppression in PeriodWindowSlider bites.
+  it("INVERTED coverage, no window: the full-track seed reports no gap", async () => {
+    // Fails if the slider stops suppressing the gap when nothing is selected.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 2025, to: null } as Coverage,
+      vintageYear: 2024,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toBeVisible();
+    expect(screen.getByText(/Not delivered/).query()).toBeNull();
+  });
+
+  it("INVERTED coverage, sub-annual ?period: the window projection reports no gap", async () => {
+    // Fails if the slider stops suppressing the gap for a sub-annual ?period,
+    // whose shown span is the window projection, not the selection.
+    const screen = await render(PeriodPicker, {
+      period: "HT2020",
+      window: WINDOW,
+      coverage: { from: 2025, to: null } as Coverage,
+      vintageYear: 2024,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect.element(screen.getByText(/Active period/)).toBeVisible();
+    expect(screen.getByText(/Not delivered/).query()).toBeNull();
+  });
+
   it("before /api/context resolves (no vintageYear) the slider falls back to wall-clock (#631)", async () => {
     // The pre-context fallback (mirroring App's `|| new Date().getFullYear()`):
     // a leaf rendered before context loads has no vintageYear → the open-ended
