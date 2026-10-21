@@ -35,7 +35,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Generator, Iterable
 
 
 class SentinelCode(BaseModel):
@@ -322,7 +322,7 @@ def curation_error(code: str, message: str, remediation: str) -> RegMetaError:
 
 
 @contextlib.contextmanager
-def located(where: str) -> Iterator[None]:
+def located(where: str) -> Generator[None]:
     """Prefix a ``RegMetaError`` raised in the block with ``where`` it points.
 
     Leaf validators check one value and do not know its file or entry; the

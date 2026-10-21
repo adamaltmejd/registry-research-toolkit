@@ -42,6 +42,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "reg_webapp/frontend"
+# The repo takes new releases immediately (`exclude-newer = false` in pyproject.toml), but
+# project-less `uvx` reads only the host uv config, which may delay them; without this a
+# freshly bumped tool pin fails locally until the host cutoff passes.
+os.environ["UV_EXCLUDE_NEWER"] = "false"
 CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
 # A raised write limit: the suite and release admission replay many projects from one
 # address (conformance/test_mcp.py's burst case drops it to pin the default).
@@ -90,12 +94,13 @@ def crates() -> None:
 
 
 def lint() -> None:
-    # The only home of the ty and panache pins; Rust formatting is in `crates`.
+    # The home of the ty pin; the panache pin is repeated in scripts/parse_lisa_docs.py
+    # (bump both). Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
-    run("uvx --from panache-cli==3.9.0 panache format --check .")
-    run("uvx --from panache-cli==3.9.0 panache lint .")
-    run("uvx --from ty==0.0.79 ty check")
+    run("uvx --from panache-cli==3.17.0 panache format --check .")
+    run("uvx --from panache-cli==3.17.0 panache lint .")
+    run("uvx --from ty==0.0.90 ty check")
 
 
 def g0(packages: list[str] | None = None) -> None:

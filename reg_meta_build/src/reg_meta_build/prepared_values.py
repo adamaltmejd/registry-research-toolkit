@@ -58,7 +58,7 @@ from reg_meta_build.source_values import (
 from .source_evidence import DeliveredCell, RecordLocator, SourceRevision
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Generator, Iterable, Iterator
     from typing import Self
 
 _MANIFEST = "manifest.json"
@@ -655,7 +655,7 @@ class PreparedSourceValues:
         return keys, tokens
 
     @contextmanager
-    def session(self) -> Iterator[PreparedValueSession]:
+    def session(self) -> Generator[PreparedValueSession]:
         """Reuse one connection and mapped streams for a whole source-resolution pass."""
         with ExitStack() as stack:
             conn = stack.enter_context(closing(_readonly(self.root / _DATABASE)))

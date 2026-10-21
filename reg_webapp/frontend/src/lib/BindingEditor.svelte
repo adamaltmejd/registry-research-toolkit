@@ -20,7 +20,7 @@ const {
   binding,
   variant,
   period: sourcePeriod,
-} = $props<{
+}: {
   sourceIndex: number;
   bindingIndex: number;
   binding: DraftBinding;
@@ -28,7 +28,7 @@ const {
    * null when it has none) — where this column's default name is resolved. */
   variant: string;
   period: string | null;
-}>();
+} = $props();
 
 // A binding field coerced to a display string (non-string → "").
 function strField(field: keyof DraftBinding): string {

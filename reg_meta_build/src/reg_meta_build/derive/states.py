@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING
 from reg_meta_build.db import register_py_lower
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Generator, Iterable
 
     from reg_meta_build.validate import ValidationResult
 
@@ -65,7 +65,7 @@ def _prepare(conn: sqlite3.Connection) -> sqlite3.Connection:
 
 
 @contextmanager
-def named_rows(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
+def named_rows(conn: sqlite3.Connection) -> Generator[sqlite3.Connection]:
     """`conn` with the row factory and the `py_lower` fold derive's reads need;
     `conn`'s own row factory is restored on exit."""
     factory = conn.row_factory

@@ -94,7 +94,7 @@ from reg_meta_build.source_files import _emit_timing, _start_timing, _timing_ena
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Generator, Iterable
 
     from reg_meta_build.resolved_bundle import ResolvedBuild
 
@@ -1124,7 +1124,7 @@ class CompletedArtifactError(Exception):
 @contextmanager
 def _retain_completed_artifact(
     result: dict[str, object], report_dir: Path
-) -> Iterator[None]:
+) -> Generator[None]:
     try:
         yield
     except Exception as exc:

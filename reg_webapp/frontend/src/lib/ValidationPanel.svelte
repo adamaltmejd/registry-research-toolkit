@@ -39,7 +39,7 @@ const {
   sources,
   onRetry,
   onRetryOrder,
-} = $props<{
+}: {
   result: ValidationResultModel | null;
   status: ValidationStatus;
   requestError: string | null;
@@ -61,7 +61,7 @@ const {
   /** Re-POSTs `/order`. Offered ONLY for an order request the backend never
    * answered — see the banner below. */
   onRetryOrder?: () => void;
-}>();
+} = $props();
 
 // Scroll the located card into view and flash it. Imperative (not a binding):
 // findings live in this panel, cards live in sibling components, and the flash is a

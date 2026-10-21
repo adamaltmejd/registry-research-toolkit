@@ -39,14 +39,18 @@ import { windowCoverageHints, windowDisjointFindings } from "./validation";
 // shown read-only. Validation runs automatically against the current draft, so the
 // order download is gated on the current backend result instead of a manual
 // Validate click.
-const { regMetaVersion, steward, providerQualified } = $props<{
+const {
+  regMetaVersion,
+  steward,
+  providerQualified,
+}: {
   regMetaVersion: string;
   steward: string;
   /** Whether this deployment serves more than one provider, so a source card's
    * title carries its provider. A deployment fact, read once at the app root and
    * passed down like `steward` — this page fetches nothing of its own. */
   providerQualified: boolean;
-}>();
+} = $props();
 
 // A hidden <input type=file> driven by the toolbar "Open" button. Resetting its
 // value after each pick lets re-opening the SAME file fire `change` again.

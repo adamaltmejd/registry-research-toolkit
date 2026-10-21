@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.27@sha256:bde3983e9c939224420ddaf6b784cc30e09b035a4dea01f581230c50809f372e
+# syntax=docker/dockerfile:1.28.0@sha256:bb22d9815c728170f72750f4e5b0d672e06176142e1d602c7e66c050100b7e5b
 
 # reg_webapp deployment image: the Rust server (`reg-meta serve`) alone, with the
 # baked reg_meta DB pair and the steward branding (crates/DESIGN.md,
@@ -52,7 +52,7 @@
 # REG_META_FLAVOR is the catalog name: `global` (public catalog) or a steward slug
 # such as `swecov`. The runtime serves it as `--catalog`, so artifact admission at
 # boot rejects a baked DB of another catalog.
-FROM debian:trixie-20261005-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS regmeta-db
+FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS regmeta-db
 
 # ca-certificates is only a Recommends of curl, so it is named for the HTTPS fetch.
 RUN apt-get update \
@@ -87,7 +87,7 @@ RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
 # workspace manifest names every crate under crates/ as a member, so all of them
 # are copied; only `reg-meta` and its dependencies are built (`reg-core-py`'s PyO3
 # extension is not). `--locked` asserts Cargo.lock is current (CI parity).
-FROM rust:1.99.0-slim-trixie@sha256:24e632c09342c20abf8312cf4f61430a911c01ed3a5e4c02b87292b1c39c5273 AS server
+FROM rust:1.99.1-slim-trixie@sha256:00544ccc9431a2fe93e65185d21381b0a039342f5cefcf84fbddac273c9e573d AS server
 WORKDIR /build
 COPY Cargo.toml Cargo.lock ./
 COPY crates/ ./crates/
@@ -97,7 +97,7 @@ RUN cargo build --release --locked -p reg-meta
 # Stage 3 — runtime: `reg-meta serve` behind the entrypoint smoke gate.
 # ---------------------------------------------------------------------------
 # Debian slim plus curl, which the entrypoint's smoke gate probes with.
-FROM debian:trixie-20261005-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS runtime
+FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS runtime
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \

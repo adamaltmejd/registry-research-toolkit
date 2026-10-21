@@ -9,8 +9,9 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
 sha2 = "0.11.0"
 # Both must stay on the Unicode version of `src/case_folding.rs` (17.0.0); the
-# `unicode_version` test pins them together.
-unicode-normalization = "0.1.25"
+# `unicode_version` test pins them together. unicode-normalization is pinned exactly:
+# 0.1.26 moved to Unicode 18.0 ahead of Rust std; lift the pin when std follows.
+unicode-normalization = "=0.1.25"
 unicode-properties = { version = "0.1.4", default-features = false, features = ["general-category"] }
 utoipa = { version = "6.0.0", optional = true }
 

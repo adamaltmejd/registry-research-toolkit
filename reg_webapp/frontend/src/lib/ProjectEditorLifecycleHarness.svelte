@@ -10,10 +10,13 @@ import { providerQualified } from "./catalog_names.svelte";
 import ProjectEditor from "./ProjectEditor.svelte";
 import { initDraftLifecycle } from "./project_store.svelte";
 
-const { regMetaVersion, steward } = $props<{
+const {
+  regMetaVersion,
+  steward,
+}: {
   regMetaVersion: string;
   steward: string;
-}>();
+} = $props();
 
 initDraftLifecycle();
 

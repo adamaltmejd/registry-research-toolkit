@@ -215,7 +215,7 @@ def write_sources(spec: dict, source: Path) -> None:
 # openpyxl stamps the save time into docProps/core.xml and every zip entry, so two
 # prepares of one spec would deliver different workbook bytes (and revisions), and a
 # drift case could go stale on the timestamp alone.
-_XLSX_EPOCH = datetime(2000, 1, 1)  # noqa: DTZ001 - openpyxl writes naive times as UTC
+_XLSX_EPOCH = datetime(2000, 1, 1)  # openpyxl writes naive times as UTC
 
 
 def _fix_zip_times(path: Path) -> None:
