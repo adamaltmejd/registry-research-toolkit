@@ -967,6 +967,11 @@ export interface components {
         };
         /** @description One resolved binding: what was asked for and what the steward delivers. */
         OrderEntry: {
+            /**
+             * @description A held row key of the output file that no binding ordered, carried so every
+             *     file joins on its keys; absent on an ordered entry.
+             */
+            key?: boolean;
             logical: components["schemas"]["LogicalCoordinate"];
             physical: components["schemas"]["PhysicalCoordinate"];
             /**
@@ -987,7 +992,9 @@ export interface components {
             clips: components["schemas"]["ClipReport"][];
             /**
              * @description One per resolved logical-to-physical binding, per source and binding in
-             *     declaration order, then by table, edition and column.
+             *     declaration order, then by table, edition and column; then each file's
+             *     held row keys no binding ordered (`key`), by table, variant, edition, member
+             *     index and column.
              */
             entries: components["schemas"]["OrderEntry"][];
             provenance: components["schemas"]["OrderProvenance"];

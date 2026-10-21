@@ -6,12 +6,13 @@
 //! compiled holdings and gates on full coverage, a catalog artifact serves each
 //! slice by its canonical column (the global fallback). Any finding blocks the
 //! whole order (`order_blocked`, every finding in accumulation order); there is
-//! never a partial manifest.
+//! never a partial manifest. On a steward artifact each output file then gains the
+//! held row keys it lacks ([`held_keys`]).
 //!
 //! The manifest's bytes are `reg_core::project::to_json_pretty`'s, the encoding the
 //! steward-side extractor reads; `order`'s `data` is the same document.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::project::{Binding, ProjectData, Source, project_hash, to_json_pretty};
 use reg_core::{Fqid, Interval, ValidationResult, gaps, intersect, merge, quote, render};
@@ -38,7 +39,9 @@ pub struct Manifest {
     version: u8,
     provenance: Provenance,
     /// One per resolved logical-to-physical binding, per source and binding in
-    /// declaration order, then by table, edition and column.
+    /// declaration order, then by table, edition and column; then each file's
+    /// held row keys no binding ordered (`key`), by table, variant, edition, member
+    /// index and column.
     entries: Vec<Entry>,
     /// Every availability clip, also when nothing blocked.
     clips: Vec<Clip>,
@@ -76,14 +79,25 @@ struct Entry {
     /// table's edition does.
     requested_period: String,
     physical: Physical,
+    /// A held row key of the output file that no binding ordered, carried so every
+    /// file joins on its keys; absent on an ordered entry.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    #[schema(required = false)]
+    key: bool,
     /// A projection's key cell its parent also serves (#1634): kept only when
     /// the projection contributes a cell of its own to the same file.
     #[serde(skip)]
     shared_key: bool,
+    /// The bound variant, which with the table finds the file's held keys.
+    #[serde(skip)]
+    variant_id: i64,
+    /// `requested_period`'s days, empty for `_default`.
+    #[serde(skip)]
+    days: Vec<Interval>,
 }
 
 /// The project-side coordinate of an entry.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 #[schema(as = LogicalCoordinate)]
 struct Logical {
     provider: String,
@@ -97,7 +111,7 @@ struct Logical {
 
 /// The steward-side coordinate of an entry; in the global fallback `table` is
 /// blank, `column` the canonical column and `edition` the requested period.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 #[schema(as = PhysicalCoordinate)]
 struct Physical {
     /// The table's edition, rendered as a period. With the table and the variant it
@@ -235,6 +249,12 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     order
         .entries
         .retain(|e| !e.shared_key || own.contains(&placement(e)));
+    // Only a file that kept an ordered entry gains its keys, so no file holds keys
+    // alone. The global fallback has no physical table to hold one.
+    if order.steward {
+        let keys = held_keys(&conn, &order.entries)?;
+        order.entries.extend(keys);
+    }
     Ok(Manifest {
         version: VERSION,
         provenance: provenance(catalog, &project),
@@ -254,6 +274,104 @@ fn placement(entry: &Entry) -> (String, String, String) {
         format!("{}/{}/{}", l.provider, l.register, l.variant),
         entry.physical.edition.clone(),
     )
+}
+
+/// The held row keys each output file lacks (crates/DESIGN.md, "Order manifest"):
+/// every column of the file's table that maps a key of the file's variant ([`IS_KEY`])
+/// and that no entry of the file already extracts, whatever variable ordered it. A key
+/// entry takes the source of the file's first entry and the union of the file's
+/// requested days, narrowed to a year or month member's or a column window's own
+/// period (a member or window the union does not reach is not added); a
+/// year-independent file's keys request `_default`. Ordered by file (table, variant,
+/// edition), then member index and column, after every ordered entry.
+fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> {
+    struct File<'a> {
+        first: &'a Entry,
+        columns: BTreeSet<&'a str>,
+        days: Vec<Interval>,
+    }
+    let mut files: BTreeMap<(String, String, String), File> = BTreeMap::new();
+    for e in entries {
+        let file = files.entry(placement(e)).or_insert_with(|| File {
+            first: e,
+            columns: BTreeSet::new(),
+            days: Vec::new(),
+        });
+        file.columns.insert(&e.physical.column);
+        file.days.extend(e.days.iter().cloned());
+    }
+    let mut stmt = conn.prepare_cached(&format!(
+        "SELECT hc.name, p.slug || '/' || r.slug || '/' || v.slug, \
+         hm.representation_canonical, hm.member_position, hm.member_lo, hm.member_hi, \
+         COALESCE(hm.member_lo, hm.window_lo), COALESCE(hm.member_hi, hm.window_hi) \
+         FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
+         JOIN holding_table ht USING(table_id) \
+         JOIN variable v ON v.variable_id = hm.variable_id \
+         JOIN register r ON r.register_id = v.register_id \
+         JOIN provider p ON p.provider_id = r.provider_id \
+         WHERE ht.physical_id = ? AND hm.variant_id = ? AND {IS_KEY} \
+         ORDER BY hc.name, v.slug"
+    ))?;
+    let mut keys = Vec::new();
+    for file in files.into_values() {
+        let first = file.first;
+        let year_independent = first.requested_period == "_default";
+        let union = merge(file.days);
+        let mut found: Vec<Entry> = Vec::new();
+        let rows = stmt.query_map(params![first.physical.table, first.variant_id], |row| {
+            let own: (Option<String>, Option<String>) = (row.get(6)?, row.get(7)?);
+            Ok((
+                row.get::<_, String>(0)?,
+                row.get::<_, String>(1)?,
+                row.get::<_, String>(2)?,
+                Member::from_columns(row.get(3)?, row.get(4)?, row.get(5)?),
+                own.0.zip(own.1),
+            ))
+        })?;
+        for row in rows {
+            let (column, variable, representation, member, own) = row?;
+            if file.columns.contains(column.as_str())
+                || found.iter().any(|k| k.physical.column == column)
+            {
+                continue;
+            }
+            let days = match (&own, year_independent) {
+                (_, true) => Vec::new(),
+                (Some(own), false) => union.iter().filter_map(|d| intersect(d, own)).collect(),
+                (None, false) => union.clone(),
+            };
+            if !year_independent && days.is_empty() {
+                continue;
+            }
+            found.push(Entry {
+                source: first.source.clone(),
+                logical: Logical {
+                    variable,
+                    representation,
+                    ..first.logical.clone()
+                },
+                requested_period: if year_independent {
+                    "_default".into()
+                } else {
+                    render(&days)
+                },
+                physical: Physical {
+                    column,
+                    member,
+                    ..first.physical.clone()
+                },
+                key: true,
+                shared_key: false,
+                variant_id: first.variant_id,
+                days,
+            });
+        }
+        found.sort_by(|a, b| {
+            (&a.physical.member, &a.physical.column).cmp(&(&b.physical.member, &b.physical.column))
+        });
+        keys.extend(found);
+    }
+    Ok(keys)
 }
 
 /// `project_invalid`: validate's issues for a project rejected before the catalog.
@@ -658,7 +776,10 @@ impl Order<'_> {
                     projection: placement.projection,
                     member: placement.member,
                 },
+                key: false,
                 shared_key: placement.shared_key,
+                variant_id: variant,
+                days: Vec::new(),
             });
         }
         Ok(())
@@ -759,10 +880,11 @@ impl Order<'_> {
         contributions.sort_by(|a, b| a.order().cmp(&b.order()));
         for c in contributions {
             let (table, physical, column) = c.key;
+            let days = merge(c.days);
             self.entries.push(Entry {
                 source: source.name.clone(),
                 logical: logical(source, binding, &column),
-                requested_period: render(&merge(c.days)),
+                requested_period: render(&days),
                 physical: Physical {
                     edition: render(&c.edition),
                     table,
@@ -771,7 +893,10 @@ impl Order<'_> {
                     projection: c.placement.projection,
                     member: c.placement.member,
                 },
+                key: false,
                 shared_key: c.placement.shared_key,
+                variant_id: variant,
+                days,
             });
         }
         Ok(())

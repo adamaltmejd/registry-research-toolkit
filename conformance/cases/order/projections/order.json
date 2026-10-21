@@ -50,6 +50,24 @@
       },
       "requested_period": "2018",
       "source": "Example"
+    },
+    {
+      "key": true,
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Child",
+        "variable": "scb/example/child",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Child",
+        "edition": "2018",
+        "projection": "narrow",
+        "table": "Narrow"
+      },
+      "requested_period": "2018",
+      "source": "Example"
     }
   ],
   "provenance": {

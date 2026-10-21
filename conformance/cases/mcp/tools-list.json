@@ -5033,6 +5033,10 @@
         "OrderEntry": {
           "description": "One resolved binding: what was asked for and what the steward delivers.",
           "properties": {
+            "key": {
+              "description": "A held row key of the output file that no binding ordered, carried so every\nfile joins on its keys; absent on an ordered entry.",
+              "type": "boolean"
+            },
             "logical": {
               "$ref": "#/$defs/LogicalCoordinate"
             },
@@ -5067,7 +5071,7 @@
               "type": "array"
             },
             "entries": {
-              "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column.",
+              "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column; then each file's\nheld row keys no binding ordered (`key`), by table, variant, edition, member\nindex and column.",
               "items": {
                 "$ref": "#/$defs/OrderEntry"
               },
