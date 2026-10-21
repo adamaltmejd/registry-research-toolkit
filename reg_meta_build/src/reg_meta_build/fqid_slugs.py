@@ -28,6 +28,8 @@ from dataclasses import dataclass
 from itertools import combinations, groupby
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
+from reg_core_py import fold_search
+
 from ._curation import curation_error, display_path, repo_curation_dir
 from .errors import RegMetaError
 from .id import is_canonical_scb
@@ -3099,15 +3101,6 @@ _SURVEY_STATS_RE = re.compile(r"\b(survey|statistics)\b", re.IGNORECASE)
 DefaultCandidateClass = Literal["exact", "near", "kept"]
 
 
-def _fold(s: str) -> str:
-    """Case/diacritic/whitespace-insensitive fold used by the _default heuristic."""
-    if not s:
-        return ""
-    folded = unicodedata.normalize("NFKD", s.strip().lower())
-    folded = "".join(c for c in folded if not unicodedata.combining(c))
-    return re.sub(r"\s+", " ", folded)
-
-
 def _strip_parens(s: str) -> str:
     return _PAREN_RE.sub("", s).strip()
 
@@ -3117,7 +3110,7 @@ def _parenthetical_contents(s: str) -> list[str]:
 
 
 def _canonical(s: str) -> str:
-    return re.sub(r"[^a-z0-9]", "", _fold(s))
+    return re.sub(r"[^a-z0-9]", "", fold_search(s))
 
 
 def classify_default_candidate(
@@ -3136,25 +3129,25 @@ def classify_default_candidate(
     The function only judges name-mirror similarity. Callers decide whether
     `_default` is appropriate (e.g. by also checking single-variant cardinality).
     """
-    fr, fv = _fold(register_name), _fold(variant_name)
+    fr, fv = fold_search(register_name), fold_search(variant_name)
     if not fr or not fv:
         return "kept", "missing name"
     if fr == fv:
         return "exact", "Registernamn == Registervariantnamn"
     spr, spv = _strip_parens(register_name), _strip_parens(variant_name)
-    if _fold(spr) == _fold(spv):
+    if fold_search(spr) == fold_search(spv):
         return "near", "match after stripping parenthetical abbrev"
     for abbr in _parenthetical_contents(register_name):
-        if _fold(abbr) == fv:
+        if fold_search(abbr) == fv:
             return "near", f"variant name matches register parenthetical ({abbr!r})"
     for abbr in _parenthetical_contents(variant_name):
-        if _fold(abbr) == fr:
+        if fold_search(abbr) == fr:
             return "near", f"register name matches variant parenthetical ({abbr!r})"
     swapped = _SURVEY_STATS_RE.sub(
         lambda m: "statistics" if m.group(1).lower() == "survey" else "survey",
         spr,
     )
-    if _fold(swapped) == _fold(spv):
+    if fold_search(swapped) == fold_search(spv):
         return "near", "Survey/Statistics sibling"
     cr, cv = _canonical(spr), _canonical(spv)
     if cr and cv and min(len(cr), len(cv)) >= 5:

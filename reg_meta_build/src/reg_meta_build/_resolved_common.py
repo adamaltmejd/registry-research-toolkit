@@ -10,6 +10,7 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from reg_core_py import gaps
 
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.id import mint, mint_canonical_scb
@@ -105,33 +106,11 @@ def _classification_id(slug: str) -> int:
 def remaining_windows(
     intervals: Iterable[tuple[str, str]], valid_from: str, valid_to: str
 ) -> tuple[tuple[str, str], ...]:
-    """The parts of one inclusive ISO window that known intervals leave uncovered."""
-    next_day = date.fromisoformat(valid_from).toordinal()
-    last_day = date.fromisoformat(valid_to).toordinal()
-    if next_day > last_day:
+    """The parts of one inclusive ISO window that known intervals leave uncovered
+    (`reg_core::gaps` over the one window)."""
+    if valid_from > valid_to:
         raise ValueError("coverage bounds are reversed")
-    gaps = []
-    for start, end in sorted(intervals):
-        lower, upper = (
-            date.fromisoformat(start).toordinal(),
-            date.fromisoformat(end).toordinal(),
-        )
-        if lower > last_day:
-            break
-        if lower > next_day:
-            gaps.append(
-                (
-                    date.fromordinal(next_day).isoformat(),
-                    date.fromordinal(lower - 1).isoformat(),
-                )
-            )
-        next_day = max(next_day, upper + 1)
-        if next_day > last_day:
-            return tuple(gaps)
-    gaps.append(
-        (date.fromordinal(next_day).isoformat(), date.fromordinal(last_day).isoformat())
-    )
-    return tuple(gaps)
+    return gaps([(valid_from, valid_to)], list(intervals))
 
 
 def covers_window(
