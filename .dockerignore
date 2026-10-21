@@ -14,6 +14,10 @@
 **/*.db-wal
 **/*.zst
 
+# --- Stale local input copies (see .gitignore), never in the image ---
+# Delete with the .gitignore line once no local worktree carries input_data/.
+reg_meta_build/input_data/
+
 # --- VCS / agent / editor cruft ---
 .git/
 .github/

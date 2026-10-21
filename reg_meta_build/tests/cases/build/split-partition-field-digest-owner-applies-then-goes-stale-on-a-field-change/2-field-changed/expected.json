@@ -2,7 +2,13 @@
   "projections": [
     {
       "table": "issues",
-      "where": {"code": "stale_curation_entry"},
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {
+          "contains": "current expected_fields_sha256 = \"e7300b91061e5076bf2b336e89f70f9d08e29fcb5b549034155e0f68d4a846f2\""
+        }
+      },
+      "note": "The stale issue prints the changed field projection's digest as the re-pin value.",
       "fields": ["locator"],
       "rows": [
         ["curation/registers/scb/sample.toml#/identity.column_owner/1"]

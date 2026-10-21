@@ -1331,6 +1331,14 @@ class IdentityColumnOwnerEntry(_CurationModel):
 
     @model_validator(mode="after")
     def _guarded_editions(self) -> IdentityColumnOwnerEntry:
+        # A complete field list is the digest pin spelled out; one spelling only.
+        if {field.name for field in self.expected_fields} == set(
+            SourceFields.model_fields
+        ):
+            raise ValueError(
+                "expected_fields lists every source field; pin the complete "
+                "projection with expected_fields_sha256 instead"
+            )
         digests = (self.expected_fields_sha256, self.expected_evidence_sha256)
         if None not in digests:
             raise ValueError(

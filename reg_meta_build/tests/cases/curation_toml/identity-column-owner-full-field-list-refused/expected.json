@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "fails_if": "the `[[identity.column_owner]]` validator accepts an `expected_fields` list naming every source field, a second spelling of `expected_fields_sha256`",
+  "note": "The owner has an exact edition and unique guards, so only the full-list rule refuses it.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.column_owner]] entry 1",
+    "message_contains": [
+      "expected_fields lists every source field",
+      "expected_fields_sha256"
+    ]
+  }
+}

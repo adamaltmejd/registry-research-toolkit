@@ -175,7 +175,7 @@ class TestPopulateVariableSlugs(PopulateVariableSlugsHelpers):
         # would re-derive `konkod` on the rebuild instead.
         # Generate build (churning): auto-derives `kon` from `Kon`, persists the
         # .auto.toml. Pinning REQUIRES that committed file (#471), so the maintainer
-        # commits it (`git add -f`) and only THEN flips the zone to curating.
+        # commits it and only THEN flips the zone to curating.
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)

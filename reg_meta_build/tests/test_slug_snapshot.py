@@ -1,6 +1,6 @@
 """precheck-slugs refuses a pinned auto file that a clean checkout would lose.
 
-A curating/frozen zone reads its variable slugs back from its gitignored
+A curating/frozen zone reads its variable slugs back from its committed
 ``*.auto.toml``. A copy that is on disk but absent from or different from the
 committed HEAD tree passes every on-disk check and then does not survive a clean
 checkout, so ``precheck-slugs`` reports it as a ``slug_pin_uncommitted`` parse

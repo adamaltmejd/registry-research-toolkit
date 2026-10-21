@@ -276,7 +276,7 @@ class TestFreezeStateAutoRegenerate:
         assert self._stored(conn) == "konkod"
         assert counts["auto_existing"] == 0
         assert counts["auto_new"] == 1
-        # The gitignored auto.toml is still rewritten with the fresh slug.
+        # The uncommitted auto.toml is still rewritten with the fresh slug.
         slugs = [
             e.slug
             for e in load_provider_toml(d / f"scb{AUTO_FILE_SUFFIX}")
@@ -300,7 +300,8 @@ class TestFreezeStateAutoRegenerate:
     @staticmethod
     def _dir_no_auto(tmp_path: Path, *, freeze: str | None) -> Path:
         # Like `_dir` but WITHOUT committing the auto.toml — the maintainer-forgot
-        # case (`*.auto.toml` is gitignored, so a pin needs `git add -f`).
+        # case (uncommitted pins are refused by the strict build's clean-tree
+        # guard, so a pin must be committed).
         (tmp_path / "scb.toml").write_text("", encoding="utf-8")
         if freeze is not None:
             (tmp_path / FREEZE_STATE_FILE).write_text(
@@ -321,9 +322,9 @@ class TestFreezeStateAutoRegenerate:
         assert "scb" in exc.value.message
         assert state in exc.value.message
         # The remediation must point the maintainer at the concrete fix — the
-        # exact gitignored file to force-add and the command to do it with.
+        # exact file to generate and commit.
         assert "scb.auto.toml" in exc.value.remediation
-        assert "git add -f" in exc.value.remediation
+        assert "commit" in exc.value.remediation
 
     def test_missing_auto_does_not_raise_when_churning(self, tmp_path: Path) -> None:
         # The critical false-fire regression: the default (churning) provider
