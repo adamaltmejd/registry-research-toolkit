@@ -1748,12 +1748,12 @@ Classification succession combines explicit edges with the accepted guarded edit
 rule. Only adjacent recognized editions with matching year-stripped names qualify.
 Variable succession lifts adjacent classification editions only within an unambiguous
 register/name and slug stream; variables spanning multiple editions do not qualify. A
-variable the name ladder renamed (below) streams under the source name it replaced,
-since the ladder exists to name exactly such edition siblings apart. Explicit edges
-retain their provenance. The combined graph is validated before materialization. A
-classification succession or derivation edge that names an uncompiled book, restates a
-derived or curated edge or closes a succession cycle is refused as `relations_invalid`,
-naming the `relations.toml` edge.
+variable the name ladder renamed (below) joins lift families and labels its edge or
+month group under the source name it replaced, since the ladder exists to name exactly
+such siblings apart. Explicit edges retain their provenance. The combined graph is
+validated before materialization. A classification succession or derivation edge that
+names an uncompiled book, restates a derived or curated edge or closes a succession
+cycle is refused as `relations_invalid`, naming the `relations.toml` edge.
 
 `event_sources` explicitly binds each native event namespace to its occurrence dataset.
 Source succession events use already resolved native register, variant, variable or

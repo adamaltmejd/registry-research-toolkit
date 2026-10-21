@@ -2095,12 +2095,14 @@ def _resolve(
                     withheld=withheld,
                     unselected=unselected,
                     slice_registers=slice_registers,
+                    ladder_sources=ladder_sources,
                 )
                 months = resolve_month_groups(
                     panel.variables,
                     edge_groups=edges.groups,
                     curated_groups=selected.metadata.variable_groups,
                     evidence=refs,
+                    ladder_sources=ladder_sources,
                 )
                 for value in (*edges.diagnostics, *months.diagnostics):
                     issue(value)

@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "name"],
+      "rows": [
+        ["efternamn", "Namn (EFTERNAMN)"],
+        ["fornamn", "Namn (FORNAMN)"],
+        ["hade-hsl-feb", "Hade HSL i månad (FEB)"],
+        ["hade-hsl-jan", "Hade HSL i månad (JAN)"],
+        ["hade-hsl-mar", "Hade HSL i månad (MAR)"]
+      ],
+      "note": "Each pair shares its definition, so every member takes its own column."
+    },
+    {
+      "table": "group_labels",
+      "fields": ["group_key", "label", "source"],
+      "rows": [
+        ["efternamn", "Namn", "edge"],
+        ["hade-hsl", "Hade HSL i månad", "token"]
+      ],
+      "note": "Both groups are labelled by the source name their renamed members share."
+    }
+  ]
+}

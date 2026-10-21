@@ -1,0 +1,18 @@
+{
+  "note": "A strict build over register 1 (#1736). Variable 10 delivers FORNAMN and EFTERNAMN together, split into two variables that share the source name 'Namn' and its definition, so they are same-definition siblings and form an edge group keyed by its first member, efternamn. Variables 11, 12 and 13 share the source name 'Hade HSL i månad' and its definition and deliver JAN, FEB and MAR, so they form the month family hade-hsl. The ladder names every member apart by its column; each group is labelled by the source name its members share.",
+  "fails_if": "a group label is read from the ladder name instead of the source name it replaced: the edge group takes its first member's 'Namn (EFTERNAMN)', and the month fold's common prefix of the ladder names leaves 'Hade HSL i månad (' (the real-seed regressions); or the ladder stops renaming the members (they are refused as duplicate_variable_name)",
+  "registers": ["1"],
+  "diagnostic": false,
+  "sources": {
+    "description": "Variable 10 delivers FORNAMN and EFTERNAMN in 2020, both named 'Namn' with the operational definition 'Personens namn'. Variables 11, 12 and 13 deliver JAN, FEB and MAR in 2020, all named 'Hade HSL i månad' with the operational definition 'Om personen hade HSL under månaden'. Every column is int of length 1.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "FORNAMN", "cvid": 41, "var_id": 10, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Namn", "varopdef": "Personens namn", "data_type": "int", "data_length": "1"},
+        {"colname": "EFTERNAMN", "cvid": 42, "var_id": 10, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Namn", "varopdef": "Personens namn", "data_type": "int", "data_length": "1"},
+        {"colname": "JAN", "cvid": 43, "var_id": 11, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Hade HSL i månad", "varopdef": "Om personen hade HSL under månaden", "data_type": "int", "data_length": "1"},
+        {"colname": "FEB", "cvid": 44, "var_id": 12, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Hade HSL i månad", "varopdef": "Om personen hade HSL under månaden", "data_type": "int", "data_length": "1"},
+        {"colname": "MAR", "cvid": 45, "var_id": 13, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Hade HSL i månad", "varopdef": "Om personen hade HSL under månaden", "data_type": "int", "data_length": "1"}
+      ]
+    }
+  }
+}

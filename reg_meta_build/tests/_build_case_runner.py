@@ -91,6 +91,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "source_register_text codes classifications",
         "concept_groups": "variables",
         "group_axes": "group_key axis ordinal label",
+        "group_labels": "group_key label source",
         "group_members": "group_key register variable column facets",
         "warnings": "register variable variant column valid_from valid_to code "
         "severity detail summary detail_hash_of fields refs withheld_output "
