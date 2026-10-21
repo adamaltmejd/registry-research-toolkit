@@ -270,7 +270,7 @@ describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
           coverage: null,
         },
       ],
-    } as unknown as Partial<ConceptGroupShow>);
+    });
   }
 
   function dispinkGraph(): RelationshipGraph {
