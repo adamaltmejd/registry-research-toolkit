@@ -954,7 +954,7 @@ map as follows:
   | registersyfte                   | purpose                            | register                                             |
   | registervariantnamn             | name                               | register_variant                                     |
   | registervariantbeskrivning      | description                        | register_variant                                     |
-  | variabelnamn                    | name                               | variable                                             |
+  | variabelnamn                    | name, source_name                  | variable (display name; pre-ladder name)             |
   | variabeldefinition              | definition                         | variable                                             |
   | variabelbeskrivning             | description                        | variable                                             |
   | variabeloperationell_definition | operational_definition             | variable; per-column alias windows                   |

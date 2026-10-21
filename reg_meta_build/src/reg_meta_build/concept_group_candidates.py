@@ -137,6 +137,9 @@ class _RawVar:
     register_slug: str
     slug: str
     name: str | None
+    # Agreement and the family label read the source name, so the collision
+    # ladder's per-variable qualifier never splits a family (#1764).
+    source_name: str | None
     # The key of the accepted `[[group]]` that claims it, if any: the variable
     # may re-emit only under that key, never as a member of another family.
     accepted_key: str | None = None
@@ -167,7 +170,7 @@ def _evaluate_fold(
       unrelated columns) and not foldable."""
     if len({suffix for _, suffix, _ in members}) < min_siblings:
         return None
-    names = [var.name for _, _, var in members]
+    names = [var.source_name for _, _, var in members]
     if any(n is None for n in names):
         return None
     present_names = [n for n in names if n is not None]
@@ -228,7 +231,7 @@ def _load_ungrouped_variables(
             grouped_excluded.add(row["variable_id"])
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, p.slug AS provider_slug, "
-        "r.slug AS register_slug, v.slug AS variable_slug, v.name "
+        "r.slug AS register_slug, v.slug AS variable_slug, v.name, v.source_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -242,6 +245,7 @@ def _load_ungrouped_variables(
             register_slug=row["register_slug"],
             slug=row["variable_slug"],
             name=row["name"],
+            source_name=row["source_name"],
             accepted_key=accepted_keys.get(row["variable_id"]),
         )
         for row in rows
@@ -544,7 +548,7 @@ def infer_concept_group_candidates(
             skipped_existing_key += 1
             continue
 
-        names = [var.name for _, _, var in members]
+        names = [var.source_name for _, _, var in members]
         # Conservative skip: a family with any NULL name has no labels to agree on
         # — neither foldable nor a battery, just not a candidate at all.
         if any(n is None for n in names):

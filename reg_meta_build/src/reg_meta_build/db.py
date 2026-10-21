@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "12.1.0"
+SCHEMA_VERSION = "12.2.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -773,6 +773,11 @@ CREATE TABLE variable (
     -- `variabelhamtadfran`, and `variabelextern_kommentar` are dropped.
     -- `variabelregister_kalla` becomes interpreted `source_register_text`; raw wording stays in source evidence.
     name TEXT,
+    -- The name the variable was formed under, which name-keyed grouping and the
+    -- worklist generators match on. It differs from `name`, the display name,
+    -- only where the collision ladder named sibling variables apart (#1764);
+    -- NULL exactly when `name` is.
+    source_name TEXT,
     definition TEXT,
     description TEXT,
     operational_definition TEXT,
@@ -2218,18 +2223,20 @@ def _insert_core_graph_from_ir(
     # `is_sensitive`/`is_identifier` are INTEGER columns; the IR carries bools.
     # `provider_key` is the NON-unique join hint. `slug` inserts NULL (the
     # populate_variable_slugs UPDATE pass fills it). `source_label` is the
-    # resolved source-register display label (IRVariable.source_label).
+    # resolved source-register display label (IRVariable.source_label). The
+    # collision ladder never renames a steward variable, so its source name is its
+    # name.
     # simplify: overlay variable ids stay minted (high band), appended after the
     # global build's dense range (#1296 2b); densify them if a steward overlay's
     # cold reads are measured slow.
     conn.executemany(
         "INSERT INTO variable "
-        "(variable_id, register_id, provider_key, slug, name, definition, "
-        " description, operational_definition, source_register_text, "
+        "(variable_id, register_id, provider_key, slug, name, source_name, "
+        " definition, description, operational_definition, source_register_text, "
         " measurement_unit, source_register_id, "
         " source_label, is_sensitive, is_identifier) "
         "VALUES (:variable_id, :register_id, :provider_key, NULL, :name, "
-        " :definition, :description, :operational_definition, "
+        " :name, :definition, :description, :operational_definition, "
         " :source_register_text, :measurement_unit, "
         " :source_register_id, :source_label, :is_sensitive, :is_identifier)",
         [

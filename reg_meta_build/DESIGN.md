@@ -1750,13 +1750,13 @@ shared-label guard; ambiguous collisions remain separate and diagnosed.
 Classification succession combines explicit edges with the accepted guarded edition
 rule. Only adjacent recognized editions with matching year-stripped names qualify.
 Variable succession lifts adjacent classification editions only within an unambiguous
-register/name and slug stream; variables spanning multiple editions do not qualify. A
-variable the name ladder renamed (below) joins lift families and labels its edge or
-month group under the source name it replaced, since the ladder exists to name exactly
-such siblings apart. Explicit edges retain their provenance. The combined graph is
-validated before materialization. A classification succession or derivation edge that
-names an uncompiled book, restates a derived or curated edge or closes a succession
-cycle is refused as `relations_invalid`, naming the `relations.toml` edge.
+register/name and slug stream; variables spanning multiple editions do not qualify. The
+lift, and the labels of edge and month groups, key on each variable's source name
+(below), so siblings the name ladder named apart still form one family. Explicit edges
+retain their provenance. The combined graph is validated before materialization. A
+classification succession or derivation edge that names an uncompiled book, restates a
+derived or curated edge or closes a succession cycle is refused as `relations_invalid`,
+naming the `relations.toml` edge.
 
 `event_sources` explicitly binds each native event namespace to its occurrence dataset.
 Source succession events use already resolved native register, variant, variable or
@@ -1902,20 +1902,26 @@ carries its source name takes the first step that names it apart:
 No step writes a name over the search cap: a member steps 1 and 2 cannot fit falls to
 step 3, and one that steps 3 and 4 cannot fit keeps its source name. The ladder name
 replaces the source name on the variable and on each of its states and per-column alias
-windows that carry the source name; a state with its own corrected name keeps it.
-Siblings that share a definition, and a variable whose definition varies across its
-states or is missing, skip steps 1 and 2. Detection reads source names, so an explicit
-`[[errata.field]]` name correction wins: the corrected variable keeps its name, still
-makes its source-name group collide, and does not block a sibling's step. A correction
-that the ladder would reproduce is redundant and is deleted. Every member the ladder
-cannot separate keeps its source name, and the uniqueness check that follows runs over
-the whole variant, so a ladder name that another variable already carries is also
-caught. Every variable whose name still collides is a located `duplicate_variable_name`
-error, withheld, none of them chosen, so a diagnostic build stays writable; curation
-names them with `[[errata.field]]`, following the `<label> — <short subquestion>` form
-above. Both the check and `validate_built_db` compare the name a reader sees per state
-(the state's own name, else the variable's), so `validate_built_db` refuses an artifact
-in which two variables with states in one variant share a name.
+windows that carry the source name; a state with its own corrected name keeps it. The
+variable keeps both facts: `name`, the display name, and `source_name`, the name it was
+formed under (an `[[errata.field]]` correction applied, the ladder not), persisted as
+`variable.source_name` and equal to `name` wherever the ladder did not rename it.
+Name-keyed grouping and matching read `source_name`: the vintage lift, edge and month
+group labels, and the `same-as-candidates` and `concept-group-candidates` worklists.
+Readers and every display read `name` (#1764). Siblings that share a definition, and a
+variable whose definition varies across its states or is missing, skip steps 1 and 2.
+Detection reads source names, so an explicit `[[errata.field]]` name correction wins:
+the corrected variable keeps its name, still makes its source-name group collide, and
+does not block a sibling's step. A correction that the ladder would reproduce is
+redundant and is deleted. Every member the ladder cannot separate keeps its source name,
+and the uniqueness check that follows runs over the whole variant, so a ladder name that
+another variable already carries is also caught. Every variable whose name still
+collides is a located `duplicate_variable_name` error, withheld, none of them chosen, so
+a diagnostic build stays writable; curation names them with `[[errata.field]]`,
+following the `<label> — <short subquestion>` form above. Both the check and
+`validate_built_db` compare the name a reader sees per state (the state's own name, else
+the variable's), so `validate_built_db` refuses an artifact in which two variables with
+states in one variant share a name.
 
 ## Strict and diagnostic builds
 
@@ -2467,7 +2473,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (12.1.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (12.2.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward

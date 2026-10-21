@@ -8,15 +8,15 @@
     },
     {
       "table": "variables",
-      "fields": ["variable", "name"],
+      "fields": ["variable", "name", "source_name"],
       "rows": [
-        ["efternamn", "Namn (EFTERNAMN)"],
-        ["fornamn", "Namn (FORNAMN)"],
-        ["hade-hsl-feb", "Hade HSL i månad (FEB)"],
-        ["hade-hsl-jan", "Hade HSL i månad (JAN)"],
-        ["hade-hsl-mar", "Hade HSL i månad (MAR)"]
+        ["efternamn", "Namn (EFTERNAMN)", "Namn"],
+        ["fornamn", "Namn (FORNAMN)", "Namn"],
+        ["hade-hsl-feb", "Hade HSL i månad (FEB)", "Hade HSL i månad"],
+        ["hade-hsl-jan", "Hade HSL i månad (JAN)", "Hade HSL i månad"],
+        ["hade-hsl-mar", "Hade HSL i månad (MAR)", "Hade HSL i månad"]
       ],
-      "note": "Each pair shares its definition, so every member takes its own column."
+      "note": "Each pair shares its definition, so every member takes its own column; each keeps the source name it was formed under."
     },
     {
       "table": "group_labels",

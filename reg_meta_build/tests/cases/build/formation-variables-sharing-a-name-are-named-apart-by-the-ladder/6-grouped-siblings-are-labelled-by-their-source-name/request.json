@@ -1,6 +1,6 @@
 {
   "note": "A strict build over register 1 (#1736). Variable 10 delivers FORNAMN and EFTERNAMN together, split into two variables that share the source name 'Namn' and its definition, so they are same-definition siblings and form an edge group keyed by its first member, efternamn. Variables 11, 12 and 13 share the source name 'Hade HSL i månad' and its definition and deliver JAN, FEB and MAR, so they form the month family hade-hsl. The ladder names every member apart by its column; each group is labelled by the source name its members share.",
-  "fails_if": "a group label is read from the ladder name instead of the source name it replaced: the edge group takes its first member's 'Namn (EFTERNAMN)', and the month fold's common prefix of the ladder names leaves 'Hade HSL i månad (' (the real-seed regressions); or the ladder stops renaming the members (they are refused as duplicate_variable_name)",
+  "fails_if": "a group label is read from the ladder name instead of the source name it replaced: the edge group takes its first member's 'Namn (EFTERNAMN)', and the month fold's common prefix of the ladder names leaves 'Hade HSL i månad (' (the real-seed regressions); or a renamed variable stops persisting the source name it was formed under; or the ladder stops renaming the members (they are refused as duplicate_variable_name)",
   "registers": ["1"],
   "diagnostic": false,
   "sources": {

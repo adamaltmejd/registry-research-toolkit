@@ -59,7 +59,10 @@ def _month_variables(stem="ink"):
     variant = ResolvedVariant(slug="people", name="People")
     return tuple(
         _variable(variant, stem + token).model_copy(
-            update={"name": f"Inkomst i {token}, totalt"}
+            update={
+                "name": f"Inkomst i {token}, totalt",
+                "source_name": f"Inkomst i {token}, totalt",
+            }
         )
         for token in ("jan", "februari", "mars")
     )

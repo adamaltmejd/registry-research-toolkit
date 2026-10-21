@@ -885,15 +885,16 @@ def write_resolved_catalog(
                 variable_id = variable_ids[provider, register_slug, variable.slug]
                 conn.execute(
                     "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-                    "name, definition, description, operational_definition, measurement_unit, "
+                    "name, source_name, definition, description, operational_definition, measurement_unit, "
                     "is_sensitive, is_identifier, deprecated, source_register_id, source_register_text, "
-                    "source_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "source_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         variable_id,
                         _storage_id(provider, "register", register_slug),
                         variable.provider_key,
                         variable.slug,
                         variable.name,
+                        variable.source_name,
                         variable.definition,
                         variable.description,
                         variable.operational_definition,
