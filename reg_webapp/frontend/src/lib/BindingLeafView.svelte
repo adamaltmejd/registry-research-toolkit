@@ -1,7 +1,9 @@
 <script lang="ts">
 import {
   getGraph,
+  getRelatedDocuments,
   getStates,
+  relatedDocumentFileHref,
   type VariableGraphNode,
   type VariableShow,
   type VariableStateModel,
@@ -21,6 +23,11 @@ import {
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
+import {
+  matrixAnswerSource,
+  pagesLabel,
+  provenanceBlocks,
+} from "./curated_source";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
@@ -269,10 +276,15 @@ type Correction = {
 };
 
 function correctionsFromState(state: VariableStateModel): Correction[] {
-  const provenance = state.provenance;
-  if (!provenance?.startsWith("errata:")) {
-    return [];
-  }
+  return provenanceBlocks(state.provenance)
+    .filter((block) => block.startsWith("errata:"))
+    .flatMap((block) => correctionsFromBlock(state, block));
+}
+
+function correctionsFromBlock(
+  state: VariableStateModel,
+  provenance: string,
+): Correction[] {
   // The class line may stand alone: the catalog publishes only source locators
   // after it, never curator evidence (#1708).
   const separator = provenance.indexOf("\n");
@@ -346,6 +358,61 @@ const inferredGaps = $derived(
 const pooledStates = $derived(
   (valueSetStates ?? []).filter((state) => state.pooled),
 );
+
+// A curated matrix answer cites a page of an SCB PDF (`curated:matrix-answer`).
+// One line per distinct (document, pages): the state's own column's page when the
+// provenance names it, else every page the answer cites.
+const matrixSources = $derived.by(() => {
+  const seen = new Map<
+    string,
+    { documentUrl: string; sha256: string; pages: string }
+  >();
+  for (const state of valueSetStates ?? []) {
+    const source = matrixAnswerSource(state.provenance);
+    if (source === null) {
+      continue;
+    }
+    const own = state.delivery_column_name
+      ? source.pages[state.delivery_column_name]
+      : undefined;
+    const pages = pagesLabel(
+      own === undefined ? Object.values(source.pages) : [own],
+    );
+    seen.set(`${source.sha256} ${pages}`, { ...source, pages });
+  }
+  return [...seen.values()];
+});
+const hasMatrixSources = $derived(matrixSources.length > 0);
+// The register's rehosted PDFs, fetched only when a state cites one, to title and
+// link the cited document by its digest. Not the register-level document list
+// (RelatedDocumentsPanel): one SHA256-matched link. No docs DB, no match or a
+// failed fetch falls back to the provider URL the provenance names.
+const citedDocumentsResource = asyncResource((signal) =>
+  hasMatrixSources
+    ? getRelatedDocuments(registerPrefixOf(node.fqid), { signal })
+    : Promise.resolve(null),
+);
+function citedDocument(sha256: string): { href: string; title: string } | null {
+  const doc = citedDocumentsResource.data?.find((d) => d.sha256 === sha256);
+  return doc
+    ? {
+        href: relatedDocumentFileHref(
+          registerPrefixOf(node.fqid),
+          doc.filename,
+        ),
+        title: doc.title,
+      }
+    : null;
+}
+function documentName(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const file = parsed.pathname.split("/").pop();
+    return file ? decodeURIComponent(file) : parsed.hostname;
+  } catch {
+    return url;
+  }
+}
 
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
@@ -802,6 +869,26 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         <dt class="micro-label">Delivery column</dt>
         <dd><code>{technicalState.delivery_column_name}</code></dd>
       {/if}
+      <!-- Waits for the document lookup so the link never swaps target under the
+           cursor (provider URL → rehosted PDF). -->
+      {#if hasMatrixSources && !citedDocumentsResource.loading}
+        <dt class="micro-label">Source</dt>
+        <dd>
+          {#each matrixSources as source (`${source.sha256} ${source.pages}`)}
+            {@const cited = citedDocument(source.sha256)}
+            <p class="matrix-source">
+              {#if cited}
+                <a href={cited.href}>{cited.title}</a>,
+              {:else}
+                <a href={source.documentUrl} target="_blank" rel="noreferrer"
+                  >{documentName(source.documentUrl)}</a
+                >,
+              {/if}
+              {source.pages}
+            </p>
+          {/each}
+        </dd>
+      {/if}
       {#if corrections.length > 0}
         <dt class="micro-label">Corrected deliveries</dt>
         <dd>
@@ -980,6 +1067,13 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     gap: var(--space-3);
     margin: 0;
     padding-inline-start: var(--space-4);
+  }
+  .matrix-source {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .matrix-source a {
+    font-weight: 600;
   }
   .correction-evidence {
     margin: var(--space-1) 0 0;
