@@ -20,9 +20,5 @@
         ]
       }
     ]
-  },
-  "observe": [
-    "entries",
-    "clips"
-  ]
+  }
 }
