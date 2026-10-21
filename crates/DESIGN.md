@@ -187,10 +187,11 @@ Rules:
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
 **Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
-agents need no install and no 1.2 GB download. Its rate limits are sized for tool calls,
-separately from the SPA's. A steward catalog is served over hosted MCP when its artifact
-is already public, as SWECOV's is (data.swecov.se); a private steward catalog stays on
-local `reg-meta mcp`. A published server admits its MCP host (`--public-host`).
+agents need no install and no 1.2 GB download. `/mcp` and every POST share one rate
+limit per client address, sized for tool calls (`reg-meta/src/limit.rs`). A steward
+catalog is served over hosted MCP when its artifact is already public, as SWECOV's is
+(data.swecov.se); a private steward catalog stays on local `reg-meta mcp`. A published
+server admits its MCP host (`--public-host`).
 
 **Hosted MCP has no webapp handoff** (maintainer, 2026-10-20, #1709). Ordering happens
 in a steward webapp; `show`'s root names none. The `order` tool stays: researchers
@@ -447,9 +448,10 @@ it is optional; only docs operations need it.
 steward holds; a project is what one user has: a `project_data.json` against a steward
 (`steward: <id>`, ordered from its holdings) or against the global catalog
 (`steward: global`, ordered from the register holders). The project layer is the user's
-file, read and validated client-side; the server has no project scope. Validation and
-order answer for the catalog that serves them, so a project is checked on its own
-steward's server: another catalog's answer differs without failing.
+file: the server stores none, and checks one only when it is posted to validate or order
+(the SPA runs the structural layer client-side first). Validation and order answer for
+the catalog that serves them, so a project is checked on its own steward's server:
+another catalog's answer differs without failing.
 
 A steward artifact defaults to `holdings` scope, a catalog artifact to `reference`;
 explicit `holdings` on a catalog is `scope_unavailable`. Reference means every node of
@@ -569,16 +571,18 @@ the project's canonical JSON, catalog schema version and `generation_id`), the e
 (logical coordinate with the canonical representation, the clipped `requested_period`,
 and the physical edition, table, column, optional partition, optional projection token
 and optional `member` index) and the clips. It is written here and read offline by the
-steward-side extract system, so it is self-contained. Its bytes are sorted keys,
-two-space indent, UTF-8 and a trailing newline, byte-identical across runs; periods
-render through the shared grammar. No timestamps: the only time-shaped values come from
-the artifact and the project. Version 1 stays in definition until the first external
-reader: shape changes stay in version 1, and from that reader on an incompatible change
-bumps it. `partition`, `projection` (the table's token) and `member` (`{"position": N}`,
-`{"year": YYYY}` or `{"month": "YYYY-MM"}`) are the only optional fields; absent means
-none, so an inventory without partitions, projections or pivot members produces the
-bytes it did before any existed. The parent (`projection_of`) is not in the manifest:
-the token is the placement.
+steward-side extract system, so it is self-contained. That system is the planned MONA
+extract runner (#707): a data manager runs it inside MONA, it writes the files there,
+and nothing row-level leaves. Its bytes are sorted keys, two-space indent, UTF-8 and a
+trailing newline, byte-identical across runs; periods render through the shared grammar.
+No timestamps: the only time-shaped values come from the artifact and the project.
+Version 1 stays in definition until the first external reader: shape changes stay in
+version 1, and from that reader on an incompatible change bumps it. `partition`,
+`projection` (the table's token) and `member` (`{"position": N}`, `{"year": YYYY}` or
+`{"month": "YYYY-MM"}`) are the only optional fields; absent means none, so an inventory
+without partitions, projections or pivot members produces the bytes it did before any
+existed. The parent (`projection_of`) is not in the manifest: the token is the
+placement.
 
 **Extraction keeps delivery topology.** One output file per ordered variant, physical
 table and table edition (`physical.edition`, #1661). `physical.table` is the unique
@@ -612,10 +616,6 @@ pair: it needs either a declared shared-key set or a projection chain.
 `simplify:` v1 records no row filter and orders the whole matching table. SWECOV's one
 large SQL table per SoS register is the upgrade trigger; it will need period `WHERE`
 clauses.
-
-**Deferred: per-binding period override.** If a researcher deliberately wants less than
-the availability intersection, the shape is a binding-level period narrowing below the
-source period. The availability clip leaves the seam. Build it when someone asks.
 
 **Deferred: companion tables.** Steward deliveries include lookup and crosswalk tables
 that are not register data (VaraText beside IVP, skolkod↔skolenhetskod, the FEK

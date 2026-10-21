@@ -35,6 +35,8 @@ reg_webapp/
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
     global/steward.json    # identity only; no catalog → full universe
+    swecov/                # steward.json (branding) + the steward spec the builder
+                           # reads (scope.toml, series/); serve reads steward.json only
   DESIGN.md
 ```
 
@@ -1149,7 +1151,7 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   `container-build.yml` sends `initialize`, `tools/list` and one `search` to that host's
   public `/mcp`.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
-  `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
+  `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/2GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
   is throttled (\~8 MiB/s), so a cold boot re-reads the SQLite pair slowly — keep the OS
   page cache warm rather than scale to zero (\~$6/mo per app). Config:
@@ -1422,13 +1424,14 @@ same two origin-side guards; GET reads are not limited (they have the cheaper ed
 
 The project editor was rebuilt around one rule: **the catalog is the only authoring
 surface**. `/project` is a **cart** — it shows what has been picked and authors nothing
-of its own but a source's **period** (Y-81, below). `ProjectEditor` / `SourceEditor` /
-`BindingEditor` display each source's variant coordinate, period, and bindings
-(variable, pinned representation) and offer only delete-per-row, that period, the
-project's own name, and the New/Open/Download project_data.json/Download order.json
-actions — validation runs automatically on every edit, with no separate Validate action.
-A wrong variable, variant or representation gets fixed by picking again from the catalog
-subject page, not by editing the cart row; there is no general in-cart editing UI.
+of its own but a source's **period** (Y-81, below), the project's name and the
+window-overlap action. `ProjectEditor` / `SourceEditor` / `BindingEditor` display each
+source's variant coordinate, period, and bindings (variable, pinned representation) and
+offer only delete-per-row, that period, the project's own name, and the
+New/Open/Download project_data.json/Download order.json actions — validation runs
+automatically on every edit, with no separate Validate action. A wrong variable, variant
+or representation gets fixed by picking again from the catalog subject page, not by
+editing the cart row; there is no general in-cart editing UI.
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
 a `representation` only where a pick had to choose between co-existing columns — so the
@@ -1638,20 +1641,21 @@ rune store holding one draft per session.
   IndexedDB recovery copy behind it. Both therefore go through one policy
   (`requestNewProject` / `requestOpenProject`, which hold the incoming project as DATA —
   never a callback): over a dirty draft they raise a single confirmation (a Bits UI
-  `AlertDialog`, the app's only modal) offering cancel / download-then-replace / replace
-  anyway, and the replacement runs only on a confirm. Nothing about the draft moves
-  while that answer is pending, so a cancel leaves the draft and its autosave untouched.
-  Open PARSES first (`parseProjectText` — JSON, top-level object) and asks only once the
-  file is one that could be loaded: a cancelled file picker, a parse/shape rejection, or
-  a refused replacement all leave the current draft exactly as it was. A restored
-  autosave stays dirty (a recovery copy is not a downloaded one), so it gets the same
-  confirmation — the flag is never cleared to skip the policy. The pending project is
-  dropped when `/project` unmounts, so an unanswered question can never outlive the page
-  that asks it. Reading a picked file's bytes is the one asynchronous step, and
-  `/project` carries a generation counter that a New, a newer Open and its own teardown
-  all bump: a read that loses that race is dropped BEFORE the ingress runs, since the
-  ingress is what raises the open-error — otherwise a stale file could still replace a
-  newer decision, or put a stale banner over it.
+  `AlertDialog`, through the shared `ConfirmDialog` that the source and window removals
+  also use) offering cancel / download-then-replace / replace anyway, and the
+  replacement runs only on a confirm. Nothing about the draft moves while that answer is
+  pending, so a cancel leaves the draft and its autosave untouched. Open PARSES first
+  (`parseProjectText` — JSON, top-level object) and asks only once the file is one that
+  could be loaded: a cancelled file picker, a parse/shape rejection, or a refused
+  replacement all leave the current draft exactly as it was. A restored autosave stays
+  dirty (a recovery copy is not a downloaded one), so it gets the same confirmation —
+  the flag is never cleared to skip the policy. The pending project is dropped when
+  `/project` unmounts, so an unanswered question can never outlive the page that asks
+  it. Reading a picked file's bytes is the one asynchronous step, and `/project` carries
+  a generation counter that a New, a newer Open and its own teardown all bump: a read
+  that loses that race is dropped BEFORE the ingress runs, since the ingress is what
+  raises the open-error — otherwise a stale file could still replace a newer decision,
+  or put a stale banner over it.
 
 Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
 list — a new or opened project replaces the current draft, deliberately (above).

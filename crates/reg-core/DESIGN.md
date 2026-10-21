@@ -91,8 +91,8 @@ major, a newer minor or a different patch, as one `unsupported_schema_version` i
 would read the document as the current contract, the claim just rejected. Nothing is
 migrated or reinterpreted. An absent or non-string `schema_version` is a malformed
 document, not a version claim, and gets the structural layer's `missing_required_field`
-or `invalid_field_type`. Whether `reg_meta_version` matches the loaded catalog is a
-semantic concern.
+or `invalid_field_type`. `reg_meta_version` is a record, not a check: nothing compares
+it with the loaded catalog, and the order manifest echoes it.
 
 `project::check` runs the two in that order and is the single entry point: the server's
 validate and order operations call it, and so does the SPA through `reg-core-wasm`'s
@@ -105,9 +105,11 @@ The crate splits a shape layer from a rule layer:
 
 - **Types** (`project.rs`) are pure shape. They keep each value's raw spelling (an int
   year stays an int, `"2018"` stays a string) and serialize every optional field, absent
-  as `null`; that encoding is what the project hash covers. Structural rules are not
-  re-encoded as deserialization failures: that would turn the issue-accumulating
-  contract into a fail-fast one, and every consumer needs the full list.
+  as `null`, except `Binding.period`, which is omitted when unset so a project without
+  binding periods keeps its hash; that encoding is what the project hash covers.
+  Structural rules are not re-encoded as deserialization failures: that would turn the
+  issue-accumulating contract into a fail-fast one, and every consumer needs the full
+  list.
 - **The structural validator** (`structural.rs`) reads the raw JSON tree, not the types.
   A wrong enum value must surface as an accumulated `invalid_enum_value`, not a
   deserialization error, and the validator must report on documents the types cannot
