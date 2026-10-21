@@ -19,8 +19,9 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["conformance"]
+# Not `conformance`: it needs the Rust server (`--server-cmd`), so `scripts/gate.py
+# rust` runs it.
 testpaths = [
-  "conformance",
   "reg_meta_build",
   "scripts/tests",
 ]

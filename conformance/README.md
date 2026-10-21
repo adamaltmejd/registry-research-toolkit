@@ -7,22 +7,23 @@ query implementation. Product adapters are not added solely for testing. No priv
 product imports or internal patches are allowed.
 
 ```sh
-uv run python -m pytest conformance -q
 cargo build --workspace
-uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
+uv run --no-project scripts/gate.py rust
+uv run python -m pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
 ```
 
-Release admission searches the Rust server, so `--run-release` without `--server-cmd`
-fails; without `--run-release`, the search-carrying artifact tests skip. Its sampled
-projects all come from one address, so the template raises the server's write limit
-(`--write-limit`); the burst case in `test_mcp.py` drops the flag and pins the default.
+Every run needs `--server-cmd`: the suite's boundary is the Rust server, and a run
+without it is refused at startup. The sampled projects all come from one address, so the
+template raises the server's write limit (`--write-limit`); the burst case in
+`test_mcp.py` drops the flag and pins the default.
 
-The first invocation runs the artifact checks on the synthetic catalog and steward
+The first invocation (the gate's `rust` step, whose command `scripts/gate.py` holds)
+runs the whole suite, with the artifact checks on the synthetic catalog and steward
 artifacts. Fixture-bound cases always build their own named readable source; they never
 substitute the selected real artifact into synthetic value goldens. The second
-invocation adds checks on exactly the selected artifact. Both flags are required for
-tier 3; the reader rejects missing, schema-incompatible and non-publishable artifacts
-before execution. Existing package `release` consumers keep their marker contract.
+invocation runs only the checks on exactly the selected artifact (`-m release`; the
+fixture-bound cases ignore it). Both flags are required for tier 3; the reader rejects
+missing, schema-incompatible and non-publishable artifacts before execution.
 
 Use the equals form for `--artifact-dir`: pytest discovers roots before loading custom
 options, and a space-separated external directory can select that directory's checkout
@@ -30,37 +31,37 @@ configuration. The documented equals form selects the current checkout reliably.
 
 ## Case contract
 
-Each case directory has `request.json` and `expected.json`. `observe` fields and JSON
-pointer projections define the compared public result; errors also pin the exit/status
-and located findings. Order cases run only against `--server-cmd`: the manifest
-download's bytes compare with the case's committed `order.json` (the frozen CLI's,
-provenance included), `order`'s `data` with that document, and a blocked case's
-`order_blocked` findings on both routes. An `api` step's body is `body` (JSON), a
-`content` string sent verbatim (encoded with its optional `encoding`) or
-`nested_arrays: N`, an object nesting N arrays deep. No volatile fields are removed from
-the comparisons. Keys and lists retain their order. An HTTP response oracle may also pin
-raw bytes: `media_type` (the content type without parameters), `headers` (exact values
-by lower-case name) and `bytes` (a file in the case directory compared byte for byte).
-Where ties have no contract order, a step's `members` (`steps`, `pointer`, `equals`)
-joins `pointer` over those steps (this one or earlier) and requires no repeats and
-exactly the `equals` set.
+Each case directory has `request.json` and, except for an order case that orders,
+`expected.json`. JSON pointer projections define the compared public result; errors also
+pin the status and located findings. In an order case the manifest download's bytes
+compare with the case's committed `order.json` (provenance included; authoring it is a
+content decision, see `test_order.py`), `order`'s `data` with that document, and a
+blocked case's `order_blocked` findings on both routes with its `expected.json`. An
+`api` step's body is `body` (JSON), a `content` string sent verbatim (encoded with its
+optional `encoding`) or `nested_arrays: N`, an object nesting N arrays deep. No volatile
+fields are removed from the comparisons. Keys and lists retain their order. An HTTP
+response oracle may also pin raw bytes: `media_type` (the content type without
+parameters), `headers` (exact values by lower-case name) and `bytes` (a file in the case
+directory compared byte for byte). Where ties have no contract order, a step's `members`
+(`steps`, `pointer`, `equals`) joins `pointer` over those steps (this one or earlier)
+and requires no repeats and exactly the `equals` set.
 
-  | Surface directory | Boundary and request interpretation                                                |
-  | ----------------- | ---------------------------------------------------------------------------------- |
-  | order             | HTTP order and download (`--server-cmd`), `order.json` bytes, observe projection   |
-  | api               | HTTP request sequence and status/pointer oracle, startup refusals (`--server-cmd`) |
-  | artifact_sample   | Sampled order entries/clips and search contracts on a readable source              |
-  | reader            | Readable sources, not independently executed cases                                 |
-  | fixtures          | HTTP readable sources, not independently executed cases                            |
+  | Surface directory | Boundary and request interpretation                                   |
+  | ----------------- | --------------------------------------------------------------------- |
+  | order             | HTTP order and download, `order.json` bytes, blocked findings         |
+  | api               | HTTP request sequence and status/pointer oracle, startup refusals     |
+  | artifact_sample   | Sampled order entries/clips and search contracts on a readable source |
+  | reader            | Readable sources, not independently executed cases                    |
+  | fixtures          | HTTP readable sources, not independently executed cases               |
 
 ## Out-of-process runner
 
-`--server-cmd` runs the HTTP surfaces above over a real socket; without it they skip. It
-is a command template: `{db}` (the artifact directory), `{catalog}` (`global` or the
-artifact's steward) and `{port}` are substituted in each word; `{port}` is 0, so the
-kernel picks a free port. The runner starts one server per cached artifact from the
-repository root, with `REG_META_DB`, `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR`
-in its environment, reads the bound port from the `listening on ADDR:PORT` line
+`--server-cmd` runs the HTTP surfaces above over a real socket. It is a command
+template: `{db}` (the artifact directory), `{catalog}` (`global` or the artifact's
+steward) and `{port}` are substituted in each word; `{port}` is 0, so the kernel picks a
+free port. The runner starts one server per cached artifact from the repository root,
+with `REG_META_DB`, `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its
+environment, reads the bound port from the `listening on ADDR:PORT` line
 `reg-meta serve` prints on stderr, and waits until `GET /openapi.json` answers on it
 (120 s at most). Two listeners cannot share a port, so parallel workers never reach each
 other's servers. It reuses the server for every case on that artifact and stops it at
@@ -72,8 +73,8 @@ an expected `build_error` is that build's located refusal, and such a case sends
 requests.
 
 The Rust server (`reg-meta serve`), on the whole suite, the `api` corpus and the MCP
-equivalence suite included (the Rust HTTP run, part of G0 and CI), and the
-release-admission command on the synthetic steward artifact:
+equivalence suite included (part of G0 and CI), and the release-admission command on the
+synthetic steward artifact:
 
 ```sh
 uv run --no-project scripts/gate.py rust release
@@ -93,8 +94,7 @@ change shows as a reviewed diff of that file. The body cap and the rate limit on
 answer with their error documents, and the drained bucket also refuses the address's
 project POSTs while its reads pass; the burst runs on a server of its own. `--mcp-cmd`
 is a command template (`{db}`, `{catalog}`) for one stdio session: initialize, list the
-tools and call `search`. Without `--server-cmd` the module skips; without `--mcp-cmd`
-the stdio session does.
+tools and call `search`. Without `--mcp-cmd` the stdio session skips.
 
 ## Fixture cache
 
@@ -131,9 +131,8 @@ candidate prefix without committing a thousand-row catalog.
 
 ## API cases
 
-`cases/api` holds the cases for the new API (`api/operations.toml`, `api/errors.toml`),
-written red ahead of the Rust server. They use the HTTP case shape above, with these
-additions:
+`cases/api` holds the cases for the API (`api/operations.toml`, `api/errors.toml`),
+served by the Rust server. They use the HTTP case shape above, with these additions:
 
 - Every step names its `operation`, and its method and path are one of that operation's
   routes. `test_api_spec.py` lints the corpus: cases parse, name existing operations,
@@ -201,7 +200,7 @@ accepted-input table/cell accounting, authored mappings and policy digests run o
 explicit `--holdings-input` alongside both tier-3 flags:
 
 ```sh
-uv run python -m pytest conformance --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
+uv run python -m pytest conformance -m release --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
 ```
 
 Admission requires a steward artifact, a clean accepted-input Git tree, matching commit

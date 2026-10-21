@@ -23,7 +23,7 @@ from artifact_requests import (
     sample_project,
     server_client,
 )
-from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 from reg_meta_build.db import get_manifest, open_db
 
 
@@ -220,7 +220,7 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
 ):
     with open_db(artifact_dir / "reg_meta.db") as conn:
         if get_manifest(conn)["catalog_artifact_kind"] != "steward":
-            pytest.skip("catalog refusals are pinned in test_artifact")
+            pytest.skip("catalog refusals are pinned in cases/api/order-errors")
         project = sample_project(conn, unheld=True)
     server = server_client(request, artifact_dir)
     binding = project["sources"][0]["bindings"][0]["variable"]
@@ -275,33 +275,34 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
 
 
 @pytest.mark.parametrize(
-    "fixture",
+    ("fixture", "stratum"),
     [
-        "reader/case-twins",
-        "reader/temporal-case-twins",
-        "alias-window-only",
-        "range",
-        "list",
-        "partitions",
+        ("reader/case-twins", "case_twin"),
+        ("reader/temporal-case-twins", "case_twin"),
+        ("alias-window-only", "alias_window"),
+        ("range", "range"),
+        ("list", "list"),
+        ("partitions", "partition"),
     ],
 )
-def test_source_built_stratified_boundary_agreement(fixture, tmp_path, request):
-    path = build_reader_artifact(
-        tmp_path / "artifact",
+def test_source_built_stratified_boundary_agreement(fixture, stratum, request):
+    # Each source holds one boundary binding. Fails if the sampler stops selecting
+    # it (falling back to `ordinary`), so the agreement never reaches that stratum.
+    path = cached_reader_artifact(
         fixture,
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
-    check_generation_seeded_stratified_binding_agreement(
+    receipt = check_generation_seeded_stratified_binding_agreement(
         path.parent, server_client(request, path.parent)
     )
+    assert stratum in receipt["selected_strata"]
 
 
-def test_binding_past_search_depth_ceiling_is_reached_by_refinement(tmp_path, request):
+def test_binding_past_search_depth_ceiling_is_reached_by_refinement(request):
     # Unheld fillers sharing the sampled "Year"'s exact name, as many as the depth
     # ceiling, outrank it in reference scope: exact-name matches alone fill it.
-    path = build_reader_artifact(
-        tmp_path / "artifact",
+    path = cached_reader_artifact(
         "reader/search-ceiling",
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
@@ -313,12 +314,11 @@ def test_binding_past_search_depth_ceiling_is_reached_by_refinement(tmp_path, re
     assert receipt["search_ceiling_refined"] == 1
 
 
-def test_binding_named_past_query_cap_is_refused_by_http_search(tmp_path, request):
+def test_binding_named_past_query_cap_is_refused_by_http_search(request):
     # The sampled variable's name is longer than the 200-character `q` cap: HTTP
     # search must refuse it on `q` in both scopes, while browse still reaches it.
     # Fails if the Rust server accepts an over-cap `q` or stops locating the refusal.
-    path = build_reader_artifact(
-        tmp_path / "artifact",
+    path = cached_reader_artifact(
         "reader/search-query-cap",
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},

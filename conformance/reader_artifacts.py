@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.data_warnings import DataWarning
-from reg_meta_build.db import SCHEMA_VERSION, open_db
+from reg_meta_build.db import open_db
 from reg_meta_build.derive import derive_holdings
 from reg_meta_build.doc_db import DOC_DB_FILENAME, build_doc_db, load_related_documents
 from reg_meta_build.holdings_accounting import INVENTORY_ROLE_PATH
@@ -478,18 +478,3 @@ def _build_artifact(
     assert validation.passed, validation.format_report()
     open_db(path).close()
     return path
-
-
-def stamp_catalog_identity(conn: sqlite3.Connection) -> None:
-    """Complete identity metadata for legacy synthetic reader catalogs."""
-    identity = json.loads((CASES / "reader/fixture/identity.json").read_text())
-    identity.update(
-        schema_version=SCHEMA_VERSION,
-        catalog_artifact_kind="catalog",
-        catalog_publishable="true",
-        catalog_completeness="complete",
-    )
-    identity["generation_id"] = generation_id(identity)
-    conn.executemany(
-        "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)", sorted(identity.items())
-    )

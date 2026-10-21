@@ -91,7 +91,7 @@ registry-research-toolkit/
     reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
     reg-core-py/    # PyO3 bindings of reg-core for the builder
     reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
-  conformance/      # cross-adapter contract corpus, run against the Rust server
+  conformance/      # contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
     frontend/       # Svelte 5 + Vite (bun)
@@ -301,7 +301,7 @@ This is the complete list of boundaries a test may assert at.
   | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                             |
   | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB           |
   | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                       |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                                    |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, `order` data identical to its download                                    |
   | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                     |
   | Curation + steward storage → findings    | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/steward_storage/` |
   | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                   |
@@ -319,17 +319,18 @@ through source-built request/expected corpora in `conformance/cases/`.
    `cargo test --workspace` and `bun run test`. Run narrowed by package while iterating.
    Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
-   `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
-   job's 6-minute timeout covers `crates/` and the gate's `rust` and `release` steps
+   `testpaths` entry, each with `timeout-minutes` at its CI budget below. Conformance is
+   not one: it requires the Rust server (`--server-cmd`). The `rust` job's 6-minute
+   timeout covers `crates/` and the gate's `rust` and `release` steps
    (`scripts/gate.py`: the workspace build, the whole conformance suite against the Rust
-   server, release admission on the synthetic steward artifact), with room for a cold
-   rust-cache and its save. The `lint` job runs `gate.py lint` (ruff, panache, ty). The
-   `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
-   check; the OpenAPI snapshot is a `crates/reg-meta` test. A job that exceeds its
-   budget fails. The Playwright drivers (`dev.sh smoke`, the gate's `flows` step) are
-   local checks, not CI jobs.
+   server, then only the `release`-marked admission checks on the synthetic steward
+   artifact), with room for a cold rust-cache and its save. The `lint` job runs
+   `gate.py lint` (ruff, panache, ty). The `reg-webapp-frontend` job has a 6-minute
+   timeout and includes the codegen drift check; the OpenAPI snapshot is a
+   `crates/reg-meta` test. A job that exceeds its budget fails. The Playwright drivers
+   (`dev.sh smoke`, the gate's `flows` step) are local checks, not CI jobs.
 3. **Artifact (maintainer or release gate).** Run
-   `pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
+   `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
    see `conformance/README.md` for the template). The reader admits the selected
    artifact before execution; incompatible or non-publishable artifacts fail, never
@@ -347,18 +348,17 @@ through source-built request/expected corpora in `conformance/cases/`.
 
 Budgets are what a lean suite for the package needs, derived from its boundaries, not
 from the suite's current size. Local is wall time with `pytest <tree> -n auto -q` (or
-`bun run test`) on a 10-core developer Mac; CI is the job's `timeout-minutes` in
-`ci.yml` on `ubuntu-latest`, including setup. A suite over budget is a finding for the
-`test-audit` skill, not a reason to raise the number.
+`bun run test`, or the pytest line of `gate.py rust`) on a 10-core developer Mac; CI is
+the job's `timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite
+over budget is a finding for the `test-audit` skill, not a reason to raise the number.
 
-  | Suite                                         | Local | CI job | Rationale                                                                                                                            |
-  | --------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-  | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
-  | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven HTTP, MCP, order and validate cases.                              |
-  | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); a few nested pytest runs dominate.                                            |
-  | `crates/` (`cargo test --workspace`)          | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
-  | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 6 min  | The whole conformance suite against the Rust server; Shares the `rust` job with `crates/`.                                           |
-  | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
+  | Suite                                | Local | CI job | Rationale                                                                                                                            |
+  | ------------------------------------ | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
+  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); a few nested pytest runs dominate.                                            |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
+  | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
+  | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
 Three verification gates cut across the tiers. They are named G0–G2 so they are not
 confused with the tiers; `conformance/README.md` ("Verification gates") has the G1
@@ -366,14 +366,14 @@ procedure and the pin.
 
   | Gate | What runs                                                                                                                                  | Budget                           | When                                |
   | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ----------------------------------- |
-  | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace`, conformance and the touched packages) and `scripts/gate.py rust` (the Rust HTTP run) | under 60 s, plus 30 s for `rust` | every change                        |
+  | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and the touched packages) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change                        |
   | G1   | `scripts/gate.py g1`: derive on the pinned real artifacts, then the pinned release's server against the checkout's, as raw bytes           | under 5 min warm                 | reader and derive changes, releases |
   | G2   | a full base build, derive, and G1 on the result                                                                                            | about 1 h                        | maintainer, at releases             |
 
-The runtime-side rows above, conformance and `crates/`, sum to 30 s, so any change
-touching the runtime fits G0's 60 s; the Rust HTTP run has its own 30 s row. G1 and G2
-run on real artifacts in tier 3 and are not package budgets. A slow gate is a defect to
-fix, not a reason to skip it.
+`crates/` takes 10 s of G0's 60 s, so any change touching the runtime fits it;
+conformance runs in `rust`, with its own 30 s row. G1 and G2 run on real artifacts in
+tier 3 and are not package budgets. A slow gate is a defect to fix, not a reason to skip
+it.
 
 ### Reader and builder tracks
 
@@ -399,16 +399,17 @@ These rules keep them coupled only through released artifacts.
 
 ### Conformance suite
 
-Every tier runs `conformance/` at the repository root. Thin loaders run its readable
-cases against the Rust server: HTTP and MCP responses, order manifests, server startup
-and project validation. Cases assert domain outputs or located errors, not object
-internals or query implementation. Product adapters are not added solely for testing.
-Fixture-bound cases always use their named source-built synthetic artifacts, including
-in a tier 3 run. Artifact-parametrized checks default to session-built catalog/steward
-artifacts and use exactly `--artifact-dir` under tier 3. They derive expectations from
-artifact content or cross-adapter agreement, never real-identifier goldens.
+Every tier runs `conformance/` at the repository root, always against the Rust server
+(`--server-cmd` is required). Thin loaders run its readable cases against it: HTTP and
+MCP responses, order manifests, server startup and project validation. Cases assert
+domain outputs or located errors, not object internals or query implementation. Product
+adapters are not added solely for testing. Fixture-bound cases always use their named
+source-built synthetic artifacts, including in a tier 3 run. Artifact-parametrized
+checks default to session-built catalog/steward artifacts and use exactly
+`--artifact-dir` under tier 3. They derive expectations from artifact content or
+artifact/HTTP agreement, never real-identifier goldens.
 
-Order comparisons across adapters and repeated runs use raw bytes, including provenance;
+Order comparisons across routes and repeated runs use raw bytes, including provenance;
 no volatile fields are removed, and key/list order remains observable. Existing scope
 accounting covers tables and columns; no manifest count contract yet exists for
 mappings, periods or unmapped reasons. Catalog artifacts permit global fallback orders;
