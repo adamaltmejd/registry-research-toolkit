@@ -8,9 +8,9 @@
       "fields": ["severity", "subject", "fields"],
       "rows": [
         ["error", "scb/sample/a", ["name"]],
-        ["error", "scb/sample/b", ["name"]]
+        ["error", "scb/sample/c", ["name"]]
       ],
-      "note": "Each owner of the tie is refused, located on its own variable."
+      "note": "Each variable holding 'Svar — Patienter' is refused, located on itself; b's ladder name is unique."
     }
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "note": "A strict build over register 1 (#1736). Variables 5, 6 and 7 share the source name 'Ägarnummer' and the operational definition 'Ägarens nummer', so the definition steps are skipped. Variable 7's column AGARE is its own: '(AGARE)'. Variables 5 and 6 spell one column AGNR and AgNr, equal case-folded, so each also takes its years; 6 has one year, written alone.",
+  "fails_if": "the ladder lets a tie take the definition step (all three become 'Ägarnummer — Ägarens nummer' and are refused), compares columns case-sensitively (5 and 6 publish '(AGNR)' and '(AgNr)'), drops the year step (5 and 6 are refused as duplicate_variable_name) or writes a single year as a range",
+  "registers": ["1"],
+  "diagnostic": false,
+  "sources": {
+    "description": "Variable 5 delivers AGNR in 2000 and 2001, variable 6 AgNr in 2002 and variable 7 AGARE in 2002, all named 'Ägarnummer' with the operational definition 'Ägarens nummer'.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "AGNR", "cvid": 21, "var_id": 5, "year": "2000", "regver_id": 2000, "register": ["TEST", 1, 2], "varname": "Ägarnummer", "varopdef": "Ägarens nummer"},
+        {"colname": "AGNR", "cvid": 22, "var_id": 5, "year": "2001", "regver_id": 2001, "register": ["TEST", 1, 2], "varname": "Ägarnummer", "varopdef": "Ägarens nummer"},
+        {"colname": "AgNr", "cvid": 23, "var_id": 6, "year": "2002", "regver_id": 2002, "register": ["TEST", 1, 2], "varname": "Ägarnummer", "varopdef": "Ägarens nummer"},
+        {"colname": "AGARE", "cvid": 24, "var_id": 7, "year": "2002", "regver_id": 2002, "register": ["TEST", 1, 2], "varname": "Ägarnummer", "varopdef": "Ägarens nummer"}
+      ]
+    }
+  }
+}

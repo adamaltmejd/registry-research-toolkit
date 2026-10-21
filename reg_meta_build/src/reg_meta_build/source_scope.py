@@ -9,7 +9,7 @@ the complete selected corpus before invoking this resolver.
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import curation_error
@@ -52,8 +52,9 @@ from reg_meta_build.source_naming import check_naming_target, native_provider_ke
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.source_siblings import (
     SiblingResolution,
-    name_sibling_owners,
+    name_colliding_variables,
     resolve_sibling_pairs,
+    source_name,
 )
 from reg_meta_build.source_value_bindings import (
     bind_occurrence_code_lists,
@@ -366,9 +367,6 @@ def resolve_source_scope(
         c for c in cases if c.decision.kind == "correct_occurrences"
     )
     corrected = apply_occurrence_cases(evidence, occurrence_cases)
-    corrected = replace(
-        corrected, occurrences=name_sibling_owners(corrected.occurrences)
-    )
     enumerated_columns = {
         entry.column
         for register in coding_registers
@@ -928,10 +926,22 @@ def resolve_source_scope(
                 withheld[
                     "succession_representation", fqid, column.lower(), variant
                 ].extend(causes)
-    # A variable name is unique within a variant (#1736). The pre-pass already
-    # named sibling owners by their operational definitions; every variable whose
-    # name still collides is withheld, none of them chosen, so a diagnostic build
-    # stays valid for `validate_built_db`.
+    # A variable name is unique within a variant (#1736). Variables that share a
+    # source name in a variant are named apart by the fallback ladder; an
+    # `[[errata.field]]` name correction wins, so only a variable still carrying its
+    # source name is renamed. Every variable whose name still collides, across the
+    # whole variant, is withheld, none of them chosen, so a diagnostic build stays
+    # valid for `validate_built_db`.
+    formed_names: dict[NativeKey, ResolvedVariable] = {}
+    source_names: dict[NativeKey, str] = {}
+    for key, variable in variables.items():
+        if variable is not None and variable.name is not None:
+            name = source_name(groups[key])
+            if name is not None:
+                formed_names[key] = variable
+                source_names[key] = name
+    for key, name in name_colliding_variables(formed_names, source_names).items():
+        variables[key] = formed_names[key].model_copy(update={"name": name})
     holders: dict[tuple[str, str, str, str], set[NativeKey]] = defaultdict(set)
     for key, variable in variables.items():
         if variable is None or variable.name is None:
@@ -957,10 +967,9 @@ def resolve_source_scope(
             subject=fqid,
             detail=f"The name {clashing_names[key]!r} is not unique in variant "
             + "; ".join(where)
-            + ". Owners of one native variable that share a source name are "
-            "named by their own operational definitions; owners that share one or "
-            "have none, and distinct variables, need an [[errata.field]] name "
-            "correction.",
+            + ". Variables that share a source name are named apart by their "
+            "operational definitions, then their delivery columns and years; these "
+            "need an [[errata.field]] name correction.",
             refs=refs,
             fields=("name",),
             withheld_output=(fqid,),

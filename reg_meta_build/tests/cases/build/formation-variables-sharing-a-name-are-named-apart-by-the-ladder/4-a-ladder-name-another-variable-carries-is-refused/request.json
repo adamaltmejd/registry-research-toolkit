@@ -1,0 +1,16 @@
+{
+  "note": "A strict build over register 1 (#1736). Owners a and b of variable 5 share the source name 'Svar' and take their operational definitions: 'Svar — Patienter' and 'Svar — Personal'. Variable 6's own source name is 'Svar — Patienter', so the ladder's name for a collides with a variable outside its group. The uniqueness check runs over the whole variant: a and c are refused, b is not.",
+  "fails_if": "the uniqueness check stops at the ladder's groups (a and c both publish 'Svar — Patienter' and the strict build completes), or the ladder renames c, which carries no shared source name",
+  "registers": ["1"],
+  "diagnostic": false,
+  "sources": {
+    "description": "Variable 5, named 'Svar', delivers A (CVID 21, 'Patienter') and B (CVID 22, 'Personal'); variable 6, named 'Svar — Patienter', delivers C (CVID 23). All in edition 2020.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "A", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Patienter"},
+        {"colname": "B", "cvid": 22, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar", "varopdef": "Personal"},
+        {"colname": "C", "cvid": 23, "var_id": 6, "year": "2020", "regver_id": 2020, "register": ["TEST", 1, 2], "varname": "Svar — Patienter"}
+      ]
+    }
+  }
+}

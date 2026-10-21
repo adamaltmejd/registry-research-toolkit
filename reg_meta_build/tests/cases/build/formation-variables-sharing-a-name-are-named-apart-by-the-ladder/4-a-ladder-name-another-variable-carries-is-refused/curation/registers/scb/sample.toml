@@ -8,6 +8,7 @@ slug = "people"
 [variable]
 "1.5.a" = "a"
 "1.5.b" = "b"
+"1.6" = "c"
 [[identity.partition]]
 variable = "1.5"
 columns = { A = "1.5.a", B = "1.5.b" }
