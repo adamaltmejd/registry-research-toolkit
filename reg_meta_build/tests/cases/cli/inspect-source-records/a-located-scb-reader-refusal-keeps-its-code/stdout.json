@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "scb_native_id_invalid",
+    "message": "Invalid SCB native ID in Registerinformation.csv at row 2, field RegVerID: 'v1'."
+  }
+}
