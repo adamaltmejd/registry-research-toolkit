@@ -94,13 +94,6 @@ OPERATIONS = {
 }
 
 
-@pytest.fixture
-def servers(http_servers):
-    if http_servers is None:
-        pytest.skip("MCP cases run against --server-cmd")
-    return http_servers
-
-
 def rpc(client, method, params):
     """One JSON-RPC request on `/mcp`; returns the HTTP response."""
     return client.post(
@@ -135,7 +128,7 @@ def path_arguments(op, path):
 
 
 @pytest.mark.parametrize("operation", EQUIVALENCE)
-def test_tool_matches_http(servers, operation):
+def test_tool_matches_http(http_servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
     # error fields, argument conversion, a POST body as an object argument, the
     # `operation` argument of a tool of several), or when the cases stop covering an
@@ -153,7 +146,7 @@ def test_tool_matches_http(servers, operation):
     for name in EQUIVALENCE[operation]:
         case = CASES / "api" / name
         request = json.loads((case / "request.json").read_text())
-        steps, clients = request["requests"], case_clients(request, case, servers)
+        steps, clients = request["requests"], case_clients(request, case, http_servers)
         http = run_http_requests(steps, clients)
         documents = {}
         for index, step in enumerate(steps):
@@ -191,11 +184,11 @@ def test_tool_matches_http(servers, operation):
     assert codes == {"invalid_parameter", *op.get("errors", [])}
 
 
-def test_tool_of_several_needs_an_operation(servers):
+def test_tool_of_several_needs_an_operation(http_servers):
     # Fails when a tool of several operations answers a call that names none of them
     # (it would have to guess one), or one that omits its operation's required
     # parameter, with anything but `invalid_parameter` naming the parameter.
-    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
     for arguments, parameter in (
         ({"identifier": "Kon"}, "operation"),
         ({"operation": "search", "q": "Kon"}, "operation"),
@@ -207,13 +200,13 @@ def test_tool_of_several_needs_an_operation(servers):
         assert document["error"]["fields"] == {"parameter": parameter}
 
 
-def test_array_argument_only_for_an_array_parameter(servers):
+def test_array_argument_only_for_an_array_parameter(http_servers):
     # Fails when a tool call flattens an array for a parameter that is not
     # `string[]` (`ref: ["…"]` resolved, `register: []` read as no filter) or
     # accepts an empty array for one that is (`columns: []`), instead of refusing
     # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
     # empty array, so these have no `api` twin.
-    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
     for tool, arguments, parameter in (
         ("resolve", {"register": [], "columns": ["Value"]}, "register"),
         ("resolve", {"columns": []}, "columns"),
@@ -225,10 +218,10 @@ def test_array_argument_only_for_an_array_parameter(servers):
         assert document["error"]["fields"] == {"parameter": parameter}
 
 
-def test_tools_list_matches_golden(servers):
+def test_tools_list_matches_golden(http_servers):
     # Fails when a tool, its description or a schema changes without updating
     # `cases/mcp/tools-list.json`, or a tool name drifts from `operations.toml`.
-    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
     served = {
         operation.get("operationId")
         for item in client.get("/openapi.json").json()["paths"].values()
@@ -245,10 +238,10 @@ def test_tools_list_matches_golden(servers):
     )
 
 
-def test_body_over_the_cap_is_payload_too_large(servers):
+def test_body_over_the_cap_is_payload_too_large(http_servers):
     # Fails when `/mcp` stops capping bodies at 1 MiB (today's write-body cap) or
     # answers the cap with anything but the error document.
-    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
     response = client.post("/mcp", content=b" " * (1024 * 1024 + 1), headers=HEADERS)
     assert response.status_code == 413
     assert response.json()["error"]["fields"] == {"limit_bytes": 1024 * 1024}
@@ -266,8 +259,6 @@ def test_burst_is_rate_limited(request, tmp_path):
     # refuse the other MCP cases from this address. It runs at the production default:
     # the suite's template raises `--write-limit` so its own cases are not refused.
     template = request.config.getoption("--server-cmd")
-    if template is None:
-        pytest.skip("MCP cases run against --server-cmd")
     pool = ServerPool(re.sub(r" --write-limit \S+", "", template), tmp_path)
     env = artifact_env(cached_case_artifact(READER), "steward")
     try:
@@ -304,7 +295,7 @@ def test_burst_is_rate_limited(request, tmp_path):
         pool.close()
 
 
-def test_stdio_session(request, servers):
+def test_stdio_session(request, http_servers):
     # Fails when `reg-meta mcp` cannot initialize, list the golden's tools or answer
     # a call with the document `/api/search` returns.
     template = request.config.getoption("--mcp-cmd")
@@ -312,7 +303,7 @@ def test_stdio_session(request, servers):
         pytest.skip("the stdio session runs against --mcp-cmd")
     env = artifact_env(cached_case_artifact(READER), "steward")
     arguments = {"q": "Value", "type": "variable", "limit": 1}
-    expected = servers.client(env).get("/api/search", params=arguments)
+    expected = http_servers.client(env).get("/api/search", params=arguments)
     messages = [
         {
             "method": "initialize",

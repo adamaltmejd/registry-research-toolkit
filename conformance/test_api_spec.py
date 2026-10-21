@@ -1,7 +1,7 @@
 """A corpus lint for the API spec (`conformance/api/operations.toml`, `errors.toml`).
 
-Not a runner: the `api` cases run for real once a server exists. This checks that every
-`api` case parses, names operations in the table, uses only catalogued error codes and
+Not a runner: `test_http.py` runs the `api` cases against the Rust server. This checks
+that every `api` case parses, names operations in the table, uses only catalogued error codes and
 references an existing fixture.
 """
 

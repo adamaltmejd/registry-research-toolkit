@@ -1547,7 +1547,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (xplangd6)"
 
 [[errata.field]]
 variable = "229.17491"
@@ -1561,7 +1561,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (xplangd6)"
 
 [[errata.field]]
 variable = "229.17491"
@@ -1575,7 +1575,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (xplangd6)"
 
 [[errata.field]]
 variable = "229.17491"
@@ -1589,7 +1589,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (xplangd6)"
 
 [[errata.field]]
 variable = "229.17491"
@@ -1603,7 +1603,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (gxpld6)"
 
 [[errata.field]]
 variable = "229.17500"
@@ -1617,7 +1617,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (xplangd7)"
 
 [[errata.field]]
 variable = "229.17500"
@@ -1631,7 +1631,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (xplangd7)"
 
 [[errata.field]]
 variable = "229.17500"
@@ -1645,7 +1645,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (xplangd7)"
 
 [[errata.field]]
 variable = "229.17500"
@@ -1659,7 +1659,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (xplangd7)"
 
 [[errata.field]]
 variable = "229.17500"
@@ -1673,7 +1673,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (gxpld7)"
 
 [[errata.field]]
 variable = "229.17492"
@@ -1687,7 +1687,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (xplangd8)"
 
 [[errata.field]]
 variable = "229.17492"
@@ -1701,7 +1701,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (xplangd8)"
 
 [[errata.field]]
 variable = "229.17492"
@@ -1715,7 +1715,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (xplangd8)"
 
 [[errata.field]]
 variable = "229.17492"
@@ -1729,7 +1729,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (xplangd8)"
 
 [[errata.field]]
 variable = "229.17492"
@@ -1743,7 +1743,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (gxpld8)"
 
 [[errata.field]]
 variable = "229.17493"
@@ -1757,7 +1757,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (xplangd9)"
 
 [[errata.field]]
 variable = "229.17493"
@@ -1771,7 +1771,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (xplangd9)"
 
 [[errata.field]]
 variable = "229.17493"
@@ -1785,7 +1785,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (xplangd9)"
 
 [[errata.field]]
 variable = "229.17493"
@@ -1799,7 +1799,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (xplangd9)"
 
 [[errata.field]]
 variable = "229.17493"
@@ -1813,7 +1813,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade."
+value = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (gxpld9)"
 
 [[errata.field]]
 variable = "229.17494"
@@ -1827,7 +1827,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade."
+value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (xplangd5)"
 
 [[errata.field]]
 variable = "229.17494"
@@ -1841,7 +1841,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade."
+value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (xplangd5)"
 
 [[errata.field]]
 variable = "229.17494"
@@ -1855,7 +1855,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade."
+value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (xplangd5)"
 
 [[errata.field]]
 variable = "229.17494"
@@ -1869,7 +1869,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade."
+value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (xplangd5)"
 
 [[errata.field]]
 variable = "229.17494"
@@ -1883,287 +1883,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end
 evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade."
-
-[[errata.field]]
-variable = "229.8063"
-variant = "229.396"
-column = "arr6"
-edition = "15072"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 1." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 1." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 1" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den första kursen?" }]
-expected_period_text = "Hela året 1999"
-expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 1 — Intervjufråga andra halvåret: Vem anordnade den första kursen?"
-
-[[errata.field]]
-variable = "229.8063"
-variant = "229.396"
-column = "arr6"
-edition = "15200"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 1." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 1." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 1" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den första kursen?" }]
-expected_period_text = "Hela året 2000"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 1 — Intervjufråga andra halvåret: Vem anordnade den första kursen?"
-
-[[errata.field]]
-variable = "229.8063"
-variant = "229.396"
-column = "arr6"
-edition = "15202"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 1." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 1." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 1" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den första kursen?" }]
-expected_period_text = "Hela året 2001"
-expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 1 — Intervjufråga andra halvåret: Vem anordnade den första kursen?"
-
-[[errata.field]]
-variable = "229.8063"
-variant = "229.396"
-column = "arr6"
-edition = "15203"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 1." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 1." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 1" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den första kursen?" }]
-expected_period_text = "Hela året 2002"
-expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 1 — Intervjufråga andra halvåret: Vem anordnade den första kursen?"
-
-[[errata.field]]
-variable = "229.8063"
-variant = "229.396"
-column = "arr6"
-edition = "15211"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 1." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 1." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 1" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den första kursen?" }]
-expected_period_text = "Hela året 2003"
-expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 1 — Intervjufråga andra halvåret: Vem anordnade den första kursen?"
-
-[[errata.field]]
-variable = "229.8066"
-variant = "229.396"
-column = "arr7"
-edition = "15072"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 2." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 2." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 2" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den andra kursen?" }]
-expected_period_text = "Hela året 1999"
-expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 2 — Intervjufråga andra halvåret: Vem anordnade den andra kursen?"
-
-[[errata.field]]
-variable = "229.8066"
-variant = "229.396"
-column = "arr7"
-edition = "15200"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 2." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 2." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 2" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den andra kursen?" }]
-expected_period_text = "Hela året 2000"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 2 — Intervjufråga andra halvåret: Vem anordnade den andra kursen?"
-
-[[errata.field]]
-variable = "229.8066"
-variant = "229.396"
-column = "arr7"
-edition = "15202"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 2." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 2." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 2" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den andra kursen?" }]
-expected_period_text = "Hela året 2001"
-expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 2 — Intervjufråga andra halvåret: Vem anordnade den andra kursen?"
-
-[[errata.field]]
-variable = "229.8066"
-variant = "229.396"
-column = "arr7"
-edition = "15203"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 2." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 2." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 2" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den andra kursen?" }]
-expected_period_text = "Hela året 2002"
-expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 2 — Intervjufråga andra halvåret: Vem anordnade den andra kursen?"
-
-[[errata.field]]
-variable = "229.8066"
-variant = "229.396"
-column = "arr7"
-edition = "15211"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 2." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 2." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 2" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den andra kursen?" }]
-expected_period_text = "Hela året 2003"
-expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 2 — Intervjufråga andra halvåret: Vem anordnade den andra kursen?"
-
-[[errata.field]]
-variable = "229.8067"
-variant = "229.396"
-column = "arr8"
-edition = "15072"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 3." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 3." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 3" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den tredje kursen?" }]
-expected_period_text = "Hela året 1999"
-expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 3 — Intervjufråga andra halvåret: Vem anordnade den tredje kursen?"
-
-[[errata.field]]
-variable = "229.8067"
-variant = "229.396"
-column = "arr8"
-edition = "15200"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 3." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 3." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 3" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den tredje kursen?" }]
-expected_period_text = "Hela året 2000"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 3 — Intervjufråga andra halvåret: Vem anordnade den tredje kursen?"
-
-[[errata.field]]
-variable = "229.8067"
-variant = "229.396"
-column = "arr8"
-edition = "15202"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 3." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 3." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 3" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den tredje kursen?" }]
-expected_period_text = "Hela året 2001"
-expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 3 — Intervjufråga andra halvåret: Vem anordnade den tredje kursen?"
-
-[[errata.field]]
-variable = "229.8067"
-variant = "229.396"
-column = "arr8"
-edition = "15203"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 3." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 3." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 3" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den tredje kursen?" }]
-expected_period_text = "Hela året 2002"
-expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 3 — Intervjufråga andra halvåret: Vem anordnade den tredje kursen?"
-
-[[errata.field]]
-variable = "229.8067"
-variant = "229.396"
-column = "arr8"
-edition = "15211"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 3." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 3." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 3" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den tredje kursen?" }]
-expected_period_text = "Hela året 2003"
-expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 3 — Intervjufråga andra halvåret: Vem anordnade den tredje kursen?"
-
-[[errata.field]]
-variable = "229.8068"
-variant = "229.396"
-column = "arr9"
-edition = "15072"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 4." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 4." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 4" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?" }]
-expected_period_text = "Hela året 1999"
-expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 4 — Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?"
-
-[[errata.field]]
-variable = "229.8068"
-variant = "229.396"
-column = "arr9"
-edition = "15200"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 4." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 4." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 4" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?" }]
-expected_period_text = "Hela året 2000"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 4 — Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?"
-
-[[errata.field]]
-variable = "229.8068"
-variant = "229.396"
-column = "arr9"
-edition = "15202"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 4." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 4." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 4" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?" }]
-expected_period_text = "Hela året 2001"
-expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 4 — Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?"
-
-[[errata.field]]
-variable = "229.8068"
-variant = "229.396"
-column = "arr9"
-edition = "15203"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 4." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 4." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 4" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?" }]
-expected_period_text = "Hela året 2002"
-expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 4 — Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?"
-
-[[errata.field]]
-variable = "229.8068"
-variant = "229.396"
-column = "arr9"
-edition = "15211"
-expected_fields = [{ name = "definition", status = "value", value = "Kurs/utbildningsanordnare, kurs 4." }, { name = "description", status = "value", value = "Anger vem som i huvudsak anordnade kurs 4." }, { name = "name", status = "value", value = "Kurs/utbildningsanordnare, kurs 4" }, { name = "operational_definition", status = "value", value = "Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?" }]
-expected_period_text = "Hela året 2003"
-expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Kurs/utbildningsanordnare, kurs 4 — Intervjufråga andra halvåret: Vem anordnade den fjärdde kursen?"
+value = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (gxpld5)"
 
 [[errata.field]]
 variable = "229.8069"
@@ -2248,73 +1968,3 @@ evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and H
 noted = "2026-10-02"
 field = "name"
 value = "Kurs/utbildningsanordnare, kurs 5 — Arr5"
-
-[[errata.field]]
-variable = "229.1545"
-variant = "229.396"
-column = "FiKod1"
-edition = "3283"
-expected_fields = [{ name = "definition", status = "value", value = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN 2000). Tre positioner av fyra möjliga (de tre första positionerna i koden)." }, { name = "description", status = "value", value = "Klassificering av inriktningen för en persons genomförda utbildning. Tillhörande klassifikation är Svensk utbildningsnomenklatur  (SUN). SUN är en standard för klassificering av enskilda utbildningar samtidigt som den utgör ett system för aggregering av utbildningar till större grupper." }, { name = "name", status = "value", value = "Utbildningsinriktning (3 positioner)" }, { name = "operational_definition", status = "value", value = "Härledd variabel från kurs 1. Intervjupersonens beskrivning av och namn på den första kursen kodas manuellt till en tresifferkod enligt SUN2000inr." }]
-expected_period_text = "Första halvåret 2010"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-06-30" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Utbildningsinriktning (3 positioner) — Härledd variabel från kurs 1. Intervjupersonens beskrivning av och namn på den första kursen kodas manuellt till en tresifferkod enligt SUN2000inr."
-
-[[errata.field]]
-variable = "229.1545"
-variant = "229.396"
-column = "FiKod2"
-edition = "3283"
-expected_fields = [{ name = "definition", status = "value", value = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN 2000). Tre positioner av fyra möjliga (de tre första positionerna i koden)." }, { name = "description", status = "value", value = "Klassificering av inriktningen för en persons genomförda utbildning. Tillhörande klassifikation är Svensk utbildningsnomenklatur  (SUN). SUN är en standard för klassificering av enskilda utbildningar samtidigt som den utgör ett system för aggregering av utbildningar till större grupper." }, { name = "name", status = "value", value = "Utbildningsinriktning (3 positioner)" }, { name = "operational_definition", status = "value", value = "Härledd variabel från kurs 2. Intervjupersonens beskrivning av och namn på den andra kursen kodas manuellt till en tresifferkod enligt SUN2000inr." }]
-expected_period_text = "Första halvåret 2010"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-06-30" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Utbildningsinriktning (3 positioner) — Härledd variabel från kurs 2. Intervjupersonens beskrivning av och namn på den andra kursen kodas manuellt till en tresifferkod enligt SUN2000inr."
-
-[[errata.field]]
-variable = "229.1545"
-variant = "229.396"
-column = "FiKod3"
-edition = "3283"
-expected_fields = [{ name = "definition", status = "value", value = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN 2000). Tre positioner av fyra möjliga (de tre första positionerna i koden)." }, { name = "description", status = "value", value = "Klassificering av inriktningen för en persons genomförda utbildning. Tillhörande klassifikation är Svensk utbildningsnomenklatur  (SUN). SUN är en standard för klassificering av enskilda utbildningar samtidigt som den utgör ett system för aggregering av utbildningar till större grupper." }, { name = "name", status = "value", value = "Utbildningsinriktning (3 positioner)" }, { name = "operational_definition", status = "value", value = "Härledd variabel från kurs 3. Intervjupersonens beskrivning av och namn på den tredje kursen kodas manuellt till en tresifferkod enligt SUN2000inr." }]
-expected_period_text = "Första halvåret 2010"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-06-30" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Utbildningsinriktning (3 positioner) — Härledd variabel från kurs 3. Intervjupersonens beskrivning av och namn på den tredje kursen kodas manuellt till en tresifferkod enligt SUN2000inr."
-
-[[errata.field]]
-variable = "229.1545"
-variant = "229.396"
-column = "FiKod4"
-edition = "3283"
-expected_fields = [{ name = "definition", status = "value", value = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN 2000). Tre positioner av fyra möjliga (de tre första positionerna i koden)." }, { name = "description", status = "value", value = "Klassificering av inriktningen för en persons genomförda utbildning. Tillhörande klassifikation är Svensk utbildningsnomenklatur  (SUN). SUN är en standard för klassificering av enskilda utbildningar samtidigt som den utgör ett system för aggregering av utbildningar till större grupper." }, { name = "name", status = "value", value = "Utbildningsinriktning (3 positioner)" }, { name = "operational_definition", status = "value", value = "Härledd variabel från kurs 4. Intervjupersonens beskrivning av och namn på den fjärde kursen kodas manuellt till en tresifferkod enligt SUN2000inr." }]
-expected_period_text = "Första halvåret 2010"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-06-30" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Utbildningsinriktning (3 positioner) — Härledd variabel från kurs 4. Intervjupersonens beskrivning av och namn på den fjärde kursen kodas manuellt till en tresifferkod enligt SUN2000inr."
-
-[[errata.field]]
-variable = "229.1545"
-variant = "229.396"
-column = "FiKod5"
-edition = "3283"
-expected_fields = [{ name = "definition", status = "value", value = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN 2000). Tre positioner av fyra möjliga (de tre första positionerna i koden)." }, { name = "description", status = "value", value = "Klassificering av inriktningen för en persons genomförda utbildning. Tillhörande klassifikation är Svensk utbildningsnomenklatur  (SUN). SUN är en standard för klassificering av enskilda utbildningar samtidigt som den utgör ett system för aggregering av utbildningar till större grupper." }, { name = "name", status = "value", value = "Utbildningsinriktning (3 positioner)" }, { name = "operational_definition", status = "value", value = "Härledd variabel från kurs 5. Intervjupersonens beskrivning av och namn på den femte kursen kodas manuellt till en tresifferkod enligt SUN2000inr." }]
-expected_period_text = "Första halvåret 2010"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-06-30" }] }
-evidence = "Complete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Utbildningsinriktning (3 positioner) — Härledd variabel från kurs 5. Intervjupersonens beskrivning av och namn på den femte kursen kodas manuellt till en tresifferkod enligt SUN2000inr."

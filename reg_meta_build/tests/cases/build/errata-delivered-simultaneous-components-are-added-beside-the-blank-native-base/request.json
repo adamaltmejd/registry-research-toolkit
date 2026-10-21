@@ -12,7 +12,7 @@
       "registerinformation": [
         {
           "colname": "A",
-          "cvid": 20,
+          "cvid": 20, "varopdef": "Answer A",
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020,
@@ -20,7 +20,7 @@
         },
         {
           "colname": "B",
-          "cvid": 21,
+          "cvid": 21, "varopdef": "Answer B",
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020,
@@ -28,7 +28,7 @@
         },
         {
           "colname": "C",
-          "cvid": 22,
+          "cvid": 22, "varopdef": "Answer C",
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020,

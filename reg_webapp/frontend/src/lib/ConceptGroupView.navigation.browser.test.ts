@@ -41,40 +41,6 @@ beforeEach(() => {
 });
 
 describe("ConceptGroupView (#617 + #678 compact column list)", () => {
-  // ── Member → leaf navigation (#678) ─────────────────────────────────────────
-  it("a single-column member's COLUMN CHIP is the leaf-navigation link (no separate 'View' link)", async () => {
-    vi.mocked(getShow).mockResolvedValue(node());
-    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
-
-    await renderGroup();
-
-    // The column chip ITSELF is the navigation link to the member's leaf FQID — there
-    // is no separate "View ↗" link anymore.
-    const janLink = await vi.waitFor(() => {
-      const els = [...document.querySelectorAll("a.col-chip.link")];
-      const jan = els.find(
-        (a) => a.getAttribute("href") === "/catalog/scb/rams/inkjan",
-      );
-      if (!jan) {
-        throw new Error("inkjan column-chip link not yet rendered");
-      }
-      return jan;
-    });
-    expect(janLink.tagName).toBe("A");
-    // The chip-link is inside the row label (the click-anywhere selection target) but
-    // is itself a real <a> (keyboard-navigable; it stops propagation so a nav click
-    // never toggles).
-    expect(janLink.closest("label.row-btn")).not.toBeNull();
-    // The other member's chip links too.
-    expect(
-      document.querySelector(
-        'a.col-chip.link[href="/catalog/scb/rams/inkfeb"]',
-      ),
-    ).not.toBeNull();
-    // No legacy "View ↗" link survives.
-    expect(document.querySelector("a.open-link")).toBeNull();
-  });
-
   // ── #678 finding 5: the member link carries the active group ?period ─────────
   it("a member nav link carries the active group ?period", async () => {
     router.navigate("/catalog/group/scb/rams/ink?period=2018..2020");

@@ -1840,6 +1840,46 @@ is a located `variable_name_over_search_cap` error, never a catalog `data_warnin
 family of subquestions under one label to `<label> — <short subquestion>`, and leaves
 the full question in the definition fields; the cap does not move.
 
+A variable name is unique within a variant (#1736). After formation, variables of one
+register that carry the same source name in a variant (partition, column-owner and split
+owners of one native variable, and distinct native variables alike) are named apart by a
+deterministic fallback ladder. A variable that shares a name in several variants is
+compared with the members of all of them and gets one name. Each member that still
+carries its source name takes the first step that names it apart:
+
+1. `<name> — <operational definition>`, when its definition is one text across all its
+   states and no sibling that also takes a definition step has the same text.
+   Definitions are compared and written with whitespace collapsed to single spaces.
+2. Else `<name> — <first sentence>` of that definition, when no such sibling's
+   definition or first sentence equals it. The first sentence is the first non-blank
+   line, cut at the first `.`, `?` or `!` followed by a space and an upper-case letter.
+   A period does not end the sentence when the word it closes holds another period
+   (`t.ex.`, `fr.o.m.`, `m.m.`), is a single letter, or is one of `ca`, `dvs`, `exkl`,
+   `inkl`, `jfr`, `kap`, `nr`, `resp`, `s`, `st`. A closing period is dropped.
+3. Else `<name> (<COLUMN>)`, the delivery column of its latest state (latest `valid_to`,
+   then `valid_from`, then column), when no other sibling left for this step has the
+   same column case-folded.
+4. Else `<name> (<COLUMN>, <first>–<last year>)`, over all its states (one year is
+   written alone, an open end as `<first>–`), when distinct the same way.
+
+No step writes a name over the search cap: a member steps 1 and 2 cannot fit falls to
+step 3, and one that steps 3 and 4 cannot fit keeps its source name. The ladder name
+replaces the source name on the variable and on each of its states and per-column alias
+windows that carry the source name; a state with its own corrected name keeps it.
+Siblings that share a definition, and a variable whose definition varies across its
+states or is missing, skip steps 1 and 2. Detection reads source names, so an explicit
+`[[errata.field]]` name correction wins: the corrected variable keeps its name, still
+makes its source-name group collide, and does not block a sibling's step. A correction
+that the ladder would reproduce is redundant and is deleted. Every member the ladder
+cannot separate keeps its source name, and the uniqueness check that follows runs over
+the whole variant, so a ladder name that another variable already carries is also
+caught. Every variable whose name still collides is a located `duplicate_variable_name`
+error, withheld, none of them chosen, so a diagnostic build stays writable; curation
+names them with `[[errata.field]]`, following the `<label> — <short subquestion>` form
+above. Both the check and `validate_built_db` compare the name a reader sees per state
+(the state's own name, else the variable's), so `validate_built_db` refuses an artifact
+in which two variables with states in one variant share a name.
+
 ## Strict and diagnostic builds
 
 Strict publication is the default. Every unhandled source discrepancy requiring a

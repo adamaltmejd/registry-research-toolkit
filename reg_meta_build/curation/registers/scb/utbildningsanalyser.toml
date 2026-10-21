@@ -3788,20 +3788,6 @@ field = "name"
 value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av person utanför lärosätet"
 
 [[errata.field]]
-variable = "366.15699"
-variant = "366.1350"
-column = "F4b_12"
-edition = "11797"
-expected_fields = [{ name = "definition", status = "value", value = "Avbrottsorsak - psykisk/fysisk ohälsa" }, { name = "description", status = "value", value = "Beskriver anledningen till att personen slutade sina studier i gymnasieskolan innan han/hon fick ett slutbetyg" }, { name = "name", status = "value", value = "Avbrottsorsak - psykisk/fysisk ohälsa" }, { name = "operational_definition", status = "value", value = "Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg? Svarsalternativ Annat hälsoskäl hindrade dig" }]
-expected_period_text = "Hösten 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Avbrottsorsak - psykisk/fysisk ohälsa — Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg? Svarsalternativ Annat hälsoskäl hindrade dig"
-
-[[errata.field]]
 variable = "366.41941"
 variant = "366.1533"
 column = "KravExam1"
@@ -3912,314 +3898,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Krav för att ta examen — Annat"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor10"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_10 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Privata/sociala skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_10 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Privata/sociala skäl"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor11"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_11 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Annat skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_11 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Annat skäl"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_2 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag ville prova på ett arbete inom yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_2 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag ville prova på ett arbete inom yrket"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_3 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Yrkets status" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_3 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Yrkets status"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_4 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att arbeta med barn/ungdomar/vuxna" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_4 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att arbeta med barn/ungdomar/vuxna"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_5 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att undervisa" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_5 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att undervisa"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_6 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag var intresserad av mina undervisningsämnen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_6 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag var intresserad av mina undervisningsämnen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_7 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Lönen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_7 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Lönen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor8"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_8 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Karriärmöjligheterna i yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_8 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Karriärmöjligheterna i yrket"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor9"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_9 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Det var svårt att få ett annat arbete" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_9 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Det var svårt att få ett annat arbete"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor10"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_10 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Har arbetat länge inom yrket/svårt att byta yrke" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_10 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Har arbetat länge inom yrket/svårt att byta yrke"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor11"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_11 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_11 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor12"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_12 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Privata/sociala skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_12 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Privata/sociala skäl"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor13"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_13 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Annat" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_13 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Annat"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_2 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_2 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_3 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att arbeta med barn/ungdomar/vuxna" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_3 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att arbeta med barn/ungdomar/vuxna"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_4 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_4 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_5 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Lönen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_5 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Lönen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_6 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_6 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_7 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_7 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor8"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_8 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_8 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor9"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_9 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_9 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön"
 
 [[errata.field]]
 variable = "366.41928"
@@ -4474,104 +4152,6 @@ field = "name"
 value = "Skäl byta arbete som lärare — Arbetsledningen/brister i arbetsorganisationen"
 
 [[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs1"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_1 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_1 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_2 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_2 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_3 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_3 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_4 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_4 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_5 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_5 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_6 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_6 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_7 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_7 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
 variable = "366.41933"
 variant = "366.1533"
 column = "Karrvag1"
@@ -4810,202 +4390,6 @@ field = "name"
 value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Psykosociala arbetsmiljön"
 
 [[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill1"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag föredrar att arbeta som lärare/skolledare inom skolväsendet" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag föredrar att arbeta som lärare/skolledare inom skolväsendet"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill12"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill10"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_10 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_10 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill11"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_11 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_11 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill13"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_13 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Annan" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_13 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Annan"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill14"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_14 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Mitt nuvarande arbete är mitt första inom skolväsendet" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_14 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Mitt nuvarande arbete är mitt första inom skolväsendet"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_2 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Brist på annat arbete" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_2 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Brist på annat arbete"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_3 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Privata/sociala skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_3 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Privata/sociala skäl"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_4 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_4 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_5 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycer om att arbete med barn/ungdomar/vuxna" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_5 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycer om att arbete med barn/ungdomar/vuxna"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_6 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_6 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_7 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Lönen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_7 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Lönen"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill8"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_8 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_8 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill9"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_9 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_9 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut"
-
-[[errata.field]]
 variable = "366.6267"
 variant = "366.1350"
 column = "F18_2"
@@ -5017,7 +4401,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Ålder — Hur gammal var du när du fick det arbetet?"
+value = "Ålder — Hur gammal var du när du fick det arbetet? (F18_2)"
 
 [[errata.field]]
 variable = "366.46048"
@@ -5060,20 +4444,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Fortbildning i att använda digitala verktyg — F20a_02"
-
-[[errata.field]]
-variable = "366.46048"
-variant = "366.1649"
-column = "F20a_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Fortbildning i att använda digitala verktyg under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i att använda digitala verktyg — Fortbildning i att använda digitala verktyg under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46048"
@@ -5134,20 +4504,6 @@ value = "Fortbildning i att använda digitala verktyg — F20a_04"
 [[errata.field]]
 variable = "366.46048"
 variant = "366.1648"
-column = "F20a_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Fortbildning i att använda digitala verktyg under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i att använda digitala verktyg — Fortbildning i att använda digitala verktyg under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46048"
-variant = "366.1648"
 column = "F20a"
 edition = "18503"
 expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Fortbildning i att använda digitala verktyg under VT2020 - VT2021" }]
@@ -5204,20 +4560,6 @@ value = "Fortbildning i pedagogik vid undervisning på distans — F20c_02"
 [[errata.field]]
 variable = "366.46050"
 variant = "366.1649"
-column = "F20c_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i pedagogik vid undervisning på distans — Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46050"
-variant = "366.1649"
 column = "F20c_01"
 edition = "18504"
 expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans under VT2020 - VT2021" }]
@@ -5270,20 +4612,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Fortbildning i pedagogik vid undervisning på distans — F20c_04"
-
-[[errata.field]]
-variable = "366.46050"
-variant = "366.1648"
-column = "F20c_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i pedagogik vid undervisning på distans — Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46050"
@@ -5344,20 +4672,6 @@ value = "Löpande möten i personalgruppen — F20e_02"
 [[errata.field]]
 variable = "366.46052"
 variant = "366.1649"
-column = "F20e_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande möten i personalgruppen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande möten i personalgruppen" }, { name = "operational_definition", status = "value", value = "Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande möten i personalgruppen — Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46052"
-variant = "366.1649"
 column = "F20e_01"
 edition = "18504"
 expected_fields = [{ name = "definition", status = "value", value = "Löpande möten i personalgruppen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande möten i personalgruppen" }, { name = "operational_definition", status = "value", value = "Löpande möten i personalgruppen för att lära av varandra under VT2020 - VT2021" }]
@@ -5410,20 +4724,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Löpande möten i personalgruppen — F20e_04"
-
-[[errata.field]]
-variable = "366.46052"
-variant = "366.1648"
-column = "F20e_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande möten i personalgruppen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande möten i personalgruppen" }, { name = "operational_definition", status = "value", value = "Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande möten i personalgruppen — Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46052"
@@ -5484,20 +4784,6 @@ value = "Löpande stöd för att använda digitala verktyg — F20b_02"
 [[errata.field]]
 variable = "366.46049"
 variant = "366.1649"
-column = "F20b_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande stöd för att använda digitala verktyg — Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46049"
-variant = "366.1649"
 column = "F20b_01"
 edition = "18504"
 expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under VT2020 - VT2021" }]
@@ -5550,20 +4836,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Löpande stöd för att använda digitala verktyg — F20b_04"
-
-[[errata.field]]
-variable = "366.46049"
-variant = "366.1648"
-column = "F20b_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande stöd för att använda digitala verktyg — Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46049"
@@ -6224,20 +5496,6 @@ field = "name"
 value = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — huvudsakligt arbete — F30_1"
 
 [[errata.field]]
-variable = "366.36202"
-variant = "366.1320"
-column = "F12_ny"
-edition = "11264"
-expected_fields = [{ name = "definition", status = "value", value = "Plats för vistelse utomlands, eftergy utb minst 2 år" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Plats för vistelse utomlands, eftergy utb minst 2 år" }, { name = "operational_definition", status = "value", value = "Om något av fritextsvaren ändå passade in på ett fast svarsalternativ så har det fasta svarsalternativet ändrats från kod 3 till kod 1 eller 2." }]
-expected_period_text = "2014"
-expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Plats för vistelse utomlands, eftergy utb minst 2 år — Om något av fritextsvaren ändå passade in på ett fast svarsalternativ så har det fasta svarsalternativet ändrats från kod 3 till kod 1 eller 2."
-
-[[errata.field]]
 variable = "366.36194"
 variant = "366.1320"
 column = "F6_03"
@@ -6320,34 +5578,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Utlandsvistelse inom olika utbildningsformer — Svar: nej"
-
-[[errata.field]]
-variable = "366.36329"
-variant = "366.1350"
-column = "F4b_07"
-edition = "11797"
-expected_fields = [{ name = "definition", status = "value", value = "Beskriver anledningen till att personen slutade sina studier i gymnasieskolan innan han/hon fick ett slutbetyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Avbrottsorsak - blev dåligt bemött i skolan" }, { name = "operational_definition", status = "value", value = "Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev dåligt bemött i skolan" }]
-expected_period_text = "Hösten 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Avbrottsorsak - blev dåligt bemött i skolan — Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev dåligt bemött i skolan"
-
-[[errata.field]]
-variable = "366.36329"
-variant = "366.1350"
-column = "F4b_08"
-edition = "11797"
-expected_fields = [{ name = "definition", status = "value", value = "Beskriver anledningen till att personen slutade sina studier i gymnasieskolan innan han/hon fick ett slutbetyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Avbrottsorsak - blev dåligt bemött i skolan" }, { name = "operational_definition", status = "value", value = "Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev mobbad" }]
-expected_period_text = "Hösten 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Avbrottsorsak - blev dåligt bemött i skolan — Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev mobbad"
 
 [[errata.field]]
 variable = "366.30817"

@@ -18,7 +18,7 @@
         },
         {
           "colname": "B",
-          "cvid": 21,
+          "cvid": 21, "varname": "GenericVar b",
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020,
@@ -26,7 +26,7 @@
         },
         {
           "colname": "B",
-          "cvid": 22,
+          "cvid": 22, "varname": "GenericVar b6",
           "var_id": 6,
           "year": "2021",
           "regver_id": 2021,
@@ -35,8 +35,8 @@
       ],
       "unika": [
         "TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0",
-        "TEST|Testregistret|Individer|Individer|GenericVar|B|2020|2020|0|0|0",
-        "TEST|Testregistret|Individer|Individer|GenericVar|B|2021|2021|0|0|0"
+        "TEST|Testregistret|Individer|Individer|GenericVar b|B|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar b6|B|2021|2021|0|0|0"
       ]
     }
   }

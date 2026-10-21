@@ -6,7 +6,7 @@
     "description": "Register 1, variable 300: FORNAMN (CVID 1004, int) in 2020 and EFTERNAMN (CVID 1005, int) in 2021.",
     "scb": {
       "registerinformation": [
-        {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300"},
+        {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300 fornamn"},
         {
           "cvid": 1005,
           "var_id": 300,

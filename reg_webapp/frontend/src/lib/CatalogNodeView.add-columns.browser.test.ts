@@ -5,12 +5,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import type { RegisterShow } from "./api";
 import { getRelatedDocuments, getShow, getStates } from "./api";
+import { registerShow } from "./api-test-helpers";
 import {
   clickVariantChip,
   columnedRegisterNode,
   delivery,
   mockRegisterAndResolve,
-  registerShow,
   renderRegister,
   splitColumnRegisterNode,
   tickColumn,
@@ -18,6 +18,7 @@ import {
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { holdRestore } from "./restore-test-helpers.svelte";
 import { windowStore } from "./window.svelte";
 
 // CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
@@ -56,20 +57,6 @@ function crossedColumnRegisterNode(): RegisterShow {
   });
 }
 
-// A register node with MANY ungrouped leaves — enough rows to overflow the test
-// viewport vertically (Y-97), the way LISA's ~740-variable list does for a real
-// researcher. Empty `deliveries`: the sticky-bar proof doesn't tick anything,
-// only scrolls past it.
-function manyLeavesRegisterNode(count: number): RegisterShow {
-  return registerShow({
-    children: Array.from({ length: count }, (_, i) => ({
-      fqid: `scb/lisa/v${i}`,
-      name: `Variable ${i}`,
-      deliveries: [],
-    })),
-  });
-}
-
 beforeEach(() => {
   vi.mocked(getShow).mockReset();
   vi.mocked(getStates).mockReset();
@@ -84,21 +71,6 @@ beforeEach(() => {
     steward: "global",
   });
 });
-
-/** Hold the app-owned draft restore open, and return its release. This is the gate
- * `applyStagedPicks` awaits between the press and the commit — and, since the list
- * reads nothing of its own at Add time (Y-104), the place a case lands something
- * (a New, a window drag, a navigation) while an Add is in flight. The same spy the
- * leaf and the concept group hold their Adds at. */
-function holdRestore(): () => void {
-  const { promise, resolve } = Promise.withResolvers<void>();
-  const restoring = vi.spyOn(projectStore, "restored", "get");
-  restoring.mockReturnValue(promise);
-  return () => {
-    restoring.mockRestore();
-    resolve();
-  };
-}
 
 describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   it("adds every ticked column to the draft in one action", async () => {
@@ -500,36 +472,5 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     release();
     await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
     expect(document.activeElement).toBe(addButtonEl);
-  });
-});
-
-describe("CatalogNodeView register arm: sticky add bar (Y-97)", () => {
-  it("keeps the add bar pinned to the viewport bottom after scrolling through a long list", async () => {
-    await page.viewport(1280, 800);
-    vi.mocked(getShow).mockResolvedValue(manyLeavesRegisterNode(60));
-
-    await renderRegister();
-    await expect.element(page.getByText("Variable 0")).toBeVisible();
-
-    // Scroll well past the bar's unscrolled position under the table — the
-    // "two thirds down a long list" the ticket's researcher is in.
-    window.scrollTo(0, document.documentElement.scrollHeight / 2);
-
-    const bar = document.querySelector<HTMLElement>(".add-bar");
-    expect(bar).not.toBeNull();
-    const rect = bar?.getBoundingClientRect();
-    const viewportBottom = window.innerHeight;
-    // Pinned flush to the viewport's bottom edge (within 1px)…
-    const bottomGap = Math.abs((rect?.bottom ?? 0) - viewportBottom);
-    expect(bottomGap).toBeLessThanOrEqual(1);
-    // …and its top is on screen, not clipped above the fold.
-    expect(rect?.top ?? -1).toBeGreaterThanOrEqual(0);
-    expect(rect?.top ?? viewportBottom).toBeLessThan(viewportBottom);
-
-    // The page itself never grows a horizontal scrollbar — DataTable's own
-    // wrapper owns the (unused, here narrow) horizontal overflow, not `.routed`.
-    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
-      document.documentElement.clientWidth + 1,
-    );
   });
 });

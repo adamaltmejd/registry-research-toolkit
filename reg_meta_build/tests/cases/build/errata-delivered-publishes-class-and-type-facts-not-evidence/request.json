@@ -7,7 +7,7 @@
       "registerinformation": [
         {
           "colname": "EDITION",
-          "cvid": 1,
+          "cvid": 1, "varname": "GenericVar v99",
           "var_id": 99,
           "year": "2018",
           "regver_id": 1,
@@ -19,7 +19,7 @@
         },
         {
           "colname": "EDITION",
-          "cvid": 2,
+          "cvid": 2, "varname": "GenericVar v99",
           "var_id": 99,
           "year": "2020",
           "regver_id": 2,
@@ -44,7 +44,7 @@
         }
       ],
       "unika": [
-        "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2018|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar v99|EDITION|2018|2020|0|0|0",
         "TEST|Testregistret|Individer|Individer|GenericVar|Q|2018|2018|0|0|0"
       ]
     }

@@ -5,11 +5,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import type { RegisterShow } from "./api";
 import { getRelatedDocuments, getShow, getStates } from "./api";
+import { registerShow } from "./api-test-helpers";
 import {
   columnedRegisterNode,
   delivery,
   mockRegisterAndResolve,
-  registerShow,
   renderRegister,
   tickColumn,
   withLisaVariants,

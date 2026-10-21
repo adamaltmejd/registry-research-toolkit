@@ -11,14 +11,14 @@
       "registerinformation": [
         {
           "colname": "ANSWER_A",
-          "cvid": 20,
+          "cvid": 20, "varopdef": "Answer ANSWER_A",
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020
         },
         {
           "colname": "ANSWER_B",
-          "cvid": 20,
+          "cvid": 20, "varopdef": "Answer ANSWER_B",
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020

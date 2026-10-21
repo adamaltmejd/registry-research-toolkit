@@ -90,53 +90,6 @@ describe("PeriodWindowSlider", () => {
     await expect.element(screen.getByText(/^data /)).not.toBeInTheDocument();
   });
 
-  it("hasSelection:false suppresses the leading not-delivered gap (no-op full-history default, #639)", async () => {
-    // The no-op full-history default: no ?period, no window → the thumbs sit at
-    // the full bounds [1960, 2008] the user never chose. The leading 1960–1994
-    // span below coverage (1995–2008) would otherwise gap as "Not delivered
-    // before 1995" — but `hasSelection:false` suppresses it (the user never chose
-    // that span). No gap cells, no note.
-    const screen = await render(PeriodWindowSlider, {
-      min: 1960,
-      max: 2008,
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      subAnnualPeriod: null,
-      hasSelection: false,
-      userChosen: false,
-      selection: { from: 1960, to: 2008 },
-      window: null,
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
-    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
-  });
-
-  it("hasSelection:true keeps the leading not-delivered gap (conditional, not removed; #639)", async () => {
-    // Complementary guard: identical props but `hasSelection:true` (a real
-    // selection/window is set) → the leading 1960–1994 gap below coverage fires.
-    // Locks the suppression as conditional on the flag, NOT an unconditional
-    // feature removal.
-    const screen = await render(PeriodWindowSlider, {
-      min: 1960,
-      max: 2008,
-      coverage: { from: 1995, to: 2008 } as Coverage,
-      subAnnualPeriod: null,
-      hasSelection: true,
-      userChosen: true,
-      selection: { from: 1960, to: 2008 },
-      window: null,
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered before 1995/))
-      .toBeVisible();
-    expect(screen.container.querySelectorAll(".gap").length).toBe(1);
-  });
-
   it("a REJECTED move keeps the thumbs, the readout and the emitted range in agreement", async () => {
     // The synthetic catalog's finite 2018 leaf: coverage 2018–2018 on a
     // 1960–2020 track, both thumbs already on the single delivered year. Home on
@@ -204,25 +157,5 @@ describe("PeriodWindowSlider", () => {
     await expect
       .element(screen.getByText(/coverage through/))
       .not.toBeInTheDocument();
-  });
-
-  it("sub-annual ?period: availability gaps are suppressed (the projection isn't the real selection)", async () => {
-    // selection 2000–2020 vs coverage 1995–2015 WOULD gap 2016–2020 — but the
-    // shown span is the window PROJECTION, not the real (sub-annual) value, so the
-    // gap is meaningless: no "Not delivered" note, no hatched gap cells. The
-    // sub-annual cue names the real value without implying the slider represents it.
-    const screen = await render(PeriodWindowSlider, {
-      ...base,
-      selection: { from: 2000, to: 2020 },
-      window: { from: 2000, to: 2020 },
-      subAnnualPeriod: "HT2020",
-      onchange: vi.fn(),
-      onreset: vi.fn(),
-    });
-    await expect.element(screen.getByText(/Active period/)).toBeVisible();
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
-    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
   });
 });

@@ -1,0 +1,11 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[variable]
+"1.5" = "a"
+"1.6" = "b"
+"1.7" = "c"

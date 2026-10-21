@@ -1,5 +1,5 @@
 {
-  "description": "Three PAR_OV ATC rows of one source record key, described First, Second and Other.",
+  "description": "Three PAR_OV ATC rows of one source record key, described First, Second (2001-2020) and Other (2001-2010).",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
@@ -42,7 +42,7 @@
           "description": "Other",
           "label": "ATC",
           "data_from": 2001,
-          "data_to": 2020
+          "data_to": 2010
         }
       ]
     }

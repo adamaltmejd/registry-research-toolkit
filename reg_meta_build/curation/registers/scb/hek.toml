@@ -5249,20 +5249,6 @@ field = "name"
 value = "Uppskovsavdrag bostadsrätt — Uppgifter från deklarationsbilagor från Skatteverket.\n\nAvser Tidigare uppskovsavdrag för bostadsrätt. Förekomst 2."
 
 [[errata.field]]
-variable = "97.4523"
-variant = "97.99"
-column = "COVRN"
-edition = "5814"
-expected_fields = [{ name = "definition", status = "value", value = "Övriga negativa transfereringar." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Övriga negativa transfereringar" }, { name = "operational_definition", status = "value", value = "Variabeln summeras enligt: Återbetalt belopp studielån + givet underhållsbidrag" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Övriga negativa transfereringar — Variabeln summeras enligt: Återbetalt belopp studielån + givet underhållsbidrag"
-
-[[errata.field]]
 variable = "97.4027"
 variant = "97.99"
 column = "BNGR2"

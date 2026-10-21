@@ -3451,20 +3451,6 @@ noted = "2026-10-01"
 variable = "301.35197"
 variant = "301.849"
 column = "DIFFTYPE_06"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Det svåra med utbildningen var att det saknades tillgång till dator eller Internet.\n\"Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att det saknades tillgång till dator eller Internet?\"" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att det saknades tillgång till dator eller Internet"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_06"
 edition = "5659"
 expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Det svåra med utbildningen var att det saknades tillgång till dator eller Internet vid distansstudier." }]
 expected_period_text = "2011/2012"
@@ -3542,20 +3528,6 @@ expected_scope = { kind = "intervals", intervals = [{ start = "2011-07-01", end 
 expected_period = { kind = "intervals", intervals = [{ start = "2011-07-01", end = "2012-06-30" }] }
 field = "name"
 value = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personen saknade stöd från sin arbetsgivare"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_12"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Det svåra med utbildningen var att personens haft tidigare negativa upplevelser av utbildning.\n\"Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att att du tidigare haft negativa upplevelser av skolan?" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personens haft tidigare negativa upplevelser av utbildning"
 evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
 noted = "2026-10-01"
 
@@ -3744,132 +3716,6 @@ noted = "2026-10-01"
 [[errata.field]]
 variable = "301.35197"
 variant = "301.849"
-column = "DIFFMAIN"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Personen svarar på frågan \"Vilken var den viktigaste anledningen (främsta svårigheten)?\n\nIdentifikationkod från 01 till 12 (svårighetens koder samma för variablerna DIFFTYPE)." }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Personen svarar på frågan \"Vilken var den viktigaste anledningen (främsta svårigheten)?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFMAIN"
-edition = "5659"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Personen svarar på frågan \"Vilken var den viktigaste anledningen till att du inte ville delta i någon utbildning (främsta svårigheten)?\nIdentifikationkod från 0 till 11 avser de alternativ som räknats upp i föregående fråga." }]
-expected_period_text = "2011/2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2011-07-01", end = "2012-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2011-07-01", end = "2012-06-30" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Personen svarar på frågan \"Vilken var den viktigaste anledningen till att du inte ville delta i någon utbildning (främsta svårigheten)?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_05"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning?  Var det att det inte fanns någon utbildning eller kurs i närheten?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att det inte fanns någon utbildning eller kurs i närheten?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_03B"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att du saknade stöd från Arbetsförmedlingen?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att du saknade stöd från Arbetsförmedlingen?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_03A"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att du saknade stöd från arbetsgivare?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att du saknade stöd från arbetsgivare?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_04"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att utbildningens schema inte passade?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det att utbildningens schema inte passade?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_12"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att att du tidigare haft negativa upplevelser av skolan?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att att du tidigare haft negativa upplevelser av skolan?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_10"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att det inte fanns någon lämplig utbildningsaktivitet?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att det inte fanns någon lämplig utbildningsaktivitet?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_02"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att det var för dyrt?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att det var för dyrt?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
 column = "DIFFTYPE_08A"
 edition = "18969"
 expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att din hälsa hindrade dig från att delta?" }]
@@ -3892,62 +3738,6 @@ expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "202
 expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
 field = "name"
 value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att din ålder hindrade dig från att delta?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_07"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att du hade brist på tid pga familjeansvar?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att du hade brist på tid pga familjeansvar?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_14"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för få registreringar?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för få registreringar?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_09"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var det p.g.a andra personliga orsaker?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det p.g.a andra personliga orsaker?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35197"
-variant = "301.849"
-column = "DIFFTYPE_13"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Svårigheter rörande deltagande i utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Svårighet vid utbildningsdeltagande" }, { name = "operational_definition", status = "value", value = "Vad var orsakerna till att du inte ville delta i någon utbildning? Var kursen fullbokad?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var kursen fullbokad?"
 evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
 noted = "2026-10-01"
 
@@ -4326,90 +4116,6 @@ expected_scope = { kind = "intervals", intervals = [{ start = "2011-07-01", end 
 expected_period = { kind = "intervals", intervals = [{ start = "2011-07-01", end = "2012-06-30" }] }
 field = "name"
 value = "Kunskapsanvändning, icke-formell utbildning — Användning av de färdigheter eller kunskaper som förvärvats vid den tredje slumpmässigt utvalda icke-formella utbildningsaktiviteten"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35153"
-variant = "301.849"
-column = "NFEUSEB2"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Användning av de färdigheter eller kunskaper som förvärvats vid icke-formella utbildningsaktiviteter." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kunskapsanvändning, icke-formell utbildning" }, { name = "operational_definition", status = "value", value = "Hur stor eller liten användning förväntar du dig att FÅ längre fram av den andra slumpmässigt utvalda utbildningen?" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Kunskapsanvändning, icke-formell utbildning — Hur stor eller liten användning förväntar du dig att FÅ längre fram av den andra slumpmässigt utvalda utbildningen?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35153"
-variant = "301.849"
-column = "NFEUSEB1"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Användning av de färdigheter eller kunskaper som förvärvats vid icke-formella utbildningsaktiviteter." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kunskapsanvändning, icke-formell utbildning" }, { name = "operational_definition", status = "value", value = "Hur stor eller liten användning förväntar du dig att FÅ längre fram av den första slumpmässigt utvalda utbildningen?" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Kunskapsanvändning, icke-formell utbildning — Hur stor eller liten användning förväntar du dig att FÅ längre fram av den första slumpmässigt utvalda utbildningen?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35153"
-variant = "301.849"
-column = "NFEUSEA2"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Användning av de färdigheter eller kunskaper som förvärvats vid icke-formella utbildningsaktiviteter." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kunskapsanvändning, icke-formell utbildning" }, { name = "operational_definition", status = "value", value = "Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den andra icke-formella utbildningen?" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Kunskapsanvändning, icke-formell utbildning — Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den andra icke-formella utbildningen?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35153"
-variant = "301.849"
-column = "NFEUSEA2"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Användning av de färdigheter eller kunskaper som förvärvats vid icke-formella utbildningsaktiviteter." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kunskapsanvändning, icke-formell utbildning" }, { name = "operational_definition", status = "value", value = "Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den andra icke-formella utbildningen?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Kunskapsanvändning, icke-formell utbildning — Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den andra icke-formella utbildningen?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35153"
-variant = "301.849"
-column = "NFEUSEA1"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Användning av de färdigheter eller kunskaper som förvärvats vid icke-formella utbildningsaktiviteter." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kunskapsanvändning, icke-formell utbildning" }, { name = "operational_definition", status = "value", value = "Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den första icke-formella utbildningen?" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Kunskapsanvändning, icke-formell utbildning — Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den första icke-formella utbildningen?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35153"
-variant = "301.849"
-column = "NFEUSEA1"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Användning av de färdigheter eller kunskaper som förvärvats vid icke-formella utbildningsaktiviteter." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kunskapsanvändning, icke-formell utbildning" }, { name = "operational_definition", status = "value", value = "Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den första icke-formella utbildningen?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Kunskapsanvändning, icke-formell utbildning — Sammanfattningsvis, vilken användning skulle du säga att du hittills HAFT av den första icke-formella utbildningen?"
 evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
 noted = "2026-10-01"
 
@@ -6698,118 +6404,6 @@ noted = "2026-10-01"
 [[errata.field]]
 variable = "301.35173"
 variant = "301.849"
-column = "INFLIBRARIES"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Besöka olika lärocenter, t.ex. bibliotek.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand genom att besöka olika lärocenter, t.ex. bibliotek?\"" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Besöka olika lärocenter, t.ex. bibliotek"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFLIBRARIES"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Besöka olika lärocenter, t.ex. bibliotek.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand genom att besöka olika lärocenter, t.ex. bibliotek?\"" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Besöka olika lärocenter, t.ex. bibliotek"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFMATERIAL"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Bok, tidning, instruktionsbok.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand från en bok, tidning, instruktionsbok eller liknande?\"" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Bok, tidning, instruktionsbok"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFMATERIAL"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Bok, tidning, instruktionsbok.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand från en bok, tidning, instruktionsbok eller liknande?\"" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Bok, tidning, instruktionsbok"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFCOMPUTER"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Dator, surfplatta eller smartphone.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand genom att använda t.ex. en dator, surfplatta eller smartphone?\"" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Dator, surfplatta eller smartphone"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFMUSEUM"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Guidade visningar, t.ex. i naturen, hos ett företag, på historiska platser eller museum.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand genom att gå på guidade visningar, t.ex. i naturen, hos ett företag, på historiska platser eller museum?\"" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Guidade visningar, t.ex. i naturen, hos ett företag, på historiska platser eller museum"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFMUSEUM"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Guidade visningar, t.ex. i naturen, hos ett företag, på historiska platser eller museum.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand genom att gå på guidade visningar, t.ex. i naturen, hos ett företag, på historiska platser eller museum?\"" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Guidade visningar, t.ex. i naturen, hos ett företag, på historiska platser eller museum"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFDEVICE"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Har du under de senaste 12 månaderna försökt lära dig något med hjälp av mobil, surfplatta, dator, TV, radio eller liknande enheter?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Har du under de senaste 12 månaderna försökt lära dig något med hjälp av mobil, surfplatta, dator, TV, radio eller liknande enheter?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
 column = "infmethod2"
 edition = "5659"
 expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Informell inlärningsmetod som använts för den näst  senast gjorda aktiviteten." }]
@@ -6850,34 +6444,6 @@ evidence = "Complete accepted AES20 family audit (636 originals), explicit suppl
 noted = "2026-10-01"
 
 [[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFFAMILY"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Vän, kollega eller familjemedlem.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand inom ett arbete eller på fritiden från t.ex. en vän, kollega eller familjemedlem?\"" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Vän, kollega eller familjemedlem"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.35173"
-variant = "301.849"
-column = "INFFAMILY"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Anger metoden som använts vid inlärning för den informella utbildningen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Undervisningsmetod, informell utbildning" }, { name = "operational_definition", status = "value", value = "Vän, kollega eller familjemedlem.\n\"Har du under de senaste 12 månaderna försökt lära dig något på egen hand inom ett arbete eller på fritiden från t.ex. en vän, kollega eller familjemedlem?\"" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Undervisningsmetod, informell utbildning — Vän, kollega eller familjemedlem"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
 variable = "301.4656"
 variant = "301.849"
 column = "GUIDEMODE_4"
@@ -6888,20 +6454,6 @@ expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "201
 expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
 field = "name"
 value = "Insamlingsmetod — Fick informationen utan interaktion, endast via tryckt material, webbsidor, TV etc"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.4656"
-variant = "301.849"
-column = "GUIDEMODE_3"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Insamlingsmetod" }, { name = "description", status = "value", value = "Beskriver hur uppgifterna har samlats in" }, { name = "name", status = "value", value = "Insamlingsmetod" }, { name = "operational_definition", status = "value", value = "Fick informationen via en datorbaserad applikation som tillhandahåller information om utbildningsmöjligheter" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Insamlingsmetod — Fick informationen via en datorbaserad applikation som tillhandahåller information om utbildningsmöjligheter"
 evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
 noted = "2026-10-01"
 
@@ -6930,34 +6482,6 @@ expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "201
 expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
 field = "name"
 value = "Insamlingsmetod — Fick informationen via kontakt med annan person via internet, telefon, epost eller annan media"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.4656"
-variant = "301.849"
-column = "GUIDEINTER_2"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Insamlingsmetod" }, { name = "description", status = "value", value = "Beskriver hur uppgifterna har samlats in" }, { name = "name", status = "value", value = "Insamlingsmetod" }, { name = "operational_definition", status = "value", value = "På vilket sätt erhölls information om utbildningsmöjligheter under de senaste 12 månaderna. Kommunikation via t.ex. chatt-robot eller någon annan automatisk funktion på internet?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Insamlingsmetod — På vilket sätt erhölls information om utbildningsmöjligheter under de senaste 12 månaderna. Kommunikation via t.ex. chatt-robot eller någon annan automatisk funktion på internet?"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.4656"
-variant = "301.849"
-column = "GUIDEINTER_1"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Insamlingsmetod" }, { name = "description", status = "value", value = "Beskriver hur uppgifterna har samlats in" }, { name = "name", status = "value", value = "Insamlingsmetod" }, { name = "operational_definition", status = "value", value = "På vilket sätt erhölls information om utbildningsmöjligheter under de senaste 12 månaderna. Personligen med någon, t.ex. via telefon, mejl eller möte, även videomöte?" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Insamlingsmetod — På vilket sätt erhölls information om utbildningsmöjligheter under de senaste 12 månaderna. Personligen med någon, t.ex. via telefon, mejl eller möte, även videomöte?"
 evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
 noted = "2026-10-01"
 
@@ -7202,34 +6726,6 @@ noted = "2026-10-01"
 [[errata.field]]
 variable = "301.32787"
 variant = "301.849"
-column = "NFEPAID2"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "operational_definition", status = "value", value = "Andra slumpmässigt valda icke-formella utbildningsaktiviteten.\nHärledning av frågorna F61-F63 som handlar om det fanns kostnader för utbildningen, ifall någon betalade något för utbildningen och i så fall om urvalspersonen eller någon annan betalade." }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Icke-formell utbildning, kostnadsvariabler — Andra slumpmässigt valda icke-formella utbildningsaktiviteten"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.32787"
-variant = "301.849"
-column = "NFEPAID2"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "operational_definition", status = "value", value = "Andra slumpmässigt valda icke-formella utbildningsaktiviteten.\nHärledning av frågorna F61-F63 som handlar om det fanns kostnader för utbildningen, ifall någon betalade något för utbildningen och i så fall om urvalspersonen eller någon annan betalade." }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Icke-formell utbildning, kostnadsvariabler — Andra slumpmässigt valda icke-formella utbildningsaktiviteten"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.32787"
-variant = "301.849"
 column = "NFEPAIDBY1"
 edition = "5659"
 expected_fields = [{ name = "definition", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "operational_definition", status = "value", value = "Första slumpmässigt valda icke-formella utbildningen. Antal betalande objekt." }]
@@ -7238,34 +6734,6 @@ expected_scope = { kind = "intervals", intervals = [{ start = "2011-07-01", end 
 expected_period = { kind = "intervals", intervals = [{ start = "2011-07-01", end = "2012-06-30" }] }
 field = "name"
 value = "Icke-formell utbildning, kostnadsvariabler — Första slumpmässigt valda icke-formella utbildningen. Antal betalande objekt"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.32787"
-variant = "301.849"
-column = "NFEPAID1"
-edition = "11748"
-expected_fields = [{ name = "definition", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "operational_definition", status = "value", value = "Första slumpmässigt valda icke-formella utbildningsaktiviteten.\nHärledning av frågorna F61-F63 som handlar om det fanns kostnader för utbildningen, ifall någon betalade något för utbildningen och i så fall om urvalspersonen eller någon annan betalade." }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-field = "name"
-value = "Icke-formell utbildning, kostnadsvariabler — Första slumpmässigt valda icke-formella utbildningsaktiviteten"
-evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
-noted = "2026-10-01"
-
-[[errata.field]]
-variable = "301.32787"
-variant = "301.849"
-column = "NFEPAID1"
-edition = "18969"
-expected_fields = [{ name = "definition", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Icke-formell utbildning, kostnadsvariabler" }, { name = "operational_definition", status = "value", value = "Första slumpmässigt valda icke-formella utbildningsaktiviteten.\nHärledning av frågorna F61-F63 som handlar om det fanns kostnader för utbildningen, ifall någon betalade något för utbildningen och i så fall om urvalspersonen eller någon annan betalade." }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Icke-formell utbildning, kostnadsvariabler — Första slumpmässigt valda icke-formella utbildningsaktiviteten"
 evidence = "Complete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
 noted = "2026-10-01"
 

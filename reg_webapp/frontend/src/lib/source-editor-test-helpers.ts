@@ -4,30 +4,27 @@
 import type { ComponentProps } from "svelte";
 import { vi } from "vitest";
 import { render } from "vitest-browser-svelte";
-import { getShow, getStates, type ShowNode } from "./api";
+import {
+  getShow,
+  getStates,
+  type ProviderShow,
+  type RegisterChild,
+  type RegisterShow,
+  type ShowNode,
+} from "./api";
+import { registerShow, rootShow } from "./api-test-helpers";
 import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
 import SourceEditor from "./SourceEditor.svelte";
-
-/** The catalog root as a deployment serving `providers` (the shell's facet list,
- * and what decides whether a card's title carries its provider). */
-export function rootShow(
-  ...providers: { fqid: string; name: string }[]
-): ShowNode {
-  return {
-    kind: "root",
-    children: providers.map(({ fqid, name }) => ({
-      kind: "provider" as const,
-      fqid,
-      name,
-    })),
-  } as unknown as ShowNode;
-}
+import { variant } from "./variants-test-helpers";
 
 /** A provider's register entry carrying its curated display name — "LISA",
  * "MiDAS": the word the register's own catalog page is headed with. */
-export function registerChild(fqid: string, name: string | null) {
+export function registerChild(
+  fqid: string,
+  name: string | null,
+): RegisterChild {
   return { fqid, name, purpose: null, tags: [], coverage: null };
 }
 
@@ -36,30 +33,23 @@ export function registerChild(fqid: string, name: string | null) {
  * node each). */
 export function providerShow(
   fqid: string,
-  ...registers: ReturnType<typeof registerChild>[]
-): ShowNode {
-  return {
-    kind: "provider",
-    fqid,
-    name: fqid,
-    children: registers,
-  } as unknown as ShowNode;
+  ...registers: RegisterChild[]
+): ProviderShow {
+  return { kind: "provider", fqid, name: fqid, children: registers };
 }
 
 /** A register's `show`, carrying its variants (the card's variant word). */
-export function registerShow(
+export function variantsRegister(
   fqid: string,
   ...variants: { slug: string; name?: string | null }[]
-): ShowNode {
-  return {
-    kind: "register",
+): RegisterShow {
+  return registerShow({
     fqid,
     name: null,
-    children: [],
-    groups: [],
-    tags: [],
-    variants: variants.map((v) => ({ versions: [], ...v })),
-  } as unknown as ShowNode;
+    variants: variants.map(({ slug, name }) =>
+      variant(slug, { name: name ?? null }),
+    ),
+  });
 }
 
 /** The LISA catalog every case starts from: a single-provider deployment whose
@@ -69,7 +59,7 @@ function lisaCatalog(): Record<string, ShowNode | Error> {
   return {
     "": rootShow({ fqid: "scb", name: "Statistiska Centralbyrån" }),
     scb: providerShow("scb", registerChild("scb/lisa", "LISA")),
-    "scb/lisa": registerShow(
+    "scb/lisa": variantsRegister(
       "scb/lisa",
       { slug: "v1", name: "Individer 15+" },
       { slug: "individer-15plus", name: "Individer, 15 år och äldre" },

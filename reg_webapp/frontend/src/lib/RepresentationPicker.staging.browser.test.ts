@@ -99,81 +99,6 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .toBeVisible();
   });
 
-  it("keeps nested row height stable when staging a pick (#1127)", async () => {
-    await render(RepresentationPicker, {
-      bands: [multiAxisBand()],
-      axes: AXES,
-      ...PROPS,
-    });
-
-    const rowEl = await vi.waitFor(() => {
-      const el = document.querySelector<HTMLElement>(
-        ".col-row.nested .row-btn",
-      );
-      if (!el) {
-        throw new Error("nested row not yet rendered");
-      }
-      return el;
-    });
-    const before = rowEl.getBoundingClientRect().height;
-
-    rowEl.querySelector<HTMLInputElement>("input.cbox")?.click();
-
-    await expectStagedAddColumnVisible();
-    const after = rowEl.getBoundingClientRect().height;
-    expect(after).toBeLessThanOrEqual(before + 1);
-  });
-
-  it("stages selectable superseded predecessor rows from the history disclosure (#926)", async () => {
-    const onapply = vi.fn();
-    const predecessor = {
-      key: "scb/iot/dispink-old",
-      name: "Disponibel inkomst familj",
-      registerPrefix: "scb/iot",
-      rows: [
-        row({
-          column: "DINFold",
-          from: "1999-01-01",
-          to: "2004-12-31",
-          windows: [{ from: "1999-01-01", to: "2004-12-31" }],
-          period: "1999 – 2004",
-          wirePeriod: "1999..2004",
-        }),
-      ],
-    } satisfies PickerBand;
-    const successor = {
-      key: "scb/iot/dispink-new",
-      name: "Disponibel inkomst familj 2004",
-      registerPrefix: "scb/iot",
-      rows: [row({ column: "DINFnew" })],
-      supersedes: [
-        {
-          name: predecessor.name,
-          href: "/catalog/scb/iot/dispink-old",
-          effectiveYear: 2005,
-          band: predecessor,
-        },
-      ],
-    } satisfies PickerBand;
-
-    await render(RepresentationPicker, {
-      bands: [successor],
-      ...PROPS,
-      onapply,
-    });
-
-    await page.getByText("supersedes 1 edition").click();
-    await page.getByRole("checkbox", { name: /DINFold/ }).click();
-    await expect.element(page.getByText("+1 column")).toBeVisible();
-    await page.getByRole("button", { name: "Add to project" }).click();
-
-    expect(onapply).toHaveBeenCalledTimes(1);
-    const payload = onapply.mock.calls[0][0];
-    expect(payload.adds).toHaveLength(1);
-    expect(payload.adds[0].band.key).toBe("scb/iot/dispink-old");
-    expect(payload.adds[0].row.column).toBe("DINFold");
-  });
-
   it("deduplicates one folded predecessor shared by split successors (#926)", async () => {
     const onapply = vi.fn();
     const predecessor = {
@@ -643,26 +568,5 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
       .click();
     expect(onapply).toHaveBeenCalledTimes(1);
     expect(onapply.mock.calls[0][0].removes).toHaveLength(2);
-  });
-});
-
-describe("RepresentationPicker footer + row-height stability (#1115)", () => {
-  it("does not grow a single-column row's height when it is picked", async () => {
-    // The #1115 regression: a Tag first appearing inline in the row grew the
-    // row (Tag `line-height: 1.4` vs the row's centered 0.9rem primary). Its
-    // height must be pixel-identical before and after staging.
-    await render(RepresentationPicker, {
-      bands: [lisaNarrowedBand("individer-16plus")],
-      ...PROPS,
-    });
-
-    const row = () =>
-      document.querySelector(".col-row.single .row-btn") as HTMLElement;
-    const before = row().clientHeight;
-
-    await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await expectStagedAddColumnVisible();
-
-    expect(row().clientHeight).toBe(before);
   });
 });

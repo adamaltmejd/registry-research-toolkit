@@ -17,7 +17,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.data_warnings import DataWarning
-from reg_meta_build.db import SCHEMA_VERSION, open_db
+from reg_meta_build.db import open_db
 from reg_meta_build.derive import derive_holdings
 from reg_meta_build.doc_db import DOC_DB_FILENAME, build_doc_db, load_related_documents
 from reg_meta_build.holdings_accounting import INVENTORY_ROLE_PATH
@@ -73,8 +73,10 @@ def replicate_filler(case: Path, destination: Path) -> Path:
     """Copy a reader case, expanding its `request.json` filler into copies.
 
     `request.json` names one `filler` binding of the case's `catalog.json` and a
-    `copies` count; the filler is replaced by that many copies whose slug and
-    provider key carry a `-N` suffix. An optional `held_table` `{id, edition}`
+    `copies` count; the filler is replaced by that many copies whose slug,
+    provider key and variants carry a `-N` suffix: a variable name is unique within
+    a variant (#1736), so each copy keeps the filler's name in a variant of its
+    own. An optional `held_table` `{id, edition}`
     also holds every copy: one inventory column and census row per copy, with the
     holdings policy re-pinned to the expanded census. Returns the expanded source
     directory.
@@ -95,11 +97,22 @@ def replicate_filler(case: Path, destination: Path) -> Path:
         == request["filler"]
     )
     catalog.remove(filler)
+
+    def variant(state: dict, index: int) -> dict:
+        return {
+            "slug": f"{state['variant']['slug']}-{index}",
+            "name": f"{state['variant']['name']} {index}",
+        }
+
     catalog.extend(
         {
             **filler,
             "slug": f"{filler['slug']}-{index}",
             "provider_key": f"{filler['provider_key']}-{index}",
+            "states": [
+                {**state, "variant": variant(state, index)}
+                for state in filler["states"]
+            ],
         }
         for index in range(request["copies"])
     )
@@ -110,7 +123,7 @@ def replicate_filler(case: Path, destination: Path) -> Path:
         provider, register = filler["register"]["provider"], filler["register"]["slug"]
         mappings = "".join(
             f'[[table.column]]\nname = "Copy{index}"\n[[table.column.mapping]]\n'
-            f'register_variant = "{provider}/{register}/{state["variant"]["slug"]}"\n'
+            f'register_variant = "{provider}/{register}/{variant(state, index)["slug"]}"\n'
             f'variable = "{provider}/{register}/{filler["slug"]}-{index}"\n'
             f'representation = "{state["delivery_column_name"]}"\n'
             for index in range(request["copies"])
@@ -478,18 +491,3 @@ def _build_artifact(
     assert validation.passed, validation.format_report()
     open_db(path).close()
     return path
-
-
-def stamp_catalog_identity(conn: sqlite3.Connection) -> None:
-    """Complete identity metadata for legacy synthetic reader catalogs."""
-    identity = json.loads((CASES / "reader/fixture/identity.json").read_text())
-    identity.update(
-        schema_version=SCHEMA_VERSION,
-        catalog_artifact_kind="catalog",
-        catalog_publishable="true",
-        catalog_completeness="complete",
-    )
-    identity["generation_id"] = generation_id(identity)
-    conn.executemany(
-        "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)", sorted(identity.items())
-    )

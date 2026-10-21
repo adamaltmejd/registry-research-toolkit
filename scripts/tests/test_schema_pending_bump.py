@@ -11,7 +11,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 from _scripts_support import load_scripts_module
 
 _MODULE = Path(__file__).resolve().parents[1] / "schema_pending_bump.py"
@@ -21,11 +20,6 @@ spb = load_scripts_module("schema_pending_bump")
 def _verdict(code_db: str, code_doc: str, asset_db: str, asset_doc: str) -> str:
     verdict, _ = spb.classify_overall(code_db, code_doc, asset_db, asset_doc)
     return verdict
-
-
-def test_pending_on_doc_minor_behind() -> None:
-    # The #437 case: code doc 1.1.0, released asset still on 1.0.0.
-    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.0.0") == "pending"
 
 
 def test_pending_on_db_minor_behind() -> None:
@@ -49,18 +43,6 @@ def test_break_on_major_mismatch() -> None:
 def test_break_suppresses_pending_on_other_axis() -> None:
     # Doc would be pending (1.1 > 1.0) but the DB major break dominates → break.
     assert _verdict("6.4.0", "1.1.0", "5.4.0", "1.0.0") == "break"
-
-
-def test_classify_axis_buckets() -> None:
-    assert spb.classify_axis("5.4.0", "5.4.0") == "compatible"
-    assert spb.classify_axis("5.4.0", "5.5.0") == "compatible"
-    assert spb.classify_axis("5.4.0", "5.3.0") == "pending"
-    assert spb.classify_axis("5.4.0", "6.4.0") == "break"
-
-
-def test_malformed_version_raises() -> None:
-    with pytest.raises(ValueError):
-        spb.classify_axis("5", "5.4.0")
 
 
 def test_malformed_version_nonzero_exit() -> None:

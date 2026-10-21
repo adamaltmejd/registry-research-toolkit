@@ -689,7 +689,7 @@
         ]
       },
       {
-        "cvid": 7601,
+        "cvid": 7601, "varname": "GenericVar value",
         "var_id": 5,
         "colname": "SAktAr",
         "year": "2016",
@@ -713,7 +713,7 @@
         ]
       },
       {
-        "cvid": 7603,
+        "cvid": 7603, "varname": "GenericVar value",
         "var_id": 5,
         "colname": "SaktAr",
         "year": "2018",
@@ -725,7 +725,7 @@
         ]
       },
       {
-        "cvid": 7604,
+        "cvid": 7604, "varname": "GenericVar value",
         "var_id": 5,
         "colname": "SAktAr",
         "year": "2019",

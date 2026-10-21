@@ -111,6 +111,7 @@ from reg_meta_build.source_scope import (
     declared_register_fqids,
     resolve_source_scope,
 )
+from reg_meta_build.source_siblings import SEARCH_QUERY_MAX_CHARS
 from reg_meta_build.source_support import (
     SourceSupportBindings,
     diagnostic_register_contexts,
@@ -142,11 +143,6 @@ if TYPE_CHECKING:
         ValueBindingIssue,
         ValueBindingSession,
     )
-
-
-# The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
-# (conformance/api/operations.toml). Change both together.
-SEARCH_QUERY_MAX_CHARS = 200
 
 
 class _Model(BaseModel):

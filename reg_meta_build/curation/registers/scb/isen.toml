@@ -1992,7 +1992,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Organisationsnummer, redovisningsenheten — Organisationsnummer, 12-siffrigt nummer från Företagsdatabasen (FDB)"
+value = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)"
 
 [[errata.field]]
 variable = "132.2617"
@@ -2006,7 +2006,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Organisationsnummer, redovisningsenheten — Organisationsnummer, 12-siffrigt nummer från Företagsdatabasen (FDB)"
+value = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)"
 
 [[errata.field]]
 variable = "132.2617"
@@ -2020,7 +2020,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Organisationsnummer, redovisningsenheten — Organisationsnummer, 12-siffrigt nummer från Företagsdatabasen (FDB)"
+value = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeorgNrHe)"
 
 [[errata.field]]
 variable = "132.1641"
@@ -2034,7 +2034,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Näringsgren för arbetsställe — Äldre standard än Ng2002."
+value = "Näringsgren för arbetsställe — Äldre standard än Ng2002 (Näringsgren2002)"
 
 [[errata.field]]
 variable = "132.1641"
