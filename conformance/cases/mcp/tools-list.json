@@ -5034,7 +5034,7 @@
           "description": "One resolved binding: what was asked for and what the steward delivers.",
           "properties": {
             "key": {
-              "description": "A held row key of the output file that no binding ordered, carried so every\nfile joins on its keys; absent on an ordered entry.",
+              "description": "A held key column of the output file that no binding ordered (the row key, or\nany identifier, linking ids included: [`IS_KEY`]), carried so every file joins\non its keys; absent on an ordered entry.",
               "type": "boolean"
             },
             "logical": {

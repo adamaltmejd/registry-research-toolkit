@@ -968,8 +968,9 @@ export interface components {
         /** @description One resolved binding: what was asked for and what the steward delivers. */
         OrderEntry: {
             /**
-             * @description A held row key of the output file that no binding ordered, carried so every
-             *     file joins on its keys; absent on an ordered entry.
+             * @description A held key column of the output file that no binding ordered (the row key, or
+             *     any identifier, linking ids included: [`IS_KEY`]), carried so every file joins
+             *     on its keys; absent on an ordered entry.
              */
             key?: boolean;
             logical: components["schemas"]["LogicalCoordinate"];

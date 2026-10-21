@@ -558,18 +558,19 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    not by name.
 5. **Held keys.** On a steward artifact every emitted file then carries its table's held
    row keys, whether or not the order binds them: each column of the file's table that
-   maps a key of the file's variant (the key test of step 3) and that no entry of the
-   file already extracts, under whatever variable, gains an entry marked `key: true`. A
-   file is emitted only for an ordered entry, so keys never make a file on their own,
-   and only what the table holds is added: a key the table does not map under the
-   variant is not invented. A key entry takes the source of the file's first entry and
-   requests the union of the file's entries' `requested_period`, so a later row filter
-   is not widened; a year or month member or a windowed key column requests that union
-   inside its own period and is left out where the union does not reach it, as an
-   ordered member is; a year-independent file's keys request `_default`. Key entries
-   follow every ordered entry, by table, variant, edition, member index and column. An
-   ordered key stays an ordered entry, unmarked. The global fallback has no physical
-   table and adds none.
+   maps a key of the file's variant (the key test of step 3: the variant's panel keys
+   and every identifier, so a linking id such as a household or firm id comes along too)
+   and that no entry of the file already extracts, under whatever variable, gains an
+   entry marked `key: true`. A file is emitted only for an ordered entry, so keys never
+   make a file on their own, and only what the table holds is added: a key the table
+   does not map under the variant is not invented. A key entry takes the source of the
+   file's first entry and requests the union of the file's entries' `requested_period`,
+   so a later row filter is not widened; a year or month member or a windowed key column
+   requests that union inside its own period and is left out where the union does not
+   reach it, as an ordered member is; a year-independent file's keys request `_default`.
+   Key entries follow every ordered entry, by table, variant, edition, member index and
+   column. An ordered key stays an ordered entry, unmarked. The global fallback has no
+   physical table and adds none.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,

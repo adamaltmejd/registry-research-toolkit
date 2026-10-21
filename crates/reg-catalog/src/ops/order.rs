@@ -79,8 +79,9 @@ struct Entry {
     /// table's edition does.
     requested_period: String,
     physical: Physical,
-    /// A held row key of the output file that no binding ordered, carried so every
-    /// file joins on its keys; absent on an ordered entry.
+    /// A held key column of the output file that no binding ordered (the row key, or
+    /// any identifier, linking ids included: [`IS_KEY`]), carried so every file joins
+    /// on its keys; absent on an ordered entry.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     #[schema(required = false)]
     key: bool,
@@ -310,7 +311,7 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
          JOIN register r ON r.register_id = v.register_id \
          JOIN provider p ON p.provider_id = r.provider_id \
          WHERE ht.physical_id = ? AND hm.variant_id = ? AND {IS_KEY} \
-         ORDER BY hc.name, v.slug"
+         ORDER BY hc.name, v.slug, hm.representation_canonical"
     ))?;
     let mut keys = Vec::new();
     for file in files.into_values() {
@@ -337,6 +338,8 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
             }
             let days = match (&own, year_independent) {
                 (_, true) => Vec::new(),
+                // simplify: no golden has an identifier pivot member or windowed key
+                // column; add an `order/` case when a steward holds one.
                 (Some(own), false) => union.iter().filter_map(|d| intersect(d, own)).collect(),
                 (None, false) => union.clone(),
             };
