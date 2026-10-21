@@ -31,7 +31,10 @@
 #                           worklist with `reg-meta-build same-as-candidates`.
 #
 #   type = "replaced_by"  — directional SUCCESSION (`from` superseded by `to`).
-#                           NOT identity: the definitions differ across eras.
+#                           NOT identity: the definitions differ across eras, or
+#                           SCB re-minted the concept under a new var_id (a
+#                           different variable here, even when only the var_id
+#                           changed; a rename within one var_id is a fold).
 #                           `from` / `to` are FQIDs of the SAME grain (register,
 #                           variable, or classification — not variant). The
 #                           successor must resolve to a live, slugged entity; the
@@ -1100,7 +1103,7 @@ from_column = "VA22"
 to_column = "VA22"
 variant = "finansbolag"
 effective_year = 2022
-note = "Upplupna kostnader och förutbetalda intäkter, block A (VA22, VarId 27408) continues in finansbolag under the general VarId 4251 from 2022; var_id only"
+note = "Upplupna kostnader och förutbetalda intäkter, block A (VA22, VarId 27408) continues in finansbolag under the general VarId 4251 from 2022 (not delivered 2021); var_id only"
 
 [[edge]]
 type = "replaced_by"
@@ -1127,7 +1130,7 @@ from_column = "VG70"
 to_column = "VG70"
 variant = "finansbolag"
 effective_year = 2022
-note = "Antalet anställda (VG70, VarId 27749) continues in finansbolag under the general VarId 690 from 2022; var_id only"
+note = "Antalet anställda (VG70, VarId 27749) continues in finansbolag under the general VarId 690 from 2022 (not delivered 2021); var_id only"
 
 [[edge]]
 type = "replaced_by"
@@ -1137,22 +1140,15 @@ from_column = "VG72"
 to_column = "VG72"
 variant = "finansbolag"
 effective_year = 2022
-note = "Antalet arbetsställen (VG72, VarId 27752) continues in finansbolag under the general VarId 17484 from 2022; var_id only"
+note = "Antalet arbetsställen (VG72, VarId 27752) continues in finansbolag under the general VarId 17484 from 2022 (not delivered 2021); var_id only"
 
-#    FTR: skogsimpediment wording and the köksinredning reference-year recut.
+#    FTR: skogsimpediment wording.
 [[edge]]
 type = "replaced_by"
 from = "scb/ftr/antal-varderingsenheter-skogsimpediment"
 to = "scb/ftr/antal-ve-skogsimp"
 effective_year = 2011
 note = "Antal värderingsenheter med skogsimpediment (AntVeSkogsimp, VarId 505) continues under VarId 27201 from 2011; var_id only, the name now reads 'skogligt impediment'"
-
-[[edge]]
-type = "replaced_by"
-from = "scb/ftr/kok-koksinredningsbyte-efter-1985"
-to = "scb/ftr/kok-koksinredningsbyte-efter-1990"
-effective_year = 2005
-note = "Köksinredningsbyte (KokInredn, VarId 15676) recut from 'efter 1985' to 'efter 1990' under VarId 16160 from 2005; the codes now split at 1990 instead of 1985 and 1989"
 
 [[edge]]
 type = "replaced_by"
@@ -1210,13 +1206,6 @@ note = "Underlag för efterlevandepensionsavgift föregående år (AEPAVGX, VarI
 
 [[edge]]
 type = "replaced_by"
-from = "scb/iot/underlag-fastighetsskatt-utland-15"
-to = "scb/iot/underlag-fastighetsskatt-utland-15-2"
-effective_year = 1998
-note = "Underlag för fastighetsskatt 1,5 % på småhus i utlandet (ASMAU15, VarId 39229) continues under VarId 5572 from 1998 (not delivered 1996–1997); var_id only"
-
-[[edge]]
-type = "replaced_by"
 from = "scb/iot/nedsattning-avkastningsskatt-avtal"
 to = "scb/iot/nedsattning-avkastningsskatt-pga-avtal"
 effective_year = 2010
@@ -1270,7 +1259,7 @@ type = "replaced_by"
 from = "scb/isen/bransleslagens-varmevarden-varmevarde"
 to = "scb/isen/bransleslagets-varmevarden-varmevarde"
 effective_year = 2007
-note = "Bränsleslagets värmevärden (Värmevärde, VarId 2598) continues under VarId 16414 from 2007 (not delivered 2006); var_id only, the definition adds an explanation of värmevärde"
+note = "Bränsleslagets värmevärden (Värmevärde, VarId 2598) continues under VarId 16414 from 2007 (the Värmevärde column is not delivered 2006, when VarId 16414 is delivered as the sibling Vv partition); var_id only, the definition adds an explanation of värmevärde"
 
 #    IT-användning: two befolkningen items re-minted.
 [[edge]]
@@ -1338,13 +1327,6 @@ from = "scb/linda/underlag-sarskild-loneskatt-forvarvs"
 to = "scb/linda/sarskild-loneskatt-forvarvsinkomst"
 effective_year = 2005
 note = "Underlag för särskild löneskatt på förvärvsinkomst (ASLSF, VarId 5566) continues under VarId 1221 from 2005; var_id only, the definition no longer states the 24,26 % rate"
-
-[[edge]]
-type = "replaced_by"
-from = "scb/linda/underlag-fastighetsskatt-utland-15"
-to = "scb/linda/underlag-fastighetsskatt-utland-15-2"
-effective_year = 1998
-note = "Underlag för fastighetsskatt 1,5 % på småhus i utlandet (ASMAU15, VarId 39229) continues under VarId 5572 from 1998 (not delivered 1996–1997); var_id only"
 
 [[edge]]
 type = "replaced_by"

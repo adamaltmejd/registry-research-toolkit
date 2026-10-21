@@ -364,8 +364,10 @@ an edge on, and the edge triple `(provider, register, variable)` is the binding 
 - **Representation succession**: curated `representation_replaced_by` rows record a
   column rename within a variable, optionally scoped to one variant.
 
-Same-concept grain, vintage or coding changes appear in no edge table; they fold into
-one variable at build time. Lineage (`variable_state_lineage`) is the state-grain edge
+Same-concept grain, vintage or coding changes within one variable appear in no edge
+table; they fold into one variable at build time. A concept SCB re-mints under a new
+`var_id` is a different variable, so its continuation is a `replaced_by` edge even when
+only the `var_id` changed. Lineage (`variable_state_lineage`) is the state-grain edge
 from a composite register's column to its source register's state, with the validity
 intersection; build warnings explain the edges it could not settle. Composite registers
 (LISA, FRIDA, LINDA, STATIV) record a stable source on the variable and a varying one on
