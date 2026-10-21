@@ -24,10 +24,7 @@ Conformance checks on a real artifact run only with `--run-release --artifact-di
 (see `conformance/README.md`).
 
 There are no git hooks: CI (`ci.yml`) runs the gate on every PR to main, and merges
-require it green. Run the relevant steps locally before pushing. A clone that once ran
-`pre-commit install` still has its launchers in `.git/hooks`, which now fail every
-commit and checkout; remove them once with
-`uvx pre-commit uninstall -t pre-commit -t post-checkout`.
+require it green. Run the relevant steps locally before pushing.
 
 ## Linting
 

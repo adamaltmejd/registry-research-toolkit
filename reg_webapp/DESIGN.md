@@ -28,9 +28,9 @@ private data.
 
 ```text
 reg_webapp/
-  .claude/skills/run-reg-webapp/  # the skill: how to use dev/
   dev/                    # dev.sh and the browser flows (driver.mjs); dev.sh
-                          # --fixture-db serves conformance/cases/fixtures/webapp-dev
+                          # --fixture-db serves conformance/cases/fixtures/webapp-dev;
+                          # how to use it: .agents/skills/run-reg-webapp/
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
@@ -1108,7 +1108,7 @@ not net simplicity.
 
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 
-§6.5's origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a
+The origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a
 Cloudflare zone in front. The deciding factor was the edge-cache contract: the origin
 ETag/`Cache-Control` machinery (above) and the #220 FQID round-trip gate assume a
 classic URL-addressed origin behind Cloudflare's zone cache. Cloudflare's own Containers

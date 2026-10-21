@@ -19,7 +19,6 @@ ROOT = Path(__file__).resolve().parents[2]
 SKILL_DIRS = [
     ROOT / ".claude/skills",
     ROOT / ".agents/skills",
-    ROOT / "reg_webapp/.claude/skills",
     *ROOT.glob("plugins/*/skills"),
 ]
 FORBIDDEN = re.compile(

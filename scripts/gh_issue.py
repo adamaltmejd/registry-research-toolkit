@@ -2,12 +2,10 @@
 """Maintainer-author trust gate for the automation ingestion path.
 
 This repo is PUBLIC. A stranger can open an issue, comment on one, or file a fork PR —
-and that free text is untrusted: routing it into a model (the `/plan-lanes`, `/pr-
-pipeline`, `/chief-of-staff` reads) or splicing it into the epic body / candidate floor
-is a prompt-injection surface. This helper is the choke point: the ingestion path only
-ever surfaces issue/PR text authored by the single trusted maintainer (repo owner, or
-`REGISTRY_MAINTAINER_LOGIN`), so a non-maintainer's content is never read by a model and
-never rendered into the projection.
+and that free text is untrusted: an agent or skill that reads it into a model opens a
+prompt-injection surface. This helper is the choke point: it only ever surfaces issue
+text authored by the single trusted maintainer (repo owner, or
+`REGISTRY_MAINTAINER_LOGIN`), so a non-maintainer's content is never read by a model.
 
 It is deliberately an **allowlist helper, not a transparent `gh` shim.** A shim that
 merely forwarded arbitrary `gh` invocations could not soundly filter — `gh api …`,
