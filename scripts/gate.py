@@ -90,7 +90,8 @@ def crates() -> None:
 
 
 def lint() -> None:
-    # The only home of the ty and panache pins; Rust formatting is in `crates`.
+    # The home of the ty pin; the panache pin is repeated in scripts/parse_lisa_docs.py
+    # (bump both). Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
     run("uvx --from panache-cli==3.17.0 panache format --check .")
