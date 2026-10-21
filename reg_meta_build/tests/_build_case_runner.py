@@ -71,6 +71,8 @@ from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
+    field_projection_sha256,
+    record_projections_sha256,
     toml_inline,
 )
 from reg_meta_build.source_evidence import canonical_sha256, evidence_sha256
@@ -493,6 +495,14 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
             _select(s.records(), a), fields=_fields(a), parents=True
         )
     ],
+    "record_projections_sha256": lambda s, a: record_projections_sha256(
+        capture_expectations(_select(s.records(), a), fields=_fields(a), parents=True)
+    ),
+    "field_projection_sha256": lambda s, a: field_projection_sha256(
+        capture_expectations((_one(s.records(), a),), fields=_fields(a))[0]
+        .alternatives[0]
+        .fields
+    ),
     "expected_fields": lambda s, a: [
         field.model_dump(mode="json")
         for field in capture_expectations((_one(s.records(), a),), fields=_fields(a))[0]

@@ -183,7 +183,9 @@ expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
   | `evidence_sha256`        | `acknowledgement_evidence_sha256` of the selected records                                                                  |
   | `coding_evidence_sha256` | the same, plus the bound physical code-list evidence of each record (`evidence_sha256`)                                    |
   | `expected_records`       | `capture_expectations(..., parents=True, coding=True)` of the selected records                                             |
+  | `record_projections_sha256` | `record_projections_sha256` of those captured records (a coding authority's `records_sha256`)                           |
   | `expected_fields`        | the captured fields of one record                                                                                          |
+  | `field_projection_sha256` | `field_projection_sha256` of one record's captured fields (a column owner's `expected_fields_sha256`)                     |
   | `period_text`            | one record's original period text                                                                                          |
   | `edition_scope`          | one record's edition scope; `end=` replaces its first interval's end                                                       |
   | `period_scope`           | one record's edition period scope                                                                                          |

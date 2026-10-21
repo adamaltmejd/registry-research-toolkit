@@ -16,6 +16,6 @@ column = "VALUE"
 periods = [["2020-01-01", "2020-12-31"]]
 members = [["1", "Included"]]
 version_label = "Supplied row"
-source_authority = { records = {{expected_records key=member:1700}}, codings = {{source_codings key=member:1700}} }
+source_authority = { records_sha256 = {{record_projections_sha256 key=member:1700}}, codings = {{source_codings key=member:1700}} }
 reason = "Reviewed coding"
 source = "fixture"

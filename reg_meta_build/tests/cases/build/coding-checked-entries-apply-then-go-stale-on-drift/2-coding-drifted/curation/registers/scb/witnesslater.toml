@@ -16,6 +16,6 @@ column = "VALUE"
 periods = [["2020-01-01", "2020-12-31"]]
 members = [["30", "Model imputation"], ["6", "Missing"], ["NULL", "Missing"]]
 version_label = "Status"
-source_authority = { records = {{expected_records key=member:3100,member:3101,member:3102}}, codings = {{source_codings key=member:3100,member:3101,member:3102}}, raw_codings = {{raw_codings key=member:3100,member:3101,member:3102}}, label_equivalences = [{ code = "30", labels = ["Matrix imputation", "Model imputation"], selected_label = "Model imputation" }], witness = ["2017-01-01", "2017-12-31"] }
+source_authority = { records_sha256 = {{record_projections_sha256 key=member:3100,member:3101,member:3102}}, codings = {{source_codings key=member:3100,member:3101,member:3102}}, raw_codings = {{raw_codings key=member:3100,member:3101,member:3102}}, label_equivalences = [{ code = "30", labels = ["Matrix imputation", "Model imputation"], selected_label = "Model imputation" }], witness = ["2017-01-01", "2017-12-31"] }
 reason = "Reviewed coding"
 source = "fixture"

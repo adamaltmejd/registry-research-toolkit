@@ -18,6 +18,6 @@ periods = [["2020-01-01", "2020-12-31"]]
 members = [["00", "Original"], ["2-3", "Range token"], ["blank", "No type"]]
 version_label = "Reviewed2019-2020block"
 data_warning = "The source tokens' stored encoding is unverified."
-source_authority = { records = {{expected_records key=variable:VA}}, codings = {{source_codings key=variable:VA}}, raw_codings = {{raw_codings key=variable:VA}}, period_block = {{association key=variable:VA code=00 label=Original}} }
+source_authority = { records_sha256 = {{record_projections_sha256 key=variable:VA}}, codings = {{source_codings key=variable:VA}}, raw_codings = {{raw_codings key=variable:VA}}, period_block = {{association key=variable:VA code=00 label=Original}} }
 reason = "Reviewed 2019-2020 block"
 source = "fixture"

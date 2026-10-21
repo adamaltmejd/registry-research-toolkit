@@ -16,6 +16,6 @@ column = "VALUE"
 periods = [["2020-01-01", "2020-12-31"]]
 members = [["30", "Model"], ["6", "Missing"]]
 version_label = "Status"
-source_authority = { records = {{expected_records key=member:3400,member:3401}}, codings = {{source_codings key=member:3400,member:3401}}, raw_codings = {{raw_codings key=member:3400,member:3401}}, label_equivalences = [{ code = "30", labels = ["Matrix", "Model"], selected_label = "Model" }], witness = ["2016-01-01", "2016-12-31"] }
+source_authority = { records_sha256 = {{record_projections_sha256 key=member:3400,member:3401}}, codings = {{source_codings key=member:3400,member:3401}}, raw_codings = {{raw_codings key=member:3400,member:3401}}, label_equivalences = [{ code = "30", labels = ["Matrix", "Model"], selected_label = "Model" }], witness = ["2016-01-01", "2016-12-31"] }
 reason = "Reviewed coding"
 source = "fixture"

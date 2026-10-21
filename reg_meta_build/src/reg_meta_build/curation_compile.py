@@ -114,6 +114,7 @@ from .source_curation import (
     SearchAliasDecision,
     SourceRecordRef,
     SourceWarningDecision,
+    _actual_field,
     _field_matches,
     acknowledgement_evidence_sha256,
     capture_expectations,
@@ -121,6 +122,8 @@ from .source_curation import (
     documented_labels_match,
     evaluate_cases,
     evaluate_source_expectations,
+    field_projection_sha256,
+    record_projections_sha256,
     toml_inline,
 )
 from .source_effects import apply_occurrence_cases, record_ref
@@ -923,6 +926,16 @@ def _scoped_column_owners(
                 or _edition_label(record) in entry.source_editions
             )
         )
+        field_digests = (
+            {
+                field_projection_sha256(
+                    _actual_field(record, name) for name in SourceFields.model_fields
+                )
+                for record in matched
+            }
+            if entry.expected_fields_sha256 is not None
+            else set()
+        )
         if (
             not matched
             or any(
@@ -931,15 +944,8 @@ def _scoped_column_owners(
                 for field in entry.expected_fields
             )
             or (
-                entry.expected_records is not None
-                and (
-                    tuple(entry.expected_records)
-                    != capture_expectations(
-                        matched,
-                        fields=tuple(SourceFields.model_fields),
-                        parents=True,
-                    )
-                )
+                entry.expected_fields_sha256 is not None
+                and field_digests != {entry.expected_fields_sha256}
             )
             or (
                 entry.expected_evidence_sha256 is not None
@@ -953,13 +959,20 @@ def _scoped_column_owners(
                 != set(entry.source_editions)
             )
         ):
-            diagnostics.append(
-                _stale_partition(
-                    ref,
-                    entry.variable,
-                    "owner, column or exact source editions changed",
+            reason = "owner, column or exact source editions changed"
+            if (
+                matched
+                and entry.expected_fields_sha256 is not None
+                and field_digests != {entry.expected_fields_sha256}
+            ):
+                # The re-pin source; the build ledger shows the current fields.
+                reason += (
+                    "; current expected_fields_sha256 = "
+                    + json.dumps(next(iter(field_digests)))
+                    if len(field_digests) == 1
+                    else "; the matched originals' fields differ between editions"
                 )
-            )
+            diagnostics.append(_stale_partition(ref, entry.variable, reason))
             continue
         for record in matched:
             key = (record_ref(record), entry.column)
@@ -2444,10 +2457,7 @@ def compile_partitions(
                     entry.expected_evidence_sha256 is not None
                     for _, entry in partitions
                 )
-                or any(
-                    entry.expected_fields or entry.expected_evidence_sha256 is not None
-                    for _, entry in scoped_entries
-                )
+                or any(entry.guarded for _, entry in scoped_entries)
                 or any(entry.expected_records is not None for _, entry in sos_splits),
             )
             guarded_sos_split = bool(
@@ -2541,11 +2551,7 @@ def compile_partitions(
                                 entry.expected_evidence_sha256 is not None
                                 for _, entry in partitions
                             )
-                            or any(
-                                entry.expected_fields
-                                or entry.expected_evidence_sha256 is not None
-                                for _, entry in scoped_entries
-                            )
+                            or any(entry.guarded for _, entry in scoped_entries)
                             else ()
                         ),
                     )
@@ -3131,11 +3137,7 @@ def compile_deferred_partitions(
                     native,
                     records,
                     guarded=source_id in {item.entry.source_id for item in entries}
-                    or any(
-                        entry.expected_fields
-                        or entry.expected_evidence_sha256 is not None
-                        for _, entry in scoped_entries
-                    ),
+                    or any(entry.guarded for _, entry in scoped_entries),
                 )
                 split_bases[scope_key].add(native)
                 scoped, scoped_issues = _scoped_column_owners(
@@ -3181,19 +3183,11 @@ def compile_deferred_partitions(
                     fields=(
                         tuple(SourceFields.model_fields)
                         if source_id in split_ids
-                        or any(
-                            entry.expected_fields
-                            or entry.expected_evidence_sha256 is not None
-                            for _, entry in scoped_entries
-                        )
+                        or any(entry.guarded for _, entry in scoped_entries)
                         else ("column_name",)
                     ),
                     parents=source_id in split_ids
-                    or any(
-                        entry.expected_fields
-                        or entry.expected_evidence_sha256 is not None
-                        for _, entry in scoped_entries
-                    ),
+                    or any(entry.guarded for _, entry in scoped_entries),
                 )
                 guard = PeerGuard(
                     guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -5345,7 +5339,7 @@ def compile_coding_register(
                         )
                     )
                     if (
-                        tuple(authority.records) != expected
+                        record_projections_sha256(expected) != authority.records_sha256
                         or (
                             source_scope is not None
                             and authority.period_block is None
@@ -5398,7 +5392,7 @@ def compile_coding_register(
                         # scope) kept as authored.
                         current = authority.model_copy(
                             update={
-                                "records": list(expected),
+                                "records_sha256": record_projections_sha256(expected),
                                 "codings": list(copied_coding_fingerprints(claims)),
                                 "raw_codings": None
                                 if authority.raw_codings is None
@@ -5489,7 +5483,10 @@ def compile_coding_register(
                     )
                     and entry.source_authority is not None
                 ):
-                    targets = tuple(entry.source_authority.records)
+                    # Its digest matched these, the column's complete originals.
+                    targets = pinned_expectations(
+                        column, witness_keys, tuple(SourceFields.model_fields), True
+                    )
                 elif compact:
                     targets = compact_evidence[evidence_key][3]
                 # Each guard expects exactly the rows the effective-column index

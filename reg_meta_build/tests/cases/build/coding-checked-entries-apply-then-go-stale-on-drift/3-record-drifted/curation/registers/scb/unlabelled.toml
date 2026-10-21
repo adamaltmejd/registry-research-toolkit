@@ -17,6 +17,6 @@ periods = [["2020-01-01", "2020-12-31"]]
 list = ""
 list_members = [["1", "Label"]]
 witness = ["2021-01-01", "2021-12-31"]
-source_authority = { records = {{expected_records key=member:1400,member:1401}}, codings = {{source_codings key=member:1400,member:1401}}, raw_codings = {{raw_codings key=member:1400,member:1401}} }
+source_authority = { records_sha256 = {{record_projections_sha256 key=member:1400,member:1401}}, codings = {{source_codings key=member:1400,member:1401}}, raw_codings = {{raw_codings key=member:1400,member:1401}} }
 reason = "Reviewed coding"
 source = "fixture"

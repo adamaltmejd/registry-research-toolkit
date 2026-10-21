@@ -18,4 +18,4 @@ members = [["1", "Less than 500"], ["2", "At least 500"]]
 version_label = "Exact enumerated source"
 reason = "Reviewed enumeration"
 source = "fixture"
-source_authority = { records = {{expected_records source=scb-registerinformation}}, codings = [], enumeration = { field = "definition", syntax = "ascii-decimal-dot-space", lines = ["1. Less than 500", "2. At least 500"] }, marker_bindings = {{marker_bindings source=scb-registerinformation key=member:1001 from=2020-01-01 to=2020-12-31}} }
+source_authority = { records_sha256 = {{record_projections_sha256 source=scb-registerinformation}}, codings = [], enumeration = { field = "definition", syntax = "ascii-decimal-dot-space", lines = ["1. Less than 500", "2. At least 500"] }, marker_bindings = {{marker_bindings source=scb-registerinformation key=member:1001 from=2020-01-01 to=2020-12-31}} }
