@@ -108,10 +108,15 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
                     "partition": row["partition"],
                     "projection": row["projection_of"]
                     and {"of": row["projection_of"], "token": row["projection"]},
+                    "period_column": row["period_column"]
+                    and {
+                        "name": row["period_column"],
+                        "encoding": row["period_encoding"],
+                    },
                     "retain_unknown_reason": row["retain_unknown_reason"],
                 }
                 for row in conn.execute(
-                    "SELECT physical_id, scope, edition_json, partition, projection_of, projection, retain_unknown_reason FROM holding_table ORDER BY physical_id"
+                    "SELECT physical_id, scope, edition_json, partition, projection_of, projection, period_column, period_encoding, retain_unknown_reason FROM holding_table ORDER BY physical_id"
                 )
             ],
             "periods": [

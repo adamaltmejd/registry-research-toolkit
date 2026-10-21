@@ -6,6 +6,7 @@
       "edition": 2018,
       "partition": "north",
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     },
     {
@@ -14,6 +15,7 @@
       "edition": 2018,
       "partition": "south",
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     }
   ],

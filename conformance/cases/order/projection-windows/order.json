@@ -70,8 +70,8 @@
   ],
   "provenance": {
     "artifact_kind": "steward",
-    "catalog_generation_id": "4553aede1d3772431dae7e188a1af17865b460e2d26dbc2c1a7820c6e99ccb8f",
-    "catalog_schema_version": "12.0.0",
+    "catalog_generation_id": "4de3a4b5b431e3031e60032c02f24a9e220f7e8f9c7a2797288cf9b09dd411d1",
+    "catalog_schema_version": "12.1.0",
     "mode": "steward_holdings",
     "project_hash": "a49aa7b104381221bbcc2e87394c2a6715009a659404e0489b9fd1342d470f09",
     "project_name": "Reader case",
