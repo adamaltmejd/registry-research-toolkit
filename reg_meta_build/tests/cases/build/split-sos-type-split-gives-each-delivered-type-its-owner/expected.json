@@ -11,8 +11,8 @@
       "where": {"register": "par"},
       "fields": ["variable", "variant", "column", "data_type", "name"],
       "rows": [
-        ["atc", "par-ov", "ATC", "integer", "ATC"],
-        ["atc-1", "par-ov", "ATC", "text", "ATC"]
+        ["atc", "par-ov", "ATC", "integer", "ATC (ATC, 2001–2010)"],
+        ["atc-1", "par-ov", "ATC", "text", "ATC (ATC, 2011–2020)"]
       ]
     },
     {

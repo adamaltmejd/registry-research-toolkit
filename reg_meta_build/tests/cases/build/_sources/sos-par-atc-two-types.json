@@ -1,5 +1,5 @@
 {
-  "description": "A PAR_OV ATC row typed Heltal and one typed text, under one source record key.",
+  "description": "A PAR_OV ATC row typed Heltal (2001-2010) and one typed text (2011-2020), under one source record key.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
@@ -26,9 +26,9 @@
           "label": "ATC",
           "data_type": "Heltal",
           "data_from": 2001,
-          "data_to": 2020
+          "data_to": 2010
         },
-        {"name": "ATC", "deldatamangd": "PAR_OV", "label": "ATC", "data_from": 2001, "data_to": 2020}
+        {"name": "ATC", "deldatamangd": "PAR_OV", "label": "ATC", "data_from": 2011, "data_to": 2020}
       ]
     }
   ]
