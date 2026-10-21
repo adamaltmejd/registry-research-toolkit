@@ -5,7 +5,7 @@
 # cites it by this SHA256.
 
 [[register.lisa.document]]
-title = "Innovationsverksamhet i Sverige 2016 (CIS)"
+title = "Example survey questionnaire"
 filename = "cis2016.pdf"
 source_url = "https://www.scb.se/cis2016.pdf"
 license = "CC BY 4.0"

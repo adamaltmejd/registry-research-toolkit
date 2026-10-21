@@ -23,7 +23,11 @@ import {
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
-import { matrixAnswerSource, pagesLabel } from "./curated_source";
+import {
+  matrixAnswerSource,
+  pagesLabel,
+  provenanceBlocks,
+} from "./curated_source";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
@@ -272,10 +276,15 @@ type Correction = {
 };
 
 function correctionsFromState(state: VariableStateModel): Correction[] {
-  const provenance = state.provenance;
-  if (!provenance?.startsWith("errata:")) {
-    return [];
-  }
+  return provenanceBlocks(state.provenance)
+    .filter((block) => block.startsWith("errata:"))
+    .flatMap((block) => correctionsFromBlock(state, block));
+}
+
+function correctionsFromBlock(
+  state: VariableStateModel,
+  provenance: string,
+): Correction[] {
   // The class line may stand alone: the catalog publishes only source locators
   // after it, never curator evidence (#1708).
   const separator = provenance.indexOf("\n");

@@ -251,9 +251,12 @@ the provider's own: an ordinary provider-documented interval, including one a cu
 entry only routed (to a variable, variant or edition), since routing claims no fact.
 Otherwise it names who curated a fact: an `errata:<class>` or `curated:<kind>` head
 followed by the entry's source locators and storage-type facts, a steward row, or
-`inferred:resolution-gap`. It never carries curator evidence, rationale or a curation
-case pointer, which stay in the build report (#1708). It stays at state grain so one
-corrected edition never relabels a neighboring window.
+`inferred:resolution-gap`; several blocks join, sorted, with a blank line. The SPA
+parses the `curated:matrix-answer` block's `Document:`, `SHA256:` and `Pages:` lines
+(`reg_webapp/frontend/src/lib/curated_source.ts`), so changing that shape is a contract
+change. It never carries curator evidence, rationale or a curation case pointer, which
+stay in the build report (#1708). It stays at state grain so one corrected edition never
+relabels a neighboring window.
 
 A state is as long as its facts allow (#1296 2d). Resolution cuts a column wherever the
 set of active source editions or code lists changes, and the builder then merges a run

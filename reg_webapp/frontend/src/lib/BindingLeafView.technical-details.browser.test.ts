@@ -120,7 +120,9 @@ describe("BindingLeafView representation picker (#678)", () => {
           delivery_column_name: "Kon",
           valid_from: "2020-01-01",
           valid_to: "2020-12-31",
-          provenance: `errata:omitted-column-in-version\n${evidence}`,
+          // A curated block sorts before the errata block, as the builder joins
+          // a state's blocks; fails if the whole provenance is read as one block.
+          provenance: `curated:coding.choice\n\nerrata:omitted-column-in-version\n${evidence}`,
         }),
       ]),
       regMetaVersion: SEED.regMetaVersion,

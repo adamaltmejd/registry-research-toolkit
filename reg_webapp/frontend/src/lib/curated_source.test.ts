@@ -2,19 +2,24 @@ import { describe, expect, it } from "vitest";
 import { matrixAnswerSource, pagesLabel } from "./curated_source";
 
 // The input is the string reg_meta_build's `cis2016_matrix.py` publishes for an
-// answer joining two source columns. Fails if the SPA's reading of that grammar
-// drifts from the builder's (a line renamed, the page list split differently).
+// answer joining two source columns, joined after another block that sorts before
+// it, as the builder joins a state's blocks. Fails if the SPA's reading of that
+// grammar drifts from the builder's (a line renamed, the page list split
+// differently, the whole provenance read as one block).
 const SHA = "90140a04b0e3e592a0f9b6814aa09005ed655441336747cec5f1cfbe3fc7b0d7";
 
 describe("matrixAnswerSource", () => {
   it("reads the document, digest and per-column pages of a matrix answer", () => {
     const source = matrixAnswerSource(
       [
-        "curated:matrix-answer",
-        "Document: https://www.scb.se/cis2016.pdf",
-        `SHA256: ${SHA}`,
-        "Pages: SAMARB_A=14, SAMARB_B=12",
-      ].join("\n"),
+        "curated:coding.choice",
+        [
+          "curated:matrix-answer",
+          "Document: https://www.scb.se/cis2016.pdf",
+          `SHA256: ${SHA}`,
+          "Pages: SAMARB_A=14, SAMARB_B=12",
+        ].join("\n"),
+      ].join("\n\n"),
     );
     expect(source).toEqual({
       documentUrl: "https://www.scb.se/cis2016.pdf",

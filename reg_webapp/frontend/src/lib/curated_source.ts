@@ -7,8 +7,10 @@
 //   SHA256: 90140a04…
 //   Pages: INNO_A=12, INNO_B=13
 //
-// The reader serves the string as is, so the SPA parses it here. Anything else,
-// or a malformed locator line, is not a matrix answer: `null`.
+// A state's provenance joins its sorted blocks with a blank line (no block holds
+// one), so the matrix answer may sit beside e.g. a `curated:coding.choice` block.
+// The reader serves the string as is, so the SPA parses it here. No matrix-answer
+// block, or a malformed one, is not a matrix answer: `null`.
 
 export type MatrixAnswerSource = {
   documentUrl: string;
@@ -19,11 +21,21 @@ export type MatrixAnswerSource = {
 
 const HEAD = "curated:matrix-answer";
 
+/** A state's provenance blocks, each a head line plus its locator lines. */
+export function provenanceBlocks(
+  provenance: string | null | undefined,
+): string[] {
+  return provenance ? provenance.split("\n\n") : [];
+}
+
 export function matrixAnswerSource(
   provenance: string | null | undefined,
 ): MatrixAnswerSource | null {
-  const lines = provenance?.split("\n") ?? [];
-  if (lines.length !== 4 || lines[0] !== HEAD) {
+  const lines =
+    provenanceBlocks(provenance)
+      .map((block) => block.split("\n"))
+      .find((blockLines) => blockLines[0] === HEAD) ?? [];
+  if (lines.length !== 4) {
     return null;
   }
   const [, document, digest, pageLine] = lines;
