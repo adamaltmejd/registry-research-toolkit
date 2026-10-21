@@ -267,9 +267,9 @@ pure role remaps.
   pane, inputs, chips, dialogs), `surface-sunken` the selected item in a browse column
   and inset wells, `surface-hover` every hover.
 - **Ink (`text`, `text-muted`, `text-faint`):** `text` for everything read; `text-muted`
-  for labels, descriptions and unselected list items (6.4:1 on white); `text-faint` only
-  for things that may recede — hints, brand subtitles, out-of-window chips — never for
-  text that must be read (3.2:1).
+  for labels, descriptions, the brand subtitle and unselected list items (6.4:1 on
+  white); `text-faint` only for things that may recede — hints, out-of-window chips —
+  never for text that must be read (3.2:1, below WCAG AA for text).
 - **Rules:** `border` is the hairline between rows and columns. `border-strong` is an
   ink hairline and means structure: the rule above a section, a default button's border,
   a column chip's stroke, the axis of a graph.
@@ -329,7 +329,7 @@ ship the latin and latin-ext subsets.
 The target shell is a top bar and three browse columns, not a rail. The current
 `AppShell` rail is a stepping stone (see Components) until it is replaced.
 
-- **Top bar:** brand (name in `h3`, product line in `mono` `text-faint` under it), one
+- **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it), one
   search bar (the command bar, `Meta/Ctrl+K`, shown as `⌘K` on macOS), and the
   `ProjectBanner` at the right. There are no "Search" or "Project" nav items; the bar
   and the banner are those.
