@@ -27,7 +27,6 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked, record_ref
 from reg_meta_build.source_intervals import occurrence_bounds, occurrence_pooled
-from reg_meta_build.source_occurrences import published_provenance
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
@@ -552,16 +551,14 @@ def apply_classification_cases(
             continue
         literal_column = decision.column_key[-1]
         assert isinstance(literal_column, str)
-        # A certificate keeps its string shape; empty when the decision cites no
-        # source locator (#1708).
-        provenance = published_provenance(decision.provenance, case.case_id) or ""
+        provenance = decision.published
         selected[decision.column_key].append(
             _Binding(
                 decision.valid_from,
                 decision.valid_to,
                 decision.classification,
                 tuple(t.ref for t in (*case.targets, *case.support)),
-                (provenance,) if provenance else (),
+                (provenance,),
                 inline_only=True,
                 sentinel_members=decision.sentinel_members,
                 sentinel_certificate=ResolvedScopedSentinels(

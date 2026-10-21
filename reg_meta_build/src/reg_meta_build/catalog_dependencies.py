@@ -623,19 +623,10 @@ def check_delivery_coverage(
                         f"claimed {field}={claim[1]!r} written {getattr(state, field)!r}"
                     )
             if claimed_attributions:
-                # The state joins its elements with a blank line, which curated
-                # free text may also contain (#1680): match each claimed element
-                # whole between separators rather than splitting the join.
-                # simplify: a claim equal to a blank-line-delimited run of the
-                # written text, across or inside elements, matches too; carry the
-                # elements as a tuple on the state if a claim can ever take that
-                # shape.
-                written = f"\n\n{state.provenance or ''}\n\n"
-                missing = [
-                    item
-                    for item in claimed_attributions
-                    if f"\n\n{item}\n\n" not in written
-                ]
+                # The state joins its elements with a blank line; no published
+                # element contains one (#1708).
+                written = set((state.provenance or "").split("\n\n"))
+                missing = [item for item in claimed_attributions if item not in written]
                 if missing:
                     ob_facts.append(
                         f"{obligation.fqid} {obligation.variant}/{obligation.column} "

@@ -25,7 +25,7 @@
       "where": {"register": "syx", "variable": "datum", "variant": "syx-a"},
       "fields": ["data_type", "provenance"],
       "rows": [
-        ["date", null]
+        ["date", "errata:data_type"]
       ]
     },
     {

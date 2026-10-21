@@ -238,8 +238,8 @@ def _pooled_merge_key(
     Provenance is compared as the text formation writes onto the state
     (`_state_from_segment`), so a cut a published correction reached never
     merges with one it did not: the merged state would attribute the
-    correction to the whole hull. A correction that publishes nothing (#1708)
-    leaves only its facts to compare."""
+    correction to the whole hull. A routing correction publishes nothing (#1708)
+    and leaves only its facts to compare."""
     return (
         tuple(getattr(segment.fields, name) for name in _POOLED_MERGE_FIELDS),
         frozenset(
