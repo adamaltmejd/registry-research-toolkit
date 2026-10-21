@@ -8,6 +8,7 @@ import type {
   ValuesPage,
   VariableStateModel,
 } from "./api";
+import { variableState } from "./api-test-helpers";
 
 /** The variable the fixtures' states belong to: the ref their codes are read by. */
 export const FQID = "scb/lisa/kommun";
@@ -61,38 +62,11 @@ export function coding(
 
 // Minimal VariableStateModel — only the fields ValueSetView reads.
 export function state(over: Partial<VariableStateModel>): VariableStateModel {
-  const built: VariableStateModel = {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
-    variant: "v",
-    variant_label: null,
-    variant_family: null,
-    variant_family_label: null,
-    register_variant_id: "1",
+  const built = variableState({
     valid_from: "2000-01-01",
     valid_to: "2000-12-31",
-    coding_window_from: null,
-    name: null,
-    definition: null,
-    description: null,
-    operational_definition: null,
-    measurement_unit: null,
-    data_type: null,
-    data_length: null,
-    delivery_column_name: null,
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
-    value_set_id: null,
-    value_set: null,
-    value_set_summary: null,
-    is_identifier: false,
-    classifications: [],
-    period_token: null,
     ...over,
-  };
+  });
   if (built.value_set_id != null) {
     STATE_VALUE_SETS.set(built.state_id, built.value_set_id);
   }

@@ -2,12 +2,9 @@ import type { ComponentProps } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
+import { registerShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
-import {
-  delivery,
-  registerShow,
-  variableChild,
-} from "./catalog-node-view-test-helpers";
+import { delivery, variableChild } from "./catalog-node-view-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
 import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
 import type { RawDraft } from "./project_data";

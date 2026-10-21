@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ShowNode, VariableShow, VariableStateModel } from "./api";
+import type { RegisterShow, VariableShow, VariableStateModel } from "./api";
 import {
   getDocsForVariable,
   getGraph,
@@ -10,8 +10,10 @@ import {
   getShow,
   getStates,
 } from "./api";
+import { registerShow } from "./api-test-helpers";
 import BindingLeafView from "./BindingLeafView.svelte";
 import { resetCatalogNames } from "./catalog_names.svelte";
+import { delivery, variableChild } from "./catalog-node-view-test-helpers";
 import { state as baseState } from "./catalog-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
 import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
@@ -76,35 +78,22 @@ function leaf(): VariableShow {
   };
 }
 
-/** A register's `show` listing one variable delivered under `variant` from
- * `from` to `to` (in `Col`) — the read the overlap plan works from. */
-function registerShow(
+/** A register's `show` listing `variable` delivered under `variant` from `from` to
+ * `to` (null: still delivered) in `Col` — the read the overlap plan works from. */
+function deliveringRegister(
   fqid: string,
   variable: string,
   variant: string,
   from: string,
-  to: string,
-): ShowNode {
-  return {
-    kind: "register",
+  to: string | null,
+): RegisterShow {
+  return registerShow({
     fqid,
-    children: [
-      {
-        fqid: variable,
-        deliveries: [
-          {
-            column: "Col",
-            variant,
-            period_scope: "intervals",
-            windows: [{ valid_from: from, valid_to: to }],
-          },
-        ],
-      },
-    ],
-    groups: [],
-    tags: [],
     variants: [],
-  } as unknown as ShowNode;
+    children: [
+      variableChild(variable, variable, [delivery(variant, "Col", [from, to])]),
+    ],
+  });
 }
 
 /** `Kon` delivered in two eras with a gap: 2005–2008, then 2012–2020. */
@@ -360,12 +349,12 @@ describe("common study window — project page", () => {
     // (package C: `getShow`, variable children without a `kind`).
     vi.mocked(getShow).mockImplementation(async (ref) => {
       if (ref === "scb/lisa") {
-        return registerShow(
+        return deliveringRegister(
           "scb/lisa",
           "scb/lisa/kon",
           "individer",
           "2000-01-01",
-          "9999-12-31",
+          null,
         );
       }
       throw new Error("offline");
@@ -406,16 +395,16 @@ describe("common study window — project page", () => {
     // (package C: `getShow`, variable children without a `kind`).
     vi.mocked(getShow).mockImplementation(async (ref) => {
       if (ref === "scb/lisa") {
-        return registerShow(
+        return deliveringRegister(
           "scb/lisa",
           "scb/lisa/kon",
           "individer",
           "2000-01-01",
-          "9999-12-31",
+          null,
         );
       }
       if (ref === "scb/rtb") {
-        return registerShow(
+        return deliveringRegister(
           "scb/rtb",
           "scb/rtb/kommun",
           "befolkning",

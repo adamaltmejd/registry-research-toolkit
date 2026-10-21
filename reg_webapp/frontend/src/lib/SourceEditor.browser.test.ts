@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { getShow, getStates } from "./api";
+import { rootShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -8,10 +9,9 @@ import { storedProject } from "./project-store-test-helpers";
 import {
   providerShow,
   registerChild,
-  registerShow,
   renderCard,
-  rootShow,
   stubCatalog,
+  variantsRegister,
 } from "./source-editor-test-helpers";
 
 // #991/#993: SourceEditor is the cart source card — it DISPLAYS the register it
@@ -148,7 +148,10 @@ describe("SourceEditor cart card", () => {
     // `_default` is the whole-register default, not a population anyone picked.
     stubCatalog({
       fk: providerShow("fk", registerChild("fk/midas", "MiDAS")),
-      "fk/midas": registerShow("fk/midas", { slug: "_default", name: null }),
+      "fk/midas": variantsRegister("fk/midas", {
+        slug: "_default",
+        name: null,
+      }),
     });
     const source = {
       name: "MIDAS",

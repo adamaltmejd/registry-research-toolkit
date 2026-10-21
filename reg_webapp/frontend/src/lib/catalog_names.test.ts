@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RootShow, ShowNode } from "./api";
+import type { ShowNode } from "./api";
 import { getShow } from "./api";
+import { rootShow } from "./api-test-helpers";
 import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";
 
 // Y-80: the cart holds coordinates, so the words come from the catalog. These
@@ -15,18 +16,6 @@ vi.mock("./api", async (importOriginal) => {
 });
 
 const COORDINATE = "scb/lisa/individer-16plus";
-
-/** The catalog root as a deployment serving exactly these providers. */
-function rootShow(...providers: { fqid: string; name: string }[]): RootShow {
-  return {
-    kind: "root",
-    children: providers.map(({ fqid, name }) => ({
-      kind: "provider" as const,
-      fqid,
-      name,
-    })),
-  } as unknown as RootShow;
-}
 
 /** `show` for the root, the `scb` provider (which names every register it owns)
  * and the `scb/lisa` register (which carries its variants). */

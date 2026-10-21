@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import AppShell from "./AppShell.svelte";
-import type { RootShow } from "./api";
 import { getShow } from "./api";
+import { rootShow } from "./api-test-helpers";
 import { DATA_BROWSER_LABEL } from "./catalog";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { projectStore } from "./project_store.svelte";
@@ -17,24 +17,6 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return { ...actual, getShow: vi.fn() };
 });
-
-/** A catalog root whose children are providers — the contextual facet list the
- * shell renders in its `aria-label="Providers"` nav. */
-function rootShow(...providers: string[]): RootShow {
-  return {
-    kind: "root",
-    catalog: {
-      id: "global",
-      reg_meta_version: "0.0.0",
-      project_schema_version: "3.0.0",
-    },
-    children: providers.map((fqid) => ({
-      kind: "provider" as const,
-      fqid,
-      name: fqid,
-    })),
-  };
-}
 
 /** The routed content the shell wraps — App passes its `<main>` switch in as the
  * `children` snippet. */
@@ -71,7 +53,9 @@ beforeEach(() => {
   // a case that stubs a different answer must not be served the previous one.
   resetCatalogNames();
   vi.mocked(getShow).mockReset();
-  vi.mocked(getShow).mockResolvedValue(rootShow("scb", "sos"));
+  vi.mocked(getShow).mockResolvedValue(
+    rootShow({ fqid: "scb", name: "scb" }, { fqid: "sos", name: "sos" }),
+  );
 });
 
 afterEach(() => {
