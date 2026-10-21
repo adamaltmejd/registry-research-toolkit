@@ -123,10 +123,10 @@ def apply_alias_cases(
             if isinstance(decision, AliasWindowDecision)
             else "search_alias"
         )
-        bounds = (
-            {"valid_from": decision.valid_from, "valid_to": decision.valid_to}
+        valid_from, valid_to = (
+            (decision.valid_from, decision.valid_to)
             if isinstance(decision, AliasWindowDecision)
-            else {}
+            else (None, None)
         )
         for issue in evaluation.issues:
             diagnostics.append(
@@ -141,7 +141,8 @@ def apply_alias_cases(
                         expected.ref for expected in (*case.targets, *case.support)
                     ),
                     withheld_output=(output,),
-                    **bounds,
+                    valid_from=valid_from,
+                    valid_to=valid_to,
                 )
             )
         if evaluation.status == "stale":
@@ -182,7 +183,8 @@ def apply_alias_cases(
                         refs=tuple(target.ref for target in case.targets),
                         fields=("alias",),
                         withheld_output=(output,),
-                        **bounds,
+                        valid_from=valid_from,
+                        valid_to=valid_to,
                     )
                 )
                 continue

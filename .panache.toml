@@ -15,6 +15,12 @@ extend-exclude = [
   ".agents/skills/yard-operator/SKILL.md",
 ]
 
+[lint]
+# space-before-punctuation (panache 3.17) fires only on the generated LISA docs, where
+# "år[^5] ." is the PDF's own text after marker's footnote extraction; stripping the
+# space would edit SCB's wording, so the rule is off rather than the output patched.
+ignore = ["space-before-punctuation"]
+
 [extensions]
 # gfm enables bare-URI autolinking, which misfires on `word:` inside emphasis
 # (reads it as a `scheme:` URI and rewrites valid text into a broken link).

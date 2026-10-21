@@ -43,7 +43,7 @@ from .source_evidence import SourceRevision
 from .source_files import _file_sha256
 
 if TYPE_CHECKING:
-    from collections.abc import Collection, Iterator, Mapping, Sequence
+    from collections.abc import Collection, Generator, Iterator, Mapping, Sequence
     from typing import IO
 
 SNAPSHOT_SCHEMA_VERSION = 1
@@ -897,7 +897,7 @@ def _iter_tsv(
 @contextmanager
 def open_lossless_csv(
     path: Path,
-) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+) -> Generator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
     """Yield exact latin-1-pass-through fields from an SCB-style CSV.
 
     Python 3.14's ``QUOTE_NOTNULL`` is load-bearing: it reads an unquoted empty
@@ -1537,7 +1537,7 @@ def _logical_hashes(
 @contextmanager
 def _open_snapshot_rows(
     root: Path, item: SnapshotFile
-) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+) -> Generator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
     """Open one normalized CSV and validate its bytes and logical stream at EOF."""
     dictionaries = _load_groups(root, item, exhaustive=True)
     header = [_decode_cell(cell) for cell in item.header]
@@ -1573,7 +1573,7 @@ def _open_snapshot_rows(
 @contextmanager
 def _open_prepared_rows(
     root: Path, item: SnapshotFile
-) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+) -> Generator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
     """Open accepted rows with structural checks but no exhaustive re-hashing."""
     dictionaries = _load_groups(root, item, exhaustive=False)
     header = [_decode_cell(cell) for cell in item.header]
@@ -1698,7 +1698,7 @@ class ScbSnapshotReader:
     @contextmanager
     def open_csv(
         self, name: str
-    ) -> Iterator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
+    ) -> Generator[tuple[list[RawCell], Iterator[list[RawCell]]]]:
         item = self._files.get(name)
         if item is None or not item.present:
             raise SnapshotError(f"snapshot source file is absent: {name}")

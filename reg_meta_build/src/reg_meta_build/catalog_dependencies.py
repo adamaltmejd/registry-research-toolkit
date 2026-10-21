@@ -54,7 +54,13 @@ from reg_meta_build.source_curation import ResolutionDiagnostic
 from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
+    from collections.abc import (
+        Callable,
+        Collection,
+        Generator,
+        Iterable,
+        Mapping,
+    )
 
     from reg_meta_build.concept_groups import CodeLabelPair
     from reg_meta_build.source_curation import SourceRecordRef
@@ -779,7 +785,7 @@ class CatalogDependencies:
             raise CatalogDependencyError(tuple(self.missing))
 
     @contextmanager
-    def entry(self) -> Iterator[int]:
+    def entry(self) -> Generator[int]:
         """Evaluate one curation entry. In a register-scoped build, one whose every
         register reference lies outside the slice is skipped: what its references
         resolved to is discarded, it emits nothing and counts as skipped. One with

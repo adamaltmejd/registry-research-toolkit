@@ -37,7 +37,7 @@ from reg_meta_build.source_values import SourceValueWindow, exact_sheet_pointer
 from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Generator, Iterable, Iterator
 
     from reg_meta_build.prepared_values import (
         PreparedSourceValues,
@@ -720,7 +720,7 @@ def clear_binding_caches(sessions: Iterable[ValueBindingSession]) -> None:
 @contextmanager
 def open_value_bindings(
     sources: Iterable[PreparedSourceValues],
-) -> Iterator[tuple[ValueBindingSession, ...]]:
+) -> Generator[tuple[ValueBindingSession, ...]]:
     with ExitStack() as stack:
         yield tuple(
             ValueBindingSession(stack.enter_context(source.session()))

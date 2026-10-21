@@ -54,7 +54,7 @@ from .source_evidence import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator
+    from collections.abc import Callable, Collection, Generator, Iterable, Iterator
 
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_support import SourceSupportJoin
@@ -686,7 +686,7 @@ def _payload_reader(
 @contextmanager
 def _decoded_database(
     root: Path, manifest: PreparedSourceManifest, cache: dict[tuple[int, str], Any]
-) -> Iterator[tuple[sqlite3.Connection, Callable[[int, str], Any]]]:
+) -> Generator[tuple[sqlite3.Connection, Callable[[int, str], Any]]]:
     try:
         with closing(_readonly(root / manifest.database_path)) as conn:
             conn.row_factory = sqlite3.Row

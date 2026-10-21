@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Generator, Iterable
 
 _REPO = Path(__file__).resolve().parents[1]
 # The sources `reg-core-py` is built from, read from its uv `cache-keys`: `uv run`
@@ -106,7 +106,7 @@ def file_sha256(path: Path) -> str:
 
 
 @contextmanager
-def staged(entry: Path) -> Iterator[Path]:
+def staged(entry: Path) -> Generator[Path]:
     """Yield a private staging directory beside `entry`; rename it to `entry` when
     the block completes.
 

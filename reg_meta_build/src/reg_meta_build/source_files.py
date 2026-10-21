@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
+    from collections.abc import Generator, Iterator, Sequence
     from pathlib import Path
 
     from .input_snapshot import ScbSnapshotReader
@@ -157,7 +157,7 @@ def _file_sha256(path: Path) -> str:
 @contextmanager
 def _open_scb_source_raw(
     path: Path, snapshot: ScbSnapshotReader
-) -> Iterator[tuple[list[str], Iterator[list[str | None]]]]:
+) -> Generator[tuple[list[str], Iterator[list[str | None]]]]:
     from .input_snapshot import SnapshotError
 
     try:
@@ -173,7 +173,7 @@ def _open_scb_source_raw(
 def _open_scb_csv_rows(
     path: Path,
     snapshot: ScbSnapshotReader,
-) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str | None]]]]]:
+) -> Generator[tuple[list[str], Iterator[tuple[int, list[str | None]]]]]:
     """Share SCB header and row-width validation before cell interpretation."""
     with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
         header = _validated_scb_header(path.name, raw_header)
@@ -213,7 +213,7 @@ def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]
 def _open_scb_csv_prepared(
     path: Path,
     snapshot: ScbSnapshotReader,
-) -> Iterator[
+) -> Generator[
     tuple[list[str], Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]]
 ]:
     """Yield lossless prepared cells through the normal SCB validation traversal.
