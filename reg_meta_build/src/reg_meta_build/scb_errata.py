@@ -464,6 +464,19 @@ def resolve_scb_errata(
                 "Use an existing classification short_name (e.g. 'SSYK96') "
                 "or declare it in reg_meta_build/curation/classifications/.",
             )
+        if classification is not None and placement == (None, None):
+            # An undated addition has no period to bind a classification over, so
+            # it could only raise unsupported_classification_scope, and that issue
+            # would cite the anchor record and land on its native variable (#1630).
+            raise curation_error(
+                _CODE,
+                f"scb_errata {ctx} declares classification {classification!r} "
+                "on an undated column (`all_versions = true`); an undated column "
+                "has no period for the classification to bind over.",
+                "Name the editions it applies to (`versions = [...]`) or date "
+                'the holding (`holdings_period = "2002-2020"`), or drop the '
+                "classification.",
+            )
         loaded = ErrataColumn(
             register_id=register_id,
             register_variant_id=variant_id,

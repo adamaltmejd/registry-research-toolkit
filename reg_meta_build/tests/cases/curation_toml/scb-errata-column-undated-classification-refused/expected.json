@@ -1,0 +1,15 @@
+{
+  "loader": "scb_errata",
+  "fails_if": "resolve_scb_errata loads a classification on an undated [[errata.column]] (all_versions = true), whose binding has no period and so can only raise unsupported_classification_scope, published on the native variable that delivers the addition's anchor record (#1630)",
+  "note": "A classified column with named `versions` loads (scb-errata-column-optional-identity-and-pii-flags-load). An undated column may still be added without a classification.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus/Ssyk4_J16",
+    "message_contains": [
+      "undated column"
+    ],
+    "remediation_contains": [
+      "holdings_period"
+    ]
+  }
+}

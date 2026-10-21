@@ -1029,6 +1029,26 @@ def resolve_source_scope(
             decision.valid_from,
             decision.valid_to,
         )
+        named = (
+            *matched,
+            *(
+                issue
+                for issue, source_register in unheld[identity]
+                if scope_owns(issue, source_register, decision)
+            ),
+        )
+        if not evidence_matches:
+            reason = "has changed original or coding evidence."
+        elif (
+            not distinct
+            and decision.expected_diagnostic_sha256 is not None
+            and len(dict.fromkeys(named)) == 1
+        ):
+            reason = "names one issue whose diagnostic digest differs."
+        else:
+            reason = (
+                f"matches {len(distinct)} distinct issues; it must name exactly one."
+            )
         record(
             ResolutionDiagnostic(
                 code="overbroad_curation_entry"
@@ -1037,26 +1057,8 @@ def resolve_source_scope(
                 severity="error",
                 case_id=case.case_id,
                 subject=decision.subject,
-                detail=(
-                    f"The acknowledgement of {decision.code!r} has changed original or coding evidence."
-                    if not evidence_matches
-                    else f"The acknowledgement of {decision.code!r} matches {len(distinct)} distinct issues; it must name exactly one."
-                )
-                + (
-                    ""
-                    if overbroad
-                    else current_pins(
-                        current_evidence,
-                        (
-                            *matched,
-                            *(
-                                issue
-                                for issue, source_register in unheld[identity]
-                                if scope_owns(issue, source_register, decision)
-                            ),
-                        ),
-                    )
-                ),
+                detail=f"The acknowledgement of {decision.code!r} {reason}"
+                + ("" if overbroad else current_pins(current_evidence, named)),
                 refs=decision.refs,
                 fields=decision.fields,
                 valid_from=decision.valid_from,
