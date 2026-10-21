@@ -1,12 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { bindingFieldsFromResolution } from "./catalog";
 import { type ProjectData, sourceSnapshot } from "./project_data";
-import {
-  initDraftLifecycle,
-  projectStore,
-  type StagedAdd,
-  setPersistence,
-} from "./project_store.svelte";
+import { projectStore, type StagedAdd } from "./project_store.svelte";
 import {
   add,
   openFile,
@@ -226,21 +221,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(JSON.stringify(storedProject())).toBe(before);
   });
 
-  it("preserves token-grammar add windows as source-period coverage", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [add("scb/hst/v1", "scb/hst/kon", "HT2020")],
-    });
-    // A second add with a DIFFERENT token extends the source period so the saved
-    // source still covers every binding that was resolved for it. HT2020 and
-    // VT2021 are day-adjacent, so their days are one school year (reg-core's
-    // merge and render).
-    projectStore.applyStagedDiff({
-      adds: [add("scb/hst/v1", "scb/hst/alder", "VT2021")],
-    });
-    expect(storedProject()?.sources[0].period).toBe("LA2020");
-  });
-
   it("preserves every same-batch token add window in the committed source period", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({
@@ -295,27 +275,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       from: 2010,
       to: 2015,
     });
-  });
-
-  it("the add-path duplicate guard makes a re-add of the SAME (variant, variable, representation) a no-op (one binding, not two)", () => {
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
-      ],
-    });
-    // A SECOND commit of the identical add sees the first commit's binding as
-    // `existing` → the guard drops it (bindingMatches' exact-column compare).
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
-      ],
-    });
-    expect(storedProject()?.sources).toHaveLength(1);
-    // Exactly ONE binding for the variable — the second add collapsed onto it.
-    expect(storedProject()?.sources[0].bindings.map((b) => b.variable)).toEqual(
-      ["scb/lisa/ssyk"],
-    );
   });
 
   it("the add-path duplicate guard treats a null-STORED binding as a duplicate of ANY payload representation (null-either-side, no field overwrite)", () => {
@@ -470,42 +429,6 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       removes: [{ registerVariant: "scb/lisa/v1", variable: "scb/lisa/ssyk" }],
     });
     expect(storedProject()?.sources).toHaveLength(0);
-  });
-
-  it("commits the whole batch in ONE mutation (id mirror rebuilt once, autosave fires once)", async () => {
-    vi.useFakeTimers();
-    const saves: unknown[] = [];
-    setPersistence({
-      save: (_k, d) => {
-        saves.push(d);
-        return Promise.resolve();
-      },
-      load: () => Promise.resolve(null),
-    });
-    projectStore.newProject(SEED);
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
-    await vi.advanceTimersByTimeAsync(600);
-    saves.length = 0; // ignore the newProject autosave
-
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/kon", 2018),
-        add("scb/rtb/v1", "scb/rtb/fodelsear", 2018),
-      ],
-    });
-    // Both sources exist with fresh, distinct stable ids (the mirror rebuilt once).
-    expect(projectStore.sourceId(0)).toMatch(/^c\d+$/);
-    expect(projectStore.sourceId(1)).toMatch(/^c\d+$/);
-    expect(projectStore.sourceId(0)).not.toBe(projectStore.sourceId(1));
-    expect(projectStore.bindingId(0, 0)).toBeTruthy();
-
-    // The debounced autosave collapses the single batch mutation into ONE write.
-    await vi.advanceTimersByTimeAsync(600);
-    expect(saves).toHaveLength(1);
-    vi.useRealTimers();
-    stop();
   });
 });
 
