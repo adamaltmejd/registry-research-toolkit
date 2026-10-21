@@ -1185,7 +1185,10 @@ partition guard, so the warning annotates only that answer's occurrences, with t
 warning field `definition` as on `[[errata.delivered]]`. Each case's provenance names
 the declaration and only that answer's own evidence (source pages, meaning evidence)
 beside the matrix-level evidence, so editing one answer never changes a sibling's
-warning detail or id; the full declaration is the committed evidence file.
+warning detail or id; the full declaration is the committed evidence file. Waves repeat
+the answer labels and a variable name is unique within a variant (#1736), so an answer's
+name is its `label_en` followed by its wave's period in the ladder's year-range form,
+`(CIS 2002–2004)`.
 
 A steward holding dated at dataset grain (`holdings_period`) converts to exactly one
 pooled-range occurrence over that range (Y-212): the delivery list says the column is

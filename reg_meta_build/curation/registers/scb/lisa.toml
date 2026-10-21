@@ -365,7 +365,7 @@ noted = "2026-06-25"
 [[errata.column]]
 variant = "individer-16plus"
 column = "FortPens_Belopp_MiDAS"
-name = "Förtidspension, ersättningsbelopp"
+name = "Förtidspension, ersättningsbelopp (MiDAS)"
 definition = "Utbetalt belopp under året för förtidspension, i relation till utbetalda dagar med förtidspension. Beloppet avser ersättningsperioden och anges i hundratal kronor."
 data_type = "decimal"
 is_sensitive = false
@@ -404,7 +404,7 @@ noted = "2026-06-25"
 [[errata.column]]
 variant = "individer-16plus"
 column = "SjukBidr_Belopp_MiDAS"
-name = "Sjukbidrag, ersättningsbelopp"
+name = "Sjukbidrag, ersättningsbelopp (MiDAS)"
 definition = "Utbetalt belopp under året för sjukbidrag, i relation till utbetalda dagar med sjukbidrag. Beloppet avser ersättningsperioden och anges i hundratal kronor."
 data_type = "decimal"
 is_sensitive = false

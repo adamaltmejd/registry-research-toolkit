@@ -120,7 +120,7 @@ def test_named_answers_preserve_exact_occurrences_and_pooled_coverage() -> None:
         assert item.fields.name is not None
         assert item.fields.definition is not None
         assert item.fields.name.status == "value"
-        assert item.fields.name.value == answer.label_en
+        assert item.fields.name.value == f"{answer.label_en} (CIS 2014–2016)"
         assert item.fields.definition.value == answer.definition_en
         assert item.edition_scope == original.edition_scope
         assert item.edition_scope.kind == "pooled"

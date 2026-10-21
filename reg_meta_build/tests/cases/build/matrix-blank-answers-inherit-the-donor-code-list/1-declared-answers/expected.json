@@ -10,8 +10,8 @@
       "table": "states",
       "fields": ["variable", "name", "column", "data_type", "valid_from", "valid_to", "pooled"],
       "rows": [
-        ["answer-sweden", "Sweden", "CO11", "decimal", "2012-01-01", "2014-12-31", 1],
-        ["answer-abroad", "Abroad", "CO12", "decimal", "2012-01-01", "2014-12-31", 1]
+        ["answer-sweden", "Sweden (CIS 2012–2014)", "CO11", "decimal", "2012-01-01", "2014-12-31", 1],
+        ["answer-abroad", "Abroad (CIS 2012–2014)", "CO12", "decimal", "2012-01-01", "2014-12-31", 1]
       ]
     },
     {
