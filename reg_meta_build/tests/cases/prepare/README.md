@@ -67,13 +67,13 @@ Every key is optional; a case delivers what its reader reads.
   that one byte, for bytes no text encoding produces.
 - `scb` is an SCB snapshot. Each key names one file and lists its rows: a raw
   pipe-delimited line, or for `registerinformation` the keyword arguments of
-  `_csv_fixtures.var_row` (as in `cases/build/README.md`, "Source spec"). The keys are
-  `registerinformation`, `unika`, `identifierare`, `timeseries`, `vardemangder` and
-  `valid_dates`; a file not named is not delivered, with two exceptions a snapshot
-  requires: `registerinformation` defaults to one member row (`cvid` 1001, `var_id` 101,
-  column `VALUE`), and `vardemangder` without `valid_dates` declares every listed item
-  valid from 2000 to 2030. `replace_bytes` maps a file name to
-  `{placeholder: replacement}`: after writing, each placeholder becomes the latin-1
+  `_registerinformation_rows.var_row` (as in `cases/build/README.md`, "Source spec").
+  The keys are `registerinformation`, `unika`, `identifierare`, `timeseries`,
+  `vardemangder` and `valid_dates`; a file not named is not delivered, with two
+  exceptions a snapshot requires: `registerinformation` defaults to one member row
+  (`cvid` 1001, `var_id` 101, column `VALUE`), and `vardemangder` without `valid_dates`
+  declares every listed item valid from 2000 to 2030. `replace_bytes` maps a file name
+  to `{placeholder: replacement}`: after writing, each placeholder becomes the latin-1
   bytes of its replacement.
 - `variants` names alternative deliveries of the same workbook. Each is a workbook spec
   applied on top of the case's own workbook. `expected.json` `agree` names the result

@@ -17,7 +17,7 @@ from reg_meta_build.resolve_code import resolve_code_sha256
 import reg_meta_build
 
 if TYPE_CHECKING:
-    from _build_case_runner import PreparedCache
+    from _build_case_sources import PreparedCache
 
 # The richest readable source and curation at hand: three registers with editions,
 # classification books and successions, and same-as relations, so the writer gets

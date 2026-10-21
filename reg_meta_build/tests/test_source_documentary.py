@@ -7,7 +7,7 @@ from contextlib import closing
 from types import SimpleNamespace
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
+from _registerinformation_rows import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
 from reg_meta_build.curation_tree import DocumentaryBindingEntry

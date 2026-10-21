@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from _csv_fixtures import commit_fixture, init_fixture_repo
+from _input_repo_fixtures import commit_fixture, init_fixture_repo
 from _prepared_fixtures import accept_prepared
 from _snapshot_fixtures import copied_builder_checkout, git
 from catalog_manifest import synthetic_manifest

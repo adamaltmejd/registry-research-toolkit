@@ -6,14 +6,14 @@ import hashlib
 import json
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import (
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import (
     sparsify_scb_values,
-    var_row,
     write_input_bundle,
-    write_scb_input,
     write_scb_snapshot,
 )
 from _lisa_fixtures import write_lisa_workbook
+from _registerinformation_rows import var_row
 from _source_inspection_fixtures import InterpreterCheckout
 from reg_meta_build.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.input_snapshot import (

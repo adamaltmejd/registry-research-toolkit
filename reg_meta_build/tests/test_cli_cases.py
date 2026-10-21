@@ -30,9 +30,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
-from _build_case_runner import fixture_generation, write_sources
+from _build_case_sources import fixture_generation, write_sources
 from _case_projection import mismatch, unclaimed
-from _csv_fixtures import write_input_bundle
+from _input_repo_fixtures import write_input_bundle
 from _lisa_fixtures import write_lisa_workbook
 from _pipeline_catalog_support import CatalogFixture
 from _source_inspection_fixtures import InterpreterCheckout
@@ -50,7 +50,7 @@ from reg_meta_build.fqid_slugs import load_slug_dir, snapshot_payload
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from _build_case_runner import PreparedCache
+    from _build_case_sources import PreparedCache
 
 CASES = Path(__file__).resolve().parent / "cases" / "cli"
 ARTIFACT = CASES / "_artifact"

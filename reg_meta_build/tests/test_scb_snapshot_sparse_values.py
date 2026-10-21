@@ -13,12 +13,12 @@ import sys
 from pathlib import Path
 
 import pytest
-from _csv_fixtures import (
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import (
     hydrate_scb_values,
     scb_values_role,
     sparsify_scb_values,
     write_input_bundle,
-    write_scb_input,
     write_scb_snapshot,
 )
 from _prepared_fixtures import accept_prepared
