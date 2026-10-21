@@ -10,7 +10,9 @@ import { initDraftLifecycle, setPersistence } from "./project_store.svelte";
  * IndexedDB open on a cold entry), and return the release: the read answers with
  * no saved draft, so the store's own draft stands. The lifecycle stops at the
  * release, and at the end of the test if the case never got there, so a failed
- * case cannot leave the next one waiting on a restore that never settles. */
+ * case cannot leave the next one waiting on a restore that never settles. The
+ * release unstubs EVERY global, so a caller that stubs `fetch` itself must do it
+ * after the release, not before the hold. */
 export function holdRestore(): () => void {
   const { promise, resolve } = Promise.withResolvers<RawDraft | null>();
   setPersistence({ save: () => Promise.resolve(), load: () => promise });
