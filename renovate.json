@@ -1,0 +1,114 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Europe/Stockholm",
+  "dependencyDashboard": true,
+  "automerge": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 6am on monday"
+    ]
+  },
+  "customManagers": [
+    {
+      "description": "uvx tool pins (`uvx --from <pkg>==<ver>`) in the gate, the LISA parser and skills",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^scripts/gate\\.py$/",
+        "/^scripts/parse_lisa_docs\\.py$/",
+        "/^\\.agents/skills/.+/SKILL\\.md$/"
+      ],
+      "matchStrings": [
+        "(?:uvx --from |\"--from\",\\s*\")(?<depName>[A-Za-z0-9][A-Za-z0-9._-]*)==(?<currentValue>[0-9][^\\s\"'`]*)"
+      ],
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "description": "wasm-bindgen CLI in workflows; must equal the crate pin in crates/reg-core-wasm/Cargo.toml",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "tool: wasm-bindgen@(?<currentValue>[0-9][^\\s\"']*)"
+      ],
+      "depNameTemplate": "wasm-bindgen",
+      "datasourceTemplate": "crate"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Nightly: everything the builder does not load (frontend, root dev deps, Actions, Docker, tool pins), none of which changes the built catalog bytes. No minimum release age anywhere (repo policy, mirrors uv `exclude-newer = false` and bunfig `minimumReleaseAge = 0`); this also lifts config:recommended's npm delay.",
+      "matchPackageNames": [
+        "*"
+      ],
+      "groupName": "tools, frontend and CI (nightly)",
+      "schedule": [
+        "before 6am"
+      ],
+      "separateMajorMinor": false,
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Move pyproject floors to the newest release and relock (repo convention), not lock-only.",
+      "matchManagers": [
+        "pep621"
+      ],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Weekly: what the builder loads. reg_meta_build's and reg-core-py's declared deps and every Cargo manifest (reg-core-py is built from crates/).",
+      "matchFileNames": [
+        "reg_meta_build/pyproject.toml",
+        "crates/reg-core-py/pyproject.toml",
+        "Cargo.toml",
+        "crates/*/Cargo.toml"
+      ],
+      "groupName": "builder runtime and Rust (weekly)",
+      "schedule": [
+        "before 6am on monday"
+      ],
+      "separateMajorMinor": false,
+      "prBodyNotes": [
+        "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
+      ]
+    },
+    {
+      "description": "wasm-bindgen: the crate pin and both workflow CLI pins move in one PR (a mismatch fails `gen:wasm`).",
+      "matchDepNames": [
+        "wasm-bindgen"
+      ],
+      "groupName": "builder runtime and Rust (weekly)",
+      "schedule": [
+        "before 6am on monday"
+      ],
+      "separateMajorMinor": false,
+      "prBodyNotes": [
+        "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
+      ]
+    },
+    {
+      "description": "One weekly lock refresh for uv.lock, Cargo.lock and bun.lock (uv.lock carries the builder's closure).",
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
+      "groupName": "builder runtime and Rust (weekly)",
+      "schedule": [
+        "before 6am on monday"
+      ],
+      "prBodyNotes": [
+        "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
+      ]
+    },
+    {
+      "description": "The Python interpreter (.python-version, requires-python) moves with the yard image and the docs: a manual upgrade (upgrade-deps), not a one-file bump.",
+      "matchDepNames": [
+        "python"
+      ],
+      "enabled": false
+    }
+  ]
+}

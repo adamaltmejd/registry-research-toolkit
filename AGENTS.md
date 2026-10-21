@@ -241,6 +241,11 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 - Develop on an isolated branch or worktree. A PR needs green CI and an independent
   review (a fresh agent that did not write the change counts) before it merges.
   Coordinate concurrent work and keep main to a single write path.
-- Dependency maintenance uses [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md),
+- Renovate (`renovate.json`) opens the routine dependency PRs: tools, frontend, CI and
+  dev deps nightly; the builder's runtime deps, Cargo and lockfiles weekly (the next
+  curation real-seed build proves those). `renovate-autofix.yml` lets Sonnet repair a red
+  one.
+- Dependency repair and manual, larger upgrades use
+  [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md),
   releases use [release](.agents/skills/release/SKILL.md), and real-seed verification
   uses [build-db](.agents/skills/build-db/SKILL.md).
