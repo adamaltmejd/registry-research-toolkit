@@ -574,6 +574,9 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "SELECT g.group_key, a.axis, a.ordinal, a.label FROM concept_group_axis a "
         "JOIN concept_group g USING (group_id)"
     ),
+    "group_labels": lambda o: o._sql(
+        "SELECT group_key, label, source FROM concept_group"
+    ),
     "group_members": _group_members,
     "warnings": _warnings,
     "report_warnings": _report_warnings,

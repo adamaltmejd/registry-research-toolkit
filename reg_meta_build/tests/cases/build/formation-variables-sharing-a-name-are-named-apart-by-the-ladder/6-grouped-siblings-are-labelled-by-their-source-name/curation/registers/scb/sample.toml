@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[variable]
+"1.10.fornamn" = "fornamn"
+"1.10.efternamn" = "efternamn"
+"1.11" = "hade-hsl-jan"
+"1.12" = "hade-hsl-feb"
+"1.13" = "hade-hsl-mar"

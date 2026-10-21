@@ -14,6 +14,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
 from itertools import pairwise
+from types import MappingProxyType
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
@@ -135,21 +136,26 @@ def resolve_variable_successions(
     metadata: ResolvedMetadata,
     variables: tuple[ResolvedVariable, ...],
     classifications: tuple[ResolvedClassificationSuccession, ...],
+    ladder_sources: Mapping[str, str],
 ) -> ResolvedMetadata:
     """Add existing classification-derived variable links before writing the DB.
 
     Explicit source/curated edges retain their richer attribution. Validate the
     combined graph so a derived edge cannot close a cycle through those edges.
+    A variable the name ladder renamed streams under the source name it replaced
+    (`ladder_sources`, by FQID): the ladder names classification-edition siblings
+    apart, and the lift must still see them as one family.
     """
     edges = variable_vintage_succession_edges(
         (
             (
-                f"{v.register_ref.provider}/{v.register_ref.slug}",
-                v.name,
+                register,
+                ladder_sources.get(f"{register}/{v.slug}", v.name),
                 v.slug,
                 link.classification,
             )
             for v in variables
+            for register in (f"{v.register_ref.provider}/{v.register_ref.slug}",)
             for domain in (
                 *v.states,
                 *(window for alias in v.aliases for window in alias.windows),
@@ -884,6 +890,7 @@ def resolve_month_groups(
     edge_groups: tuple[ResolvedVariableGroup, ...],
     curated_groups: tuple[ResolvedVariableGroup, ...],
     evidence: Mapping[str, tuple[SourceRecordRef, ...]],
+    ladder_sources: Mapping[str, str] = MappingProxyType({}),
 ) -> MonthGroupResolution:
     """Derive existing month families before writing, retaining collision reports.
 
@@ -907,7 +914,7 @@ def resolve_month_groups(
     validate_metadata_structure(ResolvedMetadata(variable_groups=existing))
     candidates = month_group_candidates(
         (
-            (fqid.rsplit("/", 1)[0], v.slug, v.name)
+            (fqid.rsplit("/", 1)[0], v.slug, ladder_sources.get(fqid, v.name))
             for fqid, v in by_fqid.items()
             if fqid not in claimed
         ),
@@ -990,6 +997,7 @@ def resolve_variable_edge_groups(
     withheld: Mapping[DependencyKey, tuple[ResolutionDiagnostic, ...]],
     unselected: Collection[DependencyKey] = (),
     slice_registers: Collection[str] | None = None,
+    ladder_sources: Mapping[str, str] = MappingProxyType({}),
 ) -> GroupEdgeResolution:
     """Resolve existing code/label and checked same-definition group edges.
 
@@ -1101,7 +1109,7 @@ def resolve_variable_edge_groups(
             ResolvedVariableGroup(
                 register=register,
                 key=key,
-                label=by_fqid[members[0]].name or key,
+                label=ladder_sources.get(members[0], by_fqid[members[0]].name) or key,
                 source="edge",
                 members=tuple(ResolvedGroupVariable(variable=m) for m in members),
             )
