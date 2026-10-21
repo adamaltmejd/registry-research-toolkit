@@ -11,16 +11,34 @@ panel_entity_key = "fastighetsbeteckning"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Bostadsbyggnads- och bygglovsstatistik (BYLBBS)
+"75.26" = "fastighetsbeteckning"
+"75.7900" = "byggnadsar"
+"75.7873.varmkall" = { slug = "varmkall-7873", deprecated = false }
+"75.7873.varmtot" = { slug = "varmtot", deprecated = false }
+"75.145.source-positive" = { slug = "identitet", deprecated = false }
+"75.7998.varmvm3" = { slug = "varmvm3", deprecated = false }
+"75.31" = "forsamling"
+"75.36" = "kommun"
+"75.49" = "lan"
+"75.7748" = "total-elanvandning"
+"75.7865" = "franluftsvarmepump"
+"75.7868" = "utevarmepump"
+"75.7869" = "bergvarmepump"
+"75.7876" = "andel-lokal-garageyta"
+"75.7891" = "elvvarme-inkl-varmvatten"
+"75.8034" = "totalarea"
+"75.34" = "juridisk-form"
+"75.3020" = "avregistreringskod-flerhus"
+"75.7860" = "taxeringsid"
+"75.8162" = "antal-svarande-enheter"
+"75.19579" = "varmeeffekt-luft-luftvarmepump"
+"75.19580" = "varmeeffekt-franluft-vattenvarmepump"
+"75.19581" = "varmeeffekt-berg-jord-sjovarmepump"
 
-[[variable]]
-native_id = "75.26"
-slug = "fastighetsbeteckning"
-
-
-[[variable]]
-native_id = "75.7900"
-slug = "byggnadsar"
+# register 76
+"75.7838.gdakt" = "graddagar"
 
 [[identity.partition]]
 data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
@@ -29,26 +47,6 @@ columns = { ArFTR = "75.7900", ByggarFTR = "75.7900" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "9791a934fd3438cc2004fd94847fcdec32ff7e8bd527946a8219bf69ae424def"
-
-[[variable]]
-native_id = "75.7873.varmkall"
-slug = "varmkall-7873"
-deprecated = false
-
-[[variable]]
-native_id = "75.7873.varmtot"
-slug = "varmtot"
-deprecated = false
-
-[[variable]]
-native_id = "75.145.source-positive"
-slug = "identitet"
-deprecated = false
-
-[[variable]]
-native_id = "75.7998.varmvm3"
-slug = "varmvm3"
-deprecated = false
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -234,94 +232,3 @@ reason = "These exact source coordinates lack unique catalog ownership because t
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
 expected_evidence_sha256 = "76f1cbeac2979401ebb3fad998fa5f48d16ed5485a0af0372ac721f3cf7f1e40"
 expected_diagnostic_sha256 = "83fa0339b4d882e094e49abdadcd9695fa182d8bb7eefdd0ee322643b9391854"
-
-[[variable]]
-native_id = "75.31"
-slug = "forsamling"
-
-
-[[variable]]
-native_id = "75.36"
-slug = "kommun"
-
-
-[[variable]]
-native_id = "75.49"
-slug = "lan"
-
-
-[[variable]]
-native_id = "75.7748"
-slug = "total-elanvandning"
-
-
-[[variable]]
-native_id = "75.7865"
-slug = "franluftsvarmepump"
-
-
-[[variable]]
-native_id = "75.7868"
-slug = "utevarmepump"
-
-
-[[variable]]
-native_id = "75.7869"
-slug = "bergvarmepump"
-
-
-[[variable]]
-native_id = "75.7876"
-slug = "andel-lokal-garageyta"
-
-
-[[variable]]
-native_id = "75.7891"
-slug = "elvvarme-inkl-varmvatten"
-
-
-[[variable]]
-native_id = "75.8034"
-slug = "totalarea"
-
-
-[[variable]]
-native_id = "75.34"
-slug = "juridisk-form"
-
-
-[[variable]]
-native_id = "75.3020"
-slug = "avregistreringskod-flerhus"
-
-
-[[variable]]
-native_id = "75.7860"
-slug = "taxeringsid"
-
-
-[[variable]]
-native_id = "75.8162"
-slug = "antal-svarande-enheter"
-
-
-[[variable]]
-native_id = "75.19579"
-slug = "varmeeffekt-luft-luftvarmepump"
-
-
-[[variable]]
-native_id = "75.19580"
-slug = "varmeeffekt-franluft-vattenvarmepump"
-
-
-[[variable]]
-native_id = "75.19581"
-slug = "varmeeffekt-berg-jord-sjovarmepump"
-
-# register 76
-
-
-[[variable]]
-native_id = "75.7838.gdakt"
-slug = "graddagar"

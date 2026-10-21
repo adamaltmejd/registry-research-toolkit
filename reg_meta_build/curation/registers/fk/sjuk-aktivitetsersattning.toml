@@ -38,26 +38,12 @@ panel_entity_key = "lopnr"
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
+[variable]
 # Sjukpenning och rehabiliteringspenning
+"5597417723181852215.Lopnr" = "lopnr"
+"5597417723181852215.A" = "har-aktivitetsersattning"
+"5597417723181852215.Ftp" = "fortidspension"
+"5597417723181852215.S" = "sjukersattning"
+"5597417723181852215.Sjb" = "sjukbidrag"
 
-[[variable]]
-native_id = "5597417723181852215.Lopnr"
-slug = "lopnr"
-
-
-[[variable]]
-native_id = "5597417723181852215.A"
-slug = "har-aktivitetsersattning"
-
-[[variable]]
-native_id = "5597417723181852215.Ftp"
-slug = "fortidspension"
-
-[[variable]]
-native_id = "5597417723181852215.S"
-slug = "sjukersattning"
-
-[[variable]]
-native_id = "5597417723181852215.Sjb"
-slug = "sjukbidrag"
 # register 6486633934264544358

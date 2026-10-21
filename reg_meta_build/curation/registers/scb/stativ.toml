@@ -31,699 +31,198 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Fastighetsregistret
+"273.57.personnr" = "personnr"
+"273.33" = "institutionell-sektor"
+"273.65" = "utbildningsinriktning"
+"273.510" = "ssyk3"
+"273.801" = "utbildningsgrupp-enl-sun-2000"
+"273.1165" = "inkomst-aktiv-enskild-naringsverksamhet"
+"273.1194" = "kontant-bruttolon-mm"
+"273.1610" = "sjuk-havandeskaps-sjuklonegaranti"
+"273.2722" = "forsorjningsstod-delat"
+"273.6392" = "antal-sysselsatta"
+"273.7914" = "arskurs"
+"273.8073" = "sun-niva-old-mor"
+"273.8074" = "faderns-utbildningsniva"
+"273.8137" = "huvudman"
+"273.15549" = "antal-sysselsatta-foretag-syssreg"
+"273.16225" = "ssyk4"
+"273.16360" = "huvudman-start"
+"273.17322" = "belagenhet-for-bostad"
+"273.17323" = "belagenhet-grundskola"
+"273.17325" = "sams-gymnasieskola-avg"
+"273.17437" = "boform"
+"273.17438" = "boform-grupperad"
+"273.18509" = "gymnasieskola-arskurs"
+"273.18531" = "socialbidragstyp"
+"273.18532" = "dispink-levnadsniva"
+"273.18568" = "faderns-yrke"
+"273.18569" = "moderns-yrke"
+"273.18570" = "dispink-levnadsniva-far"
+"273.18571" = "dispink-levnadsniva-mor"
+"273.18572" = "socialbidragstyp-fader"
+"273.18573" = "socialbidragstyp-moder"
+"273.18648" = "akassa-ers-far"
+"273.18649" = "akassa-ers-mor"
 
-[[variable]]
-native_id = "273.57.personnr"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "273.33"
-slug = "institutionell-sektor"
-
-[[variable]]
-native_id = "273.65"
-slug = "utbildningsinriktning"
-
-[[variable]]
-native_id = "273.510"
-slug = "ssyk3"
-
-[[variable]]
-native_id = "273.801"
-slug = "utbildningsgrupp-enl-sun-2000"
-
-[[variable]]
-native_id = "273.1165"
-slug = "inkomst-aktiv-enskild-naringsverksamhet"
-
-[[variable]]
-native_id = "273.1194"
-slug = "kontant-bruttolon-mm"
-
-[[variable]]
-native_id = "273.1610"
-slug = "sjuk-havandeskaps-sjuklonegaranti"
-
-[[variable]]
-native_id = "273.2722"
-slug = "forsorjningsstod-delat"
-
-[[variable]]
-native_id = "273.6392"
-slug = "antal-sysselsatta"
-
-[[variable]]
-native_id = "273.7914"
-slug = "arskurs"
-
-[[variable]]
-native_id = "273.8073"
-slug = "sun-niva-old-mor"
-
-[[variable]]
-native_id = "273.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "273.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "273.15549"
-slug = "antal-sysselsatta-foretag-syssreg"
-
-[[variable]]
-native_id = "273.16225"
-slug = "ssyk4"
-
-[[variable]]
-native_id = "273.16360"
-slug = "huvudman-start"
-
-[[variable]]
-native_id = "273.17322"
-slug = "belagenhet-for-bostad"
-
-[[variable]]
-native_id = "273.17323"
-slug = "belagenhet-grundskola"
-
-[[variable]]
-native_id = "273.17325"
-slug = "sams-gymnasieskola-avg"
-
-[[variable]]
-native_id = "273.17437"
-slug = "boform"
-
-[[variable]]
-native_id = "273.17438"
-slug = "boform-grupperad"
-
-[[variable]]
-native_id = "273.18509"
-slug = "gymnasieskola-arskurs"
-
-[[variable]]
-native_id = "273.18531"
-slug = "socialbidragstyp"
-
-[[variable]]
-native_id = "273.18532"
-slug = "dispink-levnadsniva"
-
-[[variable]]
-native_id = "273.18568"
-slug = "faderns-yrke"
-
-[[variable]]
-native_id = "273.18569"
-slug = "moderns-yrke"
-
-[[variable]]
-native_id = "273.18570"
-slug = "dispink-levnadsniva-far"
-
-[[variable]]
-native_id = "273.18571"
-slug = "dispink-levnadsniva-mor"
-
-[[variable]]
-native_id = "273.18572"
-slug = "socialbidragstyp-fader"
-
-[[variable]]
-native_id = "273.18573"
-slug = "socialbidragstyp-moder"
-
-[[variable]]
-native_id = "273.18648"
-slug = "akassa-ers-far"
-
-[[variable]]
-native_id = "273.18649"
-slug = "akassa-ers-mor"
 # #931: stativ näringsgren parallel siblings (SNI vintage × method)
-
-[[variable]]
-native_id = "273.19054.astsni2002"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "273.19054.astsni92"
-slug = "naringsgren-sni92"
-
-[[variable]]
-native_id = "273.19054.astsni2002nymet"
-slug = "naringsgren-sni2002-nymet"
-
-[[variable]]
-native_id = "273.19054.astngs07"
-slug = "naringsgren-sni2007"
-
-[[variable]]
-native_id = "273.27129"
-slug = "grund-for-bosattning-klassgrupp"
-
-[[variable]]
-native_id = "273.29240"
-slug = "sokandekategori-grupp"
-
-[[variable]]
-native_id = "273.30961"
-slug = "etabl-inskrivningsdatum"
-
-[[variable]]
-native_id = "273.31397"
-slug = "forvarvsinkomst-netto"
-
-[[variable]]
-native_id = "273.31496"
-slug = "sjukpenning-ej-arbetsgivarintrade"
-
-[[variable]]
-native_id = "273.31512"
-slug = "sjukfall-antal"
-
-[[variable]]
-native_id = "273.31516"
-slug = "sjukfall-bruttodagar"
-
-[[variable]]
-native_id = "273.31517"
-slug = "sjukfall-nettodagar"
-
-[[variable]]
-native_id = "273.31518"
-slug = "sjukfall-ersattningsbelopp"
-
-[[variable]]
-native_id = "273.31532"
-slug = "sjukpenning-bruttodagar"
-
-[[variable]]
-native_id = "273.31533"
-slug = "sjukpenning-nettodagar"
-
-[[variable]]
-native_id = "273.31534"
-slug = "sjukpenning-ersattningsbelopp"
-
-[[variable]]
-native_id = "273.31535"
-slug = "rehabiliteringspenning-bruttodagar"
-
-[[variable]]
-native_id = "273.31536"
-slug = "rehabiliteringspenning-nettodagar"
-
-[[variable]]
-native_id = "273.31537"
-slug = "rehabiliteringspenning-ersattningsbelopp"
-
-[[variable]]
-native_id = "273.31538"
-slug = "arbetsskadesjukpenning-bruttodagar"
-
-[[variable]]
-native_id = "273.31539"
-slug = "arbetsskadesjukpenning-nettodagar"
-
-[[variable]]
-native_id = "273.31540"
-slug = "arbetsskadesjukpenning-ersattningsbelopp"
-
-[[variable]]
-native_id = "273.31544"
-slug = "aktivitetsstod-dagar"
-
-[[variable]]
-native_id = "273.31545"
-slug = "aktivitetsstod-belopp"
-
-[[variable]]
-native_id = "273.42607"
-slug = "sysselsattningsstatus-november-agi"
-
-[[variable]]
-native_id = "273.46582"
-slug = "etablersattning-belopp"
-
-[[variable]]
-native_id = "273.46883"
-slug = "utbetalt-ekonomiskt-bistand"
-
-[[variable]]
-native_id = "273.46884"
-slug = "ekonomiskt-bistand-typ"
-
-[[variable]]
-native_id = "273.46889"
-slug = "bistandstyp-far"
-
-[[variable]]
-native_id = "273.46890"
-slug = "bistandstyp-mor"
-
-[[variable]]
-native_id = "273.47043"
-slug = "langtidsarbetslos-fel"
-
-[[variable]]
-native_id = "273.47051"
-slug = "belagenhet-gy-avgangen"
-
-[[variable]]
-native_id = "273.47058"
-slug = "belagenhet-gy-elev"
-
-[[variable]]
-native_id = "273.47469"
-slug = "dispink-forhallande-mor"
-
-[[variable]]
-native_id = "273.47472"
-slug = "dispink-forhallande"
-
-[[variable]]
-native_id = "273.47473"
-slug = "dispink-forhallande-far"
-
-[[variable]]
-native_id = "273.47648"
-slug = "arblos-ink-mor"
-
-[[variable]]
-native_id = "273.47650"
-slug = "arblos-ink-far"
+"273.19054.astsni2002" = "naringsgren"
+"273.19054.astsni92" = "naringsgren-sni92"
+"273.19054.astsni2002nymet" = "naringsgren-sni2002-nymet"
+"273.19054.astngs07" = "naringsgren-sni2007"
+"273.27129" = "grund-for-bosattning-klassgrupp"
+"273.29240" = "sokandekategori-grupp"
+"273.30961" = "etabl-inskrivningsdatum"
+"273.31397" = "forvarvsinkomst-netto"
+"273.31496" = "sjukpenning-ej-arbetsgivarintrade"
+"273.31512" = "sjukfall-antal"
+"273.31516" = "sjukfall-bruttodagar"
+"273.31517" = "sjukfall-nettodagar"
+"273.31518" = "sjukfall-ersattningsbelopp"
+"273.31532" = "sjukpenning-bruttodagar"
+"273.31533" = "sjukpenning-nettodagar"
+"273.31534" = "sjukpenning-ersattningsbelopp"
+"273.31535" = "rehabiliteringspenning-bruttodagar"
+"273.31536" = "rehabiliteringspenning-nettodagar"
+"273.31537" = "rehabiliteringspenning-ersattningsbelopp"
+"273.31538" = "arbetsskadesjukpenning-bruttodagar"
+"273.31539" = "arbetsskadesjukpenning-nettodagar"
+"273.31540" = "arbetsskadesjukpenning-ersattningsbelopp"
+"273.31544" = "aktivitetsstod-dagar"
+"273.31545" = "aktivitetsstod-belopp"
+"273.42607" = "sysselsattningsstatus-november-agi"
+"273.46582" = "etablersattning-belopp"
+"273.46883" = "utbetalt-ekonomiskt-bistand"
+"273.46884" = "ekonomiskt-bistand-typ"
+"273.46889" = "bistandstyp-far"
+"273.46890" = "bistandstyp-mor"
+"273.47043" = "langtidsarbetslos-fel"
+"273.47051" = "belagenhet-gy-avgangen"
+"273.47058" = "belagenhet-gy-elev"
+"273.47469" = "dispink-forhallande-mor"
+"273.47472" = "dispink-forhallande"
+"273.47473" = "dispink-forhallande-far"
+"273.47648" = "arblos-ink-mor"
+"273.47650" = "arblos-ink-far"
 
 # register 276 (fastighetsreg)
-
-[[variable]]
-native_id = "273.15724.gfb-klassgrupp"
-slug = "grund-for-bosattning-grupperad"
-
-[[variable]]
-native_id = "273.17324.desogy"
-slug = "belagenhet-gy"
-
-[[variable]]
-native_id = "273.17324.desogyavg"
-slug = "belagenhet-gy-avg"
-
-[[variable]]
-native_id = "273.17324.samsgyavg"
-slug = "belagenhet-gy-sams"
-
-[[variable]]
-native_id = "273.17452.aflang-fel"
-slug = "langtidsarbetslos"
-
-[[variable]]
-native_id = "273.17453.afsokkat-grupp"
-slug = "sokandekategori"
-
-[[variable]]
-native_id = "273.3193.boform"
-slug = "typ-av-boende"
-
-[[variable]]
-native_id = "273.3193.boformgrupp"
-slug = "typ-av-boende-grupp"
-
-[[variable]]
-native_id = "273.63.syssstat"
-slug = "sysselsattningsstatus-november"
-
-[[variable]]
-native_id = "273.6416.sun2000grp"
-slug = "utbildningsgrupp"
-
-[[variable]]
-native_id = "273.66.sun2000niva"
-slug = "sun2000niva"
+"273.15724.gfb-klassgrupp" = "grund-for-bosattning-grupperad"
+"273.17324.desogy" = "belagenhet-gy"
+"273.17324.desogyavg" = "belagenhet-gy-avg"
+"273.17324.samsgyavg" = "belagenhet-gy-sams"
+"273.17452.aflang-fel" = "langtidsarbetslos"
+"273.17453.afsokkat-grupp" = "sokandekategori"
+"273.3193.boform" = "typ-av-boende"
+"273.3193.boformgrupp" = "typ-av-boende-grupp"
+"273.63.syssstat" = "sysselsattningsstatus-november"
+"273.6416.sun2000grp" = "utbildningsgrupp"
+"273.66.sun2000niva" = "sun2000niva"
 
 # register 29 (linda)
-
-[[variable]]
-native_id = "273.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "273.14.cfarnr"
-slug = "cfar-nummer"
-
-[[variable]]
-native_id = "273.14.cfarnrnymet"
-slug = "cfar-nummer-2"
-
-[[variable]]
-native_id = "273.57.personnrankn"
-slug = "personnr-ankn"
-
-[[variable]]
-native_id = "273.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "273.25"
-slug = "familjetyp"
-
-[[variable]]
-native_id = "273.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "273.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "273.75"
-slug = "arbetsinkomst"
-
-[[variable]]
-native_id = "273.99"
-slug = "sammanraknad-forvarvsinkomst"
-
-[[variable]]
-native_id = "273.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "273.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "273.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "273.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "273.372"
-slug = "familjeidentitet-rtb"
-
-[[variable]]
-native_id = "273.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "273.753"
-slug = "examensar"
-
-[[variable]]
-native_id = "273.778"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "273.784"
-slug = "utbildningsinriktning-4-positioner"
-
-[[variable]]
-native_id = "273.1177"
-slug = "ersattning-inkomst-anstallning"
-
-[[variable]]
-native_id = "273.1187"
-slug = "akassa-arbetsloshet"
-
-[[variable]]
-native_id = "273.1198"
-slug = "loneinkomst"
-
-[[variable]]
-native_id = "273.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "273.1430"
-slug = "studiemedel-studiehjalp-lan-och-bidrag"
-
-[[variable]]
-native_id = "273.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "273.1598"
-slug = "vuxenstudiestod-studiebidrag-ovriga"
-
-[[variable]]
-native_id = "273.1613"
-slug = "rehabiliteringsersattning"
-
-[[variable]]
-native_id = "273.1626"
-slug = "foraldrapenning-barns-fodelse"
-
-[[variable]]
-native_id = "273.2669"
-slug = "vuxenstudiestod-lan-ovriga"
-
-[[variable]]
-native_id = "273.2682"
-slug = "familjepost"
-
-[[variable]]
-native_id = "273.2692"
-slug = "institutionell-sektorkod"
-
-[[variable]]
-native_id = "273.2754"
-slug = "introduktionsersattning-flyktingar"
-
-[[variable]]
-native_id = "273.3596"
-slug = "beh-gymn"
-
-[[variable]]
-native_id = "273.3614"
-slug = "meritvarde"
-
-[[variable]]
-native_id = "273.6141"
-slug = "grundlaggande-behorighet-hogskola"
-
-[[variable]]
-native_id = "273.6550"
-slug = "fodelseland-iso"
-
-[[variable]]
-native_id = "273.7173"
-slug = "manader-introduktionsersattning"
-
-[[variable]]
-native_id = "273.7498"
-slug = "manader-ekonomiskt-bistand"
-
-[[variable]]
-native_id = "273.7500"
-slug = "utbetalt-belopp-till-hushallet"
-
-[[variable]]
-native_id = "273.7504"
-slug = "antal-barn-16-17-ar"
-
-[[variable]]
-native_id = "273.7924"
-slug = "studiedeltagande-ht"
-
-[[variable]]
-native_id = "273.8180"
-slug = "grund-for-bosattning"
-
-[[variable]]
-native_id = "273.8189"
-slug = "utbildningens-niva-och-inriktning"
-
-[[variable]]
-native_id = "273.9060"
-slug = "antal-barn-0-3-ar"
-
-[[variable]]
-native_id = "273.9067"
-slug = "antal-barn-4-6-ar"
-
-[[variable]]
-native_id = "273.14655"
-slug = "kursstart"
-
-[[variable]]
-native_id = "273.14656"
-slug = "kursslut"
-
-[[variable]]
-native_id = "273.14673"
-slug = "undervisningstimmar-sfi"
-
-[[variable]]
-native_id = "273.14674"
-slug = "orsak-kursavbrott-sfi"
-
-[[variable]]
-native_id = "273.15546"
-slug = "inkomst-enskild-naringsverksamhet"
-
-[[variable]]
-native_id = "273.16342"
-slug = "genomsnittlig-betygspoang"
-
-[[variable]]
-native_id = "273.17256"
-slug = "vistelsetid"
-
-[[variable]]
-native_id = "273.17446"
-slug = "inskriven-arbetsformedlingen"
-
-[[variable]]
-native_id = "273.18020"
-slug = "sysselsattningsstatus-november-mor"
-
-[[variable]]
-native_id = "273.18021"
-slug = "sysselsattningsstatus-november-far"
-
-[[variable]]
-native_id = "273.18541"
-slug = "grund-for-bosattning-far"
-
-[[variable]]
-native_id = "273.18542"
-slug = "grund-for-bosattning-mor"
-
-[[variable]]
-native_id = "273.18897"
-slug = "ssyk-status"
-
-[[variable]]
-native_id = "273.21207"
-slug = "antal-barn-20-ar-eller-aldre"
-
-[[variable]]
-native_id = "273.21469"
-slug = "ersattning-amprogram-skattepliktig"
-
-[[variable]]
-native_id = "273.21781"
-slug = "behorighet-fran-grundskola"
-
-[[variable]]
-native_id = "273.24799"
-slug = "medborgarskap-iso"
-
-[[variable]]
-native_id = "273.27132"
-slug = "yrke-vid-arbetstillstand"
-
-[[variable]]
-native_id = "273.27150"
-slug = "antal-manader-vardnadsbidrag"
-
-[[variable]]
-native_id = "273.27151"
-slug = "vardnadsbidrag-utbetalt-belopp"
-
-[[variable]]
-native_id = "273.28093"
-slug = "sfi-bonus-belopp"
-
-[[variable]]
-native_id = "273.28159"
-slug = "etableringsersattning"
-
-[[variable]]
-native_id = "273.28160"
-slug = "etableringstillagg"
-
-[[variable]]
-native_id = "273.30883"
-slug = "ssyk-version-arbetstillstand"
-
-[[variable]]
-native_id = "273.31395"
-slug = "forvink-ers-aktiv"
-
-[[variable]]
-native_id = "273.31398"
-slug = "inkomst-foranledd-studier"
-
-[[variable]]
-native_id = "273.31499"
-slug = "inkomst-foranledd-sjukdom"
-
-[[variable]]
-native_id = "273.31546"
-slug = "aktivitetsstod-sjuk-dag"
-
-[[variable]]
-native_id = "273.31547"
-slug = "aktivitetsstod-sjuk-belopp"
-
-[[variable]]
-native_id = "273.31575"
-slug = "inkomst-foranledd-arbetsloshet"
-
-[[variable]]
-native_id = "273.31653"
-slug = "inkomst-foranledd-fortidspension"
-
-[[variable]]
-native_id = "273.35479"
-slug = "akassa-alu"
-
-[[variable]]
-native_id = "273.45144"
-slug = "klassificerad-sysselsatt"
-
-[[variable]]
-native_id = "273.46243"
-slug = "arbetsskadesjukpenning"
+"273.56" = "person-orgnr"
+"273.14.cfarnr" = "cfar-nummer"
+"273.14.cfarnrnymet" = "cfar-nummer-2"
+"273.57.personnrankn" = "personnr-ankn"
+"273.15" = "civilstand"
+"273.25" = "familjetyp"
+"273.34" = "juridisk-form"
+"273.74" = "agarkontroll"
+"273.75" = "arbetsinkomst"
+"273.99" = "sammanraknad-forvarvsinkomst"
+"273.257" = "fodelseland-rtb"
+"273.271" = "medborgarskapsland"
+"273.323" = "personnr-far"
+"273.324" = "personnr-mor"
+"273.372" = "familjeidentitet-rtb"
+"273.517" = "senaste-invandringsar"
+"273.753" = "examensar"
+"273.778" = "utbildningsniva-3-positioner"
+"273.784" = "utbildningsinriktning-4-positioner"
+"273.1177" = "ersattning-inkomst-anstallning"
+"273.1187" = "akassa-arbetsloshet"
+"273.1198" = "loneinkomst"
+"273.1378" = "fodelsear"
+"273.1430" = "studiemedel-studiehjalp-lan-och-bidrag"
+"273.1536" = "studievag-gymnasieskolan"
+"273.1598" = "vuxenstudiestod-studiebidrag-ovriga"
+"273.1613" = "rehabiliteringsersattning"
+"273.1626" = "foraldrapenning-barns-fodelse"
+"273.2669" = "vuxenstudiestod-lan-ovriga"
+"273.2682" = "familjepost"
+"273.2692" = "institutionell-sektorkod"
+"273.2754" = "introduktionsersattning-flyktingar"
+"273.3596" = "beh-gymn"
+"273.3614" = "meritvarde"
+"273.6141" = "grundlaggande-behorighet-hogskola"
+"273.6550" = "fodelseland-iso"
+"273.7173" = "manader-introduktionsersattning"
+"273.7498" = "manader-ekonomiskt-bistand"
+"273.7500" = "utbetalt-belopp-till-hushallet"
+"273.7504" = "antal-barn-16-17-ar"
+"273.7924" = "studiedeltagande-ht"
+"273.8180" = "grund-for-bosattning"
+"273.8189" = "utbildningens-niva-och-inriktning"
+"273.9060" = "antal-barn-0-3-ar"
+"273.9067" = "antal-barn-4-6-ar"
+"273.14655" = "kursstart"
+"273.14656" = "kursslut"
+"273.14673" = "undervisningstimmar-sfi"
+"273.14674" = "orsak-kursavbrott-sfi"
+"273.15546" = "inkomst-enskild-naringsverksamhet"
+"273.16342" = "genomsnittlig-betygspoang"
+"273.17256" = "vistelsetid"
+"273.17446" = "inskriven-arbetsformedlingen"
+"273.18020" = "sysselsattningsstatus-november-mor"
+"273.18021" = "sysselsattningsstatus-november-far"
+"273.18541" = "grund-for-bosattning-far"
+"273.18542" = "grund-for-bosattning-mor"
+"273.18897" = "ssyk-status"
+"273.21207" = "antal-barn-20-ar-eller-aldre"
+"273.21469" = "ersattning-amprogram-skattepliktig"
+"273.21781" = "behorighet-fran-grundskola"
+"273.24799" = "medborgarskap-iso"
+"273.27132" = "yrke-vid-arbetstillstand"
+"273.27150" = "antal-manader-vardnadsbidrag"
+"273.27151" = "vardnadsbidrag-utbetalt-belopp"
+"273.28093" = "sfi-bonus-belopp"
+"273.28159" = "etableringsersattning"
+"273.28160" = "etableringstillagg"
+"273.30883" = "ssyk-version-arbetstillstand"
+"273.31395" = "forvink-ers-aktiv"
+"273.31398" = "inkomst-foranledd-studier"
+"273.31499" = "inkomst-foranledd-sjukdom"
+"273.31546" = "aktivitetsstod-sjuk-dag"
+"273.31547" = "aktivitetsstod-sjuk-belopp"
+"273.31575" = "inkomst-foranledd-arbetsloshet"
+"273.31653" = "inkomst-foranledd-fortidspension"
+"273.35479" = "akassa-alu"
+"273.45144" = "klassificerad-sysselsatt"
+"273.46243" = "arbetsskadesjukpenning"
 
 # register 276
-
-[[variable]]
-native_id = "273.15724.gfbgrupp"
-slug = "grund-for-bosattning-grupperad-2"
-
-[[variable]]
-native_id = "273.1821.yrkstalln"
-slug = "yrkesstallning"
-
-[[variable]]
-native_id = "273.24.famst"
-slug = "familjestallning"
-
-[[variable]]
-native_id = "273.241.alder"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "273.28161.bostaders"
-slug = "bostadsersattning"
-
-[[variable]]
-native_id = "273.28161.bostaders-obearb"
-slug = "bostadsersattning-obearb"
-
-[[variable]]
-native_id = "273.305.fodelselandnamnmor"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "273.45149.bas"
-slug = "arbetsmarknadsstatus"
-
-[[variable]]
-native_id = "273.45149.basalt"
-slug = "arbetsmarknadsstatus-alt"
-
-[[variable]]
-native_id = "273.667.astkommun"
-slug = "kommun-for-arbetsstalle"
+"273.15724.gfbgrupp" = "grund-for-bosattning-grupperad-2"
+"273.1821.yrkstalln" = "yrkesstallning"
+"273.24.famst" = "familjestallning"
+"273.241.alder" = "alder-31-12"
+"273.28161.bostaders" = "bostadsersattning"
+"273.28161.bostaders-obearb" = "bostadsersattning-obearb"
+"273.305.fodelselandnamnmor" = "fodelseland-mor"
+"273.45149.bas" = "arbetsmarknadsstatus"
+"273.45149.basalt" = "arbetsmarknadsstatus-alt"
+"273.667.astkommun" = "kommun-for-arbetsstalle"
+"273.18538.ovrink" = "ovrink"
+"273.18538.sumovrink" = "sumovrink"
+"273.18538.sumovrink04" = "sumovrink04"
+"273.30999.etabl-status1" = "etabl-status1"
+"273.30999.etabl-status90" = "etabl-status90"
+"273.19054.astsni2007" = "astsni2007"
+"273.372.famid" = "famid"
+"273.372.famid1" = "famid1"
+"273.66.sun2000niva-old" = "sun2000niva-old-66"
+"273.66.sun2020niva" = "sun2020niva"
+"273.66.sun2020niva-old" = "sun2020niva-old"
 
 # register 276
 
@@ -869,50 +368,6 @@ variable = "273.66"
 columns = { Sun2000Niva = "273.66.sun2000niva", Sun2000Niva_old = "273.66.sun2000niva-old", Sun2020Niva = "273.66.sun2020niva", Sun2020Niva_old = "273.66.sun2020niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "f82df4e3c6b571c664e30ed7922eed8f8891fffcb25f964225afb484c3ed3745"
-
-[[variable]]
-native_id = "273.18538.ovrink"
-slug = "ovrink"
-
-[[variable]]
-native_id = "273.18538.sumovrink"
-slug = "sumovrink"
-
-[[variable]]
-native_id = "273.18538.sumovrink04"
-slug = "sumovrink04"
-
-[[variable]]
-native_id = "273.30999.etabl-status1"
-slug = "etabl-status1"
-
-[[variable]]
-native_id = "273.30999.etabl-status90"
-slug = "etabl-status90"
-
-[[variable]]
-native_id = "273.19054.astsni2007"
-slug = "astsni2007"
-
-[[variable]]
-native_id = "273.372.famid"
-slug = "famid"
-
-[[variable]]
-native_id = "273.372.famid1"
-slug = "famid1"
-
-[[variable]]
-native_id = "273.66.sun2000niva-old"
-slug = "sun2000niva-old-66"
-
-[[variable]]
-native_id = "273.66.sun2020niva"
-slug = "sun2020niva"
-
-[[variable]]
-native_id = "273.66.sun2020niva-old"
-slug = "sun2020niva-old"
 
 # ── #1603 A2: SWECOV Stativ ──
 

@@ -3,10 +3,60 @@ provider = "scb"
 slug = "slk"
 native_id = "130"
 
-[[variable]]
-native_id = "130.57"
-slug = "personnr"
+[variable]
+"130.57" = "personnr"
 
+# Inrikeshandelsregistret
+"130.65" = "utbildningsinriktning"
+"130.66" = "utbildningsniva"
+"130.511" = "ssyk4-huvud"
+"130.1315" = "utbildnings-inriktning-sun-2000"
+"130.1846" = "tjanstledighet"
+"130.2686" = "manadslon"
+"130.3113" = "tillagg-for-overtid"
+"130.3118" = "sjuklon-1"
+"130.3119" = "sjuklon-2"
+"130.3125" = "tjanstledighetskod-scb"
+"130.6416" = "utbildningsgrupp"
+"130.14806" = "manadslon-exkl-natura"
+"130.36036" = "sjuklon-forsta-period"
+"130.36037" = "sjuklon-andra-period"
+
+# register 131 (ireg)
+"130.1839" = "orgnr"
+"130.120" = "yrkesuppgift"
+"130.749" = "aldersgrupp"
+"130.801" = "utbildningsgrupp-enl-sun-2000"
+"130.1822" = "fasta-lonetillagg"
+"130.1834" = "lonepopulation"
+"130.1844" = "rorliga-lonetillagg"
+"130.1996" = "skolform"
+"130.2519" = "lopnummer-anstallningar"
+"130.2524" = "antal-arbetade-timmar-timavlonade"
+"130.3098" = "faktiskt-arbetad-tid"
+"130.3102" = "avtalsomrade"
+"130.3105" = "fast-kontant-lon"
+"130.3108" = "sysselsattningsgrad-faktisk"
+"130.3110" = "obekvamtidstillagg"
+"130.3112" = "sysselsattningsgrad-manadsavlonade"
+"130.3117" = "personalkategori"
+"130.3126" = "faktisk-tjanstgoringsomfattning"
+"130.3129" = "avtalsenlig-veckoarbetstid"
+"130.3134" = "beredskapstillagg"
+"130.5025" = "arbetare-tjansteman"
+"130.5032" = "jourtillagg"
+"130.5083" = "anstallningsform"
+"130.5118" = "verksamhetsomrade"
+"130.5717" = "overenskommen-sysselsattningsgrad"
+"130.5719" = "antal-overtidstimmar"
+"130.5768" = "manadsloneintervall"
+"130.5784" = "anstallningsform-hel-del-ovrig"
+"130.8189" = "utbildningens-niva-och-inriktning"
+"130.19066" = "arsarbetstid"
+"130.27263" = "avtalad-grundlon"
+"130.31094" = "antal-semesterdagar"
+"130.749.agrupp" = "agrupp"
+"130.749.agrupp2" = "agrupp2"
 
 [[variant]]
 native_id = "130.169"
@@ -15,194 +65,6 @@ display_group = "Lönestrukturstatistik, kommuner"
 panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
-
-# Inrikeshandelsregistret
-
-[[variable]]
-native_id = "130.65"
-slug = "utbildningsinriktning"
-
-[[variable]]
-native_id = "130.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "130.511"
-slug = "ssyk4-huvud"
-
-[[variable]]
-native_id = "130.1315"
-slug = "utbildnings-inriktning-sun-2000"
-
-[[variable]]
-native_id = "130.1846"
-slug = "tjanstledighet"
-
-[[variable]]
-native_id = "130.2686"
-slug = "manadslon"
-
-[[variable]]
-native_id = "130.3113"
-slug = "tillagg-for-overtid"
-
-[[variable]]
-native_id = "130.3118"
-slug = "sjuklon-1"
-
-[[variable]]
-native_id = "130.3119"
-slug = "sjuklon-2"
-
-[[variable]]
-native_id = "130.3125"
-slug = "tjanstledighetskod-scb"
-
-[[variable]]
-native_id = "130.6416"
-slug = "utbildningsgrupp"
-
-[[variable]]
-native_id = "130.14806"
-slug = "manadslon-exkl-natura"
-
-[[variable]]
-native_id = "130.36036"
-slug = "sjuklon-forsta-period"
-
-[[variable]]
-native_id = "130.36037"
-slug = "sjuklon-andra-period"
-
-# register 131 (ireg)
-
-[[variable]]
-native_id = "130.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "130.120"
-slug = "yrkesuppgift"
-
-[[variable]]
-native_id = "130.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "130.801"
-slug = "utbildningsgrupp-enl-sun-2000"
-
-[[variable]]
-native_id = "130.1822"
-slug = "fasta-lonetillagg"
-
-[[variable]]
-native_id = "130.1834"
-slug = "lonepopulation"
-
-[[variable]]
-native_id = "130.1844"
-slug = "rorliga-lonetillagg"
-
-[[variable]]
-native_id = "130.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "130.2519"
-slug = "lopnummer-anstallningar"
-
-[[variable]]
-native_id = "130.2524"
-slug = "antal-arbetade-timmar-timavlonade"
-
-[[variable]]
-native_id = "130.3098"
-slug = "faktiskt-arbetad-tid"
-
-[[variable]]
-native_id = "130.3102"
-slug = "avtalsomrade"
-
-[[variable]]
-native_id = "130.3105"
-slug = "fast-kontant-lon"
-
-[[variable]]
-native_id = "130.3108"
-slug = "sysselsattningsgrad-faktisk"
-
-[[variable]]
-native_id = "130.3110"
-slug = "obekvamtidstillagg"
-
-[[variable]]
-native_id = "130.3112"
-slug = "sysselsattningsgrad-manadsavlonade"
-
-[[variable]]
-native_id = "130.3117"
-slug = "personalkategori"
-
-[[variable]]
-native_id = "130.3126"
-slug = "faktisk-tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "130.3129"
-slug = "avtalsenlig-veckoarbetstid"
-
-[[variable]]
-native_id = "130.3134"
-slug = "beredskapstillagg"
-
-[[variable]]
-native_id = "130.5025"
-slug = "arbetare-tjansteman"
-
-[[variable]]
-native_id = "130.5032"
-slug = "jourtillagg"
-
-[[variable]]
-native_id = "130.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "130.5118"
-slug = "verksamhetsomrade"
-
-[[variable]]
-native_id = "130.5717"
-slug = "overenskommen-sysselsattningsgrad"
-
-[[variable]]
-native_id = "130.5719"
-slug = "antal-overtidstimmar"
-
-[[variable]]
-native_id = "130.5768"
-slug = "manadsloneintervall"
-
-[[variable]]
-native_id = "130.5784"
-slug = "anstallningsform-hel-del-ovrig"
-
-[[variable]]
-native_id = "130.8189"
-slug = "utbildningens-niva-och-inriktning"
-
-[[variable]]
-native_id = "130.19066"
-slug = "arsarbetstid"
-
-[[variable]]
-native_id = "130.27263"
-slug = "avtalad-grundlon"
-
-[[variable]]
-native_id = "130.31094"
-slug = "antal-semesterdagar"
 
 # register 131
 
@@ -411,11 +273,3 @@ variable = "130.749"
 columns = { agrupp = "130.749.agrupp", agrupp2 = "130.749.agrupp2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "36983b5048415e68a74ac9a8b098f2670ae36714228991dad286596b8e2367e1"
-
-[[variable]]
-native_id = "130.749.agrupp"
-slug = "agrupp"
-
-[[variable]]
-native_id = "130.749.agrupp2"
-slug = "agrupp2"

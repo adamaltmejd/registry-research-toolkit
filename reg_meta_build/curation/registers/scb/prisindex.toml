@@ -35,193 +35,95 @@ panel_entity_key = "foretagsidentitet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Finansräkenskaper
-
-[[variable]]
-native_id = "296.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "296.7550"
-slug = "foretagsidentitet"
-
-
-[[variable]]
-native_id = "296.73"
-slug = "ar"
-
-[[variable]]
-native_id = "296.7561"
-slug = "baspris"
-
-[[variable]]
-native_id = "296.7714"
-slug = "kvantitet"
-
-[[variable]]
-native_id = "296.7792"
-slug = "rapporteringsvaluta"
-
-[[variable]]
-native_id = "296.23452"
-slug = "beraknat-pris"
-
-[[variable]]
-native_id = "296.23453"
-slug = "omraknat-baspris"
-
-[[variable]]
-native_id = "296.23455"
-slug = "kvalitetsriktning"
-
-[[variable]]
-native_id = "296.23597"
-slug = "observerat-pris"
-
-[[variable]]
-native_id = "296.23598"
-slug = "observerad-kvantitet"
-
-[[variable]]
-native_id = "296.23603"
-slug = "produktgruppsvikt"
-
-[[variable]]
-native_id = "296.23605"
-slug = "kvalitetsjusteringsmetod"
-
-[[variable]]
-native_id = "296.23606"
-slug = "ordinarie-pris"
-
-[[variable]]
-native_id = "296.23610"
-slug = "branschproduktgruppsvikt"
-
-[[variable]]
-native_id = "296.23611"
-slug = "konsumtionsprodukt"
-
-[[variable]]
-native_id = "296.23613"
-slug = "produktid"
-
-[[variable]]
-native_id = "296.23614"
-slug = "produktgrupp"
-
-[[variable]]
-native_id = "296.23688"
-slug = "period2"
-
-[[variable]]
-native_id = "296.24675"
-slug = "index-dec-foregaende-ar"
-
-[[variable]]
-native_id = "296.25047"
-slug = "namn-person"
-
-[[variable]]
-native_id = "296.27203"
-slug = "arsforandring-tpi"
-
-[[variable]]
-native_id = "296.27326"
-slug = "indexbas2005"
-
-[[variable]]
-native_id = "296.28085"
-slug = "formular-titel"
-
-[[variable]]
-native_id = "296.28086"
-slug = "frage-titel"
-
-[[variable]]
-native_id = "296.28087"
-slug = "inmatningsfaltets-titel"
-
-[[variable]]
-native_id = "296.28088"
-slug = "inmatningsgruppdef-titel"
-
-[[variable]]
-native_id = "296.29259"
-slug = "index-med-bas-2005"
-
-[[variable]]
-native_id = "296.29270"
-slug = "prisindex"
-
-[[variable]]
-native_id = "296.30808"
-slug = "prissignal"
-
-[[variable]]
-native_id = "296.30830"
-slug = "produktgruppsnamn"
-
-[[variable]]
-native_id = "296.30837"
-slug = "index-foregaende-ar"
-
-[[variable]]
-native_id = "296.35935"
-slug = "period-tpi"
-
-[[variable]]
-native_id = "296.35949"
-slug = "indexbas"
-
-[[variable]]
-native_id = "296.35951"
-slug = "arsforandring"
-
-[[variable]]
-native_id = "296.45489"
-slug = "index-bas-foregaende-ar"
+"296.56" = "person-orgnr"
+"296.7550" = "foretagsidentitet"
+"296.73" = "ar"
+"296.7561" = "baspris"
+"296.7714" = "kvantitet"
+"296.7792" = "rapporteringsvaluta"
+"296.23452" = "beraknat-pris"
+"296.23453" = "omraknat-baspris"
+"296.23455" = "kvalitetsriktning"
+"296.23597" = "observerat-pris"
+"296.23598" = "observerad-kvantitet"
+"296.23603" = "produktgruppsvikt"
+"296.23605" = "kvalitetsjusteringsmetod"
+"296.23606" = "ordinarie-pris"
+"296.23610" = "branschproduktgruppsvikt"
+"296.23611" = "konsumtionsprodukt"
+"296.23613" = "produktid"
+"296.23614" = "produktgrupp"
+"296.23688" = "period2"
+"296.24675" = "index-dec-foregaende-ar"
+"296.25047" = "namn-person"
+"296.27203" = "arsforandring-tpi"
+"296.27326" = "indexbas2005"
+"296.28085" = "formular-titel"
+"296.28086" = "frage-titel"
+"296.28087" = "inmatningsfaltets-titel"
+"296.28088" = "inmatningsgruppdef-titel"
+"296.29259" = "index-med-bas-2005"
+"296.29270" = "prisindex"
+"296.30808" = "prissignal"
+"296.30830" = "produktgruppsnamn"
+"296.30837" = "index-foregaende-ar"
+"296.35935" = "period-tpi"
+"296.35949" = "indexbas"
+"296.35951" = "arsforandring"
+"296.45489" = "index-bas-foregaende-ar"
 
 # register 299 (finansrakenskaper)
-
-[[variable]]
-native_id = "296.45455.namn"
-slug = "produktgrupp-sammanvagda"
-
-[[variable]]
-native_id = "296.47652.prodkod"
-slug = "produktgrupp-sju-tpi"
+"296.45455.namn" = "produktgrupp-sammanvagda"
+"296.47652.prodkod" = "produktgrupp-sju-tpi"
 
 # register 301 (aes)
-
-[[variable]]
-native_id = "296.14"
-slug = "cfar-nummer"
-
-[[variable]]
-native_id = "296.45"
-slug = "land"
-
-[[variable]]
-native_id = "296.3081"
-slug = "imputering"
-
-[[variable]]
-native_id = "296.6415"
-slug = "urvalssannolikhet"
-
-[[variable]]
-native_id = "296.6784"
-slug = "naringsgren-sni2002-5siffer"
-
-[[variable]]
-native_id = "296.7719"
-slug = "marknadskod"
-
-[[variable]]
-native_id = "296.23599"
-slug = "versionsnummer"
+"296.14" = "cfar-nummer"
+"296.45" = "land"
+"296.3081" = "imputering"
+"296.6415" = "urvalssannolikhet"
+"296.6784" = "naringsgren-sni2002-5siffer"
+"296.7719" = "marknadskod"
+"296.23599" = "versionsnummer"
+"296.119.kn4kod" = "kn4kod"
+"296.119.kn4namn" = "kn4namn"
+"296.119.kn8beskrivning" = "kn8beskrivning"
+"296.119.kn8kod" = "kn8kod-2"
+"296.119.stat-id" = "stat-id"
+"296.145.ftgid" = "identitet-ftgid"
+"296.145.insmetodid" = "identitet-insmetodid"
+"296.145.kodid" = "identitet-kodid"
+"296.145.landid" = "identitet-landid"
+"296.145.marknprodgrparid" = "identitet-marknprodgrparid"
+"296.145.personid" = "identitet-personid"
+"296.145.prisnotid" = "identitet-prisnotid"
+"296.145.prisnotkodid" = "identitet-prisnotkodid"
+"296.145.proderbjid" = "identitet-proderbjid"
+"296.145.proderbjixid" = "identitet-proderbjixid"
+"296.145.prodgrpid" = "identitet-prodgrpid"
+"296.145.valutaid" = "identitet-valutaid"
+"296.145.valutanotid" = "identitet-valutanotid"
+"296.145.varvardeid" = "identitet-varvardeid"
+"296.27318.period" = "berakningsperiod-period"
+"296.27318.periodid" = "berakningsperiod-periodid"
+"296.27318.undersokningskvartal" = "berakningsperiod-undersokningskvartal"
+"296.27358.beskrivn" = "produkterbjudande-beskrivn"
+"296.27358.proderbjid" = "produkterbjudande-proderbjid"
+"296.27358.variant" = "produkterbjudande-variant"
+"296.29261.kod" = "marknad-kod"
+"296.29261.kortnamn" = "marknad-kortnamn"
+"296.29261.marknid" = "marknad-marknid"
+"296.1814.source-positive" = "coicop"
+"296.23614.kpi-prodgrpkod" = "produktgrupp-kpi-prodgrpkod"
+"296.23614.kpi-varukod" = "produktgrupp-kpi-varukod"
+"296.23614.tpi-prodgrpkod" = "produktgrupp-tpi-prodgrpkod"
+"296.23614.tpi-pg" = "produktgrupp-tpi-pg"
+"296.23614.ppi-beskrivnsv" = "produktgrupp-ppi-beskrivnsv"
+"296.23614.ppi-namn" = "produktgrupp-ppi-namn"
+"296.23614.ppi-namnsv" = "produktgrupp-ppi-namnsv"
+"296.23614.ppi-prodgrpkod" = "produktgrupp-ppi-prodgrpkod"
+"296.29392.source-positive" = "period-ppi"
 
 # register 300
 
@@ -498,158 +400,6 @@ columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Beskr
 expected_evidence_sha256 = "92ef18bc9b73c6f043c4924ef42d1c5c9492b1cda1a893f4e7f44c21fa8dffe0"
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
-
-[[variable]]
-native_id = "296.119.kn4kod"
-slug = "kn4kod"
-
-[[variable]]
-native_id = "296.119.kn4namn"
-slug = "kn4namn"
-
-[[variable]]
-native_id = "296.119.kn8beskrivning"
-slug = "kn8beskrivning"
-
-[[variable]]
-native_id = "296.119.kn8kod"
-slug = "kn8kod-2"
-
-[[variable]]
-native_id = "296.119.stat-id"
-slug = "stat-id"
-
-[[variable]]
-native_id = "296.145.ftgid"
-slug = "identitet-ftgid"
-
-[[variable]]
-native_id = "296.145.insmetodid"
-slug = "identitet-insmetodid"
-
-[[variable]]
-native_id = "296.145.kodid"
-slug = "identitet-kodid"
-
-[[variable]]
-native_id = "296.145.landid"
-slug = "identitet-landid"
-
-[[variable]]
-native_id = "296.145.marknprodgrparid"
-slug = "identitet-marknprodgrparid"
-
-[[variable]]
-native_id = "296.145.personid"
-slug = "identitet-personid"
-
-[[variable]]
-native_id = "296.145.prisnotid"
-slug = "identitet-prisnotid"
-
-[[variable]]
-native_id = "296.145.prisnotkodid"
-slug = "identitet-prisnotkodid"
-
-[[variable]]
-native_id = "296.145.proderbjid"
-slug = "identitet-proderbjid"
-
-[[variable]]
-native_id = "296.145.proderbjixid"
-slug = "identitet-proderbjixid"
-
-[[variable]]
-native_id = "296.145.prodgrpid"
-slug = "identitet-prodgrpid"
-
-[[variable]]
-native_id = "296.145.valutaid"
-slug = "identitet-valutaid"
-
-[[variable]]
-native_id = "296.145.valutanotid"
-slug = "identitet-valutanotid"
-
-[[variable]]
-native_id = "296.145.varvardeid"
-slug = "identitet-varvardeid"
-
-[[variable]]
-native_id = "296.27318.period"
-slug = "berakningsperiod-period"
-
-[[variable]]
-native_id = "296.27318.periodid"
-slug = "berakningsperiod-periodid"
-
-[[variable]]
-native_id = "296.27318.undersokningskvartal"
-slug = "berakningsperiod-undersokningskvartal"
-
-[[variable]]
-native_id = "296.27358.beskrivn"
-slug = "produkterbjudande-beskrivn"
-
-[[variable]]
-native_id = "296.27358.proderbjid"
-slug = "produkterbjudande-proderbjid"
-
-[[variable]]
-native_id = "296.27358.variant"
-slug = "produkterbjudande-variant"
-
-[[variable]]
-native_id = "296.29261.kod"
-slug = "marknad-kod"
-
-[[variable]]
-native_id = "296.29261.kortnamn"
-slug = "marknad-kortnamn"
-
-[[variable]]
-native_id = "296.29261.marknid"
-slug = "marknad-marknid"
-
-[[variable]]
-native_id = "296.1814.source-positive"
-slug = "coicop"
-
-[[variable]]
-native_id = "296.23614.kpi-prodgrpkod"
-slug = "produktgrupp-kpi-prodgrpkod"
-
-[[variable]]
-native_id = "296.23614.kpi-varukod"
-slug = "produktgrupp-kpi-varukod"
-
-[[variable]]
-native_id = "296.23614.tpi-prodgrpkod"
-slug = "produktgrupp-tpi-prodgrpkod"
-
-[[variable]]
-native_id = "296.23614.tpi-pg"
-slug = "produktgrupp-tpi-pg"
-
-[[variable]]
-native_id = "296.23614.ppi-beskrivnsv"
-slug = "produktgrupp-ppi-beskrivnsv"
-
-[[variable]]
-native_id = "296.23614.ppi-namn"
-slug = "produktgrupp-ppi-namn"
-
-[[variable]]
-native_id = "296.23614.ppi-namnsv"
-slug = "produktgrupp-ppi-namnsv"
-
-[[variable]]
-native_id = "296.23614.ppi-prodgrpkod"
-slug = "produktgrupp-ppi-prodgrpkod"
-
-[[variable]]
-native_id = "296.29392.source-positive"
-slug = "period-ppi"
 
 [[identity.partition]]
 data_warning = "The source-native family covers several physical fields or code/clear-text components. The catalog retains distinct literal components and all delivery-specific metadata. No equality of stored values or unstated semantic role is assumed."

@@ -8,11 +8,78 @@ native_id = "158.225"
 slug = "_default"
 display_group = "Skyddad natur"
 
+[variable]
 # Tätorter
-
-[[variable]]
-native_id = "158.39597"
-slug = "namn-pa-geografiskt-objekt"
+"158.39597" = "namn-pa-geografiskt-objekt"
+"158.3817.ansvarig-skotsel" = { slug = "ansvarig-skotsel", deprecated = false }
+"158.3817.forvaltare-namn" = { slug = "forvaltare-namn-3817", deprecated = false }
+"158.35327.area-ha" = { slug = "area-ha", deprecated = false }
+"158.35327.areaha-scb" = { slug = "areaha-scb", deprecated = false }
+"158.35327.areaprod" = { slug = "areaprod", deprecated = false }
+"158.35327.areatot" = { slug = "areatot", deprecated = false }
+"158.35327.total-areal" = { slug = "total-areal", deprecated = false }
+"158.35327.totarea-scb" = { slug = "totarea-scb", deprecated = false }
+"158.39597.beteckn" = { slug = "beteckn", deprecated = false }
+"158.39597.namn" = { slug = "namn", deprecated = false }
+"158.39597.namn-1" = { slug = "namn-1", deprecated = false }
+"158.39597.namn-12" = { slug = "namn-12", deprecated = false }
+"158.39597.objektnamn" = { slug = "objektnamn", deprecated = false }
+"158.39597.site-name" = { slug = "site-name", deprecated = false }
+"158.43151.sci" = { slug = "sci-43151", deprecated = false }
+"158.43151.spa" = { slug = "spa", deprecated = false }
+"158.43151.typ" = { slug = "typ", deprecated = false }
+"158.43151.typ-1" = { slug = "typ-1", deprecated = false }
+"158.43151.typ-12" = { slug = "typ-12", deprecated = false }
+"158.43153.ansvarig-databas" = { slug = "ansvarig-databas", deprecated = false }
+"158.43153.registrerande-myndighet" = { slug = "registrerande-myndighet-43153", deprecated = false }
+"158.43145.sitecode" = { slug = "sitecode-43145", deprecated = false }
+"158.43145.sitecode-1" = { slug = "sitecode-1", deprecated = false }
+"158.43145.sitecode-12" = { slug = "sitecode-12", deprecated = false }
+"158.19072.datbeslut" = { slug = "datbeslut", deprecated = false }
+"158.19072.eu-besl-bevarandeomr-datum" = { slug = "eu-besl-bevarandeomr-datum", deprecated = false }
+"158.19072.eu-besl-skyddsomr-datum" = { slug = "eu-besl-skyddsomr-datum", deprecated = false }
+"158.19072.inlamn-datum" = { slug = "inlamn-datum", deprecated = false }
+"158.19072.senaste-beslutsdat" = { slug = "senaste-beslutsdat", deprecated = false }
+"158.19072.uppd-datum" = { slug = "uppd-datum", deprecated = false }
+"158.19072.urspr-beslutsdatum" = { slug = "urspr-beslutsdatum", deprecated = false }
+"158.43152.urspr-gallandedatum" = { slug = "urspr-gallandedatum", deprecated = false }
+"158.43154.source-positive" = { slug = "beslutsstatus", deprecated = false }
+"158.36" = "kommun"
+"158.49" = "lan"
+"158.2870" = "avstand-till-skyddad-natur"
+"158.2874" = "naturtyp-skyddade-omraden-areal"
+"158.2875" = "skyddade-omraden-miljobalken-areal"
+"158.3818" = "kostnader-for-sakrade-omraden"
+"158.19070" = "typ-av-skyddad-kulturmiljo"
+"158.19071" = "fridlyst-vaxt-djurart-antal"
+"158.25491" = "brottsmisstankar-brottskod-8015"
+"158.28060" = "skyddade-omraden-miljobalken-antal"
+"158.28061" = "skyddade-alvar-areal"
+"158.29316" = "andel-skyddad-areal-omkring-tatort"
+"158.29317" = "folkmangd-inom-skyddat-omrade"
+"158.29318" = "typ-av-kostnad"
+"158.29322" = "typ-av-beslut-skyddade-omraden"
+"158.29508" = "nationalparker"
+"158.29511" = "nationalparker-naturreservat-marin"
+"158.29521" = "kulturreservat"
+"158.29523" = "skyddade-alvar"
+"158.29529" = "fridlyst-vaxt-djurart"
+"158.29530" = "naturtyp-skyddade-omraden"
+"158.29543" = "produktiv-skogsmark-skyddade-omraden"
+"158.30393" = "skyddade-omraden-lander-areal"
+"158.30394" = "skyddad-natur-i-varlden-andel"
+"158.30401" = "skyddad-areal-per-land"
+"158.31178" = "produktiv-skogsmark-per-region-areal"
+"158.31179" = "produktiv-skyddad-skog-region-andel"
+"158.31180" = "andel-hyggen-ungskogar-areal-skogsmark"
+"158.31181" = "produktiv-skog-nyttjande-areal"
+"158.31182" = "markagare-i-naturreservat"
+"158.35114" = "skyddade-gronomraden-andel"
+"158.37766" = "naturvardsavtal-areal"
+"158.37767" = "markersattningar-areal"
+"158.40422" = "tatort-2018"
+"158.40423" = "regionala-havsomraden"
+"158.39461" = "datatyp-for-geometri"
 
 [[identity.partition]]
 variable = "158.43159"
@@ -32,171 +99,6 @@ columns = [{ valid_from = "2024-12-31", valid_to = "2024-12-31", column = "SKYDD
 expected_evidence_sha256 = "e683373ff0a2f5909120553abdbbc9dd7ea27fdc4b54d2744fac9aea1f357a13"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
-
-[[variable]]
-native_id = "158.3817.ansvarig-skotsel"
-slug = "ansvarig-skotsel"
-deprecated = false
-
-[[variable]]
-native_id = "158.3817.forvaltare-namn"
-slug = "forvaltare-namn-3817"
-deprecated = false
-
-[[variable]]
-native_id = "158.35327.area-ha"
-slug = "area-ha"
-deprecated = false
-
-[[variable]]
-native_id = "158.35327.areaha-scb"
-slug = "areaha-scb"
-deprecated = false
-
-[[variable]]
-native_id = "158.35327.areaprod"
-slug = "areaprod"
-deprecated = false
-
-[[variable]]
-native_id = "158.35327.areatot"
-slug = "areatot"
-deprecated = false
-
-[[variable]]
-native_id = "158.35327.total-areal"
-slug = "total-areal"
-deprecated = false
-
-[[variable]]
-native_id = "158.35327.totarea-scb"
-slug = "totarea-scb"
-deprecated = false
-
-[[variable]]
-native_id = "158.39597.beteckn"
-slug = "beteckn"
-deprecated = false
-
-[[variable]]
-native_id = "158.39597.namn"
-slug = "namn"
-deprecated = false
-
-[[variable]]
-native_id = "158.39597.namn-1"
-slug = "namn-1"
-deprecated = false
-
-[[variable]]
-native_id = "158.39597.namn-12"
-slug = "namn-12"
-deprecated = false
-
-[[variable]]
-native_id = "158.39597.objektnamn"
-slug = "objektnamn"
-deprecated = false
-
-[[variable]]
-native_id = "158.39597.site-name"
-slug = "site-name"
-deprecated = false
-
-[[variable]]
-native_id = "158.43151.sci"
-slug = "sci-43151"
-deprecated = false
-
-[[variable]]
-native_id = "158.43151.spa"
-slug = "spa"
-deprecated = false
-
-[[variable]]
-native_id = "158.43151.typ"
-slug = "typ"
-deprecated = false
-
-[[variable]]
-native_id = "158.43151.typ-1"
-slug = "typ-1"
-deprecated = false
-
-[[variable]]
-native_id = "158.43151.typ-12"
-slug = "typ-12"
-deprecated = false
-
-[[variable]]
-native_id = "158.43153.ansvarig-databas"
-slug = "ansvarig-databas"
-deprecated = false
-
-[[variable]]
-native_id = "158.43153.registrerande-myndighet"
-slug = "registrerande-myndighet-43153"
-deprecated = false
-
-[[variable]]
-native_id = "158.43145.sitecode"
-slug = "sitecode-43145"
-deprecated = false
-
-[[variable]]
-native_id = "158.43145.sitecode-1"
-slug = "sitecode-1"
-deprecated = false
-
-[[variable]]
-native_id = "158.43145.sitecode-12"
-slug = "sitecode-12"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.datbeslut"
-slug = "datbeslut"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.eu-besl-bevarandeomr-datum"
-slug = "eu-besl-bevarandeomr-datum"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.eu-besl-skyddsomr-datum"
-slug = "eu-besl-skyddsomr-datum"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.inlamn-datum"
-slug = "inlamn-datum"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.senaste-beslutsdat"
-slug = "senaste-beslutsdat"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.uppd-datum"
-slug = "uppd-datum"
-deprecated = false
-
-[[variable]]
-native_id = "158.19072.urspr-beslutsdatum"
-slug = "urspr-beslutsdatum"
-deprecated = false
-
-[[variable]]
-native_id = "158.43152.urspr-gallandedatum"
-slug = "urspr-gallandedatum"
-deprecated = false
-
-[[variable]]
-native_id = "158.43154.source-positive"
-slug = "beslutsstatus"
-deprecated = false
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -462,182 +364,3 @@ reason = "Shared wording does not establish a reliable sibling group when the su
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
 expected_evidence_sha256 = "3346c32b4256f67e2c1a4b13e3827591286eb1f59886c0875d6a9f9649972747"
 expected_diagnostic_sha256 = "f34d10b6b01c52bf2675aa616acadb8fac179b1b4b763cb3eb494485d8dbc4d9"
-
-[[variable]]
-native_id = "158.36"
-slug = "kommun"
-
-
-[[variable]]
-native_id = "158.49"
-slug = "lan"
-
-
-[[variable]]
-native_id = "158.2870"
-slug = "avstand-till-skyddad-natur"
-
-
-[[variable]]
-native_id = "158.2874"
-slug = "naturtyp-skyddade-omraden-areal"
-
-
-[[variable]]
-native_id = "158.2875"
-slug = "skyddade-omraden-miljobalken-areal"
-
-
-[[variable]]
-native_id = "158.3818"
-slug = "kostnader-for-sakrade-omraden"
-
-
-[[variable]]
-native_id = "158.19070"
-slug = "typ-av-skyddad-kulturmiljo"
-
-
-[[variable]]
-native_id = "158.19071"
-slug = "fridlyst-vaxt-djurart-antal"
-
-
-[[variable]]
-native_id = "158.25491"
-slug = "brottsmisstankar-brottskod-8015"
-
-
-[[variable]]
-native_id = "158.28060"
-slug = "skyddade-omraden-miljobalken-antal"
-
-
-[[variable]]
-native_id = "158.28061"
-slug = "skyddade-alvar-areal"
-
-
-[[variable]]
-native_id = "158.29316"
-slug = "andel-skyddad-areal-omkring-tatort"
-
-
-[[variable]]
-native_id = "158.29317"
-slug = "folkmangd-inom-skyddat-omrade"
-
-
-[[variable]]
-native_id = "158.29318"
-slug = "typ-av-kostnad"
-
-
-[[variable]]
-native_id = "158.29322"
-slug = "typ-av-beslut-skyddade-omraden"
-
-
-[[variable]]
-native_id = "158.29508"
-slug = "nationalparker"
-
-
-[[variable]]
-native_id = "158.29511"
-slug = "nationalparker-naturreservat-marin"
-
-
-[[variable]]
-native_id = "158.29521"
-slug = "kulturreservat"
-
-
-[[variable]]
-native_id = "158.29523"
-slug = "skyddade-alvar"
-
-
-[[variable]]
-native_id = "158.29529"
-slug = "fridlyst-vaxt-djurart"
-
-
-[[variable]]
-native_id = "158.29530"
-slug = "naturtyp-skyddade-omraden"
-
-
-[[variable]]
-native_id = "158.29543"
-slug = "produktiv-skogsmark-skyddade-omraden"
-
-
-[[variable]]
-native_id = "158.30393"
-slug = "skyddade-omraden-lander-areal"
-
-
-[[variable]]
-native_id = "158.30394"
-slug = "skyddad-natur-i-varlden-andel"
-
-
-[[variable]]
-native_id = "158.30401"
-slug = "skyddad-areal-per-land"
-
-
-[[variable]]
-native_id = "158.31178"
-slug = "produktiv-skogsmark-per-region-areal"
-
-
-[[variable]]
-native_id = "158.31179"
-slug = "produktiv-skyddad-skog-region-andel"
-
-
-[[variable]]
-native_id = "158.31180"
-slug = "andel-hyggen-ungskogar-areal-skogsmark"
-
-
-[[variable]]
-native_id = "158.31181"
-slug = "produktiv-skog-nyttjande-areal"
-
-
-[[variable]]
-native_id = "158.31182"
-slug = "markagare-i-naturreservat"
-
-
-[[variable]]
-native_id = "158.35114"
-slug = "skyddade-gronomraden-andel"
-
-
-[[variable]]
-native_id = "158.37766"
-slug = "naturvardsavtal-areal"
-
-
-[[variable]]
-native_id = "158.37767"
-slug = "markersattningar-areal"
-
-
-[[variable]]
-native_id = "158.40422"
-slug = "tatort-2018"
-
-
-[[variable]]
-native_id = "158.40423"
-slug = "regionala-havsomraden"
-
-
-[[variable]]
-native_id = "158.39461"
-slug = "datatyp-for-geometri"

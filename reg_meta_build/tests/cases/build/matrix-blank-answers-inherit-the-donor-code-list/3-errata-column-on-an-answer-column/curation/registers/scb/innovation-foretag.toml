@@ -5,15 +5,12 @@ native_id = "257"
 [[variant]]
 native_id = "257.553"
 slug = "_default"
-[[variable]]
-native_id = "257.15661"
-slug = "v15661"
-[[variable]]
-native_id = "257.CO11"
-slug = "c-co11"
-[[variable]]
-native_id = "257.CO12"
-slug = "c-co12"
+
+[variable]
+"257.15661" = "v15661"
+"257.CO11" = "c-co11"
+"257.CO12" = "c-co12"
+
 [[representation.matrix]]
 source_mode = "documented_blank"
 evidence_file = "registers/scb/innovation-foretag/answers.json"

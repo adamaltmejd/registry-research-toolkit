@@ -8,28 +8,11 @@ native_id = "226.1432"
 slug = "handelsomraden"
 display_group = "Handelsområden"
 
+[variable]
 # Industrins förbrukning av inköpta varor (tidigare Industrins förbrukning av inköpta varor och tjänster)
-
-[[variable]]
-native_id = "226.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "226.49"
-slug = "lan"
-
-[[variable]]
-native_id = "226.2189"
-slug = "landareal"
-
-[[variable]]
-native_id = "226.25365"
-slug = "handelsomrade"
-
-[[variable]]
-native_id = "226.25366"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "226.25367"
-slug = "antal-arbetsstallen"
+"226.36" = "kommun"
+"226.49" = "lan"
+"226.2189" = "landareal"
+"226.25365" = "handelsomrade"
+"226.25366" = "antal-anstallda"
+"226.25367" = "antal-arbetsstallen"

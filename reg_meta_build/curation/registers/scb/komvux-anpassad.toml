@@ -30,162 +30,53 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Nationellt centrum för flexibelt lärande (CFL)
-
-[[variable]]
-native_id = "250.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "250.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "250.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "250.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "250.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "250.8552"
-slug = "gymnasieforbund-id"
-
-[[variable]]
-native_id = "250.14687"
-slug = "studieniva-sarvux"
-
-[[variable]]
-native_id = "250.29427"
-slug = "gymnasieforbundets-namn"
-
-[[variable]]
-native_id = "250.35635"
-slug = "studieniva-anpassad"
+"250.57" = "personnr"
+"250.66" = "utbildningsniva"
+"250.257" = "fodelseland-rtb"
+"250.1839" = "orgnr"
+"250.6809" = "folkbokforingskommun"
+"250.8552" = "gymnasieforbund-id"
+"250.14687" = "studieniva-sarvux"
+"250.29427" = "gymnasieforbundets-namn"
+"250.35635" = "studieniva-anpassad"
 
 # register 251 (cfl)
-
-[[variable]]
-native_id = "250.14815.skolkommun"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "250.36.hemkommun"
-slug = "hemkommun"
-
-[[variable]]
-native_id = "250.36.skolkommun"
-slug = "skolkommun-kod"
+"250.14815.skolkommun" = "skolkommun"
+"250.36.hemkommun" = "hemkommun"
+"250.36.skolkommun" = "skolkommun-kod"
 
 # register 258 (it-anvandning)
-
-[[variable]]
-native_id = "250.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "250.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "250.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "250.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "250.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "250.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "250.8006"
-slug = "verksamhetsform-skolvasendet"
-
-[[variable]]
-native_id = "250.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "250.8557"
-slug = "utbildningsanordnare"
-
-[[variable]]
-native_id = "250.8701"
-slug = "kopt-utbildning-i-komvux"
-
-[[variable]]
-native_id = "250.14642"
-slug = "niva-vuxenutbildning"
-
-[[variable]]
-native_id = "250.14653"
-slug = "kurs-i-komvux"
-
-[[variable]]
-native_id = "250.14655"
-slug = "kursstart"
-
-[[variable]]
-native_id = "250.14656"
-slug = "kursslut"
-
-[[variable]]
-native_id = "250.14657"
-slug = "datumavbrott"
-
-[[variable]]
-native_id = "250.14658"
-slug = "typ-av-undervisning"
-
-[[variable]]
-native_id = "250.32756"
-slug = "nyinskriven-elev"
-
-[[variable]]
-native_id = "250.32757"
-slug = "poangomfattning-grundlaggande"
-
-[[variable]]
-native_id = "250.32758"
-slug = "poangomfattning-gymnasial"
-
-[[variable]]
-native_id = "250.36646"
-slug = "orsak-ej-inrapporterat-betyg"
-
-[[variable]]
-native_id = "250.39842"
-slug = "ar-for-komvuxutbildning"
-
-[[variable]]
-native_id = "250.40049"
-slug = "avslutad-kurs"
+"250.56" = "person-orgnr"
+"250.34" = "juridisk-form"
+"250.241" = "alder-31-12"
+"250.1086" = "namn-juridiska-enheten"
+"250.1378" = "fodelsear"
+"250.1993" = "skolans-identitetsnummer"
+"250.8006" = "verksamhetsform-skolvasendet"
+"250.8137" = "huvudman"
+"250.8557" = "utbildningsanordnare"
+"250.8701" = "kopt-utbildning-i-komvux"
+"250.14642" = "niva-vuxenutbildning"
+"250.14653" = "kurs-i-komvux"
+"250.14655" = "kursstart"
+"250.14656" = "kursslut"
+"250.14657" = "datumavbrott"
+"250.14658" = "typ-av-undervisning"
+"250.32756" = "nyinskriven-elev"
+"250.32757" = "poangomfattning-grundlaggande"
+"250.32758" = "poangomfattning-gymnasial"
+"250.36646" = "orsak-ej-inrapporterat-betyg"
+"250.39842" = "ar-for-komvuxutbildning"
+"250.40049" = "avslutad-kurs"
 
 # register 251
-
-[[variable]]
-native_id = "250.32738.slan"
-slug = "skollan-2"
-
-[[variable]]
-native_id = "250.32738.slan-text"
-slug = "skollan-text-2"
-
-[[variable]]
-native_id = "250.8534.komgrupp17"
-slug = "kommungrupp-kod"
+"250.32738.slan" = "skollan-2"
+"250.32738.slan-text" = "skollan-text-2"
+"250.8534.komgrupp17" = "kommungrupp-kod"
+"250.8534.komgrupp23" = "komgrupp23"
+"250.8534.kommungrupp-text" = "kommungrupp-text"
 
 # register 26
 
@@ -449,14 +340,6 @@ variable = "250.8534"
 columns = { KOMGRUPP17 = "250.8534.komgrupp17", KOMGRUPP23 = "250.8534.komgrupp23", KOMMUNGRUPP_TEXT = "250.8534.kommungrupp-text", KomGrupp23 = "250.8534.komgrupp23", Komgrupp17 = "250.8534.komgrupp17", Komgrupp23 = "250.8534.komgrupp23", Kommungrupp_text = "250.8534.kommungrupp-text" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "22f967cb4af42421a32eea8da9f572353f02b87476cf2143a5001484b9250d4b"
-
-[[variable]]
-native_id = "250.8534.komgrupp23"
-slug = "komgrupp23"
-
-[[variable]]
-native_id = "250.8534.kommungrupp-text"
-slug = "kommungrupp-text"
 
 [[representation.parallel]]
 valid_from = "2024-01-01"

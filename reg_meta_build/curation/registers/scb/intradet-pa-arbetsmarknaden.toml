@@ -51,1740 +51,457 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Offentligt ägda företag
-
-[[variable]]
-native_id = "111.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "111.2179"
-slug = "lopnummer"
-
-
-[[variable]]
-native_id = "111.3"
-slug = "hogskolekod"
-
-[[variable]]
-native_id = "111.49"
-slug = "lan"
-
-[[variable]]
-native_id = "111.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "111.67"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "111.145"
-slug = "identitet"
-
-[[variable]]
-native_id = "111.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "111.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "111.866"
-slug = "fodd-i-sverige-utomlands"
-
-[[variable]]
-native_id = "111.1266"
-slug = "indatamedium"
-
-[[variable]]
-native_id = "111.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "111.1719"
-slug = "svarsdatum"
-
-[[variable]]
-native_id = "111.2686"
-slug = "manadslon"
-
-[[variable]]
-native_id = "111.3877"
-slug = "arbete-hemifran"
-
-[[variable]]
-native_id = "111.4600"
-slug = "scbid"
-
-[[variable]]
-native_id = "111.4613"
-slug = "populationsstorlek-per-stratum"
-
-[[variable]]
-native_id = "111.4614"
-slug = "urvalsstorlek-per-stratum"
-
-[[variable]]
-native_id = "111.4655"
-slug = "avregkod"
-
-[[variable]]
-native_id = "111.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "111.4677"
-slug = "sysselsattningsstatus"
-
-[[variable]]
-native_id = "111.4697"
-slug = "gymnasiebetyg"
-
-[[variable]]
-native_id = "111.4702"
-slug = "inriktning-i-gymnasiet"
-
-[[variable]]
-native_id = "111.4893"
-slug = "manader-forsta-arbete"
-
-[[variable]]
-native_id = "111.5018"
-slug = "kvar-pa-forsta-arbete"
-
-[[variable]]
-native_id = "111.5019"
-slug = "arbetslos-efter-utbildning"
-
-[[variable]]
-native_id = "111.5020"
-slug = "antal-manader-arbetslos"
-
-[[variable]]
-native_id = "111.5043"
-slug = "aktivt-sokt-arbete"
-
-[[variable]]
-native_id = "111.5046"
-slug = "studier-istallet-arbete"
-
-[[variable]]
-native_id = "111.5050"
-slug = "arbete-inom-norden"
-
-[[variable]]
-native_id = "111.5054"
-slug = "arbete-europa-utom-norden"
-
-[[variable]]
-native_id = "111.5057"
-slug = "arbete-i-usa"
-
-[[variable]]
-native_id = "111.5062"
-slug = "arbete-i-ovriga-varlden"
-
-[[variable]]
-native_id = "111.5063"
-slug = "arbete-utomlands"
-
-[[variable]]
-native_id = "111.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "111.5090"
-slug = "arbetsmarknadssektor"
-
-[[variable]]
-native_id = "111.5118"
-slug = "verksamhetsomrade"
-
-[[variable]]
-native_id = "111.5120"
-slug = "viljan-att-arbeta-mer"
-
-[[variable]]
-native_id = "111.5125"
-slug = "tid-lara-arbetsuppgifterna"
-
-[[variable]]
-native_id = "111.5183"
-slug = "arbetsuppgifter-matematik"
-
-[[variable]]
-native_id = "111.5184"
-slug = "arbetsuppgifter-engelska"
-
-[[variable]]
-native_id = "111.5185"
-slug = "arbetsuppgifter-folja-kunskap"
-
-[[variable]]
-native_id = "111.5186"
-slug = "arbetsuppgifter-dator"
-
-[[variable]]
-native_id = "111.5187"
-slug = "arbetsuppgifter-utrustning"
-
-[[variable]]
-native_id = "111.5188"
-slug = "arbetsuppgifter-framtrada"
-
-[[variable]]
-native_id = "111.5189"
-slug = "arbetsuppgifter-problem"
-
-[[variable]]
-native_id = "111.5190"
-slug = "arbetsuppgifter-initiativ"
-
-[[variable]]
-native_id = "111.5191"
-slug = "arbetsuppgifter-service"
-
-[[variable]]
-native_id = "111.5193"
-slug = "arbetsuppgifter-argumentera"
-
-[[variable]]
-native_id = "111.5194"
-slug = "arbetsuppgifter-team"
-
-[[variable]]
-native_id = "111.5195"
-slug = "arbetsuppgifter-lita-sjalv"
-
-[[variable]]
-native_id = "111.5196"
-slug = "arbetsuppgifter-flexibel"
-
-[[variable]]
-native_id = "111.5197"
-slug = "arbetsuppgifter-noggrann"
-
-[[variable]]
-native_id = "111.5198"
-slug = "arbetsuppgifter-stresstalig"
-
-[[variable]]
-native_id = "111.5199"
-slug = "arbetsuppgifter-omsorgsfull"
-
-[[variable]]
-native_id = "111.5200"
-slug = "arbetsuppgifter-punktlig"
-
-[[variable]]
-native_id = "111.5201"
-slug = "kurser-12-manader"
-
-[[variable]]
-native_id = "111.5203"
-slug = "kunskap-nytta-arbete"
-
-[[variable]]
-native_id = "111.5204"
-slug = "tillracklig-kunskap"
-
-[[variable]]
-native_id = "111.5205"
-slug = "kannedom-arbete-tidning"
-
-[[variable]]
-native_id = "111.5206"
-slug = "kannedom-arbete-arbetsformedling"
-
-[[variable]]
-native_id = "111.5207"
-slug = "kannedom-arbete-internet"
-
-[[variable]]
-native_id = "111.5208"
-slug = "kannedom-arbete-arbetsgivare"
-
-[[variable]]
-native_id = "111.5212"
-slug = "kannedom-arbete-foraldrar"
-
-[[variable]]
-native_id = "111.5213"
-slug = "kannedom-arbete-annat"
-
-[[variable]]
-native_id = "111.5214"
-slug = "arbete-i-samma-kommun"
-
-[[variable]]
-native_id = "111.5216"
-slug = "bedomning-gymnasieutb-undervisning"
-
-[[variable]]
-native_id = "111.5217"
-slug = "bedomning-gymnasieutb-kursinnehall"
-
-[[variable]]
-native_id = "111.5218"
-slug = "bedomning-gymnasieutb-laromedel"
-
-[[variable]]
-native_id = "111.5219"
-slug = "bedomning-gymnasieutb-studiemiljo"
-
-[[variable]]
-native_id = "111.5220"
-slug = "bedomning-gymnasieutb-vagledning"
-
-[[variable]]
-native_id = "111.5221"
-slug = "bedomning-gymnasieutb-praktik"
-
-[[variable]]
-native_id = "111.5222"
-slug = "bedomning-gymnasieutb-projektarbete"
-
-[[variable]]
-native_id = "111.5223"
-slug = "fardighetstraning-matematik"
-
-[[variable]]
-native_id = "111.5224"
-slug = "fardighetstraning-engelska"
-
-[[variable]]
-native_id = "111.5225"
-slug = "fardighetstraning-folja-kunskap"
-
-[[variable]]
-native_id = "111.5226"
-slug = "fardighetstraning-dator"
-
-[[variable]]
-native_id = "111.5227"
-slug = "fardighetstraning-utrustning"
-
-[[variable]]
-native_id = "111.5228"
-slug = "fardighetstraning-framtrada"
-
-[[variable]]
-native_id = "111.5229"
-slug = "fardighetstraning-problem"
-
-[[variable]]
-native_id = "111.5230"
-slug = "fardighetstraning-initiativ"
-
-[[variable]]
-native_id = "111.5231"
-slug = "fardighetstraning-service"
-
-[[variable]]
-native_id = "111.5232"
-slug = "fardighetstraning-sjalvstandig"
-
-[[variable]]
-native_id = "111.5233"
-slug = "fardighetstraning-argumentera"
-
-[[variable]]
-native_id = "111.5234"
-slug = "fardighetstraning-team"
-
-[[variable]]
-native_id = "111.5235"
-slug = "fardighetstraning-lita-sjalv"
-
-[[variable]]
-native_id = "111.5236"
-slug = "fardighetstraning-flexibel"
-
-[[variable]]
-native_id = "111.5237"
-slug = "fardighetstraning-noggrann"
-
-[[variable]]
-native_id = "111.5238"
-slug = "fardighetstraning-stresstalig"
-
-[[variable]]
-native_id = "111.5240"
-slug = "fardighetstraning-omsorgsfull"
-
-[[variable]]
-native_id = "111.5241"
-slug = "fardighetstraning-punktlig"
-
-[[variable]]
-native_id = "111.5243"
-slug = "studier-inom-norden"
-
-[[variable]]
-native_id = "111.5244"
-slug = "studier-europa-utom-norden"
-
-[[variable]]
-native_id = "111.5246"
-slug = "studier-i-usa"
-
-[[variable]]
-native_id = "111.5247"
-slug = "studier-i-ovriga-varlden"
-
-[[variable]]
-native_id = "111.5249"
-slug = "niva-pa-utlandsstudier"
-
-[[variable]]
-native_id = "111.5251"
-slug = "planer-studier-utbildning"
-
-[[variable]]
-native_id = "111.5252"
-slug = "valet-idag"
-
-[[variable]]
-native_id = "111.5690"
-slug = "antal-arbeten"
-
-[[variable]]
-native_id = "111.5691"
-slug = "arbete-efter-utbildning"
-
-[[variable]]
-native_id = "111.5693"
-slug = "gruppkod"
-
-[[variable]]
-native_id = "111.5694"
-slug = "scb-stratum"
-
-[[variable]]
-native_id = "111.5700"
-slug = "hjalpvariabel-3"
-
-[[variable]]
-native_id = "111.6141"
-slug = "grundlaggande-behorighet-hogskola"
-
-[[variable]]
-native_id = "111.6192"
-slug = "studerat-pa-hogskola"
-
-[[variable]]
-native_id = "111.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "111.8073"
-slug = "moderns-utbildningsniva"
-
-[[variable]]
-native_id = "111.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "111.8534"
-slug = "kommungruppsindelning"
-
-[[variable]]
-native_id = "111.8638"
-slug = "arbetsuppgifter-muntliga-presentationer"
-
-[[variable]]
-native_id = "111.8639"
-slug = "arbetsuppgifter-skriftlig-presentation"
-
-[[variable]]
-native_id = "111.8640"
-slug = "arbetsuppgifter-forklara-lekman"
-
-[[variable]]
-native_id = "111.8641"
-slug = "arbetsuppgifter-anvanda-it"
-
-[[variable]]
-native_id = "111.8642"
-slug = "arbetsuppgifter-teamarbete"
-
-[[variable]]
-native_id = "111.8647"
-slug = "arbetsuppgifter-verksamhetsutveckling"
-
-[[variable]]
-native_id = "111.8648"
-slug = "arbetsuppgifter-presentation-engelska"
-
-[[variable]]
-native_id = "111.8649"
-slug = "arbete-samma-ort-utbildningen"
-
-[[variable]]
-native_id = "111.8652"
-slug = "bedomning-utbildning-undervisning"
-
-[[variable]]
-native_id = "111.8658"
-slug = "bedomning-utbildning-amnesinnehall"
-
-[[variable]]
-native_id = "111.8659"
-slug = "bedomning-utbildning-laromedel"
-
-[[variable]]
-native_id = "111.8660"
-slug = "bedomning-utbildning-studiemiljo"
-
-[[variable]]
-native_id = "111.8661"
-slug = "bedomning-utbildning-praktik"
-
-[[variable]]
-native_id = "111.8662"
-slug = "bedomning-utbildning-examensarbete"
-
-[[variable]]
-native_id = "111.8666"
-slug = "fardighetstraning-muntlig-presentation"
-
-[[variable]]
-native_id = "111.8667"
-slug = "fardighetstraning-skriftlig-presentation"
-
-[[variable]]
-native_id = "111.8668"
-slug = "fardighetstraning-presentation-engelska"
-
-[[variable]]
-native_id = "111.8669"
-slug = "fardighetstraning-forklara-lekman"
-
-[[variable]]
-native_id = "111.8670"
-slug = "fardighetstraning-anvanda-it"
-
-[[variable]]
-native_id = "111.8671"
-slug = "fardighetstraning-teamarbete"
-
-[[variable]]
-native_id = "111.8672"
-slug = "fardighetstraning-sjalvstandig-problem"
-
-[[variable]]
-native_id = "111.8673"
-slug = "fardighetstraning-verksamhetsutveckling"
-
-[[variable]]
-native_id = "111.8675"
-slug = "bedomning-utbildning-grund-borja-arbeta"
-
-[[variable]]
-native_id = "111.8676"
-slug = "bedomning-utbildning-vidareutbildning"
-
-[[variable]]
-native_id = "111.8677"
-slug = "bedomning-utbildning-grund-utfora"
-
-[[variable]]
-native_id = "111.8678"
-slug = "bedomning-utbildning-grund-personlig"
-
-[[variable]]
-native_id = "111.8679"
-slug = "bedomning-utbildning-grund-karriar"
-
-[[variable]]
-native_id = "111.8681"
-slug = "bedomning-utbildning-entreprenorskap"
-
-[[variable]]
-native_id = "111.8682"
-slug = "valet-idag-av-utbildning"
-
-[[variable]]
-native_id = "111.8683"
-slug = "studier-i-sverige"
-
-[[variable]]
-native_id = "111.8684"
-slug = "studier-inom-europa"
-
-[[variable]]
-native_id = "111.8685"
-slug = "huvudsakligt-skal-fortsatta-studier"
-
-[[variable]]
-native_id = "111.14850"
-slug = "kommungrupp"
-
-[[variable]]
-native_id = "111.17357"
-slug = "timlon"
-
-[[variable]]
-native_id = "111.18020"
-slug = "sysselsattningsstatus-november-mor"
-
-[[variable]]
-native_id = "111.18021"
-slug = "sysselsattningsstatus-november-far"
-
-[[variable]]
-native_id = "111.21260"
-slug = "nutsregion"
-
-[[variable]]
-native_id = "111.25103"
-slug = "uenr"
-
-[[variable]]
-native_id = "111.25154"
-slug = "nojd-med-avslutad-utbildning"
-
-[[variable]]
-native_id = "111.25266"
-slug = "antal-personer-i-ledningsansvar"
-
-[[variable]]
-native_id = "111.25284"
-slug = "hade-du-chefsposition-i-arbetet"
-
-[[variable]]
-native_id = "111.28505"
-slug = "inflodeskod"
-
-[[variable]]
-native_id = "111.29887"
-slug = "huvudsaklig-utbildningsinriktning"
-
-[[variable]]
-native_id = "111.29888"
-slug = "saknar-i-utbildning-for-examen"
-
-[[variable]]
-native_id = "111.29890"
-slug = "orsak-examen-ej-uttagen-behover-ej"
-
-[[variable]]
-native_id = "111.29897"
-slug = "orsak-examen-ej-uttagen-kande-ej-kraven"
-
-[[variable]]
-native_id = "111.29898"
-slug = "orsak-examen-ej-uttagen-annan"
-
-[[variable]]
-native_id = "111.29899"
-slug = "planer-slutfora-hogskolestudier"
-
-[[variable]]
-native_id = "111.30574"
-slug = "arbetsuppgifter"
-
-[[variable]]
-native_id = "111.30622"
-slug = "arbetar-hemifran"
-
-[[variable]]
-native_id = "111.30675"
-slug = "arbete-minst-6-manader-gymnasiet"
-
-[[variable]]
-native_id = "111.30676"
-slug = "antal-manader-forsta-arbete-min6man"
-
-[[variable]]
-native_id = "111.30805"
-slug = "overensstammelse-gymnasieutbildning"
-
-[[variable]]
-native_id = "111.30806"
-slug = "utbildningsniva-tillracklig-for-arbetet"
-
-[[variable]]
-native_id = "111.30807"
-slug = "tid-lara-viktigaste-arbetsuppgifter"
-
-[[variable]]
-native_id = "111.30810"
-slug = "arbetat-eller-studerat-utomlands"
-
-[[variable]]
-native_id = "111.30812"
-slug = "framtidsplaner-fortsatta-nuvarande-jobb"
-
-[[variable]]
-native_id = "111.30813"
-slug = "framtidsplaner-skaffa-ett-nytt-jobb"
-
-[[variable]]
-native_id = "111.30814"
-slug = "framtidsplaner-skaffa-ett-jobb"
-
-[[variable]]
-native_id = "111.30815"
-slug = "framtidsplaner-starta-eget-foretag"
-
-[[variable]]
-native_id = "111.30816"
-slug = "framtidsplaner-studera-hogskola-yh"
-
-[[variable]]
-native_id = "111.30817"
-slug = "framtidsplaner-andra-studier-komvux"
-
-[[variable]]
-native_id = "111.30818"
-slug = "framtidsplaner-andra-saker"
-
-[[variable]]
-native_id = "111.30819"
-slug = "framtidsplaner-annat"
-
-[[variable]]
-native_id = "111.30820"
-slug = "framtidsplaner-vet-inte"
-
-[[variable]]
-native_id = "111.30824"
-slug = "minst-en-timmes-arbete-under-matveckan"
-
-[[variable]]
-native_id = "111.30887"
-slug = "elevtyp"
-
-[[variable]]
-native_id = "111.32454"
-slug = "foraldrarnas-utbildningsniva"
-
-[[variable]]
-native_id = "111.36224"
-slug = "procent-av-heltid"
-
-[[variable]]
-native_id = "111.37050"
-slug = "uppfyller-krav-for-examen"
-
-[[variable]]
-native_id = "111.37055"
-slug = "bedomning-lara-sig-vad-behovs"
-
-[[variable]]
-native_id = "111.37058"
-slug = "planer-for-aret-efter-gymnasieskolan"
-
-[[variable]]
-native_id = "111.37059"
-slug = "onskemal-for-arbetets-omrade"
-
-[[variable]]
-native_id = "111.37063"
-slug = "arbetar-kvar-pa-forsta-arbetet"
-
-[[variable]]
-native_id = "111.38155"
-slug = "utbildningsomrade-inom-yrkeshogskolan"
-
-[[variable]]
-native_id = "111.39554"
-slug = "hogsta-utbildningsniva-innan-yh"
-
-[[variable]]
-native_id = "111.39555"
-slug = "studieform"
-
-[[variable]]
-native_id = "111.39556"
-slug = "studietakt"
-
-[[variable]]
-native_id = "111.39557"
-slug = "utbildningslangd"
-
-[[variable]]
-native_id = "111.39559"
-slug = "studielan"
-
-[[variable]]
-native_id = "111.39562"
-slug = "huvudsaklig-sysselsattning-innan-yh"
-
-[[variable]]
-native_id = "111.39565"
-slug = "genomforde-du-nagon-lia-kurs"
-
-[[variable]]
-native_id = "111.39566"
-slug = "har-du-samma-arbetsgivare-idag"
-
-[[variable]]
-native_id = "111.39567"
-slug = "overensstammer-arbetet-med-utbildningen"
-
-[[variable]]
-native_id = "111.39568"
-slug = "har-din-arbetsuppgifter-forandrats"
-
-[[variable]]
-native_id = "111.39572"
-slug = "utstrackning-larde-vad-behovdes"
-
-[[variable]]
-native_id = "111.39573"
-slug = "yh-utbildning-forutsattning-for-arbete"
-
-[[variable]]
-native_id = "111.39574"
-slug = "arbetar-inom-utbildningens-omrade"
-
-[[variable]]
-native_id = "111.39575"
-slug = "utstrackning-anvander-det-larde-sig"
-
-[[variable]]
-native_id = "111.39576"
-slug = "hur-nojd-ar-du-med-din-yh-utbildning"
-
-[[variable]]
-native_id = "111.39577"
-slug = "forsta-jobb-efter-yh-utbildning"
-
-[[variable]]
-native_id = "111.41668"
-slug = "arbete-utomlands-inom-europa"
-
-[[variable]]
-native_id = "111.41670"
-slug = "studier-utomlands-inom-europa"
-
-[[variable]]
-native_id = "111.41671"
-slug = "studier-utomlands-utanfor-europa"
-
-[[variable]]
-native_id = "111.41672"
-slug = "overensstammelse-utbildning-och-arbete"
-
-[[variable]]
-native_id = "111.41711"
-slug = "foretagets-bransch-naringsgren"
-
-[[variable]]
-native_id = "111.41713"
-slug = "manadslon-uppraknad"
-
-[[variable]]
-native_id = "111.41716"
-slug = "yrke-och-arbetsuppgifter"
-
-[[variable]]
-native_id = "111.42174"
-slug = "larlingsanstallning"
-
-[[variable]]
-native_id = "111.42175"
-slug = "gig-plattformsjobb"
-
-[[variable]]
-native_id = "111.42177"
-slug = "frivilligarbete"
-
-[[variable]]
-native_id = "111.42182"
-slug = "nojd-med-arbetet"
-
-[[variable]]
-native_id = "111.45908"
-slug = "hogskolestudier-innan-yh"
-
-[[variable]]
-native_id = "111.45909"
-slug = "annan-examen-innan-yh"
-
-[[variable]]
-native_id = "111.46913"
-slug = "corona-syss-inget"
+"111.57" = "personnr"
+"111.2179" = "lopnummer"
+"111.3" = "hogskolekod"
+"111.49" = "lan"
+"111.66" = "utbildningsniva"
+"111.67" = "utlsvbakg"
+"111.145" = "identitet"
+"111.241" = "alder-31-12"
+"111.749" = "aldersgrupp"
+"111.866" = "fodd-i-sverige-utomlands"
+"111.1266" = "indatamedium"
+"111.1569" = "fodelseland"
+"111.1719" = "svarsdatum"
+"111.2686" = "manadslon"
+"111.3877" = "arbete-hemifran"
+"111.4600" = "scbid"
+"111.4613" = "populationsstorlek-per-stratum"
+"111.4614" = "urvalsstorlek-per-stratum"
+"111.4655" = "avregkod"
+"111.4656" = "insamlingsmetod"
+"111.4677" = "sysselsattningsstatus"
+"111.4697" = "gymnasiebetyg"
+"111.4702" = "inriktning-i-gymnasiet"
+"111.4893" = "manader-forsta-arbete"
+"111.5018" = "kvar-pa-forsta-arbete"
+"111.5019" = "arbetslos-efter-utbildning"
+"111.5020" = "antal-manader-arbetslos"
+"111.5043" = "aktivt-sokt-arbete"
+"111.5046" = "studier-istallet-arbete"
+"111.5050" = "arbete-inom-norden"
+"111.5054" = "arbete-europa-utom-norden"
+"111.5057" = "arbete-i-usa"
+"111.5062" = "arbete-i-ovriga-varlden"
+"111.5063" = "arbete-utomlands"
+"111.5083" = "anstallningsform"
+"111.5090" = "arbetsmarknadssektor"
+"111.5118" = "verksamhetsomrade"
+"111.5120" = "viljan-att-arbeta-mer"
+"111.5125" = "tid-lara-arbetsuppgifterna"
+"111.5183" = "arbetsuppgifter-matematik"
+"111.5184" = "arbetsuppgifter-engelska"
+"111.5185" = "arbetsuppgifter-folja-kunskap"
+"111.5186" = "arbetsuppgifter-dator"
+"111.5187" = "arbetsuppgifter-utrustning"
+"111.5188" = "arbetsuppgifter-framtrada"
+"111.5189" = "arbetsuppgifter-problem"
+"111.5190" = "arbetsuppgifter-initiativ"
+"111.5191" = "arbetsuppgifter-service"
+"111.5193" = "arbetsuppgifter-argumentera"
+"111.5194" = "arbetsuppgifter-team"
+"111.5195" = "arbetsuppgifter-lita-sjalv"
+"111.5196" = "arbetsuppgifter-flexibel"
+"111.5197" = "arbetsuppgifter-noggrann"
+"111.5198" = "arbetsuppgifter-stresstalig"
+"111.5199" = "arbetsuppgifter-omsorgsfull"
+"111.5200" = "arbetsuppgifter-punktlig"
+"111.5201" = "kurser-12-manader"
+"111.5203" = "kunskap-nytta-arbete"
+"111.5204" = "tillracklig-kunskap"
+"111.5205" = "kannedom-arbete-tidning"
+"111.5206" = "kannedom-arbete-arbetsformedling"
+"111.5207" = "kannedom-arbete-internet"
+"111.5208" = "kannedom-arbete-arbetsgivare"
+"111.5212" = "kannedom-arbete-foraldrar"
+"111.5213" = "kannedom-arbete-annat"
+"111.5214" = "arbete-i-samma-kommun"
+"111.5216" = "bedomning-gymnasieutb-undervisning"
+"111.5217" = "bedomning-gymnasieutb-kursinnehall"
+"111.5218" = "bedomning-gymnasieutb-laromedel"
+"111.5219" = "bedomning-gymnasieutb-studiemiljo"
+"111.5220" = "bedomning-gymnasieutb-vagledning"
+"111.5221" = "bedomning-gymnasieutb-praktik"
+"111.5222" = "bedomning-gymnasieutb-projektarbete"
+"111.5223" = "fardighetstraning-matematik"
+"111.5224" = "fardighetstraning-engelska"
+"111.5225" = "fardighetstraning-folja-kunskap"
+"111.5226" = "fardighetstraning-dator"
+"111.5227" = "fardighetstraning-utrustning"
+"111.5228" = "fardighetstraning-framtrada"
+"111.5229" = "fardighetstraning-problem"
+"111.5230" = "fardighetstraning-initiativ"
+"111.5231" = "fardighetstraning-service"
+"111.5232" = "fardighetstraning-sjalvstandig"
+"111.5233" = "fardighetstraning-argumentera"
+"111.5234" = "fardighetstraning-team"
+"111.5235" = "fardighetstraning-lita-sjalv"
+"111.5236" = "fardighetstraning-flexibel"
+"111.5237" = "fardighetstraning-noggrann"
+"111.5238" = "fardighetstraning-stresstalig"
+"111.5240" = "fardighetstraning-omsorgsfull"
+"111.5241" = "fardighetstraning-punktlig"
+"111.5243" = "studier-inom-norden"
+"111.5244" = "studier-europa-utom-norden"
+"111.5246" = "studier-i-usa"
+"111.5247" = "studier-i-ovriga-varlden"
+"111.5249" = "niva-pa-utlandsstudier"
+"111.5251" = "planer-studier-utbildning"
+"111.5252" = "valet-idag"
+"111.5690" = "antal-arbeten"
+"111.5691" = "arbete-efter-utbildning"
+"111.5693" = "gruppkod"
+"111.5694" = "scb-stratum"
+"111.5700" = "hjalpvariabel-3"
+"111.6141" = "grundlaggande-behorighet-hogskola"
+"111.6192" = "studerat-pa-hogskola"
+"111.6306" = "antal-arbetade-timmar"
+"111.8073" = "moderns-utbildningsniva"
+"111.8074" = "faderns-utbildningsniva"
+"111.8534" = "kommungruppsindelning"
+"111.8638" = "arbetsuppgifter-muntliga-presentationer"
+"111.8639" = "arbetsuppgifter-skriftlig-presentation"
+"111.8640" = "arbetsuppgifter-forklara-lekman"
+"111.8641" = "arbetsuppgifter-anvanda-it"
+"111.8642" = "arbetsuppgifter-teamarbete"
+"111.8647" = "arbetsuppgifter-verksamhetsutveckling"
+"111.8648" = "arbetsuppgifter-presentation-engelska"
+"111.8649" = "arbete-samma-ort-utbildningen"
+"111.8652" = "bedomning-utbildning-undervisning"
+"111.8658" = "bedomning-utbildning-amnesinnehall"
+"111.8659" = "bedomning-utbildning-laromedel"
+"111.8660" = "bedomning-utbildning-studiemiljo"
+"111.8661" = "bedomning-utbildning-praktik"
+"111.8662" = "bedomning-utbildning-examensarbete"
+"111.8666" = "fardighetstraning-muntlig-presentation"
+"111.8667" = "fardighetstraning-skriftlig-presentation"
+"111.8668" = "fardighetstraning-presentation-engelska"
+"111.8669" = "fardighetstraning-forklara-lekman"
+"111.8670" = "fardighetstraning-anvanda-it"
+"111.8671" = "fardighetstraning-teamarbete"
+"111.8672" = "fardighetstraning-sjalvstandig-problem"
+"111.8673" = "fardighetstraning-verksamhetsutveckling"
+"111.8675" = "bedomning-utbildning-grund-borja-arbeta"
+"111.8676" = "bedomning-utbildning-vidareutbildning"
+"111.8677" = "bedomning-utbildning-grund-utfora"
+"111.8678" = "bedomning-utbildning-grund-personlig"
+"111.8679" = "bedomning-utbildning-grund-karriar"
+"111.8681" = "bedomning-utbildning-entreprenorskap"
+"111.8682" = "valet-idag-av-utbildning"
+"111.8683" = "studier-i-sverige"
+"111.8684" = "studier-inom-europa"
+"111.8685" = "huvudsakligt-skal-fortsatta-studier"
+"111.14850" = "kommungrupp"
+"111.17357" = "timlon"
+"111.18020" = "sysselsattningsstatus-november-mor"
+"111.18021" = "sysselsattningsstatus-november-far"
+"111.21260" = "nutsregion"
+"111.25103" = "uenr"
+"111.25154" = "nojd-med-avslutad-utbildning"
+"111.25266" = "antal-personer-i-ledningsansvar"
+"111.25284" = "hade-du-chefsposition-i-arbetet"
+"111.28505" = "inflodeskod"
+"111.29887" = "huvudsaklig-utbildningsinriktning"
+"111.29888" = "saknar-i-utbildning-for-examen"
+"111.29890" = "orsak-examen-ej-uttagen-behover-ej"
+"111.29897" = "orsak-examen-ej-uttagen-kande-ej-kraven"
+"111.29898" = "orsak-examen-ej-uttagen-annan"
+"111.29899" = "planer-slutfora-hogskolestudier"
+"111.30574" = "arbetsuppgifter"
+"111.30622" = "arbetar-hemifran"
+"111.30675" = "arbete-minst-6-manader-gymnasiet"
+"111.30676" = "antal-manader-forsta-arbete-min6man"
+"111.30805" = "overensstammelse-gymnasieutbildning"
+"111.30806" = "utbildningsniva-tillracklig-for-arbetet"
+"111.30807" = "tid-lara-viktigaste-arbetsuppgifter"
+"111.30810" = "arbetat-eller-studerat-utomlands"
+"111.30812" = "framtidsplaner-fortsatta-nuvarande-jobb"
+"111.30813" = "framtidsplaner-skaffa-ett-nytt-jobb"
+"111.30814" = "framtidsplaner-skaffa-ett-jobb"
+"111.30815" = "framtidsplaner-starta-eget-foretag"
+"111.30816" = "framtidsplaner-studera-hogskola-yh"
+"111.30817" = "framtidsplaner-andra-studier-komvux"
+"111.30818" = "framtidsplaner-andra-saker"
+"111.30819" = "framtidsplaner-annat"
+"111.30820" = "framtidsplaner-vet-inte"
+"111.30824" = "minst-en-timmes-arbete-under-matveckan"
+"111.30887" = "elevtyp"
+"111.32454" = "foraldrarnas-utbildningsniva"
+"111.36224" = "procent-av-heltid"
+"111.37050" = "uppfyller-krav-for-examen"
+"111.37055" = "bedomning-lara-sig-vad-behovs"
+"111.37058" = "planer-for-aret-efter-gymnasieskolan"
+"111.37059" = "onskemal-for-arbetets-omrade"
+"111.37063" = "arbetar-kvar-pa-forsta-arbetet"
+"111.38155" = "utbildningsomrade-inom-yrkeshogskolan"
+"111.39554" = "hogsta-utbildningsniva-innan-yh"
+"111.39555" = "studieform"
+"111.39556" = "studietakt"
+"111.39557" = "utbildningslangd"
+"111.39559" = "studielan"
+"111.39562" = "huvudsaklig-sysselsattning-innan-yh"
+"111.39565" = "genomforde-du-nagon-lia-kurs"
+"111.39566" = "har-du-samma-arbetsgivare-idag"
+"111.39567" = "overensstammer-arbetet-med-utbildningen"
+"111.39568" = "har-din-arbetsuppgifter-forandrats"
+"111.39572" = "utstrackning-larde-vad-behovdes"
+"111.39573" = "yh-utbildning-forutsattning-for-arbete"
+"111.39574" = "arbetar-inom-utbildningens-omrade"
+"111.39575" = "utstrackning-anvander-det-larde-sig"
+"111.39576" = "hur-nojd-ar-du-med-din-yh-utbildning"
+"111.39577" = "forsta-jobb-efter-yh-utbildning"
+"111.41668" = "arbete-utomlands-inom-europa"
+"111.41670" = "studier-utomlands-inom-europa"
+"111.41671" = "studier-utomlands-utanfor-europa"
+"111.41672" = "overensstammelse-utbildning-och-arbete"
+"111.41711" = "foretagets-bransch-naringsgren"
+"111.41713" = "manadslon-uppraknad"
+"111.41716" = "yrke-och-arbetsuppgifter"
+"111.42174" = "larlingsanstallning"
+"111.42175" = "gig-plattformsjobb"
+"111.42177" = "frivilligarbete"
+"111.42182" = "nojd-med-arbetet"
+"111.45908" = "hogskolestudier-innan-yh"
+"111.45909" = "annan-examen-innan-yh"
+"111.46913" = "corona-syss-inget"
 
 # register 114 (offentligt-agda-foretag)
-
-[[variable]]
-native_id = "111.29880.f1"
-slug = "forekomst-av-examen"
-
-[[variable]]
-native_id = "111.29906.f15-08"
-slug = "arbetsuppgifter-kritiskt-tankande"
-
-[[variable]]
-native_id = "111.36110.f25-txt"
-slug = "ovriga-kommentarer-till-enkaten"
-
-[[variable]]
-native_id = "111.36110.f28"
-slug = "ovriga-kommentarer-till-enkaten-2"
-
-[[variable]]
-native_id = "111.36110.f29"
-slug = "ovriga-kommentarer-till-enkaten-3"
-
-[[variable]]
-native_id = "111.37056.f12"
-slug = "nytta-amnen-i-arbetet"
-
-[[variable]]
-native_id = "111.37056.f8"
-slug = "nytta-amnen-i-arbetet-2"
-
-[[variable]]
-native_id = "111.37064.f19"
-slug = "utbildning-forberett-arbete-studier"
-
-[[variable]]
-native_id = "111.37064.f21"
-slug = "utbildning-forberett-arbete-studier-2"
-
-[[variable]]
-native_id = "111.37064.f23"
-slug = "utbildning-forberett-arbete-studier-3"
-
-[[variable]]
-native_id = "111.37064.f25"
-slug = "utbildning-forberett-arbete-studier-4"
-
-[[variable]]
-native_id = "111.37064.f26"
-slug = "utbildning-forberett-arbete-studier-5"
-
-[[variable]]
-native_id = "111.37406.f9"
-slug = "programtyp-gymnasieprogram"
-
-[[variable]]
-native_id = "111.39569.f7"
-slug = "skal-arbete-ej-overensstammer"
-
-[[variable]]
-native_id = "111.42178.f16"
-slug = "corona-syss-forandrats"
-
-[[variable]]
-native_id = "111.42178.f17"
-slug = "corona-syss-forandrats-2"
-
-[[variable]]
-native_id = "111.42178.f18"
-slug = "corona-syss-forandrats-3"
-
-[[variable]]
-native_id = "111.42179.f23"
-slug = "corona-syss-annat-satt"
-
-[[variable]]
-native_id = "111.42179.f25"
-slug = "corona-syss-annat-satt-2"
-
-[[variable]]
-native_id = "111.42179.f25-txt"
-slug = "corona-syss-annat-satt-3"
-
-[[variable]]
-native_id = "111.45910.f3"
-slug = "skal-att-studera-pa-yh"
-
-[[variable]]
-native_id = "111.45910.f3-01"
-slug = "skal-studera-yh-alternativ"
-
-[[variable]]
-native_id = "111.45910.f3-txt"
-slug = "skal-att-studera-pa-yh-2"
-
-[[variable]]
-native_id = "111.45911.f7"
-slug = "skal-att-studera"
-
-[[variable]]
-native_id = "111.45911.f7-01"
-slug = "skal-studera-alternativ"
-
-[[variable]]
-native_id = "111.45912.f17"
-slug = "lia-under-pandemin"
-
-[[variable]]
-native_id = "111.45912.f18"
-slug = "lia-under-pandemin-2"
-
-[[variable]]
-native_id = "111.462.scb-str"
-slug = "stratum"
-
-[[variable]]
-native_id = "111.462.stratum"
-slug = "stratum-2"
-
-[[variable]]
-native_id = "111.4693.f9"
-slug = "gymnasieprogram"
-
-[[variable]]
-native_id = "111.5068.f1"
-slug = "huvudsaklig-sysselsattning"
-
-[[variable]]
-native_id = "111.5068.f10"
-slug = "huvudsaklig-sysselsattning-2"
-
-[[variable]]
-native_id = "111.5068.f14"
-slug = "huvudsaklig-sysselsattning-3"
-
-[[variable]]
-native_id = "111.5068.f2"
-slug = "huvudsaklig-sysselsattning-4"
-
-[[variable]]
-native_id = "111.5068.f3"
-slug = "huvudsaklig-sysselsattning-5"
-
-[[variable]]
-native_id = "111.5068.f3-txt"
-slug = "huvudsaklig-sysselsattning-6"
-
-[[variable]]
-native_id = "111.5068.f4"
-slug = "huvudsaklig-sysselsattning-7"
-
-[[variable]]
-native_id = "111.5068.f5"
-slug = "huvudsaklig-sysselsattning-8"
-
-[[variable]]
-native_id = "111.5068.f9"
-slug = "huvudsaklig-sysselsattning-9"
-
-[[variable]]
-native_id = "111.5078.f10"
-slug = "arbete-2"
-
-[[variable]]
-native_id = "111.5078.f11"
-slug = "arbete-3"
-
-[[variable]]
-native_id = "111.5078.f15"
-slug = "arbete-4"
-
-[[variable]]
-native_id = "111.5078.f5"
-slug = "arbete-5"
-
-[[variable]]
-native_id = "111.5123.f12"
-slug = "utb-arbete-overensstammelse"
-
-[[variable]]
-native_id = "111.5123.f17"
-slug = "utb-arbete-overensstammelse-2"
-
-[[variable]]
-native_id = "111.5123.f18"
-slug = "utb-arbete-overensstammelse-3"
-
-[[variable]]
-native_id = "111.5123.f20"
-slug = "utb-arbete-overensstammelse-4"
-
-[[variable]]
-native_id = "111.5123.f22"
-slug = "utb-arbete-overensstammelse-5"
-
-[[variable]]
-native_id = "111.5123.f7"
-slug = "utb-arbete-overensstammelse-6"
-
-[[variable]]
-native_id = "111.5124.f10"
-slug = "tillracklig-utbildningsniva"
-
-[[variable]]
-native_id = "111.5124.f14"
-slug = "tillracklig-utbildningsniva-2"
-
-[[variable]]
-native_id = "111.5124.f18"
-slug = "tillracklig-utbildningsniva-3"
-
-[[variable]]
-native_id = "111.5124.f21"
-slug = "tillracklig-utbildningsniva-4"
-
-[[variable]]
-native_id = "111.5124.f9"
-slug = "tillracklig-utbildningsniva-5"
-
-[[variable]]
-native_id = "111.5215.f11"
-slug = "nojdhet-med-arbete"
-
-[[variable]]
-native_id = "111.5215.f13"
-slug = "nojdhet-med-arbete-2"
-
-[[variable]]
-native_id = "111.5215.f16-01"
-slug = "nojdhet-med-arbete-alternativ"
-
-[[variable]]
-native_id = "111.5215.f18"
-slug = "nojdhet-med-arbete-3"
-
-[[variable]]
-native_id = "111.5215.f22"
-slug = "nojdhet-med-arbete-4"
-
-[[variable]]
-native_id = "111.5215.f25"
-slug = "nojdhet-med-arbete-5"
-
-[[variable]]
-native_id = "111.5215.f26"
-slug = "nojdhet-med-arbete-6"
-
-[[variable]]
-native_id = "111.5215.f31"
-slug = "nojdhet-med-arbete-7"
-
-[[variable]]
-native_id = "111.5242.f20"
-slug = "nojdhet-med-utbildning"
-
-[[variable]]
-native_id = "111.5242.f21"
-slug = "nojdhet-med-utbildning-2"
-
-[[variable]]
-native_id = "111.5242.f25"
-slug = "nojdhet-med-utbildning-3"
-
-[[variable]]
-native_id = "111.5242.f28"
-slug = "nojdhet-med-utbildning-4"
-
-[[variable]]
-native_id = "111.5242.f31"
-slug = "nojdhet-med-utbildning-5"
-
-[[variable]]
-native_id = "111.5248.f29"
-slug = "studier-utomlands"
-
-[[variable]]
-native_id = "111.5250.f31"
-slug = "planer-pa-studier"
-
-[[variable]]
-native_id = "111.5696.storan"
-slug = "stora-n-per-stratum"
-
-[[variable]]
-native_id = "111.5697.lillan"
-slug = "lilla-n-per-stratum"
-
-[[variable]]
-native_id = "111.5701.f19"
-slug = "tillracklig-utbildningsniva-examen"
-
-[[variable]]
-native_id = "111.5701.f23"
-slug = "tillracklig-utbildningsniva-examen-2"
-
-[[variable]]
-native_id = "111.5701.f3"
-slug = "tillracklig-utbildningsniva-examen-3"
-
-[[variable]]
-native_id = "111.63.syssst-k"
-slug = "sysselsattningsstatus-november"
-
-[[variable]]
-native_id = "111.63.syssstat-far"
-slug = "sysselsattningsstatus-november-2"
-
-[[variable]]
-native_id = "111.63.syssstat-mor"
-slug = "sysselsattningsstatus-november-3"
+"111.29880.f1" = "forekomst-av-examen"
+"111.29906.f15-08" = "arbetsuppgifter-kritiskt-tankande"
+"111.36110.f25-txt" = "ovriga-kommentarer-till-enkaten"
+"111.36110.f28" = "ovriga-kommentarer-till-enkaten-2"
+"111.36110.f29" = "ovriga-kommentarer-till-enkaten-3"
+"111.37056.f12" = "nytta-amnen-i-arbetet"
+"111.37056.f8" = "nytta-amnen-i-arbetet-2"
+"111.37064.f19" = "utbildning-forberett-arbete-studier"
+"111.37064.f21" = "utbildning-forberett-arbete-studier-2"
+"111.37064.f23" = "utbildning-forberett-arbete-studier-3"
+"111.37064.f25" = "utbildning-forberett-arbete-studier-4"
+"111.37064.f26" = "utbildning-forberett-arbete-studier-5"
+"111.37406.f9" = "programtyp-gymnasieprogram"
+"111.39569.f7" = "skal-arbete-ej-overensstammer"
+"111.42178.f16" = "corona-syss-forandrats"
+"111.42178.f17" = "corona-syss-forandrats-2"
+"111.42178.f18" = "corona-syss-forandrats-3"
+"111.42179.f23" = "corona-syss-annat-satt"
+"111.42179.f25" = "corona-syss-annat-satt-2"
+"111.42179.f25-txt" = "corona-syss-annat-satt-3"
+"111.45910.f3" = "skal-att-studera-pa-yh"
+"111.45910.f3-01" = "skal-studera-yh-alternativ"
+"111.45910.f3-txt" = "skal-att-studera-pa-yh-2"
+"111.45911.f7" = "skal-att-studera"
+"111.45911.f7-01" = "skal-studera-alternativ"
+"111.45912.f17" = "lia-under-pandemin"
+"111.45912.f18" = "lia-under-pandemin-2"
+"111.462.scb-str" = "stratum"
+"111.462.stratum" = "stratum-2"
+"111.4693.f9" = "gymnasieprogram"
+"111.5068.f1" = "huvudsaklig-sysselsattning"
+"111.5068.f10" = "huvudsaklig-sysselsattning-2"
+"111.5068.f14" = "huvudsaklig-sysselsattning-3"
+"111.5068.f2" = "huvudsaklig-sysselsattning-4"
+"111.5068.f3" = "huvudsaklig-sysselsattning-5"
+"111.5068.f3-txt" = "huvudsaklig-sysselsattning-6"
+"111.5068.f4" = "huvudsaklig-sysselsattning-7"
+"111.5068.f5" = "huvudsaklig-sysselsattning-8"
+"111.5068.f9" = "huvudsaklig-sysselsattning-9"
+"111.5078.f10" = "arbete-2"
+"111.5078.f11" = "arbete-3"
+"111.5078.f15" = "arbete-4"
+"111.5078.f5" = "arbete-5"
+"111.5123.f12" = "utb-arbete-overensstammelse"
+"111.5123.f17" = "utb-arbete-overensstammelse-2"
+"111.5123.f18" = "utb-arbete-overensstammelse-3"
+"111.5123.f20" = "utb-arbete-overensstammelse-4"
+"111.5123.f22" = "utb-arbete-overensstammelse-5"
+"111.5123.f7" = "utb-arbete-overensstammelse-6"
+"111.5124.f10" = "tillracklig-utbildningsniva"
+"111.5124.f14" = "tillracklig-utbildningsniva-2"
+"111.5124.f18" = "tillracklig-utbildningsniva-3"
+"111.5124.f21" = "tillracklig-utbildningsniva-4"
+"111.5124.f9" = "tillracklig-utbildningsniva-5"
+"111.5215.f11" = "nojdhet-med-arbete"
+"111.5215.f13" = "nojdhet-med-arbete-2"
+"111.5215.f16-01" = "nojdhet-med-arbete-alternativ"
+"111.5215.f18" = "nojdhet-med-arbete-3"
+"111.5215.f22" = "nojdhet-med-arbete-4"
+"111.5215.f25" = "nojdhet-med-arbete-5"
+"111.5215.f26" = "nojdhet-med-arbete-6"
+"111.5215.f31" = "nojdhet-med-arbete-7"
+"111.5242.f20" = "nojdhet-med-utbildning"
+"111.5242.f21" = "nojdhet-med-utbildning-2"
+"111.5242.f25" = "nojdhet-med-utbildning-3"
+"111.5242.f28" = "nojdhet-med-utbildning-4"
+"111.5242.f31" = "nojdhet-med-utbildning-5"
+"111.5248.f29" = "studier-utomlands"
+"111.5250.f31" = "planer-pa-studier"
+"111.5696.storan" = "stora-n-per-stratum"
+"111.5697.lillan" = "lilla-n-per-stratum"
+"111.5701.f19" = "tillracklig-utbildningsniva-examen"
+"111.5701.f23" = "tillracklig-utbildningsniva-examen-2"
+"111.5701.f3" = "tillracklig-utbildningsniva-examen-3"
+"111.63.syssst-k" = "sysselsattningsstatus-november"
+"111.63.syssstat-far" = "sysselsattningsstatus-november-2"
+"111.63.syssstat-mor" = "sysselsattningsstatus-november-3"
 
 # register 117 (kommunalekonomisk-utjamning)
-
-[[variable]]
-native_id = "111.29889.f3-01"
-slug = "f3"
-
-[[variable]]
-native_id = "111.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "111.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "111.1290"
-slug = "sammanraknad-forvarvsinkomst-familj"
-
-[[variable]]
-native_id = "111.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "111.1386"
-slug = "amne-for-examen"
-
-[[variable]]
-native_id = "111.1396"
-slug = "lasar"
-
-[[variable]]
-native_id = "111.1542"
-slug = "scb-grundkod-for-examen"
-
-[[variable]]
-native_id = "111.1768"
-slug = "examenstyp"
-
-[[variable]]
-native_id = "111.1917"
-slug = "amnesomrade"
-
-[[variable]]
-native_id = "111.2474"
-slug = "datum-inkommet-svar"
-
-[[variable]]
-native_id = "111.5699"
-slug = "hjalp-kalibrering-2"
-
-[[variable]]
-native_id = "111.5726"
-slug = "utbildningens-niva"
-
-[[variable]]
-native_id = "111.6178"
-slug = "utlsvbakgalt"
-
-[[variable]]
-native_id = "111.6818"
-slug = "medborgarland-varldsdel-namn"
-
-[[variable]]
-native_id = "111.8187"
-slug = "utlandsk-bakgrund"
-
-[[variable]]
-native_id = "111.16347"
-slug = "typ-av-betyg"
-
-[[variable]]
-native_id = "111.17454"
-slug = "deltagit-personalutbildning"
-
-[[variable]]
-native_id = "111.28305"
-slug = "designvikt"
-
-[[variable]]
-native_id = "111.30142"
-slug = "antal-hogskolepoang"
-
-[[variable]]
-native_id = "111.30809"
-slug = "anstallningsform-annan"
-
-[[variable]]
-native_id = "111.30822"
-slug = "yrke-matveckan"
-
-[[variable]]
-native_id = "111.35989"
-slug = "imputerat"
-
-[[variable]]
-native_id = "111.36555"
-slug = "yrkesgrupp"
-
-[[variable]]
-native_id = "111.36561"
-slug = "hogskole-universitetskod"
-
-[[variable]]
-native_id = "111.37405"
-slug = "suburval"
-
-[[variable]]
-native_id = "111.38945"
-slug = "latt-svart-fa-arbete-amnesomradet"
-
-[[variable]]
-native_id = "111.41084"
-slug = "orsak-ej-examensbevis"
-
-[[variable]]
-native_id = "111.41673"
-slug = "deltagande-kurs"
-
-[[variable]]
-native_id = "111.41884"
-slug = "stratum-antal-svar"
-
-[[variable]]
-native_id = "111.42991"
-slug = "civilstand-enligt-rtb"
+"111.29889.f3-01" = "f3"
+"111.15" = "civilstand"
+"111.257" = "fodelseland-rtb"
+"111.1290" = "sammanraknad-forvarvsinkomst-familj"
+"111.1378" = "fodelsear"
+"111.1386" = "amne-for-examen"
+"111.1396" = "lasar"
+"111.1542" = "scb-grundkod-for-examen"
+"111.1768" = "examenstyp"
+"111.1917" = "amnesomrade"
+"111.2474" = "datum-inkommet-svar"
+"111.5699" = "hjalp-kalibrering-2"
+"111.5726" = "utbildningens-niva"
+"111.6178" = "utlsvbakgalt"
+"111.6818" = "medborgarland-varldsdel-namn"
+"111.8187" = "utlandsk-bakgrund"
+"111.16347" = "typ-av-betyg"
+"111.17454" = "deltagit-personalutbildning"
+"111.28305" = "designvikt"
+"111.30142" = "antal-hogskolepoang"
+"111.30809" = "anstallningsform-annan"
+"111.30822" = "yrke-matveckan"
+"111.35989" = "imputerat"
+"111.36555" = "yrkesgrupp"
+"111.36561" = "hogskole-universitetskod"
+"111.37405" = "suburval"
+"111.38945" = "latt-svart-fa-arbete-amnesomradet"
+"111.41084" = "orsak-ej-examensbevis"
+"111.41673" = "deltagande-kurs"
+"111.41884" = "stratum-antal-svar"
+"111.42991" = "civilstand-enligt-rtb"
 
 # register 114
-
-[[variable]]
-native_id = "111.1728.resultatkod"
-slug = "blankettstatus"
-
-[[variable]]
-native_id = "111.37848.fa15-senaste"
-slug = "funktionella-analysregioner"
-
-[[variable]]
-native_id = "111.4736.kal-vikt"
-slug = "kalvikt"
-
-[[variable]]
-native_id = "111.4736.kalvikt"
-slug = "kalvikt-2"
-
-[[variable]]
-native_id = "111.5697.lillan1"
-slug = "lilla-n-per-stratum-2"
+"111.1728.resultatkod" = "blankettstatus"
+"111.37848.fa15-senaste" = "funktionella-analysregioner"
+"111.4736.kal-vikt" = "kalvikt"
+"111.4736.kalvikt" = "kalvikt-2"
+"111.5697.lillan1" = "lilla-n-per-stratum-2"
 
 # register 121
-
-[[variable]]
-native_id = "111.37054.f5-06"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-03"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-02"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-04"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-07"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-07"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-05"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-6"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-6"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-1"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-1"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-3"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-3"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-2"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-2"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-4"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-4"
-deprecated = false
-
-[[variable]]
-native_id = "111.37054.f5-5"
-slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-5"
-deprecated = false
-
-[[variable]]
-native_id = "111.5068.f1-txt"
-slug = "huvudsaklig-sysselsattning-f1-txt"
-deprecated = false
-
-[[variable]]
-native_id = "111.42179.f23-txt"
-slug = "har-din-huvudsakliga-sysselsattning-paverkats-pa-nagot-annat-satt-av-coronapandemin-f23-txt"
-deprecated = false
-
-[[variable]]
-native_id = "111.5697.lillan2"
-slug = "lilla-n-per-stratum-lillan2"
-deprecated = false
-
-[[variable]]
-native_id = "111.5696.storan2"
-slug = "stora-n-per-stratum-storan2"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f16-04"
-slug = "nojdhet-med-arbete-f16-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f16-02"
-slug = "nojdhet-med-arbete-f16-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f16-03"
-slug = "nojdhet-med-arbete-f16-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f16-05"
-slug = "nojdhet-med-arbete-f16-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f17-02"
-slug = "nojdhet-med-arbete-f17-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f17-03"
-slug = "nojdhet-med-arbete-f17-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f17-04"
-slug = "nojdhet-med-arbete-f17-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f11-02"
-slug = "nojdhet-med-arbete-f11-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f11-03"
-slug = "nojdhet-med-arbete-f11-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f11-04"
-slug = "nojdhet-med-arbete-f11-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f11-05"
-slug = "nojdhet-med-arbete-f11-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f11-06"
-slug = "nojdhet-med-arbete-f11-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f12-02"
-slug = "nojdhet-med-arbete-f12-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f12-03"
-slug = "nojdhet-med-arbete-f12-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f12-04"
-slug = "nojdhet-med-arbete-f12-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.5215.f12-05"
-slug = "nojdhet-med-arbete-f12-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.5250.stplan3"
-slug = "planer-pa-studier-stplan3"
-deprecated = false
-
-[[variable]]
-native_id = "111.5250.stplan4"
-slug = "planer-pa-studier-stplan4"
-deprecated = false
-
-[[variable]]
-native_id = "111.5250.stplan2"
-slug = "planer-pa-studier-stplan2"
-deprecated = false
-
-[[variable]]
-native_id = "111.29906.f15-09"
-slug = "arbetsuppgifter-kritiskt-tankande-f15-09"
-deprecated = false
-
-[[variable]]
-native_id = "111.29906.f10-07"
-slug = "arbetsuppgifter-kritiskt-tankande-f10-07"
-deprecated = false
-
-[[variable]]
-native_id = "111.29907.f19-09"
-slug = "fardighetstraning-anvanda-kritiskt-tankande-f19-09"
-deprecated = false
-
-[[variable]]
-native_id = "111.29907.f19-06"
-slug = "fardighetstraning-anvanda-kritiskt-tankande-f19-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.29907.f19-07"
-slug = "fardighetstraning-anvanda-kritiskt-tankande-f19-07"
-deprecated = false
-
-[[variable]]
-native_id = "111.45910.f3-02"
-slug = "skal-att-studera-pa-yh-f3-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.45910.f3-03"
-slug = "skal-att-studera-pa-yh-f3-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.45910.f3-07"
-slug = "skal-att-studera-pa-yh-f3-07"
-deprecated = false
-
-[[variable]]
-native_id = "111.45910.f3-06"
-slug = "skal-att-studera-pa-yh-f3-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.45910.f3-05"
-slug = "skal-att-studera-pa-yh-f3-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.45910.f3-04"
-slug = "skal-att-studera-pa-yh-f3-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.45911.f7-04"
-slug = "skal-att-studera-f7-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.45911.f7-02"
-slug = "skal-att-studera-f7-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.45911.f7-03"
-slug = "skal-att-studera-f7-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f12"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f12-05"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f12-03"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f12-04"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f12-06"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f12-02"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f7-02"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f7-03"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f7-04"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f7-05"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f7-06"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.39569.f7-07"
-slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-07"
-deprecated = false
-
-[[variable]]
-native_id = "111.37407.help2"
-slug = "kalibreringsvariabel-help2"
-deprecated = false
-
-[[variable]]
-native_id = "111.37407.help4"
-slug = "kalibreringsvariabel-help4"
-deprecated = false
-
-[[variable]]
-native_id = "111.37407.help3"
-slug = "kalibreringsvariabel-help3"
-deprecated = false
-
-[[variable]]
-native_id = "111.37407.help5"
-slug = "kalibreringsvariabel-help5"
-deprecated = false
-
-[[variable]]
-native_id = "111.37407.help6"
-slug = "kalibreringsvariabel-help6"
-deprecated = false
-
-[[variable]]
-native_id = "111.29889.f3-10"
-slug = "orsak-till-att-examenskrav-inte-natts-f3-10"
-deprecated = false
-
-[[variable]]
-native_id = "111.29889.f3-04"
-slug = "orsak-till-att-examenskrav-inte-natts-f3-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.29889.f3-05"
-slug = "orsak-till-att-examenskrav-inte-natts-f3-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.29889.f3-07"
-slug = "orsak-till-att-examenskrav-inte-natts-f3-07"
-deprecated = false
-
-[[variable]]
-native_id = "111.29889.f3-08"
-slug = "orsak-till-att-examenskrav-inte-natts-f3-08"
-deprecated = false
-
-[[variable]]
-native_id = "111.37056.f10-ny"
-slug = "nytta-med-olika-typer-av-amnen-i-arbetet-f10-ny"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f13-02"
-slug = "orsaker-till-ej-overenstammande-arbete-f13-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f13-03"
-slug = "orsaker-till-ej-overenstammande-arbete-f13-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f13-04"
-slug = "orsaker-till-ej-overenstammande-arbete-f13-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f13-05"
-slug = "orsaker-till-ej-overenstammande-arbete-f13-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f13-06"
-slug = "orsaker-till-ej-overenstammande-arbete-f13-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f8-02"
-slug = "orsaker-till-ej-overenstammande-arbete-f8-02"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f8-03"
-slug = "orsaker-till-ej-overenstammande-arbete-f8-03"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f8-04"
-slug = "orsaker-till-ej-overenstammande-arbete-f8-04"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f8-05"
-slug = "orsaker-till-ej-overenstammande-arbete-f8-05"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f8-06"
-slug = "orsaker-till-ej-overenstammande-arbete-f8-06"
-deprecated = false
-
-[[variable]]
-native_id = "111.37053.f8-07"
-slug = "orsaker-till-ej-overenstammande-arbete-f8-07"
-deprecated = false
+"111.37054.f5-06" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-06", deprecated = false }
+"111.37054.f5-03" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-03", deprecated = false }
+"111.37054.f5-02" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-02", deprecated = false }
+"111.37054.f5-04" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-04", deprecated = false }
+"111.37054.f5-07" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-07", deprecated = false }
+"111.37054.f5-05" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-05", deprecated = false }
+"111.37054.f5-6" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-6", deprecated = false }
+"111.37054.f5-1" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-1", deprecated = false }
+"111.37054.f5-3" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-3", deprecated = false }
+"111.37054.f5-2" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-2", deprecated = false }
+"111.37054.f5-4" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-4", deprecated = false }
+"111.37054.f5-5" = { slug = "skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-5", deprecated = false }
+"111.5068.f1-txt" = { slug = "huvudsaklig-sysselsattning-f1-txt", deprecated = false }
+"111.42179.f23-txt" = { slug = "har-din-huvudsakliga-sysselsattning-paverkats-pa-nagot-annat-satt-av-coronapandemin-f23-txt", deprecated = false }
+"111.5697.lillan2" = { slug = "lilla-n-per-stratum-lillan2", deprecated = false }
+"111.5696.storan2" = { slug = "stora-n-per-stratum-storan2", deprecated = false }
+"111.5215.f16-04" = { slug = "nojdhet-med-arbete-f16-04", deprecated = false }
+"111.5215.f16-02" = { slug = "nojdhet-med-arbete-f16-02", deprecated = false }
+"111.5215.f16-03" = { slug = "nojdhet-med-arbete-f16-03", deprecated = false }
+"111.5215.f16-05" = { slug = "nojdhet-med-arbete-f16-05", deprecated = false }
+"111.5215.f17-02" = { slug = "nojdhet-med-arbete-f17-02", deprecated = false }
+"111.5215.f17-03" = { slug = "nojdhet-med-arbete-f17-03", deprecated = false }
+"111.5215.f17-04" = { slug = "nojdhet-med-arbete-f17-04", deprecated = false }
+"111.5215.f11-02" = { slug = "nojdhet-med-arbete-f11-02", deprecated = false }
+"111.5215.f11-03" = { slug = "nojdhet-med-arbete-f11-03", deprecated = false }
+"111.5215.f11-04" = { slug = "nojdhet-med-arbete-f11-04", deprecated = false }
+"111.5215.f11-05" = { slug = "nojdhet-med-arbete-f11-05", deprecated = false }
+"111.5215.f11-06" = { slug = "nojdhet-med-arbete-f11-06", deprecated = false }
+"111.5215.f12-02" = { slug = "nojdhet-med-arbete-f12-02", deprecated = false }
+"111.5215.f12-03" = { slug = "nojdhet-med-arbete-f12-03", deprecated = false }
+"111.5215.f12-04" = { slug = "nojdhet-med-arbete-f12-04", deprecated = false }
+"111.5215.f12-05" = { slug = "nojdhet-med-arbete-f12-05", deprecated = false }
+"111.5250.stplan3" = { slug = "planer-pa-studier-stplan3", deprecated = false }
+"111.5250.stplan4" = { slug = "planer-pa-studier-stplan4", deprecated = false }
+"111.5250.stplan2" = { slug = "planer-pa-studier-stplan2", deprecated = false }
+"111.29906.f15-09" = { slug = "arbetsuppgifter-kritiskt-tankande-f15-09", deprecated = false }
+"111.29906.f10-07" = { slug = "arbetsuppgifter-kritiskt-tankande-f10-07", deprecated = false }
+"111.29907.f19-09" = { slug = "fardighetstraning-anvanda-kritiskt-tankande-f19-09", deprecated = false }
+"111.29907.f19-06" = { slug = "fardighetstraning-anvanda-kritiskt-tankande-f19-06", deprecated = false }
+"111.29907.f19-07" = { slug = "fardighetstraning-anvanda-kritiskt-tankande-f19-07", deprecated = false }
+"111.45910.f3-02" = { slug = "skal-att-studera-pa-yh-f3-02", deprecated = false }
+"111.45910.f3-03" = { slug = "skal-att-studera-pa-yh-f3-03", deprecated = false }
+"111.45910.f3-07" = { slug = "skal-att-studera-pa-yh-f3-07", deprecated = false }
+"111.45910.f3-06" = { slug = "skal-att-studera-pa-yh-f3-06", deprecated = false }
+"111.45910.f3-05" = { slug = "skal-att-studera-pa-yh-f3-05", deprecated = false }
+"111.45910.f3-04" = { slug = "skal-att-studera-pa-yh-f3-04", deprecated = false }
+"111.45911.f7-04" = { slug = "skal-att-studera-f7-04", deprecated = false }
+"111.45911.f7-02" = { slug = "skal-att-studera-f7-02", deprecated = false }
+"111.45911.f7-03" = { slug = "skal-att-studera-f7-03", deprecated = false }
+"111.39569.f12" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12", deprecated = false }
+"111.39569.f12-05" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-05", deprecated = false }
+"111.39569.f12-03" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-03", deprecated = false }
+"111.39569.f12-04" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-04", deprecated = false }
+"111.39569.f12-06" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-06", deprecated = false }
+"111.39569.f12-02" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f12-02", deprecated = false }
+"111.39569.f7-02" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-02", deprecated = false }
+"111.39569.f7-03" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-03", deprecated = false }
+"111.39569.f7-04" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-04", deprecated = false }
+"111.39569.f7-05" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-05", deprecated = false }
+"111.39569.f7-06" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-06", deprecated = false }
+"111.39569.f7-07" = { slug = "skal-varfor-arbete-inte-overensstammer-med-utbildningen-f7-07", deprecated = false }
+"111.37407.help2" = { slug = "kalibreringsvariabel-help2", deprecated = false }
+"111.37407.help4" = { slug = "kalibreringsvariabel-help4", deprecated = false }
+"111.37407.help3" = { slug = "kalibreringsvariabel-help3", deprecated = false }
+"111.37407.help5" = { slug = "kalibreringsvariabel-help5", deprecated = false }
+"111.37407.help6" = { slug = "kalibreringsvariabel-help6", deprecated = false }
+"111.29889.f3-10" = { slug = "orsak-till-att-examenskrav-inte-natts-f3-10", deprecated = false }
+"111.29889.f3-04" = { slug = "orsak-till-att-examenskrav-inte-natts-f3-04", deprecated = false }
+"111.29889.f3-05" = { slug = "orsak-till-att-examenskrav-inte-natts-f3-05", deprecated = false }
+"111.29889.f3-07" = { slug = "orsak-till-att-examenskrav-inte-natts-f3-07", deprecated = false }
+"111.29889.f3-08" = { slug = "orsak-till-att-examenskrav-inte-natts-f3-08", deprecated = false }
+"111.37056.f10-ny" = { slug = "nytta-med-olika-typer-av-amnen-i-arbetet-f10-ny", deprecated = false }
+"111.37053.f13-02" = { slug = "orsaker-till-ej-overenstammande-arbete-f13-02", deprecated = false }
+"111.37053.f13-03" = { slug = "orsaker-till-ej-overenstammande-arbete-f13-03", deprecated = false }
+"111.37053.f13-04" = { slug = "orsaker-till-ej-overenstammande-arbete-f13-04", deprecated = false }
+"111.37053.f13-05" = { slug = "orsaker-till-ej-overenstammande-arbete-f13-05", deprecated = false }
+"111.37053.f13-06" = { slug = "orsaker-till-ej-overenstammande-arbete-f13-06", deprecated = false }
+"111.37053.f8-02" = { slug = "orsaker-till-ej-overenstammande-arbete-f8-02", deprecated = false }
+"111.37053.f8-03" = { slug = "orsaker-till-ej-overenstammande-arbete-f8-03", deprecated = false }
+"111.37053.f8-04" = { slug = "orsaker-till-ej-overenstammande-arbete-f8-04", deprecated = false }
+"111.37053.f8-05" = { slug = "orsaker-till-ej-overenstammande-arbete-f8-05", deprecated = false }
+"111.37053.f8-06" = { slug = "orsaker-till-ej-overenstammande-arbete-f8-06", deprecated = false }
+"111.37053.f8-07" = { slug = "orsaker-till-ej-overenstammande-arbete-f8-07", deprecated = false }
+"111.41084.f1b-01" = "f1b-01"
+"111.41084.f1b-02" = "f1b-02"
+"111.41084.f1b-03" = "f1b-03"
+"111.41084.f1b-04" = "f1b-04"
+"111.41084.f1b-05" = "f1b-05"
+"111.41084.f1b-06" = "f1b-06"
+"111.5083.anstform" = "anstform"
+"111.5083.f10" = "f10-5083"
+"111.5083.f11" = "f11-5083"
+"111.5083.f12" = "f12-5083"
+"111.5083.f16" = "f16"
+"111.5083.f3" = "f3-5083"
+"111.5083.f3-ny" = "f3-ny"
+"111.5083.f3-txt" = "f3-txt"
+"111.5083.f6" = "f6-5083"
+"111.5083.fr6" = "fr6"
+"111.37057.f11" = "f11-37057"
+"111.37057.f11-ny" = "f11-ny"
+"111.37061.f16-01" = "f16-01"
+"111.37061.f16-02" = "f16-02"
+"111.37061.f16-03" = "f16-03"
+"111.37061.f16-04" = "f16-04"
+"111.37060.f15-01" = "f15-01"
+"111.37060.f15-02" = "f15-02"
+"111.37060.f15-03" = "f15-03"
+"111.37060.f15-04" = "f15-04"
+"111.37060.f15-05" = "f15-05"
+"111.37051.f3-02" = "f3-02"
+"111.37051.f3-03" = "f3-03"
+"111.37051.f3-06" = "f3-06"
+"111.37051.f3-09" = "f3-09"
 
 [[identity.column_owner]]
 variable = "111.37054"
@@ -4813,130 +3530,6 @@ variable = "111.37051"
 columns = { F3_02 = "111.37051.f3-02", F3_03 = "111.37051.f3-03", F3_06 = "111.37051.f3-06", F3_09 = "111.37051.f3-09" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "3ce6e11c94ebe149aafff03e3a81d3e65b3400a5a78f4165b3147d86bab7e64b"
-
-[[variable]]
-native_id = "111.41084.f1b-01"
-slug = "f1b-01"
-
-[[variable]]
-native_id = "111.41084.f1b-02"
-slug = "f1b-02"
-
-[[variable]]
-native_id = "111.41084.f1b-03"
-slug = "f1b-03"
-
-[[variable]]
-native_id = "111.41084.f1b-04"
-slug = "f1b-04"
-
-[[variable]]
-native_id = "111.41084.f1b-05"
-slug = "f1b-05"
-
-[[variable]]
-native_id = "111.41084.f1b-06"
-slug = "f1b-06"
-
-[[variable]]
-native_id = "111.5083.anstform"
-slug = "anstform"
-
-[[variable]]
-native_id = "111.5083.f10"
-slug = "f10-5083"
-
-[[variable]]
-native_id = "111.5083.f11"
-slug = "f11-5083"
-
-[[variable]]
-native_id = "111.5083.f12"
-slug = "f12-5083"
-
-[[variable]]
-native_id = "111.5083.f16"
-slug = "f16"
-
-[[variable]]
-native_id = "111.5083.f3"
-slug = "f3-5083"
-
-[[variable]]
-native_id = "111.5083.f3-ny"
-slug = "f3-ny"
-
-[[variable]]
-native_id = "111.5083.f3-txt"
-slug = "f3-txt"
-
-[[variable]]
-native_id = "111.5083.f6"
-slug = "f6-5083"
-
-[[variable]]
-native_id = "111.5083.fr6"
-slug = "fr6"
-
-[[variable]]
-native_id = "111.37057.f11"
-slug = "f11-37057"
-
-[[variable]]
-native_id = "111.37057.f11-ny"
-slug = "f11-ny"
-
-[[variable]]
-native_id = "111.37061.f16-01"
-slug = "f16-01"
-
-[[variable]]
-native_id = "111.37061.f16-02"
-slug = "f16-02"
-
-[[variable]]
-native_id = "111.37061.f16-03"
-slug = "f16-03"
-
-[[variable]]
-native_id = "111.37061.f16-04"
-slug = "f16-04"
-
-[[variable]]
-native_id = "111.37060.f15-01"
-slug = "f15-01"
-
-[[variable]]
-native_id = "111.37060.f15-02"
-slug = "f15-02"
-
-[[variable]]
-native_id = "111.37060.f15-03"
-slug = "f15-03"
-
-[[variable]]
-native_id = "111.37060.f15-04"
-slug = "f15-04"
-
-[[variable]]
-native_id = "111.37060.f15-05"
-slug = "f15-05"
-
-[[variable]]
-native_id = "111.37051.f3-02"
-slug = "f3-02"
-
-[[variable]]
-native_id = "111.37051.f3-03"
-slug = "f3-03"
-
-[[variable]]
-native_id = "111.37051.f3-06"
-slug = "f3-06"
-
-[[variable]]
-native_id = "111.37051.f3-09"
-slug = "f3-09"
 
 [[acknowledge]]
 code = "missing_coding_period"

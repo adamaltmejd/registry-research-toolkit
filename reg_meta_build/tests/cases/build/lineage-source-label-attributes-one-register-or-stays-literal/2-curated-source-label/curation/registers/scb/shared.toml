@@ -5,9 +5,7 @@ native_id = "4"
 [[variant]]
 native_id = "4.40"
 slug = "people"
-[[variable]]
-native_id = "4.401"
-slug = "specific-bare"
-[[variable]]
-native_id = "4.402"
-slug = "specific-variant"
+
+[variable]
+"4.401" = "specific-bare"
+"4.402" = "specific-variant"

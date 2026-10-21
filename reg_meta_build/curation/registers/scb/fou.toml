@@ -14681,870 +14681,290 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Investeringsenkäten (NV0801)
-
-[[variable]]
-native_id = "182.V0401"
-slug = "andel-driftkostnader-fou-produktgrupp-1"
-
-[[variable]]
-native_id = "182.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "182.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "182.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "182.3"
-slug = "hogskolekod"
-
-[[variable]]
-native_id = "182.44"
-slug = "kon"
-
-[[variable]]
-native_id = "182.49"
-slug = "lan"
-
-[[variable]]
-native_id = "182.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "182.73"
-slug = "ar"
-
-[[variable]]
-native_id = "182.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "182.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "182.1909"
-slug = "hogskolekategori"
-
-[[variable]]
-native_id = "182.2519"
-slug = "lopnummer-anstallningar"
-
-[[variable]]
-native_id = "182.2736"
-slug = "sektor"
-
-[[variable]]
-native_id = "182.2935"
-slug = "redovisningsgrupp"
-
-[[variable]]
-native_id = "182.3306"
-slug = "imputeringskod"
-
-[[variable]]
-native_id = "182.3310"
-slug = "branschgrupp"
-
-[[variable]]
-native_id = "182.3335"
-slug = "driftkostnader-forskning"
-
-[[variable]]
-native_id = "182.3566"
-slug = "vilja-besvara-enkat-internet"
-
-[[variable]]
-native_id = "182.3569"
-slug = "imputeringskod-bortfall"
-
-[[variable]]
-native_id = "182.3637"
-slug = "tjanstekategori"
-
-[[variable]]
-native_id = "182.4372"
-slug = "driftkostnader-fou-produkt"
-
-[[variable]]
-native_id = "182.6061"
-slug = "avskrivningar-for-fou"
-
-[[variable]]
-native_id = "182.6062"
-slug = "fou-investering-byggnader"
-
-[[variable]]
-native_id = "182.6064"
-slug = "lokalkostnader-for-fou"
-
-[[variable]]
-native_id = "182.6172"
-slug = "lopnummer-for-individ"
-
-[[variable]]
-native_id = "182.7121"
-slug = "biovetenskap"
-
-[[variable]]
-native_id = "182.7122"
-slug = "bioteknik"
-
-[[variable]]
-native_id = "182.7594"
-slug = "finansieringskallor"
-
-[[variable]]
-native_id = "182.7596"
-slug = "intakter-fou-forskarutb"
-
-[[variable]]
-native_id = "182.7706"
-slug = "antal-personer-fou"
-
-[[variable]]
-native_id = "182.7707"
-slug = "antal-arsverken-fou"
-
-[[variable]]
-native_id = "182.7708"
-slug = "utgifter-for-utlagd-fou"
-
-[[variable]]
-native_id = "182.7711"
-slug = "fou-investering-maskiner"
-
-[[variable]]
-native_id = "182.7741"
-slug = "andel-bioteknik"
-
-[[variable]]
-native_id = "182.17260"
-slug = "forskningsamne"
-
-[[variable]]
-native_id = "182.17658"
-slug = "fou-inom-biovetenskap"
-
-[[variable]]
-native_id = "182.17659"
-slug = "fou-inom-bioteknik"
-
-[[variable]]
-native_id = "182.29325"
-slug = "intakter-fou-utveckling"
-
-[[variable]]
-native_id = "182.29326"
-slug = "typ-av-utgift-kostnad"
-
-[[variable]]
-native_id = "182.29327"
-slug = "utgift-kostnad-forskarutb"
-
-[[variable]]
-native_id = "182.29328"
-slug = "utgift-kostnad-utveckling"
-
-[[variable]]
-native_id = "182.35615"
-slug = "utlandsvistelse-total"
-
-[[variable]]
-native_id = "182.35616"
-slug = "sjukskriven-hela-referenstid"
-
-[[variable]]
-native_id = "182.35622"
-slug = "utlandsvistelse-forska"
-
-[[variable]]
-native_id = "182.35623"
-slug = "utlandsvistelse-undervisa"
-
-[[variable]]
-native_id = "182.35624"
-slug = "utlandsvistelse-studera"
-
-[[variable]]
-native_id = "182.35625"
-slug = "gastvistelse-i-sverige"
-
-[[variable]]
-native_id = "182.37575"
-slug = "externa-arsverken-fou"
-
-[[variable]]
-native_id = "182.38045"
-slug = "naringsgren-sni-5-siffer"
-
-[[variable]]
-native_id = "182.38243"
-slug = "sjukskriven-hela-aret"
-
-[[variable]]
-native_id = "182.41247"
-slug = "institutionell-enhet"
-
-[[variable]]
-native_id = "182.44223"
-slug = "egen-fou-investeringar"
-
-[[variable]]
-native_id = "182.44225"
-slug = "egen-fou-rorelsekostnader"
-
-[[variable]]
-native_id = "182.45446"
-slug = "naringsgrenskod-sni-2007-5-stallig"
-
-[[variable]]
-native_id = "182.45614"
-slug = "typ-av-forskning"
-
-[[variable]]
-native_id = "182.45695"
-slug = "forskning-inom-ai"
-
-[[variable]]
-native_id = "182.45947"
-slug = "typ-av-larosate"
-
-[[variable]]
-native_id = "182.47278"
-slug = "fou-utgift-investeringar"
-
-[[variable]]
-native_id = "182.47279"
-slug = "fou-utgift-rorelsekostnader"
-
-[[variable]]
-native_id = "182.47302"
-slug = "fou-kalla-sjalv"
-
-[[variable]]
-native_id = "182.47303"
-slug = "fou-kalla-foretag-se"
-
-[[variable]]
-native_id = "182.47304"
-slug = "fou-kalla-offentliga-verk"
-
-[[variable]]
-native_id = "182.47305"
-slug = "fou-kalla-forsvar"
-
-[[variable]]
-native_id = "182.47306"
-slug = "fou-kalla-civila-statliga"
-
-[[variable]]
-native_id = "182.47307"
-slug = "fou-kalla-kommuner"
-
-[[variable]]
-native_id = "182.47308"
-slug = "fou-kalla-offentlig-stiftelse"
-
-[[variable]]
-native_id = "182.47309"
-slug = "fou-kalla-offentlig-ideell"
-
-[[variable]]
-native_id = "182.47310"
-slug = "fou-kalla-hogskola"
-
-[[variable]]
-native_id = "182.47311"
-slug = "fou-kalla-privat-ideell"
-
-[[variable]]
-native_id = "182.47312"
-slug = "fou-kalla-foretag-utland"
-
-[[variable]]
-native_id = "182.47313"
-slug = "fou-kalla-eu"
-
-[[variable]]
-native_id = "182.47314"
-slug = "fou-kalla-eu-ramprogram"
-
-[[variable]]
-native_id = "182.47315"
-slug = "fou-kalla-eu-ovrigt"
-
-[[variable]]
-native_id = "182.47316"
-slug = "fou-kalla-internationell"
-
-[[variable]]
-native_id = "182.47317"
-slug = "fou-kalla-utlandska-ovriga"
-
-[[variable]]
-native_id = "182.47318"
-slug = "fou-kalla-statliga-utland"
-
-[[variable]]
-native_id = "182.47319"
-slug = "fou-kalla-privat-ideell-utland"
-
-[[variable]]
-native_id = "182.47324"
-slug = "fou-utgifter-utveckling"
-
-[[variable]]
-native_id = "182.47325"
-slug = "fou-utgifter-grundforskning"
-
-[[variable]]
-native_id = "182.47326"
-slug = "fou-utgifter-tillampad"
-
-[[variable]]
-native_id = "182.47328"
-slug = "fou-utgifter-humaniora"
-
-[[variable]]
-native_id = "182.47329"
-slug = "fou-utgifter-samhallsvetenskap"
-
-[[variable]]
-native_id = "182.47330"
-slug = "fou-utgifter-lantbruk-vet"
-
-[[variable]]
-native_id = "182.47331"
-slug = "fou-utgifter-medicin"
-
-[[variable]]
-native_id = "182.47332"
-slug = "fou-utgifter-teknik"
-
-[[variable]]
-native_id = "182.47333"
-slug = "fou-utgifter-naturvetenskap"
-
-[[variable]]
-native_id = "182.47335"
-slug = "antal-fou-forskare-kvinnor"
-
-[[variable]]
-native_id = "182.47354"
-slug = "antal-fou-forskare-man"
-
-[[variable]]
-native_id = "182.47355"
-slug = "fou-anstallda-kvinnor"
-
-[[variable]]
-native_id = "182.47356"
-slug = "fou-personer-kvinnor"
-
-[[variable]]
-native_id = "182.47357"
-slug = "fou-anstallda-understod-kvinnor"
-
-[[variable]]
-native_id = "182.47358"
-slug = "fou-personer-understod-kvinnor"
-
-[[variable]]
-native_id = "182.47359"
-slug = "fou-anstallda-forskare-kvinnor"
-
-[[variable]]
-native_id = "182.47360"
-slug = "fou-personer-man"
-
-[[variable]]
-native_id = "182.47361"
-slug = "fou-anstallda-man"
-
-[[variable]]
-native_id = "182.47362"
-slug = "fou-personer-understod-man"
-
-[[variable]]
-native_id = "182.47363"
-slug = "fou-anstallda-forskare-man"
-
-[[variable]]
-native_id = "182.47364"
-slug = "fou-anstallda-understod-man"
-
-[[variable]]
-native_id = "182.47365"
-slug = "fou-anstallda"
-
-[[variable]]
-native_id = "182.47366"
-slug = "fou-personer-forskare"
-
-[[variable]]
-native_id = "182.47367"
-slug = "fou-personer"
-
-[[variable]]
-native_id = "182.47368"
-slug = "fou-anstallda-forskare"
-
-[[variable]]
-native_id = "182.47369"
-slug = "fou-personer-understod"
-
-[[variable]]
-native_id = "182.47370"
-slug = "fou-anstallda-understod"
-
-[[variable]]
-native_id = "182.47680"
-slug = "utgifter-fou-erc"
-
-[[variable]]
-native_id = "182.47681"
-slug = "utgifter-fou-ramanslag"
-
-[[variable]]
-native_id = "182.47682"
-slug = "utgifter-fou-statsanslag"
-
-[[variable]]
-native_id = "182.47683"
-slug = "utgifter-fou-statliga"
-
-[[variable]]
-native_id = "182.47684"
-slug = "utgifter-fou-vinnova"
-
-[[variable]]
-native_id = "182.47685"
-slug = "utgifter-fou-kammarkollegiet"
-
-[[variable]]
-native_id = "182.47686"
-slug = "utgifter-fou-energimyndigheten"
-
-[[variable]]
-native_id = "182.47687"
-slug = "utgifter-fou-forte"
-
-[[variable]]
-native_id = "182.47688"
-slug = "utgifter-fou-formas"
-
-[[variable]]
-native_id = "182.47689"
-slug = "utgifter-fou-vetenskapsradet"
-
-[[variable]]
-native_id = "182.47690"
-slug = "utgifter-fou-stiftelser-larosate"
-
-[[variable]]
-native_id = "182.47691"
-slug = "utgifter-fou-finanskostnader"
-
-[[variable]]
-native_id = "182.47692"
-slug = "utgifter-fou-ovrigt"
-
-[[variable]]
-native_id = "182.47693"
-slug = "utgifter-fou-finansintakter"
-
-[[variable]]
-native_id = "182.47694"
-slug = "rorelsekostnader-fou-ramanslag"
-
-[[variable]]
-native_id = "182.47695"
-slug = "investeringar-fou-ramanslag"
-
-[[variable]]
-native_id = "182.47696"
-slug = "rorelsekostnader-fou-statsanslag"
-
-[[variable]]
-native_id = "182.47697"
-slug = "investeringar-fou-statsanslag"
-
-[[variable]]
-native_id = "182.47698"
-slug = "rorelsekostnader-fou-vetenskapsradet"
-
-[[variable]]
-native_id = "182.47699"
-slug = "investeringar-fou-vetenskapsradet"
-
-[[variable]]
-native_id = "182.47700"
-slug = "rorelsekostnader-fou-forte"
-
-[[variable]]
-native_id = "182.47701"
-slug = "investeringar-fou-forte"
-
-[[variable]]
-native_id = "182.47702"
-slug = "rorelsekostnader-fou-formas"
-
-[[variable]]
-native_id = "182.47703"
-slug = "investeringar-fou-formas"
-
-[[variable]]
-native_id = "182.47704"
-slug = "investeringar-fou-vinnova"
-
-[[variable]]
-native_id = "182.47705"
-slug = "rorelsekostnader-fou-vinnova"
-
-[[variable]]
-native_id = "182.47706"
-slug = "rorelsekostnader-fou-statliga"
-
-[[variable]]
-native_id = "182.47707"
-slug = "investeringar-fou-statliga"
-
-[[variable]]
-native_id = "182.47708"
-slug = "rorelsekostnader-fou-energimyndigheten"
-
-[[variable]]
-native_id = "182.47709"
-slug = "investeringar-fou-energimyndigheten"
-
-[[variable]]
-native_id = "182.47710"
-slug = "rorelsekostnader-fou-kammarkollegiet"
-
-[[variable]]
-native_id = "182.47711"
-slug = "investeringar-fou-kammarkollegiet"
-
-[[variable]]
-native_id = "182.47712"
-slug = "rorelsekostnader-fou-kommuner-regioner"
-
-[[variable]]
-native_id = "182.47713"
-slug = "investeringar-fou-kommuner-regioner"
-
-[[variable]]
-native_id = "182.47714"
-slug = "rorelsekostnader-fou-offentliga"
-
-[[variable]]
-native_id = "182.47715"
-slug = "investeringar-fou-offentliga"
-
-[[variable]]
-native_id = "182.47716"
-slug = "investeringar-fou-foretag-sverige"
-
-[[variable]]
-native_id = "182.47717"
-slug = "rorelsekostnader-fou-foretag-sverige"
-
-[[variable]]
-native_id = "182.47718"
-slug = "rorelsekostnader-fou-uoh"
-
-[[variable]]
-native_id = "182.47719"
-slug = "investeringar-fou-uoh"
-
-[[variable]]
-native_id = "182.47720"
-slug = "rorelsekostnader-fou-stiftelser-larosate"
-
-[[variable]]
-native_id = "182.47721"
-slug = "investeringar-fou-stiftelser-larosate"
-
-[[variable]]
-native_id = "182.47722"
-slug = "rorelsekostnader-fou-finansintakter"
-
-[[variable]]
-native_id = "182.47723"
-slug = "rorelsekostnader-fou-finanskostnader"
-
-[[variable]]
-native_id = "182.47724"
-slug = "rorelsekostnader-fou-privata-utlandet"
-
-[[variable]]
-native_id = "182.47725"
-slug = "rorelsekostnader-fou-privata"
-
-[[variable]]
-native_id = "182.47726"
-slug = "investeringar-fou-privata"
-
-[[variable]]
-native_id = "182.47727"
-slug = "rorelsekostnader-fou-erc"
-
-[[variable]]
-native_id = "182.47728"
-slug = "rorelsekostnader-fou-eu"
-
-[[variable]]
-native_id = "182.47729"
-slug = "rorelsekostnader-fou-eu-ramprogram"
-
-[[variable]]
-native_id = "182.47730"
-slug = "rorelsekostnader-fou-foretag-utlandet"
-
-[[variable]]
-native_id = "182.47731"
-slug = "rorelsekostnader-fou-ovrigt"
-
-[[variable]]
-native_id = "182.48192"
-slug = "genomsnittlig-arbetstid-per-vecka"
-
-[[variable]]
-native_id = "182.48193"
-slug = "andel-arbetstid-fou"
-
-[[variable]]
-native_id = "182.48194"
-slug = "andel-arbetstid-direkt-stod"
-
-[[variable]]
-native_id = "182.48195"
-slug = "forskningstid-grundforskning"
-
-[[variable]]
-native_id = "182.48196"
-slug = "forskningstid-tillampad"
-
-[[variable]]
-native_id = "182.48197"
-slug = "forskningstid-utvecklingsarbete"
-
-[[variable]]
-native_id = "182.48202"
-slug = "antal-fou-helarspersoner"
+"182.V0401" = "andel-driftkostnader-fou-produktgrupp-1"
+"182.56" = "person-orgnr"
+"182.57" = "personnr"
+"182.1839" = "orgnr"
+"182.3" = "hogskolekod"
+"182.44" = "kon"
+"182.49" = "lan"
+"182.66" = "utbildningsniva"
+"182.73" = "ar"
+"182.109" = "tjanstgoringsomfattning"
+"182.1141" = "sektortillhorighet"
+"182.1909" = "hogskolekategori"
+"182.2519" = "lopnummer-anstallningar"
+"182.2736" = "sektor"
+"182.2935" = "redovisningsgrupp"
+"182.3306" = "imputeringskod"
+"182.3310" = "branschgrupp"
+"182.3335" = "driftkostnader-forskning"
+"182.3566" = "vilja-besvara-enkat-internet"
+"182.3569" = "imputeringskod-bortfall"
+"182.3637" = "tjanstekategori"
+"182.4372" = "driftkostnader-fou-produkt"
+"182.6061" = "avskrivningar-for-fou"
+"182.6062" = "fou-investering-byggnader"
+"182.6064" = "lokalkostnader-for-fou"
+"182.6172" = "lopnummer-for-individ"
+"182.7121" = "biovetenskap"
+"182.7122" = "bioteknik"
+"182.7594" = "finansieringskallor"
+"182.7596" = "intakter-fou-forskarutb"
+"182.7706" = "antal-personer-fou"
+"182.7707" = "antal-arsverken-fou"
+"182.7708" = "utgifter-for-utlagd-fou"
+"182.7711" = "fou-investering-maskiner"
+"182.7741" = "andel-bioteknik"
+"182.17260" = "forskningsamne"
+"182.17658" = "fou-inom-biovetenskap"
+"182.17659" = "fou-inom-bioteknik"
+"182.29325" = "intakter-fou-utveckling"
+"182.29326" = "typ-av-utgift-kostnad"
+"182.29327" = "utgift-kostnad-forskarutb"
+"182.29328" = "utgift-kostnad-utveckling"
+"182.35615" = "utlandsvistelse-total"
+"182.35616" = "sjukskriven-hela-referenstid"
+"182.35622" = "utlandsvistelse-forska"
+"182.35623" = "utlandsvistelse-undervisa"
+"182.35624" = "utlandsvistelse-studera"
+"182.35625" = "gastvistelse-i-sverige"
+"182.37575" = "externa-arsverken-fou"
+"182.38045" = "naringsgren-sni-5-siffer"
+"182.38243" = "sjukskriven-hela-aret"
+"182.41247" = "institutionell-enhet"
+"182.44223" = "egen-fou-investeringar"
+"182.44225" = "egen-fou-rorelsekostnader"
+"182.45446" = "naringsgrenskod-sni-2007-5-stallig"
+"182.45614" = "typ-av-forskning"
+"182.45695" = "forskning-inom-ai"
+"182.45947" = "typ-av-larosate"
+"182.47278" = "fou-utgift-investeringar"
+"182.47279" = "fou-utgift-rorelsekostnader"
+"182.47302" = "fou-kalla-sjalv"
+"182.47303" = "fou-kalla-foretag-se"
+"182.47304" = "fou-kalla-offentliga-verk"
+"182.47305" = "fou-kalla-forsvar"
+"182.47306" = "fou-kalla-civila-statliga"
+"182.47307" = "fou-kalla-kommuner"
+"182.47308" = "fou-kalla-offentlig-stiftelse"
+"182.47309" = "fou-kalla-offentlig-ideell"
+"182.47310" = "fou-kalla-hogskola"
+"182.47311" = "fou-kalla-privat-ideell"
+"182.47312" = "fou-kalla-foretag-utland"
+"182.47313" = "fou-kalla-eu"
+"182.47314" = "fou-kalla-eu-ramprogram"
+"182.47315" = "fou-kalla-eu-ovrigt"
+"182.47316" = "fou-kalla-internationell"
+"182.47317" = "fou-kalla-utlandska-ovriga"
+"182.47318" = "fou-kalla-statliga-utland"
+"182.47319" = "fou-kalla-privat-ideell-utland"
+"182.47324" = "fou-utgifter-utveckling"
+"182.47325" = "fou-utgifter-grundforskning"
+"182.47326" = "fou-utgifter-tillampad"
+"182.47328" = "fou-utgifter-humaniora"
+"182.47329" = "fou-utgifter-samhallsvetenskap"
+"182.47330" = "fou-utgifter-lantbruk-vet"
+"182.47331" = "fou-utgifter-medicin"
+"182.47332" = "fou-utgifter-teknik"
+"182.47333" = "fou-utgifter-naturvetenskap"
+"182.47335" = "antal-fou-forskare-kvinnor"
+"182.47354" = "antal-fou-forskare-man"
+"182.47355" = "fou-anstallda-kvinnor"
+"182.47356" = "fou-personer-kvinnor"
+"182.47357" = "fou-anstallda-understod-kvinnor"
+"182.47358" = "fou-personer-understod-kvinnor"
+"182.47359" = "fou-anstallda-forskare-kvinnor"
+"182.47360" = "fou-personer-man"
+"182.47361" = "fou-anstallda-man"
+"182.47362" = "fou-personer-understod-man"
+"182.47363" = "fou-anstallda-forskare-man"
+"182.47364" = "fou-anstallda-understod-man"
+"182.47365" = "fou-anstallda"
+"182.47366" = "fou-personer-forskare"
+"182.47367" = "fou-personer"
+"182.47368" = "fou-anstallda-forskare"
+"182.47369" = "fou-personer-understod"
+"182.47370" = "fou-anstallda-understod"
+"182.47680" = "utgifter-fou-erc"
+"182.47681" = "utgifter-fou-ramanslag"
+"182.47682" = "utgifter-fou-statsanslag"
+"182.47683" = "utgifter-fou-statliga"
+"182.47684" = "utgifter-fou-vinnova"
+"182.47685" = "utgifter-fou-kammarkollegiet"
+"182.47686" = "utgifter-fou-energimyndigheten"
+"182.47687" = "utgifter-fou-forte"
+"182.47688" = "utgifter-fou-formas"
+"182.47689" = "utgifter-fou-vetenskapsradet"
+"182.47690" = "utgifter-fou-stiftelser-larosate"
+"182.47691" = "utgifter-fou-finanskostnader"
+"182.47692" = "utgifter-fou-ovrigt"
+"182.47693" = "utgifter-fou-finansintakter"
+"182.47694" = "rorelsekostnader-fou-ramanslag"
+"182.47695" = "investeringar-fou-ramanslag"
+"182.47696" = "rorelsekostnader-fou-statsanslag"
+"182.47697" = "investeringar-fou-statsanslag"
+"182.47698" = "rorelsekostnader-fou-vetenskapsradet"
+"182.47699" = "investeringar-fou-vetenskapsradet"
+"182.47700" = "rorelsekostnader-fou-forte"
+"182.47701" = "investeringar-fou-forte"
+"182.47702" = "rorelsekostnader-fou-formas"
+"182.47703" = "investeringar-fou-formas"
+"182.47704" = "investeringar-fou-vinnova"
+"182.47705" = "rorelsekostnader-fou-vinnova"
+"182.47706" = "rorelsekostnader-fou-statliga"
+"182.47707" = "investeringar-fou-statliga"
+"182.47708" = "rorelsekostnader-fou-energimyndigheten"
+"182.47709" = "investeringar-fou-energimyndigheten"
+"182.47710" = "rorelsekostnader-fou-kammarkollegiet"
+"182.47711" = "investeringar-fou-kammarkollegiet"
+"182.47712" = "rorelsekostnader-fou-kommuner-regioner"
+"182.47713" = "investeringar-fou-kommuner-regioner"
+"182.47714" = "rorelsekostnader-fou-offentliga"
+"182.47715" = "investeringar-fou-offentliga"
+"182.47716" = "investeringar-fou-foretag-sverige"
+"182.47717" = "rorelsekostnader-fou-foretag-sverige"
+"182.47718" = "rorelsekostnader-fou-uoh"
+"182.47719" = "investeringar-fou-uoh"
+"182.47720" = "rorelsekostnader-fou-stiftelser-larosate"
+"182.47721" = "investeringar-fou-stiftelser-larosate"
+"182.47722" = "rorelsekostnader-fou-finansintakter"
+"182.47723" = "rorelsekostnader-fou-finanskostnader"
+"182.47724" = "rorelsekostnader-fou-privata-utlandet"
+"182.47725" = "rorelsekostnader-fou-privata"
+"182.47726" = "investeringar-fou-privata"
+"182.47727" = "rorelsekostnader-fou-erc"
+"182.47728" = "rorelsekostnader-fou-eu"
+"182.47729" = "rorelsekostnader-fou-eu-ramprogram"
+"182.47730" = "rorelsekostnader-fou-foretag-utlandet"
+"182.47731" = "rorelsekostnader-fou-ovrigt"
+"182.48192" = "genomsnittlig-arbetstid-per-vecka"
+"182.48193" = "andel-arbetstid-fou"
+"182.48194" = "andel-arbetstid-direkt-stod"
+"182.48195" = "forskningstid-grundforskning"
+"182.48196" = "forskningstid-tillampad"
+"182.48197" = "forskningstid-utvecklingsarbete"
+"182.48202" = "antal-fou-helarspersoner"
 
 # register 183 (investeringsenkaten)
-
-[[variable]]
-native_id = "182.45946.obs-value"
-slug = "internationell-mobilitet"
-
-[[variable]]
-native_id = "182.45946.varcd"
-slug = "internationell-mobilitet-varcd"
-
-[[variable]]
-native_id = "182.45946.varname"
-slug = "internationell-mobilitet-varname"
-
-[[variable]]
-native_id = "182.45972.varcd"
-slug = "arbetstidens-fordelning-uoh-varcd"
-
-[[variable]]
-native_id = "182.45972.varname"
-slug = "arbetstidens-fordelning-uoh-varname"
-
-[[variable]]
-native_id = "182.29"
-slug = "fenr"
-
-[[variable]]
-native_id = "182.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "182.33"
-slug = "institutionell-sektor"
-
-[[variable]]
-native_id = "182.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "182.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "182.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "182.666"
-slug = "anstallda-storleksklass"
-
-[[variable]]
-native_id = "182.690"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "182.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "182.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "182.1810"
-slug = "imputerad"
-
-[[variable]]
-native_id = "182.1908"
-slug = "hogskolans-huvudman"
-
-[[variable]]
-native_id = "182.2951"
-slug = "arbetskraftskostnader"
-
-[[variable]]
-native_id = "182.3271"
-slug = "upprakningsvikt"
-
-[[variable]]
-native_id = "182.3307"
-slug = "imputeringsmetod"
-
-[[variable]]
-native_id = "182.3312"
-slug = "naringsgrensgruppering"
-
-[[variable]]
-native_id = "182.3316"
-slug = "land-agare"
-
-[[variable]]
-native_id = "182.3445"
-slug = "syfte-framtagning-existerande-produkter"
-
-[[variable]]
-native_id = "182.3446"
-slug = "syfte-framtagning-nya-produkter"
-
-[[variable]]
-native_id = "182.3447"
-slug = "syfte-forbattring-existerande-produkter"
-
-[[variable]]
-native_id = "182.3448"
-slug = "syfte-framtagning-nya-processer"
-
-[[variable]]
-native_id = "182.3449"
-slug = "syfte-forbattring-existerande-processer"
-
-[[variable]]
-native_id = "182.3450"
-slug = "syfte-allman-kunskapsuppbyggnad"
-
-[[variable]]
-native_id = "182.3567"
-slug = "svarstid-enkat"
-
-[[variable]]
-native_id = "182.3572"
-slug = "inkommen-datum"
-
-[[variable]]
-native_id = "182.3573"
-slug = "lilla-n"
-
-[[variable]]
-native_id = "182.3575"
-slug = "foretagets-namn"
-
-[[variable]]
-native_id = "182.3582"
-slug = "stora-n"
-
-[[variable]]
-native_id = "182.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "182.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "182.6290"
-slug = "nuts"
-
-[[variable]]
-native_id = "182.8773"
-slug = "typ-av-anstallning"
-
-[[variable]]
-native_id = "182.15169"
-slug = "bransch"
-
-[[variable]]
-native_id = "182.28808"
-slug = "referensperiod"
-
-[[variable]]
-native_id = "182.29561"
-slug = "nationellt-forskningsamne"
-
-[[variable]]
-native_id = "182.29578"
-slug = "medborgarskap"
-
-[[variable]]
-native_id = "182.30385"
-slug = "adjungerad"
-
-[[variable]]
-native_id = "182.30435"
-slug = "utbildningsniva-isced2011"
-
-[[variable]]
-native_id = "182.35335"
-slug = "regionindelning"
-
-[[variable]]
-native_id = "182.36555"
-slug = "yrkesgrupp"
-
-[[variable]]
-native_id = "182.37730"
-slug = "naringsgrenskod-sni-2007-2-stallig"
-
-[[variable]]
-native_id = "182.46687"
-slug = "storleksklass-antal-anstallda"
+"182.45946.obs-value" = "internationell-mobilitet"
+"182.45946.varcd" = "internationell-mobilitet-varcd"
+"182.45946.varname" = "internationell-mobilitet-varname"
+"182.45972.varcd" = "arbetstidens-fordelning-uoh-varcd"
+"182.45972.varname" = "arbetstidens-fordelning-uoh-varname"
+"182.29" = "fenr"
+"182.15" = "civilstand"
+"182.33" = "institutionell-sektor"
+"182.34" = "juridisk-form"
+"182.36" = "kommun"
+"182.241" = "alder-31-12"
+"182.666" = "anstallda-storleksklass"
+"182.690" = "antal-anstallda"
+"182.749" = "aldersgrupp"
+"182.1086" = "namn-juridiska-enheten"
+"182.1810" = "imputerad"
+"182.1908" = "hogskolans-huvudman"
+"182.2951" = "arbetskraftskostnader"
+"182.3271" = "upprakningsvikt"
+"182.3307" = "imputeringsmetod"
+"182.3312" = "naringsgrensgruppering"
+"182.3316" = "land-agare"
+"182.3445" = "syfte-framtagning-existerande-produkter"
+"182.3446" = "syfte-framtagning-nya-produkter"
+"182.3447" = "syfte-forbattring-existerande-produkter"
+"182.3448" = "syfte-framtagning-nya-processer"
+"182.3449" = "syfte-forbattring-existerande-processer"
+"182.3450" = "syfte-allman-kunskapsuppbyggnad"
+"182.3567" = "svarstid-enkat"
+"182.3572" = "inkommen-datum"
+"182.3573" = "lilla-n"
+"182.3575" = "foretagets-namn"
+"182.3582" = "stora-n"
+"182.4027" = "naringsgren"
+"182.5083" = "anstallningsform"
+"182.6290" = "nuts"
+"182.8773" = "typ-av-anstallning"
+"182.15169" = "bransch"
+"182.28808" = "referensperiod"
+"182.29561" = "nationellt-forskningsamne"
+"182.29578" = "medborgarskap"
+"182.30385" = "adjungerad"
+"182.30435" = "utbildningsniva-isced2011"
+"182.35335" = "regionindelning"
+"182.36555" = "yrkesgrupp"
+"182.37730" = "naringsgrenskod-sni-2007-2-stallig"
+"182.46687" = "storleksklass-antal-anstallda"
 
 # register 183
-
-[[variable]]
-native_id = "182.1852.employ-code"
-slug = "tjanstebenamning"
-
-[[variable]]
-native_id = "182.29507.anstkat"
-slug = "anstallningskategori"
-
-[[variable]]
-native_id = "182.39021.forskamneomr"
-slug = "forskningsamnesomrade"
+"182.1852.employ-code" = "tjanstebenamning"
+"182.29507.anstkat" = "anstallningskategori"
+"182.39021.forskamneomr" = "forskningsamnesomrade"
+"182.98.time-period" = { slug = "referensar", deprecated = false }
+"182.462.stratum" = { slug = "stratum", deprecated = false }
+"182.2608.branschtyp" = { slug = "branschtyp", deprecated = false }
+"182.2608.literal-ngsredo" = { slug = "branschgrupper-ngsredo", deprecated = false }
+"182.2608.sni92fouftg" = { slug = "branschgrupper-sni92fouftg", deprecated = false }
+"182.2608.sni92fouftgtj" = { slug = "branschgrupper-sni92fouftgtj", deprecated = false }
+"182.2608.typkod" = { slug = "branschgrupper-typkod", deprecated = false }
+"182.3309.kod" = { slug = "kod", deprecated = false }
+"182.3309.prodgrp" = { slug = "kod-for-produktgrupp-prodgrp", deprecated = false }
+"182.3577.orgnr" = { slug = "organisationsnummer-10-siffror-orgnr", deprecated = false }
+"182.3577.orgnr11" = { slug = "orgnr-10", deprecated = false }
+"182.3578.peorgnr" = { slug = "orgnr-12", deprecated = false }
+"182.3578.orgnr-2003" = { slug = "organisationsnummer-12-siffror-orgnr-2003", deprecated = false }
+"182.3584.urvalsvikt" = { slug = "urvalsvikt", deprecated = false }
+"182.3584.viktu" = { slug = "urvalsvikt-viktu", deprecated = false }
+"182.6320.f34upp" = { slug = "andel-av-arbetstid-som-agnades-at-utbildning-kurser-inom-den-egna-forskarutbildningen-f34upp", deprecated = false }
+"182.6320.f34" = { slug = "arbetstid-doktorandkurser", deprecated = false }
+"182.6321.f35upp" = { slug = "andel-av-arbetstid-som-agnades-at-administration-vid-sidan-av-egen-forskning-undervisning-f35upp", deprecated = false }
+"182.6321.f35" = { slug = "arbetstid-administration", deprecated = false }
+"182.6322.f36upp" = { slug = "andel-av-arbetstid-som-agnades-at-expert-och-fortroendeuppdrag-inom-ramen-for-anstallningen-befattningen-f36upp", deprecated = false }
+"182.6322.f36" = { slug = "arbetstid-expertuppdrag", deprecated = false }
+"182.6323.f37upp" = { slug = "andel-av-arbetstid-som-agnades-at-annan-verksamhet-f37upp", deprecated = false }
+"182.6323.f37" = { slug = "f37", deprecated = false }
+"182.6324.f31b" = { slug = "arbetstid-ansoka-medel", deprecated = false }
+"182.6324.f31bupp" = { slug = "andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-f31bupp", deprecated = false }
+"182.6325.f32upp" = { slug = "andel-av-arbetstid-som-agnades-at-undervisning-pa-grund-och-avancerad-niva-f32upp", deprecated = false }
+"182.6325.f32" = { slug = "arbetstid-undervisning-grund", deprecated = false }
+"182.6326.f33upp" = { slug = "andel-av-arbetstid-som-agnades-at-undervisning-pa-forskarutbildningsniva-f33upp", deprecated = false }
+"182.6326.f33" = { slug = "arbetstid-forskarutbildning", deprecated = false }
+"182.6327.f2upp" = { slug = "arbetstid-under-en-genomsnittlig-arbetsvecka-vid-universitet-hogskolan-f2upp", deprecated = false }
+"182.6327.f2" = { slug = "f2", deprecated = false }
+"182.7591.myndighet" = { slug = "larosate", deprecated = false }
+"182.7705.v201" = { slug = "utgifter-for-egen-fou", deprecated = false }
+"182.7743.fouverkkomar" = { slug = "fou-verksamhet-nasta-ar", deprecated = false }
+"182.7744.fouarsvkomar" = { slug = "arsverken-fou-nasta-ar", deprecated = false }
+"182.7745.fouutgkomar" = { slug = "utgifter-fou-kommande-ar", deprecated = false }
+"182.16200.sasvalue" = { slug = "fou-verksamhet", deprecated = false }
+"182.25031.f31bupp" = { slug = "andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-for-fou-f31bupp", deprecated = false }
+"182.25031.f31b" = { slug = "arbetstid-ansoka-medel-fou", deprecated = false }
+"182.45972.obs-value" = { slug = "arbetstidens-fordelning-i-uoh-obs-value", deprecated = false }
+"182.v7001" = "v7001"
+"182.v7002" = "v7002"
+"182.WEIGHT" = "weight"
+"182.SIZE_CLASS" = "size-class"
+"182.VIKT" = "vikt-enligt-leverans"
+"182.TYPE_INST" = "type-inst-enligt-leverans"
+"182.TYPE_SECT" = "type-sect-enligt-leverans"
+"182.V601" = "v601-enligt-leverans"
+"182.v0401_1" = "v0401-1-enligt-leverans"
+"182.v0401_2" = "v0401-2-enligt-leverans"
+"182.v0401_3" = "v0401-3-enligt-leverans"
+"182.v0401_4" = "v0401-4-enligt-leverans"
+"182.v0401_5" = "v0401-5-enligt-leverans"
+"182.v0401_6" = "v0401-6-enligt-leverans"
+"182.v0401_7" = "v0401-7-enligt-leverans"
+"182.v0401_8" = "v0401-8-enligt-leverans"
+"182.v0402_1" = "v0402-1-enligt-leverans"
+"182.v0402_2" = "v0402-2-enligt-leverans"
+"182.v0402_3" = "v0402-3-enligt-leverans"
+"182.v0402_4" = "v0402-4-enligt-leverans"
+"182.v0402_5" = "v0402-5-enligt-leverans"
+"182.v0402_6" = "v0402-6-enligt-leverans"
+"182.v0402_7" = "v0402-7-enligt-leverans"
+"182.v0402_8" = "v0402-8-enligt-leverans"
 
 # register 187
 
@@ -15598,206 +15018,6 @@ column = "FoUUtgKomAr"
 periods = [["2007-01-01", "2007-12-31"], ["2009-01-01", "2009-12-31"], ["2011-01-01", "2011-12-31"]]
 reason = "Omit the uncoded state under the existing accepted drop decision."
 source = "codeless_overlap.toml#/resolve/21"  # v18 accepted-codeless:21:*, 3 case(s)
-
-[[variable]]
-native_id = "182.98.time-period"
-slug = "referensar"
-deprecated = false
-
-[[variable]]
-native_id = "182.462.stratum"
-slug = "stratum"
-deprecated = false
-
-[[variable]]
-native_id = "182.2608.branschtyp"
-slug = "branschtyp"
-deprecated = false
-
-[[variable]]
-native_id = "182.2608.literal-ngsredo"
-slug = "branschgrupper-ngsredo"
-deprecated = false
-
-[[variable]]
-native_id = "182.2608.sni92fouftg"
-slug = "branschgrupper-sni92fouftg"
-deprecated = false
-
-[[variable]]
-native_id = "182.2608.sni92fouftgtj"
-slug = "branschgrupper-sni92fouftgtj"
-deprecated = false
-
-[[variable]]
-native_id = "182.2608.typkod"
-slug = "branschgrupper-typkod"
-deprecated = false
-
-[[variable]]
-native_id = "182.3309.kod"
-slug = "kod"
-deprecated = false
-
-[[variable]]
-native_id = "182.3309.prodgrp"
-slug = "kod-for-produktgrupp-prodgrp"
-deprecated = false
-
-[[variable]]
-native_id = "182.3577.orgnr"
-slug = "organisationsnummer-10-siffror-orgnr"
-deprecated = false
-
-[[variable]]
-native_id = "182.3577.orgnr11"
-slug = "orgnr-10"
-deprecated = false
-
-[[variable]]
-native_id = "182.3578.peorgnr"
-slug = "orgnr-12"
-deprecated = false
-
-[[variable]]
-native_id = "182.3578.orgnr-2003"
-slug = "organisationsnummer-12-siffror-orgnr-2003"
-deprecated = false
-
-[[variable]]
-native_id = "182.3584.urvalsvikt"
-slug = "urvalsvikt"
-deprecated = false
-
-[[variable]]
-native_id = "182.3584.viktu"
-slug = "urvalsvikt-viktu"
-deprecated = false
-
-[[variable]]
-native_id = "182.6320.f34upp"
-slug = "andel-av-arbetstid-som-agnades-at-utbildning-kurser-inom-den-egna-forskarutbildningen-f34upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6320.f34"
-slug = "arbetstid-doktorandkurser"
-deprecated = false
-
-[[variable]]
-native_id = "182.6321.f35upp"
-slug = "andel-av-arbetstid-som-agnades-at-administration-vid-sidan-av-egen-forskning-undervisning-f35upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6321.f35"
-slug = "arbetstid-administration"
-deprecated = false
-
-[[variable]]
-native_id = "182.6322.f36upp"
-slug = "andel-av-arbetstid-som-agnades-at-expert-och-fortroendeuppdrag-inom-ramen-for-anstallningen-befattningen-f36upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6322.f36"
-slug = "arbetstid-expertuppdrag"
-deprecated = false
-
-[[variable]]
-native_id = "182.6323.f37upp"
-slug = "andel-av-arbetstid-som-agnades-at-annan-verksamhet-f37upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6323.f37"
-slug = "f37"
-deprecated = false
-
-[[variable]]
-native_id = "182.6324.f31b"
-slug = "arbetstid-ansoka-medel"
-deprecated = false
-
-[[variable]]
-native_id = "182.6324.f31bupp"
-slug = "andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-f31bupp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6325.f32upp"
-slug = "andel-av-arbetstid-som-agnades-at-undervisning-pa-grund-och-avancerad-niva-f32upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6325.f32"
-slug = "arbetstid-undervisning-grund"
-deprecated = false
-
-[[variable]]
-native_id = "182.6326.f33upp"
-slug = "andel-av-arbetstid-som-agnades-at-undervisning-pa-forskarutbildningsniva-f33upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6326.f33"
-slug = "arbetstid-forskarutbildning"
-deprecated = false
-
-[[variable]]
-native_id = "182.6327.f2upp"
-slug = "arbetstid-under-en-genomsnittlig-arbetsvecka-vid-universitet-hogskolan-f2upp"
-deprecated = false
-
-[[variable]]
-native_id = "182.6327.f2"
-slug = "f2"
-deprecated = false
-
-[[variable]]
-native_id = "182.7591.myndighet"
-slug = "larosate"
-deprecated = false
-
-[[variable]]
-native_id = "182.7705.v201"
-slug = "utgifter-for-egen-fou"
-deprecated = false
-
-[[variable]]
-native_id = "182.7743.fouverkkomar"
-slug = "fou-verksamhet-nasta-ar"
-deprecated = false
-
-[[variable]]
-native_id = "182.7744.fouarsvkomar"
-slug = "arsverken-fou-nasta-ar"
-deprecated = false
-
-[[variable]]
-native_id = "182.7745.fouutgkomar"
-slug = "utgifter-fou-kommande-ar"
-deprecated = false
-
-[[variable]]
-native_id = "182.16200.sasvalue"
-slug = "fou-verksamhet"
-deprecated = false
-
-[[variable]]
-native_id = "182.25031.f31bupp"
-slug = "andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-for-fou-f31bupp"
-deprecated = false
-
-[[variable]]
-native_id = "182.25031.f31b"
-slug = "arbetstid-ansoka-medel-fou"
-deprecated = false
-
-[[variable]]
-native_id = "182.45972.obs-value"
-slug = "arbetstidens-fordelning-i-uoh-obs-value"
-deprecated = false
 
 [[identity.column_owner]]
 data_warning = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
@@ -18229,100 +17449,3 @@ holdings_period = "2013-2013"
 source = "steward-holdings"
 evidence = "SWECOV holds v7002 in FTG_FOU_2013; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists it for 2013 without a description; SCB's Registerinformation export carries no row for it on this variant (#1302, low confidence on meaning)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "182.v7001"
-slug = "v7001"
-
-[[variable]]
-native_id = "182.v7002"
-slug = "v7002"
-
-[[variable]]
-native_id = "182.WEIGHT"
-slug = "weight"
-
-[[variable]]
-native_id = "182.SIZE_CLASS"
-slug = "size-class"
-
-
-[[variable]]
-native_id = "182.VIKT"
-slug = "vikt-enligt-leverans"
-
-[[variable]]
-native_id = "182.TYPE_INST"
-slug = "type-inst-enligt-leverans"
-
-[[variable]]
-native_id = "182.TYPE_SECT"
-slug = "type-sect-enligt-leverans"
-
-[[variable]]
-native_id = "182.V601"
-slug = "v601-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_1"
-slug = "v0401-1-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_2"
-slug = "v0401-2-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_3"
-slug = "v0401-3-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_4"
-slug = "v0401-4-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_5"
-slug = "v0401-5-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_6"
-slug = "v0401-6-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_7"
-slug = "v0401-7-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0401_8"
-slug = "v0401-8-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_1"
-slug = "v0402-1-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_2"
-slug = "v0402-2-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_3"
-slug = "v0402-3-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_4"
-slug = "v0402-4-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_5"
-slug = "v0402-5-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_6"
-slug = "v0402-6-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_7"
-slug = "v0402-7-enligt-leverans"
-
-[[variable]]
-native_id = "182.v0402_8"
-slug = "v0402-8-enligt-leverans"

@@ -11,1132 +11,451 @@ panel_entity_key = "eget-personnr"
 panel_time_key = ["ar-for-intervju", "matmanad"]
 panel_time_grain = "row"
 
+[variable]
 # Högutbildades arbetsmarknad
-
-[[variable]]
-native_id = "301.4544"
-slug = "eget-personnr"
-
-
-[[variable]]
-native_id = "301.44"
-slug = "kon"
-
-[[variable]]
-native_id = "301.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "301.3751"
-slug = "lopnummer"
-
-[[variable]]
-native_id = "301.6587"
-slug = "anstallningsar-huvudsysslan"
-
-[[variable]]
-native_id = "301.7450"
-slug = "matmanad"
-
-[[variable]]
-native_id = "301.18234"
-slug = "yrkesuppgift-isco"
-
-[[variable]]
-native_id = "301.19714"
-slug = "naringsgren-sysselsatt"
-
-[[variable]]
-native_id = "301.24773"
-slug = "metod-for-intervju"
-
-[[variable]]
-native_id = "301.24785"
-slug = "ar-for-intervju"
-
-[[variable]]
-native_id = "301.24799"
-slug = "medborgarskap-iso"
-
-[[variable]]
-native_id = "301.24805"
-slug = "formell-utbildning"
-
-[[variable]]
-native_id = "301.24808"
-slug = "antal-formella"
-
-[[variable]]
-native_id = "301.24827"
-slug = "icke-formell-utbildning"
-
-[[variable]]
-native_id = "301.24828"
-slug = "antal-icke-formella"
-
-[[variable]]
-native_id = "301.24958"
-slug = "informell-utbildning"
-
-[[variable]]
-native_id = "301.24974"
-slug = "utbildningsinriktning-isced"
-
-[[variable]]
-native_id = "301.25103"
-slug = "uenr"
-
-[[variable]]
-native_id = "301.25604"
-slug = "anstallningsar-arbetsplats"
-
-[[variable]]
-native_id = "301.32765"
-slug = "hushallspersoner-0-13"
-
-[[variable]]
-native_id = "301.32770"
-slug = "hushallspersoner-14-24"
-
-[[variable]]
-native_id = "301.32771"
-slug = "hushallspersoner-25-plus"
-
-[[variable]]
-native_id = "301.32773"
-slug = "antal-personer-i-hushallet"
-
-[[variable]]
-native_id = "301.32782"
-slug = "formell-utbildning-kostnad"
-
-[[variable]]
-native_id = "301.32902"
-slug = "anstallningsar-nuvarande"
-
-[[variable]]
-native_id = "301.35124"
-slug = "formell-avbruten"
-
-[[variable]]
-native_id = "301.35142"
-slug = "formell-undervisningsmetod"
-
-[[variable]]
-native_id = "301.35174"
-slug = "antal-missnoje-formell"
-
-[[variable]]
-native_id = "301.35180"
-slug = "antal-resultat-formell"
-
-[[variable]]
-native_id = "301.35199"
-slug = "antal-datoraktiviteter"
-
-[[variable]]
-native_id = "301.35201"
-slug = "antal-internetaktiviteter"
-
-[[variable]]
-native_id = "301.37530"
-slug = "utbildningsbehov"
+"301.4544" = "eget-personnr"
+"301.44" = "kon"
+"301.1378" = "fodelsear"
+"301.3751" = "lopnummer"
+"301.6587" = "anstallningsar-huvudsysslan"
+"301.7450" = "matmanad"
+"301.18234" = "yrkesuppgift-isco"
+"301.19714" = "naringsgren-sysselsatt"
+"301.24773" = "metod-for-intervju"
+"301.24785" = "ar-for-intervju"
+"301.24799" = "medborgarskap-iso"
+"301.24805" = "formell-utbildning"
+"301.24808" = "antal-formella"
+"301.24827" = "icke-formell-utbildning"
+"301.24828" = "antal-icke-formella"
+"301.24958" = "informell-utbildning"
+"301.24974" = "utbildningsinriktning-isced"
+"301.25103" = "uenr"
+"301.25604" = "anstallningsar-arbetsplats"
+"301.32765" = "hushallspersoner-0-13"
+"301.32770" = "hushallspersoner-14-24"
+"301.32771" = "hushallspersoner-25-plus"
+"301.32773" = "antal-personer-i-hushallet"
+"301.32782" = "formell-utbildning-kostnad"
+"301.32902" = "anstallningsar-nuvarande"
+"301.35124" = "formell-avbruten"
+"301.35142" = "formell-undervisningsmetod"
+"301.35174" = "antal-missnoje-formell"
+"301.35180" = "antal-resultat-formell"
+"301.35199" = "antal-datoraktiviteter"
+"301.35201" = "antal-internetaktiviteter"
+"301.37530" = "utbildningsbehov"
 
 # register 304 (fritidshem)
-
-[[variable]]
-native_id = "301.24832.infpurp"
-slug = "syfte-icke-formell"
-
-[[variable]]
-native_id = "301.24959.langlevel1"
-slug = "sprak-niva-fold"
-
-[[variable]]
-native_id = "301.35189.seeksource-1"
-slug = "informationskalla-fold"
-
-[[variable]]
-native_id = "301.35197.difftype-01"
-slug = "svarighet-typ-fold"
+"301.24832.infpurp" = "syfte-icke-formell"
+"301.24959.langlevel1" = "sprak-niva-fold"
+"301.35189.seeksource-1" = "informationskalla-fold"
+"301.35197.difftype-01" = "svarighet-typ-fold"
 
 # register 32 (fob)
-
-[[variable]]
-native_id = "301.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "301.20"
-slug = "urbaniseringsgrad-eu"
-
-[[variable]]
-native_id = "301.2712"
-slug = "hogsta-utbildning-avslutningsar"
-
-[[variable]]
-native_id = "301.3188"
-slug = "hushallstyp"
-
-[[variable]]
-native_id = "301.5593"
-slug = "fodelsemanad"
-
-[[variable]]
-native_id = "301.10191"
-slug = "insamling-direkt-indirekt"
-
-[[variable]]
-native_id = "301.17256"
-slug = "vistelsetid"
-
-[[variable]]
-native_id = "301.17589"
-slug = "gruppering-av-alder"
-
-[[variable]]
-native_id = "301.21260"
-slug = "nutsregion"
-
-[[variable]]
-native_id = "301.22693"
-slug = "arbete-under-aret"
-
-[[variable]]
-native_id = "301.27158"
-slug = "boendeland"
-
-[[variable]]
-native_id = "301.28498"
-slug = "slutfort-kurs"
-
-[[variable]]
-native_id = "301.35122"
-slug = "samboforhallande"
-
-[[variable]]
-native_id = "301.35125"
-slug = "sokt-utbildningsinfo"
-
-[[variable]]
-native_id = "301.37532"
-slug = "utbildningens-startar"
-
-[[variable]]
-native_id = "301.40780"
-slug = "formell-tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "301.45317"
-slug = "alder-insamlingsdagen"
-
-[[variable]]
-native_id = "301.45318"
-slug = "fodelsedag-passerad"
-
-[[variable]]
-native_id = "301.45479"
-slug = "upplevd-halsa"
-
-[[variable]]
-native_id = "301.46223"
-slug = "anstallningstyp"
+"301.15" = "civilstand"
+"301.20" = "urbaniseringsgrad-eu"
+"301.2712" = "hogsta-utbildning-avslutningsar"
+"301.3188" = "hushallstyp"
+"301.5593" = "fodelsemanad"
+"301.10191" = "insamling-direkt-indirekt"
+"301.17256" = "vistelsetid"
+"301.17589" = "gruppering-av-alder"
+"301.21260" = "nutsregion"
+"301.22693" = "arbete-under-aret"
+"301.27158" = "boendeland"
+"301.28498" = "slutfort-kurs"
+"301.35122" = "samboforhallande"
+"301.35125" = "sokt-utbildningsinfo"
+"301.37532" = "utbildningens-startar"
+"301.40780" = "formell-tjanstgoringsomfattning"
+"301.45317" = "alder-insamlingsdagen"
+"301.45318" = "fodelsedag-passerad"
+"301.45479" = "upplevd-halsa"
+"301.46223" = "anstallningstyp"
 
 # register 302
-
-[[variable]]
-native_id = "301.15329.feddistol"
-slug = "distansstudier-natuniversitet"
-
-[[variable]]
-native_id = "301.32454.hatfather"
-slug = "utbildningsniva-far"
-
-[[variable]]
-native_id = "301.32454.hatmother"
-slug = "utbildningsniva-mor"
-
-[[variable]]
-native_id = "301.6550.birthfather"
-slug = "fodelseland-iso-far"
-
-[[variable]]
-native_id = "301.6550.birthmother"
-slug = "fodelseland-iso-mor"
-
-[[variable]]
-native_id = "301.6550.birthplace"
-slug = "fodelseland-iso"
-
-[[variable]]
-native_id = "301.6550.fodland"
-slug = "fodelseland-iso-2"
+"301.15329.feddistol" = "distansstudier-natuniversitet"
+"301.32454.hatfather" = "utbildningsniva-far"
+"301.32454.hatmother" = "utbildningsniva-mor"
+"301.6550.birthfather" = "fodelseland-iso-far"
+"301.6550.birthmother" = "fodelseland-iso-mor"
+"301.6550.birthplace" = "fodelseland-iso"
+"301.6550.fodland" = "fodelseland-iso-2"
 
 # register 304
-
-[[variable]]
-native_id = "301.24936.avser-icke-formell-utbildning-1"
-slug = "kostnader-icke-formell-utbildning-avser-icke-formell-utbildning-1"
-
-[[variable]]
-native_id = "301.24936.avser-icke-formell-utbildning-2"
-slug = "kostnader-icke-formell-utbildning-avser-icke-formell-utbildning-2"
-
-[[variable]]
-native_id = "301.24936.avser-icke-formell-utbildning-3"
-slug = "kostnader-icke-formell-utbildning-avser-icke-formell-utbildning-3"
-
-[[variable]]
-native_id = "301.24942.avser-icke-formell-utbildning-1-sjalvstudier-och-resor-raknas-inte-med"
-slug = "langd-icke-formell-utbildning-avser-icke-formell-utbildning-1-sjalvstudier-och-resor-raknas-inte-med"
-
-[[variable]]
-native_id = "301.24942.avser-icke-formell-utbildning-2-sjalvstudier-och-resor-raknas-inte-med"
-slug = "langd-icke-formell-utbildning-avser-icke-formell-utbildning-2-sjalvstudier-och-resor-raknas-inte-med"
-
-[[variable]]
-native_id = "301.24942.avser-icke-formell-utbildning-3-sjalvstudier-och-resor-raknas-inte-med"
-slug = "langd-icke-formell-utbildning-avser-icke-formell-utbildning-3-sjalvstudier-och-resor-raknas-inte-med"
-
-[[variable]]
-native_id = "301.35197.anger-om-personen-har-deltagit-i-formell-eller-icke-formell-utbildning-och-om-personen-ville-inte-ville-delta-mer"
-slug = "svarighet-vid-utbildningsdeltagande-anger-om-personen-har-deltagit-i-formell-eller-icke-formell-utbildning-och-om-personen-ville-inte-ville-delta-mer"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-den-krockade-med-personens-schema"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-den-krockade-med-personens-schema"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet-vid-distansstudier"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet-vid-distansstudier"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personen-hade-tidsbrist-pga-familjeansvar"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personen-hade-tidsbrist-pga-familjeansvar"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personen-inte-hade-nagot-ytterligare-behov-av-utbildning"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personen-inte-hade-nagot-ytterligare-behov-av-utbildning"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personen-saknade-stod-fran-sin-arbetsgivare"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personen-saknade-stod-fran-sin-arbetsgivare"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personens-haft-tidigare-negativa-upplevelser-av-utbildning"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-haft-tidigare-negativa-upplevelser-av-utbildning"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personens-halsa-eller-alder-hindrade-personen-fran-att-delta"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-halsa-eller-alder-hindrade-personen-fran-att-delta"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personens-halsa-hindrade"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-halsa-hindrade"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-att-personens-alder-hindrade"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-alder-hindrade"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-avstandet-dar-utbildningen-skedde"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-avstandet-dar-utbildningen-skedde"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-for-att-personen-inte-hade-rad"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-for-att-personen-inte-hade-rad"
-
-[[variable]]
-native_id = "301.35197.det-svara-med-utbildningen-var-pga-andra-personliga-orsaker-tex-tidsbrist"
-slug = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-pga-andra-personliga-orsaker-tex-tidsbrist"
-
-[[variable]]
-native_id = "301.35197.orsaker-till-att-urvalspersonen-inte-deltog-i-fler-utbildningar-eller-kurser"
-slug = "svarighet-vid-utbildningsdeltagande-orsaker-till-att-urvalspersonen-inte-deltog-i-fler-utbildningar-eller-kurser"
-
-[[variable]]
-native_id = "301.35197.personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-framsta-svarigheten"
-slug = "svarighet-vid-utbildningsdeltagande-personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-framsta-svarigheten"
-
-[[variable]]
-native_id = "301.35197.personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-till-att-du-inte-ville-delta-i-nagon-utbildning-framsta-svarigheten"
-slug = "svarighet-vid-utbildningsdeltagande-personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-till-att-du-inte-ville-delta-i-nagon-utbildning-framsta-svarigheten"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-det-inte-fanns-nagon-utbildning-eller-kurs-i-narheten"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-det-inte-fanns-nagon-utbildning-eller-kurs-i-narheten"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsformedlingen"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsformedlingen"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsgivare"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsgivare"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-utbildningens-schema-inte-passade"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-utbildningens-schema-inte-passade"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-att-du-tidigare-haft-negativa-upplevelser-av-skolan"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-att-du-tidigare-haft-negativa-upplevelser-av-skolan"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-var-for-dyrt"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-var-for-dyrt"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-halsa-hindrade-dig-fran-att-delta"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-halsa-hindrade-dig-fran-att-delta"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-alder-hindrade-dig-fran-att-delta"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-alder-hindrade-dig-fran-att-delta"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-du-hade-brist-pa-tid-pga-familjeansvar"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-du-hade-brist-pa-tid-pga-familjeansvar"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-fa-registreringar"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-fa-registreringar"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-p-g-a-andra-personliga-orsaker"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-p-g-a-andra-personliga-orsaker"
-
-[[variable]]
-native_id = "301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-kursen-fullbokad"
-slug = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-kursen-fullbokad"
-
-[[variable]]
-native_id = "301.35197.vilken-var-den-viktigaste-anledningen-framsta-svarigheten"
-slug = "svarighet-vid-utbildningsdeltagande-vilken-var-den-viktigaste-anledningen-framsta-svarigheten"
-
-[[variable]]
-native_id = "301.28746.anger-vilken-typ-av-gratis-information-det-var-annan-typ-av-information-t-ex-studiestod-boendesituation-bussforbindelser-eller-liknande"
-slug = "information-anger-vilken-typ-av-gratis-information-det-var-annan-typ-av-information-t-ex-studiestod-boendesituation-bussforbindelser-eller-liknande"
-
-[[variable]]
-native_id = "301.28746.anger-vilken-typ-av-gratis-information-det-var-allman-information"
-slug = "information-anger-vilken-typ-av-gratis-information-det-var-allman-information"
-
-[[variable]]
-native_id = "301.28746.anger-vilken-typ-av-gratis-information-det-var-information-om-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter"
-slug = "information-anger-vilken-typ-av-gratis-information-det-var-information-om-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter"
-
-[[variable]]
-native_id = "301.28746.anger-vilken-typ-av-gratis-information-det-var-lamplighets-eller-intressetest"
-slug = "information-anger-vilken-typ-av-gratis-information-det-var-lamplighets-eller-intressetest"
-
-[[variable]]
-native_id = "301.28746.typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-dina-utbildningsbehov-utvarderade-utifran-ett-test-eller-en-intervju"
-slug = "information-typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-dina-utbildningsbehov-utvarderade-utifran-ett-test-eller-en-intervju"
-
-[[variable]]
-native_id = "301.28746.typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-eller-hjalp-med-hur-du-ska-ga-tillvaga-for-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-dig-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter"
-slug = "information-typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-eller-hjalp-med-hur-du-ska-ga-tillvaga-for-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-dig-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter"
-
-[[variable]]
-native_id = "301.28746.typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-om-utbildningsmojligheter"
-slug = "information-typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-om-utbildningsmojligheter"
-
-[[variable]]
-native_id = "301.35189.informationskallan-kommer-fran-arbetsformedlingen-t-ex-yrkesradgivare-vagledningstjanster"
-slug = "informationskalla-informationskallan-kommer-fran-arbetsformedlingen-t-ex-yrkesradgivare-vagledningstjanster"
-
-[[variable]]
-native_id = "301.35189.informationskallan-kommer-fran-vagledningstjanster-t-ex-yrkesradgivare-vid-arbetsformedling"
-slug = "informationskalla-informationskallan-kommer-fran-vagledningstjanster-t-ex-yrkesradgivare-vid-arbetsformedling"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-arbetsformedlingen"
-slug = "informationskalla-informationskallan-ar-arbetsformedlingen"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-bocker"
-slug = "informationskalla-informationskallan-ar-bocker"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-en-annan-institution-eller-organisation"
-slug = "informationskalla-informationskallan-ar-en-annan-institution-eller-organisation"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-en-annan-institution-eller-organisation-som-tillhandahaller-gratis-information-om-utbildningsmojligheter"
-slug = "informationskalla-informationskallan-ar-en-annan-institution-eller-organisation-som-tillhandahaller-gratis-information-om-utbildningsmojligheter"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-en-fackforening"
-slug = "informationskalla-informationskallan-ar-en-fackforening"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-en-familjemedlem-granne-eller-arbetskamrat"
-slug = "informationskalla-informationskallan-ar-en-familjemedlem-granne-eller-arbetskamrat"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-en-skola"
-slug = "informationskalla-informationskallan-ar-en-skola"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-en-utbildningsinstitution-t-ex-skola-hogskola-utbildningscenter-universitet"
-slug = "informationskalla-informationskallan-ar-en-utbildningsinstitution-t-ex-skola-hogskola-utbildningscenter-universitet"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-massmedier-t-ex-tv-radio-tidningar-eller-affischer"
-slug = "informationskalla-informationskallan-ar-massmedier-t-ex-tv-radio-tidningar-eller-affischer"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-personens-egna-arbetsgivare"
-slug = "informationskalla-informationskallan-ar-personens-egna-arbetsgivare"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-personens-egna-arbetsgivare-eller-arbetsgivarorganisation"
-slug = "informationskalla-informationskallan-ar-personens-egna-arbetsgivare-eller-arbetsgivarorganisation"
-
-[[variable]]
-native_id = "301.35189.informationskallan-ar-personens-nuvarande-eller-blivande-arbetsgivare"
-slug = "informationskalla-informationskallan-ar-personens-nuvarande-eller-blivande-arbetsgivare"
-
-[[variable]]
-native_id = "301.35153.anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kunskapsanvandning-icke-formell-utbildning-anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.35153.anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kunskapsanvandning-icke-formell-utbildning-anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.35153.anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kunskapsanvandning-icke-formell-utbildning-anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.35153.hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-andra-slumpmassigt-utvalda-utbildningen"
-slug = "kunskapsanvandning-icke-formell-utbildning-hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-andra-slumpmassigt-utvalda-utbildningen"
-
-[[variable]]
-native_id = "301.35153.hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-forsta-slumpmassigt-utvalda-utbildningen"
-slug = "kunskapsanvandning-icke-formell-utbildning-hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-forsta-slumpmassigt-utvalda-utbildningen"
-
-[[variable]]
-native_id = "301.35153.sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-andra-icke-formella-utbildningen"
-slug = "kunskapsanvandning-icke-formell-utbildning-sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-andra-icke-formella-utbildningen"
-
-[[variable]]
-native_id = "301.35153.sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-forsta-icke-formella-utbildningen"
-slug = "kunskapsanvandning-icke-formell-utbildning-sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-forsta-icke-formella-utbildningen"
-
-[[variable]]
-native_id = "301.35192.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-
-[[variable]]
-native_id = "301.35192.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-
-[[variable]]
-native_id = "301.35192.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f42a-f-ar-bekraftad"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f42a-f-ar-bekraftad"
-
-[[variable]]
-native_id = "301.35192.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-an"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-an"
-
-[[variable]]
-native_id = "301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-
-[[variable]]
-native_id = "301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-
-[[variable]]
-native_id = "301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-
-[[variable]]
-native_id = "301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-
-[[variable]]
-native_id = "301.35192.vilken-var-det-viktigaste-resultatet"
-slug = "resultat-av-nya-kunskaper-formell-utbildning-vilken-var-det-viktigaste-resultatet"
-
-[[variable]]
-native_id = "301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-
-[[variable]]
-native_id = "301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-
-[[variable]]
-native_id = "301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-
-[[variable]]
-native_id = "301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-
-[[variable]]
-native_id = "301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
-
-[[variable]]
-native_id = "301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
-
-[[variable]]
-native_id = "301.35196.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald"
-
-[[variable]]
-native_id = "301.35196.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
-
-[[variable]]
-native_id = "301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
-
-[[variable]]
-native_id = "301.35196.vad-var-det-viktigaste-av-resultaten-fran-den-andra-slumpmassigt-utvalda-icke-formella-utbildningen"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-vad-var-det-viktigaste-av-resultaten-fran-den-andra-slumpmassigt-utvalda-icke-formella-utbildningen"
-
-[[variable]]
-native_id = "301.35196.vad-var-det-viktigaste-av-resultaten-fran-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningen"
-slug = "resultat-av-nya-kunskaper-icke-formell-utbildning-vad-var-det-viktigaste-av-resultaten-fran-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningen"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-av-halsoskal"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-av-halsoskal"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-andraslumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andraslumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-av-halsoskal"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-av-halsoskal"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna"
-
-[[variable]]
-native_id = "301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar"
-slug = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
-
-[[variable]]
-native_id = "301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
-slug = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
-
-[[variable]]
-native_id = "301.35194.vilket-var-det-viktigaste-skalet-for-den-andra-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts"
-slug = "skal-till-deltagande-icke-formell-utbildning-vilket-var-det-viktigaste-skalet-for-den-andra-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts"
-
-[[variable]]
-native_id = "301.35194.vilket-var-det-viktigaste-skalet-for-den-forsta-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts"
-slug = "skal-till-deltagande-icke-formell-utbildning-vilket-var-det-viktigaste-skalet-for-den-forsta-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts"
-
-[[variable]]
-native_id = "301.35152.huvudmetod-for-inlarning-som-anvants-for-den-andra-slumpmassigt-valda-aktiviteten"
-slug = "undervisningsmetod-icke-formell-utbildning-huvudmetod-for-inlarning-som-anvants-for-den-andra-slumpmassigt-valda-aktiviteten"
-
-[[variable]]
-native_id = "301.35152.huvudmetod-for-inlarning-som-anvants-for-den-forsta-slumpmassigt-valda-aktiviteten"
-slug = "undervisningsmetod-icke-formell-utbildning-huvudmetod-for-inlarning-som-anvants-for-den-forsta-slumpmassigt-valda-aktiviteten"
-
-[[variable]]
-native_id = "301.35152.huvudmetod-for-inlarning-som-anvants-for-den-tredje-slumpmassigt-valda-aktiviteten"
-slug = "undervisningsmetod-icke-formell-utbildning-huvudmetod-for-inlarning-som-anvants-for-den-tredje-slumpmassigt-valda-aktiviteten"
-
-[[variable]]
-native_id = "301.35173.besoka-olika-larocenter-t-ex-bibliotek"
-slug = "undervisningsmetod-informell-utbildning-besoka-olika-larocenter-t-ex-bibliotek"
-
-[[variable]]
-native_id = "301.35173.bok-tidning-instruktionsbok"
-slug = "undervisningsmetod-informell-utbildning-bok-tidning-instruktionsbok"
-
-[[variable]]
-native_id = "301.35173.dator-surfplatta-eller-smartphone"
-slug = "undervisningsmetod-informell-utbildning-dator-surfplatta-eller-smartphone"
-
-[[variable]]
-native_id = "301.35173.guidade-visningar-t-ex-i-naturen-hos-ett-foretag-pa-historiska-platser-eller-museum"
-slug = "undervisningsmetod-informell-utbildning-guidade-visningar-t-ex-i-naturen-hos-ett-foretag-pa-historiska-platser-eller-museum"
-
-[[variable]]
-native_id = "301.35173.har-du-under-de-senaste-12-manaderna-forsokt-lara-dig-nagot-med-hjalp-av-mobil-surfplatta-dator-tv-radio-eller-liknande-enheter"
-slug = "undervisningsmetod-informell-utbildning-har-du-under-de-senaste-12-manaderna-forsokt-lara-dig-nagot-med-hjalp-av-mobil-surfplatta-dator-tv-radio-eller-liknande-enheter"
-
-[[variable]]
-native_id = "301.35173.informell-inlarningsmetod-som-anvants-for-den-nast-senast-gjorda-aktiviteten"
-slug = "undervisningsmetod-informell-utbildning-informell-inlarningsmetod-som-anvants-for-den-nast-senast-gjorda-aktiviteten"
-
-[[variable]]
-native_id = "301.35173.informell-inlarningsmetod-som-anvants-for-den-senast-gjorda-aktiviteten"
-slug = "undervisningsmetod-informell-utbildning-informell-inlarningsmetod-som-anvants-for-den-senast-gjorda-aktiviteten"
-
-[[variable]]
-native_id = "301.35173.tv-eller-lyssna-pa-radio"
-slug = "undervisningsmetod-informell-utbildning-tv-eller-lyssna-pa-radio"
-
-[[variable]]
-native_id = "301.35173.van-kollega-eller-familjemedlem"
-slug = "undervisningsmetod-informell-utbildning-van-kollega-eller-familjemedlem"
-
-[[variable]]
-native_id = "301.4656.fick-informationen-utan-interaktion-endast-via-tryckt-material-webbsidor-tv-etc"
-slug = "insamlingsmetod-fick-informationen-utan-interaktion-endast-via-tryckt-material-webbsidor-tv-etc"
-
-[[variable]]
-native_id = "301.4656.fick-informationen-via-en-datorbaserad-applikation-som-tillhandahaller-information-om-utbildningsmojligheter"
-slug = "insamlingsmetod-fick-informationen-via-en-datorbaserad-applikation-som-tillhandahaller-information-om-utbildningsmojligheter"
-
-[[variable]]
-native_id = "301.4656.fick-informationen-via-ett-personligt-samtal-face-to-face"
-slug = "insamlingsmetod-fick-informationen-via-ett-personligt-samtal-face-to-face"
-
-[[variable]]
-native_id = "301.4656.fick-informationen-via-kontakt-med-annan-person-via-internet-telefon-epost-eller-annan-media"
-slug = "insamlingsmetod-fick-informationen-via-kontakt-med-annan-person-via-internet-telefon-epost-eller-annan-media"
-
-[[variable]]
-native_id = "301.4656.pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-kommunikation-via-t-ex-chatt-robot-eller-nagon-annan-automatisk-funktion-pa-internet"
-slug = "insamlingsmetod-pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-kommunikation-via-t-ex-chatt-robot-eller-nagon-annan-automatisk-funktion-pa-internet"
-
-[[variable]]
-native_id = "301.4656.pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-personligen-med-nagon-t-ex-via-telefon-mejl-eller-mote-aven-videomote"
-slug = "insamlingsmetod-pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-personligen-med-nagon-t-ex-via-telefon-mejl-eller-mote-aven-videomote"
-
-[[variable]]
-native_id = "301.15329.anger-om-distansstudierna-for-den-andra-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte"
-slug = "distansstudier-natuniversitet-anger-om-distansstudierna-for-den-andra-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte"
-
-[[variable]]
-native_id = "301.15329.anger-om-distansstudierna-for-den-forsta-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte"
-slug = "distansstudier-natuniversitet-anger-om-distansstudierna-for-den-forsta-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte"
-
-[[variable]]
-native_id = "301.24769.beraknad-vikt-for-de-maximalt-2-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteterna-per-individ"
-slug = "gregvikt-beraknad-vikt-for-de-maximalt-2-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteterna-per-individ"
-
-[[variable]]
-native_id = "301.24769.beraknad-vikt-for-svarande-person"
-slug = "gregvikt-beraknad-vikt-for-svarande-person"
-
-[[variable]]
-native_id = "301.24769.beraknad-vikt-for-varje-icke-formell-utbildningsaktivitet"
-slug = "gregvikt-beraknad-vikt-for-varje-icke-formell-utbildningsaktivitet"
-
-[[variable]]
-native_id = "301.35150.anger-om-personen-har-deltagit-i-atminstone-en-av-de-icke-formella-utbildningarna-under-betald-arbetstid-inklusive-betald-semester-eller-aterhamtning"
-slug = "icke-formell-utbildning-aktivitetsvariabler-anger-om-personen-har-deltagit-i-atminstone-en-av-de-icke-formella-utbildningarna-under-betald-arbetstid-inklusive-betald-semester-eller-aterhamtning"
-
-[[variable]]
-native_id = "301.35150.anger-om-atminstone-en-av-de-icke-formella-utbildningarna-var-arbetsrelaterad"
-slug = "icke-formell-utbildning-aktivitetsvariabler-anger-om-atminstone-en-av-de-icke-formella-utbildningarna-var-arbetsrelaterad"
-
-[[variable]]
-native_id = "301.35150.identifikationkod-for-den-andra-slumpmassigt-valda-icke-formella-aktiviteten"
-slug = "icke-formell-utbildning-aktivitetsvariabler-identifikationkod-for-den-andra-slumpmassigt-valda-icke-formella-aktiviteten"
-
-[[variable]]
-native_id = "301.35150.identifikationkod-for-den-forsta-slumpmassigt-valda-icke-formella-aktiviteten"
-slug = "icke-formell-utbildning-aktivitetsvariabler-identifikationkod-for-den-forsta-slumpmassigt-valda-icke-formella-aktiviteten"
-
-[[variable]]
-native_id = "301.35150.identifikationkod-for-den-tredje-slumpmassigt-valda-icke-formella-aktiviteten"
-slug = "icke-formell-utbildning-aktivitetsvariabler-identifikationkod-for-den-tredje-slumpmassigt-valda-icke-formella-aktiviteten"
-
-[[variable]]
-native_id = "301.32787.andra-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
-slug = "icke-formell-utbildning-kostnadsvariabler-andra-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
-
-[[variable]]
-native_id = "301.32787.andra-slumpmassigt-valda-icke-formella-utbildningsaktiviteten"
-slug = "icke-formell-utbildning-kostnadsvariabler-andra-slumpmassigt-valda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.32787.forsta-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
-slug = "icke-formell-utbildning-kostnadsvariabler-forsta-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
-
-[[variable]]
-native_id = "301.32787.forsta-slumpmassigt-valda-icke-formella-utbildningsaktiviteten"
-slug = "icke-formell-utbildning-kostnadsvariabler-forsta-slumpmassigt-valda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.32787.tredje-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
-slug = "icke-formell-utbildning-kostnadsvariabler-tredje-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
-
-[[variable]]
-native_id = "301.32787.atminstone-en-av-icke-formella-utbildningarna-var-helt-eller-delvis-betald-av-arbetsgivare"
-slug = "icke-formell-utbildning-kostnadsvariabler-atminstone-en-av-icke-formella-utbildningarna-var-helt-eller-delvis-betald-av-arbetsgivare"
-
-[[variable]]
-native_id = "301.46937.hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kontakt-med-kurskamrater-hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.46937.hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kontakt-med-kurskamrater-hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.46937.hur-ofta-hade-du-kontakt-med-kurskamrater-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats"
-slug = "kontakt-med-kurskamrater-hur-ofta-hade-du-kontakt-med-kurskamrater-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats"
-
-[[variable]]
-native_id = "301.46936.hur-ofta-hade-du-sjalv-kontakt-med-lararen-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats"
-slug = "kontakt-med-larare-ledare-eller-forelasare-hur-ofta-hade-du-sjalv-kontakt-med-lararen-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats"
-
-[[variable]]
-native_id = "301.46936.hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kontakt-med-larare-ledare-eller-forelasare-hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.46936.hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-slug = "kontakt-med-larare-ledare-eller-forelasare-hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.46934.hur-ofta-gjorde-lararen-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material"
-slug = "undervisningsmaterial-hur-ofta-gjorde-lararen-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material"
-
-[[variable]]
-native_id = "301.46934.hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-andra-slumpmassigt-utvalda-utbildningsaktiviteten"
-slug = "undervisningsmaterial-hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-andra-slumpmassigt-utvalda-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.46934.hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-forsta-slumpmassigt-utvalda-utbildningsaktiviteten"
-slug = "undervisningsmaterial-hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-forsta-slumpmassigt-utvalda-utbildningsaktiviteten"
-
-[[variable]]
-native_id = "301.24823.avser-formell-utbildning-1"
-slug = "kostnader-studier-formell-utbildning-avser-formell-utbildning-1"
-
-[[variable]]
-native_id = "301.24823.avser-formell-utbildning-2"
-slug = "kostnader-studier-formell-utbildning-avser-formell-utbildning-2"
-
-[[variable]]
-native_id = "301.24823.avser-senaste-formella-utbildning"
-slug = "kostnader-studier-formell-utbildning-avser-senaste-formella-utbildning"
+"301.24936.avser-icke-formell-utbildning-1" = "kostnader-icke-formell-utbildning-avser-icke-formell-utbildning-1"
+"301.24936.avser-icke-formell-utbildning-2" = "kostnader-icke-formell-utbildning-avser-icke-formell-utbildning-2"
+"301.24936.avser-icke-formell-utbildning-3" = "kostnader-icke-formell-utbildning-avser-icke-formell-utbildning-3"
+"301.24942.avser-icke-formell-utbildning-1-sjalvstudier-och-resor-raknas-inte-med" = "langd-icke-formell-utbildning-avser-icke-formell-utbildning-1-sjalvstudier-och-resor-raknas-inte-med"
+"301.24942.avser-icke-formell-utbildning-2-sjalvstudier-och-resor-raknas-inte-med" = "langd-icke-formell-utbildning-avser-icke-formell-utbildning-2-sjalvstudier-och-resor-raknas-inte-med"
+"301.24942.avser-icke-formell-utbildning-3-sjalvstudier-och-resor-raknas-inte-med" = "langd-icke-formell-utbildning-avser-icke-formell-utbildning-3-sjalvstudier-och-resor-raknas-inte-med"
+"301.35197.anger-om-personen-har-deltagit-i-formell-eller-icke-formell-utbildning-och-om-personen-ville-inte-ville-delta-mer" = "svarighet-vid-utbildningsdeltagande-anger-om-personen-har-deltagit-i-formell-eller-icke-formell-utbildning-och-om-personen-ville-inte-ville-delta-mer"
+"301.35197.det-svara-med-utbildningen-var-att-den-krockade-med-personens-schema" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-den-krockade-med-personens-schema"
+"301.35197.det-svara-med-utbildningen-var-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet"
+"301.35197.det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet"
+"301.35197.det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet-vid-distansstudier" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet-vid-distansstudier"
+"301.35197.det-svara-med-utbildningen-var-att-personen-hade-tidsbrist-pga-familjeansvar" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personen-hade-tidsbrist-pga-familjeansvar"
+"301.35197.det-svara-med-utbildningen-var-att-personen-inte-hade-nagot-ytterligare-behov-av-utbildning" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personen-inte-hade-nagot-ytterligare-behov-av-utbildning"
+"301.35197.det-svara-med-utbildningen-var-att-personen-saknade-stod-fran-sin-arbetsgivare" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personen-saknade-stod-fran-sin-arbetsgivare"
+"301.35197.det-svara-med-utbildningen-var-att-personens-haft-tidigare-negativa-upplevelser-av-utbildning" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-haft-tidigare-negativa-upplevelser-av-utbildning"
+"301.35197.det-svara-med-utbildningen-var-att-personens-halsa-eller-alder-hindrade-personen-fran-att-delta" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-halsa-eller-alder-hindrade-personen-fran-att-delta"
+"301.35197.det-svara-med-utbildningen-var-att-personens-halsa-hindrade" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-halsa-hindrade"
+"301.35197.det-svara-med-utbildningen-var-att-personens-alder-hindrade" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-personens-alder-hindrade"
+"301.35197.det-svara-med-utbildningen-var-avstandet-dar-utbildningen-skedde" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-avstandet-dar-utbildningen-skedde"
+"301.35197.det-svara-med-utbildningen-var-for-att-personen-inte-hade-rad" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-for-att-personen-inte-hade-rad"
+"301.35197.det-svara-med-utbildningen-var-pga-andra-personliga-orsaker-tex-tidsbrist" = "svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-pga-andra-personliga-orsaker-tex-tidsbrist"
+"301.35197.orsaker-till-att-urvalspersonen-inte-deltog-i-fler-utbildningar-eller-kurser" = "svarighet-vid-utbildningsdeltagande-orsaker-till-att-urvalspersonen-inte-deltog-i-fler-utbildningar-eller-kurser"
+"301.35197.personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-framsta-svarigheten" = "svarighet-vid-utbildningsdeltagande-personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-framsta-svarigheten"
+"301.35197.personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-till-att-du-inte-ville-delta-i-nagon-utbildning-framsta-svarigheten" = "svarighet-vid-utbildningsdeltagande-personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-till-att-du-inte-ville-delta-i-nagon-utbildning-framsta-svarigheten"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-det-inte-fanns-nagon-utbildning-eller-kurs-i-narheten" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-det-inte-fanns-nagon-utbildning-eller-kurs-i-narheten"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsformedlingen" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsformedlingen"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsgivare" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-du-saknade-stod-fran-arbetsgivare"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-utbildningens-schema-inte-passade" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-att-utbildningens-schema-inte-passade"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-att-du-tidigare-haft-negativa-upplevelser-av-skolan" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-att-du-tidigare-haft-negativa-upplevelser-av-skolan"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-inte-fanns-nagon-lamplig-utbildningsaktivitet"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-var-for-dyrt" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-det-var-for-dyrt"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-halsa-hindrade-dig-fran-att-delta" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-halsa-hindrade-dig-fran-att-delta"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-alder-hindrade-dig-fran-att-delta" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-din-alder-hindrade-dig-fran-att-delta"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-du-hade-brist-pa-tid-pga-familjeansvar" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-att-du-hade-brist-pa-tid-pga-familjeansvar"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-fa-registreringar" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-for-fa-registreringar"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-p-g-a-andra-personliga-orsaker" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-det-p-g-a-andra-personliga-orsaker"
+"301.35197.vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-kursen-fullbokad" = "svarighet-vid-utbildningsdeltagande-vad-var-orsakerna-till-att-du-inte-ville-delta-i-nagon-utbildning-var-kursen-fullbokad"
+"301.35197.vilken-var-den-viktigaste-anledningen-framsta-svarigheten" = "svarighet-vid-utbildningsdeltagande-vilken-var-den-viktigaste-anledningen-framsta-svarigheten"
+"301.28746.anger-vilken-typ-av-gratis-information-det-var-annan-typ-av-information-t-ex-studiestod-boendesituation-bussforbindelser-eller-liknande" = "information-anger-vilken-typ-av-gratis-information-det-var-annan-typ-av-information-t-ex-studiestod-boendesituation-bussforbindelser-eller-liknande"
+"301.28746.anger-vilken-typ-av-gratis-information-det-var-allman-information" = "information-anger-vilken-typ-av-gratis-information-det-var-allman-information"
+"301.28746.anger-vilken-typ-av-gratis-information-det-var-information-om-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter" = "information-anger-vilken-typ-av-gratis-information-det-var-information-om-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter"
+"301.28746.anger-vilken-typ-av-gratis-information-det-var-lamplighets-eller-intressetest" = "information-anger-vilken-typ-av-gratis-information-det-var-lamplighets-eller-intressetest"
+"301.28746.typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-dina-utbildningsbehov-utvarderade-utifran-ett-test-eller-en-intervju" = "information-typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-dina-utbildningsbehov-utvarderade-utifran-ett-test-eller-en-intervju"
+"301.28746.typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-eller-hjalp-med-hur-du-ska-ga-tillvaga-for-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-dig-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter" = "information-typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-eller-hjalp-med-hur-du-ska-ga-tillvaga-for-att-fa-dispens-fran-formella-intradeskrav-t-ex-tillgodorakna-dig-utlandska-betyg-arbetslivserfarenhet-eller-andra-meriter"
+"301.28746.typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-om-utbildningsmojligheter" = "information-typ-av-information-som-erhallits-under-de-senaste-12-manaderna-har-du-fatt-radgivning-om-utbildningsmojligheter"
+"301.35189.informationskallan-kommer-fran-arbetsformedlingen-t-ex-yrkesradgivare-vagledningstjanster" = "informationskalla-informationskallan-kommer-fran-arbetsformedlingen-t-ex-yrkesradgivare-vagledningstjanster"
+"301.35189.informationskallan-kommer-fran-vagledningstjanster-t-ex-yrkesradgivare-vid-arbetsformedling" = "informationskalla-informationskallan-kommer-fran-vagledningstjanster-t-ex-yrkesradgivare-vid-arbetsformedling"
+"301.35189.informationskallan-ar-arbetsformedlingen" = "informationskalla-informationskallan-ar-arbetsformedlingen"
+"301.35189.informationskallan-ar-bocker" = "informationskalla-informationskallan-ar-bocker"
+"301.35189.informationskallan-ar-en-annan-institution-eller-organisation" = "informationskalla-informationskallan-ar-en-annan-institution-eller-organisation"
+"301.35189.informationskallan-ar-en-annan-institution-eller-organisation-som-tillhandahaller-gratis-information-om-utbildningsmojligheter" = "informationskalla-informationskallan-ar-en-annan-institution-eller-organisation-som-tillhandahaller-gratis-information-om-utbildningsmojligheter"
+"301.35189.informationskallan-ar-en-fackforening" = "informationskalla-informationskallan-ar-en-fackforening"
+"301.35189.informationskallan-ar-en-familjemedlem-granne-eller-arbetskamrat" = "informationskalla-informationskallan-ar-en-familjemedlem-granne-eller-arbetskamrat"
+"301.35189.informationskallan-ar-en-skola" = "informationskalla-informationskallan-ar-en-skola"
+"301.35189.informationskallan-ar-en-utbildningsinstitution-t-ex-skola-hogskola-utbildningscenter-universitet" = "informationskalla-informationskallan-ar-en-utbildningsinstitution-t-ex-skola-hogskola-utbildningscenter-universitet"
+"301.35189.informationskallan-ar-massmedier-t-ex-tv-radio-tidningar-eller-affischer" = "informationskalla-informationskallan-ar-massmedier-t-ex-tv-radio-tidningar-eller-affischer"
+"301.35189.informationskallan-ar-personens-egna-arbetsgivare" = "informationskalla-informationskallan-ar-personens-egna-arbetsgivare"
+"301.35189.informationskallan-ar-personens-egna-arbetsgivare-eller-arbetsgivarorganisation" = "informationskalla-informationskallan-ar-personens-egna-arbetsgivare-eller-arbetsgivarorganisation"
+"301.35189.informationskallan-ar-personens-nuvarande-eller-blivande-arbetsgivare" = "informationskalla-informationskallan-ar-personens-nuvarande-eller-blivande-arbetsgivare"
+"301.35153.anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kunskapsanvandning-icke-formell-utbildning-anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.35153.anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kunskapsanvandning-icke-formell-utbildning-anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.35153.anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kunskapsanvandning-icke-formell-utbildning-anvandning-av-de-fardigheter-eller-kunskaper-som-forvarvats-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.35153.hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-andra-slumpmassigt-utvalda-utbildningen" = "kunskapsanvandning-icke-formell-utbildning-hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-andra-slumpmassigt-utvalda-utbildningen"
+"301.35153.hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-forsta-slumpmassigt-utvalda-utbildningen" = "kunskapsanvandning-icke-formell-utbildning-hur-stor-eller-liten-anvandning-forvantar-du-dig-att-fa-langre-fram-av-den-forsta-slumpmassigt-utvalda-utbildningen"
+"301.35153.sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-andra-icke-formella-utbildningen" = "kunskapsanvandning-icke-formell-utbildning-sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-andra-icke-formella-utbildningen"
+"301.35153.sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-forsta-icke-formella-utbildningen" = "kunskapsanvandning-icke-formell-utbildning-sammanfattningsvis-vilken-anvandning-skulle-du-saga-att-du-hittills-haft-av-den-forsta-icke-formella-utbildningen"
+"301.35192.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat" = "resultat-av-nya-kunskaper-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
+"301.35192.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills" = "resultat-av-nya-kunskaper-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
+"301.35192.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f42a-f-ar-bekraftad" = "resultat-av-nya-kunskaper-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f42a-f-ar-bekraftad"
+"301.35192.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-an" = "resultat-av-nya-kunskaper-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-an"
+"301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet" = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
+"301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete" = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
+"301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon" = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
+"301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter" = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
+"301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter" = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
+"301.35192.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv" = "resultat-av-nya-kunskaper-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-senaste-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
+"301.35192.vilken-var-det-viktigaste-resultatet" = "resultat-av-nya-kunskaper-formell-utbildning-vilken-var-det-viktigaste-resultatet"
+"301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat" = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
+"301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills" = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
+"301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat" = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
+"301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills" = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
+"301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat" = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-forvantas-inte-ge-nagra-resultat"
+"301.35196.de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills" = "resultat-av-nya-kunskaper-icke-formell-utbildning-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills"
+"301.35196.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald" = "resultat-av-nya-kunskaper-icke-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald"
+"301.35196.harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald" = "resultat-av-nya-kunskaper-icke-formell-utbildning-harledd-variabel-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-icke-formella-utbildningsaktiviteten-har-inte-gett-nagra-resultat-hittills-ingen-av-delfragorna-f65a-f-ar-bekraftad-vald"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-befordran-i-arbetet"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-ett-nytt-arbete"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-hogre-lon"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-fick-nya-arbetsuppgifter"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-att-personen-gjort-det-enklare-att-utfora-sina-arbetsuppgifter"
+"301.35196.resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv" = "resultat-av-nya-kunskaper-icke-formell-utbildning-resultat-av-de-nya-fardigheter-eller-kunskaper-som-personen-forvarvat-vid-den-tredje-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten-var-personliga-orsaker-traffa-andra-manniskor-friska-upp-kunskaperna-i-allmanna-amnen-osv"
+"301.35196.vad-var-det-viktigaste-av-resultaten-fran-den-andra-slumpmassigt-utvalda-icke-formella-utbildningen" = "resultat-av-nya-kunskaper-icke-formell-utbildning-vad-var-det-viktigaste-av-resultaten-fran-den-andra-slumpmassigt-utvalda-icke-formella-utbildningen"
+"301.35196.vad-var-det-viktigaste-av-resultaten-fran-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningen" = "resultat-av-nya-kunskaper-icke-formell-utbildning-vad-var-det-viktigaste-av-resultaten-fran-den-forsta-slumpmassigt-utvalda-icke-formella-utbildningen"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-av-halsoskal" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-av-halsoskal"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna"
+"301.35194.skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar"
+"301.35194.skal-till-deltagande-i-den-andraslumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-andraslumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-av-halsoskal" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-av-halsoskal"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-fa-ett-utbildningsbevis"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-for-att-traffa-folk-och-ha-kul"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-kravdes-av-arbetsgivare-eller-lag"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-minska-risken-att-forlora-ditt-arbete-oka-mojligheterna-att-fa-ett-jobb-byta-arbete-yrke"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-starta-eget-foretag"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-vill-utfora-sitt-arbete-battre"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-karriarsmojligheterna"
+"301.35194.skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar" = "skal-till-deltagande-icke-formell-utbildning-skal-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
+"301.35194.skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-andra-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-utfora-sitt-arbete-battre"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-sina-karriarmojligheter"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-av-halsoskal"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-det-kravdes-av-arbetsgivare-eller-enligt-lag"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-for-att-kunna-gora-en-battre-insats-i-frivilligarbete-eller-ideellt-engagemang"
+"301.35194.skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-forsta-slumpmassigt-utvalda-aktiviteten-ar-pa-grund-av-organisationsforandringar-eller-nya-tekniska-krav-pa-arbetet"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-ett-utbildningsbevis"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-fa-nyttiga-kunskaper-fardigheter-for-det-dagliga-livet"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-var-tvungen-att-delta"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-bli-battre-i-sitt-arbete-och-eller-forbattra-karriarmajligheterna"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-minska-risken-for-att-forlora-arbetet"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-starta-eget-foretag"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-personen-vill-oka-mojligheterna-att-fa-ett-arbete-eller-byta-arbetsplats"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-traffa-nya-manniskor-for-nojets-skull"
+"301.35194.skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen" = "skal-till-deltagande-icke-formell-utbildning-skalet-till-deltagande-i-den-tredje-slumpmassigt-utvalda-aktiviteten-ar-att-oka-kunskaperna-fardigheterna-i-ett-amne-som-intresserar-personen"
+"301.35194.vilket-var-det-viktigaste-skalet-for-den-andra-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts" = "skal-till-deltagande-icke-formell-utbildning-vilket-var-det-viktigaste-skalet-for-den-andra-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts"
+"301.35194.vilket-var-det-viktigaste-skalet-for-den-forsta-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts" = "skal-till-deltagande-icke-formell-utbildning-vilket-var-det-viktigaste-skalet-for-den-forsta-slumpmassigt-valda-aktiviteten-om-flera-alternativ-valts"
+"301.35152.huvudmetod-for-inlarning-som-anvants-for-den-andra-slumpmassigt-valda-aktiviteten" = "undervisningsmetod-icke-formell-utbildning-huvudmetod-for-inlarning-som-anvants-for-den-andra-slumpmassigt-valda-aktiviteten"
+"301.35152.huvudmetod-for-inlarning-som-anvants-for-den-forsta-slumpmassigt-valda-aktiviteten" = "undervisningsmetod-icke-formell-utbildning-huvudmetod-for-inlarning-som-anvants-for-den-forsta-slumpmassigt-valda-aktiviteten"
+"301.35152.huvudmetod-for-inlarning-som-anvants-for-den-tredje-slumpmassigt-valda-aktiviteten" = "undervisningsmetod-icke-formell-utbildning-huvudmetod-for-inlarning-som-anvants-for-den-tredje-slumpmassigt-valda-aktiviteten"
+"301.35173.besoka-olika-larocenter-t-ex-bibliotek" = "undervisningsmetod-informell-utbildning-besoka-olika-larocenter-t-ex-bibliotek"
+"301.35173.bok-tidning-instruktionsbok" = "undervisningsmetod-informell-utbildning-bok-tidning-instruktionsbok"
+"301.35173.dator-surfplatta-eller-smartphone" = "undervisningsmetod-informell-utbildning-dator-surfplatta-eller-smartphone"
+"301.35173.guidade-visningar-t-ex-i-naturen-hos-ett-foretag-pa-historiska-platser-eller-museum" = "undervisningsmetod-informell-utbildning-guidade-visningar-t-ex-i-naturen-hos-ett-foretag-pa-historiska-platser-eller-museum"
+"301.35173.har-du-under-de-senaste-12-manaderna-forsokt-lara-dig-nagot-med-hjalp-av-mobil-surfplatta-dator-tv-radio-eller-liknande-enheter" = "undervisningsmetod-informell-utbildning-har-du-under-de-senaste-12-manaderna-forsokt-lara-dig-nagot-med-hjalp-av-mobil-surfplatta-dator-tv-radio-eller-liknande-enheter"
+"301.35173.informell-inlarningsmetod-som-anvants-for-den-nast-senast-gjorda-aktiviteten" = "undervisningsmetod-informell-utbildning-informell-inlarningsmetod-som-anvants-for-den-nast-senast-gjorda-aktiviteten"
+"301.35173.informell-inlarningsmetod-som-anvants-for-den-senast-gjorda-aktiviteten" = "undervisningsmetod-informell-utbildning-informell-inlarningsmetod-som-anvants-for-den-senast-gjorda-aktiviteten"
+"301.35173.tv-eller-lyssna-pa-radio" = "undervisningsmetod-informell-utbildning-tv-eller-lyssna-pa-radio"
+"301.35173.van-kollega-eller-familjemedlem" = "undervisningsmetod-informell-utbildning-van-kollega-eller-familjemedlem"
+"301.4656.fick-informationen-utan-interaktion-endast-via-tryckt-material-webbsidor-tv-etc" = "insamlingsmetod-fick-informationen-utan-interaktion-endast-via-tryckt-material-webbsidor-tv-etc"
+"301.4656.fick-informationen-via-en-datorbaserad-applikation-som-tillhandahaller-information-om-utbildningsmojligheter" = "insamlingsmetod-fick-informationen-via-en-datorbaserad-applikation-som-tillhandahaller-information-om-utbildningsmojligheter"
+"301.4656.fick-informationen-via-ett-personligt-samtal-face-to-face" = "insamlingsmetod-fick-informationen-via-ett-personligt-samtal-face-to-face"
+"301.4656.fick-informationen-via-kontakt-med-annan-person-via-internet-telefon-epost-eller-annan-media" = "insamlingsmetod-fick-informationen-via-kontakt-med-annan-person-via-internet-telefon-epost-eller-annan-media"
+"301.4656.pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-kommunikation-via-t-ex-chatt-robot-eller-nagon-annan-automatisk-funktion-pa-internet" = "insamlingsmetod-pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-kommunikation-via-t-ex-chatt-robot-eller-nagon-annan-automatisk-funktion-pa-internet"
+"301.4656.pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-personligen-med-nagon-t-ex-via-telefon-mejl-eller-mote-aven-videomote" = "insamlingsmetod-pa-vilket-satt-erholls-information-om-utbildningsmojligheter-under-de-senaste-12-manaderna-personligen-med-nagon-t-ex-via-telefon-mejl-eller-mote-aven-videomote"
+"301.15329.anger-om-distansstudierna-for-den-andra-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte" = "distansstudier-natuniversitet-anger-om-distansstudierna-for-den-andra-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte"
+"301.15329.anger-om-distansstudierna-for-den-forsta-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte" = "distansstudier-natuniversitet-anger-om-distansstudierna-for-den-forsta-slumpmassigt-valda-kursen-var-helt-natbaserad-eller-inte"
+"301.24769.beraknad-vikt-for-de-maximalt-2-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteterna-per-individ" = "gregvikt-beraknad-vikt-for-de-maximalt-2-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteterna-per-individ"
+"301.24769.beraknad-vikt-for-svarande-person" = "gregvikt-beraknad-vikt-for-svarande-person"
+"301.24769.beraknad-vikt-for-varje-icke-formell-utbildningsaktivitet" = "gregvikt-beraknad-vikt-for-varje-icke-formell-utbildningsaktivitet"
+"301.35150.anger-om-personen-har-deltagit-i-atminstone-en-av-de-icke-formella-utbildningarna-under-betald-arbetstid-inklusive-betald-semester-eller-aterhamtning" = "icke-formell-utbildning-aktivitetsvariabler-anger-om-personen-har-deltagit-i-atminstone-en-av-de-icke-formella-utbildningarna-under-betald-arbetstid-inklusive-betald-semester-eller-aterhamtning"
+"301.35150.anger-om-atminstone-en-av-de-icke-formella-utbildningarna-var-arbetsrelaterad" = "icke-formell-utbildning-aktivitetsvariabler-anger-om-atminstone-en-av-de-icke-formella-utbildningarna-var-arbetsrelaterad"
+"301.35150.identifikationkod-for-den-andra-slumpmassigt-valda-icke-formella-aktiviteten" = "icke-formell-utbildning-aktivitetsvariabler-identifikationkod-for-den-andra-slumpmassigt-valda-icke-formella-aktiviteten"
+"301.35150.identifikationkod-for-den-forsta-slumpmassigt-valda-icke-formella-aktiviteten" = "icke-formell-utbildning-aktivitetsvariabler-identifikationkod-for-den-forsta-slumpmassigt-valda-icke-formella-aktiviteten"
+"301.35150.identifikationkod-for-den-tredje-slumpmassigt-valda-icke-formella-aktiviteten" = "icke-formell-utbildning-aktivitetsvariabler-identifikationkod-for-den-tredje-slumpmassigt-valda-icke-formella-aktiviteten"
+"301.32787.andra-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt" = "icke-formell-utbildning-kostnadsvariabler-andra-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
+"301.32787.andra-slumpmassigt-valda-icke-formella-utbildningsaktiviteten" = "icke-formell-utbildning-kostnadsvariabler-andra-slumpmassigt-valda-icke-formella-utbildningsaktiviteten"
+"301.32787.forsta-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt" = "icke-formell-utbildning-kostnadsvariabler-forsta-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
+"301.32787.forsta-slumpmassigt-valda-icke-formella-utbildningsaktiviteten" = "icke-formell-utbildning-kostnadsvariabler-forsta-slumpmassigt-valda-icke-formella-utbildningsaktiviteten"
+"301.32787.tredje-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt" = "icke-formell-utbildning-kostnadsvariabler-tredje-slumpmassigt-valda-icke-formella-utbildningen-antal-betalande-objekt"
+"301.32787.atminstone-en-av-icke-formella-utbildningarna-var-helt-eller-delvis-betald-av-arbetsgivare" = "icke-formell-utbildning-kostnadsvariabler-atminstone-en-av-icke-formella-utbildningarna-var-helt-eller-delvis-betald-av-arbetsgivare"
+"301.46937.hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kontakt-med-kurskamrater-hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.46937.hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kontakt-med-kurskamrater-hur-ofta-hade-du-kontakt-med-kurskamrater-eller-andra-deltagare-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.46937.hur-ofta-hade-du-kontakt-med-kurskamrater-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats" = "kontakt-med-kurskamrater-hur-ofta-hade-du-kontakt-med-kurskamrater-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats"
+"301.46936.hur-ofta-hade-du-sjalv-kontakt-med-lararen-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats" = "kontakt-med-larare-ledare-eller-forelasare-hur-ofta-hade-du-sjalv-kontakt-med-lararen-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats"
+"301.46936.hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kontakt-med-larare-ledare-eller-forelasare-hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-andra-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.46936.hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten" = "kontakt-med-larare-ledare-eller-forelasare-hur-ofta-hade-du-sjalv-kontakt-med-lararen-ledaren-eller-forelasaren-via-internet-om-utbildningens-innehall-t-ex-via-e-post-sociala-medier-videosamtal-eller-skolans-webbplats-forsta-slumpmassigt-utvalda-icke-formella-utbildningsaktiviteten"
+"301.46934.hur-ofta-gjorde-lararen-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material" = "undervisningsmaterial-hur-ofta-gjorde-lararen-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material"
+"301.46934.hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-andra-slumpmassigt-utvalda-utbildningsaktiviteten" = "undervisningsmaterial-hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-andra-slumpmassigt-utvalda-utbildningsaktiviteten"
+"301.46934.hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-forsta-slumpmassigt-utvalda-utbildningsaktiviteten" = "undervisningsmaterial-hur-ofta-gjorde-lararen-ledaren-eller-forelasaren-undervisningsmaterial-tillgangligt-via-internet-eller-hanvisade-till-sadant-material-forsta-slumpmassigt-utvalda-utbildningsaktiviteten"
+"301.24823.avser-formell-utbildning-1" = "kostnader-studier-formell-utbildning-avser-formell-utbildning-1"
+"301.24823.avser-formell-utbildning-2" = "kostnader-studier-formell-utbildning-avser-formell-utbildning-2"
+"301.24823.avser-senaste-formella-utbildning" = "kostnader-studier-formell-utbildning-avser-senaste-formella-utbildning"
+"301.8557.nfeprovider1" = "nfeprovider1"
+"301.8557.nfeprovider2" = "nfeprovider2"
+"301.8557.nfeprovider3" = "nfeprovider3"
+"301.24819.fsyfte1" = "fsyfte1"
+"301.24819.fsyfte2" = "fsyfte2"
+"301.24825.feurohjalp1" = "feurohjalp1"
+"301.24825.feurohjalp2" = "feurohjalp2"
+"301.24939.ifeurohjalp1" = "ifeurohjalp1"
+"301.24939.ifeurohjalp2" = "ifeurohjalp2"
+"301.24939.ifeurohjalp3" = "ifeurohjalp3"
+"301.32783.fedpaidby-1" = "fedpaidby-1"
+"301.32783.fedpaidby-2" = "fedpaidby-2"
+"301.32783.fedpaidby-3" = "fedpaidby-3"
+"301.32783.fedpaidby-4" = "fedpaidby-4"
+"301.32783.fedpaidby-5" = "fedpaidby-5"
+"301.35116.nfecert1" = "nfecert1"
+"301.35116.nfecert2" = "nfecert2"
+"301.35116.nfecert3" = "nfecert3"
+"301.35172.infpurp1" = "infpurp1"
+"301.35172.infpurp2" = "infpurp2"
+"301.35191.fedunsatreason-1" = "fedunsatreason-1"
+"301.35191.fedunsatreason-2" = "fedunsatreason-2"
+"301.35191.fedunsatreason-3" = "fedunsatreason-3"
+"301.35191.fedunsatreason-4" = "fedunsatreason-4"
+"301.35191.fedunsatreason-5" = "fedunsatreason-5"
+"301.35193.nfereason1" = "nfereason1"
+"301.35193.nfereason2" = "nfereason2"
+"301.35193.nfereason3" = "nfereason3"
+"301.35195.nfeoutcome1" = "nfeoutcome1-antal"
+"301.35195.nfeoutcome2" = "nfeoutcome2-antal"
+"301.35195.nfeoutcome3" = "nfeoutcome3-antal"
+"301.35200.ictcomputer-1" = "ictcomputer-1"
+"301.35200.ictcomputer-10" = "ictcomputer-10"
+"301.35200.ictcomputer-2" = "ictcomputer-2"
+"301.35200.ictcomputer-3" = "ictcomputer-3"
+"301.35200.ictcomputer-4" = "ictcomputer-4"
+"301.35200.ictcomputer-5" = "ictcomputer-5"
+"301.35200.ictcomputer-6" = "ictcomputer-6"
+"301.35200.ictcomputer-7" = "ictcomputer-7"
+"301.35200.ictcomputer-8" = "ictcomputer-8"
+"301.35200.ictcomputer-9" = "ictcomputer-9"
+"301.35202.ictinternet-1" = "ictinternet-1"
+"301.35202.ictinternet-2" = "ictinternet-2"
+"301.35202.ictinternet-3" = "ictinternet-3"
+"301.35202.ictinternet-4" = "ictinternet-4"
+"301.35202.ictinternet-5" = "ictinternet-5"
+"301.35202.ictinternet-6" = "ictinternet-6"
+"301.35202.ictinternet-7" = "ictinternet-7"
+"301.35202.ictinternet-8" = "ictinternet-8"
+"301.37531.langlevel1" = "langlevel1"
+"301.37531.langlevel2" = "langlevel2"
+"301.46939.nfeskillsmain1" = "nfeskillsmain1"
+"301.46939.nfeskillsmain2" = "nfeskillsmain2"
+"301.46955.nfeinitia1" = "nfeinitia1"
+"301.46955.nfeinitia2" = "nfeinitia2"
+"301.8700.langmoth1" = "langmoth"
+"301.8700.langmoth2" = "langmoth2"
+"301.8700.langmother1" = "langmother"
+"301.8700.langmother2" = "langmother2"
+"301.8700.modersmal" = "modersmal"
+"301.24959.langbest1" = "langbest"
+"301.24959.langbest2" = "langbest2"
+"301.24959.langused" = "langused"
+"301.24959.langused-1" = "langused-1"
+"301.24959.langused-2" = "langused-2"
+"301.24959.langused-3" = "langused-3"
+"301.24959.langused-4" = "langused-4"
+"301.24959.langused-5" = "langused-5"
+"301.24959.langused-6" = "langused-6"
+"301.24959.langused-7" = "langused-7"
+"301.24959.frsprak1" = "frsprak"
+"301.24959.frsprak2" = "frsprak2"
+"301.24959.langlevel2" = "langlevel2-24959"
+"301.24959.sprak1" = "sprak"
+"301.24959.sprak2" = "sprak2"
+"301.24959.sprak3" = "sprak3"
+"301.24959.sprak4" = "sprak4"
+"301.24959.sprak5" = "sprak5"
+"301.24811.fedfield" = "fedfield"
+"301.24811.finr1" = "finr"
+"301.24811.finr2" = "finr2"
+"301.24821.fedworktime" = "fedworktime"
+"301.24821.farbtid1" = "farbtid"
+"301.24821.farbtid2" = "farbtid2"
+"301.32789.nfeact01-paidby" = "nfeact01-paidby"
+"301.32789.nfeact02-paidby" = "nfeact02-paidby"
+"301.32789.nfeact03-paidby" = "nfeact03-paidby"
+"301.32789.nfeact04-paidby" = "nfeact04-paidby"
+"301.32789.nfeact05-paidby" = "nfeact05-paidby"
+"301.32789.nfeact06-paidby" = "nfeact06-paidby"
+"301.32789.nfeact07-paidby" = "nfeact07-paidby"
+"301.32789.nfepaidby1" = "nfepaidby1"
+"301.32789.nfepaidby1-1" = "nfepaidby1-1"
+"301.32789.nfepaidby1-2" = "nfepaidby1-2"
+"301.32789.nfepaidby1-3" = "nfepaidby1-3"
+"301.32789.nfepaidby1-4" = "nfepaidby1-4"
+"301.32789.nfepaidby1-5" = "nfepaidby1-5"
+"301.32789.nfepaidby2" = "nfepaidby2"
+"301.32789.nfepaidby2-1" = "nfepaidby2-1"
+"301.32789.nfepaidby2-2" = "nfepaidby2-2"
+"301.32789.nfepaidby2-3" = "nfepaidby2-3"
+"301.32789.nfepaidby2-4" = "nfepaidby2-4"
+"301.32789.nfepaidby2-5" = "nfepaidby2-5"
+"301.32789.nfepaidby3-1" = "nfepaidby3"
+"301.32789.nfepaidby3-2" = "nfepaidby3-2"
+"301.32789.nfepaidby3-3" = "nfepaidby3-3"
+"301.32789.nfepaidby3-4" = "nfepaidby3-4"
+"301.32789.nfepaidby3-5" = "nfepaidby3-5"
+"301.32879.nfeoera1" = "nfeoera"
+"301.32879.nfeoera2" = "nfeoera2"
+"301.32879.nfeoerb1" = "nfeoerb"
+"301.32879.nfeoerb2" = "nfeoerb2"
+"301.24809.fedlevel" = "fedlevel"
+"301.24809.fniva1" = "fniva"
+"301.24809.fniva2" = "fniva2"
+"301.24835.nfeact01-worktime" = "nfeact01-worktime"
+"301.24835.nfeact02-worktime" = "nfeact02-worktime"
+"301.24835.nfeact03-worktime" = "nfeact03-worktime"
+"301.24835.nfeact04-worktime" = "nfeact04-worktime"
+"301.24835.nfeact05-worktime" = "nfeact05-worktime"
+"301.24835.nfeact06-worktime" = "nfeact06-worktime"
+"301.24835.nfeact07-worktime" = "nfeact07-worktime"
+"301.24835.nfeworktime1" = "nfeworktime"
+"301.24835.nfeworktime2" = "nfeworktime2"
+"301.24835.nfeworktime3" = "nfeworktime3"
+"301.24835.ifarbtid1" = "ifarbtid"
+"301.24835.ifarbtid2" = "ifarbtid2"
+"301.24835.ifarbtid3" = "ifarbtid3"
+"301.35126.guideinst-1" = "guideinst"
+"301.35126.guideinst-2" = "guideinst-2"
+"301.35126.guideinst-3" = "guideinst-3"
+"301.35126.seekfound" = "seekfound"
+"301.24832.nfeact01-purp" = "nfeact01-purp"
+"301.24832.nfeact02-purp" = "nfeact02-purp"
+"301.24832.nfeact03-purp" = "nfeact03-purp"
+"301.24832.nfeact04-purp" = "nfeact04-purp"
+"301.24832.nfeact05-purp" = "nfeact05-purp"
+"301.24832.nfeact06-purp" = "nfeact06-purp"
+"301.24832.nfeact07-purp" = "nfeact07-purp"
+"301.24832.nfepurp1" = "nfepurp"
+"301.24832.nfepurp2" = "nfepurp2"
+"301.24832.nfepurp3" = "nfepurp3"
+"301.24832.ifsyfte1" = "ifsyfte"
+"301.24832.ifsyfte2" = "ifsyfte2"
+"301.24832.ifsyfte3" = "ifsyfte3"
+"301.24829.nfefield1" = "nfefield"
+"301.24829.nfefield2" = "nfefield2"
+"301.24829.nfefield3" = "nfefield3"
+"301.24829.ifinr1" = "ifinr"
+"301.24829.ifinr2" = "ifinr2"
+"301.24829.ifinr3" = "ifinr3"
+"301.24960.inffield1" = "inffield"
+"301.24960.inffield2" = "inffield2"
+"301.24960.infinr1" = "infinr"
+"301.24960.infinr2" = "infinr2"
+"301.24960.infinr3" = "infinr3"
 
 [[identity.column_owner]]
 variable = "301.24936"
@@ -8314,226 +7633,6 @@ columns = { NFEINITIA1 = "301.46955.nfeinitia1", NFEINITIA2 = "301.46955.nfeinit
 columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
 expected_evidence_sha256 = "8a6268812feab09400b0a0970d3ef12080247f8e67f44e2ecc6d47eb827f0b3e"
 
-[[variable]]
-native_id = "301.8557.nfeprovider1"
-slug = "nfeprovider1"
-
-[[variable]]
-native_id = "301.8557.nfeprovider2"
-slug = "nfeprovider2"
-
-[[variable]]
-native_id = "301.8557.nfeprovider3"
-slug = "nfeprovider3"
-
-[[variable]]
-native_id = "301.24819.fsyfte1"
-slug = "fsyfte1"
-
-[[variable]]
-native_id = "301.24819.fsyfte2"
-slug = "fsyfte2"
-
-[[variable]]
-native_id = "301.24825.feurohjalp1"
-slug = "feurohjalp1"
-
-[[variable]]
-native_id = "301.24825.feurohjalp2"
-slug = "feurohjalp2"
-
-[[variable]]
-native_id = "301.24939.ifeurohjalp1"
-slug = "ifeurohjalp1"
-
-[[variable]]
-native_id = "301.24939.ifeurohjalp2"
-slug = "ifeurohjalp2"
-
-[[variable]]
-native_id = "301.24939.ifeurohjalp3"
-slug = "ifeurohjalp3"
-
-[[variable]]
-native_id = "301.32783.fedpaidby-1"
-slug = "fedpaidby-1"
-
-[[variable]]
-native_id = "301.32783.fedpaidby-2"
-slug = "fedpaidby-2"
-
-[[variable]]
-native_id = "301.32783.fedpaidby-3"
-slug = "fedpaidby-3"
-
-[[variable]]
-native_id = "301.32783.fedpaidby-4"
-slug = "fedpaidby-4"
-
-[[variable]]
-native_id = "301.32783.fedpaidby-5"
-slug = "fedpaidby-5"
-
-[[variable]]
-native_id = "301.35116.nfecert1"
-slug = "nfecert1"
-
-[[variable]]
-native_id = "301.35116.nfecert2"
-slug = "nfecert2"
-
-[[variable]]
-native_id = "301.35116.nfecert3"
-slug = "nfecert3"
-
-[[variable]]
-native_id = "301.35172.infpurp1"
-slug = "infpurp1"
-
-[[variable]]
-native_id = "301.35172.infpurp2"
-slug = "infpurp2"
-
-[[variable]]
-native_id = "301.35191.fedunsatreason-1"
-slug = "fedunsatreason-1"
-
-[[variable]]
-native_id = "301.35191.fedunsatreason-2"
-slug = "fedunsatreason-2"
-
-[[variable]]
-native_id = "301.35191.fedunsatreason-3"
-slug = "fedunsatreason-3"
-
-[[variable]]
-native_id = "301.35191.fedunsatreason-4"
-slug = "fedunsatreason-4"
-
-[[variable]]
-native_id = "301.35191.fedunsatreason-5"
-slug = "fedunsatreason-5"
-
-[[variable]]
-native_id = "301.35193.nfereason1"
-slug = "nfereason1"
-
-[[variable]]
-native_id = "301.35193.nfereason2"
-slug = "nfereason2"
-
-[[variable]]
-native_id = "301.35193.nfereason3"
-slug = "nfereason3"
-
-[[variable]]
-native_id = "301.35195.nfeoutcome1"
-slug = "nfeoutcome1-antal"
-
-[[variable]]
-native_id = "301.35195.nfeoutcome2"
-slug = "nfeoutcome2-antal"
-
-[[variable]]
-native_id = "301.35195.nfeoutcome3"
-slug = "nfeoutcome3-antal"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-1"
-slug = "ictcomputer-1"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-10"
-slug = "ictcomputer-10"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-2"
-slug = "ictcomputer-2"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-3"
-slug = "ictcomputer-3"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-4"
-slug = "ictcomputer-4"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-5"
-slug = "ictcomputer-5"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-6"
-slug = "ictcomputer-6"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-7"
-slug = "ictcomputer-7"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-8"
-slug = "ictcomputer-8"
-
-[[variable]]
-native_id = "301.35200.ictcomputer-9"
-slug = "ictcomputer-9"
-
-[[variable]]
-native_id = "301.35202.ictinternet-1"
-slug = "ictinternet-1"
-
-[[variable]]
-native_id = "301.35202.ictinternet-2"
-slug = "ictinternet-2"
-
-[[variable]]
-native_id = "301.35202.ictinternet-3"
-slug = "ictinternet-3"
-
-[[variable]]
-native_id = "301.35202.ictinternet-4"
-slug = "ictinternet-4"
-
-[[variable]]
-native_id = "301.35202.ictinternet-5"
-slug = "ictinternet-5"
-
-[[variable]]
-native_id = "301.35202.ictinternet-6"
-slug = "ictinternet-6"
-
-[[variable]]
-native_id = "301.35202.ictinternet-7"
-slug = "ictinternet-7"
-
-[[variable]]
-native_id = "301.35202.ictinternet-8"
-slug = "ictinternet-8"
-
-[[variable]]
-native_id = "301.37531.langlevel1"
-slug = "langlevel1"
-
-[[variable]]
-native_id = "301.37531.langlevel2"
-slug = "langlevel2"
-
-[[variable]]
-native_id = "301.46939.nfeskillsmain1"
-slug = "nfeskillsmain1"
-
-[[variable]]
-native_id = "301.46939.nfeskillsmain2"
-slug = "nfeskillsmain2"
-
-[[variable]]
-native_id = "301.46955.nfeinitia1"
-slug = "nfeinitia1"
-
-[[variable]]
-native_id = "301.46955.nfeinitia2"
-slug = "nfeinitia2"
-
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/aes/fodelsemanad"
@@ -8629,407 +7728,3 @@ variable = "301.24960"
 columns = { INFFIELD1 = "301.24960.inffield1", INFFIELD2 = "301.24960.inffield2", infinr1 = "301.24960.infinr1", infinr2 = "301.24960.infinr2", infinr3 = "301.24960.infinr3" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "18a221ddfaa6e63c591587d943c47df9b9450b53ba5f911bdd50f6ab7cde94ce"
-
-[[variable]]
-native_id = "301.8700.langmoth1"
-slug = "langmoth"
-
-[[variable]]
-native_id = "301.8700.langmoth2"
-slug = "langmoth2"
-
-[[variable]]
-native_id = "301.8700.langmother1"
-slug = "langmother"
-
-[[variable]]
-native_id = "301.8700.langmother2"
-slug = "langmother2"
-
-[[variable]]
-native_id = "301.8700.modersmal"
-slug = "modersmal"
-
-[[variable]]
-native_id = "301.24959.langbest1"
-slug = "langbest"
-
-[[variable]]
-native_id = "301.24959.langbest2"
-slug = "langbest2"
-
-[[variable]]
-native_id = "301.24959.langused"
-slug = "langused"
-
-[[variable]]
-native_id = "301.24959.langused-1"
-slug = "langused-1"
-
-[[variable]]
-native_id = "301.24959.langused-2"
-slug = "langused-2"
-
-[[variable]]
-native_id = "301.24959.langused-3"
-slug = "langused-3"
-
-[[variable]]
-native_id = "301.24959.langused-4"
-slug = "langused-4"
-
-[[variable]]
-native_id = "301.24959.langused-5"
-slug = "langused-5"
-
-[[variable]]
-native_id = "301.24959.langused-6"
-slug = "langused-6"
-
-[[variable]]
-native_id = "301.24959.langused-7"
-slug = "langused-7"
-
-[[variable]]
-native_id = "301.24959.frsprak1"
-slug = "frsprak"
-
-[[variable]]
-native_id = "301.24959.frsprak2"
-slug = "frsprak2"
-
-[[variable]]
-native_id = "301.24959.langlevel2"
-slug = "langlevel2-24959"
-
-[[variable]]
-native_id = "301.24959.sprak1"
-slug = "sprak"
-
-[[variable]]
-native_id = "301.24959.sprak2"
-slug = "sprak2"
-
-[[variable]]
-native_id = "301.24959.sprak3"
-slug = "sprak3"
-
-[[variable]]
-native_id = "301.24959.sprak4"
-slug = "sprak4"
-
-[[variable]]
-native_id = "301.24959.sprak5"
-slug = "sprak5"
-
-[[variable]]
-native_id = "301.24811.fedfield"
-slug = "fedfield"
-
-[[variable]]
-native_id = "301.24811.finr1"
-slug = "finr"
-
-[[variable]]
-native_id = "301.24811.finr2"
-slug = "finr2"
-
-[[variable]]
-native_id = "301.24821.fedworktime"
-slug = "fedworktime"
-
-[[variable]]
-native_id = "301.24821.farbtid1"
-slug = "farbtid"
-
-[[variable]]
-native_id = "301.24821.farbtid2"
-slug = "farbtid2"
-
-[[variable]]
-native_id = "301.32789.nfeact01-paidby"
-slug = "nfeact01-paidby"
-
-[[variable]]
-native_id = "301.32789.nfeact02-paidby"
-slug = "nfeact02-paidby"
-
-[[variable]]
-native_id = "301.32789.nfeact03-paidby"
-slug = "nfeact03-paidby"
-
-[[variable]]
-native_id = "301.32789.nfeact04-paidby"
-slug = "nfeact04-paidby"
-
-[[variable]]
-native_id = "301.32789.nfeact05-paidby"
-slug = "nfeact05-paidby"
-
-[[variable]]
-native_id = "301.32789.nfeact06-paidby"
-slug = "nfeact06-paidby"
-
-[[variable]]
-native_id = "301.32789.nfeact07-paidby"
-slug = "nfeact07-paidby"
-
-[[variable]]
-native_id = "301.32789.nfepaidby1"
-slug = "nfepaidby1"
-
-[[variable]]
-native_id = "301.32789.nfepaidby1-1"
-slug = "nfepaidby1-1"
-
-[[variable]]
-native_id = "301.32789.nfepaidby1-2"
-slug = "nfepaidby1-2"
-
-[[variable]]
-native_id = "301.32789.nfepaidby1-3"
-slug = "nfepaidby1-3"
-
-[[variable]]
-native_id = "301.32789.nfepaidby1-4"
-slug = "nfepaidby1-4"
-
-[[variable]]
-native_id = "301.32789.nfepaidby1-5"
-slug = "nfepaidby1-5"
-
-[[variable]]
-native_id = "301.32789.nfepaidby2"
-slug = "nfepaidby2"
-
-[[variable]]
-native_id = "301.32789.nfepaidby2-1"
-slug = "nfepaidby2-1"
-
-[[variable]]
-native_id = "301.32789.nfepaidby2-2"
-slug = "nfepaidby2-2"
-
-[[variable]]
-native_id = "301.32789.nfepaidby2-3"
-slug = "nfepaidby2-3"
-
-[[variable]]
-native_id = "301.32789.nfepaidby2-4"
-slug = "nfepaidby2-4"
-
-[[variable]]
-native_id = "301.32789.nfepaidby2-5"
-slug = "nfepaidby2-5"
-
-[[variable]]
-native_id = "301.32789.nfepaidby3-1"
-slug = "nfepaidby3"
-
-[[variable]]
-native_id = "301.32789.nfepaidby3-2"
-slug = "nfepaidby3-2"
-
-[[variable]]
-native_id = "301.32789.nfepaidby3-3"
-slug = "nfepaidby3-3"
-
-[[variable]]
-native_id = "301.32789.nfepaidby3-4"
-slug = "nfepaidby3-4"
-
-[[variable]]
-native_id = "301.32789.nfepaidby3-5"
-slug = "nfepaidby3-5"
-
-[[variable]]
-native_id = "301.32879.nfeoera1"
-slug = "nfeoera"
-
-[[variable]]
-native_id = "301.32879.nfeoera2"
-slug = "nfeoera2"
-
-[[variable]]
-native_id = "301.32879.nfeoerb1"
-slug = "nfeoerb"
-
-[[variable]]
-native_id = "301.32879.nfeoerb2"
-slug = "nfeoerb2"
-
-[[variable]]
-native_id = "301.24809.fedlevel"
-slug = "fedlevel"
-
-[[variable]]
-native_id = "301.24809.fniva1"
-slug = "fniva"
-
-[[variable]]
-native_id = "301.24809.fniva2"
-slug = "fniva2"
-
-[[variable]]
-native_id = "301.24835.nfeact01-worktime"
-slug = "nfeact01-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeact02-worktime"
-slug = "nfeact02-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeact03-worktime"
-slug = "nfeact03-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeact04-worktime"
-slug = "nfeact04-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeact05-worktime"
-slug = "nfeact05-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeact06-worktime"
-slug = "nfeact06-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeact07-worktime"
-slug = "nfeact07-worktime"
-
-[[variable]]
-native_id = "301.24835.nfeworktime1"
-slug = "nfeworktime"
-
-[[variable]]
-native_id = "301.24835.nfeworktime2"
-slug = "nfeworktime2"
-
-[[variable]]
-native_id = "301.24835.nfeworktime3"
-slug = "nfeworktime3"
-
-[[variable]]
-native_id = "301.24835.ifarbtid1"
-slug = "ifarbtid"
-
-[[variable]]
-native_id = "301.24835.ifarbtid2"
-slug = "ifarbtid2"
-
-[[variable]]
-native_id = "301.24835.ifarbtid3"
-slug = "ifarbtid3"
-
-[[variable]]
-native_id = "301.35126.guideinst-1"
-slug = "guideinst"
-
-[[variable]]
-native_id = "301.35126.guideinst-2"
-slug = "guideinst-2"
-
-[[variable]]
-native_id = "301.35126.guideinst-3"
-slug = "guideinst-3"
-
-[[variable]]
-native_id = "301.35126.seekfound"
-slug = "seekfound"
-
-[[variable]]
-native_id = "301.24832.nfeact01-purp"
-slug = "nfeact01-purp"
-
-[[variable]]
-native_id = "301.24832.nfeact02-purp"
-slug = "nfeact02-purp"
-
-[[variable]]
-native_id = "301.24832.nfeact03-purp"
-slug = "nfeact03-purp"
-
-[[variable]]
-native_id = "301.24832.nfeact04-purp"
-slug = "nfeact04-purp"
-
-[[variable]]
-native_id = "301.24832.nfeact05-purp"
-slug = "nfeact05-purp"
-
-[[variable]]
-native_id = "301.24832.nfeact06-purp"
-slug = "nfeact06-purp"
-
-[[variable]]
-native_id = "301.24832.nfeact07-purp"
-slug = "nfeact07-purp"
-
-[[variable]]
-native_id = "301.24832.nfepurp1"
-slug = "nfepurp"
-
-[[variable]]
-native_id = "301.24832.nfepurp2"
-slug = "nfepurp2"
-
-[[variable]]
-native_id = "301.24832.nfepurp3"
-slug = "nfepurp3"
-
-[[variable]]
-native_id = "301.24832.ifsyfte1"
-slug = "ifsyfte"
-
-[[variable]]
-native_id = "301.24832.ifsyfte2"
-slug = "ifsyfte2"
-
-[[variable]]
-native_id = "301.24832.ifsyfte3"
-slug = "ifsyfte3"
-
-[[variable]]
-native_id = "301.24829.nfefield1"
-slug = "nfefield"
-
-[[variable]]
-native_id = "301.24829.nfefield2"
-slug = "nfefield2"
-
-[[variable]]
-native_id = "301.24829.nfefield3"
-slug = "nfefield3"
-
-[[variable]]
-native_id = "301.24829.ifinr1"
-slug = "ifinr"
-
-[[variable]]
-native_id = "301.24829.ifinr2"
-slug = "ifinr2"
-
-[[variable]]
-native_id = "301.24829.ifinr3"
-slug = "ifinr3"
-
-[[variable]]
-native_id = "301.24960.inffield1"
-slug = "inffield"
-
-[[variable]]
-native_id = "301.24960.inffield2"
-slug = "inffield2"
-
-[[variable]]
-native_id = "301.24960.infinr1"
-slug = "infinr"
-
-[[variable]]
-native_id = "301.24960.infinr2"
-slug = "infinr2"
-
-[[variable]]
-native_id = "301.24960.infinr3"
-slug = "infinr3"

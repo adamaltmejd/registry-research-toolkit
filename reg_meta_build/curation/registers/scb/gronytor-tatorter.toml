@@ -20,110 +20,33 @@ native_id = "350.1214"
 slug = "forandringar-gronytor"
 display_group = "Förändringar grönytor"
 
+[variable]
 # Den internationella undersökningen av vuxnas färdigheter (PIAAC)
-
-[[variable]]
-native_id = "350.44"
-slug = "kon"
-
-[[variable]]
-native_id = "350.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "350.108"
-slug = "taxeringsenhet-typkod"
-
-[[variable]]
-native_id = "350.135"
-slug = "fnr"
-
-[[variable]]
-native_id = "350.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "350.2188"
-slug = "folkmangd"
-
-[[variable]]
-native_id = "350.22831"
-slug = "grundklassning-vegetation"
-
-[[variable]]
-native_id = "350.22834"
-slug = "grupperad-6klasser"
-
-[[variable]]
-native_id = "350.22836"
-slug = "benamning-omrade"
-
-[[variable]]
-native_id = "350.22837"
-slug = "gronomraden"
-
-[[variable]]
-native_id = "350.22838"
-slug = "forandring-gronytor-id"
-
-[[variable]]
-native_id = "350.22839"
-slug = "forandringsomrade-klass"
-
-[[variable]]
-native_id = "350.22840"
-slug = "overlagring-kartytor-mask"
-
-[[variable]]
-native_id = "350.22841"
-slug = "omkrets-forandringsyta"
-
-[[variable]]
-native_id = "350.22842"
-slug = "forandringsyta-gronomrade"
-
-[[variable]]
-native_id = "350.22843"
-slug = "saker-forandringsyta"
-
-[[variable]]
-native_id = "350.22907"
-slug = "gronyta-per-person"
-
-[[variable]]
-native_id = "350.22908"
-slug = "befolkning-gronomraden-300m"
-
-[[variable]]
-native_id = "350.22909"
-slug = "forandring-vegetationsgrad"
-
-[[variable]]
-native_id = "350.22913"
-slug = "befolkningstathet-tatorter"
-
-[[variable]]
-native_id = "350.31224"
-slug = "befolkningens-narhet-gronyta"
-
-[[variable]]
-native_id = "350.31225"
-slug = "markklassning-fin"
-
-[[variable]]
-native_id = "350.31281"
-slug = "markklassning-aggregerad"
-
-[[variable]]
-native_id = "350.31286"
-slug = "tatorter-30000-inv-visby"
-
-[[variable]]
-native_id = "350.31287"
-slug = "inom-tatort"
+"350.44" = "kon"
+"350.74" = "agarkontroll"
+"350.108" = "taxeringsenhet-typkod"
+"350.135" = "fnr"
+"350.749" = "aldersgrupp"
+"350.2188" = "folkmangd"
+"350.22831" = "grundklassning-vegetation"
+"350.22834" = "grupperad-6klasser"
+"350.22836" = "benamning-omrade"
+"350.22837" = "gronomraden"
+"350.22838" = "forandring-gronytor-id"
+"350.22839" = "forandringsomrade-klass"
+"350.22840" = "overlagring-kartytor-mask"
+"350.22841" = "omkrets-forandringsyta"
+"350.22842" = "forandringsyta-gronomrade"
+"350.22843" = "saker-forandringsyta"
+"350.22907" = "gronyta-per-person"
+"350.22908" = "befolkning-gronomraden-300m"
+"350.22909" = "forandring-vegetationsgrad"
+"350.22913" = "befolkningstathet-tatorter"
+"350.31224" = "befolkningens-narhet-gronyta"
+"350.31225" = "markklassning-fin"
+"350.31281" = "markklassning-aggregerad"
+"350.31286" = "tatorter-30000-inv-visby"
+"350.31287" = "inom-tatort"
 
 # register 353 (anpassad-gymnasieskola)
-
-[[variable]]
-native_id = "350.39461"
-slug = "datatyp-for-geometri"
+"350.39461" = "datatyp-for-geometri"

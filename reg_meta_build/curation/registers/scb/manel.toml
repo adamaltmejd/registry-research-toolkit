@@ -11,146 +11,47 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Outhyrda bostadslägenheter i flerbostadshus (OHA)
-
-[[variable]]
-native_id = "142.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "142.2620"
-slug = "adress-redovisningsenhet"
-
-[[variable]]
-native_id = "142.2622"
-slug = "benamning-redovisningsenhet"
-
-[[variable]]
-native_id = "142.7578"
-slug = "redovisningsmanad"
+"142.14" = "cfar-nummer"
+"142.2620" = "adress-redovisningsenhet"
+"142.2622" = "benamning-redovisningsenhet"
+"142.7578" = "redovisningsmanad"
 
 # register 143 (oha)
-
-[[variable]]
-native_id = "142.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "142.2617"
-slug = "orgnr-redovisningsenheten"
-
-[[variable]]
-native_id = "142.2634"
-slug = "postort-redovisningsenhet"
+"142.1086" = "namn-juridiska-enheten"
+"142.2617" = "orgnr-redovisningsenheten"
+"142.2634" = "postort-redovisningsenhet"
 
 # register 143
-
-[[variable]]
-native_id = "142.1641.ng2007"
-slug = "naringsgren-arbetsstalle"
+"142.1641.ng2007" = "naringsgren-arbetsstalle"
 
 # register 145
-
-[[variable]]
-native_id = "142.48271.elomrade-1"
-slug = "kraftvarme-industri-se-elomrade-1"
-
-[[variable]]
-native_id = "142.48271.elomrade-2"
-slug = "kraftvarme-industri-se-elomrade-2"
-
-[[variable]]
-native_id = "142.48271.elomrade-3"
-slug = "kraftvarme-industri-se-elomrade-3"
-
-[[variable]]
-native_id = "142.48271.elomrade-4"
-slug = "kraftvarme-industri-se-elomrade-4"
-
-[[variable]]
-native_id = "142.48272.elomrade-1"
-slug = "kraftvarme-fjarrvarme-se-elomrade-1"
-
-[[variable]]
-native_id = "142.48272.elomrade-2"
-slug = "kraftvarme-fjarrvarme-se-elomrade-2"
-
-[[variable]]
-native_id = "142.48272.elomrade-3"
-slug = "kraftvarme-fjarrvarme-se-elomrade-3"
-
-[[variable]]
-native_id = "142.48272.elomrade-4"
-slug = "kraftvarme-fjarrvarme-se-elomrade-4"
-
-[[variable]]
-native_id = "142.48268.elomrade-1"
-slug = "solareo-elomrade-1"
-
-[[variable]]
-native_id = "142.48268.elomrade-2"
-slug = "solareo-elomrade-2"
-
-[[variable]]
-native_id = "142.48268.elomrade-3"
-slug = "solareo-elomrade-3"
-
-[[variable]]
-native_id = "142.48268.elomrade-4"
-slug = "solareo-elomrade-4"
-
-[[variable]]
-native_id = "142.48265.elomrade-1"
-slug = "hydroeo-elomrade-1"
-
-[[variable]]
-native_id = "142.48265.elomrade-2"
-slug = "hydroeo-elomrade-2"
-
-[[variable]]
-native_id = "142.48265.elomrade-3"
-slug = "hydroeo-elomrade-3"
-
-[[variable]]
-native_id = "142.48265.elomrade-4"
-slug = "hydroeo-elomrade-4"
-
-[[variable]]
-native_id = "142.48267.elomrade-1"
-slug = "windeo-elomrade-1"
-
-[[variable]]
-native_id = "142.48267.elomrade-2"
-slug = "windeo-elomrade-2"
-
-[[variable]]
-native_id = "142.48267.elomrade-3"
-slug = "windeo-elomrade-3"
-
-[[variable]]
-native_id = "142.48267.elomrade-4"
-slug = "windeo-elomrade-4"
-
-[[variable]]
-native_id = "142.48274.elomrade-3"
-slug = "gasturbinkraft-se-elomrade-3"
-
-[[variable]]
-native_id = "142.48274.elomrade-4"
-slug = "gasturbinkraft-se-elomrade-4"
-
-[[variable]]
-native_id = "142.48273.elomrade-3"
-slug = "kondenskraft-se-elomrade-3"
-
-[[variable]]
-native_id = "142.48273.elomrade-4"
-slug = "kondenskraft-se-elomrade-4"
-
-[[variable]]
-native_id = "142.7578.producteo"
-slug = "redovisningsmanad-producteo"
+"142.48271.elomrade-1" = "kraftvarme-industri-se-elomrade-1"
+"142.48271.elomrade-2" = "kraftvarme-industri-se-elomrade-2"
+"142.48271.elomrade-3" = "kraftvarme-industri-se-elomrade-3"
+"142.48271.elomrade-4" = "kraftvarme-industri-se-elomrade-4"
+"142.48272.elomrade-1" = "kraftvarme-fjarrvarme-se-elomrade-1"
+"142.48272.elomrade-2" = "kraftvarme-fjarrvarme-se-elomrade-2"
+"142.48272.elomrade-3" = "kraftvarme-fjarrvarme-se-elomrade-3"
+"142.48272.elomrade-4" = "kraftvarme-fjarrvarme-se-elomrade-4"
+"142.48268.elomrade-1" = "solareo-elomrade-1"
+"142.48268.elomrade-2" = "solareo-elomrade-2"
+"142.48268.elomrade-3" = "solareo-elomrade-3"
+"142.48268.elomrade-4" = "solareo-elomrade-4"
+"142.48265.elomrade-1" = "hydroeo-elomrade-1"
+"142.48265.elomrade-2" = "hydroeo-elomrade-2"
+"142.48265.elomrade-3" = "hydroeo-elomrade-3"
+"142.48265.elomrade-4" = "hydroeo-elomrade-4"
+"142.48267.elomrade-1" = "windeo-elomrade-1"
+"142.48267.elomrade-2" = "windeo-elomrade-2"
+"142.48267.elomrade-3" = "windeo-elomrade-3"
+"142.48267.elomrade-4" = "windeo-elomrade-4"
+"142.48274.elomrade-3" = "gasturbinkraft-se-elomrade-3"
+"142.48274.elomrade-4" = "gasturbinkraft-se-elomrade-4"
+"142.48273.elomrade-3" = "kondenskraft-se-elomrade-3"
+"142.48273.elomrade-4" = "kondenskraft-se-elomrade-4"
+"142.7578.producteo" = "redovisningsmanad-producteo"
 
 [[identity.partition]]
 variable = "142.48271"

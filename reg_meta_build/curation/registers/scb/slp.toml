@@ -11,128 +11,41 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Lönestrukturstatistik, regioner (SLR)
-
-[[variable]]
-native_id = "50.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "50.65"
-slug = "utbildningsinriktning"
-
-[[variable]]
-native_id = "50.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "50.120"
-slug = "yrkesuppgift"
-
-[[variable]]
-native_id = "50.5543"
-slug = "lopnummer"
-
-[[variable]]
-native_id = "50.34100"
-slug = "manadslon-formaner"
-
-[[variable]]
-native_id = "50.34101"
-slug = "lonesumma-formaner"
+"50.57" = "personnr"
+"50.65" = "utbildningsinriktning"
+"50.66" = "utbildningsniva"
+"50.120" = "yrkesuppgift"
+"50.5543" = "lopnummer"
+"50.34100" = "manadslon-formaner"
+"50.34101" = "lonesumma-formaner"
 
 # register 51 (slr)
-
-[[variable]]
-native_id = "50.31093.mformaner"
-slug = "manadsforman"
-
-[[variable]]
-native_id = "50.31093.sumformaner"
-slug = "sumforman"
+"50.31093.mformaner" = "manadsforman"
+"50.31093.sumformaner" = "sumforman"
 
 # register 51 (slr)
-
-[[variable]]
-native_id = "50.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "50.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "50.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "50.753"
-slug = "examensar"
-
-[[variable]]
-native_id = "50.1641"
-slug = "naringsgren-arbetsstalle"
-
-[[variable]]
-native_id = "50.3081"
-slug = "imputering"
-
-[[variable]]
-native_id = "50.3098"
-slug = "faktiskt-arbetad-tid"
-
-[[variable]]
-native_id = "50.3117"
-slug = "personalkategori"
-
-[[variable]]
-native_id = "50.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "50.4031"
-slug = "storleksklass-pa-foretag"
-
-[[variable]]
-native_id = "50.4038"
-slug = "antal-anstallda-enligt-fdb"
-
-[[variable]]
-native_id = "50.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "50.5531"
-slug = "storleksklass-pa-arbetsstallet"
-
-[[variable]]
-native_id = "50.5546"
-slug = "manadslon-totallon"
-
-[[variable]]
-native_id = "50.5614"
-slug = "lonesumma-jour-beredskap"
-
-[[variable]]
-native_id = "50.5617"
-slug = "lonesumma-totalt"
-
-[[variable]]
-native_id = "50.5622"
-slug = "lonesumma-skift-ob"
-
-[[variable]]
-native_id = "50.5719"
-slug = "antal-overtidstimmar"
-
-[[variable]]
-native_id = "50.31094"
-slug = "antal-semesterdagar"
-
-[[variable]]
-native_id = "50.46223"
-slug = "anstallningstyp"
+"50.56" = "person-orgnr"
+"50.109" = "tjanstgoringsomfattning"
+"50.749" = "aldersgrupp"
+"50.753" = "examensar"
+"50.1641" = "naringsgren-arbetsstalle"
+"50.3081" = "imputering"
+"50.3098" = "faktiskt-arbetad-tid"
+"50.3117" = "personalkategori"
+"50.4027" = "naringsgren"
+"50.4031" = "storleksklass-pa-foretag"
+"50.4038" = "antal-anstallda-enligt-fdb"
+"50.5083" = "anstallningsform"
+"50.5531" = "storleksklass-pa-arbetsstallet"
+"50.5546" = "manadslon-totallon"
+"50.5614" = "lonesumma-jour-beredskap"
+"50.5617" = "lonesumma-totalt"
+"50.5622" = "lonesumma-skift-ob"
+"50.5719" = "antal-overtidstimmar"
+"50.31094" = "antal-semesterdagar"
+"50.46223" = "anstallningstyp"
 
 # register 51
 

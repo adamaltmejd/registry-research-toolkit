@@ -11,220 +11,72 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Lönestrukturstatistik, statlig sektor (SLS)
-
-[[variable]]
-native_id = "51.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "51.511"
-slug = "ssyk4-huvud"
-
-[[variable]]
-native_id = "51.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "51.2519"
-slug = "lopnummer-anstallningar"
-
-[[variable]]
-native_id = "51.2686"
-slug = "manadslon"
-
-[[variable]]
-native_id = "51.3105"
-slug = "fast-kontant-lon"
-
-[[variable]]
-native_id = "51.3112"
-slug = "sysselsattningsgrad-manadsavlonade"
-
-[[variable]]
-native_id = "51.3118"
-slug = "sjuklon-1"
-
-[[variable]]
-native_id = "51.3119"
-slug = "sjuklon-2"
-
-[[variable]]
-native_id = "51.3125"
-slug = "tjanstledighetskod-scb"
-
-[[variable]]
-native_id = "51.3131"
-slug = "loneform"
-
-[[variable]]
-native_id = "51.5715"
-slug = "manadslon-grundlon-rorliga"
-
-[[variable]]
-native_id = "51.5726"
-slug = "utbildningens-niva"
-
-[[variable]]
-native_id = "51.5728"
-slug = "tjanstledighetskod"
-
-[[variable]]
-native_id = "51.5784"
-slug = "anstallningsform-hel-del-ovrig"
-
-[[variable]]
-native_id = "51.5825"
-slug = "ersattning-vard-barn"
-
-[[variable]]
-native_id = "51.5829"
-slug = "lonekod"
-
-[[variable]]
-native_id = "51.6290"
-slug = "nuts"
-
-[[variable]]
-native_id = "51.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "51.6416"
-slug = "utbildningsgrupp"
-
-[[variable]]
-native_id = "51.36036"
-slug = "sjuklon-forsta-period"
-
-[[variable]]
-native_id = "51.36037"
-slug = "sjuklon-andra-period"
+"51.57" = "personnr"
+"51.511" = "ssyk4-huvud"
+"51.1839" = "orgnr"
+"51.2519" = "lopnummer-anstallningar"
+"51.2686" = "manadslon"
+"51.3105" = "fast-kontant-lon"
+"51.3112" = "sysselsattningsgrad-manadsavlonade"
+"51.3118" = "sjuklon-1"
+"51.3119" = "sjuklon-2"
+"51.3125" = "tjanstledighetskod-scb"
+"51.3131" = "loneform"
+"51.5715" = "manadslon-grundlon-rorliga"
+"51.5726" = "utbildningens-niva"
+"51.5728" = "tjanstledighetskod"
+"51.5784" = "anstallningsform-hel-del-ovrig"
+"51.5825" = "ersattning-vard-barn"
+"51.5829" = "lonekod"
+"51.6290" = "nuts"
+"51.6306" = "antal-arbetade-timmar"
+"51.6416" = "utbildningsgrupp"
+"51.36036" = "sjuklon-forsta-period"
+"51.36037" = "sjuklon-andra-period"
 
 # register 52 (sls)
-
-[[variable]]
-native_id = "51.1846.tjlk"
-slug = "tjanstledighet"
-
-[[variable]]
-native_id = "51.1846.tjlscb"
-slug = "tjanstledighet-scb"
-
-[[variable]]
-native_id = "51.5717.anform"
-slug = "overenskommen-sysselsattningsgrad"
-
-[[variable]]
-native_id = "51.5717.osysly"
-slug = "sysselsattningsgrad-osysly"
+"51.1846.tjlk" = "tjanstledighet"
+"51.1846.tjlscb" = "tjanstledighet-scb"
+"51.5717.anform" = "overenskommen-sysselsattningsgrad"
+"51.5717.osysly" = "sysselsattningsgrad-osysly"
 
 # register 55 (yrkesreg)
-
-[[variable]]
-native_id = "51.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "51.120"
-slug = "yrkesuppgift"
-
-[[variable]]
-native_id = "51.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "51.1537"
-slug = "ar-for-examensbevis"
-
-[[variable]]
-native_id = "51.1822"
-slug = "fasta-lonetillagg"
-
-[[variable]]
-native_id = "51.1825"
-slug = "grundlon"
-
-[[variable]]
-native_id = "51.1834"
-slug = "lonepopulation"
-
-[[variable]]
-native_id = "51.1837"
-slug = "naturaformaner"
-
-[[variable]]
-native_id = "51.1844"
-slug = "rorliga-lonetillagg"
-
-[[variable]]
-native_id = "51.1847"
-slug = "avtal"
-
-[[variable]]
-native_id = "51.2522"
-slug = "antal-arbetade-timmar-manadsavlonade"
-
-[[variable]]
-native_id = "51.2524"
-slug = "antal-arbetade-timmar-timavlonade"
-
-[[variable]]
-native_id = "51.3102"
-slug = "avtalsomrade"
-
-[[variable]]
-native_id = "51.3110"
-slug = "obekvamtidstillagg"
-
-[[variable]]
-native_id = "51.3113"
-slug = "tillagg-for-overtid"
-
-[[variable]]
-native_id = "51.3134"
-slug = "beredskapstillagg"
-
-[[variable]]
-native_id = "51.5032"
-slug = "jourtillagg"
-
-[[variable]]
-native_id = "51.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "51.5118"
-slug = "verksamhetsomrade"
-
-[[variable]]
-native_id = "51.5719"
-slug = "antal-overtidstimmar"
-
-[[variable]]
-native_id = "51.5735"
-slug = "avtalad-veckoarbetstid"
-
-[[variable]]
-native_id = "51.5768"
-slug = "manadsloneintervall"
-
-[[variable]]
-native_id = "51.5976"
-slug = "tjanstledighetsomfattning"
-
-[[variable]]
-native_id = "51.6091"
-slug = "formaner"
-
-[[variable]]
-native_id = "51.18234"
-slug = "yrkesuppgift-isco"
-
-[[variable]]
-native_id = "51.31094"
-slug = "antal-semesterdagar"
+"51.109" = "tjanstgoringsomfattning"
+"51.120" = "yrkesuppgift"
+"51.749" = "aldersgrupp"
+"51.1537" = "ar-for-examensbevis"
+"51.1822" = "fasta-lonetillagg"
+"51.1825" = "grundlon"
+"51.1834" = "lonepopulation"
+"51.1837" = "naturaformaner"
+"51.1844" = "rorliga-lonetillagg"
+"51.1847" = "avtal"
+"51.2522" = "antal-arbetade-timmar-manadsavlonade"
+"51.2524" = "antal-arbetade-timmar-timavlonade"
+"51.3102" = "avtalsomrade"
+"51.3110" = "obekvamtidstillagg"
+"51.3113" = "tillagg-for-overtid"
+"51.3134" = "beredskapstillagg"
+"51.5032" = "jourtillagg"
+"51.5083" = "anstallningsform"
+"51.5118" = "verksamhetsomrade"
+"51.5719" = "antal-overtidstimmar"
+"51.5735" = "avtalad-veckoarbetstid"
+"51.5768" = "manadsloneintervall"
+"51.5976" = "tjanstledighetsomfattning"
+"51.6091" = "formaner"
+"51.18234" = "yrkesuppgift-isco"
+"51.31094" = "antal-semesterdagar"
+"51.65.sun2000inr" = "sun2000inr"
+"51.65.sun2000inr1" = "sun2000inr1"
+"51.65.sun2020inr" = "sun2020inr"
+"51.65.sun2020inr1" = "sun2020inr1"
+"51.65.sun96inr" = "sun96inr"
+"51.65.suninr" = "suninr"
+"51.749.agrupp" = "agrupp"
+"51.749.agrupp2" = "agrupp2"
 
 # register 52
 
@@ -409,35 +261,3 @@ variable = "51.749"
 columns = { agrupp = "51.749.agrupp", agrupp2 = "51.749.agrupp2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "88f3d2db36f145fab48b2e406110b5a45819b75758fdf7450b1f591f685c6a65"
-
-[[variable]]
-native_id = "51.65.sun2000inr"
-slug = "sun2000inr"
-
-[[variable]]
-native_id = "51.65.sun2000inr1"
-slug = "sun2000inr1"
-
-[[variable]]
-native_id = "51.65.sun2020inr"
-slug = "sun2020inr"
-
-[[variable]]
-native_id = "51.65.sun2020inr1"
-slug = "sun2020inr1"
-
-[[variable]]
-native_id = "51.65.sun96inr"
-slug = "sun96inr"
-
-[[variable]]
-native_id = "51.65.suninr"
-slug = "suninr"
-
-[[variable]]
-native_id = "51.749.agrupp"
-slug = "agrupp"
-
-[[variable]]
-native_id = "51.749.agrupp2"
-slug = "agrupp2"

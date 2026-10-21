@@ -5,21 +5,11 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.101"
-slug = "value"
-[[variable]]
-native_id = "1.102"
-slug = "unlinked"
-[[variable]]
-native_id = "1.103"
-slug = "disjoint"
-[[variable]]
-native_id = "1.104"
-slug = "historical"
-[[variable]]
-native_id = "1.105"
-slug = "earlier"
-[[variable]]
-native_id = "1.106"
-slug = "switch"
+
+[variable]
+"1.101" = "value"
+"1.102" = "unlinked"
+"1.103" = "disjoint"
+"1.104" = "historical"
+"1.105" = "earlier"
+"1.106" = "switch"

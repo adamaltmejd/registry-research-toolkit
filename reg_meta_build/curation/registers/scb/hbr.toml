@@ -11,55 +11,20 @@ panel_entity_key = "personnr"
 panel_time_key = "startdatum"
 panel_time_grain = "row"
 
+[variable]
 # Flergenerationsregistret
+"348.57" = "personnr"
+"348.26" = "fastighetsbeteckning"
+"348.25139" = "startdatum"
+"348.15" = "civilstand"
+"348.257" = "fodelseland-rtb"
+"348.271" = "medborgarskapsland"
+"348.350" = "utvandringsland"
+"348.351" = "fastighetsbeteckning-tidigare"
+"348.353" = "forsamling-tidigare"
+"348.355" = "kommun-tidigare"
+"348.8002" = "ateranvant-personnr"
+"348.25146" = "slutdatum"
 
-[[variable]]
-native_id = "348.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "348.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "348.25139"
-slug = "startdatum"
-
-[[variable]]
-native_id = "348.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "348.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "348.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "348.350"
-slug = "utvandringsland"
-
-[[variable]]
-native_id = "348.351"
-slug = "fastighetsbeteckning-tidigare"
-
-[[variable]]
-native_id = "348.353"
-slug = "forsamling-tidigare"
-
-[[variable]]
-native_id = "348.355"
-slug = "kommun-tidigare"
-
-[[variable]]
-native_id = "348.8002"
-slug = "ateranvant-personnr"
-
-[[variable]]
-native_id = "348.25146"
-slug = "slutdatum"
 
 # register 349

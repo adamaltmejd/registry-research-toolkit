@@ -11,80 +11,33 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Fritidsfiske
-
-[[variable]]
-native_id = "389.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "389.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "389.8073"
-slug = "sun-niva-old-mor"
-
-[[variable]]
-native_id = "389.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "389.32454"
-slug = "foraldrarnas-utbildningsniva"
+"389.57" = "personnr"
+"389.257" = "fodelseland-rtb"
+"389.8073" = "sun-niva-old-mor"
+"389.8074" = "faderns-utbildningsniva"
+"389.32454" = "foraldrarnas-utbildningsniva"
 
 # register 390 (fritidsfiske)
-
-[[variable]]
-native_id = "389.5726"
-slug = "utbildningens-niva"
-
-[[variable]]
-native_id = "389.8534"
-slug = "kommungrupp"
-
-[[variable]]
-native_id = "389.14815"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "389.28498"
-slug = "slutfort-kurs"
-
-[[variable]]
-native_id = "389.38135"
-slug = "utbildningsnummer"
-
-[[variable]]
-native_id = "389.38240"
-slug = "antagen-paborjat-studier-startar"
-
-[[variable]]
-native_id = "389.39843"
-slug = "utbildningstyp-eftergymnasial"
-
-[[variable]]
-native_id = "389.39845"
-slug = "startdatum-utbildningsomgang"
-
-[[variable]]
-native_id = "389.39846"
-slug = "omgang-slutdatum"
+"389.5726" = "utbildningens-niva"
+"389.8534" = "kommungrupp"
+"389.14815" = "skolkommun"
+"389.28498" = "slutfort-kurs"
+"389.38135" = "utbildningsnummer"
+"389.38240" = "antagen-paborjat-studier-startar"
+"389.39843" = "utbildningstyp-eftergymnasial"
+"389.39845" = "startdatum-utbildningsomgang"
+"389.39846" = "omgang-slutdatum"
 
 # register 390
-
-[[variable]]
-native_id = "389.241.alder"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "389.241.aldersgrupp"
-slug = "aldersgrupp-31-12"
-
-[[variable]]
-native_id = "389.38237.studerande"
-slug = "studerande-utbildningsform"
+"389.241.alder" = "alder-31-12"
+"389.241.aldersgrupp" = "aldersgrupp-31-12"
+"389.38237.studerande" = "studerande-utbildningsform"
+"389.66.sun2000niva" = "sun2000niva"
+"389.66.sun2000niva-old" = "sun2000niva-old"
+"389.66.sun2020niva" = "sun2020niva"
+"389.66.sun2020niva-old" = "sun2020niva-old"
 
 # register 390
 
@@ -94,19 +47,3 @@ variable = "389.66"
 columns = { SUN2000Niva = "389.66.sun2000niva", SUN2000Niva_OLD = "389.66.sun2000niva-old", SUN2020Niva = "389.66.sun2020niva", SUN2020Niva_OLD = "389.66.sun2020niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "1c81862c2157dc63f77ca4166b8c7a8411422c9df4f1b2cb6aa5e53b1ec0eb4c"
-
-[[variable]]
-native_id = "389.66.sun2000niva"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "389.66.sun2000niva-old"
-slug = "sun2000niva-old"
-
-[[variable]]
-native_id = "389.66.sun2020niva"
-slug = "sun2020niva"
-
-[[variable]]
-native_id = "389.66.sun2020niva-old"
-slug = "sun2020niva-old"

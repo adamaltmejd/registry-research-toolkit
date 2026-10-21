@@ -24,130 +24,59 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Produktion inom näringslivet (PIN)
-
-[[variable]]
-native_id = "379.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "379.49"
-slug = "lan"
-
-[[variable]]
-native_id = "379.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "379.8073"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "379.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "379.8534"
-slug = "kommungruppsindelning"
-
-[[variable]]
-native_id = "379.30657"
-slug = "avdelningsbeteckning"
-
-[[variable]]
-native_id = "379.32454"
-slug = "foraldrarnas-utbildningsniva"
+"379.57" = "personnr"
+"379.49" = "lan"
+"379.473" = "lan-arbetsstalle"
+"379.8073" = "sun-niva-mor"
+"379.8074" = "faderns-utbildningsniva"
+"379.8534" = "kommungruppsindelning"
+"379.30657" = "avdelningsbeteckning"
+"379.32454" = "foraldrarnas-utbildningsniva"
 
 # register 382 (pin)
-
-[[variable]]
-native_id = "379.36.komgrupp"
-slug = "kommun"
+"379.36.komgrupp" = "kommun"
 
 # register 405 (barn-ulf)
-
-[[variable]]
-native_id = "379.14"
-slug = "cfar-nummer"
-
-[[variable]]
-native_id = "379.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "379.25139.inskrdat"
-slug = "startdatum-inskr"
-
-[[variable]]
-native_id = "379.25139.startdat"
-slug = "startdatum"
-
-[[variable]]
-native_id = "379.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "379.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "379.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "379.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "379.412"
-slug = "postort"
-
-[[variable]]
-native_id = "379.799"
-slug = "belagenhetsadress-gata"
-
-[[variable]]
-native_id = "379.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "379.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "379.8773"
-slug = "typ-av-anstallning"
-
-[[variable]]
-native_id = "379.13671"
-slug = "tjanstledig"
-
-[[variable]]
-native_id = "379.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "379.31266"
-slug = "smabarnsavdelning"
-
-[[variable]]
-native_id = "379.35887"
-slug = "nyligen-invandrad"
+"379.14" = "cfar-nummer"
+"379.56" = "person-orgnr"
+"379.25139.inskrdat" = "startdatum-inskr"
+"379.25139.startdat" = "startdatum"
+"379.34" = "juridisk-form"
+"379.257" = "fodelseland-rtb"
+"379.305" = "fodelseland-mor"
+"379.332" = "senaste-invandringsdatum"
+"379.412" = "postort"
+"379.799" = "belagenhetsadress-gata"
+"379.1996" = "skolform"
+"379.6809" = "folkbokforingskommun"
+"379.8773" = "typ-av-anstallning"
+"379.13671" = "tjanstledig"
+"379.29426" = "tidigaste-invandringsdatum"
+"379.31266" = "smabarnsavdelning"
+"379.35887" = "nyligen-invandrad"
 
 # register 382
-
-[[variable]]
-native_id = "379.36.verkkom"
-slug = "verksamhetskommun"
-
-[[variable]]
-native_id = "379.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "379.8137.hmannamn"
-slug = "huvudman-namn"
+"379.36.verkkom" = "verksamhetskommun"
+"379.8137.hman" = "huvudman"
+"379.8137.hmannamn" = "huvudman-namn"
+"379.65.sun2000inr" = "sun2000inr"
+"379.65.sun2000inr-prio1" = "sun2000inr-prio"
+"379.65.sun2000inr-prio2" = "sun2000inr-prio2"
+"379.65.sun2000inr-prio3" = "sun2000inr-prio3"
+"379.65.sun2020inr" = "sun2020inr"
+"379.65.sun2020inr-prio1" = "sun2020inr-prio"
+"379.65.sun2020inr-prio2" = "sun2020inr-prio2"
+"379.65.sun2020inr-prio3" = "sun2020inr-prio3"
+"379.66.sun2000niva" = "sun2000niva"
+"379.66.sun2000niva-prio1" = "sun2000niva-prio"
+"379.66.sun2000niva-prio2" = "sun2000niva-prio2"
+"379.66.sun2000niva-prio3" = "sun2000niva-prio3"
+"379.66.sun2020niva" = "sun2020niva"
+"379.66.sun2020niva-prio1" = "sun2020niva-prio"
+"379.66.sun2020niva-prio2" = "sun2020niva-prio2"
+"379.66.sun2020niva-prio3" = "sun2020niva-prio3"
 
 # register 382
 
@@ -164,67 +93,3 @@ variable = "379.66"
 columns = { SUN2000Niva = "379.66.sun2000niva", SUN2000Niva_prio1 = "379.66.sun2000niva-prio1", SUN2000Niva_prio2 = "379.66.sun2000niva-prio2", SUN2000Niva_prio3 = "379.66.sun2000niva-prio3", SUN2020Niva = "379.66.sun2020niva", SUN2020Niva_prio1 = "379.66.sun2020niva-prio1", SUN2020Niva_prio2 = "379.66.sun2020niva-prio2", SUN2020Niva_prio3 = "379.66.sun2020niva-prio3" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "8ebf2f8020b7d2bf376868b92120c6d1389c333d8cf8ead3d6b9a4dda5e85c0c"
-
-[[variable]]
-native_id = "379.65.sun2000inr"
-slug = "sun2000inr"
-
-[[variable]]
-native_id = "379.65.sun2000inr-prio1"
-slug = "sun2000inr-prio"
-
-[[variable]]
-native_id = "379.65.sun2000inr-prio2"
-slug = "sun2000inr-prio2"
-
-[[variable]]
-native_id = "379.65.sun2000inr-prio3"
-slug = "sun2000inr-prio3"
-
-[[variable]]
-native_id = "379.65.sun2020inr"
-slug = "sun2020inr"
-
-[[variable]]
-native_id = "379.65.sun2020inr-prio1"
-slug = "sun2020inr-prio"
-
-[[variable]]
-native_id = "379.65.sun2020inr-prio2"
-slug = "sun2020inr-prio2"
-
-[[variable]]
-native_id = "379.65.sun2020inr-prio3"
-slug = "sun2020inr-prio3"
-
-[[variable]]
-native_id = "379.66.sun2000niva"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "379.66.sun2000niva-prio1"
-slug = "sun2000niva-prio"
-
-[[variable]]
-native_id = "379.66.sun2000niva-prio2"
-slug = "sun2000niva-prio2"
-
-[[variable]]
-native_id = "379.66.sun2000niva-prio3"
-slug = "sun2000niva-prio3"
-
-[[variable]]
-native_id = "379.66.sun2020niva"
-slug = "sun2020niva"
-
-[[variable]]
-native_id = "379.66.sun2020niva-prio1"
-slug = "sun2020niva-prio"
-
-[[variable]]
-native_id = "379.66.sun2020niva-prio2"
-slug = "sun2020niva-prio2"
-
-[[variable]]
-native_id = "379.66.sun2020niva-prio3"
-slug = "sun2020niva-prio3"

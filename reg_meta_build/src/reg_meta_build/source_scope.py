@@ -709,8 +709,8 @@ def resolve_source_scope(
                         f"Partition split {key[-1]!r} of native variable "
                         f"{key[:-2]!r} has no converted catalog naming, so its "
                         "states cannot be formed.",
-                        "Pin the split with an authored [[variable]] entry "
-                        "(native_id and slug) in its register file, or remove the "
+                        "Pin the split with an authored [variable] pin "
+                        "(native id and slug) in its register file, or remove the "
                         "pin that partitions the variable.",
                     )
                 raise ValueError(f"missing explicit provider key mapping: {key!r}")

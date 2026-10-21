@@ -11,8 +11,6 @@ panel_entity_key = "leverantorsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Inkvarteringsstatistik
-
-[[variable]]
-native_id = "149.2222"
-slug = "leverantorsnummer"
+"149.2222" = "leverantorsnummer"

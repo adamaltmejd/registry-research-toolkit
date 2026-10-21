@@ -11,37 +11,17 @@ panel_entity_key = "knr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Körsträckor med svenskregistrerade fordon
-
-[[variable]]
-native_id = "359.23923"
-slug = "knr"
-
-
-[[variable]]
-native_id = "359.400"
-slug = "adress"
+"359.23923" = "knr"
+"359.400" = "adress"
 
 # register 366 (utbildningsanalyser)
+"359.412" = "postort"
+"359.1654" = "kontaktperson-mobilnr"
+"359.2014" = "foretagsnamn"
+"359.3752" = "kontaktperson"
+"359.35643" = "epost-kontaktperson"
 
-[[variable]]
-native_id = "359.412"
-slug = "postort"
-
-[[variable]]
-native_id = "359.1654"
-slug = "kontaktperson-mobilnr"
-
-[[variable]]
-native_id = "359.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "359.3752"
-slug = "kontaktperson"
-
-[[variable]]
-native_id = "359.35643"
-slug = "epost-kontaktperson"
 
 # register 361

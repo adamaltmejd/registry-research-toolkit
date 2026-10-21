@@ -11,50 +11,29 @@ panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Grundskola: nationella prov åk 5
-
-[[variable]]
-native_id = "355.1839.peorgnr"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "355.412"
-slug = "postort"
+"355.1839.peorgnr" = "orgnr"
+"355.412" = "postort"
 
 # register 356 (grundskola-prov-ak5)
-
-[[variable]]
-native_id = "355.400.poanst"
-slug = "postadress-anst"
+"355.400.poanst" = "postadress-anst"
 
 # register 366 (utbildningsanalyser)
-
-[[variable]]
-native_id = "355.145"
-slug = "identitet"
-
-[[variable]]
-native_id = "355.1839.orgnr"
-slug = "orgnr-2"
-
-[[variable]]
-native_id = "355.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "355.6404"
-slug = "arbstallnamn"
-
-[[variable]]
-native_id = "355.22863"
-slug = "lansregion"
+"355.145" = "identitet"
+"355.1839.orgnr" = "orgnr-2"
+"355.2014" = "foretagsnamn"
+"355.6404" = "arbstallnamn"
+"355.22863" = "lansregion"
 
 # register 356
-
-[[variable]]
-native_id = "355.83.brslag"
-slug = "bransleslag"
+"355.83.brslag" = "bransleslag"
+"355.23859.fuel" = "kvartal-och-ar"
+"355.23859.waste" = "kvartal-och-ar-avfall"
+"355.35270.anl" = "anlaggningens-namn-2"
+"355.35270.arbnamn" = "anlaggningens-namn"
+"355.35334.fuel" = "pris"
+"355.35334.waste" = "pris-avfall"
 
 # register 356
 
@@ -103,30 +82,6 @@ owner = "355.35334.fuel"
 ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
 source_editions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
 expected_evidence_sha256 = "67333b5fba09824ee792e715a6344b3cae2e9af16d997c4229de2f51d007421a"
-
-[[variable]]
-native_id = "355.23859.fuel"
-slug = "kvartal-och-ar"
-
-[[variable]]
-native_id = "355.23859.waste"
-slug = "kvartal-och-ar-avfall"
-
-[[variable]]
-native_id = "355.35270.anl"
-slug = "anlaggningens-namn-2"
-
-[[variable]]
-native_id = "355.35270.arbnamn"
-slug = "anlaggningens-namn"
-
-[[variable]]
-native_id = "355.35334.fuel"
-slug = "pris"
-
-[[variable]]
-native_id = "355.35334.waste"
-slug = "pris-avfall"
 
 [[representation.parallel]]
 valid_from = "2015-01-01"

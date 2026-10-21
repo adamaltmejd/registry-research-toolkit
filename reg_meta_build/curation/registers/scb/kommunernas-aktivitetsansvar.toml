@@ -11,124 +11,40 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Internationella företag
-
-[[variable]]
-native_id = "368.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "368.8073"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "368.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "368.32454"
-slug = "foraldrarnas-utbildningsniva"
-
-[[variable]]
-native_id = "368.36648"
-slug = "sysselsattning-registrering"
-
-[[variable]]
-native_id = "368.36653"
-slug = "orsak-upphort-aktivitetsansvar"
-
-[[variable]]
-native_id = "368.36654"
-slug = "orsak-avslutad-aktivitetsatgard"
-
-[[variable]]
-native_id = "368.37581"
-slug = "orsak-registrering"
+"368.57" = "personnr"
+"368.8073" = "sun-niva-mor"
+"368.8074" = "faderns-utbildningsniva"
+"368.32454" = "foraldrarnas-utbildningsniva"
+"368.36648" = "sysselsattning-registrering"
+"368.36653" = "orsak-upphort-aktivitetsansvar"
+"368.36654" = "orsak-avslutad-aktivitetsatgard"
+"368.37581" = "orsak-registrering"
 
 # register 369 (internationella-foretag)
-
-[[variable]]
-native_id = "368.25139"
-slug = "startdatum"
-
-[[variable]]
-native_id = "368.67"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "368.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "368.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "368.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "368.1428"
-slug = "ar-for-registreringen"
-
-[[variable]]
-native_id = "368.1445"
-slug = "termin-registreringen"
-
-[[variable]]
-native_id = "368.1465"
-slug = "utbytesstudier"
-
-[[variable]]
-native_id = "368.1529"
-slug = "ar-avslutad-gymnasieutbildning"
-
-[[variable]]
-native_id = "368.6556"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "368.18509"
-slug = "gymnasieskola-arskurs"
-
-[[variable]]
-native_id = "368.19346"
-slug = "ar-for-examen"
-
-[[variable]]
-native_id = "368.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "368.35887"
-slug = "nyligen-invandrad"
+"368.25139" = "startdatum"
+"368.67" = "utlbakgr"
+"368.257" = "fodelseland-rtb"
+"368.305" = "fodelseland-mor"
+"368.332" = "senaste-invandringsdatum"
+"368.1428" = "ar-for-registreringen"
+"368.1445" = "termin-registreringen"
+"368.1465" = "utbytesstudier"
+"368.1529" = "ar-avslutad-gymnasieutbildning"
+"368.6556" = "fodelseland-varldsdel"
+"368.18509" = "gymnasieskola-arskurs"
+"368.19346" = "ar-for-examen"
+"368.29426" = "tidigaste-invandringsdatum"
+"368.35887" = "nyligen-invandrad"
 
 # register 369
-
-[[variable]]
-native_id = "368.29960.yseg-far"
-slug = "yrkesbaserad-seg-far"
-
-[[variable]]
-native_id = "368.29960.yseg-mor"
-slug = "yrkesbaserad-seg-mor"
-
-[[variable]]
-native_id = "368.45149.bas-far"
-slug = "arbetsmarknadsstatus-far"
-
-[[variable]]
-native_id = "368.45149.bas-mor"
-slug = "arbetsmarknadsstatus-mor"
-
-[[variable]]
-native_id = "368.63.syssstat-far"
-slug = "sysselsattningsstatus-november-far"
-
-[[variable]]
-native_id = "368.63.syssstat-mor"
-slug = "sysselsattningsstatus-november-mor"
+"368.29960.yseg-far" = "yrkesbaserad-seg-far"
+"368.29960.yseg-mor" = "yrkesbaserad-seg-mor"
+"368.45149.bas-far" = "arbetsmarknadsstatus-far"
+"368.45149.bas-mor" = "arbetsmarknadsstatus-mor"
+"368.63.syssstat-far" = "sysselsattningsstatus-november-far"
+"368.63.syssstat-mor" = "sysselsattningsstatus-november-mor"
 
 # register 371
 

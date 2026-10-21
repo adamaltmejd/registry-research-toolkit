@@ -65,60 +65,24 @@ panel_entity_key = "skolkod"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Grundskola: elever per 15 oktober
-
-[[variable]]
-native_id = "192.104"
-slug = "skolkod"
-
-
-[[variable]]
-native_id = "192.7938"
-slug = "antal-rektorer-man"
-
-[[variable]]
-native_id = "192.7941"
-slug = "antal-ovriga-skolledare-man"
+"192.104" = "skolkod"
+"192.7938" = "antal-rektorer-man"
+"192.7941" = "antal-ovriga-skolledare-man"
 
 # register 193 (grundskola-elever)
-
-[[variable]]
-native_id = "192.7937.rektman"
-slug = "antal-rektorer"
-
-[[variable]]
-native_id = "192.7939.skollman"
-slug = "antal-ovriga-skolledare"
+"192.7937.rektman" = "antal-rektorer"
+"192.7939.skollman" = "antal-ovriga-skolledare"
 
 # register 194 (skolvasendet-kostnader)
-
-[[variable]]
-native_id = "192.30366"
-slug = "skolenhetskod"
-
-[[variable]]
-native_id = "192.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "192.431"
-slug = "landsnamn-utland"
-
-[[variable]]
-native_id = "192.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "192.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "192.6172"
-slug = "lopnummer-for-individ"
-
-[[variable]]
-native_id = "192.7914"
-slug = "arskurs"
+"192.30366" = "skolenhetskod"
+"192.109" = "tjanstgoringsomfattning"
+"192.431" = "landsnamn-utland"
+"192.1378" = "fodelsear"
+"192.1536" = "studievag-gymnasieskolan"
+"192.6172" = "lopnummer-for-individ"
+"192.7914" = "arskurs"
 
 # register 193
 

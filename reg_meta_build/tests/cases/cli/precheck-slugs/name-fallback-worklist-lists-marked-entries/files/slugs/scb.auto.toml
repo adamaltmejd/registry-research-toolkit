@@ -1,26 +1,10 @@
-[variable."1.10"]
-slug = "kon"  # source: kolumnnamn
-
-[variable."1.20"]
-slug = "inkomst"  # source: name-fallback
-
-[variable."1.21"]
-slug = "utgift"  # source: name-fallback
-
-[variable."1.40"]
-slug = "v40"  # source: v-provider-key
-
-[variable."1.44"]
-slug = "alder"
-
-[variable."1.50"]
-slug = "belopp"  # source: name-fallback
-
-[variable."1.51"]
-slug = "belopp-2"  # source: name-fallback+disambiguated
-
-[variable."1.70"]
-slug = "alfakod"  # source: drift-earliest-column
-
-[variable."1.BefolkningPerKommun"]
-slug = "befolkning"  # source: drift-name
+[variable]
+"1.10" = "kon"  # source: kolumnnamn
+"1.20" = "inkomst"  # source: name-fallback
+"1.21" = "utgift"  # source: name-fallback
+"1.40" = "v40"  # source: v-provider-key
+"1.44" = "alder"
+"1.50" = "belopp"  # source: name-fallback
+"1.51" = "belopp-2"  # source: name-fallback+disambiguated
+"1.70" = "alfakod"  # source: drift-earliest-column
+"1.BefolkningPerKommun" = "befolkning"  # source: drift-name

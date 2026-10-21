@@ -11,8 +11,6 @@ panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
+[variable]
 # Vårdbidrag
-
-[[variable]]
-native_id = "5517508967525103350.personnummer"
-slug = "lopnr-personnr"
+"5517508967525103350.personnummer" = "lopnr-personnr"

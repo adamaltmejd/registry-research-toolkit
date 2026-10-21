@@ -11,8 +11,6 @@ panel_entity_key = "personnr"
 panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
+[variable]
 # Nationella vaccinationsregistret (NVR)
-
-[[variable]]
-native_id = "9022860280161092196.personnummer"
-slug = "personnr"
+"9022860280161092196.personnummer" = "personnr"

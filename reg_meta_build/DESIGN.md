@@ -485,9 +485,16 @@ decision dump serves inspection.
 The target layout:
 
 - `curation/registers/<provider>/<register-slug>.toml` holds one register, its
-  `[register]` slug, `[[variant]]` and `[[variable]]` naming, and the other register
+  `[register]` slug, `[[variant]]` and `[variable]` naming, and the other register
   curation. Generated variable pins live beside it in `<register-slug>.auto.toml`. An
   optional directory holds a register family, e.g. Komvux 248/249/250.
+- A variable pin is one line in the file's single `[variable]` table, keyed by native
+  id: `"121.65" = "bsuninr"`. A pin with more than a slug is an inline table:
+  `"121.65" = { slug = "bsuninr", deprecated = true }`. Authored pins keep the curator's
+  order and section comments. The generated file is written sorted by native id
+  (numeric-aware), and each pin's `# source: <class>` comment records how its slug was
+  derived; `tomllib` drops the comment, so a line scanner reads it back. One line per
+  pin keeps the files short and a pin change a one-line diff.
 - `curation/classifications/<short>.toml` holds one classification: its metadata,
   sentinels, the label list behind the binding rule, and overrides. Its loader refuses
   with one code per rule family, located at the file: `classification_toml_unreadable`,
@@ -683,12 +690,12 @@ variant the anchor's own occurrence lands in: a SOS workbook without a Deldatam√
 sheet places every variable in the synthesized `_default`, and the mint follows it. Its
 optional `data_warning` annotates that occurrence and its optional `measurement_unit` is
 that occurrence's unit, as on the SCB path. A routed token (`[[identity.route]]`) is
-refused as stale: name its destination. Its name is the `[[variable]]` entry
+refused as stale: name its destination. Its name is the `[variable]` pin
 `<register native_id>.<column>`, which is also a documented SOS or thin variable's own
 source id, so the entry is refused (`column_now_documented`) when the register documents
 the column anywhere, or an `[[identity.rename]]` gives a documented variable that
-column. The `[[variable]]` entry then names the documented variable through native
-naming: a documented column extended outside its documented years is an
+column. The `[variable]` pin then names the documented variable through native naming: a
+documented column extended outside its documented years is an
 `[[errata.occurrence_carry]]`. The mint takes its slug by naming conversion's rules
 (`accepted_variable_slugs`): a generated pin in a churning zone is inactive, and an
 authored entry overrides a generated one.
@@ -2396,8 +2403,8 @@ input acceptance remain separate maintainer operations. Diagnostic output remain
 explicitly nonpublishable and cannot replace the active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
-enforces this: every variable needs an authored `[[variable]]` pin, and a variable
-without one is refused as `unresolved_catalog_identity`, entity key or not. A separate
+enforces this: every variable needs an authored `[variable]` pin, and a variable without
+one is refused as `unresolved_catalog_identity`, entity key or not. A separate
 validation gate would add nothing there, so it was retired (#1222). extend-db auto-slugs
 overlay variables, so the steward path keeps the gate (`_check_entity_key_vars_curated`,
 #559). It requires a pin in the steward slug dir for every entity-key variable of the

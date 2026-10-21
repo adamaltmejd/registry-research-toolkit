@@ -6,9 +6,7 @@ native_id = "4985939060832719747"
 [[variant]]
 slug = "syx-a"
 native_id = "4985939060832719747.4716620390085506262"
-[[variable]]
-slug = "datum"
-native_id = "4985939060832719747.DATUM"
-[[variable]]
-slug = "mark"
-native_id = "4985939060832719747.MARK"
+
+[variable]
+"4985939060832719747.DATUM" = "datum"
+"4985939060832719747.MARK" = "mark"

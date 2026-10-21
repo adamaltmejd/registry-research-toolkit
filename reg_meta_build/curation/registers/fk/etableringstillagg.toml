@@ -11,8 +11,6 @@ panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
+[variable]
 # Graviditetspenning
-
-[[variable]]
-native_id = "5025807446792777547.personnummer"
-slug = "lopnr-personnr"
+"5025807446792777547.personnummer" = "lopnr-personnr"

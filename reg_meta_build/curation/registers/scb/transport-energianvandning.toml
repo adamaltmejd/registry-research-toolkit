@@ -11,19 +11,11 @@ panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Kapitalvinster och kapitalförluster
+"393.4600" = "scbid"
+"393.1721" = "bransleforbrukning"
+"393.2262" = "fartygets-namn"
 
-[[variable]]
-native_id = "393.4600"
-slug = "scbid"
-
-
-[[variable]]
-native_id = "393.1721"
-slug = "bransleforbrukning"
-
-[[variable]]
-native_id = "393.2262"
-slug = "fartygets-namn"
 
 # register 395

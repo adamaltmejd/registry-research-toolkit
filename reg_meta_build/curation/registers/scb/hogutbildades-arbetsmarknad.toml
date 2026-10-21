@@ -8,47 +8,38 @@ native_id = "302.850"
 slug = "_default"
 display_group = "Högutbildades arbetsmarknad"
 
+[variable]
 # Fritidshem: elever
-
-[[variable]]
-native_id = "302.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "302.3584"
-slug = "urvalsvikt"
-
-[[variable]]
-native_id = "302.5090"
-slug = "arbetsmarknadssektor"
-
-[[variable]]
-native_id = "302.6172"
-slug = "lopnummer-for-individ"
-
-[[variable]]
-native_id = "302.8773"
-slug = "typ-av-anstallning"
-
-[[variable]]
-native_id = "302.25052"
-slug = "tillracklig-utbildningsniva-arbete"
-
-[[variable]]
-native_id = "302.25118"
-slug = "arbetsomfattning"
-
-[[variable]]
-native_id = "302.25135"
-slug = "arbetes-overensstammelse"
-
-[[variable]]
-native_id = "302.25154"
-slug = "nojd-med-avslutad-utbildning"
-
-[[variable]]
-native_id = "302.25163"
-slug = "utbildningsomrade-grov"
+"302.1378" = "fodelsear"
+"302.3584" = "urvalsvikt"
+"302.5090" = "arbetsmarknadssektor"
+"302.6172" = "lopnummer-for-individ"
+"302.8773" = "typ-av-anstallning"
+"302.25052" = "tillracklig-utbildningsniva-arbete"
+"302.25118" = "arbetsomfattning"
+"302.25135" = "arbetes-overensstammelse"
+"302.25154" = "nojd-med-avslutad-utbildning"
+"302.25163" = "utbildningsomrade-grov"
+"302.25307.f16" = "f16"
+"302.25307.f16-01" = "f16-01"
+"302.25307.f16-02" = "f16-02"
+"302.25307.f16-03" = "f16-03"
+"302.25307.f16-04" = "f16-04"
+"302.25307.f16-05" = "f16-05"
+"302.25307.f16-07" = "f16-07"
+"302.25307.f16-08" = "f16-08"
+"302.25307.f16-09" = "f16-09"
+"302.25307.f16-10" = "f16-10"
+"302.25307.f16-11" = "f16-11"
+"302.25307.f16forts" = "f16forts"
+"302.5068.f01" = "f01"
+"302.5068.f18a-1" = "f18a"
+"302.5068.f18a-2" = "f18a-2"
+"302.5068.f18a-3" = "f18a-3"
+"302.5068.f18a-4" = "f18a-4"
+"302.5068.f18a-5" = "f18a-5"
+"302.5068.f18a-6" = "f18a-6"
+"302.5068.f18a-7" = "f18a-7"
 
 # register 304
 
@@ -65,83 +56,3 @@ variable = "302.5068"
 columns = { F01 = "302.5068.f01", F18a_1 = "302.5068.f18a-1", F18a_2 = "302.5068.f18a-2", F18a_3 = "302.5068.f18a-3", F18a_4 = "302.5068.f18a-4", F18a_5 = "302.5068.f18a-5", F18a_6 = "302.5068.f18a-6", F18a_7 = "302.5068.f18a-7" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "75ec74e5100ca777823d603b2f16d1cc59c4d8f6360b1c0aa5dd3bacf75ef1cb"
-
-[[variable]]
-native_id = "302.25307.f16"
-slug = "f16"
-
-[[variable]]
-native_id = "302.25307.f16-01"
-slug = "f16-01"
-
-[[variable]]
-native_id = "302.25307.f16-02"
-slug = "f16-02"
-
-[[variable]]
-native_id = "302.25307.f16-03"
-slug = "f16-03"
-
-[[variable]]
-native_id = "302.25307.f16-04"
-slug = "f16-04"
-
-[[variable]]
-native_id = "302.25307.f16-05"
-slug = "f16-05"
-
-[[variable]]
-native_id = "302.25307.f16-07"
-slug = "f16-07"
-
-[[variable]]
-native_id = "302.25307.f16-08"
-slug = "f16-08"
-
-[[variable]]
-native_id = "302.25307.f16-09"
-slug = "f16-09"
-
-[[variable]]
-native_id = "302.25307.f16-10"
-slug = "f16-10"
-
-[[variable]]
-native_id = "302.25307.f16-11"
-slug = "f16-11"
-
-[[variable]]
-native_id = "302.25307.f16forts"
-slug = "f16forts"
-
-[[variable]]
-native_id = "302.5068.f01"
-slug = "f01"
-
-[[variable]]
-native_id = "302.5068.f18a-1"
-slug = "f18a"
-
-[[variable]]
-native_id = "302.5068.f18a-2"
-slug = "f18a-2"
-
-[[variable]]
-native_id = "302.5068.f18a-3"
-slug = "f18a-3"
-
-[[variable]]
-native_id = "302.5068.f18a-4"
-slug = "f18a-4"
-
-[[variable]]
-native_id = "302.5068.f18a-5"
-slug = "f18a-5"
-
-[[variable]]
-native_id = "302.5068.f18a-6"
-slug = "f18a-6"
-
-[[variable]]
-native_id = "302.5068.f18a-7"
-slug = "f18a-7"

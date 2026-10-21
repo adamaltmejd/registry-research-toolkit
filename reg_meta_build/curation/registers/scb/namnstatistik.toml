@@ -28,37 +28,17 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Omförhandling och byten av elavtal
-
-[[variable]]
-native_id = "271.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "271.327"
-slug = "efternamn"
-
-[[variable]]
-native_id = "271.16384"
-slug = "tilltalsnamn"
-
-[[variable]]
-native_id = "271.16398"
-slug = "antal-fornamn"
-
-[[variable]]
-native_id = "271.16399"
-slug = "antal-tilltalsnamn"
-
-[[variable]]
-native_id = "271.16400"
-slug = "antal-efternamn"
+"271.57" = "personnr"
+"271.327" = "efternamn"
+"271.16384" = "tilltalsnamn"
+"271.16398" = "antal-fornamn"
+"271.16399" = "antal-tilltalsnamn"
+"271.16400" = "antal-efternamn"
 
 # register 272 (elavtal-byten)
+"271.398" = "fornamn"
 
-[[variable]]
-native_id = "271.398"
-slug = "fornamn"
 
 # register 273

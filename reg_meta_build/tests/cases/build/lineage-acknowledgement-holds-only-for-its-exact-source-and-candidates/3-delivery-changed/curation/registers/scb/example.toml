@@ -5,24 +5,14 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.101"
-slug = "exact"
-[[variable]]
-native_id = "1.102"
-slug = "original"
-[[variable]]
-native_id = "1.103"
-slug = "added"
-[[variable]]
-native_id = "1.104"
-slug = "changed"
-[[variable]]
-native_id = "1.105"
-slug = "linked"
-[[variable]]
-native_id = "1.106"
-slug = "two-origins"
+
+[variable]
+"1.101" = "exact"
+"1.102" = "original"
+"1.103" = "added"
+"1.104" = "changed"
+"1.105" = "linked"
+"1.106" = "two-origins"
 
 [[acknowledge]]
 code = "unresolved_lineage_ambiguous_source_variant"

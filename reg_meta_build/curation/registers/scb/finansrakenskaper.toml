@@ -8,8 +8,6 @@ native_id = "299.838"
 slug = "_default"
 display_group = "Finansräkenskaper"
 
+[variable]
 # Leveranser av fordonsgas
-
-[[variable]]
-native_id = "299.457"
-slug = "varde"
+"299.457" = "varde"

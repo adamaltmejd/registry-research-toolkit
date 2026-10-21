@@ -11,69 +11,25 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "indat"
 panel_time_grain = "row"
 
+[variable]
 # Industrins miljöskyddskostnader
-
-[[variable]]
-native_id = "155.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "155.2376"
-slug = "ovningskorning"
-
-[[variable]]
-native_id = "155.2379"
-slug = "behorighetsdatum-korkort"
-
-[[variable]]
-native_id = "155.2382"
-slug = "utlandskt-korkort-bytt"
-
-[[variable]]
-native_id = "155.2383"
-slug = "personrad"
-
-[[variable]]
-native_id = "155.2804"
-slug = "godkannandedatum-handledare"
-
-[[variable]]
-native_id = "155.4675"
-slug = "person-id"
+"155.56" = "person-orgnr"
+"155.2376" = "ovningskorning"
+"155.2379" = "behorighetsdatum-korkort"
+"155.2382" = "utlandskt-korkort-bytt"
+"155.2383" = "personrad"
+"155.2804" = "godkannandedatum-handledare"
+"155.4675" = "person-id"
 
 # register 156 (industrins-miljoskyddskostnader)
+"155.36" = "kommun"
+"155.279" = "alder-vid-handelsen"
+"155.1975" = "karosserikod"
+"155.2012" = "tjanstevikt-lastbil"
+"155.2013" = "totalvikt-lastbil"
+"155.2813" = "motoreffektnorm-kw"
+"155.2814" = "fabrikat"
+"155.20694" = "utryckningsfordon"
 
-[[variable]]
-native_id = "155.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "155.279"
-slug = "alder-vid-handelsen"
-
-[[variable]]
-native_id = "155.1975"
-slug = "karosserikod"
-
-[[variable]]
-native_id = "155.2012"
-slug = "tjanstevikt-lastbil"
-
-[[variable]]
-native_id = "155.2013"
-slug = "totalvikt-lastbil"
-
-[[variable]]
-native_id = "155.2813"
-slug = "motoreffektnorm-kw"
-
-[[variable]]
-native_id = "155.2814"
-slug = "fabrikat"
-
-[[variable]]
-native_id = "155.20694"
-slug = "utryckningsfordon"
 
 # register 156

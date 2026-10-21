@@ -11,79 +11,26 @@ panel_entity_key = "uenr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Konjunkturstatistik över vakanser (KV)
+"125.25103" = "uenr"
+"125.544" = "sektor-i-huvudsysslan"
+"125.3582" = "stora-n"
+"125.5293" = "rotationsgrupp"
+"125.6439" = "hjalp-arbetssokande-ams"
+"125.6440" = "hjalp-alder-kon"
+"125.6442" = "hjalp-fodelseland"
+"125.6443" = "hjalp-region"
+"125.6444" = "hjalp-naringsgren-sysselsatta"
+"125.6515" = "lan-arbetsplats-huvudsyssla"
+"125.6556" = "fodelseland-varldsdel"
+"125.6586" = "anknytningsgrad"
+"125.7450" = "matmanad"
+"125.7462" = "vanligen-arbetad-tid-totalt"
+"125.15298" = "arbetskraftsstatus"
+"125.30845" = "yrkesbenamning-huvud"
+"125.36572" = "nedsatt-arbetsformaga"
+"125.36575" = "utbildningsniva-grupperad"
 
-[[variable]]
-native_id = "125.25103"
-slug = "uenr"
-
-
-[[variable]]
-native_id = "125.544"
-slug = "sektor-i-huvudsysslan"
-
-[[variable]]
-native_id = "125.3582"
-slug = "stora-n"
-
-[[variable]]
-native_id = "125.5293"
-slug = "rotationsgrupp"
-
-[[variable]]
-native_id = "125.6439"
-slug = "hjalp-arbetssokande-ams"
-
-[[variable]]
-native_id = "125.6440"
-slug = "hjalp-alder-kon"
-
-[[variable]]
-native_id = "125.6442"
-slug = "hjalp-fodelseland"
-
-[[variable]]
-native_id = "125.6443"
-slug = "hjalp-region"
-
-[[variable]]
-native_id = "125.6444"
-slug = "hjalp-naringsgren-sysselsatta"
-
-[[variable]]
-native_id = "125.6515"
-slug = "lan-arbetsplats-huvudsyssla"
-
-[[variable]]
-native_id = "125.6556"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "125.6586"
-slug = "anknytningsgrad"
-
-[[variable]]
-native_id = "125.7450"
-slug = "matmanad"
-
-[[variable]]
-native_id = "125.7462"
-slug = "vanligen-arbetad-tid-totalt"
-
-[[variable]]
-native_id = "125.15298"
-slug = "arbetskraftsstatus"
-
-[[variable]]
-native_id = "125.30845"
-slug = "yrkesbenamning-huvud"
-
-[[variable]]
-native_id = "125.36572"
-slug = "nedsatt-arbetsformaga"
-
-[[variable]]
-native_id = "125.36575"
-slug = "utbildningsniva-grupperad"
 
 # register 127

@@ -9,6 +9,6 @@ slug = "a"
 [[variant]]
 native_id = "7550156225339591583.5571160001006161371"
 slug = "b"
-[[variable]]
-native_id = "7550156225339591583.COL"
-slug = "col"
+
+[variable]
+"7550156225339591583.COL" = "col"

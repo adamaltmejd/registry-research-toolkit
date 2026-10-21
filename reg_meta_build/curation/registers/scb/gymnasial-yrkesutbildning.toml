@@ -11,68 +11,25 @@ panel_entity_key = "personnr-urval"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Anpassad gymnasieskola
-
-[[variable]]
-native_id = "352.7020"
-slug = "personnr-urval"
-
-
-[[variable]]
-native_id = "352.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "352.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "352.4697"
-slug = "gymnasiebetyg"
-
-[[variable]]
-native_id = "352.6141"
-slug = "grundlaggande-behorighet-hogskola"
-
-[[variable]]
-native_id = "352.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "352.8187"
-slug = "utlandsk-bakgrund"
-
-[[variable]]
-native_id = "352.16347"
-slug = "typ-av-betyg"
-
-[[variable]]
-native_id = "352.17473"
-slug = "kalibreringsvikt"
-
-[[variable]]
-native_id = "352.17587"
-slug = "fodelseland-grupp"
-
-[[variable]]
-native_id = "352.18245"
-slug = "grupp-andra-fas-urval"
-
-[[variable]]
-native_id = "352.24773"
-slug = "metod-for-intervju"
-
-[[variable]]
-native_id = "352.32454"
-slug = "foraldrarnas-utbildningsniva"
-
-[[variable]]
-native_id = "352.32798"
-slug = "totalt-poang-slutbetyg"
-
-[[variable]]
-native_id = "352.32873"
-slug = "larling"
+"352.7020" = "personnr-urval"
+"352.1536" = "studievag-gymnasieskolan"
+"352.4656" = "insamlingsmetod"
+"352.4697" = "gymnasiebetyg"
+"352.6141" = "grundlaggande-behorighet-hogskola"
+"352.8137" = "huvudman"
+"352.8187" = "utlandsk-bakgrund"
+"352.16347" = "typ-av-betyg"
+"352.17473" = "kalibreringsvikt"
+"352.17587" = "fodelseland-grupp"
+"352.18245" = "grupp-andra-fas-urval"
+"352.24773" = "metod-for-intervju"
+"352.32454" = "foraldrarnas-utbildningsniva"
+"352.32798" = "totalt-poang-slutbetyg"
+"352.32873" = "larling"
+"352.462.stratum-2" = "stratum-2"
+"352.462.stratum" = "stratum-462"
 
 # register 353
 
@@ -82,11 +39,3 @@ variable = "352.462"
 columns = { Stratum_2 = "352.462.stratum-2", stratum = "352.462.stratum" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "2d933397de19b39ef0fe38a2a403b21607ed8eb4b5d149a28b6c9b959726a3fe"
-
-[[variable]]
-native_id = "352.462.stratum-2"
-slug = "stratum-2"
-
-[[variable]]
-native_id = "352.462.stratum"
-slug = "stratum-462"

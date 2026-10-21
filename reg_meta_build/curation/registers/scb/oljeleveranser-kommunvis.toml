@@ -11,61 +11,23 @@ panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Energianvändning inom byggsektorn
-
-[[variable]]
-native_id = "201.3578"
-slug = "orgnr-12"
-
-
-[[variable]]
-native_id = "201.73"
-slug = "ar"
-
-[[variable]]
-native_id = "201.83"
-slug = "bransleslag"
-
-[[variable]]
-native_id = "201.446"
-slug = "kommunnamn"
-
-[[variable]]
-native_id = "201.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "201.2581"
-slug = "bransleslaget-i-klartext"
-
-[[variable]]
-native_id = "201.19529"
-slug = "scbid"
-
-[[variable]]
-native_id = "201.20251"
-slug = "kontrollnr"
-
-[[variable]]
-native_id = "201.20256"
-slug = "bolag"
-
-[[variable]]
-native_id = "201.32957"
-slug = "kommunkod"
-
-[[variable]]
-native_id = "201.48558"
-slug = "namn-pa-foretaget"
+"201.3578" = "orgnr-12"
+"201.73" = "ar"
+"201.83" = "bransleslag"
+"201.446" = "kommunnamn"
+"201.1557" = "kalenderar"
+"201.2581" = "bransleslaget-i-klartext"
+"201.19529" = "scbid"
+"201.20251" = "kontrollnr"
+"201.20256" = "bolag"
+"201.32957" = "kommunkod"
+"201.48558" = "namn-pa-foretaget"
 
 # register 209 (normskordar)
+"201.36.kommun" = "kommun"
+"201.36.lk" = "kommun-lk"
 
-[[variable]]
-native_id = "201.36.kommun"
-slug = "kommun"
-
-[[variable]]
-native_id = "201.36.lk"
-slug = "kommun-lk"
 
 # register 208 (skord-spannmal)

@@ -38,13 +38,7 @@ panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "beslutsdatum"
 panel_time_grain = "row"
 
+[variable]
 # Läkarintygsregistret
-
-[[variable]]
-native_id = "6302817431190760455.Lopnr"
-slug = "lopnr"
-
-
-[[variable]]
-native_id = "6302817431190760455.Lopnr_barn"
-slug = "lopnr-barn"
+"6302817431190760455.Lopnr" = "lopnr"
+"6302817431190760455.Lopnr_barn" = "lopnr-barn"

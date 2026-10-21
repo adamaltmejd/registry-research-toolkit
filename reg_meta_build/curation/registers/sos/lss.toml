@@ -11,144 +11,43 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Registret över insatser inom den kommunala hälso- och sjukvården (HSL)
+"5028920659479690770.PNR" = "personnr"
+"5028920659479690770.BKOMM" = "boendekommun"
+"5028920659479690770.DYGN6" = "antal-dygn-man-lss-6"
+"5028920659479690770.FODDAT" = "fodelsedatum"
+"5028920659479690770.LK" = "rapporterande-kommun"
+"5028920659479690770.LSS10" = "daglig-verksamhet-lss-10"
+"5028920659479690770.LSS2" = "personlig-assistans-9-2-lss"
+"5028920659479690770.LSS3" = "ledsagarservice"
+"5028920659479690770.LSS4" = "kontaktperson-lss"
+"5028920659479690770.LSS5" = "avlosarservice"
+"5028920659479690770.LSS6" = "korttidsvistelse"
+"5028920659479690770.LSS7" = "korttidstillsyn"
+"5028920659479690770.LSS81" = "familjehem-barn-ungdomar-lss"
+"5028920659479690770.LSS82" = "bostad-sarskild-service-barn-lss-8"
+"5028920659479690770.LSS9" = "boende-vuxna-lss-9-9"
+"5028920659479690770.LSS91" = "bostad-sarskild-service-vuxna-lss-9"
+"5028920659479690770.LSS92" = "sarskilt-anpassad-bostad-vuxna-lss-9"
+"5028920659479690770.PKRETS" = "personkrets"
+"5028920659479690770.PNRQ" = "personnummerkvalitet"
+"5028920659479690770.TIM2" = "antal-timmar-man-lss-2"
+"5028920659479690770.TIM3" = "antal-timmar-man-lss-3"
+"5028920659479690770.TIM5" = "antal-timmar-man-lss-5"
+"5028920659479690770.UK10" = "utforande-kommun-lss-9-10"
+"5028920659479690770.UK2" = "utforande-kommun-lss-9-2"
+"5028920659479690770.UK3" = "utforande-kommun-lss-9-3"
+"5028920659479690770.UK4" = "utforande-kommun-lss-9-4"
+"5028920659479690770.UK5" = "utforande-kommun-lss-9-5"
+"5028920659479690770.UK6" = "utforande-kommun-lss-9-6"
+"5028920659479690770.UK7" = "utforande-kommun-lss-9-7"
+"5028920659479690770.UK81" = "utforande-kommun-lss-9-8-familjehem"
+"5028920659479690770.UK82" = "utforande-kommun-lss-9-8-sarskild"
+"5028920659479690770.UK9" = "utforande-kommun-lss-9-9-vuxna"
+"5028920659479690770.UK91" = "utforande-kommun-lss-9-9-sarskild"
+"5028920659479690770.UK92" = "utforande-kommun-lss-9-9-bostad"
 
-[[variable]]
-native_id = "5028920659479690770.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "5028920659479690770.BKOMM"
-slug = "boendekommun"
-
-[[variable]]
-native_id = "5028920659479690770.DYGN6"
-slug = "antal-dygn-man-lss-6"
-
-[[variable]]
-native_id = "5028920659479690770.FODDAT"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "5028920659479690770.LK"
-slug = "rapporterande-kommun"
-
-[[variable]]
-native_id = "5028920659479690770.LSS10"
-slug = "daglig-verksamhet-lss-10"
-
-[[variable]]
-native_id = "5028920659479690770.LSS2"
-slug = "personlig-assistans-9-2-lss"
-
-[[variable]]
-native_id = "5028920659479690770.LSS3"
-slug = "ledsagarservice"
-
-[[variable]]
-native_id = "5028920659479690770.LSS4"
-slug = "kontaktperson-lss"
-
-[[variable]]
-native_id = "5028920659479690770.LSS5"
-slug = "avlosarservice"
-
-[[variable]]
-native_id = "5028920659479690770.LSS6"
-slug = "korttidsvistelse"
-
-[[variable]]
-native_id = "5028920659479690770.LSS7"
-slug = "korttidstillsyn"
-
-[[variable]]
-native_id = "5028920659479690770.LSS81"
-slug = "familjehem-barn-ungdomar-lss"
-
-[[variable]]
-native_id = "5028920659479690770.LSS82"
-slug = "bostad-sarskild-service-barn-lss-8"
-
-[[variable]]
-native_id = "5028920659479690770.LSS9"
-slug = "boende-vuxna-lss-9-9"
-
-[[variable]]
-native_id = "5028920659479690770.LSS91"
-slug = "bostad-sarskild-service-vuxna-lss-9"
-
-[[variable]]
-native_id = "5028920659479690770.LSS92"
-slug = "sarskilt-anpassad-bostad-vuxna-lss-9"
-
-[[variable]]
-native_id = "5028920659479690770.PKRETS"
-slug = "personkrets"
-
-[[variable]]
-native_id = "5028920659479690770.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "5028920659479690770.TIM2"
-slug = "antal-timmar-man-lss-2"
-
-[[variable]]
-native_id = "5028920659479690770.TIM3"
-slug = "antal-timmar-man-lss-3"
-
-[[variable]]
-native_id = "5028920659479690770.TIM5"
-slug = "antal-timmar-man-lss-5"
-
-[[variable]]
-native_id = "5028920659479690770.UK10"
-slug = "utforande-kommun-lss-9-10"
-
-[[variable]]
-native_id = "5028920659479690770.UK2"
-slug = "utforande-kommun-lss-9-2"
-
-[[variable]]
-native_id = "5028920659479690770.UK3"
-slug = "utforande-kommun-lss-9-3"
-
-[[variable]]
-native_id = "5028920659479690770.UK4"
-slug = "utforande-kommun-lss-9-4"
-
-[[variable]]
-native_id = "5028920659479690770.UK5"
-slug = "utforande-kommun-lss-9-5"
-
-[[variable]]
-native_id = "5028920659479690770.UK6"
-slug = "utforande-kommun-lss-9-6"
-
-[[variable]]
-native_id = "5028920659479690770.UK7"
-slug = "utforande-kommun-lss-9-7"
-
-[[variable]]
-native_id = "5028920659479690770.UK81"
-slug = "utforande-kommun-lss-9-8-familjehem"
-
-[[variable]]
-native_id = "5028920659479690770.UK82"
-slug = "utforande-kommun-lss-9-8-sarskild"
-
-[[variable]]
-native_id = "5028920659479690770.UK9"
-slug = "utforande-kommun-lss-9-9-vuxna"
-
-[[variable]]
-native_id = "5028920659479690770.UK91"
-slug = "utforande-kommun-lss-9-9-sarskild"
-
-[[variable]]
-native_id = "5028920659479690770.UK92"
-slug = "utforande-kommun-lss-9-9-bostad"
 # register 5352018376318353790
 
 # Batch47: exact unresolved dictionary links remain visible limitations.

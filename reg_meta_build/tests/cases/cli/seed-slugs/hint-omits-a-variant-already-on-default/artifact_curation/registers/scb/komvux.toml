@@ -8,6 +8,5 @@ native_id = "3.30"
 slug = "_default"
 panel_entity_key = "komvux"
 
-[[variable]]
-native_id = "3.301"
-slug = "komvux"
+[variable]
+"3.301" = "komvux"

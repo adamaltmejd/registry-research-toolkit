@@ -8,46 +8,18 @@ native_id = "315.905"
 slug = "_default"
 display_group = "Deltagare i svenskundervisning för invandrare (sfi)"
 
+[variable]
 # Tiden mellan gymnasieskolan och universitetet/högskolan
+"315.44" = "kon"
+"315.749" = "aldersgrupp"
+"315.2174" = "forsorjningsstod"
+"315.6172" = "lopnummer-for-individ"
+"315.7499" = "introduktionsersattning"
+"315.8700" = "modersmal"
+"315.14671" = "studievag-sfi"
+"315.14678" = "typ-av-invandring"
+"315.15396" = "bostad"
+"315.15399" = "hemmavarande-barn"
 
-[[variable]]
-native_id = "315.44"
-slug = "kon"
-
-[[variable]]
-native_id = "315.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "315.2174"
-slug = "forsorjningsstod"
-
-[[variable]]
-native_id = "315.6172"
-slug = "lopnummer-for-individ"
-
-[[variable]]
-native_id = "315.7499"
-slug = "introduktionsersattning"
-
-[[variable]]
-native_id = "315.8700"
-slug = "modersmal"
-
-[[variable]]
-native_id = "315.14671"
-slug = "studievag-sfi"
-
-[[variable]]
-native_id = "315.14678"
-slug = "typ-av-invandring"
-
-[[variable]]
-native_id = "315.15396"
-slug = "bostad"
-
-[[variable]]
-native_id = "315.15399"
-slug = "hemmavarande-barn"
 
 # register 317

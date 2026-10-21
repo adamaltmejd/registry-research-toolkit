@@ -11,41 +11,18 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Yrkeshögskolan
-
-[[variable]]
-native_id = "376.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "376.38234"
-slug = "antal-timmar-i-projektet"
-
-[[variable]]
-native_id = "376.48575"
-slug = "antal-timmar-i-projekt"
+"376.57" = "personnr"
+"376.38234" = "antal-timmar-i-projektet"
+"376.48575" = "antal-timmar-i-projekt"
 
 # register 377 (yrkeshogskolan)
+"376.67" = "utlsvbakg"
+"376.467" = "telefonnummer"
+"376.25118" = "arbetsomfattning"
+"376.45149" = "arbetsmarknadsstatus"
+"376.47931" = "region-eu"
 
-[[variable]]
-native_id = "376.67"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "376.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "376.25118"
-slug = "arbetsomfattning"
-
-[[variable]]
-native_id = "376.45149"
-slug = "arbetsmarknadsstatus"
-
-[[variable]]
-native_id = "376.47931"
-slug = "region-eu"
 
 # register 377

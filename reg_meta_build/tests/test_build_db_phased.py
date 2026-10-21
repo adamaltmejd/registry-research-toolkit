@@ -296,8 +296,9 @@ def test_materialize_refuses_a_blocked_altered_or_stale_bundle(
     if bundle == "blocked":
         register = catalog.curation / "registers" / "scb" / "sample.toml"
         register.write_text(
-            register.read_text(encoding="utf-8")
-            + '[[variable]]\nnative_id = "1.999"\nslug = "missing"\n',
+            register.read_text(encoding="utf-8").replace(
+                "[variable]\n", '[variable]\n"1.999" = "missing"\n'
+            ),
             encoding="utf-8",
         )
     mode = (

@@ -8,12 +8,7 @@ native_id = "181.285"
 slug = "fmr-indata"
 display_group = "Indata"
 
+[variable]
 # Forskning och utveckling i Sverige
-
-[[variable]]
-native_id = "181.1884"
-slug = "rapportdatum"
-
-[[variable]]
-native_id = "181.1928"
-slug = "balans-transaktionsvarde"
+"181.1884" = "rapportdatum"
+"181.1928" = "balans-transaktionsvarde"

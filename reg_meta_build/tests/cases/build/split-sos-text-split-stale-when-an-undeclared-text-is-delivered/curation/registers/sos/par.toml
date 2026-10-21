@@ -10,9 +10,7 @@ slug = "par-ov"
 variable = "ATC"
 by = "name"
 parts = [{ name = "First", owner = "5891427617861710725.ATC.shared" }, { name = "Second", owner = "5891427617861710725.ATC.shared" }, { name = "Other", owner = "5891427617861710725.ATC.other" }]
-[[variable]]
-native_id = "5891427617861710725.ATC.shared"
-slug = "shared"
-[[variable]]
-native_id = "5891427617861710725.ATC.other"
-slug = "other"
+
+[variable]
+"5891427617861710725.ATC.shared" = "shared"
+"5891427617861710725.ATC.other" = "other"

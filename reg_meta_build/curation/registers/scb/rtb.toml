@@ -213,14 +213,182 @@ variable = "2.24852"
 columns = { GFB_EFB_Grupp = "2.24852.gfb-grupp-efb", GFB_EFB_KlassGrupp = "2.24852.gfb-klassgruppering-efb" }
 columns_ref = "Y-317 2026-09-29: SCB VarId 24852 GFB EFB has two explicitly named delivered coding representations. GFB_EFB_Grupp carries the old text categories (2 annual originals 2009-2010, variant 66; 26 associations in 2009 including repeated NULL associations and 13 in 2010); GFB_EFB_KlassGrupp carries the current 19 two-digit text codes (15 annual originals 2011-2025). The original descriptors date the new grouping to 2011 and distinguish decisions after population registration (EFB); the old and current lists are never converted or crosswalked."
 
-[[variable]]
-native_id = "2.57.personnr"
-slug = "personnr"
+[variable]
+"2.57.personnr" = "personnr"
+"2.datinv" = "immigrationsdatum"
 
-[[variable]]
-native_id = "2.datinv"
-slug = "immigrationsdatum"
+# Fastighetstaxering (FTR)
+"2.372.familjeidentitet-rtb" = "familjeidentitet-rtb"
+"2.29828.rnplgh-ridlgh" = "lagenhetsnyckel"
+"2.19" = "a-region"
+"2.24" = "familjestallning"
+"2.25.familjetyp" = "familjetyp"
+"2.243" = "alder-vid-handelsen-relationsperson"
+"2.245.datum-aaaammdd" = "civilstandsdatum"
+"2.246.civilstandsdatum-tidigare" = "civilstandsdatum-tidigare"
+"2.250" = "civildat-tidigare-rel"
+"2.251" = "civilstand-tidigare"
+"2.267" = "kon-relationsperson"
+"2.272" = "civilstand-tidigare-varaktighet"
+"2.275.relationsperson-inklusive-tidigare" = "personnr-relationsperson"
+"2.279.harledd-civilstandsdatum" = "alder-vid-handelsen"
+"2.283" = "dodsdatum"
+"2.292" = "antal-fodda"
+"2.293" = "antal-dodfodda"
+"2.297" = "civilstandsdatum-mor"
+"2.302" = "fodelsedatum"
+"2.322" = "ordningsnummer-dodfodd-mor"
+"2.324" = "personnr-mor-2"
+"2.332.senaste-invandringsar" = "senaste-invandringsar"
+"2.332.senaste-invandringsdatum" = "senaste-invandringsdatum"
+"2.339.flyttningsgrans" = "flyttningsgrans"
+"2.339.flyttningsgrans-forsamling" = "flyttningsgrans-forsamling"
+"2.346" = "ordningsnummer-mor"
+"2.353" = "forsamling-tidigare"
+"2.355" = "kommun-tidigare"
+"2.356" = "lan-tidigare"
+"2.3195" = "h-region"
+"2.8180.grund-for-bosattning" = "grund-for-bosattning"
+"2.15724" = "grund-for-bosattning-grupperad"
+"2.16234.fodelseland-eller-lan" = "fodelseland-eller-lan"
+"2.16234.fodelseland-eller-lan-mor" = "fodelseland-eller-lan-mor"
+"2.24851" = "gfb-klassgruppering-ffb"
+"2.24852" = "gfb-klassgruppering-efb"
+"2.29236" = "antal-uppehallstillstand"
+"2.29579" = "antal-asylsokande-man"
+"2.29591" = "antal-asylsokande-kvinnor"
+"2.29592" = "antal-asylsokande-barn"
+"2.40255.bearbetningsar-vecka" = "bearbetningsar-vecka"
+"2.40255.bearbetningsvecka" = "bearbetningsvecka"
+"2.40288" = "storstadsomrade"
+"2.46109" = "antal-massflyktssokande"
 
+# register 7 (ftr)
+"2.271.medblandggrupp-eu" = "medborgarskapsland-gg-eu"
+"2.271.medblandgrupp-eu" = "medborgarskapsland-grupp-eu"
+"2.27132.ssyk" = "yrke-vid-arbetstillstand"
+"2.42676.medblandgrupp-eu" = "medborgarskapsland-eu"
+"2.48621.medblandggrupp-eu" = "medborgarskapsland-tidigare-eu"
+"2.57.personnrmor" = "personnr-mor"
+
+# register 200 (arlig-energistatistik)
+"2.135.fnrfar" = "fnr-far"
+"2.135.fnrg" = "fnr-g"
+"2.135.fnrmor" = "fnr-mor"
+"2.135.fnrrel" = "fnr-rel"
+"2.57.personnrankn" = "personnr-ankn"
+"2.57.personnrsamh" = "personnr-samhorighet"
+"2.26" = "fastighetsbeteckning"
+"2.43" = "kvartal"
+"2.242" = "alder-31-12-relationsperson"
+"2.254" = "folkbokforingsdatum"
+"2.264" = "icke-territoriell-forsamling"
+"2.269" = "medborgarskapsdatum"
+"2.296" = "civilstandsdatum-far"
+"2.323" = "personnr-far"
+"2.327" = "efternamn"
+"2.350" = "utvandringsland"
+"2.351" = "fastighetsbeteckning-tidigare"
+"2.366" = "datum-adoptivfar"
+"2.367" = "datum-adoptivmor"
+"2.379" = "personnr-adoptivfar"
+"2.380" = "personnr-adoptivmor"
+"2.383" = "personnr-make-partner"
+"2.384" = "personnr-sambo"
+"2.388" = "antal-barn"
+"2.389" = "antal-barn-under-18-ar"
+"2.390" = "antal-barn-under-22-ar"
+"2.391" = "antal-barn-under-6-ar"
+"2.398" = "fornamn"
+"2.418" = "utdelningsadress"
+"2.1573" = "aldersgruppering-31-12"
+"2.3410" = "utvandringsdatum"
+"2.27129" = "grund-for-bosattning-klassgrupp"
+"2.27158" = "boendeland"
+"2.29339" = "hushallstyp-bostadshushall"
+"2.29832" = "lopnummer-bostadshushall"
+"2.30353" = "familjeidentitet"
+"2.30883" = "ssyk-version-arbetstillstand"
+"2.39460" = "aktenskapsnr"
+
+# register 7
+"2.15.civil" = "civilstand"
+"2.15.tidcivil" = "tidpunkt-civilstand"
+"2.22864.fastnr" = "fastighetens-officiella-nr"
+"2.241.alder" = "alder-31-12"
+"2.241.aldersamh" = "alder-samhorighet"
+"2.257.fodelselandnamn" = "fodelseland-rtb"
+"2.271.medblandnamn" = "medborgarskapsland"
+"2.27132.ssyk2012" = "yrke-vid-arbetstillstand-2"
+"2.29828.rnplgh-ridlghfar" = "lagenhetsnyckel-far"
+"2.29828.rnplgh-ridlghmor" = "lagenhetsnyckel-mor"
+"2.29828.rnplgh-ridlghrel" = "lagenhetsnyckel-rel"
+"2.305.fodelselandnamnmor" = "fodelseland-mor"
+"2.305.fodelselandnamnmor-eu" = "fodelseland-mor-eu"
+"2.31.mantfors" = "mantalsskrivningsforsamling"
+"2.36.mantkommun" = "mantalsskrivningskommun"
+"2.3730.uuid-fast" = "fastighetens-identitetsnummer"
+"2.3730.uuid-fastfar" = "fastighetens-id-far"
+"2.3730.uuid-fastmor" = "fastighetens-id-mor"
+"2.3730.uuid-fastrel" = "fastighetens-id-relationsperson"
+"2.39371.taxdist" = "taxeringsdistrikt"
+"2.39371.taxdistr" = "taxeringsdistrikt-2"
+"2.39371.taxdistrikt" = "taxeringsdistrikt-3"
+"2.39375.uuid-lghfar" = "uuid-lgh-far"
+"2.39375.uuid-lghmor" = "uuid-lgh-mor"
+"2.39375.uuid-lghrel" = "uuid-lgh-rel"
+"2.44.konsamh" = "kon-samhorighet"
+"2.5144.inkomdatum" = "inkommandedatum"
+
+# Y-306 2026-09-29: qualified owners for the nine RTB sequential delivery-column
+# renames declared above; each reuses the family's existing slug.
+"2.243.alder-vid-handelsen-relationsperson" = "alder-vid-handelsen-relationsperson"
+"2.283.dodsdatum" = "dodsdatum"
+"2.292.antal-fodda" = "antal-fodda"
+"2.297.civilstandsdatum-mor" = "civilstandsdatum-mor"
+"2.322.ordningsnummer-dodfodd-mor" = "ordningsnummer-dodfodd-mor"
+"2.346.ordningsnummer-mor" = "ordningsnummer-mor"
+"2.353.forsamling-tidigare" = "forsamling-tidigare"
+"2.355.kommun-tidigare" = "kommun-tidigare"
+"2.356.lan-tidigare" = "lan-tidigare"
+
+# Y-317 2026-09-29: qualified owners for the three RTB classification-basis
+# families declared above. Each owner takes its own naming leaf; the base
+# native declarations (2.24, 2.24851, 2.24852) keep their existing slugs.
+"2.24.familjestallning-1990-1997" = "familjestallning-1990-1997"
+"2.24.familjestallning" = "familjestallning"
+"2.24851.gfb-grupp-ffb" = "gfb-grupp-ffb"
+"2.24851.gfb-klassgruppering-ffb" = "gfb-klassgruppering-ffb"
+"2.24852.gfb-grupp-efb" = "gfb-grupp-efb"
+"2.24852.gfb-klassgruppering-efb" = "gfb-klassgruppering-efb"
+"2.19.a-region" = "a-region"
+"2.250.civildat-tidigare-rel" = "civildat-tidigare-rel"
+"2.251.civilstand-tidigare" = "civilstand-tidigare"
+"2.267.kon-relationsperson" = "kon-relationsperson"
+"2.267.kon-make-maka-partner" = "kon-make-maka-partner"
+"2.272.civilstand-tidigare-varaktighet" = "civilstand-tidigare-varaktighet"
+"2.293.antal-dodfodda" = "antal-dodfodda"
+"2.302.fodelsedatum" = "fodelsedatum"
+"2.302.fodelsedatum-personnummer" = "fodelsedatum-personnummer"
+"2.3195.h-region" = "h-region"
+"2.40288.storstadsomrade" = "storstadsomrade"
+"2.15724.prioriterad" = "grund-for-bosattning-grupperad-prioriterad"
+"2.15724.senaste" = "grund-for-bosattning-grupperad-senaste"
+"2.245.datum-aammdd" = "civilstandsdatum-datum-aammdd"
+"2.245.datum-format-ej-angivet" = "civilstandsdatum-datum-format-ej-angivet"
+"2.275.make-maka-partner" = "personnr-relationsperson-make-maka-partner"
+"2.275.tidigare-make-maka-partner" = "personnr-relationsperson-tidigare-make-maka-partner"
+"2.279.civilstandsandring-harledning-ej-angiven" = "alder-vid-handelsen-civilstandsandring-harledning-ej-angiven"
+"2.279.harledd-bearbetningsar-vecka" = "alder-vid-handelsen-harledd-bearbetningsar-vecka"
+"2.279.harledd-dodsdatum" = "alder-vid-handelsen-harledd-dodsdatum"
+"2.279.harledd-folkbokforingsdatum" = "alder-vid-handelsen-harledd-folkbokforingsdatum"
+"2.279.harledd-invandringsdatum" = "alder-vid-handelsen-harledd-invandringsdatum"
+"2.279.harledd-medborgarskapsdatum" = "alder-vid-handelsen-harledd-medborgarskapsdatum"
+"2.279.harledd-utvandringsdatum" = "alder-vid-handelsen-harledd-utvandringsdatum"
+"2.279.partners-alder" = "alder-vid-handelsen-partners-alder"
+"2.279.uppgiven-vid-migration" = "alder-vid-handelsen-uppgiven-vid-migration"
+"2.27132.ssyk96" = "yrke-vid-arbetstillstand-ssyk96-kolumn"
+"2.PersonNr_Partner" = "personnr-partner"
 
 [[variant]]
 native_id = "2.53"
@@ -517,547 +685,6 @@ panel_entity_key = "familjeidentitet-rtb"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
-# Fastighetstaxering (FTR)
-
-[[variable]]
-native_id = "2.372.familjeidentitet-rtb"
-slug = "familjeidentitet-rtb"
-
-
-[[variable]]
-native_id = "2.29828.rnplgh-ridlgh"
-slug = "lagenhetsnyckel"
-
-
-[[variable]]
-native_id = "2.19"
-slug = "a-region"
-
-[[variable]]
-native_id = "2.24"
-slug = "familjestallning"
-
-[[variable]]
-native_id = "2.25.familjetyp"
-slug = "familjetyp"
-
-[[variable]]
-native_id = "2.243"
-slug = "alder-vid-handelsen-relationsperson"
-
-[[variable]]
-native_id = "2.245.datum-aaaammdd"
-slug = "civilstandsdatum"
-
-[[variable]]
-native_id = "2.246.civilstandsdatum-tidigare"
-slug = "civilstandsdatum-tidigare"
-
-[[variable]]
-native_id = "2.250"
-slug = "civildat-tidigare-rel"
-
-[[variable]]
-native_id = "2.251"
-slug = "civilstand-tidigare"
-
-[[variable]]
-native_id = "2.267"
-slug = "kon-relationsperson"
-
-[[variable]]
-native_id = "2.272"
-slug = "civilstand-tidigare-varaktighet"
-
-[[variable]]
-native_id = "2.275.relationsperson-inklusive-tidigare"
-slug = "personnr-relationsperson"
-
-[[variable]]
-native_id = "2.279.harledd-civilstandsdatum"
-slug = "alder-vid-handelsen"
-
-[[variable]]
-native_id = "2.283"
-slug = "dodsdatum"
-
-[[variable]]
-native_id = "2.292"
-slug = "antal-fodda"
-
-[[variable]]
-native_id = "2.293"
-slug = "antal-dodfodda"
-
-[[variable]]
-native_id = "2.297"
-slug = "civilstandsdatum-mor"
-
-[[variable]]
-native_id = "2.302"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "2.322"
-slug = "ordningsnummer-dodfodd-mor"
-
-[[variable]]
-native_id = "2.324"
-slug = "personnr-mor-2"
-
-[[variable]]
-native_id = "2.332.senaste-invandringsar"
-slug = "senaste-invandringsar"
-
-
-[[variable]]
-native_id = "2.332.senaste-invandringsdatum"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "2.339.flyttningsgrans"
-slug = "flyttningsgrans"
-
-
-[[variable]]
-native_id = "2.339.flyttningsgrans-forsamling"
-slug = "flyttningsgrans-forsamling"
-
-[[variable]]
-native_id = "2.346"
-slug = "ordningsnummer-mor"
-
-[[variable]]
-native_id = "2.353"
-slug = "forsamling-tidigare"
-
-[[variable]]
-native_id = "2.355"
-slug = "kommun-tidigare"
-
-[[variable]]
-native_id = "2.356"
-slug = "lan-tidigare"
-
-[[variable]]
-native_id = "2.3195"
-slug = "h-region"
-
-[[variable]]
-native_id = "2.8180.grund-for-bosattning"
-slug = "grund-for-bosattning"
-
-[[variable]]
-native_id = "2.15724"
-slug = "grund-for-bosattning-grupperad"
-
-[[variable]]
-native_id = "2.16234.fodelseland-eller-lan"
-slug = "fodelseland-eller-lan"
-
-
-[[variable]]
-native_id = "2.16234.fodelseland-eller-lan-mor"
-slug = "fodelseland-eller-lan-mor"
-
-[[variable]]
-native_id = "2.24851"
-slug = "gfb-klassgruppering-ffb"
-
-[[variable]]
-native_id = "2.24852"
-slug = "gfb-klassgruppering-efb"
-
-[[variable]]
-native_id = "2.29236"
-slug = "antal-uppehallstillstand"
-
-[[variable]]
-native_id = "2.29579"
-slug = "antal-asylsokande-man"
-
-[[variable]]
-native_id = "2.29591"
-slug = "antal-asylsokande-kvinnor"
-
-[[variable]]
-native_id = "2.29592"
-slug = "antal-asylsokande-barn"
-
-[[variable]]
-native_id = "2.40255.bearbetningsar-vecka"
-slug = "bearbetningsar-vecka"
-
-
-[[variable]]
-native_id = "2.40255.bearbetningsvecka"
-slug = "bearbetningsvecka"
-
-[[variable]]
-native_id = "2.40288"
-slug = "storstadsomrade"
-
-[[variable]]
-native_id = "2.46109"
-slug = "antal-massflyktssokande"
-
-# register 7 (ftr)
-
-[[variable]]
-native_id = "2.271.medblandggrupp-eu"
-slug = "medborgarskapsland-gg-eu"
-
-[[variable]]
-native_id = "2.271.medblandgrupp-eu"
-slug = "medborgarskapsland-grupp-eu"
-
-[[variable]]
-native_id = "2.27132.ssyk"
-slug = "yrke-vid-arbetstillstand"
-
-[[variable]]
-native_id = "2.42676.medblandgrupp-eu"
-slug = "medborgarskapsland-eu"
-
-[[variable]]
-native_id = "2.48621.medblandggrupp-eu"
-slug = "medborgarskapsland-tidigare-eu"
-
-[[variable]]
-native_id = "2.57.personnrmor"
-slug = "personnr-mor"
-
-# register 200 (arlig-energistatistik)
-
-[[variable]]
-native_id = "2.135.fnrfar"
-slug = "fnr-far"
-
-[[variable]]
-native_id = "2.135.fnrg"
-slug = "fnr-g"
-
-[[variable]]
-native_id = "2.135.fnrmor"
-slug = "fnr-mor"
-
-[[variable]]
-native_id = "2.135.fnrrel"
-slug = "fnr-rel"
-
-[[variable]]
-native_id = "2.57.personnrankn"
-slug = "personnr-ankn"
-
-[[variable]]
-native_id = "2.57.personnrsamh"
-slug = "personnr-samhorighet"
-
-[[variable]]
-native_id = "2.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "2.43"
-slug = "kvartal"
-
-[[variable]]
-native_id = "2.242"
-slug = "alder-31-12-relationsperson"
-
-[[variable]]
-native_id = "2.254"
-slug = "folkbokforingsdatum"
-
-[[variable]]
-native_id = "2.264"
-slug = "icke-territoriell-forsamling"
-
-[[variable]]
-native_id = "2.269"
-slug = "medborgarskapsdatum"
-
-[[variable]]
-native_id = "2.296"
-slug = "civilstandsdatum-far"
-
-[[variable]]
-native_id = "2.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "2.327"
-slug = "efternamn"
-
-[[variable]]
-native_id = "2.350"
-slug = "utvandringsland"
-
-[[variable]]
-native_id = "2.351"
-slug = "fastighetsbeteckning-tidigare"
-
-[[variable]]
-native_id = "2.366"
-slug = "datum-adoptivfar"
-
-[[variable]]
-native_id = "2.367"
-slug = "datum-adoptivmor"
-
-[[variable]]
-native_id = "2.379"
-slug = "personnr-adoptivfar"
-
-[[variable]]
-native_id = "2.380"
-slug = "personnr-adoptivmor"
-
-[[variable]]
-native_id = "2.383"
-slug = "personnr-make-partner"
-
-[[variable]]
-native_id = "2.384"
-slug = "personnr-sambo"
-
-[[variable]]
-native_id = "2.388"
-slug = "antal-barn"
-
-[[variable]]
-native_id = "2.389"
-slug = "antal-barn-under-18-ar"
-
-[[variable]]
-native_id = "2.390"
-slug = "antal-barn-under-22-ar"
-
-[[variable]]
-native_id = "2.391"
-slug = "antal-barn-under-6-ar"
-
-[[variable]]
-native_id = "2.398"
-slug = "fornamn"
-
-[[variable]]
-native_id = "2.418"
-slug = "utdelningsadress"
-
-[[variable]]
-native_id = "2.1573"
-slug = "aldersgruppering-31-12"
-
-[[variable]]
-native_id = "2.3410"
-slug = "utvandringsdatum"
-
-[[variable]]
-native_id = "2.27129"
-slug = "grund-for-bosattning-klassgrupp"
-
-[[variable]]
-native_id = "2.27158"
-slug = "boendeland"
-
-[[variable]]
-native_id = "2.29339"
-slug = "hushallstyp-bostadshushall"
-
-[[variable]]
-native_id = "2.29832"
-slug = "lopnummer-bostadshushall"
-
-[[variable]]
-native_id = "2.30353"
-slug = "familjeidentitet"
-
-[[variable]]
-native_id = "2.30883"
-slug = "ssyk-version-arbetstillstand"
-
-[[variable]]
-native_id = "2.39460"
-slug = "aktenskapsnr"
-
-# register 7
-
-[[variable]]
-native_id = "2.15.civil"
-slug = "civilstand"
-
-[[variable]]
-native_id = "2.15.tidcivil"
-slug = "tidpunkt-civilstand"
-
-[[variable]]
-native_id = "2.22864.fastnr"
-slug = "fastighetens-officiella-nr"
-
-[[variable]]
-native_id = "2.241.alder"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "2.241.aldersamh"
-slug = "alder-samhorighet"
-
-[[variable]]
-native_id = "2.257.fodelselandnamn"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "2.271.medblandnamn"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "2.27132.ssyk2012"
-slug = "yrke-vid-arbetstillstand-2"
-
-[[variable]]
-native_id = "2.29828.rnplgh-ridlghfar"
-slug = "lagenhetsnyckel-far"
-
-[[variable]]
-native_id = "2.29828.rnplgh-ridlghmor"
-slug = "lagenhetsnyckel-mor"
-
-[[variable]]
-native_id = "2.29828.rnplgh-ridlghrel"
-slug = "lagenhetsnyckel-rel"
-
-[[variable]]
-native_id = "2.305.fodelselandnamnmor"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "2.305.fodelselandnamnmor-eu"
-slug = "fodelseland-mor-eu"
-
-[[variable]]
-native_id = "2.31.mantfors"
-slug = "mantalsskrivningsforsamling"
-
-[[variable]]
-native_id = "2.36.mantkommun"
-slug = "mantalsskrivningskommun"
-
-[[variable]]
-native_id = "2.3730.uuid-fast"
-slug = "fastighetens-identitetsnummer"
-
-[[variable]]
-native_id = "2.3730.uuid-fastfar"
-slug = "fastighetens-id-far"
-
-[[variable]]
-native_id = "2.3730.uuid-fastmor"
-slug = "fastighetens-id-mor"
-
-[[variable]]
-native_id = "2.3730.uuid-fastrel"
-slug = "fastighetens-id-relationsperson"
-
-[[variable]]
-native_id = "2.39371.taxdist"
-slug = "taxeringsdistrikt"
-
-[[variable]]
-native_id = "2.39371.taxdistr"
-slug = "taxeringsdistrikt-2"
-
-[[variable]]
-native_id = "2.39371.taxdistrikt"
-slug = "taxeringsdistrikt-3"
-
-[[variable]]
-native_id = "2.39375.uuid-lghfar"
-slug = "uuid-lgh-far"
-
-[[variable]]
-native_id = "2.39375.uuid-lghmor"
-slug = "uuid-lgh-mor"
-
-[[variable]]
-native_id = "2.39375.uuid-lghrel"
-slug = "uuid-lgh-rel"
-
-[[variable]]
-native_id = "2.44.konsamh"
-slug = "kon-samhorighet"
-
-[[variable]]
-native_id = "2.5144.inkomdatum"
-slug = "inkommandedatum"
-
-# Y-306 2026-09-29: qualified owners for the nine RTB sequential delivery-column
-# renames declared above; each reuses the family's existing slug.
-
-[[variable]]
-native_id = "2.243.alder-vid-handelsen-relationsperson"
-slug = "alder-vid-handelsen-relationsperson"
-
-[[variable]]
-native_id = "2.283.dodsdatum"
-slug = "dodsdatum"
-
-[[variable]]
-native_id = "2.292.antal-fodda"
-slug = "antal-fodda"
-
-[[variable]]
-native_id = "2.297.civilstandsdatum-mor"
-slug = "civilstandsdatum-mor"
-
-[[variable]]
-native_id = "2.322.ordningsnummer-dodfodd-mor"
-slug = "ordningsnummer-dodfodd-mor"
-
-[[variable]]
-native_id = "2.346.ordningsnummer-mor"
-slug = "ordningsnummer-mor"
-
-[[variable]]
-native_id = "2.353.forsamling-tidigare"
-slug = "forsamling-tidigare"
-
-[[variable]]
-native_id = "2.355.kommun-tidigare"
-slug = "kommun-tidigare"
-
-[[variable]]
-native_id = "2.356.lan-tidigare"
-slug = "lan-tidigare"
-
-# Y-317 2026-09-29: qualified owners for the three RTB classification-basis
-# families declared above. Each owner takes its own naming leaf; the base
-# native declarations (2.24, 2.24851, 2.24852) keep their existing slugs.
-
-[[variable]]
-native_id = "2.24.familjestallning-1990-1997"
-slug = "familjestallning-1990-1997"
-
-[[variable]]
-native_id = "2.24.familjestallning"
-slug = "familjestallning"
-
-[[variable]]
-native_id = "2.24851.gfb-grupp-ffb"
-slug = "gfb-grupp-ffb"
-
-[[variable]]
-native_id = "2.24851.gfb-klassgruppering-ffb"
-slug = "gfb-klassgruppering-ffb"
-
-[[variable]]
-native_id = "2.24852.gfb-grupp-efb"
-slug = "gfb-grupp-efb"
-
-[[variable]]
-native_id = "2.24852.gfb-klassgruppering-efb"
-slug = "gfb-klassgruppering-efb"
-
 # register 200
 
 [[identity.partition]]
@@ -1105,50 +732,6 @@ variable = "2.40288"
 columns = { "StorstOmr" = "2.40288.storstadsomrade", "StorStadsOmr" = "2.40288.storstadsomrade" }
 columns_ref = "2026-09-29: SCB RTB VarId 40288: StorstOmr and StorStadsOmr share the supplied metropolitan-region definition. Keep the citizenship-change context on variant 64 and other events on their supplied variants. Prepared v28 has 92 physical originals/92 native members. Retain every original field, variant, source period and coding association."
 
-[[variable]]
-native_id = "2.19.a-region"
-slug = "a-region"
-
-[[variable]]
-native_id = "2.250.civildat-tidigare-rel"
-slug = "civildat-tidigare-rel"
-
-[[variable]]
-native_id = "2.251.civilstand-tidigare"
-slug = "civilstand-tidigare"
-
-[[variable]]
-native_id = "2.267.kon-relationsperson"
-slug = "kon-relationsperson"
-
-[[variable]]
-native_id = "2.267.kon-make-maka-partner"
-slug = "kon-make-maka-partner"
-
-[[variable]]
-native_id = "2.272.civilstand-tidigare-varaktighet"
-slug = "civilstand-tidigare-varaktighet"
-
-[[variable]]
-native_id = "2.293.antal-dodfodda"
-slug = "antal-dodfodda"
-
-[[variable]]
-native_id = "2.302.fodelsedatum"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "2.302.fodelsedatum-personnummer"
-slug = "fodelsedatum-personnummer"
-
-[[variable]]
-native_id = "2.3195.h-region"
-slug = "h-region"
-
-[[variable]]
-native_id = "2.40288.storstadsomrade"
-slug = "storstadsomrade"
-
 # Reviewed exact native source constructs; maps change identity only.
 
 [[identity.partition]]
@@ -1190,14 +773,6 @@ columns_ref = "2026-09-30: SCB RTB VarId 25: FamTyp, Famtyp and FTYP90 through F
 variable = "2.372"
 columns = { "FamId1" = "2.372.familjeidentitet-rtb", "Famid1" = "2.372.familjeidentitet-rtb", "FAMID90" = "2.372.familjeidentitet-rtb", "FAMID91" = "2.372.familjeidentitet-rtb", "FAMID92" = "2.372.familjeidentitet-rtb", "FAMID93" = "2.372.familjeidentitet-rtb", "FAMID94" = "2.372.familjeidentitet-rtb", "FAMID95" = "2.372.familjeidentitet-rtb", "FAMID96" = "2.372.familjeidentitet-rtb", "FAMID97" = "2.372.familjeidentitet-rtb" }
 columns_ref = "2026-09-30: SCB RTB VarId 372: FamId1, Famid1 and FAMID90 through FAMID97 supply the same RTB-family identity, defined as the oldest family member personal identifier. Preserve the historical extended source-frame provenance and original scopes; do not equate other household/family identifiers. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
-
-[[variable]]
-native_id = "2.15724.prioriterad"
-slug = "grund-for-bosattning-grupperad-prioriterad"
-
-[[variable]]
-native_id = "2.15724.senaste"
-slug = "grund-for-bosattning-grupperad-senaste"
 
 [[identity.partition]]
 variable = "2.15724"
@@ -1480,14 +1055,6 @@ owner = "2.245.datum-aaaammdd"
 ref = "Prepared SCB export: The source explicitly supplies full-year YYYYMMDD civil-status dates, shorter YYMMDD divorce/partnership dates and date quantities with no supplied encoding. Keep those representation bases independent while retaining the source civil-status-date quantity and every original event/population context. Full-year CivilDatum/Civildatum/CivDat and supplied full-year marriage-date spellings are explicit quantity aliases. Do not reconstruct a missing date encoding or change source periods. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
 source_editions = ["Gifta 1996-1997"]
 
-[[variable]]
-native_id = "2.245.datum-aammdd"
-slug = "civilstandsdatum-datum-aammdd"
-
-[[variable]]
-native_id = "2.245.datum-format-ej-angivet"
-slug = "civilstandsdatum-datum-format-ej-angivet"
-
 [[identity.column_owner]]
 variable = "2.275"
 variant = "2.56"
@@ -1511,14 +1078,6 @@ column = "PersonNrSamh"
 owner = "2.275.tidigare-make-maka-partner"
 ref = "Prepared SCB export: The source explicitly distinguishes spouse/partner and former spouse/partner in the historical relational-person operations. PersonNrRel is the combined civil-status-change relational-person quantity, whose later operation explicitly includes both current and former relations; keep it independent rather than assigning each row to an inferred relationship. Earlier PersonNrRel has less specific original prose; retain that omission. No identifier encoding or new relationship is inferred. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
 source_editions = ["Skilda 1968-1997"]
-
-[[variable]]
-native_id = "2.275.make-maka-partner"
-slug = "personnr-relationsperson-make-maka-partner"
-
-[[variable]]
-native_id = "2.275.tidigare-make-maka-partner"
-slug = "personnr-relationsperson-tidigare-make-maka-partner"
 
 [[identity.column_owner]]
 variable = "2.279"
@@ -1647,42 +1206,6 @@ column = "alderh"
 owner = "2.279.harledd-dodsdatum"
 ref = "Prepared SCB export: Source operations explicitly distinguish person age at death, immigration, emigration, move and civil-status change, partner age and self-reported age at migration registration. Older citizenship-change age uses processing year/week, while newer operation uses citizenship-change date; keep the two calculation bases independent. Civil-status age without a supplied derivation remains separate from the explicit person-number/civil-status-date derivation. Preserve original ranges, missing details and all event contexts; do not infer an upstream corrected age or comparable calculations. Finite exact native, literal, variant and source-edition coordinates only. Preserve every raw definition, operation, type, unit, coding fact, period and provenance; unlisted editions remain unresolved."
 source_editions = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2016", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Kvartal 1-3 fr.o.m. 2010"]
-
-[[variable]]
-native_id = "2.279.civilstandsandring-harledning-ej-angiven"
-slug = "alder-vid-handelsen-civilstandsandring-harledning-ej-angiven"
-
-[[variable]]
-native_id = "2.279.harledd-bearbetningsar-vecka"
-slug = "alder-vid-handelsen-harledd-bearbetningsar-vecka"
-
-[[variable]]
-native_id = "2.279.harledd-dodsdatum"
-slug = "alder-vid-handelsen-harledd-dodsdatum"
-
-[[variable]]
-native_id = "2.279.harledd-folkbokforingsdatum"
-slug = "alder-vid-handelsen-harledd-folkbokforingsdatum"
-
-[[variable]]
-native_id = "2.279.harledd-invandringsdatum"
-slug = "alder-vid-handelsen-harledd-invandringsdatum"
-
-[[variable]]
-native_id = "2.279.harledd-medborgarskapsdatum"
-slug = "alder-vid-handelsen-harledd-medborgarskapsdatum"
-
-[[variable]]
-native_id = "2.279.harledd-utvandringsdatum"
-slug = "alder-vid-handelsen-harledd-utvandringsdatum"
-
-[[variable]]
-native_id = "2.279.partners-alder"
-slug = "alder-vid-handelsen-partners-alder"
-
-[[variable]]
-native_id = "2.279.uppgiven-vid-migration"
-slug = "alder-vid-handelsen-uppgiven-vid-migration"
 
 [[errata.field]]
 variable = "2.272"
@@ -1825,14 +1348,6 @@ periods = [["1987-12-31", "1987-12-31"]]
 members = [["2020", "Okänt värde"]]
 reason = "Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels."
 source = "Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book."
-
-[[variable]]
-native_id = "2.27132.ssyk96"
-slug = "yrke-vid-arbetstillstand-ssyk96-kolumn"
-
-[[variable]]
-native_id = "2.PersonNr_Partner"
-slug = "personnr-partner"
 
 [[identity.column_owner]]
 variable = "2.27132"

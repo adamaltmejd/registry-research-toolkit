@@ -5,36 +5,19 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.1"
-slug = "s0c1"
-[[variable]]
-native_id = "1.2"
-slug = "s1c1"
-[[variable]]
-native_id = "1.3"
-slug = "sxc1"
-[[variable]]
-native_id = "1.4"
-slug = "s0c0"
-[[variable]]
-native_id = "1.5"
-slug = "s1c0"
-[[variable]]
-native_id = "1.6"
-slug = "sxc0"
-[[variable]]
-native_id = "1.7"
-slug = "s0cu"
-[[variable]]
-native_id = "1.8"
-slug = "nosum"
-[[variable]]
-native_id = "1.9.a"
-slug = "auth"
-[[variable]]
-native_id = "1.9.b"
-slug = "auth2"
+
+[variable]
+"1.1" = "s0c1"
+"1.2" = "s1c1"
+"1.3" = "sxc1"
+"1.4" = "s0c0"
+"1.5" = "s1c0"
+"1.6" = "sxc0"
+"1.7" = "s0cu"
+"1.8" = "nosum"
+"1.9.a" = "auth"
+"1.9.b" = "auth2"
+
 [[identity.partition]]
 variable = "1.9"
 columns = { AUTH = "1.9.a", AUTH2 = "1.9.b" }

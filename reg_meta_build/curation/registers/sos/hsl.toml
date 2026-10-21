@@ -30,108 +30,34 @@ panel_entity_key = "personnr"
 panel_time_key = "atgardsdatum"
 panel_time_grain = "row"
 
+[variable]
 # Registret över insatser till barn och unga (BU)
+"6512206290021964828.PNR" = "personnr"
+"6512206290021964828.APR" = "hade-hsl-april"
+"6512206290021964828.ATG_DATUM" = "atgardsdatum"
+"6512206290021964828.AUG" = "hade-hsl-augusti"
+"6512206290021964828.DEC" = "hade-hsl-december"
+"6512206290021964828.FEB" = "hade-hsl-februari"
+"6512206290021964828.FODDATN" = "fodelsedatum"
+"6512206290021964828.HKOM" = "hemkommun"
+"6512206290021964828.JAN" = "hade-hsl-januari"
+"6512206290021964828.JUL" = "hade-hsl-juli"
+"6512206290021964828.JUN" = "hade-hsl-juni"
+"6512206290021964828.KDEL" = "kommundel"
+"6512206290021964828.LK" = "kommun"
+"6512206290021964828.MAJ" = "hade-hsl-maj"
+"6512206290021964828.MAR" = "hade-hsl-mars"
+"6512206290021964828.NOV" = "hade-hsl-november"
+"6512206290021964828.OKT" = "hade-hsl-oktober"
+"6512206290021964828.PERIOD" = "ar-manad"
+"6512206290021964828.PNRQ" = "personnummerkvalitet"
+"6512206290021964828.SEP" = "hade-hsl-september"
+"6512206290021964828.YRKESBET1" = "yrkesbeteckning-1"
+"6512206290021964828.YRKESBET2" = "yrkesbeteckning-2"
+"6512206290021964828.YRKESBET3" = "yrkesbeteckning-3"
+"6512206290021964828.YRKESBET4" = "yrkesbeteckning-4"
+"6512206290021964828.YRKESBET5" = "yrkesbeteckning-5"
 
-[[variable]]
-native_id = "6512206290021964828.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "6512206290021964828.APR"
-slug = "hade-hsl-april"
-
-[[variable]]
-native_id = "6512206290021964828.ATG_DATUM"
-slug = "atgardsdatum"
-
-[[variable]]
-native_id = "6512206290021964828.AUG"
-slug = "hade-hsl-augusti"
-
-[[variable]]
-native_id = "6512206290021964828.DEC"
-slug = "hade-hsl-december"
-
-[[variable]]
-native_id = "6512206290021964828.FEB"
-slug = "hade-hsl-februari"
-
-[[variable]]
-native_id = "6512206290021964828.FODDATN"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "6512206290021964828.HKOM"
-slug = "hemkommun"
-
-[[variable]]
-native_id = "6512206290021964828.JAN"
-slug = "hade-hsl-januari"
-
-[[variable]]
-native_id = "6512206290021964828.JUL"
-slug = "hade-hsl-juli"
-
-[[variable]]
-native_id = "6512206290021964828.JUN"
-slug = "hade-hsl-juni"
-
-[[variable]]
-native_id = "6512206290021964828.KDEL"
-slug = "kommundel"
-
-[[variable]]
-native_id = "6512206290021964828.LK"
-slug = "kommun"
-
-[[variable]]
-native_id = "6512206290021964828.MAJ"
-slug = "hade-hsl-maj"
-
-[[variable]]
-native_id = "6512206290021964828.MAR"
-slug = "hade-hsl-mars"
-
-[[variable]]
-native_id = "6512206290021964828.NOV"
-slug = "hade-hsl-november"
-
-[[variable]]
-native_id = "6512206290021964828.OKT"
-slug = "hade-hsl-oktober"
-
-[[variable]]
-native_id = "6512206290021964828.PERIOD"
-slug = "ar-manad"
-
-[[variable]]
-native_id = "6512206290021964828.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "6512206290021964828.SEP"
-slug = "hade-hsl-september"
-
-[[variable]]
-native_id = "6512206290021964828.YRKESBET1"
-slug = "yrkesbeteckning-1"
-
-[[variable]]
-native_id = "6512206290021964828.YRKESBET2"
-slug = "yrkesbeteckning-2"
-
-[[variable]]
-native_id = "6512206290021964828.YRKESBET3"
-slug = "yrkesbeteckning-3"
-
-[[variable]]
-native_id = "6512206290021964828.YRKESBET4"
-slug = "yrkesbeteckning-4"
-
-[[variable]]
-native_id = "6512206290021964828.YRKESBET5"
-slug = "yrkesbeteckning-5"
 # register 7119586976865944958
 
 # Batch47: exact unresolved dictionary links remain visible limitations.

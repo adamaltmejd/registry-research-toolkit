@@ -16,11 +16,9 @@ panel_entity_key = "person-orgnr-arbetsgivare"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Grundskolan: åk 9
-
-[[variable]]
-native_id = "4171412747617845054.PeOrgNr"
-slug = "person-orgnr-arbetsgivare"
+"4171412747617845054.PeOrgNr" = "person-orgnr-arbetsgivare"
 
 # === BEGIN #471 SCB slug curation overrides (generated) ===
 # 11802 curated variable-slug overrides from the #471 fan-out
@@ -28,51 +26,18 @@ slug = "person-orgnr-arbetsgivare"
 # Emitted only where the improved name-arm generator (#732 lever A) still
 # differs from the curated slug. Regenerate via the curation pipeline; do
 # not hand-edit inside the markers.
-
 # register 1 (fdb)
+"4171412747617845054.DE_MINIMIS_STOD" = "stod-av-mindre-betydelse"
+"4171412747617845054.SLF_VINSTANDEL_FK486" = "slf-vinstandel"
+"4171412747617845054.SUMMA_ARB_AVG_SLF" = "arbetsgivaravgifter-och-slf"
+"4171412747617845054.SUMMA_SKATTEAVDR" = "summa-skatteavdrag"
+"4171412747617845054.ULAG_ARB_AVG_SOC_AVT" = "underlag-arbetsgivaravgift"
+"4171412747617845054.ULAG_FO_U" = "underlag-avdrag-fou"
+"4171412747617845054.ULAG_REDERI_REGRESS" = "underlag-rederi-regress"
+"4171412747617845054.ULAG_REGIONALT_STOD" = "underlag-regionalt-stod"
+"4171412747617845054.ULAG_SKATTEAVDR_PENS_FORS" = "underlag-skatteavdr-pensforsakring"
+"4171412747617845054.ULAG_SKATTEAVDR_RANTA_UTD" = "underlag-skatteavdr-ranta-utdelning"
+"4171412747617845054.ULAG_SLF_VINSTANDEL" = "underlag-slf-vinstandel"
 
-[[variable]]
-native_id = "4171412747617845054.DE_MINIMIS_STOD"
-slug = "stod-av-mindre-betydelse"
-
-[[variable]]
-native_id = "4171412747617845054.SLF_VINSTANDEL_FK486"
-slug = "slf-vinstandel"
-
-[[variable]]
-native_id = "4171412747617845054.SUMMA_ARB_AVG_SLF"
-slug = "arbetsgivaravgifter-och-slf"
-
-[[variable]]
-native_id = "4171412747617845054.SUMMA_SKATTEAVDR"
-slug = "summa-skatteavdrag"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_ARB_AVG_SOC_AVT"
-slug = "underlag-arbetsgivaravgift"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_FO_U"
-slug = "underlag-avdrag-fou"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_REDERI_REGRESS"
-slug = "underlag-rederi-regress"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_REGIONALT_STOD"
-slug = "underlag-regionalt-stod"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_SKATTEAVDR_PENS_FORS"
-slug = "underlag-skatteavdr-pensforsakring"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_SKATTEAVDR_RANTA_UTD"
-slug = "underlag-skatteavdr-ranta-utdelning"
-
-[[variable]]
-native_id = "4171412747617845054.ULAG_SLF_VINSTANDEL"
-slug = "underlag-slf-vinstandel"
 
 # register 42

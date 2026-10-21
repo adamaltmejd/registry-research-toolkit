@@ -29,160 +29,52 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Folkhögskolan
-
-[[variable]]
-native_id = "104.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "104.466"
-slug = "upprakningstal"
-
-[[variable]]
-native_id = "104.2777"
-slug = "svarskod"
-
-[[variable]]
-native_id = "104.7814"
-slug = "atgardsprogram"
+"104.57" = "personnr"
+"104.466" = "upprakningstal"
+"104.2777" = "svarskod"
+"104.7814" = "atgardsprogram"
 
 # register 105 (folkhogskolan)
-
-[[variable]]
-native_id = "104.104.skolkod"
-slug = "skolkod"
+"104.104.skolkod" = "skolkod"
 
 # register 105 (folkhogskolan)
-
-[[variable]]
-native_id = "104.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "104.866"
-slug = "fodd-i-sverige-utomlands"
-
-[[variable]]
-native_id = "104.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "104.3233"
-slug = "elevnamn"
-
-[[variable]]
-native_id = "104.3599"
-slug = "betyg-bild"
-
-[[variable]]
-native_id = "104.3620"
-slug = "betyg-religion"
-
-[[variable]]
-native_id = "104.3621"
-slug = "betyg-samhallskunskap"
-
-[[variable]]
-native_id = "104.3622"
-slug = "betyg-slojd"
-
-[[variable]]
-native_id = "104.3625"
-slug = "betyg-svenska"
-
-[[variable]]
-native_id = "104.3627"
-slug = "betyg-teknik"
-
-[[variable]]
-native_id = "104.3629"
-slug = "betyg-teckensprak"
-
-[[variable]]
-native_id = "104.6420"
-slug = "huvudman-for-skolan"
-
-[[variable]]
-native_id = "104.7815"
-slug = "deltagit-modersmalsundervisning"
-
-[[variable]]
-native_id = "104.7816"
-slug = "anpassad-studigang"
-
-[[variable]]
-native_id = "104.7817"
-slug = "deltagit-sva"
-
-[[variable]]
-native_id = "104.8073"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "104.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "104.8164"
-slug = "urvalsstratum"
-
-[[variable]]
-native_id = "104.23791"
-slug = "deltagit-engelska"
-
-[[variable]]
-native_id = "104.23867"
-slug = "klassbeteckning"
+"104.257" = "fodelseland-rtb"
+"104.866" = "fodd-i-sverige-utomlands"
+"104.1993" = "skolans-identitetsnummer"
+"104.3233" = "elevnamn"
+"104.3599" = "betyg-bild"
+"104.3620" = "betyg-religion"
+"104.3621" = "betyg-samhallskunskap"
+"104.3622" = "betyg-slojd"
+"104.3625" = "betyg-svenska"
+"104.3627" = "betyg-teknik"
+"104.3629" = "betyg-teckensprak"
+"104.6420" = "huvudman-for-skolan"
+"104.7815" = "deltagit-modersmalsundervisning"
+"104.7816" = "anpassad-studigang"
+"104.7817" = "deltagit-sva"
+"104.8073" = "sun-niva-mor"
+"104.8074" = "faderns-utbildningsniva"
+"104.8164" = "urvalsstratum"
+"104.23791" = "deltagit-engelska"
+"104.23867" = "klassbeteckning"
 
 # register 105
-
-[[variable]]
-native_id = "104.14815.kommun"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "104.25186.m1-betyg"
-slug = "moderna-sprak-elevens-val-betyg"
-
-[[variable]]
-native_id = "104.25186.m1-spr"
-slug = "moderna-sprak-elevens-val-sprak"
-
-[[variable]]
-native_id = "104.25188.ml-spr"
-slug = "ml-sprak"
-
-[[variable]]
-native_id = "104.30366.nyskolenhkod"
-slug = "ny-skolenhetskod"
-
-[[variable]]
-native_id = "104.30366.skolenhkod"
-slug = "skolenhetskod-2"
-
-[[variable]]
-native_id = "104.34103.m2-betyg"
-slug = "moderna-sprak-sprakval-betyg"
-
-[[variable]]
-native_id = "104.34103.m2-spr"
-slug = "moderna-sprak-sprakval"
+"104.14815.kommun" = "skolkommun"
+"104.25186.m1-betyg" = "moderna-sprak-elevens-val-betyg"
+"104.25186.m1-spr" = "moderna-sprak-elevens-val-sprak"
+"104.25188.ml-spr" = "ml-sprak"
+"104.30366.nyskolenhkod" = "ny-skolenhetskod"
+"104.30366.skolenhkod" = "skolenhetskod-2"
+"104.34103.m2-betyg" = "moderna-sprak-sprakval-betyg"
+"104.34103.m2-spr" = "moderna-sprak-sprakval"
 
 # register 105
-
-[[variable]]
-native_id = "104.104.nyskolkod"
-slug = "nyskolkod"
-
-[[variable]]
-native_id = "104.7849.rektorsomrade"
-slug = "rektorsomradeskod"
-
-[[variable]]
-native_id = "104.30366.skolenhetskod"
-slug = "skolenhetskod"
+"104.104.nyskolkod" = "nyskolkod"
+"104.7849.rektorsomrade" = "rektorsomradeskod"
+"104.30366.skolenhetskod" = "skolenhetskod"
 
 [[identity.partition]]
 variable = "104.57"

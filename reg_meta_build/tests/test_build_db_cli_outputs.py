@@ -197,8 +197,9 @@ def test_diagnostic_and_strict_compile_identically(
 ) -> None:
     register = catalog.curation / "registers" / "scb" / "sample.toml"
     register.write_text(
-        register.read_text(encoding="utf-8")
-        + '[[variable]]\nnative_id = "1.999"\nslug = "missing"\n'
+        register.read_text(encoding="utf-8").replace(
+            "[variable]\n", '[variable]\n"1.999" = "missing"\n'
+        )
         + '[[coding.uncoded]]\nvariable = "1.999"\nvariant = "people"\n'
         + 'column = "VALUE"\nperiods = [["2020-01-01", "2020-12-31"]]\n'
         + 'reason = "Reviewed"\nsource = "fixture"\n',
@@ -451,8 +452,9 @@ def test_strict_curation_failure_preserves_previous_catalog(
 ) -> None:
     register = catalog.curation / "registers/scb/sample.toml"
     register.write_text(
-        register.read_text(encoding="utf-8")
-        + '[[variable]]\nnative_id = "1.999"\nslug = "missing"\n',
+        register.read_text(encoding="utf-8").replace(
+            "[variable]\n", '[variable]\n"1.999" = "missing"\n'
+        ),
         encoding="utf-8",
     )
     output = tmp_path / "active.db"

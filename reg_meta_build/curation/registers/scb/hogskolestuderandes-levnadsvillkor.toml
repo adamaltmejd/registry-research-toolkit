@@ -11,115 +11,35 @@ panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Komvux svenska för invandrare (sfi)
+"247.4600" = "scbid"
+"247.15" = "civilstand"
+"247.63" = "sysselsattningsstatus-november"
+"247.99" = "sammanraknad-forvarvsinkomst"
+"247.241" = "alder-31-12"
+"247.749" = "aldersgrupp"
+"247.4381" = "bostadsbidrag"
+"247.4655" = "avregkod"
+"247.4656" = "insamlingsmetod"
+"247.6306" = "antal-arbetade-timmar"
+"247.8073" = "sun-niva-mor"
+"247.8074" = "faderns-utbildningsniva"
+"247.15329" = "distansstudier-natuniversitet"
+"247.15396" = "bostad"
+"247.15397" = "hyreskontrakt"
+"247.15399" = "hemmavarande-barn"
+"247.15443" = "forsorjning-studiemedel-lan-och-bidrag"
+"247.15444" = "forsorjning-studiemedel-bidrag"
+"247.15446" = "forsorjning-lon"
+"247.15448" = "forsorjning-foraldrapenning"
+"247.15449" = "forsorjning-barnbidrag"
+"247.15450" = "forsorjning-bostadsbidrag"
+"247.15451" = "forsorjning-sjukpenning"
+"247.15452" = "forsorjning-stod-sambo-make"
+"247.15458" = "statligt-studiestod"
+"247.18020" = "sysselsattningsstatus-november-mor"
+"247.18021" = "sysselsattningsstatus-november-far"
 
-[[variable]]
-native_id = "247.4600"
-slug = "scbid"
-
-
-[[variable]]
-native_id = "247.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "247.63"
-slug = "sysselsattningsstatus-november"
-
-[[variable]]
-native_id = "247.99"
-slug = "sammanraknad-forvarvsinkomst"
-
-[[variable]]
-native_id = "247.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "247.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "247.4381"
-slug = "bostadsbidrag"
-
-[[variable]]
-native_id = "247.4655"
-slug = "avregkod"
-
-[[variable]]
-native_id = "247.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "247.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "247.8073"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "247.8074"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "247.15329"
-slug = "distansstudier-natuniversitet"
-
-[[variable]]
-native_id = "247.15396"
-slug = "bostad"
-
-[[variable]]
-native_id = "247.15397"
-slug = "hyreskontrakt"
-
-[[variable]]
-native_id = "247.15399"
-slug = "hemmavarande-barn"
-
-[[variable]]
-native_id = "247.15443"
-slug = "forsorjning-studiemedel-lan-och-bidrag"
-
-[[variable]]
-native_id = "247.15444"
-slug = "forsorjning-studiemedel-bidrag"
-
-[[variable]]
-native_id = "247.15446"
-slug = "forsorjning-lon"
-
-[[variable]]
-native_id = "247.15448"
-slug = "forsorjning-foraldrapenning"
-
-[[variable]]
-native_id = "247.15449"
-slug = "forsorjning-barnbidrag"
-
-[[variable]]
-native_id = "247.15450"
-slug = "forsorjning-bostadsbidrag"
-
-[[variable]]
-native_id = "247.15451"
-slug = "forsorjning-sjukpenning"
-
-[[variable]]
-native_id = "247.15452"
-slug = "forsorjning-stod-sambo-make"
-
-[[variable]]
-native_id = "247.15458"
-slug = "statligt-studiestod"
-
-[[variable]]
-native_id = "247.18020"
-slug = "sysselsattningsstatus-november-mor"
-
-[[variable]]
-native_id = "247.18021"
-slug = "sysselsattningsstatus-november-far"
 
 # register 248

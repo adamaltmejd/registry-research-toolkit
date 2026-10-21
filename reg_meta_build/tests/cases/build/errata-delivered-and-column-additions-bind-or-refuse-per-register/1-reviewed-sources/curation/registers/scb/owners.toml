@@ -5,15 +5,11 @@ native_id = "16"
 [[variant]]
 native_id = "16.162"
 slug = "people"
-[[variable]]
-native_id = "16.5"
-slug = "v5"
-[[variable]]
-native_id = "16.5.old"
-slug = "old"
-[[variable]]
-native_id = "16.5.new"
-slug = "new"
+
+[variable]
+"16.5" = "v5"
+"16.5.old" = "old"
+"16.5.new" = "new"
 
 [[identity.column_owner]]
 variable = "16.5"

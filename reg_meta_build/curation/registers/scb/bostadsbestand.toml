@@ -23,84 +23,30 @@ panel_entity_key = "lagenhetsnyckel"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Elpriser och elavtal
-
-[[variable]]
-native_id = "282.29828"
-slug = "lagenhetsnyckel"
-
-
-[[variable]]
-native_id = "282.52"
-slug = "nyko"
-
-[[variable]]
-native_id = "282.64"
-slug = "tatort-tom-2010"
-
-[[variable]]
-native_id = "282.5092"
-slug = "hustyp"
-
-[[variable]]
-native_id = "282.6294"
-slug = "nyko-variabler"
-
-[[variable]]
-native_id = "282.19086"
-slug = "antal-lagenheter"
-
-[[variable]]
-native_id = "282.35321"
-slug = "tatort"
-
-[[variable]]
-native_id = "282.40422"
-slug = "tatort-2018"
+"282.29828" = "lagenhetsnyckel"
+"282.52" = "nyko"
+"282.64" = "tatort-tom-2010"
+"282.5092" = "hustyp"
+"282.6294" = "nyko-variabler"
+"282.19086" = "antal-lagenheter"
+"282.35321" = "tatort"
+"282.40422" = "tatort-2018"
 
 # register 284 (natpriser-naturgas)
-
-[[variable]]
-native_id = "282.7"
-slug = "adressomrade"
-
-[[variable]]
-native_id = "282.8"
-slug = "adressplats"
-
-[[variable]]
-native_id = "282.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "282.558"
-slug = "forsamling-stockholm"
-
-[[variable]]
-native_id = "282.2224"
-slug = "typkod"
-
-[[variable]]
-native_id = "282.2299"
-slug = "lagenhetstyp"
-
-[[variable]]
-native_id = "282.30120"
-slug = "bostadskategori"
-
-[[variable]]
-native_id = "282.30344"
-slug = "byggnadsperiod"
-
-[[variable]]
-native_id = "282.30770"
-slug = "agarkategori-bostad"
+"282.7" = "adressomrade"
+"282.8" = "adressplats"
+"282.26" = "fastighetsbeteckning"
+"282.558" = "forsamling-stockholm"
+"282.2224" = "typkod"
+"282.2299" = "lagenhetstyp"
+"282.30120" = "bostadskategori"
+"282.30344" = "byggnadsperiod"
+"282.30770" = "agarkategori-bostad"
 
 # register 283
-
-[[variable]]
-native_id = "282.22523.byggtyp"
-slug = "byggnadstyp"
+"282.22523.byggtyp" = "byggnadstyp"
 
 # register 286
 

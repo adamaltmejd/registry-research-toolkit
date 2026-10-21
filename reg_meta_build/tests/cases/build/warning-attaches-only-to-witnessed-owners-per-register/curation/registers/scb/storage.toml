@@ -5,12 +5,10 @@ native_id = "6"
 [[variant]]
 native_id = "6.60"
 slug = "people"
-[[variable]]
-native_id = "6.601"
-slug = "value"
-[[variable]]
-native_id = "6.Stored"
-slug = "stored"
+
+[variable]
+"6.601" = "value"
+"6.Stored" = "stored"
 
 [[errata.column]]
 data_warning = "Text storage is assumed; the historical storage type is not documented."

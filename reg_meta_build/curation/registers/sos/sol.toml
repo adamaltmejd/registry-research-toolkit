@@ -29,11 +29,9 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Tandhälsoregistret (THR)
-
-[[variable]]
-native_id = "9047831179457584381.PNR"
-slug = "personnr"
+"9047831179457584381.PNR" = "personnr"
 
 # === BEGIN #471 SOS slug curation overrides (generated) ===
 # 4 curated variable-slug overrides from the #471 fan-out
@@ -41,202 +39,57 @@ slug = "personnr"
 # Emitted only where the improved name-arm generator (#732 lever A) still
 # differs from the curated slug. Regenerate via the curation pipeline; do
 # not hand-edit inside the markers.
-
 # register 5891427617861710725 (par)
-
-[[variable]]
-native_id = "9047831179457584381.ABDAT"
-slug = "beslutsdatum-avslutat-bistand"
-
-[[variable]]
-native_id = "9047831179457584381.ABIDR"
-slug = "anhorigbidrag"
-
-[[variable]]
-native_id = "9047831179457584381.ABIST.current-context"
-slug = "annat-bistandsbeslut"
-
-[[variable]]
-native_id = "9047831179457584381.ABO"
-slug = "annat-boende"
-
-[[variable]]
-native_id = "9047831179457584381.ADAT"
-slug = "datum-avslut"
-
-[[variable]]
-native_id = "9047831179457584381.ANNAN"
-slug = "annan-insats"
-
-[[variable]]
-native_id = "9047831179457584381.AVAN.current-context"
-slug = "avlosning-av-anhorig"
-
-[[variable]]
-native_id = "9047831179457584381.AVDAT.historical-context"
-slug = "datum-avslut-utan-verkstallan"
-
-[[variable]]
-native_id = "9047831179457584381.BDAT"
-slug = "beslutsdatum"
-
-[[variable]]
-native_id = "9047831179457584381.BOSTO"
-slug = "boendestod"
-
-[[variable]]
-native_id = "9047831179457584381.BOTIM"
-slug = "boendestodstimmar"
-
-[[variable]]
-native_id = "9047831179457584381.DAGV"
-slug = "dagverksamhet"
-
-[[variable]]
-native_id = "9047831179457584381.EPH"
-slug = "enpersonshushall"
-
-[[variable]]
-native_id = "9047831179457584381.FODAR"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "9047831179457584381.FODDAT"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "9047831179457584381.FODDATN"
-slug = "fodelsedatum-numerisk"
-
-[[variable]]
-native_id = "9047831179457584381.HKOM"
-slug = "hemkommun-periodens-slut"
-
-[[variable]]
-native_id = "9047831179457584381.HTJ"
-slug = "hemtjanst"
-
-[[variable]]
-native_id = "9047831179457584381.HTJLED"
-slug = "hemtjanst-ledsagning"
-
-[[variable]]
-native_id = "9047831179457584381.HTJPOMV"
-slug = "hemtjanst-personlig-omvardnad"
-
-[[variable]]
-native_id = "9047831179457584381.HTJSERV"
-slug = "hemtjanst-service"
-
-[[variable]]
-native_id = "9047831179457584381.KDEL"
-slug = "kommundel"
-
-[[variable]]
-native_id = "9047831179457584381.KONTF"
-slug = "kontaktfamilj"
-
-[[variable]]
-native_id = "9047831179457584381.KONTP.current-context"
-slug = "kontaktperson"
-
-[[variable]]
-native_id = "9047831179457584381.LED"
-slug = "hemtjanst-ledsagning-2"
-
-[[variable]]
-native_id = "9047831179457584381.LK"
-slug = "kommun"
-
-[[variable]]
-native_id = "9047831179457584381.MATD.current-context"
-slug = "matdistribution"
-
-[[variable]]
-native_id = "9047831179457584381.OBO"
-slug = "ordinart-boende"
-
-[[variable]]
-native_id = "9047831179457584381.OMDR"
-slug = "sarskilt-boende-hemtjanst-dygnet-runt"
-
-[[variable]]
-native_id = "9047831179457584381.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "9047831179457584381.POMV"
-slug = "hemtjanst-personlig-omvardnad-2"
-
-[[variable]]
-native_id = "9047831179457584381.SBO"
-slug = "sarskilt-boende"
-
-[[variable]]
-native_id = "9047831179457584381.SERV"
-slug = "hemtjanst-service-2"
-
-[[variable]]
-native_id = "9047831179457584381.SURV"
-slug = "forandring-perioden"
-
-[[variable]]
-native_id = "9047831179457584381.TRYGG.current-context"
-slug = "trygghetslarm"
-
-[[variable]]
-native_id = "9047831179457584381.VBDAT"
-slug = "bistandsbeslutsdatum"
-
-[[variable]]
-native_id = "9047831179457584381.VDAT"
-slug = "datum-verkstallighet"
-
-[[variable]]
-native_id = "9047831179457584381.VVDAT"
-slug = "datum-verkstallighet-bistandsbeslut"
+"9047831179457584381.ABDAT" = "beslutsdatum-avslutat-bistand"
+"9047831179457584381.ABIDR" = "anhorigbidrag"
+"9047831179457584381.ABIST.current-context" = "annat-bistandsbeslut"
+"9047831179457584381.ABO" = "annat-boende"
+"9047831179457584381.ADAT" = "datum-avslut"
+"9047831179457584381.ANNAN" = "annan-insats"
+"9047831179457584381.AVAN.current-context" = "avlosning-av-anhorig"
+"9047831179457584381.AVDAT.historical-context" = "datum-avslut-utan-verkstallan"
+"9047831179457584381.BDAT" = "beslutsdatum"
+"9047831179457584381.BOSTO" = "boendestod"
+"9047831179457584381.BOTIM" = "boendestodstimmar"
+"9047831179457584381.DAGV" = "dagverksamhet"
+"9047831179457584381.EPH" = "enpersonshushall"
+"9047831179457584381.FODAR" = "fodelsear"
+"9047831179457584381.FODDAT" = "fodelsedatum"
+"9047831179457584381.FODDATN" = "fodelsedatum-numerisk"
+"9047831179457584381.HKOM" = "hemkommun-periodens-slut"
+"9047831179457584381.HTJ" = "hemtjanst"
+"9047831179457584381.HTJLED" = "hemtjanst-ledsagning"
+"9047831179457584381.HTJPOMV" = "hemtjanst-personlig-omvardnad"
+"9047831179457584381.HTJSERV" = "hemtjanst-service"
+"9047831179457584381.KDEL" = "kommundel"
+"9047831179457584381.KONTF" = "kontaktfamilj"
+"9047831179457584381.KONTP.current-context" = "kontaktperson"
+"9047831179457584381.LED" = "hemtjanst-ledsagning-2"
+"9047831179457584381.LK" = "kommun"
+"9047831179457584381.MATD.current-context" = "matdistribution"
+"9047831179457584381.OBO" = "ordinart-boende"
+"9047831179457584381.OMDR" = "sarskilt-boende-hemtjanst-dygnet-runt"
+"9047831179457584381.PNRQ" = "personnummerkvalitet"
+"9047831179457584381.POMV" = "hemtjanst-personlig-omvardnad-2"
+"9047831179457584381.SBO" = "sarskilt-boende"
+"9047831179457584381.SERV" = "hemtjanst-service-2"
+"9047831179457584381.SURV" = "forandring-perioden"
+"9047831179457584381.TRYGG.current-context" = "trygghetslarm"
+"9047831179457584381.VBDAT" = "bistandsbeslutsdatum"
+"9047831179457584381.VDAT" = "datum-verkstallighet"
+"9047831179457584381.VVDAT" = "datum-verkstallighet-bistandsbeslut"
 
 # === END #760 non-SCB concept-slug curation ===
-
-[[variable]]
-native_id = "9047831179457584381.ABIST.historical-context"
-slug = "annat-bistand-boende"
-
-[[variable]]
-native_id = "9047831179457584381.AVAN.historical-context"
-slug = "hemtjanst-avlosning-historisk"
-
-[[variable]]
-native_id = "9047831179457584381.AVDAT.current-context"
-slug = "verkstallighetsdatum-avslutat-bistand"
-
-[[variable]]
-native_id = "9047831179457584381.HTJTIM.current-context"
-slug = "htjtim"
-
-[[variable]]
-native_id = "9047831179457584381.HTJTIM.historical-context"
-slug = "beviljade-hemtjansttimmar"
-
-[[variable]]
-native_id = "9047831179457584381.KONTP.historical-context"
-slug = "kontaktfamilj-eller-person-historisk"
-
-[[variable]]
-native_id = "9047831179457584381.MATD.historical-context"
-slug = "hemtjanst-matdistribution-historisk"
-
-[[variable]]
-native_id = "9047831179457584381.PERIOD.current-context"
-slug = "period"
-
-[[variable]]
-native_id = "9047831179457584381.PERIOD.historical-context"
-slug = "statistikreferensdatum-historiskt"
-
-[[variable]]
-native_id = "9047831179457584381.TRYGG.historical-context"
-slug = "trygghetslarm-historisk-definition"
+"9047831179457584381.ABIST.historical-context" = "annat-bistand-boende"
+"9047831179457584381.AVAN.historical-context" = "hemtjanst-avlosning-historisk"
+"9047831179457584381.AVDAT.current-context" = "verkstallighetsdatum-avslutat-bistand"
+"9047831179457584381.HTJTIM.current-context" = "htjtim"
+"9047831179457584381.HTJTIM.historical-context" = "beviljade-hemtjansttimmar"
+"9047831179457584381.KONTP.historical-context" = "kontaktfamilj-eller-person-historisk"
+"9047831179457584381.MATD.historical-context" = "hemtjanst-matdistribution-historisk"
+"9047831179457584381.PERIOD.current-context" = "period"
+"9047831179457584381.PERIOD.historical-context" = "statistikreferensdatum-historiskt"
+"9047831179457584381.TRYGG.historical-context" = "trygghetslarm-historisk-definition"
 
 [[identity.split]]
 variable = "ABIST"

@@ -11,44 +11,27 @@ panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Nätanslutna solcellsanläggningar
-
-[[variable]]
-native_id = "358.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "358.466"
-slug = "upprakningstal"
-
-[[variable]]
-native_id = "358.4600"
-slug = "scbid"
+"358.1839" = "orgnr"
+"358.466" = "upprakningstal"
+"358.4600" = "scbid"
 
 # register 359 (solel)
-
-[[variable]]
-native_id = "358.50"
-slug = "manad"
-
-[[variable]]
-native_id = "358.73"
-slug = "ar"
-
-[[variable]]
-native_id = "358.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "358.39651"
-slug = "svarsalternativ"
+"358.50" = "manad"
+"358.73" = "ar"
+"358.4027" = "naringsgren"
+"358.39651" = "svarsalternativ"
 
 # register 359
-
-[[variable]]
-native_id = "358.83.bid"
-slug = "bransleslag"
+"358.83.bid" = "bransleslag"
+"358.39651.prod-1" = "prod-1"
+"358.39651.prod-2" = "prod-2"
+"358.4027.ng2007" = "ng2007"
+"358.4027.ng1" = "ng1"
+"358.83.ravarakat" = "ravarakat"
+"358.4600.id" = "id"
+"358.4600.scbid" = "scbid-4600"
 
 # register 366
 
@@ -150,34 +133,6 @@ variable = "358.4600"
 columns = { ID = "358.4600.id", SCBid = "358.4600.scbid", id = "358.4600.id" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "4d22158768ee6a99d2b12712dd234486772e98b216bf63cc7749781af5565029"
-
-[[variable]]
-native_id = "358.39651.prod-1"
-slug = "prod-1"
-
-[[variable]]
-native_id = "358.39651.prod-2"
-slug = "prod-2"
-
-[[variable]]
-native_id = "358.4027.ng2007"
-slug = "ng2007"
-
-[[variable]]
-native_id = "358.4027.ng1"
-slug = "ng1"
-
-[[variable]]
-native_id = "358.83.ravarakat"
-slug = "ravarakat"
-
-[[variable]]
-native_id = "358.4600.id"
-slug = "id"
-
-[[variable]]
-native_id = "358.4600.scbid"
-slug = "scbid-4600"
 
 [[acknowledge]]
 code = "ambiguous_sibling_shape"

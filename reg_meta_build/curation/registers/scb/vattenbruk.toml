@@ -20,223 +20,64 @@ panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Fritidshusområden
-
-[[variable]]
-native_id = "215.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "215.39818"
-slug = "produktion-av-musslor"
-
-[[variable]]
-native_id = "215.39820"
-slug = "produktion-av-ostron"
-
-[[variable]]
-native_id = "215.39923"
-slug = "forsaljning-av-musslor"
-
-[[variable]]
-native_id = "215.39925"
-slug = "forsaljning-av-ostron"
-
-[[variable]]
-native_id = "215.39955"
-slug = "musselodling-pa-band-nat-langd"
-
-[[variable]]
-native_id = "215.39956"
-slug = "musselodling-band-nat-vattenareal"
-
-[[variable]]
-native_id = "215.39957"
-slug = "musselodling-pa-flottar-langd"
-
-[[variable]]
-native_id = "215.39958"
-slug = "musselodling-flottar-vattenareal"
-
-[[variable]]
-native_id = "215.39959"
-slug = "bottenodling-musslor-vattenareal"
-
-[[variable]]
-native_id = "215.39961"
-slug = "odling-av-ostron"
-
-[[variable]]
-native_id = "215.41185"
-slug = "forsaljning-av-signalkraftor-utsattning"
-
-[[variable]]
-native_id = "215.41186"
-slug = "produktion-av-signalkraftor-konsumtion"
-
-[[variable]]
-native_id = "215.41235"
-slug = "bottenodling-musslor-antal-enheter"
-
-[[variable]]
-native_id = "215.41238"
-slug = "inkop-vattenbruksorganismer-mangd"
-
-[[variable]]
-native_id = "215.41239"
-slug = "inkop-vattenbruksorganismer-kostnad"
+"215.1839" = "orgnr"
+"215.39818" = "produktion-av-musslor"
+"215.39820" = "produktion-av-ostron"
+"215.39923" = "forsaljning-av-musslor"
+"215.39925" = "forsaljning-av-ostron"
+"215.39955" = "musselodling-pa-band-nat-langd"
+"215.39956" = "musselodling-band-nat-vattenareal"
+"215.39957" = "musselodling-pa-flottar-langd"
+"215.39958" = "musselodling-flottar-vattenareal"
+"215.39959" = "bottenodling-musslor-vattenareal"
+"215.39961" = "odling-av-ostron"
+"215.41185" = "forsaljning-av-signalkraftor-utsattning"
+"215.41186" = "produktion-av-signalkraftor-konsumtion"
+"215.41235" = "bottenodling-musslor-antal-enheter"
+"215.41238" = "inkop-vattenbruksorganismer-mangd"
+"215.41239" = "inkop-vattenbruksorganismer-kostnad"
 
 # register 216 (fritidshusomraden)
-
-[[variable]]
-native_id = "215.37409.av-arb-k"
-slug = "antal-sysselsatta-pa-foretaget"
-
-[[variable]]
-native_id = "215.37409.avlon-k"
-slug = "antal-avlonade-pa-foretaget"
-
-[[variable]]
-native_id = "215.39822.srblf"
-slug = "produktion-av-regnbage-for-utsattning"
-
-[[variable]]
-native_id = "215.39822.srblf-salt"
-slug = "produktion-av-regnbage-utsattning-salt"
-
-[[variable]]
-native_id = "215.39824.srodp-salt"
-slug = "produktion-av-oring-for-utsattning"
-
-[[variable]]
-native_id = "215.39826.srodp-salt"
-slug = "produktion-av-roding-for-utsattning"
-
-[[variable]]
-native_id = "215.39927.srblf"
-slug = "forsaljning-av-regnbage-for-utsattning"
-
-[[variable]]
-native_id = "215.39927.srblf-salt"
-slug = "forsaljning-av-regnbage-utsattning-salt"
-
-[[variable]]
-native_id = "215.39935.ryovrf"
-slug = "forsaljning-av-oring-rom-eller-yngel"
-
-[[variable]]
-native_id = "215.39935.ryovrf-salt"
-slug = "forsaljning-av-oring-rom-yngel-salt"
-
-[[variable]]
-native_id = "215.40018.ryovrf"
-slug = "forsaljning-av-rom-yngel-ovrig-art-1"
-
-[[variable]]
-native_id = "215.40018.ryovrf-salt"
-slug = "forsaljning-rom-yngel-ovrig-art-1-salt"
-
-[[variable]]
-native_id = "215.49.lan1"
-slug = "lan3"
-
-[[variable]]
-native_id = "215.6306.av-arb-k"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "215.6306.avlon-k"
-slug = "antal-arbetade-timmar-avlonade"
+"215.37409.av-arb-k" = "antal-sysselsatta-pa-foretaget"
+"215.37409.avlon-k" = "antal-avlonade-pa-foretaget"
+"215.39822.srblf" = "produktion-av-regnbage-for-utsattning"
+"215.39822.srblf-salt" = "produktion-av-regnbage-utsattning-salt"
+"215.39824.srodp-salt" = "produktion-av-oring-for-utsattning"
+"215.39826.srodp-salt" = "produktion-av-roding-for-utsattning"
+"215.39927.srblf" = "forsaljning-av-regnbage-for-utsattning"
+"215.39927.srblf-salt" = "forsaljning-av-regnbage-utsattning-salt"
+"215.39935.ryovrf" = "forsaljning-av-oring-rom-eller-yngel"
+"215.39935.ryovrf-salt" = "forsaljning-av-oring-rom-yngel-salt"
+"215.40018.ryovrf" = "forsaljning-av-rom-yngel-ovrig-art-1"
+"215.40018.ryovrf-salt" = "forsaljning-rom-yngel-ovrig-art-1-salt"
+"215.49.lan1" = "lan3"
+"215.6306.av-arb-k" = "antal-arbetade-timmar"
+"215.6306.avlon-k" = "antal-arbetade-timmar-avlonade"
 
 # register 225 (land-och-vattenarealer)
-
-[[variable]]
-native_id = "215.400"
-slug = "adress"
-
-[[variable]]
-native_id = "215.412"
-slug = "postort"
-
-[[variable]]
-native_id = "215.537"
-slug = "postnr"
-
-[[variable]]
-native_id = "215.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "215.3752"
-slug = "kontaktperson"
-
-[[variable]]
-native_id = "215.16507"
-slug = "driftskostnader-ovrigt"
-
-[[variable]]
-native_id = "215.19556"
-slug = "extraordinara-intakter"
-
-[[variable]]
-native_id = "215.19558"
-slug = "extraordinara-kostnader"
-
-[[variable]]
-native_id = "215.28064"
-slug = "imputeringsstatus"
-
-[[variable]]
-native_id = "215.38074"
-slug = "energikostnader"
+"215.400" = "adress"
+"215.412" = "postort"
+"215.537" = "postnr"
+"215.2014" = "foretagsnamn"
+"215.3752" = "kontaktperson"
+"215.16507" = "driftskostnader-ovrigt"
+"215.19556" = "extraordinara-intakter"
+"215.19558" = "extraordinara-kostnader"
+"215.28064" = "imputeringsstatus"
+"215.38074" = "energikostnader"
 
 # register 216
-
-[[variable]]
-native_id = "215.49.lan"
-slug = "lan"
-deprecated = false
-
-[[variable]]
-native_id = "215.49.lan2"
-slug = "lan2"
-deprecated = false
-
-[[variable]]
-native_id = "215.49.lan3"
-slug = "lan3-49"
-deprecated = false
-
-[[variable]]
-native_id = "215.49.mlannamn"
-slug = "mlannamn"
-deprecated = false
-
-[[variable]]
-native_id = "215.49.rylannamn"
-slug = "rylannamn"
-deprecated = false
-
-[[variable]]
-native_id = "215.49.slannamn"
-slug = "slannamn"
-deprecated = false
-
-[[variable]]
-native_id = "215.41234.odling-lan1"
-slug = "odling-lan"
-deprecated = false
-
-[[variable]]
-native_id = "215.41234.odling-lan2"
-slug = "odling-lan2"
-deprecated = false
-
-[[variable]]
-native_id = "215.41234.odling-lan3"
-slug = "odling-lan3"
-deprecated = false
+"215.49.lan" = { slug = "lan", deprecated = false }
+"215.49.lan2" = { slug = "lan2", deprecated = false }
+"215.49.lan3" = { slug = "lan3-49", deprecated = false }
+"215.49.mlannamn" = { slug = "mlannamn", deprecated = false }
+"215.49.rylannamn" = { slug = "rylannamn", deprecated = false }
+"215.49.slannamn" = { slug = "slannamn", deprecated = false }
+"215.41234.odling-lan1" = { slug = "odling-lan", deprecated = false }
+"215.41234.odling-lan2" = { slug = "odling-lan2", deprecated = false }
+"215.41234.odling-lan3" = { slug = "odling-lan3", deprecated = false }
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."

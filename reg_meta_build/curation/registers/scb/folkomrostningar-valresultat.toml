@@ -17,28 +17,13 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Europaparlamentsval, valdeltagandeundersökningen
-
-[[variable]]
-native_id = "244.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "244.69"
-slug = "valdistrikt"
-
-[[variable]]
-native_id = "244.302"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "244.16239"
-slug = "kommunvalkrets-kod"
-
-[[variable]]
-native_id = "244.25238"
-slug = "antal-avgivna-roster"
+"244.57" = "personnr"
+"244.69" = "valdistrikt"
+"244.302" = "fodelsedatum"
+"244.16239" = "kommunvalkrets-kod"
+"244.25238" = "antal-avgivna-roster"
 
 # register 245
 

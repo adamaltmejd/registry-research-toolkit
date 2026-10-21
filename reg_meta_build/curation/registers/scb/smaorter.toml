@@ -16,35 +16,17 @@ native_id = "157.224"
 slug = "_default"
 display_group = "Småorter"
 
+[variable]
 # Skyddad natur
-
-[[variable]]
-native_id = "157.25139"
-slug = "startdatum"
-
-[[variable]]
-native_id = "157.2188"
-slug = "folkmangd"
-
-[[variable]]
-native_id = "157.25146"
-slug = "slutdatum"
-
-[[variable]]
-native_id = "157.35609"
-slug = "smaort-kod"
-
-[[variable]]
-native_id = "157.35979"
-slug = "registreringsar"
-
-[[variable]]
-native_id = "157.39461"
-slug = "datatyp-for-geometri"
-
-[[variable]]
-native_id = "157.39462"
-slug = "objekt-id"
+"157.25139" = "startdatum"
+"157.2188" = "folkmangd"
+"157.25146" = "slutdatum"
+"157.35609" = "smaort-kod"
+"157.35979" = "registreringsar"
+"157.39461" = "datatyp-for-geometri"
+"157.39462" = "objekt-id"
+"157.39462.objectid" = "objectid"
+"157.39462.uuid" = "uuid"
 
 # register 158
 
@@ -54,11 +36,3 @@ variable = "157.39462"
 columns = { OBJECTID = "157.39462.objectid", UUID = "157.39462.uuid" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "87eda396168f9321cfd056766c456a25ea95b5ce1b820aa414b01d5209c40758"
-
-[[variable]]
-native_id = "157.39462.objectid"
-slug = "objectid"
-
-[[variable]]
-native_id = "157.39462.uuid"
-slug = "uuid"

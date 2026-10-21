@@ -65,120 +65,45 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Ekonomiskt bistånd (socialbidrag)
-
-[[variable]]
-native_id = "13.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "13.2857"
-slug = "redovisningsmanad"
-
-[[variable]]
-native_id = "13.15225"
-slug = "omsattning-i-sverige"
-
-[[variable]]
-native_id = "13.15250"
-slug = "omsattning-i-sverige-moms2007"
-
-[[variable]]
-native_id = "13.15273"
-slug = "redovisningsmanad-momsregistret"
-
-[[variable]]
-native_id = "13.19052"
-slug = "naringsgren-for-statistiken"
-
-[[variable]]
-native_id = "13.19054"
-slug = "naringsgren-for-statistiken-huvudsaklig"
+"13.56" = "person-orgnr"
+"13.2857" = "redovisningsmanad"
+"13.15225" = "omsattning-i-sverige"
+"13.15250" = "omsattning-i-sverige-moms2007"
+"13.15273" = "redovisningsmanad-momsregistret"
+"13.19052" = "naringsgren-for-statistiken"
+"13.19054" = "naringsgren-for-statistiken-huvudsaklig"
 
 # register 24 (ureg)
-
-[[variable]]
-native_id = "13.4027.ng0"
-slug = "naringsgren"
+"13.4027.ng0" = "naringsgren"
 
 # register 135 (ivp)
-
-[[variable]]
-native_id = "13.33"
-slug = "institutionell-sektor"
-
-[[variable]]
-native_id = "13.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "13.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "13.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "13.1006"
-slug = "redovisningsgrupp-moms"
-
-[[variable]]
-native_id = "13.1054"
-slug = "sateskommun"
-
-[[variable]]
-native_id = "13.15195"
-slug = "redovisningsar"
-
-[[variable]]
-native_id = "13.15211"
-slug = "utgaende-moms-6"
-
-[[variable]]
-native_id = "13.15212"
-slug = "utgaende-moms-12"
-
-[[variable]]
-native_id = "13.15215"
-slug = "utgaende-moms-25"
-
-[[variable]]
-native_id = "13.15230"
-slug = "momsfri-omsattning"
-
-[[variable]]
-native_id = "13.15231"
-slug = "momspl-uttag-fastighetsforvaltning"
-
-[[variable]]
-native_id = "13.15242"
-slug = "avdragsgill-ingaende-moms"
-
-[[variable]]
-native_id = "13.15245"
-slug = "export-varor-eg-land"
-
-[[variable]]
-native_id = "13.15257"
-slug = "m12-utgaende-moms-6"
-
-[[variable]]
-native_id = "13.15258"
-slug = "utgaende-moms-12-m11"
-
-[[variable]]
-native_id = "13.15259"
-slug = "utgaende-moms-25-m10"
-
-[[variable]]
-native_id = "13.23686"
-slug = "summa-utgaende-moms"
-
-[[variable]]
-native_id = "13.32695"
-slug = "referensperiod-antal-manader"
+"13.33" = "institutionell-sektor"
+"13.34" = "juridisk-form"
+"13.74" = "agarkontroll"
+"13.972" = "aktuellt-antal-anstallda"
+"13.1006" = "redovisningsgrupp-moms"
+"13.1054" = "sateskommun"
+"13.15195" = "redovisningsar"
+"13.15211" = "utgaende-moms-6"
+"13.15212" = "utgaende-moms-12"
+"13.15215" = "utgaende-moms-25"
+"13.15230" = "momsfri-omsattning"
+"13.15231" = "momspl-uttag-fastighetsforvaltning"
+"13.15242" = "avdragsgill-ingaende-moms"
+"13.15245" = "export-varor-eg-land"
+"13.15257" = "m12-utgaende-moms-6"
+"13.15258" = "utgaende-moms-12-m11"
+"13.15259" = "utgaende-moms-25-m10"
+"13.23686" = "summa-utgaende-moms"
+"13.32695" = "referensperiod-antal-manader"
+"13.4027.sni2002" = "sni2002"
+"13.IdPers" = "idpers"
+"13.IdPers_Typ" = "idpers-typ"
+"13.Samma_PeorgNr_IdPers" = "samma-peorgnr-idpers"
+"13.DatumFDB" = "datumfdb"
+"13.FDB" = "fdb"
 
 # register 22
 
@@ -188,10 +113,6 @@ variable = "13.4027"
 columns = { Ng0 = "13.4027.ng0", Ng1 = "13.4027.ng1", Sni92 = "13.4027.sni92", Sni2002 = "13.4027.sni2002" }
 columns_ref = "Complete own native family review retains four independent literal-field histories. Original operations explicitly identify Sni2002 as SNI2002 in2007–2011, with termination declared2011; Ng0 identifiesJanuary industry and laterNg1 identifiesFDB at declaration arrival. Keep all source operation/version changes, physical domains and scopes. No code conversion or literal-only version inference."
 expected_evidence_sha256 = "41e4422fbf21bd54949558033458ba4c9e9b9eae518ff7eb99fe77c5138e98d9"
-
-[[variable]]
-native_id = "13.4027.sni2002"
-slug = "sni2002"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -359,23 +280,3 @@ holdings_period = "2015-2022"
 source = "steward-holdings"
 evidence = "SWECOV holds FDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "13.IdPers"
-slug = "idpers"
-
-[[variable]]
-native_id = "13.IdPers_Typ"
-slug = "idpers-typ"
-
-[[variable]]
-native_id = "13.Samma_PeorgNr_IdPers"
-slug = "samma-peorgnr-idpers"
-
-[[variable]]
-native_id = "13.DatumFDB"
-slug = "datumfdb"
-
-[[variable]]
-native_id = "13.FDB"
-slug = "fdb"
