@@ -58,6 +58,7 @@ from keyed_cache import (
     file_sha256,
     owned_root,
     staged,
+    uv_lock_sha256,
 )
 
 if TYPE_CHECKING:
@@ -73,8 +74,9 @@ CHUNK = 1 << 20
 # ~2.6 GB of the tight disk).
 KEEP = 2
 REPO_ROOT = Path(__file__).resolve().parents[2]
-# What a derived copy depends on: the builder, the locked dependencies, and the Rust
-# sources of `reg-core-py` (its uv `cache-keys`).
+# What a derived copy depends on: the builder and the Rust sources of `reg-core-py`
+# (its uv `cache-keys`), plus the builder's locked runtime closure
+# (`uv_lock_sha256`; derive and `index_docs` import nothing from the dev group).
 DERIVE_SOURCES = BUILDER_SOURCES
 
 
@@ -237,14 +239,16 @@ def _repo(*args: str) -> str:
 
 
 def derive_source() -> str:
-    """The checkout's derive inputs (``DERIVE_SOURCES``) as committed tree ids.
+    """The checkout's derive inputs (``DERIVE_SOURCES``) as committed tree ids, and
+    the committed ``uv.lock`` as ``uv_lock_sha256`` holds it.
 
     Derive stamps the builder commit into each copy and refuses a tree with tracked
     changes, so G1 runs on a committed tree.
     """
     if _repo("status", "--porcelain", "--untracked-files=no"):
         raise RuntimeError("G1 derives with the committed builder; commit first")
-    return _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
+    trees = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
+    return f"{trees}\n{uv_lock_sha256(_repo('show', 'HEAD:uv.lock'))}"
 
 
 def ensure_derived(pins: Pins, dirs: dict[str, Path], source: str) -> dict[str, Path]:

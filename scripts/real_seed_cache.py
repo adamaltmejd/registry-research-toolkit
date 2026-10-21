@@ -45,7 +45,7 @@ boundary (`prepare_code_files`: the builder's own static import walk from the
 it reaches (`PREPARE_UNKEYED`), plus `uv.lock`, and the native extension sources
 because a walked module imports `reg_core_py`); the Python and SQLite
 versions and the loaded extension. Every key holds `uv.lock` as `lock_sha256` does:
-only the locked runtime closure of `reg-meta-build` (`uv_runtime_closure`: its
+only the locked runtime closure of `reg-meta-build` (`keyed_cache.uv_lock_sha256`: its
 transitive dependencies, never a dev group), so a dev-only pin (pytest, ruff, ...)
 moves no key. A release's version bumps leave it unchanged (`prepare_code`): a walked
 file's `__version__` value is normalized as the resolve fingerprint does, and
@@ -65,7 +65,7 @@ Build key: the raw content of `reg_meta_build/src` and the native extension sour
 and `uv.lock`'s runtime closure (`lock_sha256`). The database records no dependency
 version: the only lock-dependent value it records is a publishable build's
 `builder_commit`, and that commit is keyed itself (below); a release's `__version__`
-bump is in the raw `reg_meta_build/src`. The builder's own `curation_tree_sha256` of the
+bump is in the raw `reg_meta_build/src`. It also holds the builder's own `curation_tree_sha256` of the
 selected curation tree; the prepared commit and manifest digest; the mode and the
 `--registers` scopes as a sorted set (the builder selects by set); the Python and SQLite
 versions and the loaded extension; and for a publishable build the checkout's HEAD, which
@@ -144,6 +144,7 @@ from keyed_cache import (
     owned_root,
     staged,
     tree_digest,
+    uv_lock_sha256,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -208,8 +209,6 @@ PREPARE_UNKEYED = ("reg_meta_build/src/reg_meta_build/dbdiff.py",)
 # the build and resolve keys hold `uv.lock` the same way): a release bumps them, and
 # nothing prepared, resolved or recorded reads them.
 VERSIONED_LOCKS = ("uv.lock", "Cargo.lock")
-# The `uv.lock` package whose runtime closure every key holds (`uv_runtime_closure`).
-BUILDER_PACKAGE = "reg-meta-build"
 # Keyed by content but not walked: the CLI imports every subcommand's module at load,
 # so walking it would key prepare on the whole builder. Their import-time code runs
 # but does not reach the prepared output.
@@ -698,70 +697,21 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 # -- build -------------------------------------------------------------------------
 
 
-def uv_runtime_closure(lock: dict) -> list[dict]:
-    """The `uv.lock` packages the builder loads: the transitive `dependencies` of
-    `BUILDER_PACKAGE`, with an edge's `extra` followed into the target's
-    `optional-dependencies`. Never `dev-dependencies`: pytest, ruff and the other dev
-    tools are installed beside the builder but never imported by it.
-
-    Generous where the lock is ambiguous: an edge reaches every locked version of its
-    target and ignores its `marker`, so a spurious miss is possible, a stale hit not.
-    """
-    tables: dict[str, list[dict]] = {}
-    for package in lock["package"]:
-        tables.setdefault(package["name"], []).append(package)
-    reached: set[tuple[str, str | None]] = set()
-    pending: list[tuple[str, str | None]] = [(BUILDER_PACKAGE, None)]
-    while pending:
-        name, extra = pending.pop()
-        if (name, extra) in reached:
-            continue
-        reached.add((name, extra))
-        if name not in tables:
-            sys.exit(f"real-seed-cache: uv.lock has no package {name!r}")
-        for package in tables[name]:
-            edges = (
-                package.get("dependencies", [])
-                if extra is None
-                else package.get("optional-dependencies", {}).get(extra, [])
-            )
-            for edge in edges:
-                pending.append((edge["name"], None))
-                pending.extend((edge["name"], e) for e in edge.get("extra", ()))
-    names = {name for name, _ in reached}
-    return [p for p in lock["package"] if p["name"] in names]
-
-
 def lock_sha256(name: str) -> str:
     """The lock file `name` (one of `VERSIONED_LOCKS`) as every key holds it: without
     the workspace members' own versions, and for `uv.lock` only the builder's runtime
-    closure (`uv_runtime_closure`).
+    closure (`keyed_cache.uv_lock_sha256`, shared with the G1 cache).
 
     A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
     the builder's fingerprint normalizes), and nothing a build loads or records reads
     it, so the release build keeps reusing the preparation and bundle its candidate
-    made. A dev-only pin is outside the closure and moves no key. Each closure
-    package is held by name, version, `source` and artifact hashes (`sdist`,
-    `wheels`), so a re-published artifact moves the key; its `dependencies` and
-    `metadata` are left out, since the closure's own pins already fix what loads.
-    `Cargo.lock` is held whole: for it the keys also hold the compiled `reg_core_py`.
+    made. A dev-only pin is outside the closure and moves no key. `Cargo.lock` is held
+    whole: for it the keys also hold the compiled `reg_core_py`.
     """
-    lock = tomllib.loads((ROOT / name).read_text())
+    text = (ROOT / name).read_text()
     if name == "uv.lock":
-        members = set(lock["manifest"]["members"])
-        held = ("name", "version", "source", "sdist", "wheels")
-        packages = [
-            {
-                field: package[field]
-                for field in held
-                if field in package
-                and not (field == "version" and package["name"] in members)
-            }
-            for package in uv_runtime_closure(lock)
-        ]
-        return digest(
-            {"package": sorted(packages, key=lambda p: json.dumps(p, sort_keys=True))}
-        )
+        return uv_lock_sha256(text)
+    lock = tomllib.loads(text)
     # Cargo records no `source` for a workspace (path) package, and one for every
     # registry or git dependency.
     for package in lock["package"]:
