@@ -4,11 +4,8 @@ import { render } from "vitest-browser-svelte";
 import App from "./App.svelte";
 import type { Context } from "./lib/api";
 import { getContext, getShow, validateProject } from "./lib/api";
-import {
-  delivery,
-  registerShow,
-  variableChild,
-} from "./lib/catalog-node-view-test-helpers";
+import { registerShow } from "./lib/api-test-helpers";
+import { delivery, variableChild } from "./lib/catalog-node-view-test-helpers";
 import type { RawDraft } from "./lib/project_data";
 import { projectStore, setPersistence } from "./lib/project_store.svelte";
 import { router } from "./lib/router.svelte";

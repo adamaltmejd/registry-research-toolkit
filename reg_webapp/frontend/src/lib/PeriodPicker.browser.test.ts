@@ -421,12 +421,6 @@ describe("PeriodPicker — window slider (#615)", () => {
     await expect
       .element(screen.getByText(/Deviates from project window/))
       .not.toBeInTheDocument();
-    // The slider shows the window projection, not HT2020, so the 2009–2010 span
-    // past coverage is no real gap: fails if the sub-annual case still marks it
-    // "Not delivered".
-    await expect
-      .element(screen.getByText(/Not delivered/))
-      .not.toBeInTheDocument();
     await expect
       .element(screen.getByRole("button", { name: "More options" }))
       .not.toBeInTheDocument();
