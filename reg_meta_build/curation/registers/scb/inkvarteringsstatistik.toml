@@ -55,233 +55,36 @@ panel_time_grain = "delivery"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:11680\",\"variable:27294\",\"member:481286\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:11680\",\"variable:27294\",\"member:481286\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:11679\",\"variable:27294\",\"member:481234\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:11681\",\"variable:27294\",\"member:481319\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:13059\",\"variable:27294\",\"member:578520\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:13058\",\"variable:27294\",\"member:578483\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:13060\",\"variable:27294\",\"member:578565\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:13888\",\"variable:27294\",\"member:633711\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:13887\",\"variable:27294\",\"member:633660\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:13889\",\"variable:27294\",\"member:633743\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:16025\",\"variable:27294\",\"member:767521\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:16023\",\"variable:27294\",\"member:767480\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:16026\",\"variable:27294\",\"member:767566\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:18076\",\"variable:27294\",\"member:836342\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:18072\",\"variable:27294\",\"member:836098\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:18077\",\"variable:27294\",\"member:836372\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:18651\",\"variable:27294\",\"member:877762\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:18645\",\"variable:27294\",\"member:876637\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:18652\",\"variable:27294\",\"member:877807\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:19090\",\"variable:27294\",\"member:916321\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:19089\",\"variable:27294\",\"member:916271\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:19091\",\"variable:27294\",\"member:916351\"]}",
+]
 fields = ["coding"]
 valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "33aa0f3f1a910b863b16e700cac8b1ca12932408a697765fabbf7f92e66d7fdd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:13059\",\"variable:27294\",\"member:578520\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "1ba40d8865a1ff6fe8cf365e4062af2b78644ba555e714da606e70e8782fa565"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:13888\",\"variable:27294\",\"member:633711\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "bf6b40b3496700b5fd06aca7c236a7363aa673d09df055a58177ee8cd82ba8f9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:16025\",\"variable:27294\",\"member:767521\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "0562639973ce35e49ae276de6657423570a414e4a5a200d6557bdbb899273f31"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:18076\",\"variable:27294\",\"member:836342\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "4ff5cd0bef43583c0c7a3d1c6fd07ae20db59f5749551c6cd43eac6b1f4ad5f5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:18651\",\"variable:27294\",\"member:877762\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "b63104616915f6889d11300b73ca7074bc687009e7bca1acefcdf87d15810f6f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:933\",\"edition:19090\",\"variable:27294\",\"member:916321\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "e5fecfca57bec508a336329a3dce73201495c32de40da1fb41fad2dd43915b6a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:11679\",\"variable:27294\",\"member:481234\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "41564cb89f79d4ca0ff8d1351001d3cb811a5c0657d9cdc9a9a0c428e4205bbf"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:13058\",\"variable:27294\",\"member:578483\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "c4e9b760a0b7cefeb30ee8659d0f5bf67d6b9e8b607e3c7fbae08ffd9cc1fbc4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:13887\",\"variable:27294\",\"member:633660\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "08e621fbffeb20f2dbceaffde33014fed63e13fa467739478ae598ccb70f3e3b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:16023\",\"variable:27294\",\"member:767480\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "cb3eaf77281694a7e7f08bccdfb13c6da1f08a3fc533f305a6218fbee355d15d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:18072\",\"variable:27294\",\"member:836098\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "208af38d2e15864e14b79d970bbfed24b604aff041780e1c3296d286cafd7abe"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:18645\",\"variable:27294\",\"member:876637\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "053f1152f788d303a5e9ae638a3cfd538b3af2a6c47757b035ef725cc4cfcb83"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:973\",\"edition:19089\",\"variable:27294\",\"member:916271\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
-valid_to = "2024-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "f9fd74c4ce426c10bc3e112fe1184e083c81bc75d45c3777fb01389483ed808c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:11681\",\"variable:27294\",\"member:481319\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "d4e0821ac7a44516a05a899707df6d5db846384cfd5ecfbe22bdb4dead035ba8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:13060\",\"variable:27294\",\"member:578565\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "98acccd6e4d2329a816b83c77f613d6a2b54e927b875f64ab19f549255245da4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:13889\",\"variable:27294\",\"member:633743\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "83f39215f8db160391ee4968fe6c5be9e7f9cf943b6a4b27d1643cacca10f2fa"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:16026\",\"variable:27294\",\"member:767566\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "6963636c7d7e641e947357c26b148e1d291bc3f5227986494e1121de8896550c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:18077\",\"variable:27294\",\"member:836372\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "6d2ee34e7fd129d9d7baa351246914f470f127893a2da109f2f6624a313c74d7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:18652\",\"variable:27294\",\"member:877807\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "c0dcf64622137c8917412c2f191c12189c5d2331ac8b4a8388eb053b8042bcd1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/inkvarteringsstatistik/ar-och-manad"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:151\",\"variant:974\",\"edition:19091\",\"variable:27294\",\"member:916351\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
-valid_to = "2024-12-31"
-reason = "The source supplies no own year-and-month coding association for this exact 2018–2024 delivery window. Retain every original field and date and all known earlier lists. The year/month description does not establish the complete stored encoding or special values; do not generate a guessed enumeration. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "12d2b433ce7b173062271868bf5cb80f4c78d39560a020244d7e123517382359"
+expected_evidence_sha256 = "e98f2579d493f94439df06d6900f37fc6e8ca12966fc597dc1e9b1d6712aa185"
+expected_diagnostic_sha256 = "e240cee5e412498716bae270efd264d984623ab8de54742150cdebb4106656e7"
 
 [[identity.partition]]
 variable = "151.27236"

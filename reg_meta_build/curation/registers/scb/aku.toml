@@ -2243,7 +2243,8 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "530384f0f889da44210866fb8ce1595f5dd30649b0377ef9ebbca618202c3be5"
+expected_evidence_sha256 = "85f916871c63b1db10e4df1546a0e9eb6e59fff9da620ed3b81a9ed518224991"
+expected_diagnostic_sha256 = "d4b71676a378fd7165c80f699ecbaf5c563d1ed9100f3adfe65b0ae651f09c27"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -2257,46 +2258,19 @@ expected_evidence_sha256 = "4d2a352a6e3debc181e7fd5f3bb7d01ad65e8625c30daf39e3dc
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/aku/studfrittim-refvecka"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18775\",\"variable:21673\",\"member:889577\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18775\",\"variable:21673\",\"member:889577\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18774\",\"variable:21673\",\"member:888308\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18772\",\"variable:21673\",\"member:887634\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:13795\",\"variable:21673\",\"member:626886\"]}",
+]
 fields = ["coding"]
 valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "1c6b299648018abebe56689523d262a2bad1ddb9a0c858348716030f1ba5891a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/studfrittim-refvecka"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18774\",\"variable:21673\",\"member:888308\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "3749ba2a69ab1ee89a2d326935e53315fb5960271969b89f60c25725ff873dad"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/studfrittim-refvecka"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18772\",\"variable:21673\",\"member:887634\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "941dc16f8443ab4c4fb8aa0ab9996f26a57a24f9a24e72ee053064e005d72b6c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/studfrittim-refvecka"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:13795\",\"variable:21673\",\"member:626886\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "1d00106a888ab0c1e2f5982c0661cb17548a1fabf89c8e8b6daf98666156d6d3"
+expected_evidence_sha256 = "4fe86242e5edafb868d66912cc56fdf42f40adb0ede0502b0be1a98e6a5f1b60"
+expected_diagnostic_sha256 = "23d740d2ee53bdad38fe7b9594a90e474467f7a349754c9a6b40505529f2460c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2307,7 +2281,8 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "c58bb7bc16cca9e5387dfee31afd1b8e3d3d1f09faf91f956163b951dac53829"
+expected_evidence_sha256 = "a91d789ed0ab33da4330af20eabf5974dee64ecea64f33f56665ff02f5a548cc"
+expected_diagnostic_sha256 = "7d05276cbb9917818e8c6b170e45783a1f16ec5959ac9de9d4f70e92301f415e"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -2336,7 +2311,8 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "e0bb61909bb70f69d8681a81f4eded13c7af82eff89dd3888fb4f8f7e64b780f"
+expected_evidence_sha256 = "31163036a2408ec3bb52aea65fd609daac4ef75570a4848d9daae78cef01772a"
+expected_diagnostic_sha256 = "a29c968b1a3aa4ea5e1a871ee647bc06a175cb9802306c78e0a0cd6f058651a3"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -2392,40 +2368,24 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "7289419258ca8cb5f4a98c5019f4bc6eb6f94fbf2c200732bd8848f3692070d7"
+expected_evidence_sha256 = "f8a488c26ee8a35e9d89695827e572e56145a89d518f60a433bb35b1097b9d17"
+expected_diagnostic_sha256 = "ca7ab7a74a6a82aa594cbe226f3ead98bed36275a24caad1602aa5951d87bedb"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/aku/sokvslut"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6127\",\"variable:6836\",\"member:381356\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6127\",\"variable:6836\",\"member:381356\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6125\",\"variable:6836\",\"member:381209\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6109\",\"variable:6836\",\"member:379784\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-04-01"
-valid_to = "2005-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "19c761b1fe88e186a104fff6adf693d2909a587fd71508b491a6b1938bd46b95"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/sokvslut"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6125\",\"variable:6836\",\"member:381209\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "24716f90c9d22d806ca6ac0fae27a3bd6c78a6b34e5b2110ec5fc9d1e8144971"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/sokvslut"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6109\",\"variable:6836\",\"member:379784\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "6de93c80baca1f95da9d6dd7b3003c624aff5f7ed7009bb50c08c4f60a232841"
+expected_evidence_sha256 = "fa9a292940b24dfc05972a3e34de3717a7b220a07e3a3f53b72350fc528ad7dd"
+expected_diagnostic_sha256 = "0c9e772ea717477453d4540c32527fbc986818cfd2a0e0ae673858c73dc033f5"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -2522,46 +2482,19 @@ expected_evidence_sha256 = "49df022ae9f460e9437aa13c457b4d5863dde7610a96b730c132
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/aku/studietimmar-formella-betald"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18775\",\"variable:7829\",\"member:889576\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18775\",\"variable:7829\",\"member:889576\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18774\",\"variable:7829\",\"member:888309\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18772\",\"variable:7829\",\"member:887633\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:13795\",\"variable:7829\",\"member:626887\"]}",
+]
 fields = ["coding"]
 valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "405a13023ff1843b53f18fdd81d7fd3128b269c2484989c9a20409dccec3cdd6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/studietimmar-formella-betald"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18774\",\"variable:7829\",\"member:888309\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "3739d12229702096f1d83a8fd7a198f9736020d4764217b41a1104d748839bc1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/studietimmar-formella-betald"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:18772\",\"variable:7829\",\"member:887633\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
-evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "f317376360a456047d9d0153f5bc698ad04e34decdad32c754ddaaaf6049fd88"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/aku/studietimmar-formella-betald"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:13795\",\"variable:7829\",\"member:626887\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "9284f0f4250324430068be1aefe7ed21e12315e6ea7ebe05fa8679299d14bd65"
+expected_evidence_sha256 = "118969d4bf7e3eaa53c104319880d6babf885e48a00f1977a3c8459df04bc477"
+expected_diagnostic_sha256 = "10ff9ecd8b041d87308aad341dba9ab6d579b3e9fbe7af0f74c5f9a636580a4b"
 
 # ── #1603 A2: SWECOV AKU_2015–AKU_2020 ArVerks3 ──
 

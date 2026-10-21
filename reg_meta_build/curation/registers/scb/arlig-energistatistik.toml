@@ -435,52 +435,19 @@ source = "codeless_overlap.toml#/resolve/3"  # v18 accepted-codeless:3:*, 2 case
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:15948\",\"variable:35301\",\"member:763698\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:15948\",\"variable:35301\",\"member:763698\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:18251\",\"variable:35301\",\"member:845944\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:18568\",\"variable:35301\",\"member:870223\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:19319\",\"variable:35301\",\"member:929484\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:20027\",\"variable:35301\",\"member:997667\"]}",
+]
 fields = ["coding"]
 valid_from = "2020-10-26"
-valid_to = "2020-12-31"
-reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
-evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:18251\",\"variable:35301\",\"member:845944\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
-evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:18568\",\"variable:35301\",\"member:870223\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
-evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:19319\",\"variable:35301\",\"member:929484\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
-evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransleforbrukning-transporter-kvant"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:801\",\"edition:20027\",\"variable:35301\",\"member:997667\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "The source does not establish a code domain for this exact fuel-quantity delivery. Preserve the quantity facts and leave its value set unavailable."
 evidence = "Approved bounded unavailable-coding policy. Complete native35301 family: the 2018 kvant member584906 describes Bränsleslag i klartext and links categorical codes1–5 (Bensin, Diesel, Övriga bränslen); the2020–2024 kvant members instead describe Kvantitet av bränslen för egna transporter and have no own positive code association. Preserve every original, the2018 categorical domain and its associations, and all other deliveries. Do not extend that categorical list to quantity states or suppress independent role/name/definition conflicts. Exact proof: Batch48-energy-fuel5-proof.json and Batch48-energy-35301-own-coding-claims.json."
+expected_diagnostic_sha256 = "b7136535c4aa10010afb761d21bf151b84c79076190d4cfb5ed268b15d955b04"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -6349,79 +6316,22 @@ noted = "2026-10-01"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:13130\",\"variable:35402\",\"member:584942\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:13130\",\"variable:35402\",\"member:584942\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:14254\",\"variable:35402\",\"member:648631\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:15923\",\"variable:35402\",\"member:762687\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:18250\",\"variable:35402\",\"member:845883\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:18444\",\"variable:35402\",\"member:861537\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:19317\",\"variable:35402\",\"member:929392\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:20026\",\"variable:35402\",\"member:997604\"]}",
+]
 fields = ["coding"]
 valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
-evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "622835af21f986725cd7d8dc6968f27fbb3c945645ab604a6ced45b750aee5d5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:14254\",\"variable:35402\",\"member:648631\"]}"]
-fields = ["coding"]
-valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
-evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "21c777e15e4d6c5df5f56ec7a4d849d626aa9c5b595b85827b48881c44c4132f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:15923\",\"variable:35402\",\"member:762687\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
-evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "124e6874a94b11f5c95d2b1875a49210e5e2ba8e38cbb6343824e558b69032b7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:18250\",\"variable:35402\",\"member:845883\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
-evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "ff090646d3b3cf2a3678baba6e196e39fe16f04f17fe3adc2a45fddc980ffa3c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:18444\",\"variable:35402\",\"member:861537\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
-evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "2a2bcbe89d0be55f207616a142c2109d6c0d8b05cf61bb7463f817de79c43ca1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:19317\",\"variable:35402\",\"member:929392\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
-evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "78ee10e9b0eef40222cf8fcf8d7657ee6254611c38ae700e7ba50ce2005d3c34"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/arlig-energistatistik/bransle-for-varmeproduktion"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:200\",\"variant:802\",\"edition:20026\",\"variable:35402\",\"member:997604\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "The source stores a fuel row-number field radnr and a separate literal fuel label, but supplies no own stored fuel-code domain for this exact2018–2024 delivery window. Its30-code response list is explicitly associated with2009–2017 only. Those original lists and all later source fields remain; later fuel codes are unavailable and no domain continuity is inferred."
 evidence = "Complete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json. Exact own-source coding audit Batch48-energy-remaining8-own-coding-claims.json."
-expected_evidence_sha256 = "38647deb17a1b6d56d08ccabd13af154902abbba3a9d8525f784e6eca0433f4a"
+expected_evidence_sha256 = "323b50aa9a79fbd994cb2a2eae9eb59f44a40b08b949f73d62839619d9effd00"
+expected_diagnostic_sha256 = "70a006385f31b06d07b0ee060966603c64df11b1e88b740aa7d389789f0ff394"
 
 [[acknowledge]]
 code = "unresolved_native_identity"

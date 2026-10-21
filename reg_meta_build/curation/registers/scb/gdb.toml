@@ -259,26 +259,17 @@ witness = ["2023-01-01", "2023-01-01"]
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/smaort"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:62\",\"member:457114\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:62\",\"member:457114\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:249\",\"edition:11241\",\"variable:62\",\"member:457034\"]}",
+]
 fields = ["coding"]
 valid_from = "2017-01-01"
 valid_to = "2017-01-01"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "8b4603678825595002c5c2c470bf37ab4a9cc4290d7eeecfe3629c1d827a19ea"
-expected_diagnostic_sha256 = "280b2824ad8c20e2a04501bde83e5cffec0bf0cc6dbe4770b231ba41dec8a12e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/gdb/smaort"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:249\",\"edition:11241\",\"variable:62\",\"member:457034\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-01-01"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2ad0f99caf4e892cfd367489b346c2a868feaf765cdefee966937051646916bd"
-expected_diagnostic_sha256 = "86401597e07da9ff87175c4697b85bb52645b029bb4a48acdc7e2c0fb816a3a5"
+expected_evidence_sha256 = "d471ef516921fddf506dfa12f28389002be2b756810681f4d8f397849f89b67e"
+expected_diagnostic_sha256 = "ee9d21a4db119c4ef8bc0bb6ce5b8994e022576326a66769aee7cd2dbe7c5505"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -751,158 +742,357 @@ noted = "2026-10-16"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13392\",\"variable:36\",\"member:599438\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13681\",\"variable:36\",\"member:615819\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:14482\",\"variable:36\",\"member:660225\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:16395\",\"variable:36\",\"member:799147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18792\",\"variable:36\",\"member:891448\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18793\",\"variable:36\",\"member:891473\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13392\",\"variable:36\",\"member:599438\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13681\",\"variable:36\",\"member:615819\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:14482\",\"variable:36\",\"member:660225\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:16395\",\"variable:36\",\"member:799147\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18792\",\"variable:36\",\"member:891448\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18793\",\"variable:36\",\"member:891473\"]}",
+]
 fields = ["coding"]
 valid_from = "2025-01-01"
 valid_to = "2025-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "af767eb57c16910f0e869b336baaf03b7dda58ef9fb07d7d9441bac8160c11fb"
-expected_diagnostic_sha256 = "b56dfbbec45f54f24618eeb8c04a000e401d1f2dea5a777fd18c13fc36bc8dc3"
+expected_evidence_sha256 = "942eaa558c7f3189f074ee7005eba8602f7226dcab7d1b1f2de19fdb6f4c7d96"
+expected_diagnostic_sha256 = "16ccefb7916d8474cddbf76287e0eed1789eb762d2552b5f3cd584220bef8ff3"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1991-01-01"
 valid_to = "1991-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "7e392c14d0c38aaa03fb65069a5ad522676fc65c4bfc71a38bae7eaea5ffd2fe"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "6728cf1e5ca9a7e3fdd14c89d18c29a74aba1e26a76fdb2ad89943b973db5e0e"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1992-01-01"
 valid_to = "1992-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "2e91fce9cd16cca71e57e25404d2c4b4dd36b61c187c1dd9dc0f48ef4fbd6c83"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "b8dae568bc5ae486c590c510ba34880fe3359eee29fac85aa2d163eb3c15b6b3"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1993-01-01"
 valid_to = "1993-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "047e2d975292610f97f99a5471bde2dafbff254f1cb4552030228743c511e063"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "526e6030f7ff07e69e01875415534070175fb49ede4bd83b3029618ab626428b"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1994-01-01"
 valid_to = "1994-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "bde6acc56593a5b21ece788304a614aca326242ec1a0e9dd5865a7da320e25e3"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "0644a7f7af044519a0beb55197e76a7a5a21ce43ef570a09a4a31070c9d9391d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1995-01-01"
 valid_to = "1995-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "ff11523bcd40699ed4ea4dba8bba9013801f9e669ce97bec59b03c5deed16c2a"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "19302b00a1879ba90d13719d0fd8029839685401c010aa5540f047983d082032"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1996-01-01"
 valid_to = "1996-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "fedca7b964470d46c6cff68e4493fa4ab4b993355114a17707126fb889eb35c5"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "dca9dd4694e821cc4ef7afebcaaa1f4a5aa66532b1124c9220d3b403c9d26191"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1997-01-01"
 valid_to = "1997-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "517bb731acfa9641bdece8c4ebcea115dc14d51cf9ac0a024b9d0420c7cd7f92"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "b8f3fcd26c1ccb4a8895da366a53dae5bc316ebc0b498bc2da7809ddd504c945"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1998-01-01"
 valid_to = "1998-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "049da7594600e5b62078e0cf702c0dff94a5e6cb8559f70f79d78adc2abc71be"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "1ffda0af3d2623a6f56c8aa16227a825a337fd3197ef980623589100b388e347"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "1999-01-01"
 valid_to = "1999-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "194c4af9a6de9cec49a71d69315c742b67684eed820f4434bd46bdd15cf64d43"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "637f539a6d2a0d1ffe4fe6b7dbfb1dd5d2074c8939d05b752bd25e00447259ac"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "2000-01-01"
 valid_to = "2000-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "9e82ffb3bb7927529eb5b2d7cebf28c06029ad4d8cab32d909fd7f1507880bcb"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "4a2f8f3e1e86517fdfdd022fba57245a79bd7fe26d841e4ab3f21ff658254444"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "2001-01-01"
 valid_to = "2001-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "a343a9fa3ed495b22a51a6a84f2580a1ee0b44f5b563ac68d35bc5134673ee1e"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "cc7c012ecacd315d7aae567d357574a2561772e94c9ab2d7bc77ea659058e3e9"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/kommun"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:11244\",\"variable:36\",\"member:457111\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:160\",\"variable:36\",\"member:464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2341\",\"variable:36\",\"member:143731\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2346\",\"variable:36\",\"member:143933\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2419\",\"variable:36\",\"member:146760\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:262\",\"variable:36\",\"member:2486\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:2793\",\"variable:36\",\"member:166186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:310\",\"variable:36\",\"member:2822\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:312\",\"variable:36\",\"member:2930\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:3687\",\"variable:36\",\"member:226728\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4258\",\"variable:36\",\"member:270666\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:4658\",\"variable:36\",\"member:291585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:5462\",\"variable:36\",\"member:334939\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:6059\",\"variable:36\",\"member:373976\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:227\",\"edition:8571\",\"variable:36\",\"member:417442\"]}",
+]
 fields = ["coding"]
 valid_from = "2002-01-01"
 valid_to = "2002-01-01"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "fdb4ca32b223ee8cb767ba2ad8ae6c5717ff8b1f28100a8c757d1b353299fe9b"
-expected_diagnostic_sha256 = "2219a5d30e4be9d41dcecb2d31b5a9d3b432b3342cbbb2bfba7391b39b6bafce"
+expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
+expected_diagnostic_sha256 = "d934c8df0815d4090c9097c746becd792678897313867ebed1805920ff15aa26"
 
 # ── #1603 D: GDB year-end rule on SCB-documented versions (#1639) ──
 

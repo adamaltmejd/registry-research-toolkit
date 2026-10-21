@@ -5357,8 +5357,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-06-30"
 reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
 evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "ed9f3dce481063a0e7ac3565ffdbcf86c84b68705d97bbbd671847108e0b2d80"
-expected_diagnostic_sha256 = "63360b64832213449f1da8209e26fac165260a5d28e3f273afb58f65ebf2e5cd"
+expected_evidence_sha256 = "f93aa27af8f68505e1a86e6fffa8931fd4ac1679abf20e25a463f5c197b4213c"
+expected_diagnostic_sha256 = "80100a5078d94bda9120fcb24f397b8cb180b59e8e47c82b0f5ded6364cee59b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -5369,8 +5369,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-06-30"
 reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
 evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "ce59fd0b1771f02fdba2a80e2fc270297cd3e0d60f8ba0a37577becb2914e72a"
-expected_diagnostic_sha256 = "16650e1410374b304d64e7ec1aa82b155fe8896d0c6dd844b822bda5a3e92c6b"
+expected_evidence_sha256 = "5379c1af9dd4674117ee59ec7d368dda56ac19ca126819826c5e1583048c17cf"
+expected_diagnostic_sha256 = "72054f60fc23b41615d00b93539fdef137feb93afb0f91b9f415ad4a2c651fe0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -5381,8 +5381,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-06-30"
 reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
 evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "0f5b1d3ec3077a9ac732148cdef6b8f07dc454559c29d8a839ca006ff84179b7"
-expected_diagnostic_sha256 = "aebb8dd2f18f394d8dd5b1a4a3d866db81d7444bb9dc87c32ecc2076da7d79bb"
+expected_evidence_sha256 = "f61bf71c6ac7c336ed67f4c887d6fa2ff56d59e6941c6ff45c1ca923ca1a17f2"
+expected_diagnostic_sha256 = "5fac24ba78edd1b981215132e575aa36dc59f5d79c04c9787653f26af7f4773f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -5393,8 +5393,8 @@ valid_from = "2020-01-01"
 valid_to = "2020-06-30"
 reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
 evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a078af323212879181f67ec292d11ebb05b0a0e436550bc4508a25c06c8c71f1"
-expected_diagnostic_sha256 = "8901e1ab5c05a61f406819e7d50232b19dc05d81c0872f02c532b253297b0865"
+expected_evidence_sha256 = "d215b1621a95589799438eee7fcabed09ae235cc0a0b458fea664f06cb9bf4c2"
+expected_diagnostic_sha256 = "8b5718a6175b6583462a45487317475f59d093998a0211e495c9835e8a3686d8"
 
 # #1261: siblings SCB names with the bare family label get their subquestion as a name.
 [[errata.field]]

@@ -150,98 +150,36 @@ noted = "2026-10-02"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:12200\",\"variable:1811\",\"member:516413\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:12200\",\"variable:1811\",\"member:516413\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:12198\",\"variable:1811\",\"member:516337\"]}",
+]
 fields = ["coding"]
 valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "5b2310c903b33b03a127efb061c3c436415036ab5ecc571e0f66a2625967a995"
-expected_diagnostic_sha256 = "d5963cf3a6452d0423fb73329047227434fc5ae1ea2765e6bf194d6ed8e8d9c6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:12198\",\"variable:1811\",\"member:516337\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
 valid_to = "2002-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "4e41394f46f35ccf682d69ef5668a27832dd95fbb86d0e75d8eae9c88f9e542c"
-expected_diagnostic_sha256 = "17f24c4df96b516e070e24b8969c927b1c5c20fd7351480159593ebda8659715"
+expected_evidence_sha256 = "aecea13737c93635d804c9a2d5857958f9e76a49515bb40eb8fd38e0e6d65e41"
+expected_diagnostic_sha256 = "55b600ab2a581b09bc2aa00b76659df1d6de77e97931b555f0af39fd15dc610c"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:2233\",\"variable:1811\",\"member:139851\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:2233\",\"variable:1811\",\"member:139851\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15480\",\"variable:1811\",\"member:732161\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15481\",\"variable:1811\",\"member:732228\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15482\",\"variable:1811\",\"member:732305\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15484\",\"variable:1811\",\"member:732369\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15485\",\"variable:1811\",\"member:732502\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "ba146a29cf4aae7471aadc3c8e0fd54857a1a5517ed409ebd66613cb3069e4e5"
-expected_diagnostic_sha256 = "d96515563c1efaba53a858da4e3592afbbb49c1fa5352fd5c8bf7cabe0ec00fa"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15480\",\"variable:1811\",\"member:732161\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "6db877320e1596e34d788a27bb6e2dce9f21a58899c90a7d93ee6923baa0f618"
-expected_diagnostic_sha256 = "773e8a6a9f9809188ba24880b441d8022ae84f968d2bba96ead04a29f762fc01"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15481\",\"variable:1811\",\"member:732228\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "bf28dda34c26b80e5f17246669a950b7cce6531b7666c9953decdce7c77fab73"
-expected_diagnostic_sha256 = "8bcaca78afee1fdbdb06e694ce655e0703e79741ac4e0487aa685305b24aba03"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15482\",\"variable:1811\",\"member:732305\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "bbb32f1f9655748b2d542fb523953c9a64e109c8539d4655519df774624cab84"
-expected_diagnostic_sha256 = "f9ef8f0acca28472b1e0614fa8290d194ff007df48228d2ed4ff0c50868640c4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15484\",\"variable:1811\",\"member:732369\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "0d058b28aa3ea5f57c199cfc8211a39a402535f691296bf74d1f8b2348e70f04"
-expected_diagnostic_sha256 = "9387ccf367bb87a5b36120d7180953fcc5586b6974c739d3c4731ea4b8072760"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/variabelnummer"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15485\",\"variable:1811\",\"member:732502\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "2bca0263383e0ab508caad3cab3948f807309f9363f3064549c0497aa5041f58"
-expected_diagnostic_sha256 = "9af2e6f9b069b57171673ce4a623f48dbd402a09ee8fe5d1f7f0cb7dab14b5df"
+expected_evidence_sha256 = "2d7230fb0361dd055f516f28f08d4cc9810fde47cbe03a113caa26dc04b043b0"
+expected_diagnostic_sha256 = "c630f292a2ac9ed773752a0f211d2526bdaa0e4f340e5f8302fc2ded83da672b"
 
 [[identity.partition]]
 variable = "176.326"
@@ -526,35 +464,15 @@ expected_evidence_sha256 = "6014a735b2bff5d1e9be35207710e78a8eaebda871b26430efc5
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/livsmedelsforsaljning/ngs"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:2233\",\"variable:19052\",\"member:139898\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:2233\",\"variable:19052\",\"member:139898\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15480\",\"variable:19052\",\"member:732127\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15481\",\"variable:19052\",\"member:732194\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "0d533713c937fb2cc3d08711b1f630f1e972dd2af6c607748759b9290e9d06cb"
-expected_diagnostic_sha256 = "6e889096cb59a7ce13b0c43b545039b4b9ee89b9979b796da92ebb374aafcab5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/ngs"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15480\",\"variable:19052\",\"member:732127\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "4508c57d396e927bcf033b0ff22949751e8e93b767bd969ec120c9d8a430ff29"
-expected_diagnostic_sha256 = "e6992846356db3deb6d5396161b03345154f6761414fecf1a12ec98451ffdfe4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/livsmedelsforsaljning/ngs"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:176\",\"variant:242\",\"edition:15481\",\"variable:19052\",\"member:732194\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "efdb756f667ff1b72983ee27a34845336b85e566686f71d43b2ff25f2669b528"
-expected_diagnostic_sha256 = "d0673df6c12f7be5f5f6849d116c88cc0fc2eddeba51845d021838a110fcc261"
+expected_evidence_sha256 = "a0abeb8ed8c5451d530863e5006223de538d3c10008b26cb5adcd6a1289022c0"
+expected_diagnostic_sha256 = "6794722fdf575896b2ea6dc07eb9aa31dc01ca16f9fb7ea5e5ca80ce917f418f"

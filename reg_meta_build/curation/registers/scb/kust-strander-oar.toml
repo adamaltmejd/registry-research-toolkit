@@ -90,8 +90,8 @@ valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7591b32b1fe70ab2fa842934b8fbffe797ec6b7f350b72b9675ae37efb1e3843"
-expected_diagnostic_sha256 = "4cc73a78de8290cced6a2d766913d65aa80ef84991f782dabc53d0cc18ab3b87"
+expected_evidence_sha256 = "927446faf811cf08dc0a19207790a1233ab35f9ae389fd04c05011cf8d40105f"
+expected_diagnostic_sha256 = "35912dce792bd9370d37d946e26b234216f08f1b7fcf2bc388ee20599150af4b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -102,8 +102,8 @@ valid_from = "2020-12-31"
 valid_to = "2020-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "872d8797f74b1a9fa8f76c730927d12b26e426d7b684d20ae66ecf1b83bee303"
-expected_diagnostic_sha256 = "cde571c5aca7d5e70cab7bd30ba00b790a9bb5456823fe5a30a913cb30445cf1"
+expected_evidence_sha256 = "795d4da9d129c835ac76328101fa51efcf394ab250d41f0bae2462b17cb6f976"
+expected_diagnostic_sha256 = "5a19e2b6e94014c929b10055c1071c81bfc5386bde7dc228a77e32b26ab68380"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

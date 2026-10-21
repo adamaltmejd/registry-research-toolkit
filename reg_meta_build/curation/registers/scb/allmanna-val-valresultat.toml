@@ -271,8 +271,8 @@ valid_from = "1988-01-01"
 valid_to = "1988-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "a53429f2243a9f4c316ea48b6d32a00b48190a6d377019283ae9e210e0d64ae5"
-expected_diagnostic_sha256 = "9b8035b445a781a4dd6fed275a2f254c63bfd1e0214c3f978006d218fd1b33a2"
+expected_evidence_sha256 = "38d8c63ac55812cc27bf6ad497a4c867fb4c5cb79af2de7483b3ec8438fbf82a"
+expected_diagnostic_sha256 = "b64046e727553a2e095fd88f523acf84bca1bfbf255dc40764dea0ec48e59396"
 
 [[acknowledge]]
 code = "unresolved_column_representation"
@@ -315,8 +315,8 @@ valid_from = "1976-01-01"
 valid_to = "1976-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "bdb70e4f70f780b604739e6d5be2c15fa06c2b4f47ca25e139b5f0e081873527"
-expected_diagnostic_sha256 = "860b693297df17a92a8c1ddb9c3ad13e16834ee1eafdd833b16de0181af2581c"
+expected_evidence_sha256 = "83c4236d980dccbe8455835af7c0b2cbaeb5240b719e1853f7e5bb5ae2d8405f"
+expected_diagnostic_sha256 = "4596b90cc9e0c90deb340c44a2ceb57266e856f09566591b0e1a09db8e42fd02"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -327,8 +327,8 @@ valid_from = "1979-01-01"
 valid_to = "1979-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "c825a064450150346bd1a656f4895ee94916fcd2db051fec15a68ecafc26aa58"
-expected_diagnostic_sha256 = "818850f83c68dbd553a0e41d75efe804f7e7d81ea12fed9734e7e476a8bacb9b"
+expected_evidence_sha256 = "1a394f7c2b7618b649e180e9e82f479b38592e4d23997cfd671e5a3b3f16379d"
+expected_diagnostic_sha256 = "950b44d9981df7b0f68c95e1a7ba4b1dbc8dee92ce3604c2801f1848c59cd69e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -339,8 +339,8 @@ valid_from = "1982-01-01"
 valid_to = "1982-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "4198fc78dbae0c5578464c12f97c9bbb7586d6b43d2d1dae93f5516ead984fb4"
-expected_diagnostic_sha256 = "b4801efeb0cdda7d912e6fd56e171af5eead58cb7700de55aa01507ffb3344e0"
+expected_evidence_sha256 = "7d43e082647d26c779aaa94dbcd958c047b851d26812636c909b7168cb776ad4"
+expected_diagnostic_sha256 = "7d5408357403eec09e52b7d539b4708395e40e22643391d30bd49e8d525b4687"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -351,8 +351,8 @@ valid_from = "1985-01-01"
 valid_to = "1985-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "a91eac2594da40242c78aedb300286d449cecfdb3c3ac63de62ac22261247fc7"
-expected_diagnostic_sha256 = "336d638c4164d89df2dcb43ab2959af96ab3475f69ae94f9cda85fe09203f746"
+expected_evidence_sha256 = "60f47adc351669f37fe69a168ff22cd158fa38da724184473ec63d899ff67e4e"
+expected_diagnostic_sha256 = "526227af5adfec6f1ea7881bcae15c56df5d72aaf278a1c38043af2477380c23"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -363,20 +363,24 @@ valid_from = "1988-01-01"
 valid_to = "1988-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "fb777efc2cf91487f230451e59e1e0404e0978af2be53b4390c459400f80dba7"
-expected_diagnostic_sha256 = "54a1d671620407a9995c3711654bf7fa1352ee3caf2fef44cf24b76f509d3c73"
+expected_evidence_sha256 = "2e3228346b19c580e4a5c845786f5acb3e4f531dad1fc99f7cf39b914118f385"
+expected_diagnostic_sha256 = "35ca77d910bc545f449c2a4d59c21ac3e7b59cbd171f24c535afd92f4a3a8ccc"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/allmanna-val-valresultat/landstingskod"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569026\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569043\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569076\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569026\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569043\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569076\"]}",
+]
 fields = ["coding"]
 valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "2445396379f1374b47c8c58bd815cfa3da3e5f3d5e5151048a6b15abdf817f66"
-expected_diagnostic_sha256 = "165ee5abe4a174e39c5f93f691eb90a47531d9697762b0f80e6bacc175bd959a"
+expected_evidence_sha256 = "cb2f42e0b2d721f7e6c1b6d282d2059403f9ec82271046385250bb992341fcaf"
+expected_diagnostic_sha256 = "60768f74bea8b5b7976e940773bde1a0e16fd6a56bd48ca20e0d840a67a30956"
 
 [[acknowledge]]
 code = "unresolved_flag"
@@ -391,14 +395,17 @@ expected_diagnostic_sha256 = "a93a5a5d66692c8b482e279869e9c23350e70d130eba0beed9
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/allmanna-val-valresultat/landstingskod-lan"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569026\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569076\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569026\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:243\",\"variant:493\",\"edition:12926\",\"variable:5056\",\"member:569076\"]}",
+]
 fields = ["coding"]
 valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The exact source delivery window has no own code association establishing its stored domain. Preserve the field, original metadata and all known lists outside this window; leave this effective value set unavailable. Historical county/electoral-district memberships and region codes are not supplied by a modern or neighboring-year list. No date, code or applicability is inferred."
 evidence = "Complete3565-original nine native families plus6Person prerequisites, actual4731primary/67summary/1integer-identifier support and12canonical books. Original multiplicity, every field/parent/scope/reference and complete bound source coding are pinned. Accepted retained-unavailable policy; exact review/proof Batch52-election-source-proof.json."
-expected_evidence_sha256 = "4f0e28bb88a0e3d75520d2270bb67a5c951115747a08a82473319b45c4f80fdf"
-expected_diagnostic_sha256 = "a5457fd1e864179dd660a7e328b7602a6cf9ece92a2b89a2eb0e48e2297ff0ec"
+expected_evidence_sha256 = "d8e808076d4cbde774f235301f62696debaf3c363e42fef825392d5534f84152"
+expected_diagnostic_sha256 = "18ea2fb5f15bde315a406c0117c67933a2f22c6afbb9ad8d884ccf458e8c00d5"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"

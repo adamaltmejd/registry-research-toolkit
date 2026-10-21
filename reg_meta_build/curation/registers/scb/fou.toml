@@ -17173,13 +17173,17 @@ expected_evidence_sha256 = "2363b3a13a94e44eee7ebf8362b4c6a7f25ce8ae8c70ae8d3655
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fou/larosate"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:1706\",\"variable:7591\",\"member:120162\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:1713\",\"variable:7591\",\"member:120538\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:1706\",\"variable:7591\",\"member:120162\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:358\",\"edition:1713\",\"variable:7591\",\"member:120538\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The exact 2007 Myndighet source editions lack bound code memberships. The complete native institution history contains institution names and separate institution-code lists, but no source association establishes these two historical fields’ encoding. Preserve the known institution quantity, literal, type, operation and periods; leave only this domain unavailable and retain all independently bound domains elsewhere. Do not borrow a neighboring institution list."
 evidence = "Complete accepted native families and full-register physical-coordinate collision review, actual source support and own bound coding multiplicity. No original or coding claim removed. Reviews: Batch51-Investment-FoU48-complete-role-review.json; Batch51-Investment-FoU-physical-coordinate-collision-census.json; Batch51-Investment-FoU48-own-bound-domain-review.json. Proof: Batch51-Investment-FoU48-source-proof.json."
-expected_evidence_sha256 = "751094a354d0741423e88c245d38b7d8bc4a1c931c66c93733e484a3675f7ce5"
+expected_evidence_sha256 = "e5944af7e69e319c5a0b2d3f98d9fb2fc63359f22ecc1e916302993183d5134f"
+expected_diagnostic_sha256 = "b7a3f3cf45ce9d3cf4f712f2fedbe15bff66ee443d1719299aa2d95295bade3d"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -17322,8 +17326,8 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "3603a869c47b5f98d283c989921327cf41663ba085cef2705671cc29b7eac81d"
-expected_diagnostic_sha256 = "e6db76fd9fc331e2d87f605d7a29a011505318ad1896a319c9b0ada129934dcb"
+expected_evidence_sha256 = "4d4f8f0d1dbe1029847ba2c7f48fc3bd8bd94f612478bb28738e23293d01c794"
+expected_diagnostic_sha256 = "30e54e4f45a992151b61259df16a54a5ea053f6a90fc53b8197b42332a5fe42d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -17334,8 +17338,8 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2de2cefbc0854dbd5cf77d0afd98502fa1e3f5d203a495c38648a25108da9112"
-expected_diagnostic_sha256 = "68d66bfd267911c7d9d58499227601cbf9a84e7c48886103e061417047e0a310"
+expected_evidence_sha256 = "dbfd6171fde5145bef6084b7ecb571fb27bd20ae82cfe2b31a3a434654d30101"
+expected_diagnostic_sha256 = "4dc289d74c189bb48dc7ba580351fb505a745e4168c6b88e12c135c826c36489"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -17346,8 +17350,8 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "87ae1bb58e30d874b87a27b6455e890b68a62d99ad1ad31e841b63d9fb5d06a4"
-expected_diagnostic_sha256 = "695c0492bc497c24edf9e61c347476d2e6b38ebf4d5a6a70806c0486161157b1"
+expected_evidence_sha256 = "2a536f2cc847122a8344904e9ab750e9a8483804048f1cc75166ef0a33aab7f4"
+expected_diagnostic_sha256 = "6c20f1bc25232b0e94f53aefd3806078a394cfa54eb0044cbc09b8b0d216e294"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -17358,8 +17362,8 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "ddf07b93f6f1d94db1ff8357381174b42bfecb74dd5ea4a0ff5d407106e013ca"
-expected_diagnostic_sha256 = "a9a8395227d63b8c9649dc995036cc20762fa44f55e327d87fd0eef123342991"
+expected_evidence_sha256 = "082666ddf6e501ec3aea976a042b30986c84f1934ddb1bd571bf68a6df1f9cfc"
+expected_diagnostic_sha256 = "67a3e050c44595b3f2b4c1f52e58d8834219e7f2008e661ec1393a5ed88d3130"
 
 # #1302/#1533: the [[errata.delivered]] INSEKT 2015/2017 binding (SWECOV's Sektor column)
 # extends sektortillhorighet to two waves with no bound code list. Same retained-
@@ -17368,22 +17372,34 @@ expected_diagnostic_sha256 = "a9a8395227d63b8c9649dc995036cc20762fa44f55e327d87f
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fou/sektortillhorighet"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:15126\",\"variable:1141\",\"member:707017\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:18425\",\"variable:1141\",\"member:860419\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19497\",\"variable:1141\",\"member:962060\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19498\",\"variable:1141\",\"member:962076\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:15126\",\"variable:1141\",\"member:707017\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:18425\",\"variable:1141\",\"member:860419\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19497\",\"variable:1141\",\"member:962060\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19498\",\"variable:1141\",\"member:962076\"]}",
+]
 fields = ["coding"]
 valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The 2015 FoU företagssektorn wave delivers the sector as Sektor, bound to sektortillhorighet by an errata.delivered entry; SCB binds no code list to the variable on this variant before 2019. Preserve the delivered occurrence and leave only the 2015 coding unavailable. The 2019+ INSEKT list does not establish the 2015 encoding and is not borrowed."
 evidence = "Real-seed check-curation (prepared 0bbb894f, registers 102,168,182,232,257) on the restored INSEKT 2015/2017 errata.delivered entry: missing_coding_period for exactly 2015 and 2017 and no other new error. Maintainer decision 2026-10-12 to keep the binding under the retained-unavailable historical coding policy (#1302, #1533)."
+expected_diagnostic_sha256 = "ae3f72396eeb8cec5b1b3f72510e40056e7f0fe31708fdb5b7bb46f453f753d0"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fou/sektortillhorighet"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:15126\",\"variable:1141\",\"member:707017\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:18425\",\"variable:1141\",\"member:860419\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19497\",\"variable:1141\",\"member:962060\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19498\",\"variable:1141\",\"member:962076\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:15126\",\"variable:1141\",\"member:707017\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:18425\",\"variable:1141\",\"member:860419\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19497\",\"variable:1141\",\"member:962060\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:182\",\"variant:373\",\"edition:19498\",\"variable:1141\",\"member:962076\"]}",
+]
 fields = ["coding"]
 valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The 2017 FoU företagssektorn wave delivers the sector as Sektor, bound to sektortillhorighet by an errata.delivered entry; SCB binds no code list to the variable on this variant before 2019. Preserve the delivered occurrence and leave only the 2017 coding unavailable. The 2019+ INSEKT list does not establish the 2017 encoding and is not borrowed."
 evidence = "Real-seed check-curation (prepared 0bbb894f, registers 102,168,182,232,257) on the restored INSEKT 2015/2017 errata.delivered entry: missing_coding_period for exactly 2015 and 2017 and no other new error. Maintainer decision 2026-10-12 to keep the binding under the retained-unavailable historical coding policy (#1302, #1533)."
+expected_diagnostic_sha256 = "f180914753109e951bc2e47d7db943d2e00d44778aac124b68a99a93436afd72"
 
 # #1302: FoU företagssektorn 2013 columns held by SWECOV; undocumented, so name = column (register precedent).
 

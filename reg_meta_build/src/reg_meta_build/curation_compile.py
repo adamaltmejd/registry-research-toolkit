@@ -91,6 +91,7 @@ from .source_coordinates import (
     source_register_key,
 )
 from .source_curation import (
+    RUN_ACKNOWLEDGED_CODES,
     AcknowledgeDecision,
     AliasWindowDecision,
     CheckedEditionRebind,
@@ -8003,6 +8004,14 @@ _GLOBAL_ACK_GUARDS_FIX = (
     "acknowledges."
 )
 
+_RUN_ACK_DIGEST = "acknowledge_run_digest_missing"
+_RUN_ACK_DIGEST_FIX = (
+    "Give a missing_coding_period [[acknowledge]] its expected_diagnostic_sha256 "
+    "(issue_run_sha256 of the issues it acknowledges): it matches every issue in "
+    "its window and refs, so only the digest refuses a period that appears in or "
+    "leaves the run. A stale entry's detail prints the current digest."
+)
+
 
 def compile_curation(
     tree: CurationTree,
@@ -8189,6 +8198,16 @@ def compile_curation(
                 raise ValueError(
                     f"{case_id}: refs must be serialized SourceRecordRef JSON objects"
                 ) from exc
+            if (
+                ack.code in RUN_ACKNOWLEDGED_CODES
+                and ack.expected_diagnostic_sha256 is None
+            ):
+                raise curation_error(
+                    _RUN_ACK_DIGEST,
+                    f"{case_id}: a {ack.code} acknowledgement needs "
+                    "expected_diagnostic_sha256",
+                    _RUN_ACK_DIGEST_FIX,
+                )
             matched = owners.get(name, [])
             if not matched:
                 if subset:

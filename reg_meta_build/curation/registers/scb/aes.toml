@@ -6294,8 +6294,8 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The exact historical window has no own bound stored-code list. Retain every original column, definition, operation, scope and coding association outside the window. Leave only this historical value set unavailable; no later country or month domain is borrowed."
 evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
-expected_evidence_sha256 = "cd5233d1ca3b4e606a8ed72ba269c1ce018105e2d67a2d0981ea38ad93c50f09"
-expected_diagnostic_sha256 = "2ab5e835ffd8f2071a83362e819c8ec2dc0f564823e54bd4a0dbdc145e146d82"
+expected_evidence_sha256 = "5b2849c7fd9d934fdcc8931f51e5d64dfca3f53876b08a586dd0aa6b31655e84"
+expected_diagnostic_sha256 = "682ad5b4f84c3215e1f6320bcc7a3eb2f32c8ec33b291155475bf8aa1895fa50"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

@@ -90,122 +90,25 @@ expected_evidence_sha256 = "85f4d6663b40287c792eb76d76d4848674e1fbd3c82915dd34da
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:19053\",\"member:498978\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:19053\",\"member:498978\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:19053\",\"member:497747\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:19053\",\"member:499045\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:19053\",\"member:497826\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:19053\",\"member:499082\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:19053\",\"member:497907\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:19053\",\"member:499149\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:19053\",\"member:497986\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:19053\",\"member:499186\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:19053\",\"member:498067\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "8afc063843225537922f840204fa86bf69ac1396e06922d2019cf2a9bffcadcc"
-expected_diagnostic_sha256 = "934ccfd98ddf74ceb514632244e58e567111e60f13c3c56ee0565057a1c1780c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:19053\",\"member:499045\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "c8d6118def3aca6cbcdee39e0526e7b759a487d11d8f2d9f482cbf566bb5e443"
-expected_diagnostic_sha256 = "cd709fb7d9931fa30b8598705c9738270f0966a4a24d99d15e98a4ecf38e96c0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:19053\",\"member:499082\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "c76984b77130ce17459d0a131003d5556955447c8eab035ebf338b90f6f9a3dc"
-expected_diagnostic_sha256 = "4a2cc559d83e93c1dcfc13a087e456ec595ba0a663a688e559bc5d4955b79922"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:19053\",\"member:499149\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "77117ee97b1e9ce86fb62945264658aa850e3e7cf7e97372d82dd034e0def810"
-expected_diagnostic_sha256 = "4785a99a32ca85015bd05b231ad4ab293c412e5b5ddaf0abfa268406b9dc41a9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:19053\",\"member:499186\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "4fca323b71c5b37f62028e26bc8bbf91169e69bd02b3a66e01067cdf2634e2b5"
-expected_diagnostic_sha256 = "9319eda19b932d4c13600e5732bd96aca8fd41b0a3c60fa3cfd6c8c14c463e52"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:19053\",\"member:497747\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "73421ef0f542eb18206c3f7508c575e7508af1338b0038d7d7af6e3efe2e1254"
-expected_diagnostic_sha256 = "5a443c2b9b422c7345188b062ef68968c8e33111891c728bb128478e5e96a0b0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:19053\",\"member:497826\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "084c4221887b9bf54ae18a8192250e5752b9672fdb042bdc323766c1e8dd08fa"
-expected_diagnostic_sha256 = "5e4afbcb3523c68244a5af35171bae634ade5580198b40da539752491afc2499"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:19053\",\"member:497907\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "ee7dc53c51ee9d18027688a05a4f6237648a70c3838d9c04ef4c8e4a55592ac6"
-expected_diagnostic_sha256 = "a76de617d1eb2253d7f105953bcd66a942cd8cb3ecbb8afdfe9427701f22acc1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:19053\",\"member:497986\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "9b56267e08180817caa7e9029d5a907a914100a9a3205166f52ab0c0df22c96e"
-expected_diagnostic_sha256 = "e9fe6fb3919c08d93dca090925e1efff6c93d33d3a7cf7c35e122a05c378456e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng1"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:19053\",\"member:498067\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
-evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "9a1aec32abc677b5aba3bae549d29e027e2198384ea534066b8782349d52d5ab"
-expected_diagnostic_sha256 = "b2d534b6e5777f4252bca594e5eae3d6d2cb584da520b9c3f53e5cfdd6883a86"
+expected_evidence_sha256 = "c19c04522882dc52f175ccbe2fdad7303a1d237a56cb92c9835e5f47067497a9"
+expected_diagnostic_sha256 = "84689404523dcf94953f8154510ce051baa8444645234538f4b2a638770fa860"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -245,479 +148,91 @@ expected_evidence_sha256 = "84c02043eea16169d964175377dcda1e59c97b213d3f2caf727e
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:21078\",\"member:498993\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:21078\",\"member:498993\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:21078\",\"member:497752\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:21078\",\"member:499030\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:21078\",\"member:497821\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:21078\",\"member:499097\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:21078\",\"member:497912\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:21078\",\"member:499134\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:21078\",\"member:497981\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:21078\",\"member:499201\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:21078\",\"member:498072\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "5774a8171574b818bb5d44665b51349c8f7823bc1ee9399c08975f550f1ee1de"
-expected_diagnostic_sha256 = "56202cfadc81001c0bd692687532343f9b5100fb0d7794e1f193dbb92c359087"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:21078\",\"member:499030\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "1bfed682d17e61f4d97f3672994e2a5e8d19f6fca8be4f50fe78c3079080815f"
-expected_diagnostic_sha256 = "063fe433e5edb05d123ec859bf87eb7b674a1d2585a65304170bb5a43ee73c4b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:21078\",\"member:499097\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "a7e4734fec5451c6c318f927fa668603faba0d38f91722aea45d6d2ad3c52b76"
-expected_diagnostic_sha256 = "24e9bceaa5a71b8bf79d09b8d06f7d3533bd7c5846513246c2fad492a852ebe8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:21078\",\"member:499134\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "fb8faec0f3ee259e39e8ca648b38b50bcc74ddeb12b5104d8b366f4b36bd855c"
-expected_diagnostic_sha256 = "6d9c58901aa3492bd889e360507c41007137da2006b4ac6c2dcc7442fea732de"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:21078\",\"member:499201\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "9af8e9ddbd83500d5228d605602526b747ff578e52f34fbf58b8bc1337ca4d5b"
-expected_diagnostic_sha256 = "5971790cdf3f813b16ff48c4ba72400deb08d7fba656bb086b72939b43b3d111"
+expected_evidence_sha256 = "daea2665ab4036695dab01c7b4510f3b590bfa6c5e0705c375446c6af1334371"
+expected_diagnostic_sha256 = "07e6c0301df4ab1218f8febd496057dc27fa1aeacfa8115325b61cfc491556d8"
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:21078\",\"member:497752\"]}"]
+subject = "scb/foretagsreg/ng4-37550"
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:37550\",\"member:498995\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:37550\",\"member:497754\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:37550\",\"member:499028\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:37550\",\"member:497819\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:37550\",\"member:499099\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:37550\",\"member:497914\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:37550\",\"member:499132\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:37550\",\"member:497979\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:37550\",\"member:499203\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:37550\",\"member:498074\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "20651d10c24ab2330b569c8a9a26589d0e5d02a47d557758aa020a1702c64075"
-expected_diagnostic_sha256 = "5ad3767ff94990a21776ccee09bf0318adee58194d5f5158c3e9aa230aeeee66"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:21078\",\"member:497821\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "72787ac99969302de991355c6a24e91164a8cd087660aa538920cd1b2328d7ba"
-expected_diagnostic_sha256 = "c5c1dac7dfb8346963c5968ed2496ea79a030ecdc7ec585426f07b08f14466e3"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:21078\",\"member:497912\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7f464f9f7a66992b3723d72c9182cadfa555ce98993bf56397351f4ec5335bcd"
-expected_diagnostic_sha256 = "0f518a115a2d9418937f486cf68738453e1ca0335c583956c19e203b0671b9ef"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:21078\",\"member:497981\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "90206e02ec87c13ede0c25122f3be7f9b0c7248cb64340f80cbbedd0fbb40578"
-expected_diagnostic_sha256 = "db6cc039667be2218b9da33412a6dbf0b98f6d2570de5cc6e9cc262182d286f0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng3-21078"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:21078\",\"member:498072\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "a5bac0ccad4a7fed2615f23a571d52bbbb5529daaec43ad6f41271eeef3be2ce"
-expected_diagnostic_sha256 = "cb42049cba44464f55aa33b5942354d947ce2f4bdc9f771052624f869e71be00"
+expected_evidence_sha256 = "248c219f5a065a942db4dde83081b8d99eb4b7b0a2c89668222b92a3566a3e6d"
+expected_diagnostic_sha256 = "c980d88642ba7eff23662a83ada2f47bb03ee034a373225fa053b0ea9c8e91cd"
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:37550\",\"member:498995\"]}"]
+subject = "scb/foretagsreg/ng5-37551"
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:37551\",\"member:498996\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:37551\",\"member:497755\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:37551\",\"member:499027\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:37551\",\"member:497818\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:37551\",\"member:499100\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:37551\",\"member:497915\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:37551\",\"member:499131\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:37551\",\"member:497978\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:37551\",\"member:499204\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:37551\",\"member:498075\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7ab11d5607cc94b34107650fd17f8e0308b4d0c0c7bc409eb76b3357971b02c5"
-expected_diagnostic_sha256 = "161a3977fb2876ff140840baf1a2a6181826d160afa5ab1dd9046430e030cae2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:37550\",\"member:499028\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7ba4787271e63c34f10609a0cca9c0fb919d66ae4c2d23cab769b5bb5aa217d2"
-expected_diagnostic_sha256 = "0093f3f325a4055581e29c3c64cd2b0cf708b566ad53bcb9de7b401e9f6ef35c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:37550\",\"member:499099\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "102126e75cb3d9d0f7862787f39cb8177f34b71be33acea3502f2d6d5dd106b7"
-expected_diagnostic_sha256 = "94c310dbb2eaa1da2d1276dbbb2e75c45f6dc2b77e998cb500a509f5c9b1e99a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:37550\",\"member:499132\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "6783a34905776081b662dbbc0aee38add54a23f4e2e470bd0f7fc7c3c83814cc"
-expected_diagnostic_sha256 = "1274665d12c15d39e99cdb682ae8dbce11d6f6ade7484570cdcb1d9fda7d605c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:37550\",\"member:499203\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "471a404b5d8046ccd8f0c3cdc176a1f968d5308af77e0575710ec29b7143744b"
-expected_diagnostic_sha256 = "44d24d39cd6b5208c4a8582343cef3f86edebd61298fe2169fba12d364b19ca5"
+expected_evidence_sha256 = "4044da9121189d9e8d4915405058c6c803ee05a40eb65558c5e9d0a8ad528771"
+expected_diagnostic_sha256 = "183b353fd7020353454730d6c55a97b5f2e1a2c9fa4896178e2673f303201429"
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:37550\",\"member:497754\"]}"]
+subject = "scb/foretagsreg/ng2-835"
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:835\",\"member:498991\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:835\",\"member:497750\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:835\",\"member:499032\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:835\",\"member:497823\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:835\",\"member:499095\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:835\",\"member:497910\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:835\",\"member:499136\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:835\",\"member:497983\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:835\",\"member:499199\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:835\",\"member:498070\"]}",
+]
 fields = ["coding"]
 valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "b840a6ee6d6e59b9f0a9e250ebbe8fee0a983ec0910b74268a9bc66be6f923cf"
-expected_diagnostic_sha256 = "01a70f4ced873c180fd3a28e2382eda5b392453ed58e94c4e05ac411a46fe092"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:37550\",\"member:497819\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "42f93dddb3394a6bba5f6d611bda2dc9fd5e97b58136ce67b8d4fbee24d408f1"
-expected_diagnostic_sha256 = "f8898ae466fbe5eb93745bc518cef33cbdd8c609c87da8703e4432c3bd9b4f5d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:37550\",\"member:497914\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d5bed5b2e381794ba5975d5a850fdd1fde7dd07142b2d37f136519787f767c73"
-expected_diagnostic_sha256 = "bdf3fee174bd6c8a6904133ecda7b149d79addd250662588150fa459808f3d41"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:37550\",\"member:497979\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "85ff3c4d1deed25b1969acb612a225da70b5e036d14602893aecabed7824c0f2"
-expected_diagnostic_sha256 = "56e8a7a85dadeb747687831434d6a0f729c24f50e10531c3092d8782161705ba"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng4-37550"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:37550\",\"member:498074\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "19fcf720fb67e5609f3121146bc115fe0b4d550cb24ef054231ac6ce1717867d"
-expected_diagnostic_sha256 = "ac8084674993042fda049991fc63e2448db17a3f52c6a7802b3533fe686cd4e2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:37551\",\"member:498996\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "a0758305e39ab4d419fd38c651b3ee134dc00ca14721ebb14221a2db6488e613"
-expected_diagnostic_sha256 = "5fe5a6964cbcbf9eecaec9e3f77198101bc16970d9e996217509b2cbca47c9bb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:37551\",\"member:499027\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "3754d1ce00bd60bb4de78b7e7f50f0924ec237d0982ac41f017449ec9b67bc77"
-expected_diagnostic_sha256 = "2e646da0a7002ee9e00c4f4481c3055b3920c9d2935c348fde8e0313bb5b7ca7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:37551\",\"member:499100\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "ede9c8545f8076231b4d29a6d6731c662ad5d698423d60f71349ddb3f2fad32d"
-expected_diagnostic_sha256 = "d4aaddaddaf0b607b7bc9cb68fb8fed21f85030e75fd9084311ffb042951b4be"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:37551\",\"member:499131\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "f55279c44977c213269850d05b6eea3555d4b4b35010b64b1ea635b0a616e267"
-expected_diagnostic_sha256 = "4d69aa28729f63790b22035feefcc50857522d76f6665b4c7e826f4be49ee04c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:37551\",\"member:499204\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "35bd61631088c194daec1861736cfb8611ad4d4fa4c2340b3ffd01d2bd310758"
-expected_diagnostic_sha256 = "c51321535eb57073b8a31e0fbaeaa245921a6cbcc085a92c5dd4b5c59b51adce"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:37551\",\"member:497755\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d756e8457dfedce13da77038476d696170c0cd1a090885ac62f3ced83c7d82ca"
-expected_diagnostic_sha256 = "b0d050735b88c21b68c43eb011476b429e9bdd502f5cffae9086fa78a149c3f7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:37551\",\"member:497818\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d08b919a37ed8d625dc825057daa63f9b944a9fe0fc30db34561e21b6565317f"
-expected_diagnostic_sha256 = "d1962d42d4feeb35c73d7fb062dc4e1e89da966eac86feceb8f06eaae5e703bb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:37551\",\"member:497915\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "06d29c563139bd3fd1aa90c8ac713bb569294fc151e601270e00a2ec4322ad0a"
-expected_diagnostic_sha256 = "c7c13016d25fbd0085a8d34f6e871e75f5151603330bbb95d666eaca6a0fd60a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:37551\",\"member:497978\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "92430618b272cb7fad131a8ec8e77a245494ad84ef7fb7a69f648cb8cf9f6803"
-expected_diagnostic_sha256 = "b3c2d1a36f568536298944a7c97f041f2eb497851953e7c8230e1ded723c53f9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng5-37551"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:37551\",\"member:498075\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "dea67906a967f98d76f07984b12adfe5af48c02aac67bd38d9d136c0cb55f62b"
-expected_diagnostic_sha256 = "95704f82dd275fe10b5a7df68c1f16b5424f54666845c070b77ace128c867d42"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11977\",\"variable:835\",\"member:498991\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "13552b72e2ec5f83c064b719008b95d26453ca1cd554350bb84c778b3bcd6996"
-expected_diagnostic_sha256 = "3ef1ae6b94f350cce960ef82093e32bb1f88cb3bb7459fb435fed58924202bfa"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11978\",\"variable:835\",\"member:499032\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "4b00eb685b5d24cd001a6e972fe1b3b350d2bf99d0b51aab2be5561570504a0a"
-expected_diagnostic_sha256 = "0295fd8fd2b7df535a6991a79d017d531cf437902b596bc69f7743509e79f6db"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11979\",\"variable:835\",\"member:499095\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "452fba346e184825389e60fb42dde77d8e927d537dc42f62e9ddff54325f62d1"
-expected_diagnostic_sha256 = "1cbd18641b82adcd777a25e9cfb243948810f9019b3499b2bbc31e772a8d2e90"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11980\",\"variable:835\",\"member:499136\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "92616ebeb57e7cef009e4739b3ff54f83da98e91ddcd5ea44f56b0b8bb5ed245"
-expected_diagnostic_sha256 = "498fcea931086798d8aa85e61a4ff3dcca3f9a74128b9267e3f99a8ed33a60ba"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1346\",\"edition:11981\",\"variable:835\",\"member:499199\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "e68d9aab24839664d3b13433953928df16c6db2cdb35c2db6732bded082e51de"
-expected_diagnostic_sha256 = "7e5f76feb97679784421be4d308915a7841fc06f91f77a62b359906800161da8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11961\",\"variable:835\",\"member:497750\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2b2df595f6bfac0abb575fb358bea6269d1cb71c05924364e7ef3f1521add7e6"
-expected_diagnostic_sha256 = "a40c36672d6383b872b3ffe8d01bf2bb4051e9345ca8bdd0bc3ec3a2003d5599"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11962\",\"variable:835\",\"member:497823\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "dffd7c7ff65f291cc26af9952f4b3fffc5e04254bdf16c5ce8ce189060b32cb3"
-expected_diagnostic_sha256 = "3d13abbde7d4c97d070b10dc93ddb43ee43789ec977424ec65f12a3b54eff524"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11963\",\"variable:835\",\"member:497910\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "c3c7ce5fc4abbf6dbb6a4dc38f9f79e43f5fdf04e0714c42f993a6e87591d71d"
-expected_diagnostic_sha256 = "c0d29c1bb9abde2cfda8daeaab92870cb85d7e275c60a2b43cdd2281d60f8b0c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11964\",\"variable:835\",\"member:497983\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "1873d859d5548ca1b4b7783f4af71cd343eb9ce776611c84c1e5f856ab02c025"
-expected_diagnostic_sha256 = "c658b25300f87adcf9cb8528490d65855be2241601f685c3e4538e014bdc4952"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/foretagsreg/ng2-835"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:372\",\"variant:1347\",\"edition:11965\",\"variable:835\",\"member:498070\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "eccd3ffc66d1cceb3a0c9884c8354a03aa489504dca02e91bb251827ac121e9f"
-expected_diagnostic_sha256 = "7cdd8798c568a809ef0290d485f4c329f0e95f294339426c1945aa75fc9973c8"
+expected_evidence_sha256 = "5dfa30ac1e95667289318153c72776a1c0b6518e71df7a4f89ce4e60a1b56678"
+expected_diagnostic_sha256 = "532ee0570703d8c763de873f1a3a1336f70a7f3360ffb394de44d849e5346ea2"

@@ -78,156 +78,42 @@ panel_time_grain = "delivery"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/ng"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2294\",\"variable:1641\",\"member:142600\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2294\",\"variable:1641\",\"member:142600\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:1641\",\"member:143501\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2358\",\"variable:1641\",\"member:144335\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:1641\",\"member:144314\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "bf8fa2c5112ae5bfb4b1490f429899ec33f272a5312a8add9796da80bfa6b691"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2358\",\"variable:1641\",\"member:144335\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "09efeec3518e0cbe67cf3863e3a9f08eac7fdea89d081702f5cb83e0a295d61d"
+expected_evidence_sha256 = "a8cfba7cf7b9cf22e55320f63099c92435312a8a018b9187b0979584c250d545"
+expected_diagnostic_sha256 = "1ebd9aeba6ef356808563e5c18237a25381410714cc4cb2b70c30fba6f62965e"
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/branslestatistik/ng"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:1641\",\"member:143501\"]}"]
+subject = "scb/branslestatistik/land-for-import-export"
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2294\",\"variable:16721\",\"member:143476\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:16721\",\"member:143502\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2358\",\"variable:16721\",\"member:144358\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:16721\",\"member:144315\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:16721\",\"member:167579\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:16721\",\"member:167535\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:16721\",\"member:203407\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:16721\",\"member:203363\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:16721\",\"member:252203\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:16721\",\"member:252288\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a6b30c94864ecb78ece62bd5fcd99a922b5a93ff3f22639c0b0769256f3b6a73"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:1641\",\"member:144314\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "260e700a74d699b36e8b20ffbb74c71587e6aa7ecdbcbddf098fb2003fc06efd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2294\",\"variable:16721\",\"member:143476\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "f6fc13915e68dea529a7d871512ca661285753dc7d0298a2aedf39ca2ecd1e9e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2358\",\"variable:16721\",\"member:144358\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "e6e927692ae7a6b98796ca95166f2aadeb04be9a4083d3c3185395fd7581dc09"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:16721\",\"member:167579\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "d777d2eb02a04a87179eedb39f3146a60ce18ca69935cb8e2c237bc9d88731c9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:16721\",\"member:203407\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "4c3eb5c659340f733ce74bb526099745c7dc971d299adc9ee47f9325e75d8d91"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:16721\",\"member:252203\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "c3399940f466b02ad1ffe89fd3685370f1501e15234efd29786fe848cc53ef72"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:16721\",\"member:143502\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "5f2cec02b777b68d80754fd6443a087ab6ce6e55e590674f2a1d7a7a2c72a4c9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:16721\",\"member:144315\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a5922f6b8a1c289b144b930050113ed617ca89cfb83a4a63541d7aa4ec46a53f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:16721\",\"member:167535\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "7ff2f1817032b37ac994331b02c71bd562dfb6d0dd3fa1f7333e2866163640e4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:16721\",\"member:203363\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "280faacdc48a18626b491503c900b351b419019fd1ce47500e1ddc1552229eaf"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/land-for-import-export"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:16721\",\"member:252288\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "25ab8e8dd5a2b771aa84512910390de4b93771c0f729c6e3d538bae9ffe27f48"
+expected_evidence_sha256 = "c7f82f62a79f27ceee9aa35a091f39c618f8fc6698610482e43c090c12b26940"
+expected_diagnostic_sha256 = "252171e0a37c08b12d26aa7b2c985c2b1cbb3e81f99b5cf5a6ff2530ecb009df"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -238,73 +124,30 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "69e5cf1dcce36cf7588fff19b37711e1a0062442990c47fa8428d8ca1cc4ee88"
+expected_evidence_sha256 = "0e378259aadaa397a84e22ba4d02512e9c2d013ac181e3879dcb33bc0219f033"
+expected_diagnostic_sha256 = "b121ca688266a6d820d6155e6ca0f8b64b3ec855a3699612925fb3c6e2bc39d3"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:16721\",\"member:143729\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:16721\",\"member:143729\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:16721\",\"member:144299\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:16721\",\"member:167535\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:16721\",\"member:167559\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:16721\",\"member:203363\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:16721\",\"member:203387\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:16721\",\"member:252288\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:16721\",\"member:252312\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:16721\",\"member:287808\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "632a47defc16e5a45d667f6fd648f7928c4c867403fac027c8a9eb6edae8d575"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:16721\",\"member:144299\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "7d30f893a47f3b7ff060b643f08df33401e9d4461e179a1e976755047137452d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:16721\",\"member:167535\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:16721\",\"member:167559\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "1c7bd08eaf27c406f059d9000934554a5b1fb62395709418fc8f0010e54d84ef"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:16721\",\"member:203363\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:16721\",\"member:203387\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "e8782281038f23560fd7f0f6e4b3e7a657f96d2bbf26f8c3c70859b3ae571a00"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:16721\",\"member:252288\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:16721\",\"member:252312\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "097080b8b143abbf1cce7c895ce37928c5ea2c1c7eb67c91528513a44983c5cb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/lnamn"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:16721\",\"member:287808\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "22f00cbf9e733486516d7b8275f345bd4128a1a137136ded6d5fd3b5729f2df9"
+expected_evidence_sha256 = "5d35d3af76019b050b5e005e61f0df49942e36315ca012e103b5ba4313d1170c"
+expected_diagnostic_sha256 = "3299d811c00439b1487c255ec24b5236f9be5cda31821629bf7853c479fbf297"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -315,7 +158,8 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "69e5cf1dcce36cf7588fff19b37711e1a0062442990c47fa8428d8ca1cc4ee88"
+expected_evidence_sha256 = "0e378259aadaa397a84e22ba4d02512e9c2d013ac181e3879dcb33bc0219f033"
+expected_diagnostic_sha256 = "39270376e375bd5bd3c7465bc31e13729c7e29880906dd0ea3b34acc77f39d5c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -326,183 +170,50 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "66140e3a15e9e78240aa9ef8afef8f81a2b76a42c6efdbdc4195291d5db5ddee"
+expected_evidence_sha256 = "a2b0a780699f5743da98cb14dd2bcef409c7e6f4fb623fb731d739364413a50b"
+expected_diagnostic_sha256 = "b7be80cb2ac43b3a21e1b072da783c69acb5b7f69bc7541f1fc4e02fa156f646"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/fid"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:19508\",\"member:143505\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:19508\",\"member:143505\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:19508\",\"member:144317\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:19508\",\"member:167537\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:19508\",\"member:203365\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:19508\",\"member:252290\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:19508\",\"member:287786\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "68cf671a83a3f8ad901f29ca87b57014f19ba3f5d0c33a649489cb18e33a0e78"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/fid"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:19508\",\"member:144317\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "57f9d7fed8b06421a543eb59c04f8006128e59307f52590450fa57fa36fb376e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/fid"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:19508\",\"member:167537\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "2b5458fdefbe8a223e69d511f25a4949f9691cbe6396a2e3fd93e88555147a8d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/fid"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:19508\",\"member:203365\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "0c3ee2815ccc1abd90d83b3c335ea9f6aa04985cd0aa6bd1110fc7df6b655523"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/fid"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:19508\",\"member:252290\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "53ed5195b95d7686591d5fddb5178ed09dc8ff43c09666a2d7d34734ac9be51a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/fid"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:19508\",\"member:287786\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "cb8af5e3df7130a95c0eebd989fb4710cedf959c2172e49d4d1e499ed7fa0cd3"
+expected_evidence_sha256 = "ac893abc712144cdc04085d33e0b5843f53c040c352456dd8f3b90a12374d007"
+expected_diagnostic_sha256 = "27149533e368f4a59c5775e2789536d98604664b92741623729928d6f5c0c531"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2294\",\"variable:2601\",\"member:143449\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2294\",\"variable:2601\",\"member:143449\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:2601\",\"member:143492\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2358\",\"variable:2601\",\"member:144338\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:2601\",\"member:144306\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:2601\",\"member:167594\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:2601\",\"member:167566\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:2601\",\"member:203422\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:2601\",\"member:203394\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:2601\",\"member:252218\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:2601\",\"member:252319\"]}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "589df67e64518a5bd9eac8e8115cdc88cb4bc40a3d7311ad2ff82b82598d5a74"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2358\",\"variable:2601\",\"member:144338\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "3afc4deef4cc7b3ef0ad087d9c0ce86e527393d3c766b5a26d6269b9a01030fc"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:2601\",\"member:167594\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "97e1927cd40a2a89622b14bd913ba4c5d228290c1285a37795cb6a9d057fdb45"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:2601\",\"member:203422\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "36a016e76dbbf89cdc713143aeaf6189f287a20ae60d2bc0eef9cf88344c1eed"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:2601\",\"member:252218\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "0b2a1f4100dc473ff57ddc3e9b2b3e4fd808a7a54fd20fa21db3c3c16c32815f"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:2601\",\"member:143492\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "9f68624e616e8ce206d4a8b03bb526dd4edd2ed764dd3da6cd91821d31f760ef"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:2601\",\"member:144306\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "488b3a8071185170804b1a668e08316155862fd0c53949a1b85238f2658c61a7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:2601\",\"member:167566\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "5177c90881d3eb9f557c9e8319953821d84dbc5680606b13e769b0c16ba3ef9c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:2601\",\"member:203394\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "5c49f79cfb98ed347606f781278e98526da1089e166089b83b2cccb8c102a323"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/bransleslag-koder"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:2601\",\"member:252319\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a6f355ad8fe86bedce2f6e44925fea019238c3baf302bf9a59421547cfd709ce"
+expected_evidence_sha256 = "517adf70df32a7a484e3af5d23fd560753d031e331c8bb46a53a83b99709b1b2"
+expected_diagnostic_sha256 = "58fdc78794a94a49cc9b745748862314a16cd65a3f808a5eb8ca74e0879f3f2f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -513,364 +224,104 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "ef9da06e7bebad056d43250a013193a3a00f497f4225ee85848401cfbad306c7"
+expected_evidence_sha256 = "29ca7132f8e07e14b078c8bb75482990d074b76d68741b68d2c4fbff24fbd9a5"
+expected_diagnostic_sha256 = "3417355b9ac79e02a05f9aab6670c72c96ab725f7837f30bc880c35ca66ab7bd"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:14714\",\"variable:4027\",\"member:673593\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:14714\",\"variable:4027\",\"member:673593\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:16471\",\"variable:4027\",\"member:804921\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:16499\",\"variable:4027\",\"member:808337\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:18436\",\"variable:4027\",\"member:860872\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:18878\",\"variable:4027\",\"member:901323\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:19322\",\"variable:4027\",\"member:930086\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:19853\",\"variable:4027\",\"member:984891\"]}",
+]
 fields = ["coding"]
 valid_from = "2019-01-01"
-valid_to = "2019-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "5944c21c8c7c798ed2b02b14d1781fb64d62879f733589b511cda60ff7aa791c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:16471\",\"variable:4027\",\"member:804921\"]}"]
-fields = ["coding"]
-valid_from = "2020-01-01"
-valid_to = "2020-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "27e56a8a6c612c2351f0bc9b25eaa9c29591254a44f84b01ebed4becb18a1498"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:16499\",\"variable:4027\",\"member:808337\"]}"]
-fields = ["coding"]
-valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "3166ec51af2c046823f39eb94e91aa611c965c87ef9e29ad41322afffb2a840b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:18436\",\"variable:4027\",\"member:860872\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "08ea019ad3fe678b74a3f8d5c34d265aa1ff65f8c7b36582c0fcf04a0fbcdc26"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:18878\",\"variable:4027\",\"member:901323\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "a5f8d32a6b2b1e6dd1d9b268dd2b5e73cc67b80bce99d0473292c16947b6e87d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:19322\",\"variable:4027\",\"member:930086\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
-valid_to = "2024-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "1a8ef2b272746c55fd31fd8d9799e18f64b7dd9b11d3679c8f3c6f8f181211f5"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/nggrupp"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:19853\",\"variable:4027\",\"member:984891\"]}"]
-fields = ["coding"]
-valid_from = "2025-01-01"
 valid_to = "2025-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "dfe479b982407d4f5390b764d4e44f5f37e9c1d2122f1b17fdfa9cdf6d89eafb"
+expected_evidence_sha256 = "ab20f5515ccf99505b304ed717bb616f3cd0acd40166bf1801d1bc6f27f055f6"
+expected_diagnostic_sha256 = "d195388c6e5708c36f89176bb111c45b8c13c21be321e43a2fcd04f90f4dd51d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11662\",\"variable:43\",\"member:479421\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11662\",\"variable:43\",\"member:479421\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2339\",\"variable:43\",\"member:143644\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:43\",\"member:143481\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:43\",\"member:144283\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:43\",\"member:167527\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:43\",\"member:203355\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:43\",\"member:252280\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:43\",\"member:287776\"]}",
+]
 fields = ["coding"]
 valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "9b236244af28a070fccfbf41a31069518839e71b0f83f98a9e6cba177bb97316"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2339\",\"variable:43\",\"member:143644\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "d758ef89aea9638360d41fa57723b9103179c16f346b33cecc1fadd1df2d6424"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:212\",\"variable:43\",\"member:143481\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "02aab299beb109969a11a7813856bffa0b09f72592d76d6e71560b17c668fe31"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2357\",\"variable:43\",\"member:144283\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "c83748ddc33e900c0a31c6ed5eda5ce85dcd7412f1eef9014287d0a0611735d9"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:43\",\"member:167527\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "69b62c76d0d5593eb367bf9c7d67288e3e96f2a9857f485fff599c6caab0612e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:43\",\"member:203355\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "37ff7cf2ab84565b58f5e510e709e79c7ac6ea27cce42e532c24ecf60c89132c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:43\",\"member:252280\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
-evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "bb2476dfdb3118f0214cd1a495d8d1841f3324598e08a227a819b730e8e237db"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/kvartal"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4575\",\"variable:43\",\"member:287776\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied Bränslestatistik delivery has no coding association establishing this exact physical column’s stored values in this period. Preserve its source metadata and leave the response domain unavailable. Other-year or other-column lists do not prove this window’s encoding; no country, quarter, fuel, heat or industry codes are borrowed or manufactured."
 evidence = "Complete six-native-family review (271 originals), actual same-register primary/summary/integer-identifier support and maintained production naming, partitions and curation compilation. Pinned declared source codebooks retained. Exact full-original and bound-coding guard includes every physical row sharing the semantic refs. Proof: Batch48-Branslestatistik-coding-gap-source-proof.json."
-expected_evidence_sha256 = "bd812b358a7f667965963dc82f055f28fd3ab6a1b3eba1959f961361f1e6d2f9"
+expected_evidence_sha256 = "8998f6e2326e7ab2b65629f64efb75bdcf158e3729c03892469971c890bc7ec9"
+expected_diagnostic_sha256 = "d1d5a6c54edf67863efb2e84b2fe1fc157de6868d050bd8400548feeb57a34cc"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:1641\",\"member:167591\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:2801\",\"variable:1641\",\"member:167591\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:1641\",\"member:167534\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:1641\",\"member:203419\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:1641\",\"member:203362\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:1641\",\"member:252215\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:1641\",\"member:252287\"]}",
+]
 fields = ["coding"]
 valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "8a0330748cf95d921a7432ddff63c27b9b6599e8517a8e881f747988a0116a5b"
-expected_diagnostic_sha256 = "aefe80f56230e460560bff514d61cfd84dea4a42f52da5dd7b4fcba26db817c6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:3312\",\"variable:1641\",\"member:203419\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "7a18a67b96fa4b66c24b046b14651cda2021d8adab4784c9a029fab919330c53"
-expected_diagnostic_sha256 = "00e4999c552eaeff9458cd6ab7146ce6bdb68437301e6403467e454f4d90b4b1"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:4030\",\"variable:1641\",\"member:252215\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "3c4fbbea96d8487017c3a73acd69e0513cd6b70360df26a2f413c0a9e5c7b006"
-expected_diagnostic_sha256 = "9b963cfee5a8b0f0326606c635c5a2888af6b397ad484a9352aeb054aa870bd2"
+expected_evidence_sha256 = "e48f37a6aca549740d2985bfa927242ecccdcc348a6b1d80d64ea46cf039b54d"
+expected_diagnostic_sha256 = "074702c633d31f6d1c254ac64d5fdf8cb9d8f9d60da1350a6ee62778cb407ab7"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:5280\",\"variable:1641\",\"member:325948\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:5280\",\"variable:1641\",\"member:325948\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:5281\",\"variable:1641\",\"member:326005\"]}",
+]
 fields = ["coding"]
 valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "a09e972075326538574070ac6920501f8e8cfca79bc085ffec3c3d0608947ee4"
-expected_diagnostic_sha256 = "fa55b938a7d279575a704a2a81e8dc6dcbb713912bec9d2441522212231fd007"
+expected_evidence_sha256 = "69fe59fff36c28c54658ceec95e8ad2817e1eb8f1fcfb1dd937469cb8bbd2db5"
+expected_diagnostic_sha256 = "f78a1f60483879265c9b87c9188c29c73b4792e2cde87e962c047364d4ffb50c"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:7446\",\"variable:1641\",\"member:409465\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:7446\",\"variable:1641\",\"member:409465\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:7443\",\"variable:1641\",\"member:409396\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11165\",\"variable:1641\",\"member:454025\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11164\",\"variable:1641\",\"member:453968\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11997\",\"variable:1641\",\"member:499906\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:1641\",\"member:553050\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:13244\",\"variable:1641\",\"member:588794\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:1641\",\"member:592184\"]}",
+]
 fields = ["coding"]
 valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "a0ee758e0b4795de0efab9704c39b79bc7eb102e18bbe06588277d36174ddc29"
-expected_diagnostic_sha256 = "5a1910f3939eb5161b89fbb28cbae67644c07224692ac176e5eaf4a6194324c0"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11165\",\"variable:1641\",\"member:454025\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "4307ac2805500aeb1717d55b6f794b931854eec1b21b30bfae0142cc1e4c5f23"
-expected_diagnostic_sha256 = "6aba78171a68059c26aedb0560cccbe9b647c2d87caeef20b8e81381c5abd160"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:11997\",\"variable:1641\",\"member:499906\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "ff7dc5d4862a4930a020a896450d5e1c00f25e7354331983c5b0353c4ca338ff"
-expected_diagnostic_sha256 = "2601cb4225e2b0133b973266399691277995364ea5d2e9f83172dcb4a12f5458"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:203\",\"edition:13244\",\"variable:1641\",\"member:588794\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "5e98efe503dc785fbd29526835ca3b21d4ade1f9b249c5d1b8c4dcfb657283ab"
-expected_diagnostic_sha256 = "9fe052b74834f8f3165e24cecb68c22c91392c7c2c4ea68f585bf449b7c16ee2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:2800\",\"variable:1641\",\"member:167534\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "1be8c3ba870da76b5424cbdafb698459869208f8255666e235024c1f6db5077a"
-expected_diagnostic_sha256 = "4b5ec3b2ed6309351ac8450097d89eb66b7117a0f25a6c8f9b92116c4138e4a8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:3310\",\"variable:1641\",\"member:203362\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "9990fa986f557beba0b2bf5e54a6913a6870eb5ccf3977b28740a72f329b410a"
-expected_diagnostic_sha256 = "7a5a8c6858f63030a61e4630ae986d0f55fb00837c72f2a1c51882347adf1733"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:4032\",\"variable:1641\",\"member:252287\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "535d09ae64a217aea9258d7f575d66420ca783ee0ae50e660ec2ee92e61832b4"
-expected_diagnostic_sha256 = "61b19a32f9c4a19a2fc676530e3cf5982cc98403cd275a1105b7a4f983f2b348"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:5281\",\"variable:1641\",\"member:326005\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "ede97826a50677c409bba6d2e2831579a2775cb29753571747b05ac23bad445f"
-expected_diagnostic_sha256 = "fb54828baf2beba388df4e841f38343e01024295480f64dce1b02d63201e76aa"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:7443\",\"variable:1641\",\"member:409396\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "94ad60f9afe23ed47edced3a77b73370176c3178d8cab3555a8ac2975c7379a7"
-expected_diagnostic_sha256 = "1c1e421a18bee6c725117717f15735963f6828c6e9f5cf5e33b0ad065de506d8"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:11164\",\"variable:1641\",\"member:453968\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "39b8e1a11cd352b3ccff13f18c195098471f2109c8cb231f4df12c491b574ad6"
-expected_diagnostic_sha256 = "1d2aafe838ac2e92fe2e312272f807b92187662fa61132ce680615584a1df186"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:12581\",\"variable:1641\",\"member:553050\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "0bd10d97916f48533c32a5b095bd87d0b14fdda7dbc88c4fcccd78f689ce4cd9"
-expected_diagnostic_sha256 = "69fa6c9d6dc93059a5c87c55e8cf1833c91406e119e40dcec2c1d7f73a4df7d2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/branslestatistik/ng2002"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:139\",\"variant:204\",\"edition:13294\",\"variable:1641\",\"member:592184\"]}"]
-fields = ["coding"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "The exact historical component is physically supported, but its supplied source lists do not establish the stored response codes for this window. Retain its original meaning, column, period and every raw coding association; leave the effective response domain unavailable. No later code list or question-category encoding is substituted."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "e22e6bdfccfd5f33c93b8db6080856338c5a9b18406a68c63dc7e1acd99a6f45"
-expected_diagnostic_sha256 = "428bcec6a591de8d3b0b5da9c93d88d61852fa86c0d4a23e0829df4532969c67"
+expected_evidence_sha256 = "916e1888fb9aff8ba61725d08817e02d2adf72ea04df01a3d6187c90ffa61000"
+expected_diagnostic_sha256 = "f1d6021eb5a886d9e00638c0d273e4f74d25fc70263ebc1553dc260ea102e80d"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"

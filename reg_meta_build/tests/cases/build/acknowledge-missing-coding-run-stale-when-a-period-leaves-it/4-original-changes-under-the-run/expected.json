@@ -1,0 +1,43 @@
+{
+  "result": {
+    "acknowledged": {"missing_coding_period": null}
+  },
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {"code": "missing_coding_period"},
+      "fields": ["key", "valid_from", "severity", "acknowledged_by"],
+      "rows": [
+        [
+          ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
+          "2020-01-01",
+          "error",
+          null
+        ],
+        [
+          ["register:1", "variant:10", "edition:110", "variable:1", "member:1005"],
+          "2022-01-01",
+          "error",
+          null
+        ],
+        [
+          ["register:1", "variant:10", "edition:2023", "variable:1", "member:1007"],
+          "2023-01-01",
+          "error",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {"contains": "has changed original or coding evidence"}
+      },
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/acknowledge/1"]
+      ]
+    }
+  ]
+}

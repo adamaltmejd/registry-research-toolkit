@@ -146,8 +146,8 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "a0882b53b8413dff37a44d359d6077d9185a6cb24eddbea6a21bc02b58811db9"
-expected_diagnostic_sha256 = "76d029dcac1a5a13e88a83f0a8793b31aac6679b27b3392c3d97191efc01c602"
+expected_evidence_sha256 = "ad71b1a51d632d55624015c4039568e5a16d17b394194301ec158799b2a46602"
+expected_diagnostic_sha256 = "bffed13839f2b28e1d8a7a8b3f8e8cc69a69a94989a26b267c39de164f2c6ff7"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

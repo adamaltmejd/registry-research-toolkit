@@ -27,186 +27,29 @@ panel_time_grain = "delivery"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3038\",\"variable:462\",\"member:178610\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3038\",\"variable:462\",\"member:178610\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3037\",\"variable:462\",\"member:178592\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3036\",\"variable:462\",\"member:178574\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3035\",\"variable:462\",\"member:178556\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3034\",\"variable:462\",\"member:178538\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3033\",\"variable:462\",\"member:178520\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3032\",\"variable:462\",\"member:178502\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:430\",\"variable:462\",\"member:5598\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2091\",\"variable:462\",\"member:130471\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2092\",\"variable:462\",\"member:130489\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2093\",\"variable:462\",\"member:130507\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2094\",\"variable:462\",\"member:130525\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2408\",\"variable:462\",\"member:146233\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2841\",\"variable:462\",\"member:169271\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3445\",\"variable:462\",\"member:214156\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:4152\",\"variable:462\",\"member:261194\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:4707\",\"variable:462\",\"member:292609\"]}",
+]
 fields = ["coding"]
 valid_from = "1997-01-01"
-valid_to = "1997-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "485c5a63d4dd9cc0c4686b96b072065b2beded43a8593cb10f40f0b6a176eef2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3037\",\"variable:462\",\"member:178592\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "1531a154e4269ebca6c789459a244b2a4e30ea74b84975d66557d85b7db83d5e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3036\",\"variable:462\",\"member:178574\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
-valid_to = "1999-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "253bf7c2f8bd52f7f84c39e58cdf52bdd34e962dc4fe68efb10e64447958ae74"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3035\",\"variable:462\",\"member:178556\"]}"]
-fields = ["coding"]
-valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "2e0dd43a45a66b3bf3e2d393278e0526f7efbedfb7a4b3dfca9d9c091c464f07"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3034\",\"variable:462\",\"member:178538\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a2499c6aabe0ecf7413b8ff6ddc6d301f172b709ee9d6cf095a5864fb372a2bd"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3033\",\"variable:462\",\"member:178520\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "fb66db3f8a59e1f6e822747e06ddcd7f6e6eb7ff8bb4399fb2df1e225a7029ed"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3032\",\"variable:462\",\"member:178502\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "f6b01bda58dc107b4963bcc33cfa52587e52f4222d6c2f2d0ff76db19ae8b717"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:430\",\"variable:462\",\"member:5598\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2004-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "772b3ad7d54178123787a738655e7423513afd040b37f6551b4a23eab7c453e2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2091\",\"variable:462\",\"member:130471\"]}"]
-fields = ["coding"]
-valid_from = "2005-01-01"
-valid_to = "2005-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "d36f3934c9c03de4b34f9b3790c72d9fcdb664add4ba0816188afe5882cac860"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2092\",\"variable:462\",\"member:130489\"]}"]
-fields = ["coding"]
-valid_from = "2006-01-01"
-valid_to = "2006-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "0201b3e7b4f7c1ab46e8facfce621467e5016c3c21cff3f97bb7ef44db495731"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2093\",\"variable:462\",\"member:130507\"]}"]
-fields = ["coding"]
-valid_from = "2007-01-01"
-valid_to = "2007-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "c11116c540c252fe3b294063b21ca1bfce694726dc7721b4c91f03b02cf4c42b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2094\",\"variable:462\",\"member:130525\"]}"]
-fields = ["coding"]
-valid_from = "2008-01-01"
-valid_to = "2008-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "09ed30aa6087d1ef6634cf4574c0c91c369c78679ecf73a6ab896b074dadc1fb"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2408\",\"variable:462\",\"member:146233\"]}"]
-fields = ["coding"]
-valid_from = "2009-01-01"
-valid_to = "2009-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "71e33ded7ddf9f33d87924b184339a2607b1c9c0d85d45a3971e1bf02ff1893c"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:2841\",\"variable:462\",\"member:169271\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "6ad8d7f8255c0e857572fd1299093e063f9885fbc9c3dc1ef57691b63af97df7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:3445\",\"variable:462\",\"member:214156\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a5b25eeb24ccfc487514d824fda4e41be9401d9bae3c8791f62ee95a85a63669"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:4152\",\"variable:462\",\"member:261194\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
-evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a3d96cdf6020a71925a8669b523c0f8a2bca2efce75e3757860ee63f7c54feea"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/hku/stratum"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:166\",\"variant:239\",\"edition:4707\",\"variable:462\",\"member:292609\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The source supplies no own stratum coding association for this exact 1997–2013 window. Retain every original field and date and the known HKU 2014 list; its stored historical strata cannot be established by copying the later list. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "8cc049081c33bddbc4654e7d3a396837aad75185203e6f532baff2bef0de30a1"
+expected_evidence_sha256 = "52bd3fa3b36589439949ced99e602635dccd8c88da8b33414be24ad8e334a892"
+expected_diagnostic_sha256 = "03cee436d6a315e9136487896b661202b94c45ff87c826b8cbfa62b7b7cb5d1a"

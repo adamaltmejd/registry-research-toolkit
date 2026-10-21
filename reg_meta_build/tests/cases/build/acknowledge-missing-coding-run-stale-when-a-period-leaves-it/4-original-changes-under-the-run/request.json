@@ -1,0 +1,26 @@
+{
+  "note": "Step 1's entry and both pins, built after member 1007's definition changes. The change alters no coordinate of the run's issues, so the identity digest still matches; only the evidence pin refuses the entry. It is stale at its own location and every issue stays an error.",
+  "fails_if": "the run settlement in `resolve_source_scope` (source_scope.py) stops comparing the run's `expected_evidence_sha256` against the current digest set, so 1007's changed definition leaves the pin matching and the run still acknowledges both issues",
+  "sources": {
+    "description": "Step 1's deliveries; member 1007's definition changed.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "VALUE", "cvid": 1005, "var_id": 1, "versionname": "2020-2022"},
+        {"colname": "VALUE", "cvid": 1006, "var_id": 1, "year": "2021", "regver_id": 2021},
+        {"colname": "VALUE", "cvid": 1007, "var_id": 1, "year": "2023", "regver_id": 2023, "vardef": "Changed source meaning"}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1006|5001"]
+    }
+  },
+  "authored_from": {
+    "description": "Pooled member 1005 (2020-2022) beside annual 2021 member 1006, which alone carries the code list, and annual 2023 member 1007 without one.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "VALUE", "cvid": 1005, "var_id": 1, "versionname": "2020-2022"},
+        {"colname": "VALUE", "cvid": 1006, "var_id": 1, "year": "2021", "regver_id": 2021},
+        {"colname": "VALUE", "cvid": 1007, "var_id": 1, "year": "2023", "regver_id": 2023}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1006|5001"]
+    }
+  }
+}

@@ -89,194 +89,79 @@ source = "codeless_overlap.toml#/resolve/48"  # v18 accepted-codeless:48:*, 2 ca
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/kvartal-period"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:15844\",\"variable:19079\",\"member:758972\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:15844\",\"variable:19079\",\"member:758972\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:18035\",\"variable:19079\",\"member:835139\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:18596\",\"variable:19079\",\"member:874406\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:19035\",\"variable:19079\",\"member:913595\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:19734\",\"variable:19079\",\"member:976721\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:20303\",\"variable:19079\",\"member:1044087\"]}",
+]
 fields = ["coding"]
 valid_from = "2021-03-26"
-valid_to = "2021-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "afd89ec04a08a3f33071d61c49cf7bd7b0412a9a9437506aec5cf482858f4ade"
-expected_diagnostic_sha256 = "50e826990b2fb4ccb98a45b56c19adca0ba758f91df056d7ba485ec6b004ec43"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/kvartal-period"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:18035\",\"variable:19079\",\"member:835139\"]}"]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "75c13695546551ec283e334c3cbdaa7972e854183a02347ee56424e6b48e44af"
-expected_diagnostic_sha256 = "91679c11ad7822453630e463c7cb5cececccdd0d1fd81c84494e84f604e47c05"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/kvartal-period"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:18596\",\"variable:19079\",\"member:874406\"]}"]
-fields = ["coding"]
-valid_from = "2023-01-01"
-valid_to = "2023-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2250acf09fff9d5cf0960b735578b93c217c54d52c8cb81b95055f09fad5a4c1"
-expected_diagnostic_sha256 = "5833284abc4ed528c9b7db69de914409a6cfbf02edfdec7a0ad6564d1f6501ba"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/kvartal-period"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:19035\",\"variable:19079\",\"member:913595\"]}"]
-fields = ["coding"]
-valid_from = "2024-01-01"
-valid_to = "2024-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "a0db92a92dfcf6c51320431f76d189611bb656be3d1e7b047d50e00b59f02723"
-expected_diagnostic_sha256 = "232772b024c4cee1f6218ae31bbc3166d0a9afcb1ae69cc250b79327a5de88ca"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/kvartal-period"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:19734\",\"variable:19079\",\"member:976721\"]}"]
-fields = ["coding"]
-valid_from = "2025-01-01"
-valid_to = "2025-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "653936dd986142b3b763117c24e32ef0088c500d2b0fad7a951fd20e0a64f7b1"
-expected_diagnostic_sha256 = "6e2857d376df0648c1e7de26d126a02198e3fecb6b399655e96ed8bdaf2a08b4"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/kvartal-period"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:20303\",\"variable:19079\",\"member:1044087\"]}"]
-fields = ["coding"]
-valid_from = "2026-01-01"
 valid_to = "2026-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "13b8e399c191f72b35f671f41320c72aaaaef817121c384240457a5db39a5828"
-expected_diagnostic_sha256 = "30833df4c7161eab096639000a906cd05698696b19bd5b21a9bc1cb9a6df7d97"
+expected_evidence_sha256 = "fd8699066a4314cf6b0852774ac2b31ee175b8ba26fce82afa4d30cfc07dd6ae"
+expected_diagnostic_sha256 = "66d112534386ca188d2b524294db2403e1ae89a148368725c101ff8a86139ded"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/mig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2331\",\"variable:19096\",\"member:143406\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2331\",\"variable:19096\",\"member:143406\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2330\",\"variable:19096\",\"member:143398\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2329\",\"variable:19096\",\"member:143390\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2328\",\"variable:19096\",\"member:143382\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2327\",\"variable:19096\",\"member:143374\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:16130\",\"variable:19096\",\"member:770948\"]}",
+]
 fields = ["coding"]
 valid_from = "1999-01-01"
-valid_to = "1999-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "8f045df79a624a4e8f8a85cea35df9fc35197a0758aa7df1c0872079b9045354"
-expected_diagnostic_sha256 = "62d86c752a5cde60b4fe541a52e905c223d881f05d13f25b9c9cd0974b7a48c7"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/mig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2330\",\"variable:19096\",\"member:143398\"]}"]
-fields = ["coding"]
-valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "8365bb431a9358d2da78667ce4df394bb89114f755040210e8e9f577259df26a"
-expected_diagnostic_sha256 = "463a4ce32c3dcba1513667f6a5bbcb082d353171c409b17d327e36a05f50971b"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/mig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2329\",\"variable:19096\",\"member:143390\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "9d33a0c68ec60c22d311f5b3573f6a7efe46cdd89252bc623bce2d30d4ac88c8"
-expected_diagnostic_sha256 = "b1b45edef0a4444041bf502bf50eed7c3c20514d89a7ea319883954f8d491987"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/mig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2328\",\"variable:19096\",\"member:143382\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "91d36aaea2df69be8f949754920911eef26d474eafb401c4b0d891ec9b16d837"
-expected_diagnostic_sha256 = "2aa3a01dab8304bf53bfd5e57aa526cd3e1b4e499981954382cc879f524d4622"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/mig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:2327\",\"variable:19096\",\"member:143374\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7000cf1e0eafe5177626ffe601766aa85af10c33a302f2849dc4f61bfc3b0c5d"
-expected_diagnostic_sha256 = "9810576620b2b9f3e778b2e6e48f9cf25e1cdee8f50669da1e7d01e20f558084"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/mig"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:259\",\"edition:16130\",\"variable:19096\",\"member:770948\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "f911264f577956ae067900a63254d0ec9f8ae227cf743cce421989bd69f560a3"
-expected_diagnostic_sha256 = "e68821a15c33ef280d6315dd8704157125b920cced15b1db81fd040efb18228b"
+expected_evidence_sha256 = "cc13fa3cb2a7442eaec9a20b191fbfe22d5dff50d3f9e7e13220cacac17da649"
+expected_diagnostic_sha256 = "dc216fbce9ed07dc3a094e9dd89428878bc285717282c83cf47054afe174f633"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/produktgrupp-spin-2007"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36001\",\"member:453893\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36001\",\"member:453893\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:393\",\"edition:10076\",\"variable:36001\",\"member:453891\"]}",
+]
 fields = ["coding"]
 valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2a8dc3068758ca8e612b64772196a57ac7d2f26e3422aa540bcf5d2c350b2707"
-expected_diagnostic_sha256 = "4c027903b2b7e448b65acdba7245506e9420e3a7a0e8a76abd473f8163ec719a"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/produktgrupp-spin-2007"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:393\",\"edition:10076\",\"variable:36001\",\"member:453891\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "cdc5c33aa2fe3159dd014c2bd1722b4f00c37bc1d9c7d7e62696d8b0c1c3a01f"
-expected_diagnostic_sha256 = "be2b2dfcb7d767a52b1a03fda6d31f1ddd843115da62e4eea4f32fb2494a31b1"
+expected_evidence_sha256 = "3561c942d919e2ff9f179b18490cc545fa2094b0d1734e3293a9680ee47b4b30"
+expected_diagnostic_sha256 = "8f9f94f00d7d4c7fa53343a265d7a65323584b252bf54c0d74e8338da336ccb8"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:393\",\"edition:10076\",\"variable:36002\",\"member:453892\"]}",
+]
 fields = ["coding"]
-valid_from = "2017-01-01"
+valid_from = "2010-01-01"
 valid_to = "2017-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d8cad763949f550f8e57d3f32e34eac869c60129d6c969c65d5b86e134cf2a7f"
-expected_diagnostic_sha256 = "1cc7ce3bc24aafbad058c2ccbde5f83b2610bddc353aa58166e9ad5112a17f49"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:393\",\"edition:10076\",\"variable:36002\",\"member:453892\"]}"]
-fields = ["coding"]
-valid_from = "2017-01-01"
-valid_to = "2017-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2d2fe42fd2a484623109f80503248ebb9b7921eb86122631ca249040e04e7fc6"
-expected_diagnostic_sha256 = "9bc0ea28a446835b1cff22b3ebf90fd0c79b16bf592e2a3efc2c07a646e32762"
+reason = "No own bound stored-code domain covers 2010-2017. For 2010-2016 the #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits, and errata.delivered deliberately copies no coding across editions; for 2017 later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Carrying a neighbouring year's list into it would assert membership nobody has checked; no domain is borrowed or invented."
+evidence = "2010-2016: availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review. 2017: complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ef3f406966dad58232b529c690744b5adbee87a5b202176254a5dd87db29dd07"
+expected_diagnostic_sha256 = "4e3bb396e5b62270330d7870623e8255edc20f50ffa2c6555195cbef5d8b2ef7"
 
 # #1302: SPIN2002 product code held by SWECOV on the intrastat variant.
 
@@ -771,156 +656,58 @@ noted = "2026-10-15"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/landskod-utrikeshandel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15770\",\"variable:19312\",\"member:753225\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19312\",\"member:141716\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2317\",\"variable:19312\",\"member:143190\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2318\",\"variable:19312\",\"member:143219\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2319\",\"variable:19312\",\"member:143248\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2320\",\"variable:19312\",\"member:143277\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2321\",\"variable:19312\",\"member:143306\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19312\",\"member:168496\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19312\",\"member:168646\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19312\",\"member:168676\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19312\",\"member:168706\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19312\",\"member:168736\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19312\",\"member:186462\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19312\",\"member:255464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19312\",\"member:288517\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19312\",\"member:326962\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19312\",\"member:370871\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19312\",\"member:411542\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15770\",\"variable:19312\",\"member:753225\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19312\",\"member:141716\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2317\",\"variable:19312\",\"member:143190\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2318\",\"variable:19312\",\"member:143219\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2319\",\"variable:19312\",\"member:143248\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2320\",\"variable:19312\",\"member:143277\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2321\",\"variable:19312\",\"member:143306\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19312\",\"member:168496\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19312\",\"member:168646\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19312\",\"member:168676\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19312\",\"member:168706\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19312\",\"member:168736\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19312\",\"member:186462\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19312\",\"member:255464\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19312\",\"member:288517\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19312\",\"member:326962\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19312\",\"member:370871\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19312\",\"member:411542\"]}",
+]
 fields = ["coding"]
 valid_from = "1997-01-01"
-valid_to = "1997-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "478b1e76f7d304ff5f526dad8d2e2aa3a3b6993fd56f9cf9d13e508efe6f6bd6"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/landskod-utrikeshandel"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15770\",\"variable:19312\",\"member:753225\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19312\",\"member:141716\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2317\",\"variable:19312\",\"member:143190\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2318\",\"variable:19312\",\"member:143219\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2319\",\"variable:19312\",\"member:143248\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2320\",\"variable:19312\",\"member:143277\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2321\",\"variable:19312\",\"member:143306\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19312\",\"member:168496\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19312\",\"member:168646\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19312\",\"member:168676\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19312\",\"member:168706\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19312\",\"member:168736\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19312\",\"member:186462\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19312\",\"member:255464\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19312\",\"member:288517\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19312\",\"member:326962\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19312\",\"member:370871\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19312\",\"member:411542\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
 valid_to = "1998-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "478b1e76f7d304ff5f526dad8d2e2aa3a3b6993fd56f9cf9d13e508efe6f6bd6"
+expected_evidence_sha256 = "e266af58f651e15fee82c36d33f5af11a5d54fd687fff40c5e27ae22e462d7d4"
+expected_diagnostic_sha256 = "114fef3d43cd460a10cd327a0aeb316812ec2be7bb5fc90668652295b6c4f0de"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/spin"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19455\",\"member:142718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19455\",\"member:168502\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19455\",\"member:168652\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19455\",\"member:168682\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19455\",\"member:168712\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19455\",\"member:168742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19455\",\"member:186468\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19455\",\"member:255467\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19455\",\"member:288520\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19455\",\"member:326959\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19455\",\"member:370874\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19455\",\"member:411539\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19455\",\"member:142718\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19455\",\"member:168502\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19455\",\"member:168652\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19455\",\"member:168682\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19455\",\"member:168712\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19455\",\"member:168742\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19455\",\"member:186468\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19455\",\"member:255467\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19455\",\"member:288520\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19455\",\"member:326959\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19455\",\"member:370874\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19455\",\"member:411539\"]}",
+]
 fields = ["coding"]
 valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "3bb4be27db0e1c4c766aee24b567c73a634cf2b327ba1c1a265797175fd06e99"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19455\",\"member:142718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19455\",\"member:168502\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19455\",\"member:168652\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19455\",\"member:168682\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19455\",\"member:168712\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19455\",\"member:168742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19455\",\"member:186468\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19455\",\"member:255467\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19455\",\"member:288520\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19455\",\"member:326959\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19455\",\"member:370874\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19455\",\"member:411539\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "3bb4be27db0e1c4c766aee24b567c73a634cf2b327ba1c1a265797175fd06e99"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19455\",\"member:142718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19455\",\"member:168502\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19455\",\"member:168652\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19455\",\"member:168682\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19455\",\"member:168712\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19455\",\"member:168742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19455\",\"member:186468\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19455\",\"member:255467\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19455\",\"member:288520\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19455\",\"member:326959\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19455\",\"member:370874\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19455\",\"member:411539\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "3bb4be27db0e1c4c766aee24b567c73a634cf2b327ba1c1a265797175fd06e99"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19455\",\"member:142718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19455\",\"member:168502\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19455\",\"member:168652\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19455\",\"member:168682\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19455\",\"member:168712\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19455\",\"member:168742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19455\",\"member:186468\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19455\",\"member:255467\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19455\",\"member:288520\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19455\",\"member:326959\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19455\",\"member:370874\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19455\",\"member:411539\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "3bb4be27db0e1c4c766aee24b567c73a634cf2b327ba1c1a265797175fd06e99"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19455\",\"member:142718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19455\",\"member:168502\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19455\",\"member:168652\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19455\",\"member:168682\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19455\",\"member:168712\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19455\",\"member:168742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19455\",\"member:186468\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19455\",\"member:255467\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19455\",\"member:288520\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19455\",\"member:326959\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19455\",\"member:370874\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19455\",\"member:411539\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "3bb4be27db0e1c4c766aee24b567c73a634cf2b327ba1c1a265797175fd06e99"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2010-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2011-01-01"
-valid_to = "2011-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2012-01-01"
-valid_to = "2012-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2013-01-01"
-valid_to = "2013-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
-valid_to = "2014-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}"]
-fields = ["coding"]
-valid_from = "2016-01-01"
-valid_to = "2016-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a371f3c8aa36ef433366701906c11d5b964a8467c8cd444e81cff5a640704497"
+expected_evidence_sha256 = "a8cb7ad4fb7a9d8459397bec302906a6747e4c4a74b4d1b20cad7a2e8048b2da"
+expected_diagnostic_sha256 = "3a3e5f8130040e20ce3a246c9c47d9436f15fb845bce1abc3d1a10ed06c236e2"
 
 # ── #1603 B4: SWECOV UHV_1997–UHV_2004 SITC5 ──
 
@@ -939,90 +726,27 @@ noted = "2026-10-15"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}",
+]
 fields = ["coding"]
 valid_from = "1997-01-01"
-valid_to = "1997-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "1998-01-01"
-valid_to = "1998-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "1999-01-01"
-valid_to = "1999-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "2000-01-01"
-valid_to = "2000-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "2002-01-01"
-valid_to = "2002-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "2003-01-01"
-valid_to = "2003-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/sitc"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2271\",\"variable:19451\",\"member:142723\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2813\",\"variable:19451\",\"member:168507\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2819\",\"variable:19451\",\"member:168629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2820\",\"variable:19451\",\"member:168659\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2821\",\"variable:19451\",\"member:168689\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:2822\",\"variable:19451\",\"member:168719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:3153\",\"variable:19451\",\"member:186445\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4078\",\"variable:19451\",\"member:255451\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:4599\",\"variable:19451\",\"member:288504\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5293\",\"variable:19451\",\"member:326975\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:5985\",\"variable:19451\",\"member:370858\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:7474\",\"variable:19451\",\"member:411555\"]}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
+expected_evidence_sha256 = "86b9b1e345994749dab657cecc745d4ee04f2ac1c8bd4bc06317b214269299f9"
+expected_diagnostic_sha256 = "74a6759a04251c5f4727c4836aa76907f5d699086ec0dd955a53a220ba794e71"
 
 # ── #1617: land (concept 45) carries an R&D NABS description; HA0201 partner country, 2017–2026 ──
 

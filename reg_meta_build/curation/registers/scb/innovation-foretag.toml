@@ -11285,6 +11285,7 @@ valid_from = "2007-01-01"
 valid_to = "2009-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "94acc41f1a04fa677980109edb4a912d7083fd088f3b5b1502d8a00d3c7c91ea"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11295,6 +11296,7 @@ valid_from = "2004-01-01"
 valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "2cc6a2d2c3108ce540737d5568b15a4af6ac87a98e2b0a2f21e3beaae57d4b47"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11305,6 +11307,7 @@ valid_from = "2004-01-01"
 valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "4afd9f06346cd593760af0571c77113c7e22e533a05dff627f6c503278d711a0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11315,6 +11318,7 @@ valid_from = "2010-01-01"
 valid_to = "2012-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "3f73e081bbbd7eb1559b5f49b682fafe9efb910262b380515e55cf91f087bcea"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11325,6 +11329,7 @@ valid_from = "2004-01-01"
 valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "e5046da3d51e2f8981a2965aee58b7f18a122edb8b6a9ee92194c26e6bcc7b4c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11335,6 +11340,7 @@ valid_from = "2010-01-01"
 valid_to = "2012-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "bd45a496c7f7b97b1f579d8e228f4e67b4a22581db487b27a2d9851b6809007e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11345,6 +11351,7 @@ valid_from = "2004-01-01"
 valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "6603f342068fbc25ecc60458118a4aea55ebeeb901fe44431e0371bc78d13441"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11355,6 +11362,7 @@ valid_from = "2010-01-01"
 valid_to = "2012-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "8cfe8e1677549e0da84f5bd563c38bd539b13775b62d1014d5bc6f773b3ed8c0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11365,6 +11373,7 @@ valid_from = "2010-01-01"
 valid_to = "2012-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "084bd835c65d4909fa2f2548c873733b439c47695aef32c5f558117a7dc0fd08"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11375,6 +11384,7 @@ valid_from = "2010-01-01"
 valid_to = "2012-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "df72cd92357c10fce74350b1b4cf7367f7fc14f6d97a1bb961b5cd1234220794"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11385,6 +11395,7 @@ valid_from = "2008-01-01"
 valid_to = "2010-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "99452aa199ce67d325477777ef43b97524eecd7afeb36e45af8fa692d895472e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11395,6 +11406,7 @@ valid_from = "2008-01-01"
 valid_to = "2010-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "e5bbe4bab061610d97ee5bbb2592a0e233e60ef690fbecd3bd8789b0d4fbd8d5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11405,6 +11417,7 @@ valid_from = "2008-01-01"
 valid_to = "2010-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "d7cf716e4cd4820145a95945936fd2c4d5c6240c68e9bca0db75f75cf7c2bbf5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11415,6 +11428,7 @@ valid_from = "2008-01-01"
 valid_to = "2010-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "ac54325832a915082288ff82443249071a01b7c05cbf720f516ef57c1d6cfc70"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11425,16 +11439,22 @@ valid_from = "2008-01-01"
 valid_to = "2010-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "60cd5094d5d7c5d6b0489c99b31d488e13fe8831bdaa03bb86c98a7cb5feae81"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/ho"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37075\",\"member:478989\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:13272\",\"variable:37075\",\"member:590300\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:17817\",\"variable:37075\",\"member:827141\"],\"source\":\"scb-registerinformation\"}"]
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37075\",\"member:478989\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:13272\",\"variable:37075\",\"member:590300\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:17817\",\"variable:37075\",\"member:827141\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2007-01-01"
 valid_to = "2012-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "6f9c0fd5f5e2aa32a1627087bdd2c28b26bcd9b0ae07e4095c5dc7119c4d647f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11445,6 +11465,7 @@ valid_from = "2004-01-01"
 valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "78c96cc13638873ac8604c1bc7cc9e3afc843ee6c8e5fc50c4662b3a95c0f61d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11455,6 +11476,7 @@ valid_from = "2004-01-01"
 valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "b8f74d017bf6e23463a786dd29c09b7aa26e53d7ade0161c095acdd7a2384a30"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -11465,6 +11487,7 @@ valid_from = "2002-01-01"
 valid_to = "2004-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
+expected_diagnostic_sha256 = "6c1cf42698d2560ea3c6e20a2263aec418198e0d8196de1f4682a22e50312a45"
 
 [[coding.choice]]
 variable = "257.15559.geografisk-marknad-ovriga-lander"
@@ -12439,122 +12462,170 @@ witness = ["2014-01-01", "2016-12-31"]
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/varuinnovation-anpassad-av-foretaget"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "3a830dbb45ef0935f6c415fbf136b8ca23161131ba16c91ad1b2d9468afd5098"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/varuinnovation-utvecklad-av-andra"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "ac7cca654a2e771cf878839bb10c55d54d3926d8d34ba79888a6ddf92c7aa7b8"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/varuinnovation-utvecklad-av-foretaget"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "63a8d2fc27ea18bab68e1ff26c9b9b044ef37b83f486cc6da4da0309eee134f7"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/varuinnovation-utvecklad-med-andra"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28054\",\"member:469423\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28054\",\"member:318924\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "f13ffb710d8ef23ec0422ab0350f143c480b36cac741824825f56c783be0bb58"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/tjansteinnovation-anpassad-av-foretaget"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "4e601563e3bb214c07967b86c6e105fab21b4e40e3017b02bb4749958ca5d09c"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-andra"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "b253b14fd14555d4937882dde714dbe56fdb9f85b022361a65d773f794461b09"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-foretaget"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "6283f20b88e146c6a7a7dec0999b773b0afb962d9a0d94dba9f86508b47db40d"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/tjansteinnovation-utvecklad-med-andra"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28055\",\"member:469422\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28055\",\"member:318923\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "edafaef651f0bb55b4a9e03d0fb0337fb4a98783157c2d56447c537609ec2693"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/processinnovation-anpassad-av-foretaget"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "e842eb8edda776cdc96493976b55f789274f23ebebc212454e704011f7e6cc70"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/processinnovation-utvecklad-av-andra"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "76f691e2f1f036a37fae0ce8bf535ac930215cdcb04e8f767d32475bf2eaceb0"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "f9ee499d2a0d1a0f9d248161dc09c403fa2e3fdd0f65ff6e8594bbbc33b84ed9"
 
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/innovation-foretag/processinnovation-utvecklad-med-andra"
+refs = [
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}",
+  "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}",
+]
 fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:28056\",\"member:469421\"],\"source\":\"scb-registerinformation\"}", "{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:5168\",\"variable:28056\",\"member:318922\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved exact historical developer-component coding limitation,2026-10-01: retain the physical component column and supported metadata while its historical stored code domain remains unavailable."
 evidence = "User explicitly approved these twelve frozen Batch41 windows on2026-10-01. Complete126 original records and48 ordered source coding associations retained in Batch41-Innovation-developer12-complete-source-review.json.gz. Source a/b/c/d developer-category books establish response roles but do not establish component-column stored encoding. No binary code guess, recoding, latest-wave choice or lost source facts; state.value_set remains withheld."
+expected_diagnostic_sha256 = "00dc933264634623e1a1082c8ce7129412b81ae4c1c86c79f699e74d22cd885e"
 
 [[coding.choice]]
 data_warning = "This delivery uses a compatible complete source domain with documented routing or missing-response codes; their actual occurrence in historical extracts is not independently verified."

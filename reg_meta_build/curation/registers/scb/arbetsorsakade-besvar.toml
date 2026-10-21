@@ -163,8 +163,8 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "0d67f0c948abeee33f03c71fe25202565a9a7d28d541b9c12eede62aed993dd7"
-expected_diagnostic_sha256 = "a841a2f61b6247f0c0ce069182e3bda1d51e0c50dd8f41e53a21e021e5587b88"
+expected_evidence_sha256 = "f52073c6b766809c0213ef072502bfdebc98a507b0c783331fa9a29db92a119f"
+expected_diagnostic_sha256 = "1cfb72b3c59bffa4c986f39ee91ac7967f8563cb27402d05ff203a9b726d5d20"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -175,8 +175,8 @@ valid_from = "2001-01-01"
 valid_to = "2001-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual-eight-gap-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "91c27b2817611ff6095c025cadf20667aa11fcda4b5128a4257ba5fc0f98d3cf"
-expected_diagnostic_sha256 = "9805ba8500674e9c5265b81e2bd8b5554e4cc6c0fe5a18a946f610904025855f"
+expected_evidence_sha256 = "d3b71e511568a69348c5a2b1aaacab0d105cb8c6479b74ff5fdb26da8beb5da0"
+expected_diagnostic_sha256 = "d631638f651f316c0085840d4ceaf5e3262202b9cbbdba158f478ed597dd6db5"
 
 [[identity.partition]]
 data_warning = "Literal simultaneous source components are separate catalog variables; their numeric suffixes have no independently verified ordinal meaning. Every original label, definition and coding association is retained."
