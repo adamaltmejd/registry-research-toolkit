@@ -2104,7 +2104,8 @@ their ids are unchanged. Derive reads an immutable base, publishes atomically, l
 the base bytes unchanged and rejects a stale derivation. It admits a base of the same
 major and a minor up to the builder's (`open_built_db(older_minor=True)` in `db.py`);
 every other builder input, `extend-db`'s base included, stays exact, so an older base is
-derived before it is extended.
+derived before it is extended. A minor that widens a base table cannot be derived up to:
+`validate_built_db` refuses a table missing a declared column, and the base is rebuilt.
 
 **Invariants `validate_built_db` owns** for the derived tables (one validator, extended,
 never a second one): browse delivery windows disjoint; `resolver_column` equal to the
@@ -2709,8 +2710,10 @@ be one the table lists, exactly as spelled, and a year-independent table takes n
 `holding_table.period_column`/`period_encoding` store it, with CHECKs that both or
 neither are set and only on a dated table. The bump is minor (12.1.0): a 12.0 reader
 ignores the column and orders the whole table, as it does today; the manifest's row
-filter and the reader gate that needs 12.1 come together later. extend-db opens its base
-at this exact schema, so the next steward build rebuilds the global base.
+filter and the reader gate that needs 12.1 come together later. It widens a base table,
+so a 12.0 base cannot be derived up to it: derive rebuilds only the derived tables.
+`validate_built_db` refuses any table missing a column the code's DDL declares, so the
+next steward build rebuilds the global base under 12.1.0.
 
 A mapping may carry a steward-scoped `data_warning` (#1684):
 `data_warning = { summary = "…", detail = "…", window = … }`. The author writes both

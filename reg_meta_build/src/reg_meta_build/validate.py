@@ -50,10 +50,11 @@ stays green; they bite on the orchestrator's full-corpus build.
 from __future__ import annotations
 
 import json
+import sqlite3
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 from reg_core_py import fold_search, fts_terms
 
@@ -66,7 +67,7 @@ from reg_meta_build._resolved_common import (
 )
 from reg_meta_build.artifact_identity import search_rows_sha256
 from reg_meta_build.data_warnings import BUILD_ONLY_CODES
-from reg_meta_build.db import stored_data_warnings
+from reg_meta_build.db import DDL, SCHEMA_VERSION, stored_data_warnings
 from reg_meta_build.derive.browse import check_browse
 from reg_meta_build.derive.chains import CHAIN_TABLES, check_chains
 from reg_meta_build.derive.schema import check_coded
@@ -95,9 +96,6 @@ from .fqid_slugs import _decode_panel_entity_key
 _GLOBAL_NONSCB_PROVIDER_IDS: tuple[int, ...] = tuple(
     pid for pid, _slug, _name in _PROVIDER_SEED if pid != PROVIDER_ID_SCB
 )
-
-if TYPE_CHECKING:
-    import sqlite3
 
 
 LineKind = Literal["section", "ok", "fail", "info", "block"]
@@ -360,6 +358,26 @@ def _check_schema_shape(
             result.fail(f"{absent} should have been dropped")
         else:
             result.ok(f"{absent} absent")
+
+    # Derive lifts an older-minor base by rebuilding only the derived tables, so
+    # a base table a later minor widened (12.1.0: holding_table.period_column)
+    # would ship under the new version without its new columns.
+    with sqlite3.connect(":memory:") as declared:
+        declared.executescript(DDL)
+        for (table,) in declared.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+        ):
+            if table not in tables:
+                continue
+            missing = sorted(
+                {r[1] for r in declared.execute(f"PRAGMA table_info({table})")}
+                - {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+            )
+            if missing:
+                result.fail(
+                    f"{table} lacks columns {', '.join(missing)} of schema "
+                    f"{SCHEMA_VERSION}; rebuild the base under this schema"
+                )
 
     # A2.7: value_set_id moved to variable_state (variable_instance is gone).
     cols = {r["name"] for r in conn.execute("PRAGMA table_info(variable_state)")}
