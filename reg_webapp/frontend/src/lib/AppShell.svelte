@@ -220,7 +220,7 @@ function plural(count: number, singular: string, pluralLabel: string): string {
       aria-label={`Project: ${projectTitle}, ${plural(projectSourceCount, "source", "sources")} and ${plural(projectColumnCount, "column", "columns")}, ${STATUS_LABEL[projectStatus]}${projectStore.dirty ? ", unsaved changes" : ""}`}
     >
       <span class="project-chip-head">
-        <span class="micro-label project-chip-label">Project</span>
+        <span class="micro-label">Project</span>
         {#if projectStore.dirty}
           <span class="project-dirty">Unsaved</span>
         {/if}
@@ -480,13 +480,6 @@ function plural(count: number, singular: string, pluralLabel: string): string {
     gap: var(--space-2);
     min-width: 0;
   }
-  /* The rail's labels wear the `.micro-label` utility and only re-tint it
-     faint here (same for .rail-window-label/.facets-label below): a scoped class
-     selector out-specifies the global utility, so the color wins wherever the
-     two stylesheets land. */
-  .project-chip-label {
-    color: var(--text-faint);
-  }
   .project-dirty {
     flex: 0 0 auto;
     font-size: var(--text-micro);
@@ -558,7 +551,6 @@ function plural(count: number, singular: string, pluralLabel: string): string {
   .facets-label {
     margin: 0 0 var(--space-1);
     padding: 0 var(--space-2);
-    color: var(--text-faint);
   }
   .facets-note {
     margin: 0;

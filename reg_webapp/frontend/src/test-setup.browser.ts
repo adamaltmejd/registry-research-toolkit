@@ -10,6 +10,7 @@
 // with its styling under test just as it does in the app.
 import { commands } from "vitest/browser";
 import "./tokens.css";
+import "./lib/ui/motion.css";
 import "./lib/ui/utilities.css";
 import { initRegCore } from "./lib/reg_core";
 
