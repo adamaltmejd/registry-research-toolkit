@@ -31,8 +31,7 @@
       "panel_entity_key": null,
       "panel_time_key": null,
       "panel_time_grain": null,
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "register_variant",
@@ -44,8 +43,7 @@
       "panel_entity_key": "personnummer",
       "panel_time_key": "period",
       "panel_time_grain": "delivery",
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "register_variant",
@@ -60,8 +58,7 @@
       ],
       "panel_time_key": "manad",
       "panel_time_grain": "row",
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "register_variant",
@@ -76,8 +73,7 @@
         "kvartal"
       ],
       "panel_time_grain": null,
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "register_variant",
@@ -89,8 +85,7 @@
       "panel_entity_key": null,
       "panel_time_key": "period",
       "panel_time_grain": null,
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "register_variant",
@@ -102,8 +97,7 @@
       "panel_entity_key": null,
       "panel_time_key": "manad",
       "panel_time_grain": null,
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "register_variant",
@@ -118,8 +112,7 @@
         "kvartal"
       ],
       "panel_time_grain": "row",
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "variable",
@@ -131,8 +124,7 @@
       "panel_entity_key": null,
       "panel_time_key": null,
       "panel_time_grain": null,
-      "deprecated": false,
-      "replaced_by": null
+      "deprecated": false
     },
     {
       "kind": "variable",
@@ -144,8 +136,7 @@
       "panel_entity_key": null,
       "panel_time_key": null,
       "panel_time_grain": null,
-      "deprecated": true,
-      "replaced_by": null
+      "deprecated": true
     }
   ]
 }

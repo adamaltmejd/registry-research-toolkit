@@ -35,6 +35,3 @@ slug = "hushalls-inkomst"
 
 [variable."1.21"]
 deprecated = true
-
-[variable."1.22"]
-replaced_by = "1.21"

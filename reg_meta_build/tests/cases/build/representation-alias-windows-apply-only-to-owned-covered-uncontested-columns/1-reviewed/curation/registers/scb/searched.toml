@@ -13,7 +13,6 @@ slug = "value"
 register = "scb/searched"
 variable = "value"
 delivery_column = "OLD"
-provenance = "delivery list"
 
 [[representation.alias_window]]
 variable = "scb/searched/value"

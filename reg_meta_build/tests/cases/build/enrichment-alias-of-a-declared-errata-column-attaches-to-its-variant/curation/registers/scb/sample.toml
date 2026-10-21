@@ -29,4 +29,3 @@ versions = ["2020"]
 register = "scb/sample"
 variable = "new-col"
 delivery_column = "FormerA"
-provenance = "delivery list"
