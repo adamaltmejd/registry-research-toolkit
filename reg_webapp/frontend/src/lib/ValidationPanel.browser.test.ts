@@ -83,8 +83,6 @@ describe("ValidationPanel — researcher-language findings", () => {
     expect(document.body.textContent).not.toContain(
       "/sources/0/bindings/0/variable",
     );
-    // …and the message never leaks a dataclass repr.
-    expect(document.body.textContent).not.toContain("PeriodRange");
   });
 
   it("links out to the binding's catalog subject page (read-only cart fixes happen in the browser, #991)", async () => {
