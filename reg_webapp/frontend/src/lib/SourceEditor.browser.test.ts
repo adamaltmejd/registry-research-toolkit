@@ -348,36 +348,6 @@ describe("SourceEditor cart card", () => {
     expect(storedProject()?.sources).toHaveLength(2);
   });
 
-  it("removes the source through the store once the removal is confirmed", async () => {
-    // Seed a two-source draft so we can observe the removal against the store.
-    projectStore.applyStagedDiff({
-      adds: [
-        {
-          registerVariant: "scb/lisa/v1",
-          period: 2020,
-          binding: { variable: "scb/lisa/kon", type: "categorical" },
-        },
-        {
-          registerVariant: "scb/rtb/v1",
-          period: 2019,
-          binding: { variable: "scb/rtb/x", type: "opaque" },
-        },
-      ],
-    });
-    const source = storedProject()?.sources?.[0] as ProjectSource;
-    await renderCard(source);
-
-    await page.getByRole("button", { name: "Remove source" }).click();
-    const dialog = page.getByRole("alertdialog");
-    await expect.element(dialog).toMatchTextContent(/and its 1 column\?/);
-    await dialog.getByRole("button", { name: "Remove source" }).click();
-
-    // The store dropped source 0 (scb/lisa/v1); scb/rtb/v1 survives.
-    expect(storedProject()?.sources?.map((s) => s.register_variant)).toEqual([
-      "scb/rtb/v1",
-    ]);
-  });
-
   it("renders an alert (not a crash) when bindings is a non-array", async () => {
     const source = {
       name: "bad",

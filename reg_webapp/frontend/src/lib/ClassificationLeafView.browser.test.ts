@@ -198,7 +198,9 @@ describe("ClassificationLeafView (#638 shell)", () => {
     expect(document.body.textContent).not.toContain("SUN 1996");
   });
 
-  it("renders non-temporal derived-from classification references", async () => {
+  // Fails if the leaf stops mounting the related-classification links. Their
+  // content (both lists, notes, hrefs) is pinned once, in ClassificationGroupView.
+  it("mounts the related-classification links", async () => {
     await render(ClassificationLeafView, {
       node: node({
         fqid: "class/ks87-p",
@@ -212,32 +214,11 @@ describe("ClassificationLeafView (#638 shell)", () => {
             note: "Primary-care setting variant of ICD-9-KS87",
           },
         ],
-        derivatives: [
-          {
-            fqid: "class/ks87-p-extra",
-            short_name: "KS87-P extra",
-            name: "Extra derived classification",
-            note: null,
-          },
-        ],
       }),
     });
 
     await expect
       .element(page.getByRole("heading", { name: "Related classifications" }))
       .toBeVisible();
-    await expect.element(page.getByText("Derived from")).toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "ICD-9-KS87" }))
-      .toHaveAttribute("href", "/catalog/class/icd-9-ks87");
-    await expect
-      .element(page.getByText("Primary-care setting variant of ICD-9-KS87"))
-      .toBeVisible();
-    await expect
-      .element(page.getByText("Derived classifications"))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("link", { name: "KS87-P extra" }))
-      .toHaveAttribute("href", "/catalog/class/ks87-p-extra");
   });
 });

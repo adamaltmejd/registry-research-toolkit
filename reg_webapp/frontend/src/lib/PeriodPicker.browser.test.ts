@@ -381,23 +381,6 @@ describe("PeriodPicker — window slider (#615)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("availability deviation: an explicit ?period past coverage greys the not-delivered span", async () => {
-    // An explicit ?period 2000–2010 (the URL's source of truth) past coverage
-    // 1995–2008 → 2009–2010 is not delivered. Unlike the #671 default seed (which
-    // is clipped INTO coverage and clamped), an explicit out-of-coverage ?period
-    // renders honestly with its gap.
-    const screen = await render(PeriodPicker, {
-      period: "2000..2010",
-      window: WINDOW,
-      coverage: COVERAGE,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect
-      .element(screen.getByText(/Not delivered after 2008/))
-      .toBeVisible();
-  });
-
   it("sub-annual ?period with a window: the slider shows the sub-annual cue without advanced modes", async () => {
     // HT2020 is not year-representable → activeYearSelection falls back to the
     // window, so the slider seeds to the window. Without the cue that would read

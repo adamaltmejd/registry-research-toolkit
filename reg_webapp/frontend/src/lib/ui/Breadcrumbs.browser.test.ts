@@ -13,19 +13,15 @@ describe("Breadcrumbs", () => {
     { label: "LISA", href: "/catalog/scb/lisa" },
   ];
 
-  it("exposes a Breadcrumb nav landmark", async () => {
+  // Fails if the nav loses its "Breadcrumb" label (the links are found only
+  // inside that landmark) or the last item renders as a link.
+  it("links every item except the last, inside a Breadcrumb nav landmark", async () => {
     await render(Breadcrumbs, { items });
+    const nav = page.getByRole("navigation", { name: "Breadcrumb" });
     await expect
-      .element(page.getByRole("navigation", { name: "Breadcrumb" }))
+      .element(nav.getByRole("link", { name: "Catalog" }))
       .toBeVisible();
-  });
-
-  it("links every item except the last", async () => {
-    await render(Breadcrumbs, { items });
-    await expect
-      .element(page.getByRole("link", { name: "Catalog" }))
-      .toBeVisible();
-    await expect.element(page.getByRole("link", { name: "SCB" })).toBeVisible();
+    await expect.element(nav.getByRole("link", { name: "SCB" })).toBeVisible();
     // The current page is not a link.
     expect(page.getByRole("link", { name: "LISA" }).query()).toBeNull();
   });

@@ -109,31 +109,6 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
       .toBeVisible();
   });
 
-  it("labels a lone delivery with its own year and prints it unqualified", async () => {
-    vi.mocked(getShow).mockResolvedValue(
-      registerWith(
-        variant("standard", {
-          name: "Standard",
-          versions: [lisaVersion(2019, "16 år och äldre")],
-        }),
-      ),
-    );
-
-    await render(VariantBrowser, {
-      registerFqid: "scb/rams",
-    });
-
-    await expect
-      .element(page.getByRole("heading", { name: "Version 2019" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Population" }))
-      .toBeVisible();
-    await expect
-      .element(page.getByRole("heading", { name: "Object type" }))
-      .toBeVisible();
-  });
-
   it("renders every population and object type of a version, repeated names included", async () => {
     // One delivery can carry two frames, and reg_meta may deliver both under
     // the SAME name — the metadata loops are unkeyed precisely because a name

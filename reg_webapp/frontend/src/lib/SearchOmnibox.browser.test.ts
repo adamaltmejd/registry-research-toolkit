@@ -91,6 +91,8 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     await typeAndSettle("kon");
 
     expect(router.getQueryParam("q")).toBe("kon");
+    // Fails if a refinement writes a default `?type=` the URL never carried.
+    expect(router.getQueryParam("type")).toBeNull();
     // Refinement replaces the current entry — the history stack doesn't grow.
     expect(window.history.length).toBe(lenBefore);
   });
@@ -121,15 +123,6 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
 
     expect(router.getQueryParam("q")).toBe("kon");
     expect(router.getQueryParam("type")).toBe("value");
-  });
-
-  it("does not add a ?type= when none is present (default scope stays clean)", async () => {
-    setUrl("/search?q=ko");
-    await render(SearchOmnibox);
-    await typeAndSettle("kon");
-
-    expect(router.getQueryParam("q")).toBe("kon");
-    expect(router.getQueryParam("type")).toBeNull();
   });
 
   it("adopts the URL's ?q on a back/forward (popstate) without ping-pong", async () => {

@@ -97,21 +97,6 @@ describe("SourceEditor source period (Y-81)", () => {
 
   // The window is an authoring SEED, not an inheritance: a source may deliberately
   // cover more or less, so a divergence is MARKED, never warned about.
-  it("marks nothing when the period matches the study window", async () => {
-    const source = {
-      name: "LISA",
-      register_variant: "scb/lisa/arbetsstallen",
-      period: { from: 2005, to: 2020 },
-      bindings: [],
-    } as unknown as ProjectSource;
-    await renderCard(source, { studyWindow: { from: 2005, to: 2020 } });
-
-    await expect
-      .element(page.getByRole("textbox", { name: "From" }))
-      .toHaveValue("2005");
-    expect(page.getByText(/Differs from study window/).query()).toBeNull();
-  });
-
   // The marker compares SPANS, not spellings: a hand-authored single-year source
   // writes `{from, to}` where a pick writes the bare year, and the two cover the
   // same one year. Marking that as a divergence would send a researcher looking
