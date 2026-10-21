@@ -31,7 +31,10 @@
 #                           worklist with `reg-meta-build same-as-candidates`.
 #
 #   type = "replaced_by"  — directional SUCCESSION (`from` superseded by `to`).
-#                           NOT identity: the definitions differ across eras.
+#                           NOT identity: the definitions differ across eras, or
+#                           SCB re-minted the concept under a new var_id (a
+#                           different variable here, even when only the var_id
+#                           changed; a rename within one var_id is a fold).
 #                           `from` / `to` are FQIDs of the SAME grain (register,
 #                           variable, or classification — not variant). The
 #                           successor must resolve to a live, slugged entity; the
@@ -939,6 +942,677 @@ to = "scb/yrkesreg/ku1astsni0"
 effective_year = 2002
 note = "Näringsgren, största förvärvskälla (VarId 16221) moved from SNI92 (KU1AstSni, 2001) to SNI2002 (KU1AstSni02, 2002–2010)"
 
+# ── Shared-column succession worklist, cross-var_id rows (2026-10-21) ──
+#    Maintainer-approved batch: worklist rows where one concept continues under a
+#    new SCB VarId. `[[identity.partition]]` folds within one native variable, so
+#    succession is the only in-register link. Each pair was checked against the
+#    reg_meta v0.57.0 catalog: both sides' states in every variant, full
+#    definitions and code sets. Kept only where the eras neither overlap nor
+#    interleave and no other variable carries the concept in between; a delivery
+#    gap is named in the note. `effective_year` is the successor's first year.
+#    The note says whether only the VarId changed or the definition too.
+
+#    AKU: hemarbete re-minted for 2007.
+[[edge]]
+type = "replaced_by"
+from = "scb/aku/huarbhemant"
+to = "scb/aku/huarbhem-frekvens"
+effective_year = 2007
+note = "Arbete hemifrån egna bostaden i huvudsysslan, frekvens (HUARBHEMANT, VarId 6512) continues under VarId 18004 from 2007; var_id only"
+
+#    Arbetsmiljöundersökningen: nattarbete and besvär items re-minted.
+[[edge]]
+type = "replaced_by"
+from = "scb/arbetsmiljoundersokningen/nattarbete-minst-halften"
+to = "scb/arbetsmiljoundersokningen/nattarbete-halvdag-hs"
+effective_year = 2021
+note = "Nattarbete minst hälften av arbetsdagarna (nattant, VarId 24932) continues under VarId 45872 from 2021; var_id only, the definition is the one in use since 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/arbetsmiljoundersokningen/besvar-byte-av-yrke"
+to = "scb/arbetsmiljoundersokningen/besvar-orsak-yrkesbyte"
+effective_year = 1999
+note = "Besvär orsak till byte av yrke (BESVABYT, VarId 42187) continues under VarId 41611 from 1999; var_id only"
+
+#    BAST: a transactions row re-minted with an abbreviated name.
+[[edge]]
+type = "replaced_by"
+from = "scb/bast/ovriga-svenska-aktier-utlandet-trans"
+to = "scb/bast/ovriga-sv-aktier-utlandet-trans"
+effective_year = 1998
+note = "Övriga svenska aktier och andelar, transaktioner där motparten har utländsk adress (TransRad312, VarId 24752) continues under VarId 25429 from 1998; var_id only, the name is abbreviated"
+
+#    FoU UoH-personal: the 2011 re-mint of the time-share item (F31b and its
+#    uppräknad twin).
+[[edge]]
+type = "replaced_by"
+from = "scb/fou/arbetstid-ansoka-medel"
+to = "scb/fou/arbetstid-ansoka-medel-fou"
+effective_year = 2011
+note = "Andel av arbetstid för att ansöka om medel (F31b, VarId 6324) continues under VarId 25031 from 2011 (not asked in 2009); the definition is re-worded and no longer mentions direct support"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/fou/andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-f31bupp"
+to = "scb/fou/andel-av-arbetstid-som-agnades-at-att-ansoka-om-medel-for-fou-f31bupp"
+effective_year = 2011
+note = "Andel av arbetstid för att ansöka om medel, uppräknad (F31bupp, VarId 6324) continues under VarId 25031 from 2011 (not asked in 2009); the definition is re-worded and no longer mentions direct support"
+
+#    FRIDA: punktskatter deductions re-minted in 2014 and 2017 (the miljöklass or
+#    fuel moves from the definition to the operational definition), a
+#    försäkringsbolag line renumbering, and finansbolag columns that join general
+#    VarIds in 2017/2022. Those general VarIds were already delivered by other
+#    variants, so those edges are representation grain, scoped to finansbolag.
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/fastighetsskatt-elproduktion-vattenkraft"
+to = "scb/frida/underlag-fastighetsskatt-vattenkraft"
+effective_year = 2012
+note = "Underlag för fastighetsskatt, elproduktionsenhet vattenkraft (AVAT, VarId 29836) continues under VarId 21837 from 2012; the definition is re-worded and no longer names the 2,8 % rate"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/arets-resultat-l27"
+to = "scb/frida/arets-resultat-l26"
+effective_year = 2016
+note = "Årets resultat in försäkringsbolag (column L27, VarId 29696) continues under VarId 26268 from 2016; var_id only, the form line label is renumbered L27 → L26 while the column stays L27"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-metallurgiska-mk1"
+to = "scb/frida/avdrag-bransle-metallurgiska-processer"
+effective_year = 2014
+note = "Avdrag för skatt på bränsle, metallurgiska processer (V712_112, VarId 26031) continues under VarId 26300 from 2014; the definition drops 'högbeskattad olja miljöklass 1', which returns as the 2017 operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-export-mk1"
+to = "scb/frida/avdrag-bransle-export-tredje-land"
+effective_year = 2014
+note = "Avdrag för skatt på bränsle exporterat till tredje land eller frizon (V712_45, VarId 26346) continues under VarId 26511 from 2014; the definition drops 'högbeskattad olja miljöklass 1', which returns as the 2017 operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-annat-andamal-mk1"
+to = "scb/frida/avdrag-bransle-annat-andamal-dubbel"
+effective_year = 2014
+note = "Avdrag för skatt på bränsle för annat ändamål än motordrift eller dubbel användning (V712_55, VarId 26356) continues under VarId 26578 from 2014; the definition drops 'högbeskattad olja miljöklass 1', which returns as the 2017 operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-energiprodukter-mk1"
+to = "scb/frida/avdrag-bransle-framstallning-energi"
+effective_year = 2014
+note = "Avdrag för skatt på bränsle, framställning av energiprodukter (V712_78, VarId 26376) continues under VarId 26593 from 2014; the definition drops 'högbeskattad olja miljöklass 1', which returns as the 2017 operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-elektrisk-kraft-mk1"
+to = "scb/frida/avdr-for-skatt-pa-bransle-framstallning-elektrisk-kraft-avser-punktskattedeklaration-for-olja-gasol-m-m-hogbeskattad-olja-mk1"
+effective_year = 2017
+note = "Avdrag för skatt på bränsle, framställning elektrisk kraft, olja MK1 (V712_88, VarId 26386) continues under VarId 26392 from 2017 (not delivered 2014–2016); the miljöklass moves from the definition to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/v712-89"
+to = "scb/frida/avdr-for-skatt-pa-bransle-framstallning-elektrisk-kraft-avser-punktskattedeklaration-for-olja-gasol-m-m-hogbeskattad-olja-mk2"
+effective_year = 2017
+note = "Avdrag för skatt på bränsle, framställning elektrisk kraft, olja MK2 (V712_89, VarId 26388) continues under VarId 26392 from 2017 (not delivered 2014–2016); the miljöklass moves from the definition to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/v713-60"
+to = "scb/frida/avdr-for-skatt-pa-bransle-framstallning-elektrisk-kraft-avser-punktskattedeklaration-for-naturgas-kol-och-koks-kol-koks"
+effective_year = 2017
+note = "Avdrag för skatt på bränsle, framställning elektrisk kraft, kol och koks (V713_60, VarId 26461) continues under VarId 26392 from 2017 (not delivered 2014–2016); the fuel moves from the definition to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-annat-andamal-bensin-mk1"
+to = "scb/frida/avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-35"
+effective_year = 2017
+note = "Avdrag för skatt på bränsle för annat ändamål eller vissa industriella processer, bensin MK1 (V714_35, VarId 26517) continues under VarId 26520 from 2017 (not delivered 2014–2016); the miljöklass moves from the definition to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/v714-36"
+to = "scb/frida/avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-36"
+effective_year = 2017
+note = "Avdrag för skatt på bränsle för annat ändamål eller vissa industriella processer, bensin MK2 (V714_36, VarId 26518) continues under VarId 26520 from 2017 (not delivered 2014–2016); the miljöklass moves from the definition to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/v714-40"
+to = "scb/frida/avdr-for-skatt-pa-bransle-som-forbr-annat-andamal-eller-vissa-v714-40"
+effective_year = 2017
+note = "Avdrag för skatt på bränsle för annat ändamål eller vissa industriella processer, CO2-skatt bensin (V714_40, VarId 26522) continues under VarId 26520 from 2017 (not delivered 2014–2016); the tax moves from the definition to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avdrag-bransle-forstart-svavelskatt"
+to = "scb/frida/avdrag-bransle-forstorts-force-majeure"
+effective_year = 2014
+note = "Avdrag för skatt på bränsle som förstörts eller force majeure (V718_49, VarId 26601) continues under VarId 26600 from 2014; the definition drops 'svavelskatt', which returns as the 2017 operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/va22"
+to = "scb/frida/upplupna-kostnader-forutbetalda-intakter"
+from_column = "VA22"
+to_column = "VA22"
+variant = "finansbolag"
+effective_year = 2022
+note = "Upplupna kostnader och förutbetalda intäkter, block A (VA22, VarId 27408) continues in finansbolag under the general VarId 4251 from 2022 (not delivered 2021); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/avsattning-till-reservfond-2"
+to = "scb/frida/avsattning-till-reservfond"
+from_column = "VG46"
+to_column = "VG46"
+variant = "finansbolag"
+effective_year = 2017
+note = "Avsättning till reservfond (VG46, VarId 27718) continues in finansbolag under VarId 26054 from 2017; var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/ovriga-forandringar"
+to = "scb/frida/ovriga-forandringar-2"
+effective_year = 2017
+note = "Övriga förändringar (VG51, VarId 27723) continues under VarId 38023 from 2017; var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/vg70"
+to = "scb/frida/antal-anstallda"
+from_column = "VG70"
+to_column = "VG70"
+variant = "finansbolag"
+effective_year = 2022
+note = "Antalet anställda (VG70, VarId 27749) continues in finansbolag under the general VarId 690 from 2022 (not delivered 2021); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/vg72"
+to = "scb/frida/antal-arbetsstallen"
+from_column = "VG72"
+to_column = "VG72"
+variant = "finansbolag"
+effective_year = 2022
+note = "Antalet arbetsställen (VG72, VarId 27752) continues in finansbolag under the general VarId 17484 from 2022 (not delivered 2021); var_id only"
+
+#    FTR: skogsimpediment wording.
+[[edge]]
+type = "replaced_by"
+from = "scb/ftr/antal-varderingsenheter-skogsimpediment"
+to = "scb/ftr/antal-ve-skogsimp"
+effective_year = 2011
+note = "Antal värderingsenheter med skogsimpediment (AntVeSkogsimp, VarId 505) continues under VarId 27201 from 2011; var_id only, the name now reads 'skogligt impediment'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ftr/taxeringsvarde-for-skogsimpediment"
+to = "scb/ftr/taxeringsvarde-for-skogligt-impediment"
+effective_year = 2011
+note = "Taxeringsvärde för skogsimpediment (VardeSkogsimp, VarId 575) continues under VarId 27197 from 2011; var_id only, the name now reads 'skogligt impediment'"
+
+#    HEK: household child counts re-minted for 2012.
+[[edge]]
+type = "replaced_by"
+from = "scb/hek/antal-barn-under-22-ar"
+to = "scb/hek/antal-barn-under-22"
+effective_year = 2012
+note = "Antal barn under 22 år (BANT22, VarId 390) continues under VarId 4632 from 2012; the definition is shortened and no longer says hemmaboende"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/hek/antal-barn-under-6-ar"
+to = "scb/hek/antal-barn-under-6"
+effective_year = 2012
+note = "Antal barn under 6 år (BANT6, VarId 391) continues under VarId 4633 from 2012; the definition is shortened and no longer says hemmaboende"
+
+#    IKU: driftskostnader recut to include periodiskt underhåll.
+[[edge]]
+type = "replaced_by"
+from = "scb/iku/driftskostnader-reparationer"
+to = "scb/iku/driftskostnader-reparationer-underhall"
+effective_year = 2012
+note = "Driftskostnader för reparationer och underhåll (V3010, VarId 16502) recut under VarId 30402 from 2012 to include periodiskt underhåll, which the 2007–2011 definition excluded"
+
+#    Inträdet på arbetsmarknaden: the parents' status columns leave LISA VarId 63
+#    for parent-specific VarIds; each edge keeps its role.
+[[edge]]
+type = "replaced_by"
+from = "scb/intradet-pa-arbetsmarknaden/sysselsattningsstatus-november-2"
+to = "scb/intradet-pa-arbetsmarknaden/sysselsattningsstatus-november-far"
+effective_year = 2008
+note = "Sysselsättningsstatus november for the graduate's father (SyssStat_Far, LISA VarId 63) continues under the father-specific VarId 18021 from 2008; var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/intradet-pa-arbetsmarknaden/sysselsattningsstatus-november-3"
+to = "scb/intradet-pa-arbetsmarknaden/sysselsattningsstatus-november-mor"
+effective_year = 2008
+note = "Sysselsättningsstatus november for the graduate's mother (SyssStat_Mor, LISA VarId 63) continues under the mother-specific VarId 18020 from 2008; var_id only"
+
+#    IoT: tax-base items re-minted after a delivery gap.
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/underlag-efterlevandepensionsavgift"
+to = "scb/iot/underlag-efterlevande-pension-forar"
+effective_year = 2011
+note = "Underlag för efterlevandepensionsavgift föregående år (AEPAVGX, VarId 24165) continues under VarId 28094 from 2011 (not delivered 2010); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/nedsattning-avkastningsskatt-avtal"
+to = "scb/iot/nedsattning-avkastningsskatt-pga-avtal"
+effective_year = 2010
+note = "Nedsättning av avkastningsskatt p.g.a. avtal (BAAVK, VarId 685) continues under VarId 28095 from 2010 (not delivered 2008–2009); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/regional-nedsattning-egenavgifter"
+to = "scb/iot/regional-ersattning-egenavgifter"
+effective_year = 2002
+note = "Regional nedsättning av egenavgifter (SAEGENR, VarId 8375) continues under VarId 726 from 2002 (not delivered 2000–2001); the successor's name reads 'ersättning' and its definition repeats the name"
+
+#    ISEN: arbetsställe and fuel items re-minted for 2006/2007.
+[[edge]]
+type = "replaced_by"
+from = "scb/isen/anstallda-pa-arbetsstallet-anst"
+to = "scb/isen/antal-anstallda-pa-arbetsstallet-anst"
+effective_year = 2007
+note = "Anställda på arbetsstället (Anst, VarId 1639) continues under VarId 16314 from 2007 (not delivered 2006); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/isen/anstallda-pa-arbetsstallet-anstallda"
+to = "scb/isen/antal-anstallda-pa-arbetsstallet-anstallda"
+effective_year = 2007
+note = "Anställda på arbetsstället (Anställda, VarId 1639) continues under VarId 16314 from 2007 (not delivered 2006); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/isen/kommentar-uppgiftslamnaren"
+to = "scb/isen/kommentar-uppgiftslamnare"
+effective_year = 2011
+note = "Kommentar från uppgiftslämnaren (Komm, VarId 16420) continues under VarId 1653 from 2011; var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/isen/bransle-maxvarde"
+to = "scb/isen/bransle-maxpris"
+effective_year = 2006
+note = "Bränsleslagets genomsnittliga högsta pris per enhet (MaxPris, VarId 2595) continues under VarId 16415 from 2006; var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/isen/bransleslagens-varmevarden-vv"
+to = "scb/isen/bransleslagets-varmevarden-vv"
+effective_year = 2006
+note = "Bränsleslagets värmevärden (Vv, VarId 2598) continues under VarId 16414 from 2006; var_id only, the definition adds an explanation of värmevärde"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/isen/bransleslagens-varmevarden-varmevarde"
+to = "scb/isen/bransleslagets-varmevarden-varmevarde"
+effective_year = 2007
+note = "Bränsleslagets värmevärden (Värmevärde, VarId 2598) continues under VarId 16414 from 2007 (the Värmevärde column is not delivered 2006, when VarId 16414 is delivered as the sibling Vv partition); var_id only, the definition adds an explanation of värmevärde"
+
+#    IT-användning: two befolkningen items re-minted.
+[[edge]]
+type = "replaced_by"
+from = "scb/it-anvandning/dator-hemma"
+to = "scb/it-anvandning/tillgang-dator-hemma"
+effective_year = 2013
+note = "Tillgång till dator i hemmet (COMP, VarId 15889) continues under VarId 37036 from 2013; the question now names the household's members and counts laptops and tablets but not smartphones"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/it-anvandning/antal-svarande-stratum-referensmanad"
+to = "scb/it-anvandning/antal-svarande-stratum-referensmanad-2"
+effective_year = 2010
+note = "Antal svarande per stratum och referensmånad (Lills, VarId 6815) continues under VarId 23406 from 2010; var_id only"
+
+#    Kommunalekonomisk utjämning: the kommuner outcome re-minted for 2023.
+[[edge]]
+type = "replaced_by"
+from = "scb/kommunalekonomisk-utjamning/utjamning-utfall-kr-per-inv"
+to = "scb/kommunalekonomisk-utjamning/utjamning-kommuner-utfall-kr-inv"
+effective_year = 2023
+note = "Kommunalekonomisk utjämning, utfall kronor per invånare, kommuner (Utfall, VarId 8470) continues under VarId 46091 from 2023 (not delivered 2014–2022); var_id only"
+
+#    LINDA: tax-base items re-minted for 2005 (most drop the rate from the name)
+#    and the same re-mints as IoT.
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/underlag-avkastningsskatt-15"
+to = "scb/linda/avkastningsskatt-innevarande-ar"
+effective_year = 2005
+note = "Underlag för avkastningsskatt, påbörjades innevarande år (AAVKAST, VarId 5555) continues under VarId 1212 from 2005; var_id only, the name no longer states the 15 % rate"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/underlag-efterlevandepensionsavgift"
+to = "scb/linda/underlag-efterlevande-pension-forar"
+effective_year = 2011
+note = "Underlag för efterlevandepensionsavgift föregående år (AEPAVGX, VarId 24165) continues under VarId 28094 from 2011 (not delivered 2010); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/underlag-skattereduktion-bredband"
+to = "scb/linda/underlag-skattereduktion-bredband-2"
+effective_year = 2005
+note = "Underlag för skattereduktion för bredband (AREDBRE, VarId 1214) continues under VarId 4625 from 2005; var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/underlag-foraldraforsakringsavgift-2"
+to = "scb/linda/underlag-foraldraforsakringsavgift"
+effective_year = 2005
+note = "Underlag för föräldraförsäkringsavgift (ASFAVG, VarId 5561) continues under VarId 1217 from 2005; var_id only, the name no longer states the 2,2 % rate"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/underlag-arbetsskadeavgift-138"
+to = "scb/linda/underlag-arbetsskadeavgift"
+effective_year = 2005
+note = "Underlag för arbetsskadeavgift (ASKAD, VarId 5565) continues under VarId 1220 from 2005; var_id only, the definition no longer states the 1,38 % rate"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/underlag-sarskild-loneskatt-forvarvs"
+to = "scb/linda/sarskild-loneskatt-forvarvsinkomst"
+effective_year = 2005
+note = "Underlag för särskild löneskatt på förvärvsinkomst (ASLSF, VarId 5566) continues under VarId 1221 from 2005; var_id only, the definition no longer states the 24,26 % rate"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/regional-nedsattning-egenavgifter"
+to = "scb/linda/regional-ersattning-egenavgifter"
+effective_year = 2002
+note = "Regional nedsättning av egenavgifter (SAEGENR, VarId 8375) continues under VarId 726 from 2002 (not delivered 2000–2001); the successor's name reads 'ersättning' and its definition repeats the name"
+
+#    LISA: arbetsställe headcount re-minted for 2023.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/antal-personer-vid-arbetsstallet"
+to = "scb/lisa/antal-personer-pa-arbetsstallet"
+effective_year = 2023
+note = "Antal personer på arbetsstället (Ast_AntalPers, VarId 29246) continues under VarId 49432 from 2023 (not delivered 2022); the definition now counts arbetsgivardeklaration instead of kontrolluppgift, although LISA switched to AGI from 2019"
+
+#    PSU: förvärvsarbete split at 2011, as both names say.
+[[edge]]
+type = "replaced_by"
+from = "scb/psu/forvarvsarbete-tom-2010"
+to = "scb/psu/forvarvsarbete-from-2011"
+effective_year = 2011
+note = "Förvärvsarbete förra veckan (fr12, VarId 7204) continues under VarId 26832 from 2011, the year SCB marks in both names; the definition is re-worded from the interview question to a description"
+
+#    Taxeringsutfallet: föregående-år bases re-minted after a delivery gap.
+[[edge]]
+type = "replaced_by"
+from = "scb/taxeringsutfallet/ulagallmloneavg2"
+to = "scb/taxeringsutfallet/ulagallmloneavg-foregar"
+effective_year = 2016
+note = "Underlag för allmän löneavgift, föregående inkomstår (UlagAllmLoneAvg2, VarId 19790) continues under VarId 37010 from 2016 (not delivered 2014–2015); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/taxeringsutfallet/ulageftpensavg2"
+to = "scb/taxeringsutfallet/ulageftpensavg-foregar"
+effective_year = 2012
+note = "Underlag för efterlevandepensionsavgift, föregående inkomstår (UlagEftPensAvg2, VarId 22682) continues under VarId 28858 from 2012 (not delivered 2011); var_id only"
+
+#    ULF: the 2006 re-mint of the household roster (födelseår and kön per
+#    person), plus school, child-care and health items.
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/at0041"
+to = "scb/ulf/kortare-langre-veckoarbetstid"
+effective_year = 2006
+note = "Kortare/längre veckoarbetstid (AT0041, VarId 11636) continues under VarId 24090 from 2006; the definition is re-worded from the interview question, which moves to the operational definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-1-fodelsear"
+to = "scb/ulf/person-1-fodelsear-2"
+effective_year = 2006
+note = "Person 1 födelseår (BA0191, VarId 12546) continues under VarId 47828 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-2-fodelsear"
+to = "scb/ulf/person-2-fodelsear-2"
+effective_year = 2006
+note = "Person 2 födelseår (BA0192, VarId 12552) continues under VarId 47829 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-3-fodelsear"
+to = "scb/ulf/person-3-fodelsear-2"
+effective_year = 2006
+note = "Person 3 födelseår (BA0193, VarId 12554) continues under VarId 47830 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-4-fodelsear"
+to = "scb/ulf/person-4-fodelsear-2"
+effective_year = 2006
+note = "Person 4 födelseår (BA0194, VarId 12555) continues under VarId 47831 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-5-fodelsear"
+to = "scb/ulf/person-5-fodelsear-2"
+effective_year = 2006
+note = "Person 5 födelseår (BA0195, VarId 12556) continues under VarId 47832 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-6-fodelsear"
+to = "scb/ulf/person-6-fodelsear-2"
+effective_year = 2006
+note = "Person 6 födelseår (BA0196, VarId 12557) continues under VarId 47833 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-7-fodelsear"
+to = "scb/ulf/person-7-fodelsear-2"
+effective_year = 2006
+note = "Person 7 födelseår (BA0197, VarId 12558) continues under VarId 47834 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-8-fodelsear"
+to = "scb/ulf/person-8-fodelsear-2"
+effective_year = 2006
+note = "Person 8 födelseår (BA0198, VarId 12559) continues under VarId 47835 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-1"
+to = "scb/ulf/kon-person-1-2"
+effective_year = 2006
+note = "Kön person 1 (BA0211, VarId 11727) continues under VarId 47846 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-2"
+to = "scb/ulf/kon-person-2-2"
+effective_year = 2006
+note = "Kön person 2 (BA0212, VarId 11731) continues under VarId 47847 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-3"
+to = "scb/ulf/kon-person-3-2"
+effective_year = 2006
+note = "Kön person 3 (BA0213, VarId 11732) continues under VarId 47848 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-4"
+to = "scb/ulf/kon-person-4-2"
+effective_year = 2006
+note = "Kön person 4 (BA0214, VarId 11733) continues under VarId 47849 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-5"
+to = "scb/ulf/kon-person-5-2"
+effective_year = 2006
+note = "Kön person 5 (BA0215, VarId 11734) continues under VarId 47850 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-6"
+to = "scb/ulf/kon-person-6-2"
+effective_year = 2006
+note = "Kön person 6 (BA0216, VarId 11735) continues under VarId 47851 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-7"
+to = "scb/ulf/kon-person-7-2"
+effective_year = 2006
+note = "Kön person 7 (BA0217, VarId 11736) continues under VarId 47852 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-8"
+to = "scb/ulf/kon-person-8-2"
+effective_year = 2006
+note = "Kön person 8 (BA0218, VarId 11737) continues under VarId 47853 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/senaste-invandringsar-ip"
+to = "scb/ulf/senaste-invandringsar-up"
+effective_year = 2006
+note = "Senaste invandringsår (BA0331, VarId 12862) continues under VarId 47857 from 2006; the successor documents the source (RTB DatInv) and names the respondent UP instead of ip"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-9-fodelsear"
+to = "scb/ulf/person-9-fodelsear-2"
+effective_year = 2006
+note = "Person 9 födelseår (BA3509, VarId 12560) continues under VarId 47897 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/person-10-fodelsear"
+to = "scb/ulf/person-10-fodelsear-2"
+effective_year = 2006
+note = "Person 10 födelseår (BA3510, VarId 12548) continues under VarId 48883 from 2006; var_id only, the definition is re-worded from 'enligt tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-9"
+to = "scb/ulf/kon-person-9-2"
+effective_year = 2006
+note = "Kön person 9 (BA3519, VarId 11738) continues under VarId 47896 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/kon-person-10"
+to = "scb/ulf/kon-person-10-2"
+effective_year = 2006
+note = "Kön person 10 (BA3520, VarId 11728) continues under VarId 47962 from 2006; var_id only, the definition is re-worded from 'i tablån' to 'i hushållet'"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/barntillsynskostnad-manad"
+to = "scb/ulf/barntillsynskostnader-manad"
+effective_year = 2006
+note = "Barntillsynskostnader per månad (EK0231, VarId 9739) continues under VarId 35817 from 2006; the definition is re-worded from the interview question"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/go0160"
+to = "scb/ulf/go0161"
+effective_year = 2006
+note = "Går i skola, barn 1 (GO0161, before 1998 GO0160, VarId 10887) continues under VarId 42866 from 2006; the age range is now given as 5–12 instead of 6–12"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/go0260"
+to = "scb/ulf/go0261"
+effective_year = 2006
+note = "Går i skola, barn 2 (GO0261, before 1998 GO0260, VarId 10888) continues under VarId 42867 from 2006; the age range is now given as 5–12 instead of 6–12"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/go0360"
+to = "scb/ulf/go0361"
+effective_year = 2006
+note = "Går i skola, barn 3 (GO0361, before 1998 GO0360, VarId 10889) continues under VarId 42868 from 2006; the age range is now given as 5–12 instead of 6–12"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/go0460"
+to = "scb/ulf/go0461"
+effective_year = 2006
+note = "Går i skola, barn 4 (GO0461, before 1998 GO0460, VarId 10890) continues under VarId 42869 from 2006; the age range is now given as 5–12 instead of 6–12"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/go0560"
+to = "scb/ulf/go0561"
+effective_year = 2006
+note = "Går i skola, barn 5 (GO0561, before 1998 GO0560, VarId 10891) continues under VarId 42870 from 2006; the age range is now given as 5–12 instead of 6–12"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/go0661"
+to = "scb/ulf/gar-i-skola-barn-6"
+effective_year = 2008
+note = "Går i skola, barn 6 (GO0661, VarId 10892) continues under VarId 42871 from 2008 (not delivered 2006); the age range is now given as 5–12 instead of 6–12"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/egna-tander"
+to = "scb/ulf/egna-tander-2"
+effective_year = 2009
+note = "Egna tänder (HA0423, VarId 10128) continues under VarId 48027 from 2009 (not delivered 2004–2008); the question is now asked only of respondents 65 and older and counts proteser with löständer"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/allergiska-besvar-2"
+to = "scb/ulf/allergiska-besvar-2-2"
+effective_year = 2004
+note = "Allergiska besvär 2 (HA1252, VarId 17947) continues under VarId 17946 from 2004 (not delivered 1998–2003); var_id only"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/ansokt-om-fardtjanst"
+to = "scb/ulf/ha1345"
+effective_year = 2009
+note = "Ansökt om färdtjänst (HA1345, VarId 9033) continues under VarId 49175 from 2009 (not delivered 2004–2008); the definition is re-worded from the interview question"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/sokt-kommunal-hjalp"
+to = "scb/ulf/ha1383"
+effective_year = 2009
+note = "Sökt kommunal hjälp (HA1383, VarId 13451) continues under VarId 49177 from 2009 (not delivered 2004–2008); the definition is re-worded from the interview question"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/ulf/yrkeskod-fob85-arbetslosa"
+to = "scb/ulf/sy0363"
+effective_year = 1990
+note = "Yrkeskod enligt FoB 85 för arbetslösa (SY0363, VarId 14314) continues under VarId 14308 from 1990; var_id only, the successor zero-pads the codes"
+
+#    Växtskyddsmedel: sprayer equipment item re-minted for 2010.
+[[edge]]
+type = "replaced_by"
+from = "scb/vaxtskyddsmedel/utrustning-skoljvattentank-2006"
+to = "scb/vaxtskyddsmedel/utrustning-skoljvattentank"
+effective_year = 2010
+note = "Sprutans utrustning, sköljvattentank (UtrSkolj, VarId 48969) continues under VarId 48497 from 2010; the coding changes from a presence flag to Ja/Nej"
 # ── #508 tier-1 same_as: auto-curated canonical-family identities ──
 # Reproducible derivation (re-runnable for the deferred follow-up):
 #  1. `reg-meta-build same-as-candidates --max-tier 1` on a real scb,sos build
