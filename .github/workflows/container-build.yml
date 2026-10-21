@@ -1,32 +1,36 @@
-# reg_webapp build + deploy — origin image AND Cloudflare edge worker
-# (topology in reg_webapp/DESIGN.md → "Deployment").
+# reg_webapp build + deploy: the Fly origin images and the Cloudflare edge workers
+# (topology in reg_webapp/DESIGN.md → "Deployment"). Two deployments, each an origin
+# app behind an edge worker:
+#   global  reg-webapp-global behind an MCP-only worker on reg-meta.vqv.uk: `/mcp`
+#           only, no SPA and no `/api`.
+#   swecov  reg-webapp-swecov behind a worker on data.swecov.se that serves the SPA
+#           as static assets and passes `/api`, `/openapi.json` and `/mcp` through.
 #
-# PRs: build-ONLY — proves the multi-stage Dockerfile still builds, including
-# the digest-verified DB bake, the `reg-meta` Rust build and the #224
+# PRs: build-only. `build-image` proves the multi-stage Dockerfile still builds,
+# including the digest-verified DB bake, the `reg-meta` Rust build and the #224
 # provenance-confinement assertion #3 (the RUN check fails the build if
-# reg_meta.provenance.db* is present).
+# reg_meta.provenance.db* is present). Nothing deploys.
 #
-# Pushes to main: a `changes` filter scopes the work — image-affecting paths
-# rebuild + push + `flyctl deploy` the origin; SPA/edge-affecting paths build
-# the SPA and `wrangler deploy` the edge worker. Image-affecting paths ALSO
-# redeploy the edge: each edge deploy carries a fresh DEPLOY_VERSION that the
-# worker stamps into the /api/* cache key (#318), so an origin deploy that
-# changes API payloads must ship an edge deploy to orphan the pre-deploy edge
-# cache. The edge job `needs:` the origin deploy so a contract-changing push
-# can never ship a new SPA against an old origin (deploy-skew guard). Both
-# deploy jobs also verify they are still main's HEAD before shipping — GHA
-# concurrency serializes deploys but admits them in BUILD-COMPLETION order,
-# so without the guard an older commit's slow build could overwrite a newer
-# deploy.
+# Pushes to main: the `changes` filter scopes four deploy jobs. Image-affecting paths
+# build, push and `flyctl deploy` both origins (`deploy`, `deploy-swecov`). Each edge
+# job (`edge-deploy` for global, `edge-deploy-swecov`, which also builds the SPA)
+# runs when its own worker's inputs change, and after every origin deploy of its
+# deployment: the swecov worker's fresh DEPLOY_VERSION orphans its pre-deploy /api/*
+# cache (#318), and each job's public MCP smoke checks the new origin through the
+# edge. Each edge job `needs:` its origin deploy, so a worker never ships ahead of
+# its origin (deploy-skew guard). Every deploy job also verifies it is still main's
+# HEAD before shipping: GHA concurrency serializes deploys but admits them in
+# BUILD-COMPLETION order, so without the guard an older commit's slow build could
+# overwrite a newer deploy.
 #
-# `global` is prod and staging in one tier (§7.5), so every relevant main
-# push deploys. workflow_dispatch is the manual escape hatch (rebuild +
-# deploy everything); the HEAD guards make a non-main dispatch a no-op at
-# the deploy steps, so it cannot ship branch code to prod.
+# There is no separate staging, so every relevant main push deploys.
+# workflow_dispatch is the manual escape hatch (rebuild + deploy everything); the
+# HEAD guards make a non-main dispatch a no-op at the deploy steps, so it cannot ship
+# branch code to prod.
 #
-# Nothing deploys without green CI: a `wait-ci` job polls the ci.yml run for
-# this commit and both deploy jobs require its success — an image that builds
-# but fails lint/types/tests never ships.
+# Nothing deploys without green CI: a `wait-ci` job polls the ci.yml run for this
+# commit and every deploy job requires its success — an image that builds but fails
+# lint/types/tests never ships.
 
 name: Container build
 
@@ -61,7 +65,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.filter.outputs.image }}
-      edge: ${{ steps.filter.outputs.edge }}
+      edge_global: ${{ steps.filter.outputs.edge_global }}
+      edge_swecov: ${{ steps.filter.outputs.edge_swecov }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: dorny/paths-filter@v4.0.3
@@ -73,6 +78,12 @@ jobs:
           # docs don't change image/origin content, and an image deploy swaps
           # prod machines (brief origin blip), so content-identical rebuilds
           # are worth avoiding.
+          #
+          # Each edge filter lists what its job's `wrangler deploy` ships. The global
+          # worker is the worker code and its config: no assets binding, so the
+          # SPA never reaches it. The swecov worker also ships the SPA it builds
+          # (frontend/** plus the openapi.json `gen:types` reads); the crates
+          # `gen:wasm` compiles are under `image`, which runs it too.
           filters: |
             image:
               - "reg_webapp/stewards/**"
@@ -85,9 +96,14 @@ jobs:
               - "Cargo.lock"
               - ".dockerignore"
               - ".github/workflows/container-build.yml"
-            edge:
+            edge_global:
+              - "reg_webapp/edge/src/**"
+              - "reg_webapp/edge/wrangler.jsonc"
+              - ".github/workflows/container-build.yml"
+            edge_swecov:
+              - "reg_webapp/edge/src/**"
+              - "reg_webapp/edge/wrangler.swecov.jsonc"
               - "reg_webapp/frontend/**"
-              - "reg_webapp/edge/**"
               - "crates/reg-meta/openapi.json"
               - ".github/workflows/container-build.yml"
 
@@ -99,7 +115,8 @@ jobs:
     needs: changes
     if: >-
       !cancelled() && (needs.changes.outputs.image == 'true' ||
-      needs.changes.outputs.edge == 'true' ||
+      needs.changes.outputs.edge_global == 'true' ||
+      needs.changes.outputs.edge_swecov == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     outputs:
@@ -534,7 +551,7 @@ jobs:
       needs.schema-guard.result == 'success' &&
       needs.schema-guard.outputs.pending_bump != 'true' &&
       needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
-      (needs.changes.outputs.edge == 'true' ||
+      (needs.changes.outputs.edge_global == 'true' ||
       needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
@@ -618,7 +635,7 @@ jobs:
       needs.schema-guard.outputs.pending_bump != 'true' &&
       needs.build-swecov-image.result != 'failure' &&
       needs.deploy-swecov.result != 'failure' &&
-      (needs.changes.outputs.edge == 'true' ||
+      (needs.changes.outputs.edge_swecov == 'true' ||
       needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
