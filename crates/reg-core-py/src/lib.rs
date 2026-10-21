@@ -9,7 +9,8 @@ mod reg_core_py {
 
     use pyo3::exceptions::PyValueError;
     use pyo3::prelude::*;
-    use reg_core::{GrammarError as CoreGrammarError, Period};
+    use pyo3::types::PyTuple;
+    use reg_core::{GrammarError as CoreGrammarError, Interval, Period};
 
     pyo3::create_exception!(
         reg_core_py,
@@ -140,10 +141,52 @@ mod reg_core_py {
         reg_core::period_token_for_bounds(lo, hi)
     }
 
-    /// The day after an inclusive ISO upper bound (`reg_core::next_iso_day`).
+    /// Interval lists cross as tuples, not lists: the build keeps them in frozen
+    /// dataclasses and dict keys and compares them with `==` against other tuples.
+    fn interval_tuple(
+        py: Python<'_>,
+        intervals: Vec<Interval>,
+    ) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, intervals)
+    }
+
+    /// The days two inclusive ISO intervals share, else `None` (`reg_core::intersect`).
     #[pyfunction]
-    fn next_iso_day(s: &str) -> String {
-        reg_core::next_iso_day(s)
+    fn intersect(a: Interval, b: Interval) -> Option<Interval> {
+        reg_core::intersect(&a, &b)
+    }
+
+    /// Intervals sorted and coalesced, day-adjacent ones joined (`reg_core::merge`).
+    #[pyfunction]
+    fn merge(py: Python<'_>, intervals: Vec<Interval>) -> PyResult<Bound<'_, PyTuple>> {
+        interval_tuple(py, reg_core::merge(intervals))
+    }
+
+    /// The parts of `whole` (ascending, disjoint) that `covered` leaves
+    /// (`reg_core::gaps`).
+    #[pyfunction]
+    fn gaps(
+        py: Python<'_>,
+        whole: Vec<Interval>,
+        covered: Vec<Interval>,
+    ) -> PyResult<Bound<'_, PyTuple>> {
+        interval_tuple(py, reg_core::gaps(&whole, covered))
+    }
+
+    /// The intervals two ascending, disjoint lists share (`reg_core::overlap`).
+    #[pyfunction]
+    fn overlap(
+        py: Python<'_>,
+        a: Vec<Interval>,
+        b: Vec<Interval>,
+    ) -> PyResult<Bound<'_, PyTuple>> {
+        interval_tuple(py, reg_core::overlap(&a, &b))
+    }
+
+    /// The period spelling of ascending, disjoint intervals (`reg_core::render`).
+    #[pyfunction]
+    fn render(intervals: Vec<Interval>) -> String {
+        reg_core::render(&intervals)
     }
 
     /// `reg_core::fold_identity`, the column identity fold.

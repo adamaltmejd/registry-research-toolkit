@@ -34,10 +34,12 @@ from pydantic import (
 )
 from reg_core_py import (
     fold_identity,
-    next_iso_day,
+    merge,
+    overlap,
     parse_fqid,
     period_bounds,
     period_token_for_bounds,
+    render,
 )
 
 from .errors import EXIT_CONFIG, RegMetaError
@@ -177,71 +179,12 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
     return tuple(bounds)
 
 
-# ── interval algebra and period rendering over inclusive ISO dates ──────────
-#
-# Shared with `inventory_coverage.py` and `derive/browse.py`, which import these: an
-# inventory edition, a project period, an availability window, a resolution conflict
-# and a delivery's windows must all expand and render through ONE grammar, so a
-# clip, an overlap, an edition and a browse row can never disagree about bounds
-# or spelling.
-
 # An inclusive ISO `(lo, hi)` date interval — the currency of every edition,
-# overlap, clip and coverage computation.
+# overlap, clip and coverage computation. Its algebra (`merge`, `overlap`,
+# `render`, ...) is reg-core's, through `reg_core_py`, so an edition, a project
+# period and a browse row can never disagree with the reader about bounds or
+# spelling.
 _Interval = tuple[str, str]
-
-
-def _intersect(a: _Interval, b: _Interval) -> _Interval | None:
-    lo, hi = max(a[0], b[0]), min(a[1], b[1])
-    return (lo, hi) if lo <= hi else None
-
-
-def _merge(intervals: list[_Interval]) -> tuple[_Interval, ...]:
-    """Sort and coalesce intervals, joining overlapping AND day-adjacent ones
-    (`..2018-12-31` + `2019-01-01..` is one continuous window, not two)."""
-    merged: list[_Interval] = []
-    for lo, hi in sorted(intervals):
-        if merged and lo <= next_iso_day(merged[-1][1]):
-            if hi > merged[-1][1]:
-                merged[-1] = (merged[-1][0], hi)
-        else:
-            merged.append((lo, hi))
-    return tuple(merged)
-
-
-def _render(intervals: tuple[_Interval, ...]) -> str:
-    """Canonical period rendering, reusing the shared grammar's inverse
-    (`period_token_for_bounds`): the coarsest exact token per interval
-    (`2019`, `2019-Q3`), an explicit `lo..hi` range when no single token
-    expands to it, and the comma-joined wire form for a disjoint series — the
-    same grammar `Source.period` and an inventory `edition` are authored in."""
-    return ",".join(_render_interval(lo, hi) for lo, hi in intervals)
-
-
-def _render_interval(lo: str, hi: str) -> str:
-    token = period_token_for_bounds(lo, hi)
-    if ".." not in token:
-        return token
-    # A multi-year span has no single token; render the ENDPOINTS as tokens so
-    # a whole-year range reads `2019..2020` (the authored range spelling) rather
-    # than `2019-01-01..2020-12-31`. Each endpoint token is exact — a year token
-    # is used only when the bound really is that year's first/last day — so the
-    # rendering still expands back to exactly `(lo, hi)`.
-    return f"{_boundary_token(lo, start=True)}..{_boundary_token(hi, start=False)}"
-
-
-def _boundary_token(iso: str, *, start: bool) -> str:
-    if iso.endswith("-01-01" if start else "-12-31"):
-        return iso[:4]
-    return iso
-
-
-def _overlap(
-    a: tuple[_Interval, ...], b: tuple[_Interval, ...]
-) -> tuple[_Interval, ...]:
-    """The intervals two editions share, over `edition_bounds` output. Both
-    sides are ascending and non-overlapping (`edition_bounds` enforces it), so
-    the result is too and renders in period order."""
-    return tuple(x for left in a for right in b if (x := _intersect(left, right)))
 
 
 def _representations_conflate(left: str, right: str) -> bool:
@@ -691,7 +634,7 @@ def _edition_intervals(table: InventoryTable) -> tuple[_Interval, ...]:
     2019 }`. Empty for a year-independent table."""
     if table.period_scope != "intervals":
         return ()
-    return _merge(list(edition_bounds(table.edition)))
+    return merge(list(edition_bounds(table.edition)))
 
 
 def _parent_serves(placement: _Placement, parent: _Placement) -> bool:
@@ -707,7 +650,7 @@ def _parent_serves(placement: _Placement, parent: _Placement) -> bool:
     return (
         _representations_conflate(placement.representation, parent.representation)
         and placement.position == parent.position
-        and _overlap(placement.served, parent.served) == placement.served
+        and overlap(placement.served, parent.served) == placement.served
     )
 
 
@@ -876,7 +819,7 @@ def _placement_name_collisions(tables: tuple[InventoryTable, ...]) -> list[str]:
                 continue
             if table.period_scope != other.period_scope or (
                 table.period_scope == "intervals"
-                and not _overlap(editions[table.id], editions[other.id])
+                and not overlap(editions[table.id], editions[other.id])
             ):
                 continue
             if shared := sorted(variants[table.id] & variants[other.id]):
@@ -1008,8 +951,8 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     and b in served
                 ):
                     continue
-                overlap = _overlap(a_bounds, b_bounds)
-                if not overlap and scope == "intervals":
+                shared = overlap(a_bounds, b_bounds)
+                if not shared and scope == "intervals":
                     continue
                 pair = (variant, variable, a_location, b_location)
                 if pair in reported:
@@ -1022,7 +965,7 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     f"({_representation_label(a_rep)}) and "
                     f"{b_location} "
                     f"({_representation_label(b_rep)}) both map "
-                    f"{variant} {variable} over {'_default' if scope == 'year_independent' else _render(overlap)}"
+                    f"{variant} {variable} over {'_default' if scope == 'year_independent' else render(shared)}"
                     + _partition_hint(a_part, b_part)
                 )
     if conflicts:
@@ -1117,7 +1060,7 @@ def _check_member_sets(tables: tuple[InventoryTable, ...]) -> None:
                 ):
                     problems.append(
                         f"{where}: column {name!r} {member.kind} {member.index!r} "
-                        f"lies outside the table's edition {_render(segments)}"
+                        f"lies outside the table's edition {render(segments)}"
                     )
     if problems:
         raise _InventoryGuardError(
@@ -1180,8 +1123,8 @@ def _check_windows(tables: tuple[InventoryTable, ...]) -> None:
                 if not any(lo <= window[0] and window[1] <= hi for lo, hi in served):
                     problems.append(
                         f"{where}: {coordinate} data_warning window "
-                        f"{_render((window,))} lies outside the period the mapping "
-                        f"serves {_render(served)}"
+                        f"{render((window,))} lies outside the period the mapping "
+                        f"serves {render(served)}"
                     )
     if problems:
         raise _InventoryGuardError(
@@ -1207,8 +1150,8 @@ def _window_problem(
         return f"window: {exc}"
     if not any(lo <= window[0] and window[1] <= hi for lo, hi in segments):
         return (
-            f"window {_render((window,))} lies outside the table's edition "
-            f"{_render(segments)}"
+            f"window {render((window,))} lies outside the table's edition "
+            f"{render(segments)}"
         )
     if (
         sum(

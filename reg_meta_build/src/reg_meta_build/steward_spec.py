@@ -65,14 +65,13 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_core_py import parse_fqid
+from reg_core_py import parse_fqid, render
 
 from .errors import EXIT_CONFIG, RegMetaError
 from .inventory import (
     WINDOW_INVALID,
     ColumnMapping,
     EditionRange,
-    _render,
     edition_bounds,
 )
 from .slug_grammar import validate_slug
@@ -755,7 +754,7 @@ def _check_warning_reach(
     raise _spec_error(
         WINDOW_INVALID,
         f"{where}: mapping onto {mapping.register_variant} data_warning window "
-        f"{_render((window,))} meets no period its dated tables serve",
+        f"{render((window,))} meets no period its dated tables serve",
     )
 
 

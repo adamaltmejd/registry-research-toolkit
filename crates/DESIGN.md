@@ -47,7 +47,7 @@ second copy held in step by a parity test.
   | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
   | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
   | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
-  | Interval algebra over periods           | `reg-core`                       | Reader; SPA via `reg-core-wasm`                       |
+  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
   | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
   | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; no Rust consumer recomputes a build hash  |
   | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
@@ -57,6 +57,12 @@ The SPA never parses period grammar or computes a project period's bounds: it co
 `reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)); the catalog's
 delivery-window fusing in `catalog.ts` is the one remaining copy (#1426). Its
 type-to-filter fold is `fold_search` through the same module.
+
+The build reaches `reg-core` through the compiled `reg-core-py` extension, which
+`resolve_code_sha256` (`reg_meta_build/src/reg_meta_build/resolve_code.py`) hashes. A
+`reg-core` change, an interval or grammar fix included, therefore invalidates every
+build resolve key: the next real-seed build resolves in full and its dbdiff shows any
+artifact change.
 
 **Text folds.** Two named folds, specified rather than inherited from a library:
 

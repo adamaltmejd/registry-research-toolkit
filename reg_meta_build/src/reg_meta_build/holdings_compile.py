@@ -8,6 +8,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_core_py import gaps, merge, render
+
 from ._resolved_common import _storage_id
 from .data_warnings import DataWarning, keep_warning, mapping_data_warnings
 from .db import catalog_coordinate_ids, stored_data_warnings, write_data_warnings
@@ -22,8 +24,6 @@ from .inventory import (
     DeliveryInventory,
     _edition_intervals,
     _location,
-    _merge,
-    _render,
     _segment_bounds,
     edition_bounds,
     load_inventory,
@@ -32,7 +32,6 @@ from .inventory import (
 from .inventory_coverage import (
     _fold,
     _load_windows,
-    uncovered_days,
     warning_gap_problem,
 )
 from .source_evidence import canonical_json
@@ -182,9 +181,11 @@ def _licensed_clones(
     for table, column, mapping in warned:
         assert mapping.data_warning is not None
         pair = (variables[mapping.variable], variants[mapping.register_variant])
+        # `served` is merged (one window or a merged edition), so the gaps come out
+        # coalesced: `gaps` does not merge its output.
         served = mapping.served(_edition_intervals(table))
-        gaps = uncovered_days(served, windows.for_mapping(pair, mapping.representation))
-        if not gaps:
+        uncovered = gaps(served, windows.for_mapping(pair, mapping.representation))
+        if not uncovered:
             continue
         where = (
             f"policy/inventory.toml:{_location(table.id, column.name)}: "
@@ -193,16 +194,16 @@ def _licensed_clones(
         )
         window = mapping.data_warning.window
         stated = (_segment_bounds(window),) if window is not None else served
-        if problem := warning_gap_problem(served, gaps, stated):
+        if problem := warning_gap_problem(served, uncovered, stated):
             problems.append(f"{where}: {problem}")
             continue
-        (lo, hi), end = gaps[0], served[-1][1]
+        (lo, hi), end = uncovered[0], served[-1][1]
         sources = _clone_sources(
             _cell_states(conn, pair), mapping.representation, lo, hi, end
         )
         if not sources:
             problems.append(
-                f"{where}: no catalog state of the cell to clone over {_render(gaps)}"
+                f"{where}: no catalog state of the cell to clone over {render(uncovered)}"
                 " (its coverage is alias windows only)"
             )
             continue
@@ -210,7 +211,7 @@ def _licensed_clones(
             labels = ", ".join(repr(s["value_set_version_label"]) for s in sources)
             problems.append(
                 f"{where}: {len(sources)} catalog states of the cell (code versions "
-                f"{labels}) could each be cloned over {_render(gaps)}; a warning "
+                f"{labels}) could each be cloned over {render(uncovered)}; a warning "
                 "licenses one coding, so the clone source is ambiguous"
             )
             continue
@@ -267,12 +268,12 @@ class _Clone:
 
 
 def _coalesce(pair: tuple[int, int], group: list[_Licence]) -> list[_Clone]:
-    """One clone per run of overlapping or abutting licences (`_merge`): an
+    """One clone per run of overlapping or abutting licences (`merge`): an
     annual table per year, each warned, licenses one state over the years, and
     two shards licensing one gap are one clone. The id is the catalog state id
     the clone's coordinates mint."""
     clones = []
-    for lo, hi in _merge([(licence.lo, licence.hi) for licence in group]):
+    for lo, hi in merge([(licence.lo, licence.hi) for licence in group]):
         members = tuple(
             licence for licence in group if lo <= licence.lo and licence.hi <= hi
         )
@@ -303,7 +304,7 @@ def _clone_overlaps(
     INSERT, whose unique index would otherwise only catch a same-start clash."""
     label = clone.source["value_set_version_label"]
     where = clone.licences[0].where
-    span = _render(((clone.lo, clone.hi),))
+    span = render(((clone.lo, clone.hi),))
     problems: list[str] = []
     for state in _cell_states(conn, clone.pair):
         if (
@@ -314,7 +315,7 @@ def _clone_overlaps(
             problems.append(
                 f"{where}: the clone over {span} would overlap the catalog state of "
                 f"column {state['delivery_column_name']!r} over "
-                f"{_render(((state['valid_from'], state['valid_to']),))}; a warning "
+                f"{render(((state['valid_from'], state['valid_to']),))}; a warning "
                 "cannot license years another column of the cell already "
                 "documents: map that column's representation instead"
             )
@@ -329,7 +330,7 @@ def _clone_overlaps(
             problems.append(
                 f"{where}: the clone over {span} (copying column "
                 f"{clone.source['delivery_column_name']!r}) overlaps the clone over "
-                f"{_render(((other.lo, other.hi),))} (copying column "
+                f"{render(((other.lo, other.hi),))} (copying column "
                 f"{other.source['delivery_column_name']!r}) licensed at "
                 f"{other.licences[0].where}; one day of a cell takes one coding: "
                 "narrow one warning or map one column"

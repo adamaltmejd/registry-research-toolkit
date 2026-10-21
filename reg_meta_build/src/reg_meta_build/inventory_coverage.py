@@ -86,14 +86,15 @@ from typing import TYPE_CHECKING, Literal
 # leaf, so a stanza reads like every other candidate emitter's. `_PROVIDER` is the
 # ONE provider `curation/registers/scb/<slug>.toml` accepts, imported rather than restated so the
 # partition here cannot drift from the loader's own refusal.
-from reg_meta_build._resolved_common import _CURATED_PROVIDERS, remaining_windows
+from reg_core_py import intersect, merge, render
+
+from reg_meta_build._resolved_common import _CURATED_PROVIDERS
 from reg_meta_build.db import catalog_coordinate_ids
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
 from reg_meta_build.scb_errata import _PROVIDER, ERRATA_COLUMN_SOURCE_LABEL
 
-# Reuse the inventory's interval grammar at the build-time diagnostic boundary.
-from .inventory import _intersect, _merge, _render, edition_bounds
+from .inventory import edition_bounds
 
 if TYPE_CHECKING:
     import sqlite3
@@ -609,7 +610,7 @@ def _load_windows(conn: sqlite3.Connection, pairs: set[_PairIds]) -> _Windows:
                     (valid_from, valid_to)
                 )
     return _Windows(
-        by_column={key: _merge(rows) for key, rows in by_column.items()},
+        by_column={key: merge(rows) for key, rows in by_column.items()},
         independent_columns=frozenset(independent_columns),
     )
 
@@ -635,9 +636,9 @@ class _Versions:
         overlapping = [
             (name, claims)
             for name, claims in self.by_variant.get(variant_id, ())
-            if any(_intersect(edition, claim) for claim in claims)
+            if any(intersect(edition, claim) for claim in claims)
         ]
-        documented = _merge([claim for _, claims in overlapping for claim in claims])
+        documented = merge([claim for _, claims in overlapping for claim in claims])
         if not _covers(edition, documented):
             return None
         return tuple(name for name, _ in overlapping)
@@ -663,7 +664,7 @@ def _load_versions(conn: sqlite3.Connection, variants: set[int]) -> _Versions:
     return _Versions(
         by_variant={
             variant_id: tuple(
-                sorted((name, _merge(rows)) for name, rows in names.items())
+                sorted((name, merge(rows)) for name, rows in names.items())
             )
             for variant_id, names in claimed.items()
         }
@@ -752,7 +753,7 @@ class _Accumulator:
             mint=tuple(sorted(self.mint)),
             # Merged: the group folds every table stating the column, so the
             # coordinate's windows are one continuous history, not a per-table list.
-            windows=_merge(list(self.windows)),
+            windows=merge(list(self.windows)),
             errata_column=self.errata_column,
         )
 
@@ -764,7 +765,7 @@ def _suggested_version_name(edition: _Interval) -> str:
     reader understands that same interval as `2020/2021`. Keep the broader SCB
     grammar unchanged; only generated names need this translation.
     """
-    token = _render((edition,))
+    token = render((edition,))
     if token.startswith("LA"):
         year = int(token[2:])
         return f"{year}/{year + 1}"
@@ -786,16 +787,6 @@ def _fold(column: str) -> str:
     return unicodedata.normalize("NFC", column).lower()
 
 
-def uncovered_days(
-    served: tuple[_Interval, ...], windows: tuple[_Interval, ...]
-) -> tuple[_Interval, ...]:
-    """The days of `served` no catalog window covers, coalesced (#1684): the
-    held period a mapping warning must state exactly to license."""
-    return _merge(
-        [gap for lo, hi in served for gap in remaining_windows(windows, lo, hi)]
-    )
-
-
 def warning_gap_problem(
     served: tuple[_Interval, ...],
     gaps: tuple[_Interval, ...],
@@ -807,15 +798,15 @@ def warning_gap_problem(
     rule extend-db refuses by and the SWECOV generator reviews a decision by."""
     if len(gaps) > 1 or (gaps[0][0] != served[0][0] and gaps[0][1] != served[-1][1]):
         return (
-            f"the catalog leaves {_render(gaps)} of the served period "
-            f"{_render(served)} uncovered; a data_warning licenses one leading or "
+            f"the catalog leaves {render(gaps)} of the served period "
+            f"{render(served)} uncovered; a data_warning licenses one leading or "
             "trailing uncovered interval"
         )
     if stated != gaps:
         return (
-            f"the catalog leaves {_render(gaps)} of the served period "
-            f"{_render(served)} uncovered, but the data_warning window is "
-            f"{_render(stated)}; the warning must state exactly the uncovered "
+            f"the catalog leaves {render(gaps)} of the served period "
+            f"{render(served)} uncovered, but the data_warning window is "
+            f"{render(stated)}; the warning must state exactly the uncovered "
             "days (mismatched)"
         )
     return None
@@ -868,8 +859,8 @@ def _curated_surface(provider: str) -> str:
 def _ranges(intervals: tuple[_Interval, ...]) -> str:
     """Intervals merged into the inventory's own period rendering (`2010..2012`,
     `2019-Q3`) — abutting editions read as the run they are. A miss's `windows` are
-    merged already (`_Accumulator.finish`) and render through `_render` directly."""
-    return _render(_merge(list(intervals)))
+    merged already (`_Accumulator.finish`) and render through `render` directly."""
+    return render(merge(list(intervals)))
 
 
 def _held_vs_windows(miss: CoverageMiss) -> str:
@@ -878,7 +869,7 @@ def _held_vs_windows(miss: CoverageMiss) -> str:
     way because they describe the same miss."""
     return (
         f"held {_ranges(miss.editions)}, catalog windows "
-        f"{_render(miss.windows) if miss.windows else 'none'}"
+        f"{render(miss.windows) if miss.windows else 'none'}"
     )
 
 
