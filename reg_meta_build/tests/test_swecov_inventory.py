@@ -10,22 +10,25 @@ leaves. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 from __future__ import annotations
 
 import argparse
-import shutil
 import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
+    FLAVORED_TOML,
     SPEC,
     build_catalog,
     column as _column,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
     one_table_series,
+    owner_block,
     run_flavor,
     run_inventory as _run_inventory,
     synthetic_enriched as _synthetic_enriched,
+    variant_block,
+    write_flavored_db,
     write_spec,
 )
 from reg_meta_build.errors import RegMetaError
@@ -70,9 +73,7 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
     }
 
 
-def test_curated_pivot_members_map_with_their_index(
-    tmp_path: Path, flavored_db: Path
-) -> None:
+def test_curated_pivot_members_map_with_their_index(tmp_path: Path) -> None:
     """A curated decision naming a `member` maps a wide-pivot member with its
     index (#1495): `T_kolumn`, `T_kolumn2` and `Covid_19_antikroppar` as
     positions 1-3 of `T_kolumn` in a 2020-2021 table, and `Emp2021` as the 2021
@@ -84,23 +85,12 @@ def test_curated_pivot_members_map_with_their_index(
     auto-matched mapping beside a member (a member column with two mappings), both
     of which `load_inventory` refuses; if it checks a year member's owner against
     the whole edition (`Emp2021` goes to the scope worklist and the run exits); or
-    if the spec refuses a curated member. The `Emp` owner is inserted as DB rows,
-    like the rest of this harness's fixtures; moving them to readable source is
-    #1654."""
+    if the spec refuses a curated member."""
     variant = "inera/bestallda-prover/_default"
-    db = tmp_path / "candidate.db"
-    shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
-        conn.execute(
-            "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
-            "VALUES (920,901,'emp','emp','Emp')"
-        )
-        conn.execute(
-            "INSERT INTO variable_state(state_id,variable_id,register_variant_id,"
-            "valid_from,valid_to,delivery_column_name) VALUES ((SELECT "
-            "COALESCE(MAX(state_id), 0) + 1 FROM variable_state),920,902,"
-            "'2021-01-01','2021-12-31','Emp')"
-        )
+    db = write_flavored_db(
+        tmp_path / "candidate",
+        FLAVORED_TOML + owner_block("emp", "Emp", ("2021", "2021"), name="Emp"),
+    )
 
     def member(column: str, variable: str, representation: str, index: str) -> str:
         return (
@@ -146,35 +136,28 @@ def test_curated_pivot_members_map_with_their_index(
     }
 
 
-def test_member_decision_with_two_mappings_is_refused(
-    tmp_path: Path, flavored_db: Path
-) -> None:
+def test_member_decision_with_two_mappings_is_refused(tmp_path: Path) -> None:
     """A member column carries one mapping, so a member decision naming two is
     refused when the spec loads, naming the column and the count. The two are the
     silent-drop shape: year members 2020 and 2021 on two admissible variants whose
     owners are documented only in their own year. Fails if the refusal goes: the
     generator then checks both mappings against the last one's period, drops the
-    2020 mapping, and emits the 2021 one without error. The owners are inserted as
-    DB rows, like the rest of this harness's fixtures (#1654)."""
-    db = tmp_path / "candidate.db"
-    shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, "
-            "name, slug) VALUES (905, 901, 'Andra', 'andra')"
-        )
-        conn.execute(
-            "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
-            "VALUES (921,901,'hushall','hushall','Hushall')"
-        )
-        for variant, year in ((902, 2020), (905, 2021)):
-            conn.execute(
-                "INSERT INTO variable_state(state_id,variable_id,register_variant_id,"
-                "valid_from,valid_to,delivery_column_name) VALUES ((SELECT "
-                "COALESCE(MAX(state_id), 0) + 1 FROM variable_state),921,?,?,?,"
-                "'Hushallsid')",
-                (variant, f"{year}-01-01", f"{year}-12-31"),
+    2020 mapping, and emits the 2021 one without error."""
+    db = write_flavored_db(
+        tmp_path / "candidate",
+        FLAVORED_TOML
+        + variant_block("andra")
+        + "".join(
+            owner_block(
+                "hushall",
+                "Hushallsid",
+                (str(year), str(year)),
+                variants=(variant,),
+                name="Hushall",
             )
+            for variant, year in (("_default", 2020), ("andra", 2021))
+        ),
+    )
     variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/andra")
     decisions = (
         '[[column]]\ncolumn = "Hushallsid"\nmappings = ['

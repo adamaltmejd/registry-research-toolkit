@@ -1,0 +1,34 @@
+# The steward provider the SWECOV generator tests flavor (`_swecov_fixtures`),
+# overlaid onto a synthetic global base by `extend_db`. `Beställda prover` holds
+# one grouped variable, two co-delivered spellings of one column (one state, an
+# alias window for each), and `T_kolumn`, the single-spelling control. Tests
+# derive their variants by editing this text: a state window, another owner,
+# another variant.
+[provider]
+name = "Inera AB / 1177 Vårdguiden"
+source_label = "swecov-generator-test"
+
+[[register]]
+key = "bestallda-prover"
+name = "Beställda prover"
+
+  [[register.variant]]
+  key = "_default"
+  name = "Beställda prover"
+
+  [[register.variable]]
+  key = "covid-19-antikroppar"
+  name = "Covid-19 antikroppar"
+
+    [[register.variable.state]]
+    column = "Covid-19 antikroppar"
+    data_type = "varchar"
+    aliases = ["Covid_19_antikroppar"]
+
+  [[register.variable]]
+  key = "t-kolumn"
+  name = "T_kolumn"
+
+    [[register.variable.state]]
+    column = "T_kolumn"
+    data_type = "varchar"

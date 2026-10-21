@@ -13,15 +13,22 @@ import argparse
 import json
 import sqlite3
 import tomllib
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
     build_catalog,
     flavored_db_fixture,  # noqa: F401
+    on_scb,
+    owner_block,
+    t_kolumn_window,
+    variant_block,
+    write_flavored_db,
 )
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.errors import RegMetaError
+from reg_meta_build.id import mint
 from reg_meta_build.inventory import edition_bounds
 
 if TYPE_CHECKING:
@@ -83,6 +90,35 @@ def _held(
     )
 
 
+def _scb_db(directory: Path, provider_toml: str) -> Path:
+    """The flavored DB with `Beställda prover` authored under `scb`: errata
+    stanzas are what SCB register files accept, and no other provider's."""
+    return write_flavored_db(directory, on_scb(provider_toml), provider="scb")
+
+
+def _scb_rows(db: Path, *, versions: tuple[str, ...] = (), **sql: str) -> None:
+    """SCB-side rows the steward overlay never writes, stated directly: the
+    documented `register_version`s of the variant, and each `sql` statement
+    (the register's id bound as `:register`, `T_kolumn`'s as `:t_kolumn`)."""
+    register = mint("register", "scb", "bestallda-prover")
+    variant = mint("variant", "scb", "bestallda-prover", "_default")
+    with closing(sqlite3.connect(db)) as conn:
+        conn.executemany(
+            "INSERT INTO register_version "
+            "(regver_id, register_variant_id, registerversionnamn) VALUES (?, ?, ?)",
+            [(905 + index, variant, name) for index, name in enumerate(versions)],
+        )
+        for statement in sql.values():
+            conn.execute(
+                statement,
+                {
+                    "register": register,
+                    "t_kolumn": mint("variable", "scb", "bestallda-prover", "t-kolumn"),
+                },
+            )
+        conn.commit()
+
+
 def _errata_text(
     tmp_path: Path,
     db: Path,
@@ -119,10 +155,12 @@ def test_errata_rejects_incompatible_catalog_schema(
 ) -> None:
     db = tmp_path / "old.db"
     db.write_bytes(flavored_db.read_bytes())
-    with sqlite3.connect(db) as conn:
+    # Closed, not only committed: the reader opens `immutable=1` and ignores a WAL.
+    with closing(sqlite3.connect(db)) as conn:
         conn.execute(
             "UPDATE import_manifest SET value = '0.1.0' WHERE key = 'schema_version'"
         )
+        conn.commit()
     with pytest.raises(RegMetaError) as exc_info:
         _errata_text(tmp_path, db, {2021: ("T_kolumn",)})
     assert exc_info.value.code == "schema_incompatible"
@@ -130,7 +168,7 @@ def test_errata_rejects_incompatible_catalog_schema(
 
 
 def test_errata_worklist_splits_version_missing_from_column_missing(
-    tmp_path: Path, flavored_db: Path
+    tmp_path: Path,
 ) -> None:
     """With `T_kolumn` narrowed to 2019 and the variant documenting exactly one
     register version (2020), a 2020 holding of `T_kolumn` is column-missing — the
@@ -139,25 +177,12 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     `[[errata.version]]` (2021) and ONE `[[errata.delivered]]` naming both editions (two entries
     for one column would be the duplicate `scb_errata` refuses).
 
-    The register moves to the `scb` provider on the copy, because stanzas are what
-    SCB register files accept these tables and no other provider: a miss on the fixture's
-    own flavor provider is the curated-window case below, not this one.
+    The register sits on the `scb` provider, because stanzas are what SCB
+    register files accept and no other provider: a miss on the fixture's own
+    flavor provider is the curated-window case below, not this one.
     """
-    db = tmp_path / "narrowed.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
-    conn.execute(
-        "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2019-12-31' "
-        "WHERE delivery_column_name = 'T_kolumn'"
-    )
-    conn.execute(
-        "INSERT INTO register_version "
-        "(regver_id, register_variant_id, registerversionnamn) "
-        "VALUES (905, 902, '2020')"
-    )
-    conn.commit()
-    conn.close()
+    db = _scb_db(tmp_path / "narrowed", t_kolumn_window("2019-01-01", "2019-12-31"))
+    _scb_rows(db, versions=("2020",))
 
     worklist = tomllib.loads(
         _errata_text(
@@ -194,7 +219,7 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
 
 
 def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
-    tmp_path: Path, flavored_db: Path, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """A `[[column]]`-minted variable has no real SCB row for `[[delivered]]`.
 
@@ -205,30 +230,21 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
     `[[version]]` candidate. The range table proves it contributes to none of the
     candidate or assessed counts.
     """
-    db = tmp_path / "errata-columns.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
-    conn.execute(
-        "UPDATE variable SET source_label = 'scb-errata' WHERE variable_id = 904"
+    db = _scb_db(
+        tmp_path / "errata-columns", t_kolumn_window("2019-01-01", "2019-12-31")
     )
-    conn.execute(
-        "UPDATE variable_state SET valid_from = '2019-01-01', "
-        "valid_to = '2019-12-31' WHERE variable_id = 904"
-    )
-    conn.execute(
-        "INSERT INTO variable "
+    # `[[column]]`-minted variables carry the SCB errata source label, which only
+    # the global SCB build writes; the second has no state at all.
+    _scb_rows(
+        db,
+        versions=("2020",),
+        label="UPDATE variable SET source_label = 'scb-errata' "
+        "WHERE variable_id = :t_kolumn",
+        stateless="INSERT INTO variable "
         "(variable_id, register_id, provider_key, slug, name, source_label) "
-        "VALUES (906, 901, 'Errata_utan_variant', 'errata-utan-variant', "
-        "'Errata utan variant', 'scb-errata')"
+        "VALUES (906, :register, 'Errata_utan_variant', 'errata-utan-variant', "
+        "'Errata utan variant', 'scb-errata')",
     )
-    conn.execute(
-        "INSERT INTO register_version "
-        "(regver_id, register_variant_id, registerversionnamn) "
-        "VALUES (905, 902, '2020')"
-    )
-    conn.commit()
-    conn.close()
 
     text = _errata_text(
         tmp_path,
@@ -271,22 +287,13 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
 
 
 def test_school_year_version_candidate_round_trips_through_scb_claims(
-    tmp_path: Path, flavored_db: Path
+    tmp_path: Path,
 ) -> None:
     """The holdings token stays `LA2020`, while the suggested SCB version name
     uses the loader's native `2020/2021` spelling and claims those exact bounds.
     A multi-period control remains entirely outside inference.
     """
-    db = tmp_path / "school-year.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
-    conn.execute(
-        "UPDATE variable_state SET valid_from = '2019-01-01', "
-        "valid_to = '2019-12-31' WHERE variable_id = 904"
-    )
-    conn.commit()
-    conn.close()
+    db = _scb_db(tmp_path / "school-year", t_kolumn_window("2019-01-01", "2019-12-31"))
 
     text = _errata_text(
         tmp_path,
@@ -311,7 +318,7 @@ def test_school_year_version_candidate_round_trips_through_scb_claims(
 
 
 def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
-    tmp_path: Path, flavored_db: Path
+    tmp_path: Path,
 ) -> None:
     """`Beställda prover` sits on the steward's own `inera` provider, and
     errata entries belong in the SCB register files alone — so the same narrowed holding
@@ -320,15 +327,9 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     flavor provider, the curated-provider TOML `extend-db` overlaid. A
     `[[errata.delivered]]` here would send the maintainer to a file
     whose loader refuses the entry."""
-    db = tmp_path / "narrowed.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    conn.execute(
-        "UPDATE variable_state SET valid_from = '2019-01-01', valid_to = '2019-12-31' "
-        "WHERE delivery_column_name = 'T_kolumn'"
+    db = write_flavored_db(
+        tmp_path / "narrowed", t_kolumn_window("2019-01-01", "2019-12-31")
     )
-    conn.commit()
-    conn.close()
 
     text = _errata_text(tmp_path, db, {2020: ("T_kolumn",)})
 
@@ -351,23 +352,14 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     ],
 )
 def test_errata_worklist_judges_a_narrowed_column_on_its_own_period(
-    tmp_path: Path, flavored_db: Path, narrowing: str, served: tuple[str, str]
+    tmp_path: Path, narrowing: str, served: tuple[str, str]
 ) -> None:
     """A column window (#1645) or a month member (#1495) is the column's own
     delivered period, so a 2018 table holding `T_kolumn` only there is covered by a
     catalog window of exactly that period. Fails if the diagnostic judges the
     mapping on the table's whole 2018 edition, which lists a false curated-window
     miss."""
-    db = tmp_path / "narrowed.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    conn.execute(
-        "UPDATE variable_state SET valid_from = ?, valid_to = ? "
-        "WHERE delivery_column_name = 'T_kolumn'",
-        served,
-    )
-    conn.commit()
-    conn.close()
+    db = write_flavored_db(tmp_path / "narrowed", t_kolumn_window(*served))
 
     text = _errata_text(tmp_path, db, {2018: ("T_kolumn",)}, narrowing=narrowing)
 
@@ -376,33 +368,25 @@ def test_errata_worklist_judges_a_narrowed_column_on_its_own_period(
 
 @pytest.mark.parametrize("old_first", [True, False])
 def test_errata_worklist_judges_each_windowed_variant_of_a_column_alone(
-    tmp_path: Path, flavored_db: Path, old_first: bool
+    tmp_path: Path, old_first: bool
 ) -> None:
     """One 2018 column mapped by two variants over disjoint windows (#1645): the
     old variant in Q1, which the catalog covers, and a new variant in Q4, which the
     catalog delivers only from November. October is a real gap of the new variant,
     reported once in either mapping order. Fails if the diagnostic judges the
     column by one mapping only, or lets the covered old window cover the new one."""
-    db = tmp_path / "two-variants.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    conn.execute(
-        "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-        "VALUES (905, 901, 'Ny', 'ny')"
+    db = write_flavored_db(
+        tmp_path / "two-variants",
+        t_kolumn_window("2018-01-01", "2018-03-31", variants=("_default",))
+        + variant_block("ny")
+        + owner_block(
+            "t-kolumn",
+            "T_kolumn",
+            ("2018-11-01", None),
+            variants=("ny",),
+            name="T_kolumn",
+        ),
     )
-    conn.execute(
-        "UPDATE variable_state SET valid_from = '2018-01-01', valid_to = '2018-03-31' "
-        "WHERE delivery_column_name = 'T_kolumn'"
-    )
-    conn.execute(
-        "INSERT INTO variable_state (state_id, variable_id, register_variant_id,"
-        " valid_from, valid_to, data_type, delivery_column_name) VALUES ((SELECT"
-        " MAX(state_id) + 1 FROM variable_state), 904, 905, '2018-11-01',"
-        " '9999-12-31', 'varchar', 'T_kolumn')"
-    )
-    conn.execute("INSERT INTO variable_alias VALUES (904, 905, 'T_kolumn')")
-    conn.commit()
-    conn.close()
     register = _INERA.rpartition("/")[0]
     mappings = [
         f'register_variant = "{variant}"\nvariable = "{register}/t-kolumn"\n'
@@ -433,23 +417,18 @@ def test_errata_worklist_judges_each_windowed_variant_of_a_column_alone(
 
 @pytest.mark.parametrize("variant", [_INERA, "scb/bestallda-prover/_default"])
 def test_errata_worklist_excludes_every_multi_period_suggestion(
-    tmp_path: Path, flavored_db: Path, variant: str, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path, variant: str, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """Partial, absent and disjoint range/list holdings are not availability
     evidence. They produce no version, delivered-column or curated-window
     suggestion regardless of provider, and the worklist/CLI report an honest
     zero assessed denominator plus the skipped-table count."""
-    db = tmp_path / "narrowed.db"
-    db.write_bytes(flavored_db.read_bytes())
-    conn = sqlite3.connect(db)
-    if variant.startswith("scb/"):
-        conn.execute("UPDATE provider SET slug = 'scb' WHERE provider_id = 900")
-    conn.execute(
-        "UPDATE variable_state SET valid_from = '2019-01-01', "
-        "valid_to = '2019-12-31' WHERE delivery_column_name = 'T_kolumn'"
+    narrowed = t_kolumn_window("2019-01-01", "2019-12-31")
+    db = (
+        _scb_db(tmp_path / "narrowed", narrowed)
+        if variant.startswith("scb/")
+        else write_flavored_db(tmp_path / "narrowed", narrowed)
     )
-    conn.commit()
-    conn.close()
 
     text = _errata_text(
         tmp_path,

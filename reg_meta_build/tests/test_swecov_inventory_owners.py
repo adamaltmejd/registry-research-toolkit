@@ -13,15 +13,24 @@ import argparse
 import json
 import shutil
 import sqlite3
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
+    FLAVORED_TOML,
+    REGISTER_ID,
+    T_KOLUMN_ID,
+    VARIANT_ID,
     build_catalog,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
     one_table_series,
+    owner_block,
     run_inventory as _run_inventory,
+    t_kolumn_window,
+    variant_block,
+    write_flavored_db,
     write_spec,
 )
 from reg_meta_build.derive.states import derive_states
@@ -33,28 +42,15 @@ if TYPE_CHECKING:
 
 @pytest.mark.parametrize(("year", "expected"), [(2021, "before-bas"), (2022, "bas")])
 def test_inventory_uses_the_declared_owner_covering_its_exact_year(
-    tmp_path: Path, flavored_db: Path, year: int, expected: str
+    tmp_path: Path, year: int, expected: str
 ) -> None:
     """One literal column, distinct reviewed edition owners."""
-    import shutil
-
-    db = tmp_path / "candidate.db"
-    shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
-        for variable, owner, start, end in (
-            (910, "before-bas", "2014-01-01", "2021-12-31"),
-            (911, "bas", "2022-01-01", "2023-12-31"),
-        ):
-            conn.execute(
-                "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
-                "VALUES (?,901,?,?,?)",
-                (variable, owner, owner, owner),
-            )
-            conn.execute(
-                "INSERT INTO variable_state(state_id, variable_id,register_variant_id,valid_from,"
-                "valid_to,delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,902,?,?,'InstKod10')",
-                (variable, start, end),
-            )
+    db = write_flavored_db(
+        tmp_path / "candidate",
+        FLAVORED_TOML
+        + owner_block("before-bas", "InstKod10", ("2014", "2021"))
+        + owner_block("bas", "InstKod10", ("2022", "2023")),
+    )
     steward = _run_inventory(tmp_path, db, f"T{year}", ["InstKod10"])
     table = load_delivery_inventory(steward / "inventory.toml").tables[0]
     assert str(table.columns[0].mappings[0].variable) == (
@@ -71,11 +67,11 @@ def _owner_db(
     year-independent state (no calendar window)."""
     db = tmp_path / "owners.db"
     shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
+    with closing(sqlite3.connect(db, autocommit=True)) as conn:
         for variable_id, (owner, windows) in enumerate(owners.items(), start=910):
             conn.execute(
                 "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
-                "VALUES (?,901,?,?,?)",
+                f"VALUES (?,{REGISTER_ID},?,?,?)",
                 (variable_id, owner, owner, owner),
             )
             for window in windows:
@@ -83,7 +79,7 @@ def _owner_db(
                 conn.execute(
                     "INSERT INTO variable_state(state_id, variable_id,register_variant_id,"
                     "period_scope,valid_from,valid_to,delivery_column_name) "
-                    "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,902,?,?,?,'Column')",
+                    f"VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,{VARIANT_ID},?,?,?,'Column')",
                     (
                         variable_id,
                         "intervals" if window else "year_independent",
@@ -175,15 +171,9 @@ def test_inventory_does_not_choose_an_owner_from_a_pooled_range(
 
 
 def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory(
-    tmp_path: Path, flavored_db: Path
+    tmp_path: Path,
 ) -> None:
-    import shutil
-
-    db = tmp_path / "candidate.db"
-    shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
-        conn.execute("UPDATE variable_state SET valid_to='2018-12-31'")
-        conn.execute("UPDATE variable_alias_window SET valid_to='2018-12-31'")
+    db = write_flavored_db(tmp_path / "candidate", t_kolumn_window(None, "2018-12-31"))
     csv = tmp_path / "holdings.csv"
     csv.write_text(
         "Category,Detail,Table,V1\nInera/1177,Ordered tests,T2019,T_kolumn\n"
@@ -228,11 +218,11 @@ def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     db = tmp_path / "alias-intersections.db"
     shutil.copyfile(flavored_db, db)
     conn = sqlite3.connect(db)
-    conn.execute("DELETE FROM variable_state WHERE variable_id=904")
+    conn.execute(f"DELETE FROM variable_state WHERE variable_id={T_KOLUMN_ID}")
     conn.executemany(
         "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
         "valid_from, valid_to, data_type, delivery_column_name) "
-        "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 904, 902, ?, ?, 'varchar', ?)",
+        f"VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), {T_KOLUMN_ID}, {VARIANT_ID}, ?, ?, 'varchar', ?)",
         [
             ("2018-01-01", "2018-12-31", "Earlier"),
             ("2019-01-01", "2019-06-30", "Current"),
@@ -243,7 +233,7 @@ def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     conn.executemany(
         "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
         "delivery_column_name, valid_from, valid_to, column_metadata) "
-        "VALUES (904, 902, ?, ?, ?, 'per_column')",
+        f"VALUES ({T_KOLUMN_ID}, {VARIANT_ID}, ?, ?, ?, 'per_column')",
         [
             ("Earlier", "2019-01-01", "2020-12-31"),
             ("Current", "2019-01-01", "2019-12-31"),
@@ -298,15 +288,15 @@ def test_inventory_curated_alias_needs_no_base_column_window(
 ) -> None:
     db = tmp_path / "additive-alias.db"
     shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
+    with closing(sqlite3.connect(db, autocommit=True)) as conn:
         conn.execute(
             "UPDATE variable_state SET valid_from='2019-01-01', "
-            "valid_to='2019-12-31' WHERE variable_id=904"
+            f"valid_to='2019-12-31' WHERE variable_id={T_KOLUMN_ID}"
         )
         conn.execute(
             "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
             "delivery_column_name, valid_from, valid_to, provenance, column_metadata) "
-            "VALUES (904,902,'Historic',?,?,?,?)",
+            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'Historic',?,?,?,?)",
             (start, end, provenance, mode),
         )
 
@@ -323,20 +313,20 @@ def test_inventory_shared_alias_cannot_use_invalid_or_curated_source_backing(
 ) -> None:
     db = tmp_path / "source-alias-guards.db"
     shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
+    with closing(sqlite3.connect(db, autocommit=True)) as conn:
         conn.execute(
             "UPDATE variable_state SET valid_from='2019-01-01', "
-            "valid_to='2019-12-31' WHERE variable_id=904"
+            f"valid_to='2019-12-31' WHERE variable_id={T_KOLUMN_ID}"
         )
         conn.execute(
             "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
             "delivery_column_name, valid_from, valid_to) "
-            "VALUES (904,902,'Historic','2019-03-01','2019-08-31')"
+            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'Historic','2019-03-01','2019-08-31')"
         )
         conn.execute(
             "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
             "delivery_column_name, valid_from, valid_to, provenance) "
-            "VALUES (904,902,'T_kolumn',?,?,?)",
+            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'T_kolumn',?,?,?)",
             (
                 "2019-01-01" if curated_backing else "2018-01-01",
                 "2019-12-31" if curated_backing else "2020-12-31",
@@ -358,26 +348,26 @@ def test_inventory_column_windows_preserve_source_and_curated_scope(
 ) -> None:
     db = tmp_path / "public-resolution-parity.db"
     shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
+    with closing(sqlite3.connect(db, autocommit=True)) as conn:
         conn.execute(
             "UPDATE variable_state SET valid_from='2019-01-01', "
-            "valid_to='2019-12-31' WHERE variable_id=904"
+            f"valid_to='2019-12-31' WHERE variable_id={T_KOLUMN_ID}"
         )
         if case == "year_independent":
             conn.execute(
                 "UPDATE variable_state SET period_scope='year_independent', "
-                "valid_from=NULL,valid_to=NULL WHERE variable_id=904"
+                f"valid_from=NULL,valid_to=NULL WHERE variable_id={T_KOLUMN_ID}"
             )
         if case in {"source_replacement", "year_independent"}:
             conn.execute(
                 "INSERT INTO variable_alias_window (variable_id,register_variant_id, "
                 "delivery_column_name,valid_from,valid_to) "
-                "VALUES (904,902,'T_kolumn','2019-03-01','2019-08-31')"
+                f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'T_kolumn','2019-03-01','2019-08-31')"
             )
         conn.execute(
             "INSERT INTO variable_alias_window (variable_id,register_variant_id, "
             "delivery_column_name,valid_from,valid_to,provenance) "
-            "VALUES (904,902,'Historic','2019-03-01','2019-08-31',?)",
+            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'Historic','2019-03-01','2019-08-31',?)",
             ("reviewed alias" if case == "curated_additive" else None,),
         )
     expected = {
@@ -410,11 +400,11 @@ def _case_twin_db(tmp_path: Path, flavored_db: Path, windows: tuple[str, ...]) -
     co-delivered under `windows`, spellings that differ only in case."""
     db = tmp_path / "case-twins.db"
     shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
+    with closing(sqlite3.connect(db, autocommit=True)) as conn:
         conn.executemany(
             "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
             "delivery_column_name, valid_from, valid_to) "
-            "VALUES (904, 902, ?, '0001-01-01', '9999-12-31')",
+            f"VALUES ({T_KOLUMN_ID}, {VARIANT_ID}, ?, '0001-01-01', '9999-12-31')",
             [(window,) for window in windows],
         )
         # The generator reads the derived `resolver_column` universe, as the
@@ -471,50 +461,41 @@ def test_inventory_curated_mapping_wins_among_case_only_twins(
 
 @pytest.mark.parametrize("scope", ["variant", "owner"])
 def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
-    tmp_path: Path, flavored_db: Path, scope: str
+    tmp_path: Path, scope: str
 ) -> None:
     """Spellings that differ only in case under different variants, or under
     different owners, are separate coordinates and each keep their mapping."""
-    db = tmp_path / "case-scopes.db"
-    shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
-        if scope == "variant":
-            conn.execute(
-                "INSERT INTO register_variant (register_variant_id, register_id, "
-                "name, slug) VALUES (905, 901, 'Andra', 'andra')"
+    if scope == "variant":
+        source = (
+            FLAVORED_TOML.replace(
+                '  key = "t-kolumn"\n',
+                '  key = "t-kolumn"\n  variants = ["_default"]\n',
             )
-            conn.execute(
-                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
-                "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 904, 905, '0001-01-01', '9999-12-31', 'varchar', 'T_KOLUMN')"
+            + variant_block("andra")
+            + owner_block("t-kolumn", "T_KOLUMN", variants=("andra",), name="T_kolumn")
+        )
+        table = "T2019"
+        series = {
+            "variants": (
+                "inera/bestallda-prover/_default",
+                "inera/bestallda-prover/andra",
             )
-            table = "T2019"
-            series = {
-                "variants": (
-                    "inera/bestallda-prover/_default",
-                    "inera/bestallda-prover/andra",
-                )
-            }
-            expected = [
-                ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
-                ("inera/bestallda-prover/andra", "t-kolumn", "T_KOLUMN"),
-            ]
-        else:
-            conn.execute(
-                "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-                "name) VALUES (910, 901, 'annan', 'annan', 'Annan')"
-            )
-            conn.execute(
-                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
-                "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 910, 902, '2020-01-01', '2020-12-31', 'varchar', 'T_KOLUMN')"
-            )
-            table = "T_pooled"
-            series = {"edition": "{ from = 2019, to = 2020 }"}
-            expected = [
-                ("inera/bestallda-prover/_default", "annan", "T_KOLUMN"),
-                ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
-            ]
+        }
+        expected = [
+            ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
+            ("inera/bestallda-prover/andra", "t-kolumn", "T_KOLUMN"),
+        ]
+    else:
+        source = FLAVORED_TOML + owner_block(
+            "annan", "T_KOLUMN", ("2020", "2020"), name="Annan"
+        )
+        table = "T_pooled"
+        series = {"edition": "{ from = 2019, to = 2020 }"}
+        expected = [
+            ("inera/bestallda-prover/_default", "annan", "T_KOLUMN"),
+            ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
+        ]
+    db = write_flavored_db(tmp_path / "case-scopes", source)
 
     steward = _run_inventory(tmp_path, db, table, ["T_KOLUMN"], **series)
 
@@ -629,17 +610,21 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     window."""
     db = tmp_path / "split.db"
     shutil.copyfile(flavored_db, db)
-    with sqlite3.connect(db) as conn:
+    with closing(sqlite3.connect(db, autocommit=True)) as conn:
         conn.execute(
             "INSERT INTO register_variant (register_variant_id, register_id, "
-            "name, slug) VALUES (905, 901, 'Efter', 'efter')"
+            f"name, slug) VALUES (905, {REGISTER_ID}, 'Efter', 'efter')"
         )
         conn.execute(
             "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-            "name) VALUES (920, 901, 'lopnr', 'lopnr', 'Lopnr')"
+            f"name) VALUES (920, {REGISTER_ID}, 'lopnr', 'lopnr', 'Lopnr')"
         )
         for variant, start, end in (
-            (902, "2002-01-01", "9999-12-31" if beside in _MIXED else "2018-09-30"),
+            (
+                VARIANT_ID,
+                "2002-01-01",
+                "9999-12-31" if beside in _MIXED else "2018-09-30",
+            ),
             (905, successor_from, "9999-12-31"),
         ):
             conn.execute(
@@ -652,12 +637,12 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         if beside == "alias":
             # Co-delivered spellings: each alias window, the state's own included.
             conn.executemany(
-                "INSERT INTO variable_alias VALUES (920, 902, ?)",
+                f"INSERT INTO variable_alias VALUES (920, {VARIANT_ID}, ?)",
                 [("Lopnr",), ("LOPNR",)],
             )
             conn.executemany(
                 "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-                "delivery_column_name, valid_from, valid_to) VALUES (920, 902, ?, ?, ?)",
+                f"delivery_column_name, valid_from, valid_to) VALUES (920, {VARIANT_ID}, ?, ?, ?)",
                 [
                     ("Lopnr", "2002-01-01", "2018-09-30"),
                     ("LOPNR", "2018-01-01", "2018-06-30"),
@@ -666,7 +651,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         if beside in _THIRD_VARIANT:
             conn.execute(
                 "INSERT INTO register_variant (register_variant_id, register_id, "
-                "name, slug) VALUES (906, 901, 'Tidig', 'tidig')"
+                f"name, slug) VALUES (906, {REGISTER_ID}, 'Tidig', 'tidig')"
             )
             conn.execute(
                 "INSERT INTO variable_state (state_id, variable_id, "
@@ -684,13 +669,13 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         if beside in _COMPETITOR:
             conn.execute(
                 "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-                "name) VALUES (921, 901, 'annan', 'annan', 'Annan')"
+                f"name) VALUES (921, {REGISTER_ID}, 'annan', 'annan', 'Annan')"
             )
             conn.execute(
                 "INSERT INTO variable_state (state_id, variable_id, "
                 "register_variant_id, valid_from, valid_to, data_type, "
                 "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
-                "+ 1 FROM variable_state), 921, 902, ?, ?, 'varchar', ?)",
+                f"+ 1 FROM variable_state), 921, {VARIANT_ID}, ?, ?, 'varchar', ?)",
                 _COMPETITOR[beside],
             )
     variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
