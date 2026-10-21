@@ -22,14 +22,18 @@ import hashlib
 import importlib.util
 import json
 import shutil
-import sqlite3
 import subprocess
 import sys
+import tomllib
 from collections import defaultdict
 from pathlib import Path
 
 import pytest
-from reg_meta_build.db import DDL, SCHEMA_VERSION
+from _extend_db_support import BASE_FIXTURE
+from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
+from reg_meta_build.db import DB_FILENAME
+from reg_meta_build.extend_db import extend_db
+from reg_meta_build.id import mint
 from reg_meta_build.steward_spec import load_steward_spec
 
 GENERATOR = (
@@ -47,6 +51,11 @@ _spec.loader.exec_module(build_catalog)
 # public model.
 SPEC_DIR = build_catalog.SPEC_DIR
 SPEC = load_steward_spec(SPEC_DIR)
+
+# The steward provider every flavored DB starts from (`write_flavored_db`).
+FLAVORED_TOML = (Path(__file__).parent / "cases" / "swecov" / "inera.toml").read_text(
+    encoding="utf-8"
+)
 
 
 def column(name: str, **extra: str) -> dict:
@@ -92,78 +101,134 @@ def synthetic_enriched() -> dict[str, dict]:
     return enriched
 
 
-def write_flavored_db(db_path: Path) -> Path:
-    """A minimal FLAVORED DB holding `Beställda prover` the way `extend-db`
-    writes a grouped variable: ONE `variable_state` on the first spelling, a
-    `variable_alias` for every column of that state, and — because these two
-    are co-delivered — a `variable_alias_window` for each, the state's own
-    included (that write shape is pinned by `test_extend_db.py` →
-    `test_co_delivered_aliases_are_one_state_with_alias_windows`; the rows are
-    stated directly here because the resolver's input is the DB, and because
-    one row below is deliberately one `extend-db` never writes). `T_kolumn` is
-    the single-spelling control: one state, its own alias row, no window.
+def write_flavored_db(
+    directory: Path, provider_toml: str = FLAVORED_TOML, *, provider: str = "inera"
+) -> Path:
+    """A FLAVORED DB: `provider_toml` (by default `cases/swecov/inera.toml`) as
+    the steward provider `provider`, overlaid by `extend_db` onto the synthetic
+    global base, so every row is one the builder writes. Each register, variant
+    and variable is pinned to its own key as its slug, as the committed steward
+    slug pins do for `_default`."""
+    providers = directory / "providers"
+    providers.mkdir(parents=True)
+    (providers / f"{provider}.toml").write_text(provider_toml, encoding="utf-8")
+    slugs = directory / "slugs"
+    slugs.mkdir()
+    (slugs / ".snapshot.json").write_text("{}\n", encoding="utf-8")
+    pins = []
+    for register in tomllib.loads(provider_toml)["register"]:
+        register_id = mint("register", provider, register["key"])
+        pins.append(f'[register."{register_id}"]\nslug = "{register["key"]}"\n')
+        pins += [
+            f'[register_variant."{register_id}.'
+            f'{mint("variant", provider, register["key"], variant["key"])}"]\n'
+            f'slug = "{variant["key"]}"\n'
+            for variant in register["variant"]
+        ]
+        pins += [
+            f'[variable."{register_id}.{key}"]\nslug = "{key}"\n'
+            for key in dict.fromkeys(v["key"] for v in register["variable"])
+        ]
+    (slugs / f"{provider}.toml").write_text("".join(pins), encoding="utf-8")
+    extend_db(
+        base_db=cached_reader_artifact(
+            BASE_FIXTURE,
+            "catalog",
+            identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+        ),
+        providers_dir=providers,
+        db_dir=directory / "db",
+        steward="swecov",
+        slug_dir=slugs,
+        diagnostic=True,
+    )
+    return directory / "db" / DB_FILENAME
 
-    Provenance: Python-literal SQL, carried from the pre-split module. It is
-    fixture debt that is not mechanical to convert: building it through
-    `extend-db` needs a base build and mints hash ids, while tests derive their
-    variants by row edits addressing these literal ids, and one row is one
-    `extend-db` never writes."""
-    conn = sqlite3.connect(db_path)
-    conn.executescript(DDL)
-    conn.execute(
-        "INSERT INTO import_manifest VALUES (?, ?)", ("schema_version", SCHEMA_VERSION)
+
+def on_scb(provider_toml: str = FLAVORED_TOML) -> str:
+    """`provider_toml` authored for the `scb` provider (pass `provider="scb"`):
+    the base's own provider, whose name a steward TOML must repeat."""
+    return provider_toml.replace(
+        'name = "Inera AB / 1177 Vårdguiden"', 'name = "Statistiska Centralbyrån"', 1
     )
-    conn.execute(
-        "INSERT INTO provider (provider_id, slug, name) VALUES (900, 'inera', 'Inera AB / 1177 Vårdguiden')"
+
+
+def t_kolumn_window(
+    valid_from: str | None,
+    valid_to: str | None = None,
+    provider_toml: str = FLAVORED_TOML,
+    *,
+    variants: tuple[str, ...] | None = None,
+) -> str:
+    """`provider_toml` with the `T_kolumn` state bounded to `valid_from`..`valid_to`
+    (`None` leaves a bound open), delivered on `variants` alone when given."""
+    bounds = "".join(
+        f'    {key} = "{value}"\n'
+        for key, value in (("valid_from", valid_from), ("valid_to", valid_to))
+        if value is not None
     )
-    conn.execute(
-        "INSERT INTO register (register_id, provider_id, name, slug) "
-        "VALUES (901, 900, 'Beställda prover', 'bestallda-prover')"
+    provider_toml = provider_toml.replace(
+        '    column = "T_kolumn"\n', f'    column = "T_kolumn"\n{bounds}', 1
     )
-    conn.execute(
-        "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
-        "VALUES (902, 901, 'Beställda prover', '_default')"
+    if variants is None:
+        return provider_toml
+    return provider_toml.replace(
+        '  key = "t-kolumn"\n',
+        '  key = "t-kolumn"\n  variants = ['
+        + ", ".join(f'"{v}"' for v in variants)
+        + "]\n",
+        1,
     )
-    for variable_id, slug, columns in (
-        (903, "covid-19-antikroppar", ("Covid-19 antikroppar", "Covid_19_antikroppar")),
-        (904, "t-kolumn", ("T_kolumn",)),
-    ):
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, slug, name) "
-            "VALUES (?, 901, ?, ?, ?)",
-            (variable_id, slug, slug, columns[0]),
-        )
-        conn.execute(
-            "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from,"
-            " valid_to, data_type, delivery_column_name) "
-            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 902, '0001-01-01', '9999-12-31', 'varchar', ?)",
-            (variable_id, columns[0]),
-        )
-        alias_rows = [(variable_id, column) for column in columns]
-        conn.executemany("INSERT INTO variable_alias VALUES (?, 902, ?)", alias_rows)
-        if len(columns) > 1:
-            conn.executemany(
-                "INSERT INTO variable_alias_window "
-                "(variable_id, register_variant_id, delivery_column_name, "
-                "valid_from, valid_to) VALUES "
-                "(?, 902, ?, '0001-01-01', '9999-12-31')",
-                alias_rows,
-            )
-    # A historical case spelling carried by `variable_alias` alone. With no
-    # window it is a search-only header the order path never delivers, so it
-    # must stay out of the resolution index — a mapping onto it is not
-    # supported by resolver-emitted delivery columns.
-    conn.execute("INSERT INTO variable_alias VALUES (904, 902, 'T_KOLUMN')")
-    conn.commit()
-    conn.close()
-    return db_path
+
+
+def variant_block(key: str) -> str:
+    """Another `[[register.variant]]` of `Beställda prover`, appended to the TOML."""
+    return f'\n  [[register.variant]]\n  key = "{key}"\n  name = "{key}"\n'
+
+
+def owner_block(
+    key: str,
+    column: str,
+    *windows: tuple[str, str | None],
+    variants: tuple[str, ...] | None = None,
+    name: str | None = None,
+) -> str:
+    """Another variable of `Beställda prover` (named `name`, by default its key),
+    appended to the TOML: one state delivering `column` per
+    `(valid_from, valid_to)` window (`None` leaves it open), or one open state
+    without windows; `variants` restricts it to those variant keys."""
+    lines = [
+        "",
+        "  [[register.variable]]",
+        f'  key = "{key}"',
+        f'  name = "{name or key}"',
+    ]
+    if variants is not None:
+        lines.append("  variants = [" + ", ".join(f'"{v}"' for v in variants) + "]")
+    for valid_from, valid_to in windows or ((None, None),):
+        lines += ["", "    [[register.variable.state]]", f'    column = "{column}"']
+        if valid_from is not None:
+            lines.append(f'    valid_from = "{valid_from}"')
+        if valid_to is not None:
+            lines.append(f'    valid_to = "{valid_to}"')
+    return "\n".join(lines) + "\n"
+
+
+# Row ids of the default flavored DB (`mint`, as `extend_db` keys them), for the
+# probes that state a row `extend_db` never writes: alias windows with their own
+# provenance or column metadata, a year-independent state on a dated variant.
+# Those are global-build shapes; moving them to a global readable source
+# (`write_resolved_catalog`) is what remains of #1654.
+REGISTER_ID = mint("register", "inera", "bestallda-prover")
+VARIANT_ID = mint("variant", "inera", "bestallda-prover", "_default")
+T_KOLUMN_ID = mint("variable", "inera", "bestallda-prover", "t-kolumn")
 
 
 @pytest.fixture(scope="module", name="flavored_db")
 def flavored_db_fixture(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """One `write_flavored_db` per importing module (import it as
     `flavored_db_fixture`; tests request it as `flavored_db`)."""
-    return write_flavored_db(tmp_path_factory.mktemp("db") / "reg_meta_swecov.db")
+    return write_flavored_db(tmp_path_factory.mktemp("flavored"))
 
 
 def run_flavor(
