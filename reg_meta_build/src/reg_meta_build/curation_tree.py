@@ -1924,10 +1924,6 @@ class CodingDocumentedEntry(CodingEntry):
     source-coding guard the compiled `DocumentedCodingSelection` checks.
     """
 
-    kind: Literal["documented"] = "documented"
-    # Equivalences belong to `source_authority`; committed entries still write
-    # the empty top-level list.
-    label_equivalences: Annotated[tuple[()], Field(strict=False)] = ()
     version_label: str = Field(min_length=1)
     members: DocumentedMembers
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
