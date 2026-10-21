@@ -42,6 +42,7 @@ from .curation_tree import (
     ErrataOccurrencePeriodEntry,
     ErrataSupportEntry,
     _EditionCorrectionEntry,
+    _GuardedOccurrenceEntry,
     _OccurrenceCorrectionEntry,
 )
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
@@ -154,12 +155,12 @@ from .source_records import (
     TemporalScope,
     value_field,
 )
-from .sources.scb_records import scb_edition_scopes
 from .source_value_bindings import (
     bind_code_lists,
     marker_binding_fingerprints,
     open_value_bindings,
 )
+from .sources.scb_records import scb_edition_scopes
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -5699,7 +5700,7 @@ class _OriginalCoordinate:
 
 
 def _original_coordinates(
-    register: RegisterCuration, entry: _OccurrenceCorrectionEntry
+    register: RegisterCuration, entry: _GuardedOccurrenceEntry
 ) -> tuple[_OriginalCoordinate, ...]:
     """Each edition an entry corrects, checked on its own as if entered alone.
 
@@ -5716,13 +5717,17 @@ def _original_coordinates(
                 ),
             )
         assert entry.expected_period_text is not None
-        register_id = int(register.register_info.native_id or 0)
+        # Only SCB records carry an edition; elsewhere the selection is empty and
+        # the entry goes stale, whatever scopes this derives.
+        native_id = register.register_info.native_id or ""
+        register_id = int(native_id) if native_id.isdecimal() else -1
         return tuple(
             _OriginalCoordinate(
                 edition, text, *scb_edition_scopes(register_id, text.strip())[:2]
             )
             for edition, text in entry.expected_period_text.items()
         )
+    assert isinstance(entry, _OccurrenceCorrectionEntry)
     return (
         _OriginalCoordinate(
             entry.edition if isinstance(entry, _EditionCorrectionEntry) else None,
@@ -5737,7 +5742,7 @@ def _original_coordinates(
 
 def _select_occurrence_correction(
     register: RegisterCuration,
-    entry: _OccurrenceCorrectionEntry,
+    entry: _GuardedOccurrenceEntry,
     original: _OriginalCoordinate,
     family: tuple[SourceRecord, ...],
 ) -> tuple[SourceRecord, ...]:
@@ -5798,7 +5803,7 @@ def _select_occurrence_correction(
 
 
 def _occurrence_correction_matches(
-    entry: _OccurrenceCorrectionEntry,
+    entry: _GuardedOccurrenceEntry,
     original: _OriginalCoordinate,
     selected: tuple[SourceRecord, ...],
 ) -> bool:
