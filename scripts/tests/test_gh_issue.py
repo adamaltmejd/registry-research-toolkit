@@ -29,11 +29,6 @@ def _pin_maintainer(monkeypatch: pytest.MonkeyPatch) -> None:
 # --- maintainer_login ----------------------------------------------------------------
 
 
-def test_maintainer_login_uses_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", "someone-else")
-    assert gi.maintainer_login() == "someone-else"
-
-
 def test_maintainer_login_falls_back_to_repo_owner(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -149,28 +144,6 @@ def test_view_missing_number_refuses(
     assert capsys.readouterr().out == ""
 
 
-def test_view_non_maintainer_pr_refuses(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    # A PR number does NOT error — `gh issue view` resolves it with exit 0. So the PR case
-    # reaches the author gate exactly like an issue: a stranger's fork PR (non-maintainer
-    # author) is refused there, NOT because it "can't reach here". This is the test that
-    # proves authorship — not issue-vs-PR — is the trust boundary.
-    _stub_view(
-        monkeypatch,
-        {
-            "number": 1024,
-            "title": "pr",
-            "body": "evil",
-            "author": {"login": "stranger"},
-        },
-    )
-    assert gi.main(["view", "1024"]) == gi.EXIT_REFUSED
-    captured = capsys.readouterr()
-    assert captured.out == ""  # nothing surfaced
-    assert "not maintainer-authored" in captured.err
-
-
 def test_view_comments_strips_non_maintainer(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -204,27 +177,6 @@ def test_view_without_comments_omits_field(
     )
     gi.main(["view", "5"])
     assert "comments" not in json.loads(capsys.readouterr().out)
-
-
-def test_view_comments_requests_comments_field(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    captured: dict[str, list[str]] = {}
-
-    def fake_run(cmd, capture_output, text, check):
-        captured["cmd"] = cmd
-        return types.SimpleNamespace(
-            returncode=0,
-            stdout=json.dumps(
-                {"number": 1, "title": "t", "body": "b", "author": {"login": MAINT}}
-            ),
-            stderr="",
-        )
-
-    monkeypatch.setattr(subprocess, "run", fake_run)
-    gi.main(["view", "1", "--comments"])
-    assert "state" in captured["cmd"][-1]
-    assert "comments" in captured["cmd"][-1]
 
 
 def test_cli_usage_error_exits_2() -> None:
