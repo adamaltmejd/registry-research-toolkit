@@ -32,21 +32,11 @@ Thumbs.db
 # Project
 .tmp/
 
-# Input data lives in the private registry-catalog-inputs repository. Stale local
-# copies (incl. confidential SWECOV extracts) may remain in old checkouts; this line
-# keeps them out of `git add`. Delete it once no checkout carries input_data/.
-reg_meta_build/input_data/
-
 # Personal exploration scripts (not part of the toolkit's curated scripts/)
 scripts/sample_*.py
 
 # reg_meta database (built from SCB exports, not committed)
 *.db
-
-# Generated variable pins. Committed pins for curating/frozen zones are
-# force-added; new generated files stay ignored until reviewed.
-reg_meta_build/fqid_slugs/**/*.auto.toml
-reg_meta_build/curation/registers/**/*.auto.toml
 
 # SCB source PDFs (binary, copyrighted, not committed)
 *.pdf

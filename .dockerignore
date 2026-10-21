@@ -14,9 +14,6 @@
 **/*.db-wal
 **/*.zst
 
-# --- Stale local input copies (see .gitignore), never in the image ---
-reg_meta_build/input_data/
-
 # --- VCS / agent / editor cruft ---
 .git/
 .github/
