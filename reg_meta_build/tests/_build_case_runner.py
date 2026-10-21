@@ -475,6 +475,19 @@ def _association(s: PreparedSet, args: dict[str, str]):
     return found[0]
 
 
+def _field_projection_sha256(
+    records: tuple[SourceRecord, ...], fields: tuple[str, ...]
+) -> str:
+    """The one field digest every selected record shares, as an owner pins it."""
+    digests = {
+        field_projection_sha256(projection.fields)
+        for expectation in capture_expectations(records, fields=fields)
+        for projection in expectation.alternatives
+    }
+    assert len(digests) == 1, f"selected records differ in their fields: {digests}"
+    return digests.pop()
+
+
 def _scope(record: SourceRecord, args: dict[str, str], attribute: str) -> dict:
     scope = getattr(record, attribute).model_dump(mode="json")
     if "end" in args:
@@ -498,10 +511,8 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     "record_projections_sha256": lambda s, a: record_projections_sha256(
         capture_expectations(_select(s.records(), a), fields=_fields(a), parents=True)
     ),
-    "field_projection_sha256": lambda s, a: field_projection_sha256(
-        capture_expectations((_one(s.records(), a),), fields=_fields(a))[0]
-        .alternatives[0]
-        .fields
+    "field_projection_sha256": lambda s, a: _field_projection_sha256(
+        _select(s.records(), a), _fields(a)
     ),
     "expected_fields": lambda s, a: [
         field.model_dump(mode="json")

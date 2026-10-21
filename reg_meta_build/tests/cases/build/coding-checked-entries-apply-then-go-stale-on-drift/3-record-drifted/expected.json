@@ -60,7 +60,7 @@
         ],
         "detail": {
           "contains": [
-            "Current pins: source_authority = { \"records\" = [{ \"ref\" = { \"source\" = \"scb-registerinformation\"",
+            "Current pins: source_authority = { \"records_sha256\" = \"",
             "\"codings\" = ["
           ]
         }
@@ -85,7 +85,7 @@
           "curation/registers/scb/rows.toml#/coding.documented/1/period/1"
         ]
       ],
-      "note": "Each record-drifted authority prints its current pin, the curator's re-pin source (#1436): the build's own records and coding fingerprints as one inline TOML table. Fails if the stale detail stops carrying the current `source_authority`."
+      "note": "Each record-drifted authority prints its current pin, the curator's re-pin source (#1436): the build's own records digest and coding fingerprints as one inline TOML table. Fails if the stale detail stops carrying the current `source_authority`."
     },
     {
       "table": "state_codes",
