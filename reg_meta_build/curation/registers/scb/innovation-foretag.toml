@@ -8043,8 +8043,8 @@ panel_time_grain = "delivery"
 "257.37092.logistikinnovation-annat-hinder" = "logistikinnovation-annat-hinder"
 
 # Y-311 2026-09-29: split-owner naming for the 74 finite Innovation native-question
-# families above. Each leaf reuses the family's existing source-native slug; the base
-# family keeps its own name.
+# families declared below (Y-311 partitions). Each leaf reuses the family's existing
+# source-native slug; the base family keeps its own name.
 "257.29.fenr" = "fenr"
 "257.690.antal-anstallda" = "antal-anstallda"
 "257.2468.outlier" = "outlier"

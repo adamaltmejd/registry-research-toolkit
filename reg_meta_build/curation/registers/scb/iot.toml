@@ -1122,7 +1122,8 @@ panel_time_grain = "delivery"
 "25.40360.statlig-beskattningsbar-exkl-formaner" = "statlig-beskattningsbar-exkl-formaner"
 
 # Y-305 2026-09-29: qualified owners for the 22 IoT KUSOC compensation-code
-# sequential renames declared above; each reuses the family's existing slug.
+# sequential renames declared below (Y-305 partitions); each reuses the
+# family's existing slug.
 "25.21785.summa-skattefritt-skattepliktigt" = "summa-skattefritt-skattepliktigt"
 "25.21786.pkuli421" = "pkuli421"
 "25.21787.pkuli422" = "pkuli422"
@@ -1147,12 +1148,14 @@ panel_time_grain = "delivery"
 "25.21806.ersattningskod-426-skattepliktig-del" = "ersattningskod-426-skattepliktig-del"
 
 # Y-306 2026-09-29: qualified owners for the two IoT sequential delivery-column
-# renames declared above; each reuses the family's existing slug.
+# renames declared below (Y-306 partitions); each reuses the family's
+# existing slug.
 "25.596.tjanstepension" = "tjanstepension"
 "25.1190.akassa-atgarder" = "akassa-atgarder"
 
 # Y-310 2026-09-29: qualified naming leaves for the 58 IoT calculation-base
-# families above; each leaf reuses the family's existing source-name stem.
+# families declared below (Y-310 partitions); each leaf reuses the family's
+# existing source-name stem.
 "25.5655.individ" = "betald-begravningsavgift-individ"
 "25.5655.hushall" = "betald-begravningsavgift-hushall"
 "25.5655.hushall-vaxelvis-boende" = "betald-begravningsavgift-hushall-vaxelvis-boende"
@@ -1329,8 +1332,9 @@ panel_time_grain = "delivery"
 "25.23618.hushall-vaxelvis-boende" = "forlangd-omstallningspension-summerad-hushall-vaxelvis-boende"
 
 # Y-315 2026-09-29: qualified naming leaves for the eight household-only
-# families above. The ordinary leaf reuses the family's existing
-# household-native slug; the VX leaf adds the explicit -vaxelvis-boende suffix.
+# families declared below (Y-315 partitions). The ordinary leaf reuses the
+# family's existing household-native slug; the VX leaf adds the explicit
+# -vaxelvis-boende suffix.
 "25.3188.hushallstyp" = "hushallstyp"
 "25.3188.hushallstyp-vaxelvis-boende" = "hushallstyp-vaxelvis-boende"
 "25.4381.bostadsbidrag" = "bostadsbidrag"
@@ -1349,9 +1353,9 @@ panel_time_grain = "delivery"
 "25.30835.hushall-inkluderas-inkomststatistiken-vaxelvis-boende" = "hushall-inkluderas-inkomststatistiken-vaxelvis-boende"
 
 # Y-316 2026-09-29: qualified naming leaves for the nine employer-reporting
-# source-basis families above. The pre-2019 leaf reuses the family's existing
-# native slug; the post-2019 leaf adds the explicit -agi-ku suffix for the mixed
-# monthly-AGI + remaining-annual-KU basis.
+# source-basis families declared below (Y-316 partitions). The pre-2019 leaf
+# reuses the family's existing native slug; the post-2019 leaf adds the
+# explicit -agi-ku suffix for the mixed monthly-AGI + remaining-annual-KU basis.
 "25.1195.skattepliktiga-formaner-ej-lon" = "skattepliktiga-formaner-ej-lon"
 "25.1195.skattepliktiga-formaner-ej-lon-agi-ku" = "skattepliktiga-formaner-ej-lon-agi-ku"
 "25.6093.hyresersattning" = "hyresersattning"

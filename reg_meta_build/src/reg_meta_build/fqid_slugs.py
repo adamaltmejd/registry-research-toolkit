@@ -578,6 +578,12 @@ def _register_allows_split_base_pair(
     )
 
 
+def expand_bare_slug(pin: object) -> object:
+    """A `[variable]` pin may be a bare slug, shorthand for `{ slug = "…" }`.
+    Any other value passes through for the caller to validate."""
+    return {"slug": pin} if isinstance(pin, str) else pin
+
+
 def load_provider_toml(path: Path) -> list[SlugEntry]:
     """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …).
 
@@ -621,9 +627,8 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                 f'Use [{kind}."<id>"] entries, not a flat array.',
             )
         for source_id, raw in table.items():
-            # A variable pin may be a bare slug: `"<id>" = "<slug>"`.
-            if kind == "variable" and isinstance(raw, str):
-                raw = {"slug": raw}
+            if kind == "variable":
+                raw = expand_bare_slug(raw)
             if not isinstance(raw, dict):
                 raise curation_error(
                     "slug_toml_invalid",
@@ -3458,11 +3463,7 @@ def _raw_variable_table(path: Path) -> dict[str, Any] | None:
         return None
     if not isinstance(table, dict):
         return None
-    # A bare-string pin is shorthand for `{ slug = "…" }`.
-    return {
-        sid: {"slug": row} if isinstance(row, str) else row
-        for sid, row in table.items()
-    }
+    return {sid: expand_bare_slug(row) for sid, row in table.items()}
 
 
 def _name_fallback_variables(

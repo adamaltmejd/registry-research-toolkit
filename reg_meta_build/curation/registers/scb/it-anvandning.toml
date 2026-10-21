@@ -4957,12 +4957,12 @@ panel_time_grain = "delivery"
 
 # Y-211 (maintainer decision 2026-09-19): IT-anvandning sequential column
 # renames as tracked literal ownership (diagnostic v17 rename-worklist-258,
-# `sequential` rows only, full worklist per ticket revision 4). Each chain below
-# is non-overlapping delivery years on one native variable, so every spelling is
-# owned by a single split whose key discriminator reuses the family slug string
-# unchanged. Y-219: each split also pins that same family slug (the family slug
-# row itself is untouched); the loader allows exactly this own-base reuse for a
-# `columns`-carrying split. Overlapping rows need a partition decision and
+# `sequential` rows only, full worklist per ticket revision 4). Each chain
+# (the Y-211 partitions above) is non-overlapping delivery years on one native
+# variable, so every spelling is owned by a single split whose key discriminator
+# reuses the family slug string unchanged. Y-219: each split also pins that same
+# family slug (the family slug row itself is untouched); the loader allows exactly
+# this own-base reuse for a `columns`-carrying split. Overlapping rows need a partition decision and
 # case-only twins belong to Y-210: neither is decided here.
 "258.15.civilstand" = "civilstand"
 "258.509.hussyk2" = "hussyk2"

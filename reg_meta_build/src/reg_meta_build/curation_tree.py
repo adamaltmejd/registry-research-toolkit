@@ -49,6 +49,7 @@ from .documentary import (
 )
 from .errors import RegMetaError
 from .fqid_slugs import (
+    expand_bare_slug,
     load_lineage_config,
 )
 from .normalization import normalize_text
@@ -315,7 +316,7 @@ class RegisterVariableSlug(_CurationModel):
     @model_validator(mode="before")
     @classmethod
     def _bare_slug(cls, value: object) -> object:
-        return {"slug": value} if isinstance(value, str) else value
+        return expand_bare_slug(value)
 
 
 CatalogDataType = Literal["integer", "decimal", "text", "date"]
