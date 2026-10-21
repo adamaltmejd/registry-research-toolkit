@@ -42,7 +42,7 @@
         "detail": {
           "contains": [
             "names one issue whose diagnostic digest differs",
-            "expected_evidence_sha256 = \"fe8c30f4b5403e87c04d1260ea6b3e459a4fb3961aa6e2fbee651f7eea0c2d69\"",
+            "expected_evidence_sha256 = \"e8c18ee8cf4c9fe359ec88a5571fe326b19de94455bab53391b5ba6ce54b1a7d\"",
             "expected_diagnostic_sha256 = \"ba672860cb39218a223c6b46c63042480e92446bd3b4d933b1058881e63fe9f4\""
           ]
         }

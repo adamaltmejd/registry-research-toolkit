@@ -3,7 +3,7 @@
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
-      {"cvid": 1003, "var_id": 102, "colname": "OTHER", "vardef": "A generic family label"}
+      {"cvid": 1003, "varname": "GenericVar other", "var_id": 102, "colname": "OTHER", "vardef": "A generic family label"}
     ]
   }
 }

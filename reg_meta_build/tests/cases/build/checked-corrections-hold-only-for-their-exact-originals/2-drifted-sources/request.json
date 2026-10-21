@@ -25,9 +25,9 @@
         {"colname": "ANSWER", "cvid": 71, "var_id": 5, "year": "2017", "regver_id": 100, "register": ["PERIOD", 6, 2]},
         {"colname": "VALUE", "cvid": 80, "var_id": 5, "year": "2021", "regver_id": 2021, "register": ["SENTINEL", 7, 2]},
         {"colname": "VALUE", "cvid": 90, "var_id": 5, "year": "2021", "regver_id": 2021, "register": ["SUBSTANTIVE", 8, 2]},
-        {"colname": "First", "cvid": 100, "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2020-2022", "regver_id": 110, "register": ["PARALLEL", 9, 10]},
-        {"colname": "Second", "cvid": 101, "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2022-2024", "regver_id": 111, "register": ["PARALLEL", 9, 10]},
-        {"colname": "Sibling", "cvid": 100, "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2020-2022", "regver_id": 110, "register": ["PARALLEL", 9, 10]}
+        {"colname": "First", "cvid": 100, "varopdef": "Income quantity", "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2020-2022", "regver_id": 110, "register": ["PARALLEL", 9, 10]},
+        {"colname": "Second", "cvid": 101, "varopdef": "Income quantity", "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2022-2024", "regver_id": 111, "register": ["PARALLEL", 9, 10]},
+        {"colname": "Sibling", "cvid": 100, "varopdef": "Sibling role", "var_id": 1, "varname": "Income", "year": "2020", "versionname": "2020-2022", "regver_id": 110, "register": ["PARALLEL", 9, 10]}
       ],
       "vardemangder": [
         "list|1|01|Category|80|7001",

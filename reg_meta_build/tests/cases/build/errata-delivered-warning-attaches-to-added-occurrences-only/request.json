@@ -6,7 +6,7 @@
     "scb": {
       "registerinformation": [
         {
-          "cvid": 1001,
+          "cvid": 1001, "varname": "GenericVar value",
           "var_id": 101,
           "colname": "VALUE",
           "year": "2022",

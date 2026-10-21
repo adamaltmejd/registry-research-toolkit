@@ -23,7 +23,7 @@
         },
         {
           "colname": "C",
-          "cvid": 22,
+          "cvid": 22, "varname": "GenericVar c",
           "var_id": 6,
           "year": "2020",
           "versionname": "Födelseland",

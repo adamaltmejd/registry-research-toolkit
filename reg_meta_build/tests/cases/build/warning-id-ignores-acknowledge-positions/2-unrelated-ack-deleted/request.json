@@ -6,7 +6,7 @@
     "scb": {
       "registerinformation": [
         {
-          "cvid": 1001,
+          "cvid": 1001, "varopdef": "Answer First",
           "var_id": 101,
           "colname": "First",
           "regver_id": 110,
@@ -17,7 +17,7 @@
           ]
         },
         {
-          "cvid": 1001,
+          "cvid": 1001, "varopdef": "Answer Second",
           "var_id": 101,
           "colname": "Second",
           "regver_id": 110,
@@ -28,7 +28,7 @@
           ]
         },
         {
-          "cvid": 1002,
+          "cvid": 1002, "varopdef": "Answer First",
           "var_id": 101,
           "colname": "First",
           "year": "2021",
@@ -40,7 +40,7 @@
           ]
         },
         {
-          "cvid": 1002,
+          "cvid": 1002, "varopdef": "Answer Second",
           "var_id": 101,
           "colname": "Second",
           "year": "2021",
@@ -52,7 +52,7 @@
           ]
         },
         {
-          "cvid": 1003,
+          "cvid": 1003, "varname": "GenericVar other",
           "var_id": 102,
           "colname": "OTHER",
           "regver_id": 110,
@@ -63,7 +63,7 @@
           ]
         },
         {
-          "cvid": 1004,
+          "cvid": 1004, "varname": "GenericVar other",
           "var_id": 102,
           "colname": "OTHER",
           "year": "2021",

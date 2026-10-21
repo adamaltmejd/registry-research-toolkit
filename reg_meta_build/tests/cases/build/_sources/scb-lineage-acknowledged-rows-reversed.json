@@ -93,7 +93,7 @@
         }
       },
       {
-        "cvid": 6004,
+        "cvid": 6004, "varname": "GenericVar new-source",
         "var_id": 603,
         "colname": "NEW_SOURCE",
         "year": "2000",
@@ -123,7 +123,7 @@
         }
       },
       {
-        "cvid": 6002,
+        "cvid": 6002, "varname": "GenericVar linked",
         "var_id": 601,
         "colname": "LINKED",
         "year": "2000",
@@ -138,7 +138,7 @@
         }
       },
       {
-        "cvid": 6001,
+        "cvid": 6001, "varname": "GenericVar linked",
         "var_id": 601,
         "colname": "LINKED",
         "year": "2000",
@@ -333,7 +333,7 @@
         }
       },
       {
-        "cvid": 1007,
+        "cvid": 1007, "varname": "GenericVar two-origins",
         "var_id": 106,
         "colname": "TWO_ORIGINS",
         "year": "2001",
@@ -346,7 +346,7 @@
         "varsource": "Second origin (SND) : People"
       },
       {
-        "cvid": 1006,
+        "cvid": 1006, "varname": "GenericVar two-origins",
         "var_id": 106,
         "colname": "TWO_ORIGINS",
         "year": "2000",
@@ -358,7 +358,7 @@
         "varsource": "First origin (FST) : People"
       },
       {
-        "cvid": 1005,
+        "cvid": 1005, "varname": "GenericVar linked",
         "var_id": 105,
         "colname": "LINKED",
         "year": "2000",
@@ -370,7 +370,7 @@
         "varsource": "Identity edge register (IDE) : People"
       },
       {
-        "cvid": 1004,
+        "cvid": 1004, "varname": "GenericVar changed",
         "var_id": 104,
         "colname": "CHANGED",
         "year": "2000",
@@ -394,7 +394,7 @@
         "varsource": "Added candidate register (ADD) : People"
       },
       {
-        "cvid": 1002,
+        "cvid": 1002, "varname": "GenericVar original",
         "var_id": 102,
         "colname": "ORIGINAL",
         "year": "2000",
@@ -406,7 +406,7 @@
         "varsource": "Original register (ORI) : People"
       },
       {
-        "cvid": 1001,
+        "cvid": 1001, "varname": "GenericVar exact",
         "var_id": 101,
         "colname": "EXACT",
         "year": "2000",

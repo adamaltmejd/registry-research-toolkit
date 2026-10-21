@@ -43,8 +43,8 @@
         "variables": [
           {"name": "DISTRIKT", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"},
           {"name": "DISTRIKT", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2017, "data_to": 2017, "value_set": "Six-digit district code", "external_classification": "District reference"},
-          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Seven-digit district code", "external_classification": "Incorrect municipal list"},
-          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2017, "data_to": 2017, "value_set": "Six-digit district code", "external_classification": "District reference"}
+          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt distrikt2", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Seven-digit district code", "external_classification": "Incorrect municipal list"},
+          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt distrikt2", "description": null, "data_type": "Sträng (text)", "data_from": 2017, "data_to": 2017, "value_set": "Six-digit district code", "external_classification": "District reference"}
         ],
         "code_lists": {}
       }
@@ -73,7 +73,7 @@
         ],
         "variables": [
           {"name": "DISTRIKT", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"},
-          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"}
+          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt distrikt2", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"}
         ],
         "code_lists": {}
       }

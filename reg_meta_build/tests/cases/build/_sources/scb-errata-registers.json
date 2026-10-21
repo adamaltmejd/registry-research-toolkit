@@ -4,7 +4,7 @@
     "registerinformation": [
       {
         "colname": "A",
-        "cvid": 1101,
+        "cvid": 1101, "varname": "GenericVar v5",
         "var_id": 5,
         "year": "2020",
         "regver_id": 2020,
@@ -12,7 +12,7 @@
       },
       {
         "colname": "B",
-        "cvid": 1102,
+        "cvid": 1102, "varname": "GenericVar v6",
         "var_id": 6,
         "year": "2021",
         "regver_id": 2021,
@@ -47,7 +47,7 @@
       },
       {
         "colname": "B",
-        "cvid": 1301,
+        "cvid": 1301, "varname": "GenericVar v5",
         "var_id": 5,
         "year": "2020",
         "regver_id": 2020,
@@ -55,7 +55,7 @@
       },
       {
         "colname": "B",
-        "cvid": 1302,
+        "cvid": 1302, "varname": "GenericVar v6",
         "var_id": 6,
         "year": "2021",
         "regver_id": 2021,
@@ -103,7 +103,7 @@
       },
       {
         "colname": "A",
-        "cvid": 1601,
+        "cvid": 1601, "varname": "GenericVar old",
         "var_id": 5,
         "year": "2019",
         "regver_id": 2019,
@@ -111,7 +111,7 @@
       },
       {
         "colname": "A",
-        "cvid": 1602,
+        "cvid": 1602, "varname": "GenericVar new",
         "var_id": 5,
         "year": "2020",
         "regver_id": 2020,
@@ -167,7 +167,7 @@
       },
       {
         "colname": "B",
-        "cvid": 1803,
+        "cvid": 1803, "varname": "GenericVar v6",
         "var_id": 6,
         "year": "2022",
         "regver_id": 2022,

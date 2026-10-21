@@ -21,7 +21,7 @@ slug = "pooled"
 [[errata.column]]
 variant = "people"
 column = "Dated"
-name = "New column"
+name = "Dated column"
 definition = "Documented"
 data_type = "integer"
 source = "steward-holdings"
@@ -32,7 +32,7 @@ versions = ["2020"]
 [[errata.column]]
 variant = "people"
 column = "Undated"
-name = "New column"
+name = "Undated column"
 definition = "Documented"
 data_type = "integer"
 source = "steward-holdings"
@@ -43,7 +43,7 @@ all_versions = true
 [[errata.column]]
 variant = "people"
 column = "Pooled"
-name = "New column"
+name = "Pooled column"
 definition = "Documented"
 data_type = "integer"
 source = "steward-holdings"

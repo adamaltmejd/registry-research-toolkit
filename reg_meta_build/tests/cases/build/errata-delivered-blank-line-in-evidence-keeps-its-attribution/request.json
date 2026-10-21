@@ -5,12 +5,12 @@
     "description": "Editions 2018 and 2020; Q documented only in 2018.",
     "scb": {
       "registerinformation": [
-        {"colname": "EDITION", "cvid": 1, "var_id": 99, "year": "2018", "regver_id": 1, "register": ["TEST", 1, 2]},
-        {"colname": "EDITION", "cvid": 2, "var_id": 99, "year": "2020", "regver_id": 2, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 1, "varname": "GenericVar v99", "var_id": 99, "year": "2018", "regver_id": 1, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 2, "varname": "GenericVar v99", "var_id": 99, "year": "2020", "regver_id": 2, "register": ["TEST", 1, 2]},
         {"colname": "Q", "cvid": 5, "var_id": 5, "year": "2018", "regver_id": 1, "register": ["TEST", 1, 2], "data_type": "integer"}
       ],
       "unika": [
-        "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2018|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar v99|EDITION|2018|2020|0|0|0",
         "TEST|Testregistret|Individer|Individer|GenericVar|Q|2018|2018|0|0|0"
       ]
     }

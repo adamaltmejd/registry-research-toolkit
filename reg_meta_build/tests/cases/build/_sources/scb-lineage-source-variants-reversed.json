@@ -17,12 +17,12 @@
       {"cvid": 2003, "var_id": 202, "colname": "FILLER", "year": "2000", "regver_id": 220, "register": ["Gap register (GAP)", 2, 22], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 2002, "var_id": 201, "colname": "GAP", "year": "2000", "regver_id": 210, "register": ["Gap register (GAP)", 2, 21], "cells": {"Registervariantnamn": "Other"}},
       {"cvid": 2001, "var_id": 201, "colname": "GAP", "year": "2000", "regver_id": 200, "register": ["Gap register (GAP)", 2, 20], "cells": {"Registervariantnamn": "People"}},
-      {"cvid": 1006, "var_id": 106, "colname": "DOUBLED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Thirteenth register (THR) : People"},
-      {"cvid": 1005, "var_id": 105, "colname": "UNKNOWN", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Twelfth register (TWL) : Unknown delivery"},
-      {"cvid": 1004, "var_id": 104, "colname": "UNDELIVERED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Eleventh register (ELV) : Missing delivery"},
-      {"cvid": 1003, "var_id": 103, "colname": "EXPLICIT", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Tenth register (TEN) : People"},
+      {"cvid": 1006, "varname": "GenericVar doubled", "var_id": 106, "colname": "DOUBLED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Thirteenth register (THR) : People"},
+      {"cvid": 1005, "varname": "GenericVar unknown-delivery", "var_id": 105, "colname": "UNKNOWN", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Twelfth register (TWL) : Unknown delivery"},
+      {"cvid": 1004, "varname": "GenericVar undelivered", "var_id": 104, "colname": "UNDELIVERED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Eleventh register (ELV) : Missing delivery"},
+      {"cvid": 1003, "varname": "GenericVar explicit", "var_id": 103, "colname": "EXPLICIT", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Tenth register (TEN) : People"},
       {"cvid": 1002, "var_id": 102, "colname": "DEFAULTED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Ninth register (NIN)"},
-      {"cvid": 1001, "var_id": 101, "colname": "GAP", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Gap register (GAP) : People"}
+      {"cvid": 1001, "varname": "GenericVar gap", "var_id": 101, "colname": "GAP", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Gap register (GAP) : People"}
     ]
   }
 }

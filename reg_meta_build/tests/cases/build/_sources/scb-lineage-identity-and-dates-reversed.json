@@ -11,13 +11,13 @@
       {"cvid": 4001, "var_id": 401, "colname": "DISJOINT", "year": "2001", "regver_id": 400, "register": ["Disjoint register (DSJ)", 4, 40], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 3001, "var_id": 301, "colname": "UNLINKED", "year": "2000", "regver_id": 300, "register": ["Unlinked register (UNL)", 3, 30], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 2001, "var_id": 201, "colname": "VALUE", "year": "2000", "versionname": "1999-2001", "regver_id": 200, "register": ["Original register (ORIG)", 2, 20], "cells": {"Registervariantnamn": "People"}},
-      {"cvid": 1007, "var_id": 106, "colname": "SWITCH", "year": "2001", "register": ["EXAMPLE", 1, 10], "varsource": "Switch register (SWT)"},
-      {"cvid": 1006, "var_id": 106, "colname": "SWITCH", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Switch register (SWT)"},
-      {"cvid": 1005, "var_id": 105, "colname": "EARLIER", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Earlier register (ERL)"},
-      {"cvid": 1004, "var_id": 104, "colname": "HISTORICAL", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Historical register (HST)"},
+      {"cvid": 1007, "varname": "GenericVar switch", "var_id": 106, "colname": "SWITCH", "year": "2001", "register": ["EXAMPLE", 1, 10], "varsource": "Switch register (SWT)"},
+      {"cvid": 1006, "varname": "GenericVar switch", "var_id": 106, "colname": "SWITCH", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Switch register (SWT)"},
+      {"cvid": 1005, "varname": "GenericVar earlier", "var_id": 105, "colname": "EARLIER", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Earlier register (ERL)"},
+      {"cvid": 1004, "varname": "GenericVar historical", "var_id": 104, "colname": "HISTORICAL", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Historical register (HST)"},
       {"cvid": 1003, "var_id": 103, "colname": "DISJOINT", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Disjoint register (DSJ) : People"},
-      {"cvid": 1002, "var_id": 102, "colname": "UNLINKED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Unlinked register (UNL) : People"},
-      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Original register (ORIG) : People"}
+      {"cvid": 1002, "varname": "GenericVar unlinked", "var_id": 102, "colname": "UNLINKED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Unlinked register (UNL) : People"},
+      {"cvid": 1001, "varname": "GenericVar value", "var_id": 101, "colname": "VALUE", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Original register (ORIG) : People"}
     ]
   }
 }
