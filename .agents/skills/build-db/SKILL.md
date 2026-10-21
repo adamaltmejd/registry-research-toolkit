@@ -250,13 +250,12 @@ classification-reference lists; FDB's two-spelling column ownership; committed S
 other book metadata and labels; every declared classification book (a `codes_file` the
 bundle lacks refuses the build with `classification_codes_file_missing`, and a
 `resolve_canonical_codes` diagnostic, such as conflicting labels, a blank code, an
-unresolved parent or an empty book, is an error that blocks a strict build; CI no
-longer checks books, so a bad one surfaces only here); RTB edition splits and coding
-windows; the
-overlay layout and committed curation counts; curated `same_as`/`replaced_by` edges and
-their component bounds; and that the committed `scb.toml` still names the LISA variant
-the SWECOV column candidates carry. A strict build that passes but changes one of these
-is a content change: read the dbdiff.
+unresolved parent or an empty book, is an error that blocks a strict build; CI no longer
+checks books, so a bad one surfaces only here); RTB edition splits and coding windows;
+the overlay layout and committed curation counts; curated `same_as`/`replaced_by` edges
+and their component bounds; and that the committed `scb.toml` still names the LISA
+variant the SWECOV column candidates carry. A strict build that passes but changes one
+of these is a content change: read the dbdiff.
 
 ## Private SWECOV extension
 

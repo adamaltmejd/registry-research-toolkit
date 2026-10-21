@@ -56,8 +56,7 @@ time:
 
 Every declared classification must ship a CSV: a book whose `codes_file` the bundle
 lacks refuses the build at its file (`classification_codes_file_missing`). Fresh builds
-no longer produce
-unknown-validity `classification_code` rows.
+no longer produce unknown-validity `classification_code` rows.
 
 ## CSV format
 

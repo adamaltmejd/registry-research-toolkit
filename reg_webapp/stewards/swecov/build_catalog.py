@@ -1302,7 +1302,9 @@ def cmd_grafts(args: argparse.Namespace) -> None:
     # falls through as `steward-holdings`. `--lisa-docs-dir` holds one
     # `<register>/*.md` directory per documented register.
     doc_cols: dict[str, set[str]] = {
-        d.name: {_norm_alnum(p.stem) for p in d.glob("*.md") if not p.stem.startswith("_")}
+        d.name: {
+            _norm_alnum(p.stem) for p in d.glob("*.md") if not p.stem.startswith("_")
+        }
         for d in docs_root.iterdir()
         if d.is_dir()
     }
