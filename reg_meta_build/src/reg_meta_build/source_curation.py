@@ -1049,6 +1049,26 @@ def documented_labels_match(
     )
 
 
+DocumentedMembers = Annotated[
+    tuple[Annotated[tuple[str, str], Field(strict=False)], ...], Field(strict=False)
+]
+
+
+def check_documented_members(
+    version_label: str, members: tuple[tuple[str, str], ...]
+) -> None:
+    """Refuse a documented list without a label or with blank or repeated codes."""
+    if not version_label.strip() or not members:
+        raise ValueError("documented coding needs a label and finite members")
+    # A blank code is missing data, never a member, authored or delivered.
+    if any(not code.strip() for code, _ in members):
+        raise ValueError("documented member codes must be nonblank")
+    if any(not label.strip() for _, label in members):
+        raise ValueError("documented member labels must be nonempty")
+    if len({code for code, _ in members}) != len(members):
+        raise ValueError("documented member codes must be unique")
+
+
 class DocumentedCodingSelection(_CurationModel):
     """An exact finite list supplied by independently reviewed documentation."""
 
@@ -1078,9 +1098,7 @@ class DocumentedCodingSelection(_CurationModel):
     ] = ()
     witness: Annotated[tuple[str, str], Field(strict=False)] | None = None
     version_label: str = Field(min_length=1)
-    members: Annotated[
-        tuple[Annotated[tuple[str, str], Field(strict=False)], ...], Field(strict=False)
-    ]
+    members: DocumentedMembers
 
     @model_validator(mode="after")
     def _finite_members(self) -> Self:
@@ -1107,15 +1125,7 @@ class DocumentedCodingSelection(_CurationModel):
                     "documented witness requires a finite label certificate"
                 )
             FiniteCurationWindow(valid_from=self.witness[0], valid_to=self.witness[1])
-        if not self.version_label.strip() or not self.members:
-            raise ValueError("documented coding needs a label and finite members")
-        # A blank code is missing data, never a member, authored or delivered.
-        if any(not code.strip() for code, _ in self.members):
-            raise ValueError("documented member codes must be nonblank")
-        if any(not label.strip() for _, label in self.members):
-            raise ValueError("documented member labels must be nonempty")
-        if len({code for code, _ in self.members}) != len(self.members):
-            raise ValueError("documented member codes must be unique")
+        check_documented_members(self.version_label, self.members)
         if len({entry.code for entry in self.label_equivalences}) != len(
             self.label_equivalences
         ):

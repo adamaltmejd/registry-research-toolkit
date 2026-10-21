@@ -42,9 +42,10 @@ class RetainedDocumentaryRelationship(_ResolvedModel):
     declaration: LiteralSourceRelationship
     binding_status: Literal["retained_unattached"] = "retained_unattached"
     reason: str
+    case_id: str
     provenance: str
 
-    _text = field_validator("reason", "provenance")(_require_trimmed)
+    _text = field_validator("reason", "case_id", "provenance")(_require_trimmed)
 
     @field_validator("register_ref")
     @classmethod

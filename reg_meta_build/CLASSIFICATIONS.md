@@ -21,8 +21,6 @@ sentinel_codes = [            # optional
   { code = "-1", meaning = "Uppgift saknas" },
 ]
 # hierarchy = "flat"          # optional: do not read parent_code cells (CSV format)
-# hierarchy = "code_prefix"   # optional: codes nest by prefix (Code tree below)
-# prefix_widths = [2, 4, 6]   # required with "code_prefix": the code lengths
 
 [binding]                     # optional
 # label_source = "sos"        # provider whose value-set labels carry it; absent = SCB
@@ -94,16 +92,6 @@ cycle, or a parent whose digit level is not shallower than its child's, refuses 
 (`classification_entry_invalid`). A source whose cells name codes outside the book
 declares `hierarchy = "flat"` in `[classification]`, and its parent cells are not read:
 KS87-P's cells are KS87 chapter numbers, and no chapter is a row of that book.
-
-A book whose codes nest by prefix (SCB books such as LKF: län `01`, kommun `0114`,
-församling `011401`) declares `hierarchy = "code_prefix"` and its code lengths as
-`prefix_widths`, in increasing order; its `parent_code` cells are not read. A code at
-the shortest width is a root. Any longer code's parent is its prefix at the longest
-declared shorter width that is a code of the book, so `018001` hangs under `01` when
-`0180` is not a row. Nothing is inferred from the codes: a code whose length is not a
-declared width reports `undeclared_classification_code_width`, and a longer code with no
-declared prefix in the book reports `unresolved_classification_parent`. Both are located
-errors at the code's row, and the code keeps no parent.
 
 ## Workflow
 

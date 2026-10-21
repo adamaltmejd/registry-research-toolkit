@@ -47,7 +47,7 @@ second copy held in step by a parity test.
   | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
   | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
   | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
-  | Interval algebra over periods           | `reg-core`                       | Reader; SPA via `reg-core-wasm`                       |
+  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
   | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
   | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; no Rust consumer recomputes a build hash  |
   | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
@@ -57,6 +57,12 @@ The SPA never parses period grammar or computes a project period's bounds: it co
 `reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
 interval merge that fuses delivery windows in `catalog.ts`. Its type-to-filter fold is
 `fold_search` through the same module.
+
+The build reaches `reg-core` through the compiled `reg-core-py` extension, which
+`resolve_code_sha256` (`reg_meta_build/src/reg_meta_build/resolve_code.py`) hashes. A
+`reg-core` change, an interval or grammar fix included, therefore invalidates every
+build resolve key: the next real-seed build resolves in full and its dbdiff shows any
+artifact change.
 
 **Text folds.** Two named folds, specified rather than inherited from a library:
 
@@ -241,9 +247,11 @@ cannot mix dated and year-independent states. Birth, migration or classification
 never supply a delivery range. `pooled` marks a state spanning a pooled multi-year
 edition with no annual coverage: one state over the whole range, and consumers must not
 infer annual availability inside it. A state's `provenance` is NULL for an ordinary
-provider-documented interval and otherwise names an errata correction (with its evidence
-and exact source editions), a steward row, or `inferred:resolution-gap`. It stays at
-state grain so one corrected edition never relabels a neighboring window.
+provider-documented interval and otherwise names an errata correction class with its
+source locators and storage-type facts, a steward row, or `inferred:resolution-gap`. It
+never carries curator evidence, rationale or a curation case pointer, which stay in the
+build report (#1708). It stays at state grain so one corrected edition never relabels a
+neighboring window.
 
 A state is as long as its facts allow (#1296 2d). Resolution cuts a column wherever the
 set of active source editions or code lists changes, and the builder then merges a run

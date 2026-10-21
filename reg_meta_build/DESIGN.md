@@ -524,9 +524,8 @@ and native id agree with its path. Unknown tables, unknown fields, duplicate
 declarations, and entries scoped to a different register fail with the source file and
 entry index.
 
-SCB errata records omitted rows and explicit periods for existing editions whose names
-are topics rather than dates. The register file implies the register; each entry names a
-variant and literal SCB column/version coordinates. A curated
+SCB errata records omitted rows. The register file implies the register; each entry
+names a variant and literal SCB column/version coordinates. A curated
 `[[identity.edition_split]]` moves exact named editions of one native variant to a
 declared split variant. Its `editions` and `source_editions` lists account for every
 native edition name; a new or missing name makes the entry stale and withholds the
@@ -535,13 +534,12 @@ implies a split. An errata addition naming a moved edition is stale until additi
 be rebound under the split variant; corrections to native rows still move with the
 split. RTB's eight `Kvartal 1-3 fr.o.m.` editions use this surface to keep quarterly
 delivery lines separate from their annual parent variants. The same checked split can
-preserve a source-labelled range separately from annual editions, with a scoped
-`data_warning` when aggregation or physical delivery semantics are unverified; it never
-assigns annual availability to the range. A split variant has no native row and inherits
-its parent's Registervariantbeskrivning, so what the split is (a survey wave, a
-half-year, a school-year line) and what stays unverified about it belongs in the split
-variant's curated `[[variant]] description`, which replaces the inherited text, rather
-than in a warning repeated on every state (#1708).
+preserve a source-labelled range separately from annual editions; it never assigns
+annual availability to the range. A split variant has no native row and inherits its
+parent's Registervariantbeskrivning, so what the split is (a survey wave, a half-year, a
+school-year line) and what stays unverified about it belongs in the split variant's
+curated `[[variant]] description`, which replaces the inherited text, rather than in a
+warning repeated on every state (#1708).
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
 reviewed native family, including blank columns, every source field, parent fact and
@@ -609,15 +607,10 @@ periods or code domains.
 `[[errata.version]]` carries `variant`, `name`, `evidence`, and `noted`; it adds an
 undocumented register edition and requires a year-bearing SCB version name. Version era
 order follows the maximum year the edition claims, so adding a historical edition cannot
-replace a newer documented edition's latest spelling or type.
-`[[errata.edition_period]]` names one existing native edition by variant and SCB's
-literal edition name. For a name the period parser cannot interpret, its documented
-`valid_from` and `valid_to` are the exact inclusive occurrence interval; `evidence` and
-`noted` record the source of that claim. A missing or renamed edition, or a name the
-parser can interpret, makes the entry stale. No register coverage or nearby edition
-supplies an inferred period, and other unparseable names remain unsupported.
-`[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`expected_evidence_sha256`, `evidence`, `noted`, and optional `upstream`,
+replace a newer documented edition's latest spelling or type. An edition name the period
+parser cannot interpret gets no period: no register coverage or nearby edition supplies
+an inferred one. `[[errata.delivered]]` carries `variant`, literal `column`, existing
+`versions`, `expected_evidence_sha256`, `evidence`, `noted`, and optional `upstream`,
 `native_variable_id`, `measurement_unit` and nonblank `data_warning`; it adds omitted
 rows for a column documented elsewhere on the variant and names edition tokens verbatim.
 Optional `donor_variant` names a different variant of the same register: identity and
@@ -1425,19 +1418,15 @@ succession edges. The book keeps its place in a derived edition chain, so no edg
 it. A literal source-reference dictionary or checked declaration establishes a variable
 binding. Code overlap percentages, URL guesses and name similarity cannot.
 
-A book's code tree comes from its codebook's delivered `parent_code` cells (#1297), or
-from a curated prefix declaration. A parent that names no agreed code of the same book
-is a located `unresolved_classification_parent` error, never dropped silently; a cycle
-or a parent no shallower than its child refuses the book. The tree is never inferred
-from undeclared code shape or from another book. A source whose parent cells name
-something outside the book declares `hierarchy = "flat"` in its classification file,
-which is visible curation rather than a heuristic: KS87-P's cells are KS87 chapter
-numbers, and its sheet has no chapter rows. A book whose codes nest by prefix (LKF, SUN)
-declares `hierarchy = "code_prefix"` with explicit `prefix_widths`; a code's parent is
-its prefix at the longest declared shorter width that is a book code. The widths are
-curation, not detection: a code of an undeclared width or without a declared prefix in
-the book is a located error. `validate_built_db` re-checks the stored tree: same book,
-shallower level, acyclic.
+A book's code tree comes from its codebook's delivered `parent_code` cells (#1297). A
+parent that names no agreed code of the same book is a located
+`unresolved_classification_parent` error, never dropped silently; a cycle or a parent no
+shallower than its child refuses the book. The tree is never inferred from undeclared
+code shape or from another book. A source whose parent cells name something outside the
+book declares `hierarchy = "flat"` in its classification file, which is visible curation
+rather than a heuristic: KS87-P's cells are KS87 chapter numbers, and its sheet has no
+chapter rows. `validate_built_db` re-checks the stored tree: same book, shallower level,
+acyclic.
 
 The label binding is a rule. A state whose value-set version label exactly matches an
 entry on a classification's label list binds to that classification, whether the label
@@ -1787,7 +1776,16 @@ without both entries fails the build. The reviewer's `reason` and `provenance` s
 the curation entry the warning's `acknowledged_by` or `case_id` names, and in the detail
 of a build-only warning. Diagnostics a researcher reads as one limitation share a public
 code (`PUBLIC_CODES`: `no_supported_states` publishes as `unsupported_occurrence`); the
-build keeps the original code, which acknowledgements name.
+build keeps the original code, which acknowledgements name. Published provenance (state,
+classification link, alias window, sentinel certificate, source relationship) follows
+the same rule: it carries a decision's `errata:<class>` line and its structured source
+locators (`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`, a matrix's
+`evidence:` and `source_pages:`) and storage-type facts, never the case pointer, the
+reason or free-text evidence, which go to the case event in the build ledger. A
+correction citing no locator publishes nothing, so equal neighbouring states pool. A
+curated alias window keeps the `curated:alias-window` head, since non-NULL provenance is
+what makes it additive; a book's override binding publishes
+`curated:override -> <slug>`; a source relationship names its declaration row.
 
 The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
 forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`
@@ -2162,8 +2160,8 @@ also carry their own type, length, definitions, names and source text, and per-c
 coding windows their own value set and classification links; these override the base
 even when NULL. Per-column windows are clipped to successive base states; shared windows
 must lie inside their state. A window's `provenance` follows the state's: source-derived
-windows leave it NULL, and an exact-edition curated alias carries its correction class,
-evidence and editions and is additive rather than replacing.
+windows leave it NULL, and an exact-edition curated alias carries `curated:alias-window`
+and its source locators and is additive rather than replacing.
 
 **Compiled relations.**
 

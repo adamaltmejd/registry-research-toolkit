@@ -14,12 +14,12 @@ from pydantic import (
     Field,
     model_validator,
 )
-from reg_core_py import parse_fqid
+from reg_core_py import intersect, merge, parse_fqid
 
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
 from reg_meta_build.source_intervals import occurrence_bounds
 
-from .inventory import _edition_intervals, _intersect, _merge, _segment_bounds
+from .inventory import _edition_intervals, _segment_bounds
 from .slug_grammar import validate_slug
 from .source_evidence import SourceRecordRef, canonical_sha256
 
@@ -392,11 +392,11 @@ def mapping_data_warnings(
                     if (
                         clipped := segment
                         if window is None
-                        else _intersect(segment, window)
+                        else intersect(segment, window)
                     )
                 ]
     rows = [(key, (None, None)) for key in independent] + [
-        (key, bounds) for key, spans in dated.items() for bounds in _merge(spans)
+        (key, bounds) for key, spans in dated.items() for bounds in merge(spans)
     ]
     warnings: dict[str, DataWarning] = {}
     for (variable, variant, column, summary, detail), (lo, hi) in rows:
@@ -722,7 +722,7 @@ def scope_data_warnings(
                         )
     for token, spans in sorted(assumption_spans.items()):
         # One warning per contiguous window; a gap between windows stays a gap.
-        for lo, hi in _merge([(f, t) for f, t, _, _ in spans]):
+        for lo, hi in merge([(f, t) for f, t, _, _ in spans]):
             within = [s for s in spans if s[0] <= hi and s[1] >= lo]
             payload = {
                 **assumption_payloads[token],

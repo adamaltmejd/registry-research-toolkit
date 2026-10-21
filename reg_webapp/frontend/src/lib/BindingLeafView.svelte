@@ -414,12 +414,12 @@ function correctionsFromState(state: VariableStateModel): Correction[] {
   if (!provenance?.startsWith("errata:")) {
     return [];
   }
+  // The class line may stand alone: the catalog publishes only source locators
+  // after it, never curator evidence (#1708).
   const separator = provenance.indexOf("\n");
-  if (separator < 0) {
-    return [];
-  }
-  const className = provenance.slice("errata:".length, separator).trim();
-  const body = provenance.slice(separator + 1).trim();
+  const head = separator < 0 ? provenance : provenance.slice(0, separator);
+  const className = head.slice("errata:".length).trim();
+  const body = separator < 0 ? "" : provenance.slice(separator + 1).trim();
   const providerDocumented = className === "scoped-attributions";
   if (providerDocumented || className === "overlapping-attributions") {
     let parsed: unknown;
@@ -461,7 +461,7 @@ function correctionsFromState(state: VariableStateModel): Correction[] {
     return corrections;
   }
   const evidence = body;
-  return className && evidence
+  return className
     ? [
         {
           state,
@@ -998,7 +998,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 >
                   <KeyValue rows={correctionFacts} />
                 </div>
-                <p class="correction-evidence">{correction.evidence}</p>
+                {#if correction.evidence}
+                  <p class="correction-evidence">{correction.evidence}</p>
+                {/if}
               </li>
             {/each}
           </ul>

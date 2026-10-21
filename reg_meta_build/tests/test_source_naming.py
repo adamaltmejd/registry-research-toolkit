@@ -235,14 +235,13 @@ def test_reader_uses_tracked_freeze_state_for_generated_names(tmp_path: Path) ->
 
 
 def test_absent_authored_slug_preserves_generated_name_and_authored_metadata() -> None:
-    authored = _entry(slug=None, deprecated=True, replaced_by="1.102")
+    authored = _entry(slug=None, deprecated=True)
     generated = _entry(origin="generated")
     result = convert_naming(_selection(authored, generated), [_binding(authored)])
     assert result.complete
     (declaration,) = result.declarations
     assert declaration.naming.slug == "variable-a"
     assert declaration.naming.deprecated
-    assert declaration.naming.replaced_by == "1.102"
     assert {entry.entry.slug for entry in declaration.contributors} == {
         None,
         "variable-a",
@@ -253,7 +252,7 @@ def test_absent_authored_slug_preserves_generated_name_and_authored_metadata() -
     assert without_auto.declarations[0].contributors == (authored,)
 
 
-def test_variant_metadata_and_typo_pointer_remain_exact_intent() -> None:
+def test_variant_metadata_remains_exact_intent() -> None:
     authored = _entry(
         "1.10",
         "subset",
@@ -263,7 +262,6 @@ def test_variant_metadata_and_typo_pointer_remain_exact_intent() -> None:
         panel_time_key="period",
         panel_time_grain="delivery",
         deprecated=True,
-        replaced_by="1.11",
     )
     result = convert_naming(
         _selection(authored), [_binding(authored, _target(kind="register_variant"))]

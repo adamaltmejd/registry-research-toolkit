@@ -200,7 +200,6 @@ provenance = "delivery list"
 register = "scb/sample"
 variable = "a"
 delivery_column = "FormerA"
-provenance = "delivery list"
 
 # 19: a description beside a sibling column's source description on one record.
 [[variable]]

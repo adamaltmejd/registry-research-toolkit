@@ -38,6 +38,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
+from reg_meta_build.source_occurrences import published_provenance
 from reg_meta_build.source_records import ScopeInterval, SourceFields, TemporalScope
 from reg_meta_build.source_value_bindings import _member_scope
 
@@ -653,10 +654,7 @@ def compile_coding_selection(
         if complete and not (
             kind == "uncoded"
             and getattr(entry, "stored_role", None) is not None
-            and (
-                getattr(entry, "expected_evidence_sha256", None) is not None
-                or getattr(entry, "source_authority", None) is not None
-            )
+            and getattr(entry, "expected_evidence_sha256", None) is not None
         ):
             return None, "stale", "period has a complete nonempty list"
         return ("uncoded" if kind == "uncoded" else "omit_state"), "matched", ""
@@ -1109,8 +1107,15 @@ def apply_coding_choices(
                     segments=tuple(
                         replace(
                             segment,
-                            provenance=(
-                                f"{case.case_id}: {decision.reason}\n{decision.provenance}",
+                            provenance=tuple(
+                                filter(
+                                    None,
+                                    (
+                                        published_provenance(
+                                            decision.provenance, case.case_id
+                                        ),
+                                    ),
+                                )
                             ),
                         )
                         for segment in selected.segments

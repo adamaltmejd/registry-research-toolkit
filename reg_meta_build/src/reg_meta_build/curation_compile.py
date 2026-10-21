@@ -41,6 +41,7 @@ from .curation_tree import (
     ErrataOccurrenceCarryEntry,
     ErrataOccurrencePeriodEntry,
     ErrataSupportEntry,
+    _EditionCorrectionEntry,
     _OccurrenceCorrectionEntry,
 )
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
@@ -142,7 +143,6 @@ from .source_naming import (
     refuse_slug_collisions,
 )
 from .source_occurrences import EffectiveOccurrence, source_occurrence
-from .source_periods import source_scopes
 from .source_records import (
     NativeCoordinates,
     ScopeInterval,
@@ -182,8 +182,7 @@ class CompiledCodebook:
     source: str
     descriptor: str
     metadata: dict[str, str | int | list[dict[str, str]] | None]
-    hierarchy: Literal["parent_code", "flat", "code_prefix"] = "parent_code"
-    prefix_widths: tuple[int, ...] = ()
+    hierarchy: Literal["parent_code", "flat"] = "parent_code"
 
 
 @dataclass(frozen=True)
@@ -4320,13 +4319,6 @@ def compile_edition_splits(
                         ),
                         reason=entry.evidence,
                         provenance=ref,
-                        data_warning=entry.data_warning,
-                        data_warning_refs=tuple(target.ref for target in targets)
-                        if entry.data_warning is not None
-                        else (),
-                        data_warning_fields=("availability",)
-                        if entry.data_warning is not None
-                        else (),
                     ),
                 )
             )
@@ -4368,8 +4360,6 @@ def _compile_sos_register(
 ) -> tuple[
     tuple[CurationCase, ...], tuple[ResolutionDiagnostic, ...], dict[str, list[str]]
 ]:
-    from collections import defaultdict
-
     statuses = {
         key: []
         for key in (
@@ -5301,12 +5291,7 @@ def compile_coding_register(
                 if (
                     isinstance(
                         entry,
-                        (
-                            CodingDocumentedEntry,
-                            CodingChoiceEntry,
-                            CodingExtendEntry,
-                            CodingUncodedEntry,
-                        ),
+                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
                     )
                     and entry.source_authority is not None
                 ):
@@ -5481,12 +5466,7 @@ def compile_coding_register(
                 if (
                     isinstance(
                         entry,
-                        (
-                            CodingDocumentedEntry,
-                            CodingChoiceEntry,
-                            CodingExtendEntry,
-                            CodingUncodedEntry,
-                        ),
+                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
                     )
                     and entry.source_authority is not None
                 ):
@@ -5604,7 +5584,6 @@ def compile_coding_register(
                                         CodingDocumentedEntry,
                                         CodingChoiceEntry,
                                         CodingExtendEntry,
-                                        CodingUncodedEntry,
                                     ),
                                 )
                                 and entry.source_authority is not None
@@ -5690,7 +5669,8 @@ def _select_occurrence_correction(
             else entry.column
         )
         and (
-            entry.edition is None
+            not isinstance(entry, _EditionCorrectionEntry)
+            or entry.edition is None
             or (
                 record.subject.native.edition_id is not None
                 and str(record.subject.native.edition_id) == entry.edition
@@ -5739,8 +5719,13 @@ def _select_occurrence_correction(
 def _occurrence_correction_matches(
     entry: _OccurrenceCorrectionEntry, selected: tuple[SourceRecord, ...]
 ) -> bool:
+    period_text = (
+        entry.expected_period_text
+        if isinstance(entry, _EditionCorrectionEntry)
+        else None
+    )
     if not selected or any(
-        record.original_period_text != entry.expected_period_text
+        record.original_period_text != period_text
         or record.edition_scope != entry.expected_scope
         or record.edition_period_scope != entry.expected_period
         for record in selected
@@ -6850,9 +6835,7 @@ def compile_errata(
         diagnostics,
         report,
     ) = _compile_provider_columns(tree, prepared, scopes, subset=subset)
-    if not loaded and not any(
-        register.errata.edition_period for register in tree.registers
-    ):
+    if not loaded:
         return (
             {key: tuple(value) for key, value in cases.items()},
             {
@@ -6890,7 +6873,6 @@ def compile_errata(
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         if register.register_info.provider != "scb" or not (
             register.errata.version
-            or register.errata.edition_period
             or register.errata.delivered
             or register.errata.column
         ):
@@ -6979,69 +6961,6 @@ def compile_errata(
                         "declared edition has no native variant records",
                     )
                 )
-        for index, row in enumerate(register.errata.edition_period, 1):
-            case_id = f"{register.source_file}#/errata.edition_period/{index}"
-            statuses["entries_read"].append(case_id)
-            subject = f"{name}/{row.variant}/{row.name}"
-            variant_id = variant_ids[row.variant]
-            matching = tuple(
-                record
-                for record in by_variant.get(variant_id, ())
-                if record.original_period_text == row.name
-                and record.subject.native.edition_id is not None
-            )
-            edition_ids = {record.subject.native.edition_id for record in matching}
-            if not matches and subset:
-                statuses["not_evaluated_in_subset"].append(case_id)
-                continue
-            if len(matches) != 1 or len(edition_ids) != 1:
-                overbroad = len(matches) > 1 or len(edition_ids) > 1
-                statuses["over_broad" if overbroad else "stale"].append(case_id)
-                diagnostics.append(
-                    _family_diagnostic(
-                        case_id,
-                        subject,
-                        f"matches {len(edition_ids)} native editions in "
-                        f"{len(matches)} register scopes; expected one",
-                        overbroad=overbroad,
-                    )
-                )
-                continue
-            if source_scopes(row.name)[2] != "unparseable_period" or any(
-                record.edition_period_scope.kind != "unknown" for record in matching
-            ):
-                statuses["stale"].append(case_id)
-                diagnostics.append(
-                    _family_diagnostic(
-                        case_id, subject, "named edition already has a parsed period"
-                    )
-                )
-                continue
-            interval = TemporalScope(
-                kind="intervals",
-                intervals=(ScopeInterval(start=row.valid_from, end=row.valid_to),),
-            )
-            expectations = capture_expectations(matching, fields=())
-            cases[scope_key].append(
-                CurationCase(
-                    case_id=case_id,
-                    targets=expectations,
-                    decision=OccurrenceCorrectionDecision(
-                        reviewed=True,
-                        effects=tuple(
-                            CheckedPeriodChange(
-                                ref=item.ref,
-                                edition_scope=interval,
-                                edition_period_scope=interval,
-                            )
-                            for item in expectations
-                        ),
-                        reason=row.evidence,
-                        provenance=f"{case_id}: {row.evidence}",
-                    ),
-                )
-            )
-            statuses["entries_matched"].append(case_id)
         for table, entries in (
             ("delivered", register.errata.delivered),
             ("column", register.errata.column),
@@ -7854,9 +7773,8 @@ def compile_enrichment(
                         variable_key=variable_key,
                         variant_keys=tuple(sorted(variant_keys, key=repr)),
                         column=row.delivery_column,
-                        reason=row.provenance
-                        or f"Accepted delivery alias for {target_name}",
-                        provenance=row.provenance or f"curation:{case_id}",
+                        reason=f"Accepted delivery alias for {target_name}",
+                        provenance=f"curation:{case_id}",
                     )
                 cases[scope_key].append(
                     CurationCase(
@@ -7994,7 +7912,6 @@ def compile_curation(
                         "codes_file",
                         "sentinel_codes",
                         "hierarchy",
-                        "prefix_widths",
                     },
                 ),
                 "sentinel_codes": [
@@ -8009,7 +7926,6 @@ def compile_curation(
                 ],
             },
             hierarchy=entry.classification.hierarchy,
-            prefix_widths=entry.classification.prefix_widths,
         )
         for entry in tree.classifications
     )

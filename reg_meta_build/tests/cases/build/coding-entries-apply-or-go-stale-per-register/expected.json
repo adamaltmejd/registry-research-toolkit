@@ -24,21 +24,6 @@
       "note": "choices.py::test_pin_free_choice_compiles_and_applies_from_literal_labels: the pin-free choice (no evidence digest) applies; VALUE 2020 publishes the kept list keep (01 Label)."
     },
     {
-      "table": "states",
-      "where": {
-        "register": "pinfree"
-      },
-      "fields": [
-        "provenance"
-      ],
-      "rows": [
-        [
-          "curation/registers/scb/pinfree.toml#/coding.choice/1/period/1: Reviewed coding\nfixture"
-        ]
-      ],
-      "note": "Same test: the applied case is `<file>#/coding.choice/1/period/1`; the state carries it as `<case id>: <reason>\\n<source>` (the provenance form choice_application.py::test_choice_changes_only_checked_window_and_feeds_ordinary_formation asserted)."
-    },
-    {
       "table": "issues",
       "where": {
         "subject": [
@@ -72,21 +57,6 @@
         ]
       ],
       "note": "choices.py::test_pin_free_uncoded_and_omit_compile_without_nonempty_lists (uncoded): a column without a nonempty list accepts uncoded; the state publishes no value set."
-    },
-    {
-      "table": "states",
-      "where": {
-        "register": "uncoded"
-      },
-      "fields": [
-        "provenance"
-      ],
-      "rows": [
-        [
-          "curation/registers/scb/uncoded.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
-        ]
-      ],
-      "note": "Same test: the uncoded decision is applied and attributed to its entry."
     },
     {
       "table": "issues",
@@ -165,39 +135,12 @@
       "rows": [
         [
           "2019-01-01",
-          "2019-12-31",
-          "01",
-          "Label"
-        ],
-        [
-          "2020-01-01",
           "2020-12-31",
           "01",
           "Label"
         ]
       ],
       "note": "choices.py::test_pin_free_extend_compiles_from_finite_witness and choice_application.py::test_extension_checks_separate_witness_and_changes_only_exact_target: the witness list (01 Label, 2020) extends to the listless 2019 target with the same code set."
-    },
-    {
-      "table": "states",
-      "where": {
-        "register": "extend"
-      },
-      "fields": [
-        "valid_from",
-        "provenance"
-      ],
-      "rows": [
-        [
-          "2019-01-01",
-          "curation/registers/scb/extend.toml#/coding.extend/1/period/1: Reviewed coding\nfixture"
-        ],
-        [
-          "2020-01-01",
-          null
-        ]
-      ],
-      "note": "choice_application.py::test_extension_checks_separate_witness_and_changes_only_exact_target: only the extended target carries the decision's provenance; the witness state keeps its own source coding."
     },
     {
       "table": "issues",
@@ -705,7 +648,7 @@
       "rows": [
         [
           "2020-01-01",
-          "curation/registers/scb/cardinality.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+          null
         ]
       ],
       "note": "Same test: `len(cases) == 1`: period 1 still applies."
@@ -768,7 +711,7 @@
         [
           "2020-01-01",
           "2020-12-31",
-          "curation/registers/scb/undateduncoded.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+          null
         ]
       ],
       "note": "choice_application.py::test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance: the finite uncoded acceptance applies to 2020 only."
@@ -1001,22 +944,6 @@
         ]
       ],
       "note": "Same test: the coding issues cover exactly the two unchosen windows; their code is the unresolved-conflict code of coding-competing-lists-without-choice-publish-no-value-set."
-    },
-    {
-      "table": "states",
-      "where": {
-        "register": "window",
-        "valid_from": "2020-04-01"
-      },
-      "fields": [
-        "provenance"
-      ],
-      "rows": [
-        [
-          "curation/registers/scb/window.toml#/coding.choice/1/period/1: Reviewed coding\nfixture"
-        ]
-      ],
-      "note": "Same test: the chosen state's provenance is `<case id>: <reason>\\n<source>`."
     },
     {
       "table": "state_codes",
@@ -1582,23 +1509,6 @@
       "note": "Same test: the refused extension gives 2019 no value set."
     },
     {
-      "table": "states",
-      "where": {
-        "register": "syn",
-        "variable": "empty",
-        "valid_from": "2019-01-01"
-      },
-      "fields": [
-        "provenance"
-      ],
-      "rows": [
-        [
-          "curation/registers/sos/syn.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
-        ]
-      ],
-      "note": "choice_application.py::test_exact_empty_evidence_can_be_accepted_as_uncoded_without_guessing_members: EMPTY's list has no member active in 2019; uncoded is accepted there and attributed to its entry."
-    },
-    {
       "table": "state_codes",
       "where": {
         "register": "syn",
@@ -1656,12 +1566,6 @@
       "rows": [
         [
           "2019-01-01",
-          "2019-12-31",
-          "01",
-          "Label"
-        ],
-        [
-          "2020-01-01",
           "2020-12-31",
           "01",
           "Label"
@@ -1788,12 +1692,6 @@
         ],
         [
           "2019-01-01",
-          "2019-12-31",
-          "01",
-          "Label"
-        ],
-        [
-          "2020-01-01",
           "2020-12-31",
           "01",
           "Label"

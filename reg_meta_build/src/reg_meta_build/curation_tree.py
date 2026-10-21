@@ -18,7 +18,6 @@ import json
 import tomllib
 from dataclasses import dataclass
 from datetime import date
-from itertools import pairwise
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
@@ -27,7 +26,6 @@ from pydantic import (
     ConfigDict,
     Field,
     PrivateAttr,
-    StrictInt,
     ValidationError,
     ValidationInfo,
     field_validator,
@@ -62,12 +60,13 @@ from .source_curation import (
     ColumnRepresentation,
     DeliveryMetadataColumn,
     DeliveryMetadataDecision,
-    DocumentedCodingSelection,
+    DocumentedMembers,
     FieldExpectation,
     FiniteCurationWindow,
     RecordExpectation,
     SourceEnumeration,
     SupportedCodingAssociation,
+    check_documented_members,
 )
 from .source_intervals import coding_scope_bounds
 from .source_records import SourceFields, TemporalScope
@@ -127,11 +126,8 @@ class ClassificationMetadata(_CurationModel):
     # `parent_code` column, where every named parent must be a code of the book
     # (a book without the column has no tree). "flat": the book has no tree and
     # its `parent_code` cells are not read, for a source whose cells name codes
-    # outside the book (KS87-P's KAPITEL chapter numbers). "code_prefix": codes
-    # nest by prefix at the declared `prefix_widths` (SCB books such as LKF and
-    # SUN), and the `parent_code` cells are not read.
-    hierarchy: Literal["parent_code", "flat", "code_prefix"] = "parent_code"
-    prefix_widths: Annotated[tuple[StrictInt, ...], Field(strict=False)] = ()
+    # outside the book (KS87-P's KAPITEL chapter numbers).
+    hierarchy: Literal["parent_code", "flat"] = "parent_code"
 
     _names = field_validator("short_name", "name")(_require_trimmed)
 
@@ -165,18 +161,6 @@ class ClassificationMetadata(_CurationModel):
             and self.valid_from > self.valid_to
         ):
             raise ValueError("classification validity bounds are reversed")
-        if self.hierarchy != "code_prefix":
-            if self.prefix_widths:
-                raise ValueError('prefix_widths require hierarchy = "code_prefix"')
-        elif (
-            not self.prefix_widths
-            or self.prefix_widths[0] < 1
-            or any(a >= b for a, b in pairwise(self.prefix_widths))
-        ):
-            raise ValueError(
-                'hierarchy = "code_prefix" requires prefix_widths: positive '
-                "code lengths in strictly increasing order"
-            )
         return self
 
     @field_validator("slug")
@@ -307,7 +291,6 @@ class RegisterVariantSlug(_CurationModel):
     panel_time_key: str | list[str] | None = None
     panel_time_grain: str | None = None
     deprecated: bool = False
-    replaced_by: str | None = None
 
     @field_validator("native_id")
     @classmethod
@@ -324,7 +307,6 @@ class RegisterVariantSlug(_CurationModel):
 class RegisterVariableSlug(_CurationModel):
     native_id: str
     slug: str | None = None
-    replaced_by: str | None = None
     deprecated: bool = False
 
 
@@ -336,34 +318,6 @@ class ErrataVersionEntry(_CurationModel):
     name: str
     evidence: str
     noted: str
-
-
-class ErrataEditionPeriodEntry(_CurationModel):
-    variant: str
-    name: str
-    valid_from: str
-    valid_to: str
-    evidence: str
-    noted: str
-
-    @model_validator(mode="after")
-    def _valid_period(self) -> ErrataEditionPeriodEntry:
-        for field in ("variant", "name", "evidence"):
-            if not getattr(self, field).strip():
-                raise ValueError(f"{field} must not be blank")
-        for field in ("valid_from", "valid_to", "noted"):
-            value = getattr(self, field)
-            try:
-                parsed = date.fromisoformat(value)
-            except ValueError as exc:
-                raise ValueError(f"{field} must be an ISO date") from exc
-            if parsed.isoformat() != value or (
-                field != "noted" and parsed.year == 9999
-            ):
-                raise ValueError(f"{field} must be a canonical finite ISO date")
-        if self.valid_to < self.valid_from:
-            raise ValueError("valid_to must not precede valid_from")
-        return self
 
 
 class ErrataDeliveredEntry(_CurationModel):
@@ -544,15 +498,13 @@ class _OccurrenceCorrectionEntry(_CurationModel):
     variable: str
     variant: str
     column: str
-    edition: str | None = None
     expected_fields: list[FieldExpectation]
-    expected_period_text: str | None = None
     expected_scope: TemporalScope
     expected_period: TemporalScope
     evidence: str
     noted: str
 
-    _text = field_validator("variable", "variant", "column", "edition", "evidence")(
+    _text = field_validator("variable", "variant", "column", "evidence")(
         _require_trimmed
     )
 
@@ -593,7 +545,19 @@ class _OccurrenceCorrectionEntry(_CurationModel):
         return value
 
 
-class ErrataFieldEntry(_OccurrenceCorrectionEntry):
+class _EditionCorrectionEntry(_OccurrenceCorrectionEntry):
+    """A correction that may pin the native edition and the original period text.
+
+    A carry has neither: it copies an SOS original, which has no native edition.
+    """
+
+    edition: str | None = None
+    expected_period_text: str | None = None
+
+    _edition = field_validator("edition")(_require_trimmed)
+
+
+class ErrataFieldEntry(_EditionCorrectionEntry):
     expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
     authority_records: list[RecordExpectation] | None = Field(
         default=None, min_length=1
@@ -783,7 +747,7 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
         return self
 
 
-class ErrataSupportEntry(_OccurrenceCorrectionEntry):
+class ErrataSupportEntry(_EditionCorrectionEntry):
     kind: Literal[
         "contradictory_question", "nonphysical_projection", "carried_replacement"
     ] = "contradictory_question"
@@ -803,7 +767,7 @@ class ErrataSupportEntry(_OccurrenceCorrectionEntry):
         return _OccurrenceCorrectionEntry._prose_guards(value)
 
     # A positive source native on the same cell; carried_replacement has none.
-    authority: _OccurrenceCorrectionEntry | None = None
+    authority: _EditionCorrectionEntry | None = None
     # carried_replacement only: the native an `[[errata.delivered]]` carry puts on
     # the withdrawn sole owner's cell (#1671), spelled like `variable`.
     replacement: str | None = None
@@ -875,7 +839,7 @@ class ErrataSupportEntry(_OccurrenceCorrectionEntry):
         return self
 
 
-class ErrataFlagsEntry(_OccurrenceCorrectionEntry):
+class ErrataFlagsEntry(_EditionCorrectionEntry):
     """Author both flags on one checked occurrence SCB leaves unflagged (#1621).
 
     Flags reconcile over a variable's occurrences, so one stated pair decides
@@ -904,7 +868,7 @@ class ErrataFlagsEntry(_OccurrenceCorrectionEntry):
         return value
 
 
-class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
+class ErrataOccurrencePeriodEntry(_EditionCorrectionEntry):
     authority: list[RecordExpectation] = Field(default_factory=list)
     _authority_shapes = field_validator("authority", mode="before")(
         _record_expectation_shapes
@@ -977,7 +941,6 @@ class ErrataCuration(_CurationModel):
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
     version: list[ErrataVersionEntry] = Field(default_factory=list)
-    edition_period: list[ErrataEditionPeriodEntry] = Field(default_factory=list)
     data_type: list[ErrataDataTypeEntry] = Field(default_factory=list)
     classification_reference: list[ErrataClassificationReferenceEntry] = Field(
         default_factory=list
@@ -1003,7 +966,6 @@ class EnrichmentAliasEntry(_CurationModel):
     register_fqid: str = Field(validation_alias="register")
     variable: str
     delivery_column: str
-    provenance: str = ""
 
     _text = field_validator("delivery_column")(_require_trimmed)
     _variable = field_validator("variable")(EnrichmentDescriptionEntry._local_variable)
@@ -1436,7 +1398,6 @@ class IdentityEditionSplitEntry(_CurationModel):
     source_editions: list[str]
     evidence: str
     noted: str
-    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
 
     _text = field_validator("evidence")(_require_trimmed)
 
@@ -1707,10 +1668,15 @@ def _coding_members(value: list[list[str]]) -> list[list[str]]:
 
 class _CheckedCodingEntry(CodingEntry):
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
-    source_authority: PreparedCodingAuthority | None = None
     expected_evidence_sha256: str | None = Field(
         default=None, pattern=r"^[0-9a-f]{64}$"
     )
+
+
+class _AuthorizedCodingEntry(_CheckedCodingEntry):
+    """A checked entry that may pin its column's source rows instead of a digest."""
+
+    source_authority: PreparedCodingAuthority | None = None
 
     @field_validator("source_authority", mode="before")
     @classmethod
@@ -1718,7 +1684,7 @@ class _CheckedCodingEntry(CodingEntry):
         return _prepared_coding_authority(value)
 
     @model_validator(mode="after")
-    def _checked_authority(self) -> _CheckedCodingEntry:
+    def _checked_authority(self) -> _AuthorizedCodingEntry:
         authority = self.source_authority
         if authority is not None and self.expected_evidence_sha256 is not None:
             raise ValueError(
@@ -1764,9 +1730,7 @@ class CodingUncodedEntry(_CheckedCodingEntry):
     @model_validator(mode="after")
     def _checked_text_role(self) -> CodingUncodedEntry:
         if self.stored_role is not None and (
-            self.expected_evidence_sha256 is None
-            and self.source_authority is None
-            or self.data_warning is None
+            self.expected_evidence_sha256 is None or self.data_warning is None
         ):
             raise ValueError(
                 "stored text role requires complete source coding guards and a data warning"
@@ -1774,7 +1738,7 @@ class CodingUncodedEntry(_CheckedCodingEntry):
         return self
 
 
-class CodingChoiceEntry(_CheckedCodingEntry):
+class CodingChoiceEntry(_AuthorizedCodingEntry):
     keep: str
     keep_members: list[list[str]] | None = None
     keep_members_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
@@ -1802,7 +1766,7 @@ class CodingChoiceEntry(_CheckedCodingEntry):
         return trimmed
 
 
-class CodingExtendEntry(_CheckedCodingEntry):
+class CodingExtendEntry(_AuthorizedCodingEntry):
     list: str
     list_members: list[list[str]] | None = None
     witness: list[str]
@@ -1953,9 +1917,15 @@ def _prepared_coding_authority(value: object) -> object:
     return PreparedCodingAuthority.model_validate_json(json.dumps(value))
 
 
-class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
-    """Documented members; existing list selectors keep their own contracts."""
+class CodingDocumentedEntry(CodingEntry):
+    """Documented members; existing list selectors keep their own contracts.
 
+    The members' authority is a PDF or `source_authority`, which carries every
+    source-coding guard the compiled `DocumentedCodingSelection` checks.
+    """
+
+    version_label: str = Field(min_length=1)
+    members: DocumentedMembers
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     document_url: str | None = Field(default=None, pattern=r"^https://\S+$")
     document_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
@@ -2014,16 +1984,7 @@ class CodingDocumentedEntry(CodingEntry, DocumentedCodingSelection):
             raise ValueError(
                 "documented coding requires finite periods or exact source scope, exclusively"
             )
-        if (
-            self.period_block is not None
-            or self.enumeration is not None
-            or self.expected_marker_bindings is not None
-            or self.source_scope is not None
-            or self.expected_source_codings is not None
-            or self.expected_raw_codings is not None
-            or self.label_equivalences
-        ):
-            raise ValueError("source-scope coding must use checked source authority")
+        check_documented_members(self.version_label, self.members)
         if (
             self.source_authority is not None
             and self.source_authority.enumeration is not None
@@ -2380,7 +2341,6 @@ def _register_arrays(
         ("errata.delivered", entry.errata.delivered),
         ("errata.column", entry.errata.column),
         ("errata.version", entry.errata.version),
-        ("errata.edition_period", entry.errata.edition_period),
         ("errata.data_type", entry.errata.data_type),
         ("errata.classification_reference", entry.errata.classification_reference),
         ("enrichment.description", entry.enrichment.description),
@@ -2444,8 +2404,6 @@ def _check_register_ref(
 
 
 def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
-    from .fqid_slugs import _parse_variant_id
-
     identity = entry.register_info
     expected = f"{identity.provider}/{identity.slug}"
     for index, item in enumerate(entry.identity.unassigned, 1):
@@ -2461,11 +2419,6 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
             )
     edition_owners: set[tuple[str, str]] = set()
     variant_ids = {variant.native_id for variant in entry.variant}
-    native_variant_slugs = {
-        variant.slug
-        for variant in entry.variant
-        if len(_parse_variant_id(variant.native_id)) == 2
-    }
     for index, split in enumerate(entry.identity.edition_split, 1):
         where = f"{file} [[identity.edition_split]] entry {index}"
         if identity.provider != "scb" or not split.variant.startswith(
@@ -2521,15 +2474,6 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                         f"{file} [[{table}]] entry {index}: matrix selector/path must belong to this register and native variant.",
                         "Use the owning register's evidence path and declared native variant.",
                     )
-            if isinstance(row, ErrataEditionPeriodEntry) and (
-                identity.provider != "scb" or row.variant not in native_variant_slugs
-            ):
-                raise curation_error(
-                    _REGISTER_MISPLACED,
-                    f"{file} [[{table}]] entry {index}: variant {row.variant!r} "
-                    "must name a native variant of an SCB register.",
-                    "Use a native [[variant]] slug in the owning SCB register file.",
-                )
             if (
                 isinstance(
                     row, (ErrataDataTypeEntry, ErrataClassificationReferenceEntry)
@@ -2667,12 +2611,6 @@ _UNIQUE_TARGETS: tuple[tuple[type, Callable[[Any], object], str, str], ...] = (
         lambda row: (row.deldatamangd, row.variable, row.column),
         "data type target",
         "Keep one correction per Deldatamängd, variable and column.",
-    ),
-    (
-        ErrataEditionPeriodEntry,
-        lambda row: (row.variant, row.name),
-        "edition period",
-        "Keep one period per variant and edition name.",
     ),
     (
         EnrichmentDescriptionEntry,

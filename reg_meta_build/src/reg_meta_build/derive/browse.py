@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from reg_core_py import merge
+
 from reg_meta_build.derive.states import (
     _applicable_alias_windows,
     _variable_windows,
@@ -17,7 +19,6 @@ from reg_meta_build.derive.states import (
     representative_columns,
 )
 from reg_meta_build.errors import EXIT_NOT_FOUND, RegMetaError
-from reg_meta_build.inventory import _merge
 
 if TYPE_CHECKING:
     import sqlite3
@@ -113,7 +114,7 @@ def _reference_deliveries(
     eras under the one spelling `representative_columns` picks. No step reads the
     row order, so the reads stay unordered.
 
-    simplify: the fuse is one `_merge` per column over one row per state or alias
+    simplify: the fuse is one `merge` per column over one row per state or alias
     window, about 22,684 rows on the largest register (scb/ulf). Gap-and-islands
     SQL (a window function over `MAX(valid_to) OVER (...)`) is the upgrade if a
     register ever makes that slow.
@@ -221,7 +222,7 @@ def _reference_deliveries(
             variant_columns.items(), key=lambda kv: (kv[0] is not None, kv[0] or "")
         ):
             out.setdefault(slug, []).append(
-                (variant, column, "intervals", len(eras), _merge(eras))
+                (variant, column, "intervals", len(eras), merge(eras))
             )
     for slug, variant, column in sorted(
         independent, key=lambda x: (x[0], x[1], x[2] or "")
@@ -300,7 +301,7 @@ def _held_deliveries(
         intervals = physical.setdefault(tuple(row[:4]), [])
         if row[4] is not None:
             intervals.append((row[4], row[5]))
-    physical = {key: list(_merge(intervals)) for key, intervals in physical.items()}
+    physical = {key: list(merge(intervals)) for key, intervals in physical.items()}
     groups: dict[tuple[str, str, str, str], list[tuple[str, str] | None]] = {}
     for row in rows:
         variable_id, variant_id = row["variable_id"], row["register_variant_id"]
@@ -323,7 +324,7 @@ def _held_deliveries(
             offered = (
                 [None]
                 if row["period_scope"] == "year_independent"
-                else _merge(
+                else merge(
                     [
                         (max(lo, start), min(hi, end))
                         for start, end in physical[key]
@@ -343,7 +344,7 @@ def _held_deliveries(
                 column,
                 period_scope,
                 len(offered),
-                _merge([window for window in offered if window is not None]),
+                merge([window for window in offered if window is not None]),
             )
         )
     return out

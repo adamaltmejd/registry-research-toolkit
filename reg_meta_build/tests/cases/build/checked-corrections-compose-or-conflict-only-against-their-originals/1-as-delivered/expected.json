@@ -52,12 +52,14 @@
       ]
     },
     {
-      "note": "compose's state carries all three corrections, the two equal column assignments included (the old test: len(occurrence.corrections) == 3), each as its locator and evidence text in locator order.",
-      "table": "states",
-      "where": {"register": "compose"},
-      "fields": ["provenance"],
+      "note": "compose's record uses all three corrections, the two equal column assignments included (the old test: len(occurrence.corrections) == 3). Field corrections cite no source locator, so the state publishes no provenance and the ledger is where they show (#1708).",
+      "table": "case_uses",
+      "where": {"case_id": {"contains": "compose.toml"}},
+      "fields": ["case_id", "key", "variable"],
       "rows": [
-        ["curation/registers/scb/compose.toml#/errata.field/1: The delivered OLD column is VALUE.\n\ncuration/registers/scb/compose.toml#/errata.field/2: A second reviewer also reads the delivered OLD column as VALUE.\n\ncuration/registers/scb/compose.toml#/errata.field/3: The delivered description is corrected."]
+        ["curation/registers/scb/compose.toml#/errata.field/1", "member:101", "scb/compose/answer"],
+        ["curation/registers/scb/compose.toml#/errata.field/2", "member:101", "scb/compose/answer"],
+        ["curation/registers/scb/compose.toml#/errata.field/3", "member:101", "scb/compose/answer"]
       ]
     },
     {

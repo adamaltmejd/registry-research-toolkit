@@ -7,10 +7,6 @@
       "rows": [
         ["flat", "008-", null, null],
         ["flat", "011-", null, null],
-        ["prefix", "01", 2, null],
-        ["prefix", "0114", 4, "01"],
-        ["prefix", "011401", 6, "0114"],
-        ["prefix", "018001", 6, "01"],
         ["tree", "01", 2, "A"],
         ["tree", "011", 3, "01"],
         ["tree", "0111", 4, "011"],
@@ -19,14 +15,14 @@
         ["tree", "B", null, null],
         ["tree", "U", null, null]
       ],
-      "note": "Each parent is a code of its own book; level stays the digit count, so a letter root has none. Prefix book prefix nests by its declared widths [2, 4, 6]: 018001's kommun prefix 0180 is no code of the book, so it hangs under the longest declared prefix that is, län 01."
+      "note": "Each parent is a code of its own book; level stays the digit count, so a letter root has none."
     },
     {
       "table": "issues",
-      "where": {"subject": ["flat", "prefix", "tree"]},
+      "where": {"subject": ["flat", "tree"]},
       "fields": ["code", "subject"],
       "rows": [],
-      "note": "No book reports an issue: tree's parents all resolve, flat reads no parent cell, and every prefix code has a declared width and a declared prefix in the book."
+      "note": "No book reports an issue: tree's parents all resolve and flat reads no parent cell."
     }
   ]
 }

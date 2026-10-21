@@ -11,8 +11,7 @@ Variables auto-slug from the latest kolumnnamn at build time. Explicit
 ``[variable]`` TOML rows are exceptions — overrides or deprecations. Graph
 semantics (``same_as`` / ``replaced_by`` succession) are NOT a
 slug surface; they live in ``curation/relations.toml`` (#522, see
-``relations.py``). The per-entry ``replaced_by`` field that survives here is the
-WITHIN-FILE slug-typo rename pointer, a different relation from succession.
+``relations.py``).
 """
 
 from __future__ import annotations
@@ -27,6 +26,8 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from itertools import combinations, groupby
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
+
+from reg_core_py import fold_search
 
 from ._curation import curation_error, display_path, repo_curation_dir
 from .errors import RegMetaError
@@ -111,13 +112,6 @@ class SlugEntry:
     # only short-circuits the missing-row branch on this — a still-live row
     # with `deprecated = true` is still slugged so resolution keeps working.
     deprecated: bool = False
-    # Within-file slug-typo rename pointer (another row's TOML key in the SAME
-    # file/provider). Validated for shape and cycle-freedom but not yet applied
-    # to the DB; the resolver-side typo-correction lands with consumer-side
-    # binding materialization in step 1e. NOT succession — the cross-provider /
-    # dead-predecessor succession surface is `curation/relations.toml`'s
-    # `type = "replaced_by"` edges (#522, `relations.py`), a different relation.
-    replaced_by: str | None = None
 
 
 def repo_slug_dir() -> Path | None:
@@ -244,7 +238,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
     # `same_as` is NOT a slug field anymore (#522) — graph semantics live in
     # `curation/relations.toml`, so an inline `same_as` here now fails as an
     # unknown field, the same as a top-level `[[replaced_by]]` in a slug TOML.
-    base = {"slug", "deprecated", "replaced_by"}
+    base = {"slug", "deprecated"}
     if kind == "variable":
         return frozenset(base)
     if kind == "register_variant":
@@ -331,15 +325,6 @@ def _validate_entry(
             f"(true/false), got {type(deprecated_raw).__name__}.",
             "Use bare `deprecated = true` or `deprecated = false`.",
         )
-    replaced_by = entry.get("replaced_by")
-    if replaced_by is not None and (
-        not isinstance(replaced_by, str) or not replaced_by
-    ):
-        raise curation_error(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `replaced_by` must be a non-empty string.",
-            "Point it at the TOML key of the replacement row.",
-        )
     display_group = entry.get("display_group")
     if display_group is not None and not isinstance(display_group, str):
         raise curation_error(
@@ -388,7 +373,6 @@ def _validate_entry(
         panel_time_key=panel_time_key,
         panel_time_grain=panel_time_grain,
         deprecated=deprecated_raw,
-        replaced_by=replaced_by,
     )
 
 
@@ -553,34 +537,6 @@ def _validate_panel_time_consistency(
         )
 
 
-def _resolve_replaced_by(entries: list[SlugEntry], *, scope: str) -> None:
-    by_key: dict[tuple[str, str], SlugEntry] = {
-        (e.kind, e.source_id): e for e in entries
-    }
-    for entry in entries:
-        if entry.replaced_by is None:
-            continue
-        seen: set[tuple[str, str]] = {(entry.kind, entry.source_id)}
-        cur = entry
-        while cur.replaced_by is not None:
-            nxt_key = (cur.kind, cur.replaced_by)
-            if nxt_key not in by_key:
-                raise curation_error(
-                    "slug_toml_invalid",
-                    f"{scope}: {cur.kind}.{cur.source_id!r} replaced_by "
-                    f"{cur.replaced_by!r} which is not declared.",
-                    "Add the replacement row, or remove the replaced_by link.",
-                )
-            if nxt_key in seen:
-                raise curation_error(
-                    "slug_toml_invalid",
-                    f"{scope}: replaced_by cycle through {entry.kind}.{entry.source_id!r}.",
-                    "Break the cycle so resolution terminates.",
-                )
-            seen.add(nxt_key)
-            cur = by_key[nxt_key]
-
-
 def _provider_from_path(path: Path) -> str:
     """Provider slug from a provider TOML filename.
 
@@ -704,7 +660,6 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                     )
                 holders.append(entry)
             entries.append(entry)
-    _resolve_replaced_by(entries, scope=path.name)
     return entries
 
 
@@ -1135,7 +1090,6 @@ def _load_register_slug_tree(
                         )
                 slug_owners[slug_key] = (entry, f"{file} {location}")
             local.append(entry)
-        _resolve_replaced_by(local, scope=file)
         if authored_only or freeze_state(states, provider) == "churning":
             entries.extend(local)
             continue
@@ -3099,15 +3053,6 @@ _SURVEY_STATS_RE = re.compile(r"\b(survey|statistics)\b", re.IGNORECASE)
 DefaultCandidateClass = Literal["exact", "near", "kept"]
 
 
-def _fold(s: str) -> str:
-    """Case/diacritic/whitespace-insensitive fold used by the _default heuristic."""
-    if not s:
-        return ""
-    folded = unicodedata.normalize("NFKD", s.strip().lower())
-    folded = "".join(c for c in folded if not unicodedata.combining(c))
-    return re.sub(r"\s+", " ", folded)
-
-
 def _strip_parens(s: str) -> str:
     return _PAREN_RE.sub("", s).strip()
 
@@ -3117,7 +3062,7 @@ def _parenthetical_contents(s: str) -> list[str]:
 
 
 def _canonical(s: str) -> str:
-    return re.sub(r"[^a-z0-9]", "", _fold(s))
+    return re.sub(r"[^a-z0-9]", "", fold_search(s))
 
 
 def classify_default_candidate(
@@ -3136,25 +3081,25 @@ def classify_default_candidate(
     The function only judges name-mirror similarity. Callers decide whether
     `_default` is appropriate (e.g. by also checking single-variant cardinality).
     """
-    fr, fv = _fold(register_name), _fold(variant_name)
+    fr, fv = fold_search(register_name), fold_search(variant_name)
     if not fr or not fv:
         return "kept", "missing name"
     if fr == fv:
         return "exact", "Registernamn == Registervariantnamn"
     spr, spv = _strip_parens(register_name), _strip_parens(variant_name)
-    if _fold(spr) == _fold(spv):
+    if fold_search(spr) == fold_search(spv):
         return "near", "match after stripping parenthetical abbrev"
     for abbr in _parenthetical_contents(register_name):
-        if _fold(abbr) == fv:
+        if fold_search(abbr) == fv:
             return "near", f"variant name matches register parenthetical ({abbr!r})"
     for abbr in _parenthetical_contents(variant_name):
-        if _fold(abbr) == fr:
+        if fold_search(abbr) == fr:
             return "near", f"register name matches variant parenthetical ({abbr!r})"
     swapped = _SURVEY_STATS_RE.sub(
         lambda m: "statistics" if m.group(1).lower() == "survey" else "survey",
         spr,
     )
-    if _fold(swapped) == _fold(spv):
+    if fold_search(swapped) == fold_search(spv):
         return "near", "Survey/Statistics sibling"
     cr, cv = _canonical(spr), _canonical(spv)
     if cr and cv and min(len(cr), len(cv)) >= 5:
@@ -3578,7 +3523,7 @@ def _name_fallback_variables(
         )
         # Only a string `slug` override RESOLVES the auto slug — drop those from
         # the backlog even though their frozen auto entry + marker linger. A
-        # metadata-only entry (`same_as` / `replaced_by` / `deprecated` with NO
+        # metadata-only entry (`deprecated` with NO
         # slug) leaves the auto slug unchanged (a deprecated variable stays slugged
         # so old references resolve), so it still needs curation and stays backlog.
         resolved = (

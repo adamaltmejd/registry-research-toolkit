@@ -236,9 +236,10 @@ def _pooled_merge_key(
     value-set/coding evidence, and the correction provenance the state carries.
 
     Provenance is compared as the text formation writes onto the state
-    (`_state_from_segment`), so a cut an errata or field correction reached
-    never merges with one it did not: the merged state would attribute the
-    correction to the whole hull."""
+    (`_state_from_segment`), so a cut a published correction reached never
+    merges with one it did not: the merged state would attribute the
+    correction to the whole hull. A correction that publishes nothing (#1708)
+    leaves only its facts to compare."""
     return (
         tuple(getattr(segment.fields, name) for name in _POOLED_MERGE_FIELDS),
         frozenset(
@@ -247,9 +248,10 @@ def _pooled_merge_key(
             for record in occurrence.coding_records
         ),
         frozenset(
-            correction.provenance
+            correction.attribution
             for occurrence in segment.effective_occurrences
             for correction in occurrence.corrections
+            if correction.attribution is not None
         ),
     )
 
