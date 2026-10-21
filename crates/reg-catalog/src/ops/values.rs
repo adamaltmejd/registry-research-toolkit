@@ -32,7 +32,10 @@ const STATE_PARAMS: &[&str] = &[
 ];
 
 /// One delivered (code, label) pair: today's `ValueSetMember`.
+// Serialize-only, so `deny_unknown_fields` acts on the schema alone: its
+// `additionalProperties: false` keeps the other `ValueRow` rows from matching this one.
 #[derive(Serialize, ToSchema)]
+#[serde(deny_unknown_fields)]
 pub struct ValueSetMember {
     code: String,
     label: String,
@@ -47,6 +50,7 @@ pub struct ClassificationExtensionMember {
     /// `nonstandard` or `sentinel`.
     member_kind: String,
     /// The book's curated meaning of a sentinel code.
+    #[schema(required = true)]
     sentinel_meaning: Option<String>,
     /// The certificates that make a source-local code a sentinel.
     scoped_sentinels: Vec<ScopedSentinel>,
@@ -73,16 +77,22 @@ pub struct ClassificationCode {
     code: String,
     label: String,
     /// The hierarchy depth; null when the classification is flat.
+    #[schema(required = true)]
     level: Option<i64>,
     /// True for a canonical code, null when no canonical list exists.
+    #[schema(required = true)]
     is_valid: Option<bool>,
     /// How many codes name this one as their parent: null when the book has no
     /// code tree, 0 for a leaf.
+    #[schema(required = true)]
     child_count: Option<i64>,
 }
 
 /// A row of `values`: a classification's code, a state's delivered pair, or a
 /// delivered pair outside a declared book.
+// Untagged, so the schema's `oneOf` holds only while every row matches exactly one
+// variant: `ClassificationCode` requires `level`, the extension `member_kind`, and
+// `ValueSetMember` is closed.
 #[derive(Serialize, ToSchema)]
 #[serde(untagged)]
 pub enum ValueRow {

@@ -28,6 +28,7 @@ from http_cases import (
     run_http_requests,
     select_json,
 )
+from jsonschema import Draft202012Validator
 
 PROTOCOL = "2025-11-25"
 HEADERS = {
@@ -236,6 +237,24 @@ def test_tools_list_matches_golden(http_servers):
             if name in served and "tool" in op
         }
     )
+
+
+def test_values_state_matches_output_schema(http_servers):
+    # Fails when a state's value-set rows validate against more than one branch of
+    # the advertised `ValueRow` oneOf (reg-meta 0.57.0: a `{code, label}` row also
+    # matched `ClassificationCode`), so MCP clients that check structured content
+    # against `outputSchema` reject every `values` call for a variable state.
+    request = {"fixture": "values", "kind": "catalog"}
+    client = http_servers.client(artifact_env(cached_case_artifact(request), "catalog"))
+    _, states = call(client, "states", {"ref": "scb/example/yrke"})
+    state = states["data"]["items"][0]["state_id"]
+    is_error, document = call(
+        client, "values", {"ref": "scb/example/yrke", "state": state}
+    )
+    assert not is_error
+    assert document["data"]["items"]
+    (tool,) = (t for t in TOOLS if t["name"] == "values")
+    Draft202012Validator(tool["outputSchema"]).validate(document)
 
 
 def test_body_over_the_cap_is_payload_too_large(http_servers):

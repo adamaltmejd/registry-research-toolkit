@@ -1928,7 +1928,10 @@
         "description": "One code of a classification edition: today's `ClassificationCode`.",
         "required": [
           "code",
-          "label"
+          "label",
+          "level",
+          "is_valid",
+          "child_count"
         ],
         "properties": {
           "child_count": {
@@ -1969,6 +1972,7 @@
           "code",
           "label",
           "member_kind",
+          "sentinel_meaning",
           "scoped_sentinels"
         ],
         "properties": {
@@ -5848,7 +5852,8 @@
           "label": {
             "type": "string"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ValueSetSummary": {
         "type": "object",

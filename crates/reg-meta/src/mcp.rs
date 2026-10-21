@@ -119,7 +119,9 @@ fn tool(openapi: &Value, name: &'static str, ops: &[&Operation]) -> Tool {
     };
     let mut outputs: Vec<Value> = entries.iter().map(|entry| envelope(entry, "200")).collect();
     outputs.push(envelope(entries[0], "default"));
-    let output = json!({"type": "object", "oneOf": outputs});
+    // `anyOf`: two operations' pages can share a shape (an empty `schema` and
+    // `coded_variables` page both read `{items: []}`), which fails a `oneOf`.
+    let output = json!({"type": "object", "anyOf": outputs});
     Tool::new_with_raw(name, Some(description.into()), with_defs(input, openapi))
         .with_raw_output_schema(with_defs(output, openapi))
 }
