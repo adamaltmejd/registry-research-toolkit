@@ -3,7 +3,7 @@
     "status": 200,
     "json": {
       "/data/period_span": {"from": 2018, "to": 2019},
-      "/data/steward/order_instructions": "To order data, email your project_data.json to SWECOV's data managers. Do not send order.json; the data managers generate it from your project.",
+      "/data/steward/order_instructions": "To order data, email your project_data.json to your SWECOV coordinator. They review the project and generate order.json from it, so you do not need to download or send order.json.",
       "/meta/scope": "holdings"
     }
   }

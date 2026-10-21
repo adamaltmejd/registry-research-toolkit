@@ -47,8 +47,8 @@ reg_webapp/
 plain text on how a researcher hands a project to the steward. `/api/context` serves it
 under `steward`, and /project shows it under the two downloads. A deployment that takes
 no orders (global) omits it and the page shows nothing. SWECOV's text asks for
-`project_data.json` only, because the data managers review the project and generate
-`order.json` themselves.
+`project_data.json` only, sent to the researcher's SWECOV coordinator, who reviews it
+and generates `order.json` themselves.
 
 ## Boot seam (artifact admission)
 

@@ -2,5 +2,5 @@
   "id": "swecov",
   "name": "SWECOV",
   "long_name": "SWECOV register-data catalog",
-  "order_instructions": "To order data, email your project_data.json to SWECOV's data managers. Do not send order.json; the data managers generate it from your project."
+  "order_instructions": "To order data, email your project_data.json to your SWECOV coordinator. They review the project and generate order.json from it, so you do not need to download or send order.json."
 }
