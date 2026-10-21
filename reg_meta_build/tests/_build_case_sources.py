@@ -304,6 +304,7 @@ _PREPARING_MODULES = (
     "_registerinformation_rows.py",
     "_input_repo_fixtures.py",
     "_sos_fixtures.py",
+    "_workbook_spec.py",
     "_prepared_fixtures.py",
     "_pipeline_catalog_support.py",
 )
