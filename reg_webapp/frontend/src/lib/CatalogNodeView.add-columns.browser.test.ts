@@ -18,6 +18,7 @@ import {
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { holdRestore } from "./restore-test-helpers.svelte";
 import { windowStore } from "./window.svelte";
 
 // CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
@@ -70,21 +71,6 @@ beforeEach(() => {
     steward: "global",
   });
 });
-
-/** Hold the app-owned draft restore open, and return its release. This is the gate
- * `applyStagedPicks` awaits between the press and the commit — and, since the list
- * reads nothing of its own at Add time (Y-104), the place a case lands something
- * (a New, a window drag, a navigation) while an Add is in flight. The same spy the
- * leaf and the concept group hold their Adds at. */
-function holdRestore(): () => void {
-  const { promise, resolve } = Promise.withResolvers<void>();
-  const restoring = vi.spyOn(projectStore, "restored", "get");
-  restoring.mockReturnValue(promise);
-  return () => {
-    restoring.mockRestore();
-    resolve();
-  };
-}
 
 describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   it("adds every ticked column to the draft in one action", async () => {

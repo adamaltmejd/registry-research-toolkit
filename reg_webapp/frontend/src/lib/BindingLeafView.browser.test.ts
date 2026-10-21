@@ -13,6 +13,7 @@ import {
 import { expectStagedAddColumnVisible } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { holdRestore } from "./restore-test-helpers.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -130,36 +131,30 @@ describe("BindingLeafView representation picker (#678)", () => {
     // Same wait, the other way out of it: the leaf is gone before the gate
     // settles, so the late continuation must not mutate the draft from a page the
     // researcher has left.
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      const view = await render(BindingLeafView, {
-        fqidPath: "scb/lisa/kon",
-        ...leaf(pickerStates),
-        regMetaVersion: SEED.regMetaVersion,
-        steward: SEED.steward,
-        windowMinYear: SEED.windowMinYear,
-        vintageYear: 2024,
-      });
+    const release = holdRestore();
+    const view = await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      ...leaf(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
 
-      await page.getByRole("checkbox", { name: /Kon/ }).click();
-      await page.getByRole("button", { name: "Add to project" }).click();
-      await expect
-        .element(page.getByRole("button", { name: "Applying..." }))
-        .toBeVisible();
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Applying..." }))
+      .toBeVisible();
 
-      view.unmount();
-      release();
-      // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
-      // an unguarded Add needs several microtask hops (its add resolutions)
-      // to reach the mutation — a poll would pass on the first tick, before the
-      // continuation it is meant to catch has run.
-      await new Promise((r) => setTimeout(r, 100));
-      expect(storedProject()?.sources).toHaveLength(0);
-    } finally {
-      restoring.mockRestore();
-    }
+    view.unmount();
+    release();
+    // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
+    // an unguarded Add needs several microtask hops (its add resolutions)
+    // to reach the mutation — a poll would pass on the first tick, before the
+    // continuation it is meant to catch has run.
+    await new Promise((r) => setTimeout(r, 100));
+    expect(storedProject()?.sources).toHaveLength(0);
   });
 
   it("applying one folded variant-family row adds each concrete era source", async () => {
