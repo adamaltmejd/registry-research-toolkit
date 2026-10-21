@@ -5,48 +5,23 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.401"
-slug = "pool"
-[[variable]]
-native_id = "1.402"
-slug = "lasaren"
-[[variable]]
-native_id = "1.403"
-slug = "annual-wins"
-[[variable]]
-native_id = "1.404"
-slug = "annual-facts"
-[[variable]]
-native_id = "1.405"
-slug = "annual-facts-conflict"
-[[variable]]
-native_id = "1.406"
-slug = "annual-full"
-[[variable]]
-native_id = "1.407"
-slug = "overlap-same"
-[[variable]]
-native_id = "1.408"
-slug = "overlap-diff"
-[[variable]]
-native_id = "1.409"
-slug = "adjacent"
-[[variable]]
-native_id = "1.410"
-slug = "gap"
-[[variable]]
-native_id = "1.411"
-slug = "overlap-uncoded"
-[[variable]]
-native_id = "1.412"
-slug = "unit-diff"
-[[variable]]
-native_id = "1.413"
-slug = "unit-same"
-[[variable]]
-native_id = "1.414"
-slug = "corrected"
+
+[variable]
+"1.401" = "pool"
+"1.402" = "lasaren"
+"1.403" = "annual-wins"
+"1.404" = "annual-facts"
+"1.405" = "annual-facts-conflict"
+"1.406" = "annual-full"
+"1.407" = "overlap-same"
+"1.408" = "overlap-diff"
+"1.409" = "adjacent"
+"1.410" = "gap"
+"1.411" = "overlap-uncoded"
+"1.412" = "unit-diff"
+"1.413" = "unit-same"
+"1.414" = "corrected"
+
 [[errata.field]]
 variable = "1.414"
 variant = "1.10"

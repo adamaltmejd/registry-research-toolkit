@@ -2,8 +2,8 @@
 
 Related-document curation and binaries are explicit arguments; only the
 `build-docs` CLI supplies the repository's `related_documents.toml` and the
-untracked `input_data/SCB/docs` seed, so library callers (test fixtures
-included) stay hermetic.
+`--related-docs-dir` binaries, so library callers (test fixtures included) stay
+hermetic.
 """
 
 from __future__ import annotations

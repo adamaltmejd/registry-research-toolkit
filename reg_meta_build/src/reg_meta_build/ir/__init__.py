@@ -149,8 +149,9 @@ class IRVariableState(_IRBase):
     # delivery-column grain (#736). Distinct from variable-level
     # `operational_definition`, which is only a shared/canonical summary.
     operational_definition: str | None = None
-    # NULL for ordinary provider-exported rows. Corrected SCB states carry
-    # `errata:<class>` plus source locators (never curator evidence, #1708); corrections overlapping a documented claim use
+    # NULL for provider-documented facts, routed-only states included. A curated
+    # fact carries its constant `errata:<class>` or `curated:<kind>` head plus
+    # checked locators, never curator evidence (#1708); corrections overlapping a documented claim use
     # `errata:scoped-attributions` JSON records that retain exact edition/evidence
     # pairs, and correction-only overlaps use `errata:overlapping-attributions`.
     # `inferred:resolution-gap` marks source-less coverage retained by resolution.

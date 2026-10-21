@@ -21,7 +21,6 @@ from reg_meta_build.input_snapshot import (
     prepare_input_bundle,
     verify_input_bundle,
 )
-from reg_meta_build.sources.curated_records import CuratedSourceError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -47,7 +46,9 @@ def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
     bundle = open_input_bundle(selection)
 
     items = {item.path: item for item in bundle.manifest.files}
-    assert not items["catalog/scb_canonical/scb_canonical.toml"].present
+    # Fails if capture again takes authored curation (the thin-provider and
+    # scb_canonical TOMLs, which prepare-sources reads from the curation tree).
+    assert not [path for path in items if path.endswith(".toml")]
     manifest_text = (selection.path / "catalog-bundle.json").read_text(encoding="utf-8")
     assert str(tmp_path) not in manifest_text
     assert bundle.provenance == {
@@ -245,12 +246,6 @@ def test_bundle_preparation_keeps_source_conflicts_for_common_resolution(
     write_scb_input(input_dir)
     canonical = input_dir / "scb_canonical"
     canonical.mkdir()
-    (canonical / "scb_canonical.toml").write_text(
-        '[[register]]\nkey = "example"\nname = "Example"\n'
-        '[[register.variable]]\nname = "Code"\ncolumn = "Code"\n'
-        'classification = "Unresolved source declaration"\nvalue_set = "codes"\n',
-        encoding="utf-8",
-    )
     codes = canonical / "codes.csv"
     codes.write_text("code,label\n01,First\n01,Conflicting\n", encoding="utf-8")
 
@@ -260,74 +255,3 @@ def test_bundle_preparation_keeps_source_conflicts_for_common_resolution(
         selection.path / "catalog/scb_canonical/codes.csv"
     ).read_bytes() == codes.read_bytes()
     verify_input_bundle(selection)
-
-
-@pytest.mark.parametrize(
-    ("name", "message"),
-    (
-        ("../outside", "local filename"),
-        ("/outside", "local filename"),
-        ("dir\\outside", "local filename"),
-        # Fails if capture records a declared but undelivered list as an absent
-        # optional file (as it does SCB's fixed paths) and commits a bundle that
-        # silently lacks the list the canonical register binds.
-        ("undelivered", "referenced catalog input files are missing"),
-    ),
-)
-def test_bundle_preparation_rejects_a_canonical_code_list_it_cannot_capture(
-    tmp_path: Path, name: str, message: str
-) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    canonical = input_dir / "scb_canonical"
-    canonical.mkdir()
-    (canonical / "scb_canonical.toml").write_text(
-        '[[register]]\nkey = "example"\nname = "Example"\n'
-        '[[register.variable]]\nname = "Code"\ncolumn = "Code"\n'
-        f"value_set = {json.dumps(name)}\n",
-        encoding="utf-8",
-    )
-    with pytest.raises(SnapshotError, match=message):
-        write_input_bundle(tmp_path / "accepted", input_dir)
-
-
-def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    from reg_meta_build.errors import EXIT_CONFIG
-
-    from reg_meta_build import cli as cli_module
-
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    provider_dir = input_dir / "Folkhalsomyndigheten"
-    provider_dir.mkdir()
-    (provider_dir / "fohm.toml").write_text("not = [valid", encoding="utf-8")
-    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-
-    with pytest.raises(CuratedSourceError, match="invalid global curated TOML"):
-        prepare_input_bundle(input_dir, snapshot, snapshot.path.parent / "bundle")
-    assert (
-        cli_module.run(
-            [
-                "prepare-input-bundle",
-                "--input-dir",
-                str(input_dir),
-                "--scb-snapshot",
-                str(snapshot.path),
-                "--scb-input-commit",
-                snapshot.input_commit,
-                "--scb-manifest-sha256",
-                snapshot.manifest_sha256,
-                "--output-dir",
-                str(snapshot.path.parent / "bundle"),
-            ]
-        )
-        == EXIT_CONFIG
-    )
-    # Fails if the command re-codes the located curated-source refusal (also a
-    # ValueError) as its generic catalog_input_bundle_invalid.
-    error = json.loads(capsys.readouterr().out)["error"]
-    assert error["code"] == "curated_source_invalid"
-    assert "invalid global curated TOML" in error["message"]
-    assert not (snapshot.path.parent / "bundle").exists()

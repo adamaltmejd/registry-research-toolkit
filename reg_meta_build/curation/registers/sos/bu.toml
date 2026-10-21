@@ -103,60 +103,27 @@ panel_entity_key = "personnr"
 panel_time_grain = "row"
 panel_time_key = "besldat"
 
-[[variable]]
-native_id = "7550156225339591583.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "7550156225339591583.FOD_DATUMN.fod-datumn"
-slug = "barn-fodelsedatum"
-
-[[variable]]
-native_id = "7550156225339591583.FOD_DATUMN.fod-datumn-1"
-slug = "fodelsedatum"
+[variable]
+"7550156225339591583.PNR" = "personnr"
+"7550156225339591583.FOD_DATUMN.fod-datumn" = "barn-fodelsedatum"
+"7550156225339591583.FOD_DATUMN.fod-datumn-1" = "fodelsedatum"
 
 # === END #471 SOS slug curation overrides ===
-
 # === BEGIN #760 non-SCB concept-slug curation (generated) ===
 # 1086 curated overrides: cryptic delivery-column slugs replaced
 # with canonical Swedish-prose slugs derived from the variable name, plus
 # cross-register/cross-provider concept consistency and person/org identifier
 # alignment to the SCB locked forms (#760). Keyed by source_id.
-
 # register 5028920659479690770
+"7550156225339591583.FODDATN" = "fodelsedatum-numerisk"
+"7550156225339591583.FODELSELANDNAMN" = "fodelseland-namn"
+"7550156225339591583.FODLAND" = "fodelseland"
+"7550156225339591583.LK" = "kommun"
+"7550156225339591583.PLACDAT1" = "datum-start-placering"
+"7550156225339591583.PNRQ" = "personnummerkvalitet"
+"7550156225339591583.SENAR" = "senaste-ar-med-insats"
+"7550156225339591583.SPEC" = "specifikation-insatsen"
 
-[[variable]]
-native_id = "7550156225339591583.FODDATN"
-slug = "fodelsedatum-numerisk"
-
-[[variable]]
-native_id = "7550156225339591583.FODELSELANDNAMN"
-slug = "fodelseland-namn"
-
-[[variable]]
-native_id = "7550156225339591583.FODLAND"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "7550156225339591583.LK"
-slug = "kommun"
-
-[[variable]]
-native_id = "7550156225339591583.PLACDAT1"
-slug = "datum-start-placering"
-
-[[variable]]
-native_id = "7550156225339591583.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "7550156225339591583.SENAR"
-slug = "senaste-ar-med-insats"
-
-[[variable]]
-native_id = "7550156225339591583.SPEC"
-slug = "specifikation-insatsen"
 # register 7661979173609203267
 
 # Batch47: exact unresolved dictionary links remain visible limitations.

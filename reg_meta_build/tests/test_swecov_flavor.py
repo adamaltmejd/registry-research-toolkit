@@ -1,4 +1,4 @@
-"""SWECOV generator: the flavor stage (`cmd_flavor`) and the CLI's default inventory.
+"""SWECOV generator: the flavor stage (`cmd_flavor`).
 
 `cmd_flavor` projects the enriched holdings named by the committed `[[flavor]]` entries
 into curated-provider TOMLs plus their FQID slug pins; these tests read those emitted
@@ -8,19 +8,17 @@ files. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 from __future__ import annotations
 
 import argparse
-import json
 import shutil
 import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
-    GENERATOR,
     SPEC,
     SPEC_DIR,
-    build_catalog,
     column as _column,
-    copied_generator,
+    flavor_generator,
+    flavor_slug_dir,
     run_flavor,
     run_generator,
     synthetic_enriched as _synthetic_enriched,
@@ -37,34 +35,6 @@ from reg_meta_build.sources.curated import CuratedAdapter
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-def test_default_csv_uses_newest_full_inventory_or_requires_argument(
-    tmp_path: Path,
-) -> None:
-    """Without `--csv` the CLI reads the newest `SWECOV_variables_full_*.csv`
-    beside the script, and with none there `--csv` becomes a required argument.
-    Each candidate inventory names a category of its own, so the normalized
-    holdings say which file was read."""
-    generator = copied_generator(tmp_path)
-    old_name = generator.parent / "SWECOV_variables_2099-01-01.csv"
-    older = generator.parent / "SWECOV_variables_full_2026-08-01.csv"
-    newest = generator.parent / "SWECOV_variables_full_2026-09-13.csv"
-    for path in (old_name, older, newest):
-        path.write_text(
-            f"Category,Detail,Table\n{path.stem},Detail,T2020,Kolumn\n",
-            encoding="utf-8",
-        )
-
-    matching = run_generator(generator, "normalize")
-    assert matching.returncode == 0, matching.stderr
-    assert list(json.loads(matching.stdout)) == [f"{newest.stem} / Detail"]
-
-    older.unlink()
-    newest.unlink()
-    required = run_generator(generator, "normalize")
-    assert required.returncode == 2
-    assert "the following arguments are required: --csv" in required.stderr
 
 
 # --- cmd_flavor: vintage-spelling grouping ------------------------------------
@@ -184,7 +154,7 @@ def test_kalla_column_without_a_graft_register_refuses_before_writing(
     message = str(refusal.value)
     assert "Inera/1177/Ordered tests: Sysselsattning (Källa=LISA)" in message
     assert "Stodbelopp" not in message
-    assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
+    assert not (tmp_path / "out" / "providers").exists()
 
 
 def test_flavor_column_lists_keep_kalla_columns_and_flag_sensitive(
@@ -226,7 +196,7 @@ def test_flavor_column_list_naming_an_absent_column_refuses(
     assert "absent from holding 'RTB/Population': ['FodelseArMan']" in str(
         refusal.value
     )
-    assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
+    assert not (tmp_path / "out" / "providers").exists()
 
 
 # --- cmd_flavor: the flavors' register/variant emission ---------------------
@@ -336,7 +306,7 @@ def test_emitted_tomls_load_through_curated_adapter(
 
 def test_generated_slug_pins_bind_to_emitted_graph(flavor_root: Path) -> None:
     providers_dir = flavor_root / "providers"
-    slug_dir = flavor_root.parents[1] / "fqid_slugs" / "swecov"
+    slug_dir = flavor_slug_dir(flavor_root)
     for path in sorted(providers_dir.glob("*.toml")):
         objs = list(CuratedAdapter(path.stem, steward="swecov").emit(providers_dir))
         pins = tomllib.loads((slug_dir / path.name).read_text(encoding="utf-8"))
@@ -354,8 +324,10 @@ def test_repeated_flavor_generation_is_deterministic(tmp_path: Path) -> None:
     providers_dir = root / "providers"
     before = {path.name: path.read_bytes() for path in providers_dir.glob("*.toml")}
 
-    build_catalog.cmd_flavor(
-        argparse.Namespace(csv=root / "SWECOV_variables_2025-12-11.csv", spec=SPEC_DIR)
+    flavor_generator(tmp_path).cmd_flavor(
+        argparse.Namespace(
+            csv=tmp_path / "SWECOV_variables_2025-12-11.csv", spec=SPEC_DIR, out=root
+        )
     )
 
     assert {
@@ -395,12 +367,14 @@ def test_removed_provider_refuses_stale_toml_before_writing(tmp_path: Path) -> N
     spec = _spec_without_provider(tmp_path, "swedbank")
 
     result = run_generator(
-        GENERATOR,
+        tmp_path / "reg_webapp" / "stewards" / "swecov" / "build_catalog.py",
         "--csv",
-        str(root / "SWECOV_variables_2025-12-11.csv"),
+        str(tmp_path / "SWECOV_variables_2025-12-11.csv"),
         "--spec",
         str(spec),
         "flavor",
+        "--out",
+        str(root),
     )
 
     assert result.returncode == 1
@@ -416,4 +390,4 @@ def test_flavor_rejects_stale_declared_table_before_writing(tmp_path: Path) -> N
     enriched[flavor.holding]["table_columns"].pop(flavor.tables[0])
     with pytest.raises(SystemExit, match=r"table\(s\) absent from holding"):
         run_flavor(tmp_path, enriched)
-    assert not (tmp_path / "providers").exists()
+    assert not (tmp_path / "out" / "providers").exists()

@@ -11,446 +11,110 @@ panel_entity_key = "lghbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Årlig energistatistik (el, gas och fjärrvärme)
-
-[[variable]]
-native_id = "199.35378"
-slug = "lghbet"
-
-
-[[variable]]
-native_id = "199.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "199.2296"
-slug = "agarkategori"
-
-[[variable]]
-native_id = "199.2302"
-slug = "kommungruppering-regioner"
-
-[[variable]]
-native_id = "199.3413"
-slug = "vardear"
-
-[[variable]]
-native_id = "199.4472"
-slug = "upplatelseform"
-
-[[variable]]
-native_id = "199.4555"
-slug = "bostadsyta"
-
-[[variable]]
-native_id = "199.14742"
-slug = "vem-har-kontrakt"
-
-[[variable]]
-native_id = "199.14753"
-slug = "vardear-klassindelat"
-
-[[variable]]
-native_id = "199.14755"
-slug = "schablon-varmgarage"
-
-[[variable]]
-native_id = "199.14756"
-slug = "schablon-kallgarage"
-
-[[variable]]
-native_id = "199.14757"
-slug = "schablon-motorvarmare"
-
-[[variable]]
-native_id = "199.14758"
-slug = "schablon-bilplats"
-
-[[variable]]
-native_id = "199.14759"
-slug = "schablon-hushallsel"
-
-[[variable]]
-native_id = "199.14763"
-slug = "upplatelseform-tabellering"
-
-[[variable]]
-native_id = "199.21548"
-slug = "forhandl-nasta-ar"
-
-[[variable]]
-native_id = "199.22862"
-slug = "kommunregion"
-
-[[variable]]
-native_id = "199.30770"
-slug = "agarkategori-bostad"
-
-[[variable]]
-native_id = "199.35293"
-slug = "ordinarie-lagenhet"
-
-[[variable]]
-native_id = "199.35383"
-slug = "agare-forvaltare-postnr"
-
-[[variable]]
-native_id = "199.38146"
-slug = "hyra-nyforhandlad-just"
-
-[[variable]]
-native_id = "199.38147"
-slug = "hyra-december-justerad"
+"199.35378" = "lghbet"
+"199.36" = "kommun"
+"199.2296" = "agarkategori"
+"199.2302" = "kommungruppering-regioner"
+"199.3413" = "vardear"
+"199.4472" = "upplatelseform"
+"199.4555" = "bostadsyta"
+"199.14742" = "vem-har-kontrakt"
+"199.14753" = "vardear-klassindelat"
+"199.14755" = "schablon-varmgarage"
+"199.14756" = "schablon-kallgarage"
+"199.14757" = "schablon-motorvarmare"
+"199.14758" = "schablon-bilplats"
+"199.14759" = "schablon-hushallsel"
+"199.14763" = "upplatelseform-tabellering"
+"199.21548" = "forhandl-nasta-ar"
+"199.22862" = "kommunregion"
+"199.30770" = "agarkategori-bostad"
+"199.35293" = "ordinarie-lagenhet"
+"199.35383" = "agare-forvaltare-postnr"
+"199.38146" = "hyra-nyforhandlad-just"
+"199.38147" = "hyra-december-justerad"
 
 # register 200 (arlig-energistatistik)
-
-[[variable]]
-native_id = "199.14751.bransle"
-slug = "uppvarmning-i-hyran"
-
-[[variable]]
-native_id = "199.14752.strom"
-slug = "hushallsel-i-hyran"
-
-[[variable]]
-native_id = "199.14754.garage"
-slug = "garage-bilplats-i-hyran"
-
-[[variable]]
-native_id = "199.50.man"
-slug = "manad"
+"199.14751.bransle" = "uppvarmning-i-hyran"
+"199.14752.strom" = "hushallsel-i-hyran"
+"199.14754.garage" = "garage-bilplats-i-hyran"
+"199.50.man" = "manad"
 
 # register 2 (rtb)
-
-[[variable]]
-native_id = "199.56.apeorgnr"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "199.56.fpeorgnr"
-slug = "person-orgnr-2"
-
-[[variable]]
-native_id = "199.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "199.31"
-slug = "forsamling"
-
-[[variable]]
-native_id = "199.2299"
-slug = "lagenhetstyp"
-
-[[variable]]
-native_id = "199.3316"
-slug = "land-agare"
-
-[[variable]]
-native_id = "199.4584"
-slug = "hyra-avgift-per-manad"
-
-[[variable]]
-native_id = "199.5109"
-slug = "hyra-avgift"
-
-[[variable]]
-native_id = "199.5115"
-slug = "region-fem-regioner"
-
-[[variable]]
-native_id = "199.14750"
-slug = "rabattbelopp"
-
-[[variable]]
-native_id = "199.14762"
-slug = "fardigstallandear"
-
-[[variable]]
-native_id = "199.16297"
-slug = "nybyggnadsar"
-
-[[variable]]
-native_id = "199.30120"
-slug = "bostadskategori"
+"199.56.apeorgnr" = "person-orgnr"
+"199.56.fpeorgnr" = "person-orgnr-2"
+"199.26" = "fastighetsbeteckning"
+"199.31" = "forsamling"
+"199.2299" = "lagenhetstyp"
+"199.3316" = "land-agare"
+"199.4584" = "hyra-avgift-per-manad"
+"199.5109" = "hyra-avgift"
+"199.5115" = "region-fem-regioner"
+"199.14750" = "rabattbelopp"
+"199.14762" = "fardigstallandear"
+"199.16297" = "nybyggnadsar"
+"199.30120" = "bostadskategori"
 
 # register 200
-
-[[variable]]
-native_id = "199.16420.komment"
-slug = "kommentar-uppgiftslamnaren"
+"199.16420.komment" = "kommentar-uppgiftslamnaren"
 
 # register 2
-
-[[variable]]
-native_id = "199.22862.regionny"
-slug = "kommunregion-regionny"
-deprecated = false
-
-[[variable]]
-native_id = "199.22862.kommun"
-slug = "kommunregion-kommun"
-deprecated = false
-
-[[variable]]
-native_id = "199.14754.garage1-following-year"
-slug = "ingar-kostnader-for-garage-bilplats-i-hyran-garage1-following-year"
-deprecated = false
-
-[[variable]]
-native_id = "199.14754.garage1"
-slug = "ingar-kostnader-for-garage-bilplats-i-hyran-garage1"
-deprecated = false
-
-[[variable]]
-native_id = "199.14752.strom1"
-slug = "ingar-kostnader-for-hushallsel-i-hyran-strom1"
-deprecated = false
-
-[[variable]]
-native_id = "199.14751.bransle1-following-year"
-slug = "ingar-kostnader-for-uppvarmning-i-hyran-bransle1-following-year"
-deprecated = false
-
-[[variable]]
-native_id = "199.14751.bransle1"
-slug = "ingar-kostnader-for-uppvarmning-i-hyran-bransle1"
-deprecated = false
-
-[[variable]]
-native_id = "199.50.man1-following-year"
-slug = "manad-man1-following-year"
-deprecated = false
-
-[[variable]]
-native_id = "199.50.man1"
-slug = "manad-man1"
-deprecated = false
-
-[[variable]]
-native_id = "199.4555.boarea"
-slug = "boende-bostadsyta-i-kvadratmeter-boarea"
-deprecated = false
-
-[[variable]]
-native_id = "199.4555.lghyta"
-slug = "boende-bostadsyta-i-kvadratmeter-lghyta"
-deprecated = false
-
-[[variable]]
-native_id = "199.35383.apostnr-manager"
-slug = "agarens-forvaltarens-postnummer-apostnr-manager"
-deprecated = false
-
-[[variable]]
-native_id = "199.35383.fpostnr-manager"
-slug = "agarens-forvaltarens-postnummer-fpostnr-manager"
-deprecated = false
-
-[[variable]]
-native_id = "199.35383.apostnr"
-slug = "agarens-forvaltarens-postnummer-apostnr"
-deprecated = false
-
-[[variable]]
-native_id = "199.35383.apostnr-unspecified"
-slug = "agarens-forvaltarens-postnummer-apostnr-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35383.fpostnr"
-slug = "agarens-forvaltarens-postnummer-fpostnr"
-deprecated = false
-
-[[variable]]
-native_id = "199.35382.aadress-manager"
-slug = "fastighetsagarens-fastighetsforvaltarens-adress-aadress-manager"
-deprecated = false
-
-[[variable]]
-native_id = "199.35382.fadress"
-slug = "fastighetsagarens-fastighetsforvaltarens-adress-fadress"
-deprecated = false
-
-[[variable]]
-native_id = "199.35382.aadress"
-slug = "fastighetsagarens-fastighetsforvaltarens-adress-aadress"
-deprecated = false
-
-[[variable]]
-native_id = "199.35382.aadress-unspecified"
-slug = "fastighetsagarens-fastighetsforvaltarens-adress-aadress-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35382.fadress-unspecified"
-slug = "fastighetsagarens-fastighetsforvaltarens-adress-fadress-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35381.aco"
-slug = "agarens-forvaltarens-co-adress-aco"
-deprecated = false
-
-[[variable]]
-native_id = "199.35381.fco"
-slug = "agarens-forvaltarens-co-adress-fco"
-deprecated = false
-
-[[variable]]
-native_id = "199.35381.aco-owner"
-slug = "agarens-forvaltarens-co-adress-aco-owner"
-deprecated = false
-
-[[variable]]
-native_id = "199.35381.aco-unspecified"
-slug = "agarens-forvaltarens-co-adress-aco-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35381.fco-unspecified"
-slug = "agarens-forvaltarens-co-adress-fco-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35380.anamn"
-slug = "agarens-forvaltarens-namn-anamn"
-deprecated = false
-
-[[variable]]
-native_id = "199.35380.fnamn-owner"
-slug = "agarens-forvaltarens-namn-fnamn-owner"
-deprecated = false
-
-[[variable]]
-native_id = "199.35380.anamn-unspecified"
-slug = "agarens-forvaltarens-namn-anamn-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35380.fnamn"
-slug = "agarens-forvaltarens-namn-fnamn"
-deprecated = false
-
-[[variable]]
-native_id = "199.35380.fnamn-manager"
-slug = "agarens-forvaltarens-namn-fnamn-manager"
-deprecated = false
-
-[[variable]]
-native_id = "199.35384.apostort-owner"
-slug = "agarens-forvaltarens-postort-apostort-owner"
-deprecated = false
-
-[[variable]]
-native_id = "199.35384.fpostort-owner"
-slug = "agarens-forvaltarens-postort-fpostort-owner"
-deprecated = false
-
-[[variable]]
-native_id = "199.35384.apostort"
-slug = "agarens-forvaltarens-postort-apostort"
-deprecated = false
-
-[[variable]]
-native_id = "199.35384.fpostort-unspecified"
-slug = "agarens-forvaltarens-postort-fpostort-unspecified"
-deprecated = false
-
-[[variable]]
-native_id = "199.35384.fpostort"
-slug = "agarens-forvaltarens-postort-fpostort"
-deprecated = false
-
-[[variable]]
-native_id = "199.5109.hyraalt0"
-slug = "hyra-avgift-hyraalt0"
-deprecated = false
-
-[[variable]]
-native_id = "199.5109.hyraalt1"
-slug = "hyra-avgift-hyraalt1"
-deprecated = false
-
-[[variable]]
-native_id = "199.21548.forhandl1"
-slug = "forhandling-om-manadshyra-forhandl1"
-deprecated = false
-
-[[variable]]
-native_id = "199.21548.forhandl0-investigation-year"
-slug = "forhandling-om-manadshyra-forhandl0-investigation-year"
-deprecated = false
-
-[[variable]]
-native_id = "199.21548.forhandl0"
-slug = "forhandling-om-manadshyra-forhandl0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyraapril0"
-slug = "hyror-i-bostadslagenheter-hyraapril0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyraaug0"
-slug = "hyror-i-bostadslagenheter-hyraaug0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyradec0"
-slug = "hyror-i-bostadslagenheter-hyradec0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyrafeb0"
-slug = "hyror-i-bostadslagenheter-hyrafeb0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyraja0"
-slug = "hyror-i-bostadslagenheter-hyraja0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyraja1"
-slug = "hyror-i-bostadslagenheter-hyraja1"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyrajuli0"
-slug = "hyror-i-bostadslagenheter-hyrajuli0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyrajuni0"
-slug = "hyror-i-bostadslagenheter-hyrajuni0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyramaj0"
-slug = "hyror-i-bostadslagenheter-hyramaj0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyramars0"
-slug = "hyror-i-bostadslagenheter-hyramars0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyranov0"
-slug = "hyror-i-bostadslagenheter-hyranov0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyraokt0"
-slug = "hyror-i-bostadslagenheter-hyraokt0"
-deprecated = false
-
-[[variable]]
-native_id = "199.20911.hyrasept0"
-slug = "hyror-i-bostadslagenheter-hyrasept0"
-deprecated = false
+"199.22862.regionny" = { slug = "kommunregion-regionny", deprecated = false }
+"199.22862.kommun" = { slug = "kommunregion-kommun", deprecated = false }
+"199.14754.garage1-following-year" = { slug = "ingar-kostnader-for-garage-bilplats-i-hyran-garage1-following-year", deprecated = false }
+"199.14754.garage1" = { slug = "ingar-kostnader-for-garage-bilplats-i-hyran-garage1", deprecated = false }
+"199.14752.strom1" = { slug = "ingar-kostnader-for-hushallsel-i-hyran-strom1", deprecated = false }
+"199.14751.bransle1-following-year" = { slug = "ingar-kostnader-for-uppvarmning-i-hyran-bransle1-following-year", deprecated = false }
+"199.14751.bransle1" = { slug = "ingar-kostnader-for-uppvarmning-i-hyran-bransle1", deprecated = false }
+"199.50.man1-following-year" = { slug = "manad-man1-following-year", deprecated = false }
+"199.50.man1" = { slug = "manad-man1", deprecated = false }
+"199.4555.boarea" = { slug = "boende-bostadsyta-i-kvadratmeter-boarea", deprecated = false }
+"199.4555.lghyta" = { slug = "boende-bostadsyta-i-kvadratmeter-lghyta", deprecated = false }
+"199.35383.apostnr-manager" = { slug = "agarens-forvaltarens-postnummer-apostnr-manager", deprecated = false }
+"199.35383.fpostnr-manager" = { slug = "agarens-forvaltarens-postnummer-fpostnr-manager", deprecated = false }
+"199.35383.apostnr" = { slug = "agarens-forvaltarens-postnummer-apostnr", deprecated = false }
+"199.35383.apostnr-unspecified" = { slug = "agarens-forvaltarens-postnummer-apostnr-unspecified", deprecated = false }
+"199.35383.fpostnr" = { slug = "agarens-forvaltarens-postnummer-fpostnr", deprecated = false }
+"199.35382.aadress-manager" = { slug = "fastighetsagarens-fastighetsforvaltarens-adress-aadress-manager", deprecated = false }
+"199.35382.fadress" = { slug = "fastighetsagarens-fastighetsforvaltarens-adress-fadress", deprecated = false }
+"199.35382.aadress" = { slug = "fastighetsagarens-fastighetsforvaltarens-adress-aadress", deprecated = false }
+"199.35382.aadress-unspecified" = { slug = "fastighetsagarens-fastighetsforvaltarens-adress-aadress-unspecified", deprecated = false }
+"199.35382.fadress-unspecified" = { slug = "fastighetsagarens-fastighetsforvaltarens-adress-fadress-unspecified", deprecated = false }
+"199.35381.aco" = { slug = "agarens-forvaltarens-co-adress-aco", deprecated = false }
+"199.35381.fco" = { slug = "agarens-forvaltarens-co-adress-fco", deprecated = false }
+"199.35381.aco-owner" = { slug = "agarens-forvaltarens-co-adress-aco-owner", deprecated = false }
+"199.35381.aco-unspecified" = { slug = "agarens-forvaltarens-co-adress-aco-unspecified", deprecated = false }
+"199.35381.fco-unspecified" = { slug = "agarens-forvaltarens-co-adress-fco-unspecified", deprecated = false }
+"199.35380.anamn" = { slug = "agarens-forvaltarens-namn-anamn", deprecated = false }
+"199.35380.fnamn-owner" = { slug = "agarens-forvaltarens-namn-fnamn-owner", deprecated = false }
+"199.35380.anamn-unspecified" = { slug = "agarens-forvaltarens-namn-anamn-unspecified", deprecated = false }
+"199.35380.fnamn" = { slug = "agarens-forvaltarens-namn-fnamn", deprecated = false }
+"199.35380.fnamn-manager" = { slug = "agarens-forvaltarens-namn-fnamn-manager", deprecated = false }
+"199.35384.apostort-owner" = { slug = "agarens-forvaltarens-postort-apostort-owner", deprecated = false }
+"199.35384.fpostort-owner" = { slug = "agarens-forvaltarens-postort-fpostort-owner", deprecated = false }
+"199.35384.apostort" = { slug = "agarens-forvaltarens-postort-apostort", deprecated = false }
+"199.35384.fpostort-unspecified" = { slug = "agarens-forvaltarens-postort-fpostort-unspecified", deprecated = false }
+"199.35384.fpostort" = { slug = "agarens-forvaltarens-postort-fpostort", deprecated = false }
+"199.5109.hyraalt0" = { slug = "hyra-avgift-hyraalt0", deprecated = false }
+"199.5109.hyraalt1" = { slug = "hyra-avgift-hyraalt1", deprecated = false }
+"199.21548.forhandl1" = { slug = "forhandling-om-manadshyra-forhandl1", deprecated = false }
+"199.21548.forhandl0-investigation-year" = { slug = "forhandling-om-manadshyra-forhandl0-investigation-year", deprecated = false }
+"199.21548.forhandl0" = { slug = "forhandling-om-manadshyra-forhandl0", deprecated = false }
+"199.20911.hyraapril0" = { slug = "hyror-i-bostadslagenheter-hyraapril0", deprecated = false }
+"199.20911.hyraaug0" = { slug = "hyror-i-bostadslagenheter-hyraaug0", deprecated = false }
+"199.20911.hyradec0" = { slug = "hyror-i-bostadslagenheter-hyradec0", deprecated = false }
+"199.20911.hyrafeb0" = { slug = "hyror-i-bostadslagenheter-hyrafeb0", deprecated = false }
+"199.20911.hyraja0" = { slug = "hyror-i-bostadslagenheter-hyraja0", deprecated = false }
+"199.20911.hyraja1" = { slug = "hyror-i-bostadslagenheter-hyraja1", deprecated = false }
+"199.20911.hyrajuli0" = { slug = "hyror-i-bostadslagenheter-hyrajuli0", deprecated = false }
+"199.20911.hyrajuni0" = { slug = "hyror-i-bostadslagenheter-hyrajuni0", deprecated = false }
+"199.20911.hyramaj0" = { slug = "hyror-i-bostadslagenheter-hyramaj0", deprecated = false }
+"199.20911.hyramars0" = { slug = "hyror-i-bostadslagenheter-hyramars0", deprecated = false }
+"199.20911.hyranov0" = { slug = "hyror-i-bostadslagenheter-hyranov0", deprecated = false }
+"199.20911.hyraokt0" = { slug = "hyror-i-bostadslagenheter-hyraokt0", deprecated = false }
+"199.20911.hyrasept0" = { slug = "hyror-i-bostadslagenheter-hyrasept0", deprecated = false }
 
 [[identity.column_owner]]
 data_warning = "Exact source limitations for this native family, applying only to annotated owner originals:\nKOMMUN: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nRegionny: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire."

@@ -88,7 +88,7 @@ _RESERVED_CORRECTION_CLASSES = frozenset(
     {"scoped-attributions", "overlapping-attributions"}
 )
 
-# `data_type` vocabulary, shared with `input_data/scb_canonical/scb_canonical.toml`
+# `data_type` vocabulary, shared with `curation/scb_canonical/scb_canonical.toml`
 # (CanonicalScbAdapter). Stored verbatim on the synthetic row; the gate keeps a
 # typo (`txt`, `int`) from shipping a meaningless type. Optional: a steward
 # holdings list often names no type, and an absent one is a NULL state type.
@@ -128,6 +128,7 @@ class ErrataDelivered:
     register_variant_id: int
     column: str
     versions: tuple[str, ...]
+    upstream: str
     provenance: str
     native_variable_id: int | None = None
     donor_variant_id: int | None = None
@@ -246,8 +247,9 @@ def _entries(kind: str, registers: Sequence[RegisterCuration]) -> list[_Curation
 def _state_provenance(class_name: str, evidence: str) -> str:
     """The decision's provenance: class first, evidence after it.
 
-    The catalog publishes only the class line and the source-locator lines
-    (`published_provenance`); the evidence reaches the build ledger. The catalog contract also defines
+    The catalog publishes the `errata:<class>` head and the storage-type facts
+    (the decision's `published`), never this evidence, which reaches the build
+    ledger. The catalog contract also defines
     `scoped-attributions` and `overlapping-attributions` provenance forms, which
     readers still parse; the build emits neither today, and a curator may not
     claim either name as a correction class.
@@ -431,6 +433,7 @@ def resolve_scb_errata(
                 variant_id,
                 column,
                 named,
+                upstream,
                 provenance,
                 cast("int | None", values.get("native_variable_id")),
                 donor_variant_id,
@@ -1140,16 +1143,14 @@ def convert_delivered_entry(
             else None
         )
     )
-    provenance = "\n".join(
-        (
-            entry.provenance,
-            f"Curated data_type: {curated_type or 'none'}",
-            "Documented Datatyp: "
-            + ", ".join(
-                f"{edition}={value or 'none'}" for edition, value in documented_values
-            ),
-        )
+    storage_facts = (
+        f"Curated data_type: {curated_type or 'none'}",
+        "Documented Datatyp: "
+        + ", ".join(
+            f"{edition}={value or 'none'}" for edition, value in documented_values
+        ),
     )
+    provenance = "\n".join((entry.provenance, *storage_facts))
     effects: list[OccurrenceEffect] = []
     targets: set[SourceRecordRef] = set()
     retained_blank_refs: set[SourceRecordRef] = set()
@@ -1356,6 +1357,7 @@ def convert_delivered_entry(
             effects=tuple(effects),
             reason=entry.provenance,
             provenance=provenance,
+            published="\n".join((f"errata:{entry.upstream}", *storage_facts)),
         ),
     )
     return ErrataConversion(case, (), references, tuple(sorted(relied, key=str)))
@@ -1598,6 +1600,7 @@ def convert_column_entry(
             effects=effects,
             reason=provenance,
             provenance=provenance,
+            published=f"errata:{entry.source}",
         ),
     )
     return ErrataConversion(case, (), ())

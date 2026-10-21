@@ -11,30 +11,17 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Vattenbruk
-
-[[variable]]
-native_id = "211.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "211.49"
-slug = "lan"
-
-[[variable]]
-native_id = "211.2437"
-slug = "skordeomrade"
+"211.56" = "person-orgnr"
+"211.49" = "lan"
+"211.2437" = "skordeomrade"
 
 # register 215 (vattenbruk)
-
-[[variable]]
-native_id = "211.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "211.15390"
-slug = "ej-utnyttjad-vallareal"
+"211.467" = "telefonnummer"
+"211.15390" = "ej-utnyttjad-vallareal"
+"211.467.telefon1" = "telefon1"
+"211.467.telefon2" = "telefon2"
 
 # register 215
 
@@ -44,11 +31,3 @@ variable = "211.467"
 columns = { telefon1 = "211.467.telefon1", telefon2 = "211.467.telefon2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "fb93f2f8dd4acf4b6a4a7c3d41c06eb4a4ff1b939422b71fffc809e9547f1804"
-
-[[variable]]
-native_id = "211.467.telefon1"
-slug = "telefon1"
-
-[[variable]]
-native_id = "211.467.telefon2"
-slug = "telefon2"

@@ -27,280 +27,79 @@ native_id = "197.395"
 slug = "allmannyttiga-bostadsforetag"
 display_group = "Allmännyttiga bostadsföretag"
 
+[variable]
 # Avgifter/hyror för nybyggda lägenheter
-
-[[variable]]
-native_id = "197.26"
-slug = "fastighetsbeteckning"
-
-
-[[variable]]
-native_id = "197.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "197.3179"
-slug = "taxeringsvarde"
-
-[[variable]]
-native_id = "197.3274"
-slug = "total-bostadsyta"
-
-[[variable]]
-native_id = "197.3413"
-slug = "vardear"
-
-[[variable]]
-native_id = "197.16297"
-slug = "nybyggnadsar"
-
-[[variable]]
-native_id = "197.16466"
-slug = "bostadsrattsforening"
-
-[[variable]]
-native_id = "197.16471"
-slug = "ombyggnad"
-
-[[variable]]
-native_id = "197.16472"
-slug = "foreningens-taxeringsvarde"
-
-[[variable]]
-native_id = "197.16478"
-slug = "garage-bilplatser-antal"
-
-[[variable]]
-native_id = "197.16488"
-slug = "intaktsreduktioner-bostader"
-
-[[variable]]
-native_id = "197.16491"
-slug = "intakter-efter-avdrag"
-
-[[variable]]
-native_id = "197.16500"
-slug = "driftskostnader-underhall"
-
-[[variable]]
-native_id = "197.16502"
-slug = "driftskostnader-reparationer"
-
-[[variable]]
-native_id = "197.16503"
-slug = "driftskostnader-uppvarmning"
-
-[[variable]]
-native_id = "197.16504"
-slug = "driftskostnader-fastighetsel"
-
-[[variable]]
-native_id = "197.16507"
-slug = "driftskostnader-ovrigt"
-
-[[variable]]
-native_id = "197.16517"
-slug = "fastighetslan"
-
-[[variable]]
-native_id = "197.16570"
-slug = "bostadsbolag"
-
-[[variable]]
-native_id = "197.16586"
-slug = "intakter-bostader"
-
-[[variable]]
-native_id = "197.16587"
-slug = "intakter-lokaler"
-
-[[variable]]
-native_id = "197.16588"
-slug = "intakter-garage-bilplatser"
-
-[[variable]]
-native_id = "197.16592"
-slug = "intakter-ovriga"
-
-[[variable]]
-native_id = "197.16599"
-slug = "tomtrattsavgald"
-
-[[variable]]
-native_id = "197.16604"
-slug = "intakter-rantebidrag"
-
-[[variable]]
-native_id = "197.16605"
-slug = "summa-finansiella-intakter"
-
-[[variable]]
-native_id = "197.16607"
-slug = "driftkostnader-fastighetsskotsel"
-
-[[variable]]
-native_id = "197.16609"
-slug = "driftkostnader-vatten-avlopp"
-
-[[variable]]
-native_id = "197.17046"
-slug = "antal-lagenheter-totalt"
-
-[[variable]]
-native_id = "197.21423"
-slug = "intaktsreduktioner-summa"
-
-[[variable]]
-native_id = "197.22862"
-slug = "kommunregion"
-
-[[variable]]
-native_id = "197.30402"
-slug = "driftskostnader-reparationer-underhall"
+"197.26" = "fastighetsbeteckning"
+"197.36" = "kommun"
+"197.3179" = "taxeringsvarde"
+"197.3274" = "total-bostadsyta"
+"197.3413" = "vardear"
+"197.16297" = "nybyggnadsar"
+"197.16466" = "bostadsrattsforening"
+"197.16471" = "ombyggnad"
+"197.16472" = "foreningens-taxeringsvarde"
+"197.16478" = "garage-bilplatser-antal"
+"197.16488" = "intaktsreduktioner-bostader"
+"197.16491" = "intakter-efter-avdrag"
+"197.16500" = "driftskostnader-underhall"
+"197.16502" = "driftskostnader-reparationer"
+"197.16503" = "driftskostnader-uppvarmning"
+"197.16504" = "driftskostnader-fastighetsel"
+"197.16507" = "driftskostnader-ovrigt"
+"197.16517" = "fastighetslan"
+"197.16570" = "bostadsbolag"
+"197.16586" = "intakter-bostader"
+"197.16587" = "intakter-lokaler"
+"197.16588" = "intakter-garage-bilplatser"
+"197.16592" = "intakter-ovriga"
+"197.16599" = "tomtrattsavgald"
+"197.16604" = "intakter-rantebidrag"
+"197.16605" = "summa-finansiella-intakter"
+"197.16607" = "driftkostnader-fastighetsskotsel"
+"197.16609" = "driftkostnader-vatten-avlopp"
+"197.17046" = "antal-lagenheter-totalt"
+"197.21423" = "intaktsreduktioner-summa"
+"197.22862" = "kommunregion"
+"197.30402" = "driftskostnader-reparationer-underhall"
 
 # register 198 (avgifter-hyror)
-
-[[variable]]
-native_id = "197.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "197.610"
-slug = "fastighetsskatt"
-
-[[variable]]
-native_id = "197.1724"
-slug = "e-postadress-kontaktperson"
-
-[[variable]]
-native_id = "197.3752"
-slug = "kontaktperson"
-
-[[variable]]
-native_id = "197.16510"
-slug = "rantebidrag"
-
-[[variable]]
-native_id = "197.16511"
-slug = "tomtrattsavgald-och-arrendeavgifter"
-
-[[variable]]
-native_id = "197.16523"
-slug = "rantekostnader"
+"197.467" = "telefonnummer"
+"197.610" = "fastighetsskatt"
+"197.1724" = "e-postadress-kontaktperson"
+"197.3752" = "kontaktperson"
+"197.16510" = "rantebidrag"
+"197.16511" = "tomtrattsavgald-och-arrendeavgifter"
+"197.16523" = "rantekostnader"
 
 # register 198
-
-[[variable]]
-native_id = "197.36.kommunnamn"
-slug = "kommun-kommunnamn"
-
-[[variable]]
-native_id = "197.36.kommkod-2012"
-slug = "kommun-kommkod-2012"
-
-[[variable]]
-native_id = "197.22862.regklass-2012"
-slug = "kommunregion-regklass-2012"
-
-[[variable]]
-native_id = "197.21695.source-positive"
-slug = "totalyta"
-
-[[variable]]
-native_id = "197.21695.y92"
-slug = "totalyta-y92"
-
-[[variable]]
-native_id = "197.17046.arsmedel"
-slug = "antal-lagenheter-totalt-arsmedel"
-
-[[variable]]
-native_id = "197.17046.a11"
-slug = "antal-lagenheter-totalt-a11"
-
-[[variable]]
-native_id = "197.17046.a91"
-slug = "antal-lagenheter-totalt-a91"
-
-[[variable]]
-native_id = "197.17046.a92"
-slug = "antal-lagenheter-totalt-a92"
-
-[[variable]]
-native_id = "197.3419.source-positive"
-slug = "total-lokalyta"
-
-[[variable]]
-native_id = "197.3419.arsmedel"
-slug = "total-lokalyta-arsmedel"
-
-[[variable]]
-native_id = "197.3419.y21"
-slug = "total-lokalyta-y21"
-
-[[variable]]
-native_id = "197.16476.source-positive"
-slug = "lokaler-antal"
-
-[[variable]]
-native_id = "197.16476.arsmedel"
-slug = "lokaler-antal-arsmedel"
-
-[[variable]]
-native_id = "197.16476.a21"
-slug = "lokaler-antal-a21"
-
-[[variable]]
-native_id = "197.3274.arsmedel"
-slug = "total-bostadsyta-arsmedel"
-
-[[variable]]
-native_id = "197.3274.y11"
-slug = "total-bostadsyta-y11"
-
-[[variable]]
-native_id = "197.16478.a41"
-slug = "garage-bilplatser-antal-a41"
-
-[[variable]]
-native_id = "197.16478.garf"
-slug = "garage-bilplatser-antal-garf"
-
-[[variable]]
-native_id = "197.610.avgift-och-skatt"
-slug = "fastighetsskatt-avgift-och-skatt"
-
-[[variable]]
-native_id = "197.610.v4091-avgift-och-skatt"
-slug = "fastighetsskatt-v4091-avgift-och-skatt"
-
-[[variable]]
-native_id = "197.16297.faeaar"
-slug = "nybyggnadsar-faeaar"
-
-[[variable]]
-native_id = "197.3413.vaeaaar"
-slug = "vardear-vaeaaar"
-
-[[variable]]
-native_id = "197.17661.source-positive"
-slug = "hushallsel-intakter"
-
-[[variable]]
-native_id = "197.17661.ingarsfraga"
-slug = "hushallsel-intakter-ingarsfraga"
-
-[[variable]]
-native_id = "197.30403.source-positive"
-slug = "v4081"
-
-[[variable]]
-native_id = "197.30403.ingarsfraga"
-slug = "v4081-ingarsfraga"
-
-[[variable]]
-native_id = "197.16508.source-positive"
-slug = "v4080"
+"197.36.kommunnamn" = "kommun-kommunnamn"
+"197.36.kommkod-2012" = "kommun-kommkod-2012"
+"197.22862.regklass-2012" = "kommunregion-regklass-2012"
+"197.21695.source-positive" = "totalyta"
+"197.21695.y92" = "totalyta-y92"
+"197.17046.arsmedel" = "antal-lagenheter-totalt-arsmedel"
+"197.17046.a11" = "antal-lagenheter-totalt-a11"
+"197.17046.a91" = "antal-lagenheter-totalt-a91"
+"197.17046.a92" = "antal-lagenheter-totalt-a92"
+"197.3419.source-positive" = "total-lokalyta"
+"197.3419.arsmedel" = "total-lokalyta-arsmedel"
+"197.3419.y21" = "total-lokalyta-y21"
+"197.16476.source-positive" = "lokaler-antal"
+"197.16476.arsmedel" = "lokaler-antal-arsmedel"
+"197.16476.a21" = "lokaler-antal-a21"
+"197.3274.arsmedel" = "total-bostadsyta-arsmedel"
+"197.3274.y11" = "total-bostadsyta-y11"
+"197.16478.a41" = "garage-bilplatser-antal-a41"
+"197.16478.garf" = "garage-bilplatser-antal-garf"
+"197.610.avgift-och-skatt" = "fastighetsskatt-avgift-och-skatt"
+"197.610.v4091-avgift-och-skatt" = "fastighetsskatt-v4091-avgift-och-skatt"
+"197.16297.faeaar" = "nybyggnadsar-faeaar"
+"197.3413.vaeaaar" = "vardear-vaeaaar"
+"197.17661.source-positive" = "hushallsel-intakter"
+"197.17661.ingarsfraga" = "hushallsel-intakter-ingarsfraga"
+"197.30403.source-positive" = "v4081"
+"197.30403.ingarsfraga" = "v4081-ingarsfraga"
+"197.16508.source-positive" = "v4080"
 
 [[identity.partition]]
 variable = "197.36"

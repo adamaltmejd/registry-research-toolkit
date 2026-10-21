@@ -5,16 +5,16 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.101"
-slug = "value"
+
+[variable]
+"1.101" = "value"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
 subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 102)"
 refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:102\", \"member:1003\"]}"]
 fields = ["identity"]
-expected_evidence_sha256 = "fe8c30f4b5403e87c04d1260ea6b3e459a4fb3961aa6e2fbee651f7eea0c2d69"
+expected_evidence_sha256 = "e8c18ee8cf4c9fe359ec88a5571fe326b19de94455bab53391b5ba6ce54b1a7d"
 reason = "Accepted while the source stays unresolved."
 evidence = "Synthetic fixture issue."
 expected_diagnostic_sha256 = "ba672860cb39218a223c6b46c63042480e92446bd3b4d933b1058881e63fe9f4"

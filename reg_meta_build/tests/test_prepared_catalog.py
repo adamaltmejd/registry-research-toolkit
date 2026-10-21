@@ -43,6 +43,9 @@ def _selection(
     tmp_path: Path, *, all_roles: bool = False, validity: bool = True
 ) -> CatalogBundleSelection:
     source = tmp_path / "source"
+    # The authored sources `prepare-sources --curation-dir` reads; empty unless
+    # `all_roles` writes a thin provider and `scb_canonical.toml`.
+    (tmp_path / "curation").mkdir()
     write_scb_input(
         source,
         include=(
@@ -60,16 +63,18 @@ def _selection(
         lisa = LisaWorkbookSelection(
             workbook, "2024-2025", hashlib.sha256(workbook.read_bytes()).hexdigest()
         )
-        thin = source / "Folkhalsomyndigheten"
+        thin = tmp_path / "curation" / "providers"
         thin.mkdir()
         (thin / "fohm.toml").write_text(
             '[[register]]\nkey="sample"\nname="Sample"\nvalid_from="2000-01-01"\n[[register.variable]]\nname="Number"\ncolumn="N"\ndata_type="text"\n'
         )
-        canonical = source / "scb_canonical"
-        canonical.mkdir()
-        (canonical / "scb_canonical.toml").write_text(
+        authored = tmp_path / "curation" / "scb_canonical"
+        authored.mkdir()
+        (authored / "scb_canonical.toml").write_text(
             '[[register]]\nkey="sample"\nname="Sample"\nvalid_from="2000-01-01"\n[[register.variable]]\nname="Code"\ncolumn="CODE"\ndata_type="text"\nvalue_set="sample-codes"\n'
         )
+        canonical = source / "scb_canonical"
+        canonical.mkdir()
         (canonical / "sample-codes.csv").write_text(
             "code,label\n001,First\n001,First\n002,Other\n"
         )
@@ -91,6 +96,8 @@ def test_cli_prepares_new_artifact_without_accepting_or_overwriting_it(
         selection.manifest_sha256,
         "--output-dir",
         str(destination),
+        "--curation-dir",
+        str(tmp_path / "curation"),
     ]
     assert run(args) == 0
     report = json.loads(capsys.readouterr().out)
@@ -140,6 +147,8 @@ def test_preparation_cli_summary_cannot_modify_its_inputs_or_output(
                 selection.manifest_sha256,
                 "--output-dir",
                 str(destination),
+                "--curation-dir",
+                str(tmp_path / "curation"),
                 "--output",
                 str(report),
             ]
@@ -153,7 +162,9 @@ def test_preparation_cli_summary_cannot_modify_its_inputs_or_output(
 def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> None:
     selection = _selection(tmp_path, all_roles=True)
     destination = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(selection, destination)
+    manifest = prepare_catalog_sources(
+        selection, destination, curation_dir=tmp_path / "curation"
+    )
     commit = accept_prepared(destination)
     prepared = open_prepared_catalog_sources(
         destination, expected_sha256=manifest.sha256, input_commit=commit
@@ -176,10 +187,7 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
         "thin_provider",
         "code_list",
     }
-    assert (
-        accounting[("bundle", "catalog/Forsakringskassan/fk.toml")].disposition
-        == "absent"
-    )
+    assert accounting[("curation", "providers/fk.toml")].disposition == "absent"
     assert {
         item.role for item in manifest.inputs if item.record_usage == "occurrence"
     } == {
@@ -341,7 +349,9 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
     selection = repin_input_bundle(selection)
 
     destination = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(selection, destination)
+    manifest = prepare_catalog_sources(
+        selection, destination, curation_dir=tmp_path / "curation"
+    )
     prepared = open_prepared_catalog_sources(
         destination,
         expected_sha256=manifest.sha256,
@@ -433,7 +443,9 @@ def test_sos_declarations_validity_support_and_formula_evidence_survive_preparat
 def test_warm_open_needs_only_the_accepted_preparation(tmp_path: Path) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(selection, destination)
+    manifest = prepare_catalog_sources(
+        selection, destination, curation_dir=tmp_path / "curation"
+    )
     commit = accept_prepared(destination)
     # Warm use depends on the accepted preparation alone, never on the raw inputs.
     shutil.rmtree(tmp_path / "accepted")
@@ -449,8 +461,12 @@ def test_warm_open_needs_only_the_accepted_preparation(tmp_path: Path) -> None:
 def test_preparation_is_byte_identical_on_rerun(tmp_path: Path) -> None:
     selection = _selection(tmp_path)
     first, second = tmp_path / "first", tmp_path / "second"
-    before = prepare_catalog_sources(selection, first)
-    after = prepare_catalog_sources(selection, second)
+    before = prepare_catalog_sources(
+        selection, first, curation_dir=tmp_path / "curation"
+    )
+    after = prepare_catalog_sources(
+        selection, second, curation_dir=tmp_path / "curation"
+    )
     assert before == after
     assert {file.path: (first / file.path).read_bytes() for file in before.files} == {
         file.path: (second / file.path).read_bytes() for file in after.files
@@ -462,7 +478,7 @@ def test_unsupported_or_incoherent_manifest_fails_before_opening_children(
 ) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
-    prepare_catalog_sources(selection, destination)
+    prepare_catalog_sources(selection, destination, curation_dir=tmp_path / "curation")
     path = destination / "manifest.json"
     document = json.loads(path.read_text())
     next(item for item in document["inputs"] if item["role"] == "scb_records")[
@@ -497,7 +513,7 @@ def test_record_child_must_hold_the_selected_source_revisions(tmp_path: Path) ->
     """
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
-    prepare_catalog_sources(selection, destination)
+    prepare_catalog_sources(selection, destination, curation_dir=tmp_path / "curation")
     path = destination / "manifest.json"
     document = json.loads(path.read_text())
     next(item for item in document["inputs"] if item["role"] == "scb_records")[
@@ -516,7 +532,7 @@ def test_record_child_must_hold_the_selected_source_revisions(tmp_path: Path) ->
 def test_legacy_curation_role_cannot_open_prepared_manifest(tmp_path: Path) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
-    prepare_catalog_sources(selection, destination)
+    prepare_catalog_sources(selection, destination, curation_dir=tmp_path / "curation")
     path = destination / "manifest.json"
     document = json.loads(path.read_text(encoding="utf-8"))
     document["inputs"][0]["role"] = "curation"
@@ -537,7 +553,7 @@ def test_child_manifest_hash_must_match_its_outer_preparation_proof(
 ) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
-    prepare_catalog_sources(selection, destination)
+    prepare_catalog_sources(selection, destination, curation_dir=tmp_path / "curation")
     path = destination / "manifest.json"
     document = json.loads(path.read_text())
     child_path = (
@@ -563,7 +579,9 @@ def test_absent_validity_is_accounted_without_inventing_validity(
 ) -> None:
     selection = _selection(tmp_path, validity=False)
     destination = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(selection, destination)
+    manifest = prepare_catalog_sources(
+        selection, destination, curation_dir=tmp_path / "curation"
+    )
     absent = next(
         item for item in manifest.inputs if item.path == "VardemangderValidDates.csv"
     )
@@ -597,7 +615,9 @@ def test_preparation_rejects_unknown_selected_file_before_output(
     selection = repin_input_bundle(selection)
     destination = tmp_path / "prepared"
     with pytest.raises(PreparedCatalogError, match="no stage-1 input role"):
-        prepare_catalog_sources(selection, destination)
+        prepare_catalog_sources(
+            selection, destination, curation_dir=tmp_path / "curation"
+        )
     assert not destination.exists()
 
 
@@ -626,7 +646,9 @@ def test_selected_classification_lists_keep_their_provider_subdirectory(
     selection = repin_input_bundle(selection)
 
     output = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(selection, output)
+    manifest = prepare_catalog_sources(
+        selection, output, curation_dir=tmp_path / "curation"
+    )
     entry = next(item for item in manifest.inputs if item.path == relative)
     assert entry.role == "code_list" and entry.counts.associations == 1
     prepared = open_prepared_catalog_sources(
@@ -651,12 +673,14 @@ def test_output_conflicts_and_cold_materialization_fail_without_overwrite(
     marker = destination / "keep"
     marker.write_text("original")
     with pytest.raises(PreparedCatalogError, match="already exists"):
-        prepare_catalog_sources(selection, destination)
+        prepare_catalog_sources(
+            selection, destination, curation_dir=tmp_path / "curation"
+        )
     assert marker.read_text() == "original"
     sparsify_scb_values(selection)
     missing = tmp_path / "cold"
     with pytest.raises(SnapshotMaterializationError):
-        prepare_catalog_sources(selection, missing)
+        prepare_catalog_sources(selection, missing, curation_dir=tmp_path / "curation")
     assert not missing.exists()
 
 
@@ -684,7 +708,9 @@ def test_failed_selected_source_cleans_staging_and_preserves_accepted_inputs(
     original = path.read_bytes()
     destination = tmp_path / "new" / "prepared"
     with pytest.raises(ValueError):
-        prepare_catalog_sources(selection, destination)
+        prepare_catalog_sources(
+            selection, destination, curation_dir=tmp_path / "curation"
+        )
     assert not destination.exists() and list(destination.parent.iterdir()) == []
     assert path.read_bytes() == original
 
@@ -727,7 +753,9 @@ def test_selected_source_change_while_staging_does_not_publish(
     with monkeypatch.context() as patch:
         record_file_opens(patch, _edit_bundle_while_staging(selection, flag))
         with pytest.raises(PreparedCatalogError, match=message):
-            prepare_catalog_sources(selection, destination)
+            prepare_catalog_sources(
+                selection, destination, curation_dir=tmp_path / "curation"
+            )
     assert not destination.exists()
     assert not list(destination.parent.glob(".prepared.*"))
 
@@ -738,7 +766,9 @@ def test_warm_inventory_rejects_unaccepted_or_stale_payloads(
 ) -> None:
     selection = _selection(tmp_path)
     destination = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(selection, destination)
+    manifest = prepare_catalog_sources(
+        selection, destination, curation_dir=tmp_path / "curation"
+    )
     commit = accept_prepared(destination)
     payload = destination / "files/evidence.jsonl"
     if change == "untracked":

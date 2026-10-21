@@ -18,50 +18,15 @@ if TYPE_CHECKING:
 
 
 STORAGE_DETAIL_PREFIXES = ("Curated data_type: ", "Documented Datatyp: ")
-# The structured source-locator lines a decision's provenance carries, each built
-# from schema-checked fields; every other line is curator text (#1708).
-_SOURCE_REFERENCE_PREFIXES = (
-    "Document: ",
-    "SHA256: ",
-    "Pages: ",
-    "Source rows: ",
-    "Rows: ",
-    "evidence: ",
-    "source_pages: ",
-    *STORAGE_DETAIL_PREFIXES,
-)
-
-
-def published_provenance(provenance: str, case_id: str) -> str | None:
-    """The part of a curation decision's provenance the catalog publishes (#1708):
-    its `errata:<class>` line and its source-locator lines. The case pointer, the
-    reason and free-text evidence stay in the build ledger's case event; None when
-    nothing remains."""
-    lines = provenance.removeprefix(f"{case_id}: ").splitlines()
-    return (
-        "\n".join(
-            (
-                *(lines[:1] if lines and lines[0].startswith("errata:") else ()),
-                *(
-                    line
-                    for line in lines
-                    if line.startswith(_SOURCE_REFERENCE_PREFIXES)
-                ),
-            )
-        )
-        or None
-    )
 
 
 @dataclass(frozen=True)
 class AppliedCorrection:
     case_id: str
     effect_index: int
-    provenance: str
-
-    @property
-    def attribution(self) -> str | None:
-        return published_provenance(self.provenance, self.case_id)
+    # What the effect publishes on its state: its decision's `published` for a
+    # fact effect, None for routing (#1708).
+    attribution: str | None
 
 
 @dataclass(frozen=True)

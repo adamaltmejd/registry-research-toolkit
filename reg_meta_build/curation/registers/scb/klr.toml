@@ -24,99 +24,34 @@ panel_entity_key = "region"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
+[variable]
 # Konjunkturstatistik, löner för privat sektor (KLP)
-
-[[variable]]
-native_id = "90.2907"
-slug = "region"
-
-[[variable]]
-native_id = "90.5056"
-slug = "landstingskod"
-
-[[variable]]
-native_id = "90.5061"
-slug = "antal-heltidsanstallda"
-
-[[variable]]
-native_id = "90.5071"
-slug = "antal-deltidsanstallda"
-
-[[variable]]
-native_id = "90.5074"
-slug = "antal-timanstallda"
-
-[[variable]]
-native_id = "90.5735"
-slug = "avtalad-veckoarbetstid"
-
-[[variable]]
-native_id = "90.37393"
-slug = "landsting"
+"90.2907" = "region"
+"90.5056" = "landstingskod"
+"90.5061" = "antal-heltidsanstallda"
+"90.5071" = "antal-deltidsanstallda"
+"90.5074" = "antal-timanstallda"
+"90.5735" = "avtalad-veckoarbetstid"
+"90.37393" = "landsting"
 
 # register 91 (klp)
-
-[[variable]]
-native_id = "90.2522"
-slug = "antal-arbetade-timmar-manadsavlonade"
-
-[[variable]]
-native_id = "90.2524"
-slug = "antal-arbetade-timmar-timavlonade"
-
-[[variable]]
-native_id = "90.2525"
-slug = "anstallningsavtal"
-
-[[variable]]
-native_id = "90.3081"
-slug = "imputering"
-
-[[variable]]
-native_id = "90.5059"
-slug = "landstingets-namn"
+"90.2522" = "antal-arbetade-timmar-manadsavlonade"
+"90.2524" = "antal-arbetade-timmar-timavlonade"
+"90.2525" = "anstallningsavtal"
+"90.3081" = "imputering"
+"90.5059" = "landstingets-namn"
 
 # register 91
-
-[[variable]]
-native_id = "90.50.man"
-slug = "man"
-
-[[variable]]
-native_id = "90.50.manad"
-slug = "manad"
-
-[[variable]]
-native_id = "90.5735.avttm"
-slug = "avttm"
-
-[[variable]]
-native_id = "90.5735.avttvem"
-slug = "avttvem"
-
-[[variable]]
-native_id = "90.5071.antdel"
-slug = "antdel"
-
-[[variable]]
-native_id = "90.5071.deltid"
-slug = "deltid"
-
-[[variable]]
-native_id = "90.5061.anthel"
-slug = "anthel"
-
-[[variable]]
-native_id = "90.5061.heltid"
-slug = "heltid"
-
-[[variable]]
-native_id = "90.5074.anttim"
-slug = "anttim"
-
-[[variable]]
-native_id = "90.5074.timanst"
-slug = "timanst"
+"90.50.man" = "man"
+"90.50.manad" = "manad"
+"90.5735.avttm" = "avttm"
+"90.5735.avttvem" = "avttvem"
+"90.5071.antdel" = "antdel"
+"90.5071.deltid" = "deltid"
+"90.5061.anthel" = "anthel"
+"90.5061.heltid" = "heltid"
+"90.5074.anttim" = "anttim"
+"90.5074.timanst" = "timanst"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

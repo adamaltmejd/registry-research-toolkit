@@ -8,6 +8,6 @@ slug = "other"
 [[variant]]
 native_id = "4.40"
 slug = "people"
-[[variable]]
-native_id = "4.401"
-slug = "explicit"
+
+[variable]
+"4.401" = "explicit"

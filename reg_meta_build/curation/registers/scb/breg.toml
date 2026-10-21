@@ -46,529 +46,144 @@ panel_entity_key = "familjeidentitet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Försäkringsföretagens årsredogörelse
-
-[[variable]]
-native_id = "333.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "333.30353"
-slug = "familjeidentitet"
-
-
-[[variable]]
-native_id = "333.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "333.24"
-slug = "familjestallning"
-
-[[variable]]
-native_id = "333.304"
-slug = "fodelselandnamnfar"
-
-[[variable]]
-native_id = "333.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "333.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "333.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "333.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "333.390"
-slug = "antal-barn-under-22-ar"
-
-[[variable]]
-native_id = "333.393"
-slug = "yngstabarn"
-
-[[variable]]
-native_id = "333.7644"
-slug = "personnr-bomor"
-
-[[variable]]
-native_id = "333.7645"
-slug = "personnr-bofar"
-
-[[variable]]
-native_id = "333.14603"
-slug = "fodelselandskod-admor"
-
-[[variable]]
-native_id = "333.14604"
-slug = "fodelselandskod-adfar"
-
-[[variable]]
-native_id = "333.14605"
-slug = "fodelselandskod-bomor"
-
-[[variable]]
-native_id = "333.14606"
-slug = "fodelselandskod-bofar"
-
-[[variable]]
-native_id = "333.15154"
-slug = "foraldrar-doda"
-
-[[variable]]
-native_id = "333.15158"
-slug = "alder-31-12-adoptivfar"
-
-[[variable]]
-native_id = "333.15159"
-slug = "alder-31-12-adoptivmor"
-
-[[variable]]
-native_id = "333.15160"
-slug = "alder-31-12-biologisk-far"
-
-[[variable]]
-native_id = "333.15161"
-slug = "alder-31-12-biologisk-mor"
-
-[[variable]]
-native_id = "333.15162"
-slug = "alder-31-12-bofar"
-
-[[variable]]
-native_id = "333.15163"
-slug = "alder-31-12-bomor"
-
-[[variable]]
-native_id = "333.15167"
-slug = "bakgrund-bioforaldrar"
-
-[[variable]]
-native_id = "333.15168"
-slug = "bakgrund-boforaldrar"
-
-[[variable]]
-native_id = "333.19547"
-slug = "avstand-barn-mor"
-
-[[variable]]
-native_id = "333.19548"
-slug = "avstand-barn-far"
-
-[[variable]]
-native_id = "333.19643"
-slug = "familjetyp-12-senare"
-
-[[variable]]
-native_id = "333.19644"
-slug = "familjestallning-12-senare"
-
-[[variable]]
-native_id = "333.19645"
-slug = "forsamling-12-senare"
-
-[[variable]]
-native_id = "333.19646"
-slug = "fastbet-12-senare"
-
-[[variable]]
-native_id = "333.19651"
-slug = "grund-separation"
-
-[[variable]]
-native_id = "333.19862"
-slug = "vardnadshavare1-15-senare"
-
-[[variable]]
-native_id = "333.19863"
-slug = "antal-vardnadshavare-15-senare"
-
-[[variable]]
-native_id = "333.19864"
-slug = "vardnadshavare2-12-senare"
-
-[[variable]]
-native_id = "333.19865"
-slug = "familjesituation-12-senare"
-
-[[variable]]
-native_id = "333.19899"
-slug = "vardnadshavare2-15-senare"
-
-[[variable]]
-native_id = "333.20056"
-slug = "fodelselandskod-mor"
-
-[[variable]]
-native_id = "333.20057"
-slug = "fodelselandskod-far"
-
-[[variable]]
-native_id = "333.29139"
-slug = "vardnadshavare1-12-senare"
-
-[[variable]]
-native_id = "333.30410"
-slug = "varldsdelsgruppering-mor"
-
-[[variable]]
-native_id = "333.30411"
-slug = "varldsdelsgruppering-far"
-
-[[variable]]
-native_id = "333.37982"
-slug = "barnets-invandringsdatum"
-
-[[variable]]
-native_id = "333.40466"
-slug = "barnets-botyp"
+"333.57" = "personnr"
+"333.30353" = "familjeidentitet"
+"333.15" = "civilstand"
+"333.24" = "familjestallning"
+"333.304" = "fodelselandnamnfar"
+"333.305" = "fodelseland-mor"
+"333.323" = "personnr-far"
+"333.324" = "personnr-mor"
+"333.332" = "senaste-invandringsdatum"
+"333.390" = "antal-barn-under-22-ar"
+"333.393" = "yngstabarn"
+"333.7644" = "personnr-bomor"
+"333.7645" = "personnr-bofar"
+"333.14603" = "fodelselandskod-admor"
+"333.14604" = "fodelselandskod-adfar"
+"333.14605" = "fodelselandskod-bomor"
+"333.14606" = "fodelselandskod-bofar"
+"333.15154" = "foraldrar-doda"
+"333.15158" = "alder-31-12-adoptivfar"
+"333.15159" = "alder-31-12-adoptivmor"
+"333.15160" = "alder-31-12-biologisk-far"
+"333.15161" = "alder-31-12-biologisk-mor"
+"333.15162" = "alder-31-12-bofar"
+"333.15163" = "alder-31-12-bomor"
+"333.15167" = "bakgrund-bioforaldrar"
+"333.15168" = "bakgrund-boforaldrar"
+"333.19547" = "avstand-barn-mor"
+"333.19548" = "avstand-barn-far"
+"333.19643" = "familjetyp-12-senare"
+"333.19644" = "familjestallning-12-senare"
+"333.19645" = "forsamling-12-senare"
+"333.19646" = "fastbet-12-senare"
+"333.19651" = "grund-separation"
+"333.19862" = "vardnadshavare1-15-senare"
+"333.19863" = "antal-vardnadshavare-15-senare"
+"333.19864" = "vardnadshavare2-12-senare"
+"333.19865" = "familjesituation-12-senare"
+"333.19899" = "vardnadshavare2-15-senare"
+"333.20056" = "fodelselandskod-mor"
+"333.20057" = "fodelselandskod-far"
+"333.29139" = "vardnadshavare1-12-senare"
+"333.30410" = "varldsdelsgruppering-mor"
+"333.30411" = "varldsdelsgruppering-far"
+"333.37982" = "barnets-invandringsdatum"
+"333.40466" = "barnets-botyp"
 
 # register 334 (forsakring-arsredogorelse)
-
-[[variable]]
-native_id = "333.19901.civil"
-slug = "civilstand-15-senare"
-
-[[variable]]
-native_id = "333.241.yngstabarn"
-slug = "alder-yngstabarn"
-
-[[variable]]
-native_id = "333.66.sun2020niva-grov-adfar"
-slug = "sun2020niva-grov-adfar"
-
-[[variable]]
-native_id = "333.66.sun2020niva-grov-admor"
-slug = "sun2020niva-grov-admor"
-
-[[variable]]
-native_id = "333.66.sun2020niva-grov-bofar"
-slug = "sun2020niva-grov-bofar"
-
-[[variable]]
-native_id = "333.66.sun2020niva-grov-bomor"
-slug = "sun2020niva-grov-bomor"
-
-[[variable]]
-native_id = "333.66.sun2020niva-grov-far"
-slug = "sun2020niva-grov-far"
-
-[[variable]]
-native_id = "333.66.sun2020niva-grov-mor"
-slug = "sun2020niva-grov-mor"
-
-[[variable]]
-native_id = "333.66.utbniva-foraldrar"
-slug = "sun2020niva-grov-foraldrar"
-
-[[variable]]
-native_id = "333.775.sun2020niva-grov-adfar"
-slug = "utbildningsniva-grov-adfar-2"
-
-[[variable]]
-native_id = "333.775.sun2020niva-grov-admor"
-slug = "utbildningsniva-grov-admor-2"
-
-[[variable]]
-native_id = "333.775.sun2020niva-grov-bofar"
-slug = "utbildningsniva-grov-bofar-2"
-
-[[variable]]
-native_id = "333.775.sun2020niva-grov-bomor"
-slug = "utbildningsniva-grov-bomor-2"
-
-[[variable]]
-native_id = "333.775.sun2020niva-grov-far"
-slug = "utbildningsniva-grov-far-2"
-
-[[variable]]
-native_id = "333.775.sun2020niva-grov-mor"
-slug = "utbildningsniva-grov-mor-2"
-
-[[variable]]
-native_id = "333.775.utbniva-foraldrar"
-slug = "utbildningsniva-grov-foraldrar"
+"333.19901.civil" = "civilstand-15-senare"
+"333.241.yngstabarn" = "alder-yngstabarn"
+"333.66.sun2020niva-grov-adfar" = "sun2020niva-grov-adfar"
+"333.66.sun2020niva-grov-admor" = "sun2020niva-grov-admor"
+"333.66.sun2020niva-grov-bofar" = "sun2020niva-grov-bofar"
+"333.66.sun2020niva-grov-bomor" = "sun2020niva-grov-bomor"
+"333.66.sun2020niva-grov-far" = "sun2020niva-grov-far"
+"333.66.sun2020niva-grov-mor" = "sun2020niva-grov-mor"
+"333.66.utbniva-foraldrar" = "sun2020niva-grov-foraldrar"
+"333.775.sun2020niva-grov-adfar" = "utbildningsniva-grov-adfar-2"
+"333.775.sun2020niva-grov-admor" = "utbildningsniva-grov-admor-2"
+"333.775.sun2020niva-grov-bofar" = "utbildningsniva-grov-bofar-2"
+"333.775.sun2020niva-grov-bomor" = "utbildningsniva-grov-bomor-2"
+"333.775.sun2020niva-grov-far" = "utbildningsniva-grov-far-2"
+"333.775.sun2020niva-grov-mor" = "utbildningsniva-grov-mor-2"
+"333.775.utbniva-foraldrar" = "utbildningsniva-grov-foraldrar"
 
 # register 336 (utlandska-doktorander)
-
-[[variable]]
-native_id = "333.372"
-slug = "familjeidentitet-rtb"
-
-[[variable]]
-native_id = "333.22"
-slug = "disponibel-inkomst"
-
-[[variable]]
-native_id = "333.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "333.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "333.298"
-slug = "civilfar"
-
-[[variable]]
-native_id = "333.299"
-slug = "civilmor"
-
-[[variable]]
-native_id = "333.366"
-slug = "datum-adoptivfar"
-
-[[variable]]
-native_id = "333.367"
-slug = "datum-adoptivmor"
-
-[[variable]]
-native_id = "333.379"
-slug = "personnr-adoptivfar"
-
-[[variable]]
-native_id = "333.380"
-slug = "personnr-adoptivmor"
-
-[[variable]]
-native_id = "333.388"
-slug = "antal-barn"
-
-[[variable]]
-native_id = "333.389"
-slug = "antal-barn-under-18-ar"
-
-[[variable]]
-native_id = "333.391"
-slug = "antal-barn-under-6-ar"
-
-[[variable]]
-native_id = "333.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "333.1393"
-slug = "barnbidrag-forlangt-flerbarnstillagg"
-
-[[variable]]
-native_id = "333.2872"
-slug = "ostlig-mittpunktskoordinat"
-
-[[variable]]
-native_id = "333.2873"
-slug = "nordlig-mittpunktskoordinat"
-
-[[variable]]
-native_id = "333.4499"
-slug = "familjestod-totalt"
-
-[[variable]]
-native_id = "333.6460"
-slug = "hemmaboende-barn"
-
-[[variable]]
-native_id = "333.7608"
-slug = "antal-barn-0-ar"
-
-[[variable]]
-native_id = "333.7609"
-slug = "antal-barn-10-ar"
-
-[[variable]]
-native_id = "333.7610"
-slug = "antal-barn-2-ar"
-
-[[variable]]
-native_id = "333.7611"
-slug = "antal-barn-3-ar"
-
-[[variable]]
-native_id = "333.7612"
-slug = "antal-barn-4-ar"
-
-[[variable]]
-native_id = "333.7613"
-slug = "antal-barn-5-ar"
-
-[[variable]]
-native_id = "333.7614"
-slug = "antal-barn-6-ar"
-
-[[variable]]
-native_id = "333.7615"
-slug = "antal-barn-7-ar"
-
-[[variable]]
-native_id = "333.7616"
-slug = "antal-barn-8-ar"
-
-[[variable]]
-native_id = "333.7617"
-slug = "antal-barn-9-ar"
-
-[[variable]]
-native_id = "333.7618"
-slug = "antal-barn-1-ar"
-
-[[variable]]
-native_id = "333.7619"
-slug = "antal-barn-11-ar"
-
-[[variable]]
-native_id = "333.7620"
-slug = "antal-barn-12-ar"
-
-[[variable]]
-native_id = "333.7621"
-slug = "antal-barn-13-ar"
-
-[[variable]]
-native_id = "333.7622"
-slug = "antal-barn-14-ar"
-
-[[variable]]
-native_id = "333.7623"
-slug = "antal-barn-15-ar"
-
-[[variable]]
-native_id = "333.7650"
-slug = "varldsdelkod"
-
-[[variable]]
-native_id = "333.8180"
-slug = "grund-for-bosattning"
-
-[[variable]]
-native_id = "333.15166"
-slug = "antal-vardnadshavare"
-
-[[variable]]
-native_id = "333.19616"
-slug = "antal-barn-17-ar"
-
-[[variable]]
-native_id = "333.19617"
-slug = "antal-barn-16-ar"
-
-[[variable]]
-native_id = "333.19618"
-slug = "antal-barn-18-ar"
-
-[[variable]]
-native_id = "333.19619"
-slug = "antal-barn-19-ar"
-
-[[variable]]
-native_id = "333.19620"
-slug = "antal-barn-20-ar"
-
-[[variable]]
-native_id = "333.19621"
-slug = "antal-barn-21-ar"
-
-[[variable]]
-native_id = "333.22349"
-slug = "ekonomiskt-bistand-socialbidrag"
-
-[[variable]]
-native_id = "333.29828"
-slug = "lagenhetsnyckel"
-
-[[variable]]
-native_id = "333.30120"
-slug = "bostadskategori"
-
-[[variable]]
-native_id = "333.30639"
-slug = "mottaget-underhallsbidrag"
+"333.372" = "familjeidentitet-rtb"
+"333.22" = "disponibel-inkomst"
+"333.26" = "fastighetsbeteckning"
+"333.257" = "fodelseland-rtb"
+"333.298" = "civilfar"
+"333.299" = "civilmor"
+"333.366" = "datum-adoptivfar"
+"333.367" = "datum-adoptivmor"
+"333.379" = "personnr-adoptivfar"
+"333.380" = "personnr-adoptivmor"
+"333.388" = "antal-barn"
+"333.389" = "antal-barn-under-18-ar"
+"333.391" = "antal-barn-under-6-ar"
+"333.749" = "aldersgrupp"
+"333.1393" = "barnbidrag-forlangt-flerbarnstillagg"
+"333.2872" = "ostlig-mittpunktskoordinat"
+"333.2873" = "nordlig-mittpunktskoordinat"
+"333.4499" = "familjestod-totalt"
+"333.6460" = "hemmaboende-barn"
+"333.7608" = "antal-barn-0-ar"
+"333.7609" = "antal-barn-10-ar"
+"333.7610" = "antal-barn-2-ar"
+"333.7611" = "antal-barn-3-ar"
+"333.7612" = "antal-barn-4-ar"
+"333.7613" = "antal-barn-5-ar"
+"333.7614" = "antal-barn-6-ar"
+"333.7615" = "antal-barn-7-ar"
+"333.7616" = "antal-barn-8-ar"
+"333.7617" = "antal-barn-9-ar"
+"333.7618" = "antal-barn-1-ar"
+"333.7619" = "antal-barn-11-ar"
+"333.7620" = "antal-barn-12-ar"
+"333.7621" = "antal-barn-13-ar"
+"333.7622" = "antal-barn-14-ar"
+"333.7623" = "antal-barn-15-ar"
+"333.7650" = "varldsdelkod"
+"333.8180" = "grund-for-bosattning"
+"333.15166" = "antal-vardnadshavare"
+"333.19616" = "antal-barn-17-ar"
+"333.19617" = "antal-barn-16-ar"
+"333.19618" = "antal-barn-18-ar"
+"333.19619" = "antal-barn-19-ar"
+"333.19620" = "antal-barn-20-ar"
+"333.19621" = "antal-barn-21-ar"
+"333.22349" = "ekonomiskt-bistand-socialbidrag"
+"333.29828" = "lagenhetsnyckel"
+"333.30120" = "bostadskategori"
+"333.30639" = "mottaget-underhallsbidrag"
 
 # register 336
-
-[[variable]]
-native_id = "333.18541.grundbofar"
-slug = "grund-for-bosattning-far"
-
-[[variable]]
-native_id = "333.18542.grundbomor"
-slug = "grund-for-bosattning-mor"
-
-[[variable]]
-native_id = "333.241.alderslut"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "333.241.aldstabarn"
-slug = "alder-aldstabarn"
-
-[[variable]]
-native_id = "333.25.famtyp"
-slug = "familjetyp"
-
-[[variable]]
-native_id = "333.45149.bas-bofar"
-slug = "arbetsmarknadsstatus-bofar"
-
-[[variable]]
-native_id = "333.45149.bas-bofar-uppf"
-slug = "arbetsmarknadsstatus-bofar-uppf"
-
-[[variable]]
-native_id = "333.45149.bas-bomor"
-slug = "arbetsmarknadsstatus-bomor"
-
-[[variable]]
-native_id = "333.45149.bas-bomor-uppf"
-slug = "arbetsmarknadsstatus-bomor-uppf"
-
-[[variable]]
-native_id = "333.775.sun2000niva-grov-adfar"
-slug = "utbildningsniva-grov-adfar"
-
-[[variable]]
-native_id = "333.775.sun2000niva-grov-admor"
-slug = "utbildningsniva-grov-admor"
-
-[[variable]]
-native_id = "333.775.sun2000niva-grov-bofar"
-slug = "utbildningsniva-grov-bofar"
-
-[[variable]]
-native_id = "333.775.sun2000niva-grov-bomor"
-slug = "utbildningsniva-grov-bomor"
-
-[[variable]]
-native_id = "333.775.sun2000niva-grov-far"
-slug = "utbildningsniva-grov-far"
-
-[[variable]]
-native_id = "333.775.sun2000niva-grov-mor"
-slug = "utbildningsniva-grov-mor"
+"333.18541.grundbofar" = "grund-for-bosattning-far"
+"333.18542.grundbomor" = "grund-for-bosattning-mor"
+"333.241.alderslut" = "alder-31-12"
+"333.241.aldstabarn" = "alder-aldstabarn"
+"333.25.famtyp" = "familjetyp"
+"333.45149.bas-bofar" = "arbetsmarknadsstatus-bofar"
+"333.45149.bas-bofar-uppf" = "arbetsmarknadsstatus-bofar-uppf"
+"333.45149.bas-bomor" = "arbetsmarknadsstatus-bomor"
+"333.45149.bas-bomor-uppf" = "arbetsmarknadsstatus-bomor-uppf"
+"333.775.sun2000niva-grov-adfar" = "utbildningsniva-grov-adfar"
+"333.775.sun2000niva-grov-admor" = "utbildningsniva-grov-admor"
+"333.775.sun2000niva-grov-bofar" = "utbildningsniva-grov-bofar"
+"333.775.sun2000niva-grov-bomor" = "utbildningsniva-grov-bomor"
+"333.775.sun2000niva-grov-far" = "utbildningsniva-grov-far"
+"333.775.sun2000niva-grov-mor" = "utbildningsniva-grov-mor"
 
 # register 339
-
-[[variable]]
-native_id = "333.385.current"
-slug = "personnrvard1"
-
-[[variable]]
-native_id = "333.385.later"
-slug = "personnrvard1-15-manader-senare"
-
-[[variable]]
-native_id = "333.386.current"
-slug = "personnrvard2"
-
-[[variable]]
-native_id = "333.386.later"
-slug = "personnrvard2-15-manader-senare"
+"333.385.current" = "personnrvard1"
+"333.385.later" = "personnrvard1-15-manader-senare"
+"333.386.current" = "personnrvard2"
+"333.386.later" = "personnrvard2-15-manader-senare"
 
 [[identity.partition]]
 variable = "333.24"
@@ -776,7 +391,7 @@ valid_to = "2001-12-31"
 expected_evidence_sha256 = "5234a01deb4cfe99ad61fde2f1feb1ae6b7b2eccb8b4fac63ea3458b1f7465c4"
 expected_diagnostic_sha256 = "a70325608097611760d0528af82b72615ee439df922e0227349c006366f2a075"
 reason = "The literal RTB source variant label is shared by its annual and quarterly admitted variants. Retain the exact source attribution and accepted variable identity without selecting a delivery variant or manufacturing a lineage edge. The source declaration does not establish which variant supplied this consumer window."
-evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement."
+evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement. Re-pinned 2026-10-21 (#1723): the candidate's 2010 state stopped publishing its case pointer; originals, candidates and identity edges unchanged."
 
 [[acknowledge]]
 code = "unresolved_lineage_ambiguous_source_variant"

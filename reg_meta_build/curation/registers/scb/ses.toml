@@ -32,115 +32,34 @@ panel_entity_key = "individnyckel"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Högskolestuderandes levnadsvillkor
-
-[[variable]]
-native_id = "246.17328"
-slug = "individnyckel"
-
-
-[[variable]]
-native_id = "246.466"
-slug = "upprakningstal"
-
-[[variable]]
-native_id = "246.1194"
-slug = "kontant-bruttolon-mm"
-
-[[variable]]
-native_id = "246.5622"
-slug = "lonesumma-skift-ob"
-
-[[variable]]
-native_id = "246.5719"
-slug = "antal-overtidstimmar"
-
-[[variable]]
-native_id = "246.6091"
-slug = "formaner"
-
-[[variable]]
-native_id = "246.7146"
-slug = "bonusar"
-
-[[variable]]
-native_id = "246.15113"
-slug = "artal-fodelse"
-
-[[variable]]
-native_id = "246.16335"
-slug = "overtidsersattning"
-
-[[variable]]
-native_id = "246.17335"
-slug = "antal-veckor"
-
-[[variable]]
-native_id = "246.17341"
-slug = "timmar"
-
-[[variable]]
-native_id = "246.17350"
-slug = "nyckel"
-
-[[variable]]
-native_id = "246.17356"
-slug = "lon-referensmanaden"
-
-[[variable]]
-native_id = "246.17357"
-slug = "timlon"
+"246.17328" = "individnyckel"
+"246.466" = "upprakningstal"
+"246.1194" = "kontant-bruttolon-mm"
+"246.5622" = "lonesumma-skift-ob"
+"246.5719" = "antal-overtidstimmar"
+"246.6091" = "formaner"
+"246.7146" = "bonusar"
+"246.15113" = "artal-fodelse"
+"246.16335" = "overtidsersattning"
+"246.17335" = "antal-veckor"
+"246.17341" = "timmar"
+"246.17350" = "nyckel"
+"246.17356" = "lon-referensmanaden"
+"246.17357" = "timlon"
 
 # register 248 (komvux-sfi)
-
-[[variable]]
-native_id = "246.44"
-slug = "kon"
-
-[[variable]]
-native_id = "246.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "246.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "246.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "246.120"
-slug = "yrkesuppgift"
-
-[[variable]]
-native_id = "246.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "246.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "246.6087"
-slug = "bilforman"
-
-[[variable]]
-native_id = "246.6267"
-slug = "alder"
-
-[[variable]]
-native_id = "246.6290"
-slug = "nuts"
-
-[[variable]]
-native_id = "246.14704"
-slug = "storleksklass-pa-foretag-eu"
-
-[[variable]]
-native_id = "246.17351"
-slug = "medborgarskap"
-
-[[variable]]
-native_id = "246.17402"
-slug = "koncerntillhorighet"
+"246.44" = "kon"
+"246.74" = "agarkontroll"
+"246.98" = "referensar"
+"246.109" = "tjanstgoringsomfattning"
+"246.120" = "yrkesuppgift"
+"246.4027" = "naringsgren"
+"246.5083" = "anstallningsform"
+"246.6087" = "bilforman"
+"246.6267" = "alder"
+"246.6290" = "nuts"
+"246.14704" = "storleksklass-pa-foretag-eu"
+"246.17351" = "medborgarskap"
+"246.17402" = "koncerntillhorighet"

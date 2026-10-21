@@ -50,8 +50,8 @@ jobs:
       - run: uv sync --frozen
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
-      # process. `release`: the release-admission
-      # run on the synthetic steward artifact. Commands: scripts/gate.py.
+      # process (its only run). `release`: the release-admission checks
+      # on the synthetic steward artifact. Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust release
 
   # One leg per root `testpaths` entry (pyproject.toml); keep the two lists in
@@ -70,10 +70,6 @@ jobs:
             budget: 6
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
-          # The suite without `--server-cmd`; the `rust` job reruns the whole
-          # suite against the Rust server.
-          - suite: conformance
-            budget: 4
           - suite: scripts/tests
             budget: 2
     steps:

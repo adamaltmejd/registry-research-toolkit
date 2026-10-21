@@ -1,16 +1,17 @@
 """The committed curation inputs load through the build's public loaders.
 
 Load-time validation only: TOML shape, strict models, cross-file references the
-loaders resolve, classification code CSVs and reviewed matrix evidence. Whether the
-committed content is *right* (named owners, counts, endpoints that resolve against
-real exports) is checked by the maintainer's real-seed strict build, not here. The
+loaders resolve and reviewed matrix evidence. Whether the committed content is
+*right* (named owners, counts, endpoints that resolve against real exports, and the
+classification books, which live in the private inputs repository: each declared
+book's canonical codes resolve without an error-severity diagnostic) is checked by
+the maintainer's real-seed strict build, not here. The
 one content exception is the grouped-SNI label pin below, a mistake the real-seed
 build accepts.
 """
 
 from __future__ import annotations
 
-import hashlib
 from dataclasses import fields
 from typing import TYPE_CHECKING, get_origin
 
@@ -19,11 +20,7 @@ from pydantic import BaseModel
 from reg_meta_build.cis2016_matrix import load_matrix
 from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.doc_db import load_doc_sources, load_related_documents
-from reg_meta_build.resolved_catalog import ResolvedClassification
 from reg_meta_build.scb_errata import resolve_scb_errata
-from reg_meta_build.source_classifications import resolve_canonical_codes
-from reg_meta_build.source_evidence import SourceRevision
-from reg_meta_build.sources.code_lists import read_code_list
 
 from reg_meta_build.fqid_slugs import (
     diff_snapshot,
@@ -137,47 +134,6 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
         ),
     )
     assert errata.delivered and errata.columns and errata.versions
-
-    # Every declared book reads through the build's own CSV reader, with members,
-    # and passes the build's canonical-code rule: one label per code and no blank
-    # code. A book that fails it is withheld by the build with
-    # conflicting_classification_labels or unknown_classification_member, and a
-    # parent_code naming no code of the book (unless the book is declared flat)
-    # is an unresolved_classification_parent error. Its tree and curated
-    # sentinels then pass the build's book model, which refuses a parent cycle, a
-    # parent no shallower than its child, and a sentinel also in the canonical
-    # code set (classification_entry_invalid at build).
-    books = REPO_ROOT / "input_data" / "classifications"
-    for entry in tree.classifications:
-        path = books / entry.classification.codes_file
-        payload = path.read_bytes()
-        revision = SourceRevision.create(
-            dataset=path.name,
-            publisher="classifications",
-            purpose="Committed classification book",
-            upstream_revision="committed",
-            artifact_path=f"catalog/classifications/{path.name}",
-            artifact_size=len(payload),
-            artifact_sha256=hashlib.sha256(payload).hexdigest(),
-        )
-        book = read_code_list(path, revision, name=path.stem)
-        assert book.associations, entry.classification.short_name
-        resolved = resolve_canonical_codes(
-            book.values.values(),
-            source=path.name,
-            subject=entry.classification.slug,
-            hierarchy=entry.classification.hierarchy,
-        )
-        issues = resolved.diagnostics
-        assert not issues, [(issue.code, issue.detail) for issue in issues]
-        metadata = entry.classification
-        ResolvedClassification(
-            slug=metadata.slug,
-            short_name=metadata.short_name,
-            name=metadata.name,
-            codes=resolved.codes,
-            sentinel_codes=metadata.sentinel_codes,
-        )
 
     label_rules = {
         label: entry.classification.short_name

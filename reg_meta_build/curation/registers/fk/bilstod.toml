@@ -20,13 +20,7 @@ panel_entity_key = ["lopnr-sokande", "lopnr-barn"]
 panel_time_key = "ansokningsdatum"
 panel_time_grain = "row"
 
+[variable]
 # Föräldrapenning
-
-[[variable]]
-native_id = "5488356780395367498.Lopnr_barn"
-slug = "lopnr-barn"
-
-
-[[variable]]
-native_id = "5488356780395367498.Lopnr_sokande"
-slug = "lopnr-sokande"
+"5488356780395367498.Lopnr_barn" = "lopnr-barn"
+"5488356780395367498.Lopnr_sokande" = "lopnr-sokande"

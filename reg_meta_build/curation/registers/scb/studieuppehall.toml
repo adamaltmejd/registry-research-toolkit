@@ -8,43 +8,31 @@ native_id = "317.982"
 slug = "_default"
 display_group = "Tiden mellan gymnasieskolan och universitetet/högskolan"
 
+[variable]
 # Produktionsindex över näringslivet
-
-[[variable]]
-native_id = "317.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "317.6172"
-slug = "lopnummer-for-individ"
-
-[[variable]]
-native_id = "317.8073"
-slug = "sun-niva-grov-mor"
-
-[[variable]]
-native_id = "317.17587"
-slug = "fodelseland-grupp"
-
-[[variable]]
-native_id = "317.25163"
-slug = "utbildningsomrade-grov"
-
-[[variable]]
-native_id = "317.28176"
-slug = "utbildningstyp"
-
-[[variable]]
-native_id = "317.28305"
-slug = "designvikt"
-
-[[variable]]
-native_id = "317.28679"
-slug = "sysselsattning-aktivitet"
-
-[[variable]]
-native_id = "317.28690"
-slug = "antagen"
+"317.749" = "aldersgrupp"
+"317.6172" = "lopnummer-for-individ"
+"317.8073" = "sun-niva-grov-mor"
+"317.17587" = "fodelseland-grupp"
+"317.25163" = "utbildningsomrade-grov"
+"317.28176" = "utbildningstyp"
+"317.28305" = "designvikt"
+"317.28679" = "sysselsattning-aktivitet"
+"317.28690" = "antagen"
+"317.28683.f10-01" = "f10-01"
+"317.28683.f10-02" = "f10-02"
+"317.28683.f10-03" = "f10-03"
+"317.28683.f10-04" = "f10-04"
+"317.28679.f09-01" = "f09-01"
+"317.28679.f09-02" = "f09-02"
+"317.28679.f09-03" = "f09-03"
+"317.28679.f09-04" = "f09-04"
+"317.28696.f15-1" = "f15"
+"317.28696.f15-2" = "f15-2"
+"317.28696.f15-3" = "f15-3"
+"317.28696.f15-4" = "f15-4"
+"317.28696.f15-ver2" = "f15-ver2"
+"317.28696.f16-ver2" = "f16-ver2"
 
 # register 318
 
@@ -68,59 +56,3 @@ variable = "317.28696"
 columns = { F15_1 = "317.28696.f15-1", F15_2 = "317.28696.f15-2", F15_3 = "317.28696.f15-3", F15_4 = "317.28696.f15-4", F15_ver2 = "317.28696.f15-ver2", F16_ver2 = "317.28696.f16-ver2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "8fe0a69ce4cc370508c07c4b2a28f8a71833d79f9687f84e67daeb59d7b91ece"
-
-[[variable]]
-native_id = "317.28683.f10-01"
-slug = "f10-01"
-
-[[variable]]
-native_id = "317.28683.f10-02"
-slug = "f10-02"
-
-[[variable]]
-native_id = "317.28683.f10-03"
-slug = "f10-03"
-
-[[variable]]
-native_id = "317.28683.f10-04"
-slug = "f10-04"
-
-[[variable]]
-native_id = "317.28679.f09-01"
-slug = "f09-01"
-
-[[variable]]
-native_id = "317.28679.f09-02"
-slug = "f09-02"
-
-[[variable]]
-native_id = "317.28679.f09-03"
-slug = "f09-03"
-
-[[variable]]
-native_id = "317.28679.f09-04"
-slug = "f09-04"
-
-[[variable]]
-native_id = "317.28696.f15-1"
-slug = "f15"
-
-[[variable]]
-native_id = "317.28696.f15-2"
-slug = "f15-2"
-
-[[variable]]
-native_id = "317.28696.f15-3"
-slug = "f15-3"
-
-[[variable]]
-native_id = "317.28696.f15-4"
-slug = "f15-4"
-
-[[variable]]
-native_id = "317.28696.f15-ver2"
-slug = "f15-ver2"
-
-[[variable]]
-native_id = "317.28696.f16-ver2"
-slug = "f16-ver2"

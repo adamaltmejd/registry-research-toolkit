@@ -5,15 +5,11 @@ native_id = "20"
 [[variant]]
 native_id = "20.202"
 slug = "people"
-[[variable]]
-native_id = "20.5"
-slug = "v5"
-[[variable]]
-native_id = "20.NewCol"
-slug = "new-col"
-[[variable]]
-native_id = "20.Flagged"
-slug = "flagged"
+
+[variable]
+"20.5" = "v5"
+"20.NewCol" = "new-col"
+"20.Flagged" = "flagged"
 
 [[errata.version]]
 variant = "people"

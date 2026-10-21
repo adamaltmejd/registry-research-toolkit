@@ -11,8 +11,6 @@ panel_entity_key = "institutioncode"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Konst- och kulturutbildningar och vissa andra utbildningar
-
-[[variable]]
-native_id = "387.49985"
-slug = "institutioncode"
+"387.49985" = "institutioncode"

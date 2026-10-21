@@ -1,0 +1,16 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "duplicate_variable_name"},
+      "fields": ["severity", "subject", "fields"],
+      "rows": [
+        ["error", "scb/sample/a", ["name"]],
+        ["error", "scb/sample/c", ["name"]]
+      ],
+      "note": "Each variable holding 'Svar — Patienter' is refused, located on itself; b's ladder name is unique."
+    }
+  ]
+}

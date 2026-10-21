@@ -1,0 +1,20 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "name", "state_name", "operational_definition"],
+      "rows": [
+        ["a", "Svar — Alternativ A", "Svar — Alternativ A", "Alternativ A"],
+        ["b", "Svar — Alternativ B", "Svar — Alternativ B", "Alternativ B"],
+        ["c", "Svar, annat", "Svar, annat", "Alternativ C"]
+      ],
+      "note": "a and b take the source name with their own operational definition appended, on the variable and on each state that carries the source name; c keeps its reviewed correction."
+    }
+  ]
+}

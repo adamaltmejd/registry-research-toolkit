@@ -5,9 +5,9 @@ native_id = "19"
 [[variant]]
 native_id = "19.2"
 slug = "people"
-[[variable]]
-native_id = "19.5"
-slug = "value"
+
+[variable]
+"19.5" = "value"
 
 [[coding.sentinel]]
 variable = "19.5"

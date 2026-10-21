@@ -599,7 +599,7 @@
       },
       {
         "colname": "VALUE",
-        "cvid": 4000,
+        "cvid": 4000, "varname": "GenericVar value",
         "var_id": 5,
         "year": "2021",
         "regver_id": 402021,

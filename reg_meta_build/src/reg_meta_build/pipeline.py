@@ -62,6 +62,7 @@ from reg_meta_build.data_warnings import (
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
+    check_authored_sources,
     open_prepared_catalog_sources,
 )
 from reg_meta_build.prepared_sources import PreparedSourceRecords
@@ -110,6 +111,7 @@ from reg_meta_build.source_scope import (
     declared_register_fqids,
     resolve_source_scope,
 )
+from reg_meta_build.source_siblings import SEARCH_QUERY_MAX_CHARS
 from reg_meta_build.source_support import (
     SourceSupportBindings,
     diagnostic_register_contexts,
@@ -141,11 +143,6 @@ if TYPE_CHECKING:
         ValueBindingIssue,
         ValueBindingSession,
     )
-
-
-# The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
-# (conformance/api/operations.toml). Change both together.
-SEARCH_QUERY_MAX_CHARS = 200
 
 
 class _Model(BaseModel):
@@ -1134,6 +1131,7 @@ def _resolve(
         input_commit=input_commit,
         expected_sha256=input_manifest_sha256,
     )
+    check_authored_sources(prepared.manifest, curation_dir)
     occurrence_sources = {
         entry.revision.dataset
         for entry in prepared.manifest.inputs

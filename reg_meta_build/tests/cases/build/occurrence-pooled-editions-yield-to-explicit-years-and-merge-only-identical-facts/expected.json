@@ -70,9 +70,10 @@
       "where": {"variable": "corrected"},
       "fields": ["variable", "valid_from", "valid_to", "pooled", "name", "provenance"],
       "rows": [
-        ["corrected", "2016-01-01", "2020-12-31", true, "Pooled label", null]
+        ["corrected", "2016-01-01", "2017-12-31", true, "Pooled label", null],
+        ["corrected", "2018-01-01", "2020-12-31", true, "Pooled label", "errata:field"]
       ],
-      "note": "A correction's published provenance is a fact the state carries, so it decides the merge like the unit does. The errata renames only the 2018 - 2020 member, so after correction every cut has the same name and type. A field correction cites no source locator, so it publishes nothing (#1708): no fact tells the cuts apart, and 2016-2020 is one state whose provenance names no correction for years it never reached."
+      "note": "A correction's published provenance is a fact the state carries, so it decides the merge like the unit does. The errata renames only the 2018 - 2020 member, so after correction every cut has the same name and type. Only the published `errata:field` head differs (#1708): the errata-free 2016-2017 stays its own state, and the two corrected cuts still re-join. One state over 2016-2020 would attribute the 2018 - 2020 correction to the 2016-2017 years it never reached."
     },
     {
       "table": "states",

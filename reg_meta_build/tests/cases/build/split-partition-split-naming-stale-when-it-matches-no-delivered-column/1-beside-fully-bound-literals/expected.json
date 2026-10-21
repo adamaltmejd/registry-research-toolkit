@@ -11,7 +11,7 @@
           "curation/registers/scb/sample.toml#variable/1.5.other"
         ]
       ],
-      "note": "The only issue: the unmatched entry, located at its [[variable]] pin."
+      "note": "The only issue: the unmatched entry, located at its [variable] pin."
     },
     {
       "table": "states",

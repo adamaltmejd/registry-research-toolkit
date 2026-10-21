@@ -6,9 +6,9 @@ native_id = "8646299464352216667"
 [[variant]]
 slug = "syn-a"
 native_id = "8646299464352216667.8787440101791605432"
-[[variable]]
-slug = "alder"
-native_id = "8646299464352216667.ALDER"
+
+[variable]
+"8646299464352216667.ALDER" = "alder"
 
 [[representation.delivery_metadata]]
 variable = "8646299464352216667.ALDER"

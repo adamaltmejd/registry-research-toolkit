@@ -61,172 +61,63 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Labour Cost Survey (LCS)
-
-[[variable]]
-native_id = "233.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "233.49"
-slug = "lan"
-
-[[variable]]
-native_id = "233.16303"
-slug = "programbidrag"
-
-[[variable]]
-native_id = "233.23867"
-slug = "klassbeteckning"
+"233.57" = "personnr"
+"233.49" = "lan"
+"233.16303" = "programbidrag"
+"233.23867" = "klassbeteckning"
 
 # register 234 (lcs)
-
-[[variable]]
-native_id = "233.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "233.31"
-slug = "forsamling"
-
-[[variable]]
-native_id = "233.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "233.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "233.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "233.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "233.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "233.1994"
-slug = "rektorsomrades-id"
-
-[[variable]]
-native_id = "233.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "233.4693"
-slug = "gymnasieprogram"
-
-[[variable]]
-native_id = "233.26963"
-slug = "inriktning-fristaende-gr"
-
-[[variable]]
-native_id = "233.27049"
-slug = "studiernas-omfattning"
-
-[[variable]]
-native_id = "233.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "233.29427"
-slug = "gymnasieforbundets-namn"
-
-[[variable]]
-native_id = "233.30410"
-slug = "varldsdelsgruppering-mor"
-
-[[variable]]
-native_id = "233.30411"
-slug = "varldsdelsgruppering-far"
-
-[[variable]]
-native_id = "233.30471"
-slug = "direktovergang"
-
-[[variable]]
-native_id = "233.30654"
-slug = "skolenhetens-namn"
-
-[[variable]]
-native_id = "233.35887"
-slug = "nyligen-invandrad"
-
-[[variable]]
-native_id = "233.36587"
-slug = "termin-arskurs-start"
+"233.56" = "person-orgnr"
+"233.31" = "forsamling"
+"233.34" = "juridisk-form"
+"233.257" = "fodelseland-rtb"
+"233.305" = "fodelseland-mor"
+"233.332" = "senaste-invandringsdatum"
+"233.517" = "senaste-invandringsar"
+"233.1994" = "rektorsomrades-id"
+"233.1996" = "skolform"
+"233.4693" = "gymnasieprogram"
+"233.26963" = "inriktning-fristaende-gr"
+"233.27049" = "studiernas-omfattning"
+"233.29426" = "tidigaste-invandringsdatum"
+"233.29427" = "gymnasieforbundets-namn"
+"233.30410" = "varldsdelsgruppering-mor"
+"233.30411" = "varldsdelsgruppering-far"
+"233.30471" = "direktovergang"
+"233.30654" = "skolenhetens-namn"
+"233.35887" = "nyligen-invandrad"
+"233.36587" = "termin-arskurs-start"
 
 # register 234
-
-[[variable]]
-native_id = "233.1536.stvkod"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "233.1993.skolid"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "233.30392.beh-ehs-ak9"
-slug = "behorighet-gy-ehs-ak9"
-
-[[variable]]
-native_id = "233.30392.beh-est-ak9"
-slug = "behorighet-gy-est-ak9"
-
-[[variable]]
-native_id = "233.30392.beh-impro-ak9"
-slug = "behorighet-gy-impro-ak9"
-
-[[variable]]
-native_id = "233.30392.beh-nt-ak9"
-slug = "behorighet-gy-nt-ak9"
-
-[[variable]]
-native_id = "233.30392.beh-yrk-ak9"
-slug = "behorighet-gy-yrk-ak9"
-
-[[variable]]
-native_id = "233.30907.larl-ers"
-slug = "larlingsersattning"
-
-[[variable]]
-native_id = "233.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "233.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "233.8073.sun2000niva3-mor"
-slug = "sun-niva-3-mor"
-
-[[variable]]
-native_id = "233.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "233.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "233.8074.sun2000niva3-far"
-slug = "sun2000niva-3-far"
-
-[[variable]]
-native_id = "233.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "233.8552.gyfid"
-slug = "gymnasieforbund-id"
+"233.1536.stvkod" = "studievag-gymnasieskolan"
+"233.1993.skolid" = "skolans-identitetsnummer"
+"233.30392.beh-ehs-ak9" = "behorighet-gy-ehs-ak9"
+"233.30392.beh-est-ak9" = "behorighet-gy-est-ak9"
+"233.30392.beh-impro-ak9" = "behorighet-gy-impro-ak9"
+"233.30392.beh-nt-ak9" = "behorighet-gy-nt-ak9"
+"233.30392.beh-yrk-ak9" = "behorighet-gy-yrk-ak9"
+"233.30907.larl-ers" = "larlingsersattning"
+"233.8073.sun2000niva-mor" = "sun-niva-mor"
+"233.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"233.8073.sun2000niva3-mor" = "sun-niva-3-mor"
+"233.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"233.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"233.8074.sun2000niva3-far" = "sun2000niva-3-far"
+"233.8137.hman" = "huvudman"
+"233.8552.gyfid" = "gymnasieforbund-id"
+"233.1536.stvkod2" = "stvkod2"
+"233.1536.stvkod-start" = "stvkod-start"
+"233.16306.utbild" = "utbild"
+"233.16306.utbild2" = "utbild2"
+"233.16306.utbild-start" = "utbild-start"
+"233.30471.direkt" = "direkt"
+"233.30471.direkt9" = "direkt9"
+"233.67.utlbakgr" = "utlbakgr-67"
+"233.67.utlbakgr2" = "utlbakgr"
+"233.67.utlsvbakg" = "utlsvbakg"
+"233.67.utl-bakg" = "utl-bakg"
 
 # register 234
 
@@ -257,47 +148,3 @@ variable = "233.67"
 columns = { UtlBakGr = "233.67.utlbakgr", UtlBakGr2 = "233.67.utlbakgr2", UtlSvBakg = "233.67.utlsvbakg", Utl_BakG = "233.67.utl-bakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "4b348f29eb945e08262a5ebf2183bf440f9f0ec1f010698b8dc145218d10e86d"
-
-[[variable]]
-native_id = "233.1536.stvkod2"
-slug = "stvkod2"
-
-[[variable]]
-native_id = "233.1536.stvkod-start"
-slug = "stvkod-start"
-
-[[variable]]
-native_id = "233.16306.utbild"
-slug = "utbild"
-
-[[variable]]
-native_id = "233.16306.utbild2"
-slug = "utbild2"
-
-[[variable]]
-native_id = "233.16306.utbild-start"
-slug = "utbild-start"
-
-[[variable]]
-native_id = "233.30471.direkt"
-slug = "direkt"
-
-[[variable]]
-native_id = "233.30471.direkt9"
-slug = "direkt9"
-
-[[variable]]
-native_id = "233.67.utlbakgr"
-slug = "utlbakgr-67"
-
-[[variable]]
-native_id = "233.67.utlbakgr2"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "233.67.utlsvbakg"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "233.67.utl-bakg"
-slug = "utl-bakg"

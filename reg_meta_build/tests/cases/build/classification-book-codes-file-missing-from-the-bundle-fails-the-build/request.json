@@ -1,0 +1,5 @@
+{
+  "note": "Book MISSING declares codes_file missing.csv and the bundle delivers no classifications/missing.csv; SNI2000's file is delivered. Book code lists are pinned bundle inputs since they left the public repo, so a book whose file the bundle lacks is a curation error at its own file, not a build crash.",
+  "fails_if": "`compile_curation` (curation_compile.py) keeps a book whose codes_file the prepared bundle does not deliver (the build then crashes on the missing value source), or refuses it without the book's file and the missing classifications/ path",
+  "sources": "scb-classification-books"
+}

@@ -27,17 +27,11 @@ Coverage (as of probing in 2026-04):
     Pre-1974   not addressable from SCB's modern downloads. REGINA (the SCB
                regional-indelningar tracker) covers 1952+ but isn't a file.
 
-Run:
+Run, with ``<inputs>`` a worktree of the private inputs repo:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
-        --out reg_meta_build/input_data/classifications/
+        --out <inputs>/catalog/source/classifications/
 
 Add --download-pdfs to also fetch the PDF editions for 2015–2021.
-Add --emit-toml to print starter classification files on stdout.
-
-Usage:
-    uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
-        --out reg_meta_build/input_data/classifications/
-
 Add --emit-toml to print starter curation/classifications/LKF{YEAR}.toml files on
 stdout.
 """
@@ -370,8 +364,8 @@ def main() -> int:
     p.add_argument(
         "--out",
         type=Path,
-        default=Path("reg_meta_build/input_data/classifications"),
-        help="Where to write per-year CSVs.",
+        required=True,
+        help="Where to write per-year CSVs (<inputs>/catalog/source/classifications/).",
     )
     p.add_argument(
         "--cache",

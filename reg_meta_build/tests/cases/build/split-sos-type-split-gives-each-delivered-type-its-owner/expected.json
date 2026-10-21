@@ -9,10 +9,10 @@
     {
       "table": "states",
       "where": {"register": "par"},
-      "fields": ["variable", "variant", "column", "data_type", "name"],
+      "fields": ["variable", "variant", "column", "data_type"],
       "rows": [
-        ["atc", "par-ov", "ATC", "integer", "ATC"],
-        ["atc-1", "par-ov", "ATC", "text", "ATC"]
+        ["atc", "par-ov", "ATC", "integer"],
+        ["atc-1", "par-ov", "ATC", "text"]
       ]
     },
     {

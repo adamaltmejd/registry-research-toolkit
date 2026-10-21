@@ -8,12 +8,11 @@ slug = "later"
 [[variant]]
 native_id = "1.3"
 slug = "early"
-[[variable]]
-native_id = "1.5"
-slug = "value"
-[[variable]]
-native_id = "1.99"
-slug = "edition"
+
+[variable]
+"1.5" = "value"
+"1.99" = "edition"
+
 [[errata.delivered]]
 variant = "later"
 donor_variant = "early"

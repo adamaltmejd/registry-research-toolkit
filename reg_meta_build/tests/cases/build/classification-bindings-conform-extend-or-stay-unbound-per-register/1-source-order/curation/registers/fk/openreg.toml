@@ -5,6 +5,6 @@ native_id = {{naming_id kind=register provider=fk register_key=openreg}}
 [[variant]]
 slug = "default"
 native_id = {{naming_id kind=register_variant provider=fk register_key=openreg member_key=_default}}
-[[variable]]
-slug = "opencol"
-native_id = {{naming_id kind=variable provider=fk register_key=openreg member_key=OPENCOL}}
+
+[variable]
+{{naming_id kind=variable provider=fk register_key=openreg member_key=OPENCOL}} = "opencol"

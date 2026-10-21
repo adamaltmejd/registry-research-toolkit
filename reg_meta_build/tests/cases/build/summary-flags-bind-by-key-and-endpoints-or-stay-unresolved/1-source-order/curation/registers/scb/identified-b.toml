@@ -5,6 +5,6 @@ native_id = "11"
 [[variant]]
 native_id = "11.110"
 slug = "people"
-[[variable]]
-native_id = "11.9001"
-slug = "id"
+
+[variable]
+"11.9001" = "id"

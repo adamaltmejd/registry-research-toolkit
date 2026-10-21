@@ -49,6 +49,7 @@ from .documentary import (
 )
 from .errors import RegMetaError
 from .fqid_slugs import (
+    expand_bare_slug,
     load_lineage_config,
 )
 from .normalization import normalize_text
@@ -119,7 +120,7 @@ class ClassificationMetadata(_CurationModel):
     valid_to: int | None = None
     description: str | None = None
     url: str | None = None
-    # Relative to `input_data/classifications/`; SOS books sit under `sos/`.
+    # Relative to the bundle's `classifications/`; SOS books sit under `sos/`.
     codes_file: str
     sentinel_codes: tuple[SentinelCode, ...] = ()
     # How the book's code tree is read. "parent_code": from the CSV's
@@ -305,9 +306,17 @@ class RegisterVariantSlug(_CurationModel):
 
 
 class RegisterVariableSlug(_CurationModel):
-    native_id: str
+    """One `[variable]` pin, keyed by its native id: `"<id>" = "<slug>"`, or an
+    inline table (`"<id>" = { slug = "…", deprecated = true }`) when the pin
+    carries more than its slug."""
+
     slug: str | None = None
     deprecated: bool = False
+
+    @model_validator(mode="before")
+    @classmethod
+    def _bare_slug(cls, value: object) -> object:
+        return expand_bare_slug(value)
 
 
 CatalogDataType = Literal["integer", "decimal", "text", "date"]
@@ -2142,7 +2151,7 @@ class RegisterCuration(_CurationModel):
 
     register_info: RegisterIdentity = Field(validation_alias="register")
     variant: list[RegisterVariantSlug] = Field(default_factory=list)
-    variable: list[RegisterVariableSlug] = Field(default_factory=list)
+    variable: dict[str, RegisterVariableSlug] = Field(default_factory=dict)
     errata: ErrataCuration = Field(default_factory=ErrataCuration)
     enrichment: EnrichmentCuration = Field(default_factory=EnrichmentCuration)
     group: list[RegisterGroupEntry] = Field(default_factory=list)

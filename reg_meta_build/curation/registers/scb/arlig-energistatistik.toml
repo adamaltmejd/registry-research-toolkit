@@ -47,1392 +47,375 @@ panel_entity_key = "orgnr-10"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Oljeleveranser, kommunvis redovisning
-
-[[variable]]
-native_id = "200.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "200.3577"
-slug = "orgnr-10"
-
-
-
-[[variable]]
-native_id = "200.16728.identifier-supported"
-slug = "foretagets-id-nummer"
-[[variable]]
-native_id = "200.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "200.145"
-slug = "identitet"
-
-[[variable]]
-native_id = "200.537"
-slug = "postnr"
-
-[[variable]]
-native_id = "200.1721"
-slug = "bransleforbrukning"
-
-[[variable]]
-native_id = "200.1797"
-slug = "gatuadress"
-
-[[variable]]
-native_id = "200.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "200.16420"
-slug = "kommentar-uppgiftslamnaren"
-
-[[variable]]
-native_id = "200.16428"
-slug = "postort-for-arbetsstallet"
-
-[[variable]]
-native_id = "200.16473"
-slug = "antal-bostadslagenheter"
-
-[[variable]]
-native_id = "200.19529"
-slug = "scbid"
-
-[[variable]]
-native_id = "200.20251"
-slug = "kontrollnr"
-
-[[variable]]
-native_id = "200.24030"
-slug = "namn-juridiska-enheten-scb"
-
-[[variable]]
-native_id = "200.24312"
-slug = "ngast1-intakter-forsaljning-stadsgas"
-
-[[variable]]
-native_id = "200.24313"
-slug = "ngast1-intakter-ovriga-handel"
-
-[[variable]]
-native_id = "200.24314"
-slug = "ngast1-intakter-forsaljning-ng-slutliga"
-
-[[variable]]
-native_id = "200.24315"
-slug = "ngast1-intakter-forsaljning-ng-annan"
-
-[[variable]]
-native_id = "200.24316"
-slug = "ngast1-sysselsattning-antal-handel"
-
-[[variable]]
-native_id = "200.24317"
-slug = "ngast1-kostnad-lonekostnad"
-
-[[variable]]
-native_id = "200.24318"
-slug = "ngast1-kostnad-inkop-naturgas"
-
-[[variable]]
-native_id = "200.24319"
-slug = "ngast1-sysselsattning-timmar-handel"
-
-[[variable]]
-native_id = "200.24320"
-slug = "ngast2-naturgas-kvant"
-
-[[variable]]
-native_id = "200.24321"
-slug = "ngast2-propan-butan-varde"
-
-[[variable]]
-native_id = "200.24322"
-slug = "ngast2-propan-butan-kvant"
-
-[[variable]]
-native_id = "200.24323"
-slug = "ngast2-naturgas-varde"
-
-[[variable]]
-native_id = "200.24324"
-slug = "ngast2-dieselbrannolja-kvant"
-
-[[variable]]
-native_id = "200.24325"
-slug = "ngast2-motorbensin-varde"
-
-[[variable]]
-native_id = "200.24326"
-slug = "ngast2-motorbensin-kvant"
-
-[[variable]]
-native_id = "200.24327"
-slug = "ngast2-dieselbrannolja-varde"
-
-[[variable]]
-native_id = "200.24328"
-slug = "ngast2-eldningsolja-nr1-kvant"
-
-[[variable]]
-native_id = "200.24329"
-slug = "ngast2-eldningsolja-nr1-varde"
-
-[[variable]]
-native_id = "200.24330"
-slug = "ngast2-eldningsolja-nr2-5-kvant"
-
-[[variable]]
-native_id = "200.24331"
-slug = "ngast2-eldningsolja-nr2-5-varde"
-
-[[variable]]
-native_id = "200.24332"
-slug = "ngast2-fjarrvarme-varde"
-
-[[variable]]
-native_id = "200.24333"
-slug = "ngast2-elektrisk-energi-kvant"
-
-[[variable]]
-native_id = "200.24334"
-slug = "ngast2-elektrisk-energi-varde"
-
-[[variable]]
-native_id = "200.24335"
-slug = "ngast2-fjarrvarme-kvant"
-
-[[variable]]
-native_id = "200.24364"
-slug = "sgast2-tillforsel-vid-nationell"
-
-[[variable]]
-native_id = "200.24365"
-slug = "sgast2-tillforsel-lagerandring"
-
-[[variable]]
-native_id = "200.24366"
-slug = "sgast2-tillforsel-i-granspunkt"
-
-[[variable]]
-native_id = "200.24367"
-slug = "sgast2-distribution-till-annat"
-
-[[variable]]
-native_id = "200.24368"
-slug = "sgast2-distribution-till-slutliga"
-
-[[variable]]
-native_id = "200.24369"
-slug = "stadsgas-natanvandning"
-
-[[variable]]
-native_id = "200.24370"
-slug = "sgast2-anvandning-matdifferenser"
-
-[[variable]]
-native_id = "200.24371"
-slug = "sgast2-anvandning-ovrig-forbr"
-
-[[variable]]
-native_id = "200.24375"
-slug = "sgast3-uttagspunkter-sni-01-02-03"
-
-[[variable]]
-native_id = "200.24378"
-slug = "sgast3-uttagspunkter-sni-01-1-01-3"
-
-[[variable]]
-native_id = "200.24379"
-slug = "sgast3-uttagspunkter-sni-05-33"
-
-[[variable]]
-native_id = "200.24380"
-slug = "sgast3-uttagspunkter-sni-35-1-35-3"
-
-[[variable]]
-native_id = "200.24381"
-slug = "sgast3-uttagspunkter-sni-36-001-002"
-
-[[variable]]
-native_id = "200.24382"
-slug = "sgast3-uttagspunkter-sni-37-39"
-
-[[variable]]
-native_id = "200.24383"
-slug = "sgast3-uttagspunkter-sni-41-43"
-
-[[variable]]
-native_id = "200.24384"
-slug = "sgast3-uttagspunkter-sni-46"
-
-[[variable]]
-native_id = "200.24386"
-slug = "sgast3-uttagspunkter-sni-45-47"
-
-[[variable]]
-native_id = "200.24387"
-slug = "sgast3-uttagspunkter-sni-49-1-49-31"
-
-[[variable]]
-native_id = "200.24388"
-slug = "sgast3-uttagspunkter-sni-49-32-52"
-
-[[variable]]
-native_id = "200.24389"
-slug = "sgast3-uttagspunkter-sni-53"
-
-[[variable]]
-native_id = "200.24390"
-slug = "sgast3-uttagspunkter-sni-64-66"
-
-[[variable]]
-native_id = "200.24391"
-slug = "sgast3-uttagspunkter-sni-68-2-68-32"
-
-[[variable]]
-native_id = "200.24392"
-slug = "sgast3-uttagspunkter-sni-69-71-77-82"
-
-[[variable]]
-native_id = "200.24393"
-slug = "sgast3-uttagspunkter-sni-72-85"
-
-[[variable]]
-native_id = "200.24394"
-slug = "sgast3-uttagspunkter-sni-75-86-88"
-
-[[variable]]
-native_id = "200.24395"
-slug = "sgast3-uttagspunkter-sni-55-56"
-
-[[variable]]
-native_id = "200.24396"
-slug = "sgast3-uttagspunkter-sni-90-93"
-
-[[variable]]
-native_id = "200.24397"
-slug = "sgast3-uttagspunkter-sni-94-96-99"
-
-[[variable]]
-native_id = "200.24398"
-slug = "sgast3-uttagspunkter-sni-84"
-
-[[variable]]
-native_id = "200.24399"
-slug = "sgast3-uttagspunkter-flerbost"
-
-[[variable]]
-native_id = "200.24400"
-slug = "sgast3-uttagspunkter-flerbost-husgas"
-
-[[variable]]
-native_id = "200.24401"
-slug = "sgast3-uttagspunkter-flerbost-uppvarmgas"
-
-[[variable]]
-native_id = "200.24402"
-slug = "sgast3-uttagspunkter-flerbost-bada-gas"
-
-[[variable]]
-native_id = "200.24403"
-slug = "sgast3-uttagspunkter-entvabost-husgas"
-
-[[variable]]
-native_id = "200.24404"
-slug = "sgast3-uttagspunkter-entvabost"
-
-[[variable]]
-native_id = "200.24408"
-slug = "sgast3-dist-slutlig-sni-01-02-03"
-
-[[variable]]
-native_id = "200.24409"
-slug = "sgast3-dist-slutlig-sni-01-1-01-3"
-
-[[variable]]
-native_id = "200.24410"
-slug = "sgast3-dist-slutlig-sni-05-33-ravara"
-
-[[variable]]
-native_id = "200.24411"
-slug = "sgast3-dist-slutlig-sni-35-1-35-3"
-
-[[variable]]
-native_id = "200.24412"
-slug = "sgast3-dist-slutlig-sni-36-001-002"
-
-[[variable]]
-native_id = "200.24413"
-slug = "sgast3-dist-slutlig-sni-37-39"
-
-[[variable]]
-native_id = "200.24414"
-slug = "sgast3-dist-slutlig-sni-41-43"
-
-[[variable]]
-native_id = "200.24415"
-slug = "sgast3-dist-slutlig-sni-46"
-
-[[variable]]
-native_id = "200.24416"
-slug = "sgast3-dist-slutlig-sni-45-47"
-
-[[variable]]
-native_id = "200.24417"
-slug = "sgast3-dist-slutlig-sni-49-1-49-31"
-
-[[variable]]
-native_id = "200.24418"
-slug = "sgast3-dist-slutlig-sni-05-33"
-
-[[variable]]
-native_id = "200.24422"
-slug = "sgast3-dist-slutlig-sni-49-32-52"
-
-[[variable]]
-native_id = "200.24423"
-slug = "sgast3-dist-slutlig-sni-64-66"
-
-[[variable]]
-native_id = "200.24424"
-slug = "sgast3-dist-slutlig-sni-68-2-68-32"
-
-[[variable]]
-native_id = "200.24425"
-slug = "sgast3-dist-slutlig-sni-69-71-77-82"
-
-[[variable]]
-native_id = "200.24426"
-slug = "sgast3-dist-slutlig-sni-72-85"
-
-[[variable]]
-native_id = "200.24427"
-slug = "sgast3-dist-slutlig-sni-75-86-88"
-
-[[variable]]
-native_id = "200.24428"
-slug = "sgast3-dist-slutlig-sni-55-56"
-
-[[variable]]
-native_id = "200.24429"
-slug = "sgast3-dist-slutlig-sni-90-93"
-
-[[variable]]
-native_id = "200.24430"
-slug = "sgast3-dist-slutlig-sni-94-96-99"
-
-[[variable]]
-native_id = "200.24431"
-slug = "sgast3-dist-slutlig-sni-53"
-
-[[variable]]
-native_id = "200.24432"
-slug = "sgast3-dist-slutlig-sni-84"
-
-[[variable]]
-native_id = "200.24433"
-slug = "sgast3-dist-slutlig-flerbost"
-
-[[variable]]
-native_id = "200.24434"
-slug = "sgast3-dist-slutlig-flerbost-husgas"
-
-[[variable]]
-native_id = "200.24435"
-slug = "sgast3-dist-slutlig-flerbost-uppvarmgas"
-
-[[variable]]
-native_id = "200.24436"
-slug = "stadsgas-distribuerad"
-
-[[variable]]
-native_id = "200.24437"
-slug = "sgast3-dist-slutlig-entvabost"
-
-[[variable]]
-native_id = "200.24438"
-slug = "sgast3-dist-slutlig-entvabost-husgas"
-
-[[variable]]
-native_id = "200.24440"
-slug = "sgast3-uttagspunkter-sni-05-33-ravara"
-
-[[variable]]
-native_id = "200.24451"
-slug = "ngast1-intakter-overforing-ng-annan"
-
-[[variable]]
-native_id = "200.24454"
-slug = "ngast1-intakter-overforing-ng-slutliga"
-
-[[variable]]
-native_id = "200.24455"
-slug = "ngast1-intakter-overforing-biogas-annan"
-
-[[variable]]
-native_id = "200.24456"
-slug = "ngast1-intakter-overforing-sg-slutliga"
-
-[[variable]]
-native_id = "200.24457"
-slug = "ngast1-intakter-anslutningsavgifter"
-
-[[variable]]
-native_id = "200.24458"
-slug = "ngast1-intakter-ovriga-nat"
-
-[[variable]]
-native_id = "200.24459"
-slug = "ngast1-kostnader-inkop-naturgas"
-
-[[variable]]
-native_id = "200.24460"
-slug = "ngast1-kostnader-inkop-biogas"
-
-[[variable]]
-native_id = "200.24461"
-slug = "ngast1-kostnader-inkop-ovriga"
-
-[[variable]]
-native_id = "200.24462"
-slug = "ngast1-kostnader-loner"
-
-[[variable]]
-native_id = "200.24463"
-slug = "ngast1-sysselsattning-antal-nat"
-
-[[variable]]
-native_id = "200.24464"
-slug = "ngast1-sysselsattning-timmar-nat"
-
-[[variable]]
-native_id = "200.24466"
-slug = "ngast2-tillforsel-mottaget-nationell"
-
-[[variable]]
-native_id = "200.24468"
-slug = "ngast2-tillforsel-lagerforandring"
-
-[[variable]]
-native_id = "200.24469"
-slug = "ngast2-tillforsel-mottaget-granspunkt"
-
-[[variable]]
-native_id = "200.24471"
-slug = "ngast2-anvandning-konverterad-stadsgas"
-
-[[variable]]
-native_id = "200.24472"
-slug = "ngast2-anvandning-matdifferenser"
-
-[[variable]]
-native_id = "200.24473"
-slug = "ngast2-anvandning-ovrig-forbrukning"
-
-[[variable]]
-native_id = "200.24476"
-slug = "ngast2-distribution-ng-slutliga"
-
-[[variable]]
-native_id = "200.24477"
-slug = "ngast2-distribution-biogas-slutliga"
-
-[[variable]]
-native_id = "200.24478"
-slug = "ngast2-distribution-ng-annat-omrade"
-
-[[variable]]
-native_id = "200.24480"
-slug = "ngast3-distribution-sni-01"
-
-[[variable]]
-native_id = "200.24482"
-slug = "ngast3-distribution-sni-01-2"
-
-[[variable]]
-native_id = "200.24483"
-slug = "ngast3-distribution-sni-05-totalt"
-
-[[variable]]
-native_id = "200.24484"
-slug = "ngast3-distribution-sni-05-ravara"
-
-[[variable]]
-native_id = "200.24485"
-slug = "ngast3-distribution-sni-36"
-
-[[variable]]
-native_id = "200.24486"
-slug = "ngast3-distribution-sni-37"
-
-[[variable]]
-native_id = "200.24488"
-slug = "ngast3-distribution-sni-41"
-
-[[variable]]
-native_id = "200.24489"
-slug = "ngast3-distribution-sni-46"
-
-[[variable]]
-native_id = "200.24490"
-slug = "ngast3-distribution-sni-45"
-
-[[variable]]
-native_id = "200.24491"
-slug = "ngast3-distribution-sni-49"
-
-[[variable]]
-native_id = "200.24492"
-slug = "ngast3-distribution-sni-49-52"
-
-[[variable]]
-native_id = "200.24493"
-slug = "ngast3-distribution-sni-53"
-
-[[variable]]
-native_id = "200.24494"
-slug = "ngast3-distribution-sni-64"
-
-[[variable]]
-native_id = "200.24495"
-slug = "ngast3-distribution-sni-68"
-
-[[variable]]
-native_id = "200.24496"
-slug = "ngast3-distribution-sni-69"
-
-[[variable]]
-native_id = "200.24497"
-slug = "ngast3-distribution-sni-72"
-
-[[variable]]
-native_id = "200.24498"
-slug = "ngast3-distribution-sni-75"
-
-[[variable]]
-native_id = "200.24499"
-slug = "ngast3-distribution-sni-55"
-
-[[variable]]
-native_id = "200.24500"
-slug = "ngast3-distribution-sni-90"
-
-[[variable]]
-native_id = "200.24501"
-slug = "ngast3-distribution-sni-94"
-
-[[variable]]
-native_id = "200.24502"
-slug = "ngast3-distribution-sni-84"
-
-[[variable]]
-native_id = "200.24505"
-slug = "ngast3-mwh-flerbostadshus-totalt"
-
-[[variable]]
-native_id = "200.24506"
-slug = "ngast3-mwh-flerbostadshus-hushallsgas"
-
-[[variable]]
-native_id = "200.24507"
-slug = "ngast3-mwh-flerbostadshus-uppvarmning"
-
-[[variable]]
-native_id = "200.24508"
-slug = "ngast3-mwh-flerbostadshus-bada"
-
-[[variable]]
-native_id = "200.24509"
-slug = "ngast3-mwh-enbostadshus-totalt"
-
-[[variable]]
-native_id = "200.24510"
-slug = "ngast3-mwh-enbostadshus-hushallsgas"
-
-[[variable]]
-native_id = "200.24512"
-slug = "ngast3-distribution-sni-35"
-
-[[variable]]
-native_id = "200.24525"
-slug = "ngast3-uttag-sni-01"
-
-[[variable]]
-native_id = "200.24526"
-slug = "ngast3-uttag-sni-01-delav"
-
-[[variable]]
-native_id = "200.24527"
-slug = "ngast3-uttag-sni-05-totalt"
-
-[[variable]]
-native_id = "200.24528"
-slug = "ngast3-uttag-sni-05-ravara"
-
-[[variable]]
-native_id = "200.24529"
-slug = "ngast3-uttag-sni-35"
-
-[[variable]]
-native_id = "200.24530"
-slug = "ngast3-uttag-sni-36"
-
-[[variable]]
-native_id = "200.24531"
-slug = "ngast3-uttag-sni-37"
-
-[[variable]]
-native_id = "200.24532"
-slug = "ngast3-uttag-sni-41"
-
-[[variable]]
-native_id = "200.24533"
-slug = "ngast3-uttag-sni-46"
-
-[[variable]]
-native_id = "200.24534"
-slug = "ngast3-uttag-sni-45"
-
-[[variable]]
-native_id = "200.24535"
-slug = "ngast3-uttag-sni-49"
-
-[[variable]]
-native_id = "200.24536"
-slug = "ngast3-uttag-sni-49-52"
-
-[[variable]]
-native_id = "200.24537"
-slug = "ngast3-uttag-sni-53"
-
-[[variable]]
-native_id = "200.24538"
-slug = "ngast3-uttag-sni-64"
-
-[[variable]]
-native_id = "200.24539"
-slug = "ngast3-uttag-sni-68"
-
-[[variable]]
-native_id = "200.24540"
-slug = "ngast3-uttag-sni-69"
-
-[[variable]]
-native_id = "200.24541"
-slug = "ngast3-uttag-sni-72"
-
-[[variable]]
-native_id = "200.24542"
-slug = "ngast3-uttag-sni-75"
-
-[[variable]]
-native_id = "200.24543"
-slug = "ngast3-uttag-sni-55"
-
-[[variable]]
-native_id = "200.24544"
-slug = "ngast3-uttag-sni-90"
-
-[[variable]]
-native_id = "200.24545"
-slug = "ngast3-uttag-sni-94"
-
-[[variable]]
-native_id = "200.24546"
-slug = "ngast3-uttag-sni-84"
-
-[[variable]]
-native_id = "200.24547"
-slug = "ngast3-uttag-flerbostadshus-totalt"
-
-[[variable]]
-native_id = "200.24548"
-slug = "ngast3-uttag-flerbostadshus-hushallsgas"
-
-[[variable]]
-native_id = "200.24549"
-slug = "ngast3-uttag-enbostadshus-hushallsgas"
-
-[[variable]]
-native_id = "200.24550"
-slug = "ngast3-uttag-flerbostadshus-uppvarmning"
-
-[[variable]]
-native_id = "200.24551"
-slug = "ngast3-uttag-flerbostadshus-bada"
-
-[[variable]]
-native_id = "200.24552"
-slug = "ngast3-uttag-enbostadshus-totalt"
-
-[[variable]]
-native_id = "200.24553"
-slug = "ngast4-propan-butan-kvantitet"
-
-[[variable]]
-native_id = "200.24554"
-slug = "ngast4-propan-butan-varde"
-
-[[variable]]
-native_id = "200.24555"
-slug = "ngast4-propan-butan-ersatt-kvantitet"
-
-[[variable]]
-native_id = "200.24556"
-slug = "ngast4-propan-butan-ersatt-varde"
-
-[[variable]]
-native_id = "200.24559"
-slug = "ngast4-naturgas-kvantitet"
-
-[[variable]]
-native_id = "200.24561"
-slug = "ngast4-naturgas-varde"
-
-[[variable]]
-native_id = "200.24563"
-slug = "ngast4-motorbensin-kvantitet"
-
-[[variable]]
-native_id = "200.24564"
-slug = "ngast4-motorbensin-varde"
-
-[[variable]]
-native_id = "200.24565"
-slug = "ngast4-dieselbrannolja-kvantitet"
-
-[[variable]]
-native_id = "200.24566"
-slug = "ngast4-dieselbrannolja-varde"
-
-[[variable]]
-native_id = "200.24567"
-slug = "ngast4-eldningsolja-nr-1-kvantitet"
-
-[[variable]]
-native_id = "200.24568"
-slug = "ngast4-eldningsolja-nr-1-varde"
-
-[[variable]]
-native_id = "200.24572"
-slug = "ngast4-eldningsolja-nr-2-5-kvantitet"
-
-[[variable]]
-native_id = "200.24573"
-slug = "ngast4-eldningsolja-nr-2-5-varde"
-
-[[variable]]
-native_id = "200.24578"
-slug = "ngast4-fjarrvarme-kvantitet"
-
-[[variable]]
-native_id = "200.24579"
-slug = "ngast4-fjarrvarme-varde"
-
-[[variable]]
-native_id = "200.24581"
-slug = "ngast4-elektrisk-energi-kvantitet"
-
-[[variable]]
-native_id = "200.24582"
-slug = "ngast4-elektrisk-energi-varde"
-
-[[variable]]
-native_id = "200.24586"
-slug = "ngast5-ng-flerbostadshus-totalt"
-
-[[variable]]
-native_id = "200.24587"
-slug = "ngast5-ng-flerbostadshus-hushallsgas"
-
-[[variable]]
-native_id = "200.24588"
-slug = "ngast5-ng-flerbostadshus-uppvarmning"
-
-[[variable]]
-native_id = "200.24589"
-slug = "ngast5-ng-flerbostadshus-bada"
-
-[[variable]]
-native_id = "200.24590"
-slug = "ngast5-ng-enbostadshus-totalt"
-
-[[variable]]
-native_id = "200.24591"
-slug = "ngast5-naturgas-entva-hushall"
-
-[[variable]]
-native_id = "200.24592"
-slug = "ngast5-stadsgas-flerb-totalt"
-
-[[variable]]
-native_id = "200.24593"
-slug = "ngast5-stadsgas-flerb-hushall"
-
-[[variable]]
-native_id = "200.24594"
-slug = "ngast5-stadsgas-flerb-uppvarmning"
-
-[[variable]]
-native_id = "200.24595"
-slug = "ngast5-stadsgas-flerb-2-gastyper"
-
-[[variable]]
-native_id = "200.24596"
-slug = "ngast5-stadsgas-entva-totalt"
-
-[[variable]]
-native_id = "200.24597"
-slug = "ngast5-stadsgas-entva-hushall"
-
-[[variable]]
-native_id = "200.24602"
-slug = "ngast3-distrib-slutlig-forbrukare-totalt"
-
-[[variable]]
-native_id = "200.24603"
-slug = "ngast3-uttagspunkter-totalt"
-
-[[variable]]
-native_id = "200.24604"
-slug = "ngast6-inv-naturgas-produktion"
-
-[[variable]]
-native_id = "200.24605"
-slug = "ngast6-inv-naturgas-transnat-totalt"
-
-[[variable]]
-native_id = "200.24606"
-slug = "ngast6-inv-naturgas-transnat-ledningar"
-
-[[variable]]
-native_id = "200.24607"
-slug = "ngast6-inv-naturgas-transnat-stationer"
-
-[[variable]]
-native_id = "200.24608"
-slug = "ngast6-inv-naturgas-transnat-lager"
-
-[[variable]]
-native_id = "200.24609"
-slug = "ngast6-inv-naturgas-distnat-totalt"
-
-[[variable]]
-native_id = "200.24610"
-slug = "ngast6-inv-naturgas-distnat-ledningar"
-
-[[variable]]
-native_id = "200.24611"
-slug = "ngast6-inv-naturgas-distnat-stationer"
-
-[[variable]]
-native_id = "200.24612"
-slug = "ngast6-inv-naturgas-distnat-lager"
-
-[[variable]]
-native_id = "200.24613"
-slug = "ngast6-inv-naturgas-ovrigt"
-
-[[variable]]
-native_id = "200.24615"
-slug = "ngast6-inv-stadsgas-produktion"
-
-[[variable]]
-native_id = "200.24616"
-slug = "ngast6-inv-stadsgas-transnat-totalt"
-
-[[variable]]
-native_id = "200.24617"
-slug = "ngast6-inv-stadsgas-transnat-ledningar"
-
-[[variable]]
-native_id = "200.24618"
-slug = "ngast6-inv-stadsgas-transnat-stationer"
-
-[[variable]]
-native_id = "200.24619"
-slug = "ngast6-inv-stadsgas-transnat-lager"
-
-[[variable]]
-native_id = "200.24620"
-slug = "ngast6-inv-stadsgas-distnat-totalt"
-
-[[variable]]
-native_id = "200.24621"
-slug = "ngast6-inv-stadsgas-distnat-ledningar"
-
-[[variable]]
-native_id = "200.24622"
-slug = "ngast6-inv-stadsgas-distnat-stationer"
-
-[[variable]]
-native_id = "200.24623"
-slug = "ngast6-inv-stadsgas-distnat-lager"
-
-[[variable]]
-native_id = "200.24624"
-slug = "ngast6-inv-stadsgas-ovrigt"
-
-[[variable]]
-native_id = "200.24627"
-slug = "ngast7-transnat-naturgas-km"
-
-[[variable]]
-native_id = "200.24630"
-slug = "ngast7-transnat-naturgas-stationer"
-
-[[variable]]
-native_id = "200.24632"
-slug = "ngast7-transnat-stadsgas-km"
-
-[[variable]]
-native_id = "200.24633"
-slug = "ngast7-transnat-stadsgas-stationer"
-
-[[variable]]
-native_id = "200.24634"
-slug = "ngast7-distnat-naturgas-km"
-
-[[variable]]
-native_id = "200.24635"
-slug = "ngast7-distnat-naturgas-stationer"
-
-[[variable]]
-native_id = "200.24636"
-slug = "ngast7-distnat-stadsgas-km"
-
-[[variable]]
-native_id = "200.24637"
-slug = "ngast7-distnat-stadsgas-stationer"
-
-[[variable]]
-native_id = "200.24639"
-slug = "ngast8-app-hushall-spisar"
-
-[[variable]]
-native_id = "200.24640"
-slug = "ngast8-app-hushall-varmvatten"
-
-[[variable]]
-native_id = "200.24641"
-slug = "ngast8-app-hushall-ovriga"
-
-[[variable]]
-native_id = "200.24642"
-slug = "ngast8-app-hushall-totalt"
-
-[[variable]]
-native_id = "200.24643"
-slug = "ngast8-app-varme-panncentraler"
-
-[[variable]]
-native_id = "200.24644"
-slug = "ngast8-app-varme-varmepannor-entva"
-
-[[variable]]
-native_id = "200.24645"
-slug = "ngast8-app-varme-varmepannor-flerb"
-
-[[variable]]
-native_id = "200.24646"
-slug = "ngast8-app-varme-ovrigt"
-
-[[variable]]
-native_id = "200.24647"
-slug = "ngast8-app-varme-totalt"
-
-[[variable]]
-native_id = "200.24648"
-slug = "ngast8-app-industri-uppvarmning"
-
-[[variable]]
-native_id = "200.24649"
-slug = "ngast8-app-industri-direktanvandning"
-
-[[variable]]
-native_id = "200.24650"
-slug = "ngast8-app-industri-ovrig-anvandning"
-
-[[variable]]
-native_id = "200.24651"
-slug = "ngast8-app-industri-totalt"
-
-[[variable]]
-native_id = "200.24652"
-slug = "ngast8-app-ovriga-restauranger"
-
-[[variable]]
-native_id = "200.24653"
-slug = "ngast8-app-ovriga-tradgardsodling"
-
-[[variable]]
-native_id = "200.24654"
-slug = "ngast8-app-ovriga-ovrigt"
-
-[[variable]]
-native_id = "200.24655"
-slug = "ngast8-app-ovriga-totalt"
-
-[[variable]]
-native_id = "200.24678"
-slug = "administrativa-variabler-gasforetag"
-
-[[variable]]
-native_id = "200.35270"
-slug = "anlaggningens-namn"
-
-[[variable]]
-native_id = "200.35289"
-slug = "typ-av-aggregat"
-
-[[variable]]
-native_id = "200.35296"
-slug = "generatoreffekt-maxnetto-optimalt"
-
-[[variable]]
-native_id = "200.35297"
-slug = "generatoreffekt-maxnetto-huvudbransle"
-
-[[variable]]
-native_id = "200.35300"
-slug = "varmeproduktion-brutto-mottryck"
-
-[[variable]]
-native_id = "200.35304"
-slug = "inkopsvarde"
-
-[[variable]]
-native_id = "200.35311"
-slug = "forbrukning-varmeproduktion-mottryck"
-
-[[variable]]
-native_id = "200.35328"
-slug = "antal-abonnemang"
-
-[[variable]]
-native_id = "200.35397"
-slug = "verkningsgrad"
-
-[[variable]]
-native_id = "200.35402"
-slug = "bransle-for-varmeproduktion"
-
-[[variable]]
-native_id = "200.35403"
-slug = "varmevarde-vid-varmeproduktion"
-
-[[variable]]
-native_id = "200.35427"
-slug = "tillford-el-vid-eget-nat"
-
-[[variable]]
-native_id = "200.35431"
-slug = "uttagen-el-fran-eget-nat"
-
-[[variable]]
-native_id = "200.35432"
-slug = "mwh-tillford-el-eget-nat"
-
-[[variable]]
-native_id = "200.35433"
-slug = "mwh-uttagen-el-fran-eget-nat"
-
-[[variable]]
-native_id = "200.35439"
-slug = "overford-el-antal-mwh-hogspanning"
-
-[[variable]]
-native_id = "200.35441"
-slug = "overford-el-antal-mwh-lagspanning"
-
-[[variable]]
-native_id = "200.35446"
-slug = "elproduktion-egenforbrukning-bransle"
-
-[[variable]]
-native_id = "200.35464"
-slug = "bransle-for-produktion-av-enbart-varme"
-
-[[variable]]
-native_id = "200.35465"
-slug = "bransle-for-kraftvarmeproduktion"
-
-[[variable]]
-native_id = "200.40052"
-slug = "radnummer"
-
-[[variable]]
-native_id = "200.45900"
-slug = "generatoreffekt-maxnetto"
+"200.1839" = "orgnr"
+"200.3577" = "orgnr-10"
+"200.16728.identifier-supported" = "foretagets-id-nummer"
+"200.36" = "kommun"
+"200.145" = "identitet"
+"200.537" = "postnr"
+"200.1721" = "bransleforbrukning"
+"200.1797" = "gatuadress"
+"200.2014" = "foretagsnamn"
+"200.16420" = "kommentar-uppgiftslamnaren"
+"200.16428" = "postort-for-arbetsstallet"
+"200.16473" = "antal-bostadslagenheter"
+"200.19529" = "scbid"
+"200.20251" = "kontrollnr"
+"200.24030" = "namn-juridiska-enheten-scb"
+"200.24312" = "ngast1-intakter-forsaljning-stadsgas"
+"200.24313" = "ngast1-intakter-ovriga-handel"
+"200.24314" = "ngast1-intakter-forsaljning-ng-slutliga"
+"200.24315" = "ngast1-intakter-forsaljning-ng-annan"
+"200.24316" = "ngast1-sysselsattning-antal-handel"
+"200.24317" = "ngast1-kostnad-lonekostnad"
+"200.24318" = "ngast1-kostnad-inkop-naturgas"
+"200.24319" = "ngast1-sysselsattning-timmar-handel"
+"200.24320" = "ngast2-naturgas-kvant"
+"200.24321" = "ngast2-propan-butan-varde"
+"200.24322" = "ngast2-propan-butan-kvant"
+"200.24323" = "ngast2-naturgas-varde"
+"200.24324" = "ngast2-dieselbrannolja-kvant"
+"200.24325" = "ngast2-motorbensin-varde"
+"200.24326" = "ngast2-motorbensin-kvant"
+"200.24327" = "ngast2-dieselbrannolja-varde"
+"200.24328" = "ngast2-eldningsolja-nr1-kvant"
+"200.24329" = "ngast2-eldningsolja-nr1-varde"
+"200.24330" = "ngast2-eldningsolja-nr2-5-kvant"
+"200.24331" = "ngast2-eldningsolja-nr2-5-varde"
+"200.24332" = "ngast2-fjarrvarme-varde"
+"200.24333" = "ngast2-elektrisk-energi-kvant"
+"200.24334" = "ngast2-elektrisk-energi-varde"
+"200.24335" = "ngast2-fjarrvarme-kvant"
+"200.24364" = "sgast2-tillforsel-vid-nationell"
+"200.24365" = "sgast2-tillforsel-lagerandring"
+"200.24366" = "sgast2-tillforsel-i-granspunkt"
+"200.24367" = "sgast2-distribution-till-annat"
+"200.24368" = "sgast2-distribution-till-slutliga"
+"200.24369" = "stadsgas-natanvandning"
+"200.24370" = "sgast2-anvandning-matdifferenser"
+"200.24371" = "sgast2-anvandning-ovrig-forbr"
+"200.24375" = "sgast3-uttagspunkter-sni-01-02-03"
+"200.24378" = "sgast3-uttagspunkter-sni-01-1-01-3"
+"200.24379" = "sgast3-uttagspunkter-sni-05-33"
+"200.24380" = "sgast3-uttagspunkter-sni-35-1-35-3"
+"200.24381" = "sgast3-uttagspunkter-sni-36-001-002"
+"200.24382" = "sgast3-uttagspunkter-sni-37-39"
+"200.24383" = "sgast3-uttagspunkter-sni-41-43"
+"200.24384" = "sgast3-uttagspunkter-sni-46"
+"200.24386" = "sgast3-uttagspunkter-sni-45-47"
+"200.24387" = "sgast3-uttagspunkter-sni-49-1-49-31"
+"200.24388" = "sgast3-uttagspunkter-sni-49-32-52"
+"200.24389" = "sgast3-uttagspunkter-sni-53"
+"200.24390" = "sgast3-uttagspunkter-sni-64-66"
+"200.24391" = "sgast3-uttagspunkter-sni-68-2-68-32"
+"200.24392" = "sgast3-uttagspunkter-sni-69-71-77-82"
+"200.24393" = "sgast3-uttagspunkter-sni-72-85"
+"200.24394" = "sgast3-uttagspunkter-sni-75-86-88"
+"200.24395" = "sgast3-uttagspunkter-sni-55-56"
+"200.24396" = "sgast3-uttagspunkter-sni-90-93"
+"200.24397" = "sgast3-uttagspunkter-sni-94-96-99"
+"200.24398" = "sgast3-uttagspunkter-sni-84"
+"200.24399" = "sgast3-uttagspunkter-flerbost"
+"200.24400" = "sgast3-uttagspunkter-flerbost-husgas"
+"200.24401" = "sgast3-uttagspunkter-flerbost-uppvarmgas"
+"200.24402" = "sgast3-uttagspunkter-flerbost-bada-gas"
+"200.24403" = "sgast3-uttagspunkter-entvabost-husgas"
+"200.24404" = "sgast3-uttagspunkter-entvabost"
+"200.24408" = "sgast3-dist-slutlig-sni-01-02-03"
+"200.24409" = "sgast3-dist-slutlig-sni-01-1-01-3"
+"200.24410" = "sgast3-dist-slutlig-sni-05-33-ravara"
+"200.24411" = "sgast3-dist-slutlig-sni-35-1-35-3"
+"200.24412" = "sgast3-dist-slutlig-sni-36-001-002"
+"200.24413" = "sgast3-dist-slutlig-sni-37-39"
+"200.24414" = "sgast3-dist-slutlig-sni-41-43"
+"200.24415" = "sgast3-dist-slutlig-sni-46"
+"200.24416" = "sgast3-dist-slutlig-sni-45-47"
+"200.24417" = "sgast3-dist-slutlig-sni-49-1-49-31"
+"200.24418" = "sgast3-dist-slutlig-sni-05-33"
+"200.24422" = "sgast3-dist-slutlig-sni-49-32-52"
+"200.24423" = "sgast3-dist-slutlig-sni-64-66"
+"200.24424" = "sgast3-dist-slutlig-sni-68-2-68-32"
+"200.24425" = "sgast3-dist-slutlig-sni-69-71-77-82"
+"200.24426" = "sgast3-dist-slutlig-sni-72-85"
+"200.24427" = "sgast3-dist-slutlig-sni-75-86-88"
+"200.24428" = "sgast3-dist-slutlig-sni-55-56"
+"200.24429" = "sgast3-dist-slutlig-sni-90-93"
+"200.24430" = "sgast3-dist-slutlig-sni-94-96-99"
+"200.24431" = "sgast3-dist-slutlig-sni-53"
+"200.24432" = "sgast3-dist-slutlig-sni-84"
+"200.24433" = "sgast3-dist-slutlig-flerbost"
+"200.24434" = "sgast3-dist-slutlig-flerbost-husgas"
+"200.24435" = "sgast3-dist-slutlig-flerbost-uppvarmgas"
+"200.24436" = "stadsgas-distribuerad"
+"200.24437" = "sgast3-dist-slutlig-entvabost"
+"200.24438" = "sgast3-dist-slutlig-entvabost-husgas"
+"200.24440" = "sgast3-uttagspunkter-sni-05-33-ravara"
+"200.24451" = "ngast1-intakter-overforing-ng-annan"
+"200.24454" = "ngast1-intakter-overforing-ng-slutliga"
+"200.24455" = "ngast1-intakter-overforing-biogas-annan"
+"200.24456" = "ngast1-intakter-overforing-sg-slutliga"
+"200.24457" = "ngast1-intakter-anslutningsavgifter"
+"200.24458" = "ngast1-intakter-ovriga-nat"
+"200.24459" = "ngast1-kostnader-inkop-naturgas"
+"200.24460" = "ngast1-kostnader-inkop-biogas"
+"200.24461" = "ngast1-kostnader-inkop-ovriga"
+"200.24462" = "ngast1-kostnader-loner"
+"200.24463" = "ngast1-sysselsattning-antal-nat"
+"200.24464" = "ngast1-sysselsattning-timmar-nat"
+"200.24466" = "ngast2-tillforsel-mottaget-nationell"
+"200.24468" = "ngast2-tillforsel-lagerforandring"
+"200.24469" = "ngast2-tillforsel-mottaget-granspunkt"
+"200.24471" = "ngast2-anvandning-konverterad-stadsgas"
+"200.24472" = "ngast2-anvandning-matdifferenser"
+"200.24473" = "ngast2-anvandning-ovrig-forbrukning"
+"200.24476" = "ngast2-distribution-ng-slutliga"
+"200.24477" = "ngast2-distribution-biogas-slutliga"
+"200.24478" = "ngast2-distribution-ng-annat-omrade"
+"200.24480" = "ngast3-distribution-sni-01"
+"200.24482" = "ngast3-distribution-sni-01-2"
+"200.24483" = "ngast3-distribution-sni-05-totalt"
+"200.24484" = "ngast3-distribution-sni-05-ravara"
+"200.24485" = "ngast3-distribution-sni-36"
+"200.24486" = "ngast3-distribution-sni-37"
+"200.24488" = "ngast3-distribution-sni-41"
+"200.24489" = "ngast3-distribution-sni-46"
+"200.24490" = "ngast3-distribution-sni-45"
+"200.24491" = "ngast3-distribution-sni-49"
+"200.24492" = "ngast3-distribution-sni-49-52"
+"200.24493" = "ngast3-distribution-sni-53"
+"200.24494" = "ngast3-distribution-sni-64"
+"200.24495" = "ngast3-distribution-sni-68"
+"200.24496" = "ngast3-distribution-sni-69"
+"200.24497" = "ngast3-distribution-sni-72"
+"200.24498" = "ngast3-distribution-sni-75"
+"200.24499" = "ngast3-distribution-sni-55"
+"200.24500" = "ngast3-distribution-sni-90"
+"200.24501" = "ngast3-distribution-sni-94"
+"200.24502" = "ngast3-distribution-sni-84"
+"200.24505" = "ngast3-mwh-flerbostadshus-totalt"
+"200.24506" = "ngast3-mwh-flerbostadshus-hushallsgas"
+"200.24507" = "ngast3-mwh-flerbostadshus-uppvarmning"
+"200.24508" = "ngast3-mwh-flerbostadshus-bada"
+"200.24509" = "ngast3-mwh-enbostadshus-totalt"
+"200.24510" = "ngast3-mwh-enbostadshus-hushallsgas"
+"200.24512" = "ngast3-distribution-sni-35"
+"200.24525" = "ngast3-uttag-sni-01"
+"200.24526" = "ngast3-uttag-sni-01-delav"
+"200.24527" = "ngast3-uttag-sni-05-totalt"
+"200.24528" = "ngast3-uttag-sni-05-ravara"
+"200.24529" = "ngast3-uttag-sni-35"
+"200.24530" = "ngast3-uttag-sni-36"
+"200.24531" = "ngast3-uttag-sni-37"
+"200.24532" = "ngast3-uttag-sni-41"
+"200.24533" = "ngast3-uttag-sni-46"
+"200.24534" = "ngast3-uttag-sni-45"
+"200.24535" = "ngast3-uttag-sni-49"
+"200.24536" = "ngast3-uttag-sni-49-52"
+"200.24537" = "ngast3-uttag-sni-53"
+"200.24538" = "ngast3-uttag-sni-64"
+"200.24539" = "ngast3-uttag-sni-68"
+"200.24540" = "ngast3-uttag-sni-69"
+"200.24541" = "ngast3-uttag-sni-72"
+"200.24542" = "ngast3-uttag-sni-75"
+"200.24543" = "ngast3-uttag-sni-55"
+"200.24544" = "ngast3-uttag-sni-90"
+"200.24545" = "ngast3-uttag-sni-94"
+"200.24546" = "ngast3-uttag-sni-84"
+"200.24547" = "ngast3-uttag-flerbostadshus-totalt"
+"200.24548" = "ngast3-uttag-flerbostadshus-hushallsgas"
+"200.24549" = "ngast3-uttag-enbostadshus-hushallsgas"
+"200.24550" = "ngast3-uttag-flerbostadshus-uppvarmning"
+"200.24551" = "ngast3-uttag-flerbostadshus-bada"
+"200.24552" = "ngast3-uttag-enbostadshus-totalt"
+"200.24553" = "ngast4-propan-butan-kvantitet"
+"200.24554" = "ngast4-propan-butan-varde"
+"200.24555" = "ngast4-propan-butan-ersatt-kvantitet"
+"200.24556" = "ngast4-propan-butan-ersatt-varde"
+"200.24559" = "ngast4-naturgas-kvantitet"
+"200.24561" = "ngast4-naturgas-varde"
+"200.24563" = "ngast4-motorbensin-kvantitet"
+"200.24564" = "ngast4-motorbensin-varde"
+"200.24565" = "ngast4-dieselbrannolja-kvantitet"
+"200.24566" = "ngast4-dieselbrannolja-varde"
+"200.24567" = "ngast4-eldningsolja-nr-1-kvantitet"
+"200.24568" = "ngast4-eldningsolja-nr-1-varde"
+"200.24572" = "ngast4-eldningsolja-nr-2-5-kvantitet"
+"200.24573" = "ngast4-eldningsolja-nr-2-5-varde"
+"200.24578" = "ngast4-fjarrvarme-kvantitet"
+"200.24579" = "ngast4-fjarrvarme-varde"
+"200.24581" = "ngast4-elektrisk-energi-kvantitet"
+"200.24582" = "ngast4-elektrisk-energi-varde"
+"200.24586" = "ngast5-ng-flerbostadshus-totalt"
+"200.24587" = "ngast5-ng-flerbostadshus-hushallsgas"
+"200.24588" = "ngast5-ng-flerbostadshus-uppvarmning"
+"200.24589" = "ngast5-ng-flerbostadshus-bada"
+"200.24590" = "ngast5-ng-enbostadshus-totalt"
+"200.24591" = "ngast5-naturgas-entva-hushall"
+"200.24592" = "ngast5-stadsgas-flerb-totalt"
+"200.24593" = "ngast5-stadsgas-flerb-hushall"
+"200.24594" = "ngast5-stadsgas-flerb-uppvarmning"
+"200.24595" = "ngast5-stadsgas-flerb-2-gastyper"
+"200.24596" = "ngast5-stadsgas-entva-totalt"
+"200.24597" = "ngast5-stadsgas-entva-hushall"
+"200.24602" = "ngast3-distrib-slutlig-forbrukare-totalt"
+"200.24603" = "ngast3-uttagspunkter-totalt"
+"200.24604" = "ngast6-inv-naturgas-produktion"
+"200.24605" = "ngast6-inv-naturgas-transnat-totalt"
+"200.24606" = "ngast6-inv-naturgas-transnat-ledningar"
+"200.24607" = "ngast6-inv-naturgas-transnat-stationer"
+"200.24608" = "ngast6-inv-naturgas-transnat-lager"
+"200.24609" = "ngast6-inv-naturgas-distnat-totalt"
+"200.24610" = "ngast6-inv-naturgas-distnat-ledningar"
+"200.24611" = "ngast6-inv-naturgas-distnat-stationer"
+"200.24612" = "ngast6-inv-naturgas-distnat-lager"
+"200.24613" = "ngast6-inv-naturgas-ovrigt"
+"200.24615" = "ngast6-inv-stadsgas-produktion"
+"200.24616" = "ngast6-inv-stadsgas-transnat-totalt"
+"200.24617" = "ngast6-inv-stadsgas-transnat-ledningar"
+"200.24618" = "ngast6-inv-stadsgas-transnat-stationer"
+"200.24619" = "ngast6-inv-stadsgas-transnat-lager"
+"200.24620" = "ngast6-inv-stadsgas-distnat-totalt"
+"200.24621" = "ngast6-inv-stadsgas-distnat-ledningar"
+"200.24622" = "ngast6-inv-stadsgas-distnat-stationer"
+"200.24623" = "ngast6-inv-stadsgas-distnat-lager"
+"200.24624" = "ngast6-inv-stadsgas-ovrigt"
+"200.24627" = "ngast7-transnat-naturgas-km"
+"200.24630" = "ngast7-transnat-naturgas-stationer"
+"200.24632" = "ngast7-transnat-stadsgas-km"
+"200.24633" = "ngast7-transnat-stadsgas-stationer"
+"200.24634" = "ngast7-distnat-naturgas-km"
+"200.24635" = "ngast7-distnat-naturgas-stationer"
+"200.24636" = "ngast7-distnat-stadsgas-km"
+"200.24637" = "ngast7-distnat-stadsgas-stationer"
+"200.24639" = "ngast8-app-hushall-spisar"
+"200.24640" = "ngast8-app-hushall-varmvatten"
+"200.24641" = "ngast8-app-hushall-ovriga"
+"200.24642" = "ngast8-app-hushall-totalt"
+"200.24643" = "ngast8-app-varme-panncentraler"
+"200.24644" = "ngast8-app-varme-varmepannor-entva"
+"200.24645" = "ngast8-app-varme-varmepannor-flerb"
+"200.24646" = "ngast8-app-varme-ovrigt"
+"200.24647" = "ngast8-app-varme-totalt"
+"200.24648" = "ngast8-app-industri-uppvarmning"
+"200.24649" = "ngast8-app-industri-direktanvandning"
+"200.24650" = "ngast8-app-industri-ovrig-anvandning"
+"200.24651" = "ngast8-app-industri-totalt"
+"200.24652" = "ngast8-app-ovriga-restauranger"
+"200.24653" = "ngast8-app-ovriga-tradgardsodling"
+"200.24654" = "ngast8-app-ovriga-ovrigt"
+"200.24655" = "ngast8-app-ovriga-totalt"
+"200.24678" = "administrativa-variabler-gasforetag"
+"200.35270" = "anlaggningens-namn"
+"200.35289" = "typ-av-aggregat"
+"200.35296" = "generatoreffekt-maxnetto-optimalt"
+"200.35297" = "generatoreffekt-maxnetto-huvudbransle"
+"200.35300" = "varmeproduktion-brutto-mottryck"
+"200.35304" = "inkopsvarde"
+"200.35311" = "forbrukning-varmeproduktion-mottryck"
+"200.35328" = "antal-abonnemang"
+"200.35397" = "verkningsgrad"
+"200.35402" = "bransle-for-varmeproduktion"
+"200.35403" = "varmevarde-vid-varmeproduktion"
+"200.35427" = "tillford-el-vid-eget-nat"
+"200.35431" = "uttagen-el-fran-eget-nat"
+"200.35432" = "mwh-tillford-el-eget-nat"
+"200.35433" = "mwh-uttagen-el-fran-eget-nat"
+"200.35439" = "overford-el-antal-mwh-hogspanning"
+"200.35441" = "overford-el-antal-mwh-lagspanning"
+"200.35446" = "elproduktion-egenforbrukning-bransle"
+"200.35464" = "bransle-for-produktion-av-enbart-varme"
+"200.35465" = "bransle-for-kraftvarmeproduktion"
+"200.40052" = "radnummer"
+"200.45900" = "generatoreffekt-maxnetto"
 
 # register 201 (oljeleveranser-kommunvis)
-
-[[variable]]
-native_id = "200.35274.mwh"
-slug = "tillforsel-av-el-brutto-mwh"
-
-[[variable]]
-native_id = "200.35274.radnr"
-slug = "tillforsel-av-el-brutto-radnr"
-
-[[variable]]
-native_id = "200.35274.tkr"
-slug = "tillforsel-av-el-brutto-tkr"
-
-[[variable]]
-native_id = "200.35275.mwh"
-slug = "egen-slutlig-forbrukning-av-el-mwh"
-
-[[variable]]
-native_id = "200.35275.radnr"
-slug = "egen-slutlig-forbrukning-av-el-radnr"
-
-[[variable]]
-native_id = "200.35275.tkr"
-slug = "egen-slutlig-forbrukning-av-el-tkr"
-
-[[variable]]
-native_id = "200.35276.mwh"
-slug = "forsald-el-mwh"
-
-[[variable]]
-native_id = "200.35276.radnr"
-slug = "forsald-el-radnr"
-
-[[variable]]
-native_id = "200.35276.tkr"
-slug = "forsald-el-tkr"
-
-[[variable]]
-native_id = "200.35279.radnr"
-slug = "vissa-rorelseintakter-radnr"
-
-[[variable]]
-native_id = "200.35279.tkr"
-slug = "vissa-rorelseintakter-tkr"
-
-[[variable]]
-native_id = "200.35280.mwh"
-slug = "vissa-rorelsekostnader-mwh"
-
-[[variable]]
-native_id = "200.35280.radnr"
-slug = "vissa-rorelsekostnader-radnr"
-
-[[variable]]
-native_id = "200.35280.tkr"
-slug = "vissa-rorelsekostnader-tkr"
-
-[[variable]]
-native_id = "200.35281.radnr"
-slug = "sysselsattning-vid-el-radnr"
-
-[[variable]]
-native_id = "200.35281.tkr"
-slug = "sysselsattning-vid-el-tkr"
-
-[[variable]]
-native_id = "200.35301.brkod"
-slug = "bransleforbrukning-transporter-brkod"
-
-[[variable]]
-native_id = "200.35301.kvant"
-slug = "bransleforbrukning-transporter-kvant"
-
-[[variable]]
-native_id = "200.35301.tkr"
-slug = "bransleforbrukning-transporter-tkr"
-
-
-[[variable]]
-native_id = "200.35302.maxnetto-1"
-slug = "sammanlagd-generatoreffekt-maxnetto"
-
-[[variable]]
-native_id = "200.35302.maxnettoopt"
-slug = "sammanlagd-generatoreffekt-maxnettoopt"
-
-[[variable]]
-native_id = "200.35317.kvant"
-slug = "bransle-fjarrvarme-drivmedel-kvant"
-
-[[variable]]
-native_id = "200.35317.radnr"
-slug = "forbrukning-bransle-drivmedel-od-radnr"
-
-[[variable]]
-native_id = "200.35317.tkr"
-slug = "forbrukning-bransle-drivmedel-od-tkr"
-
-[[variable]]
-native_id = "200.35324.antab"
-slug = "leveranser-av-fjarrvarme"
-
-[[variable]]
-native_id = "200.35324.antlgh"
-slug = "leveranser-av-fjarrvarme-antlgh"
-
-[[variable]]
-native_id = "200.35324.mwh"
-slug = "leveranser-av-fjarrvarme-mwh"
-
-[[variable]]
-native_id = "200.35324.radnr"
-slug = "leveranser-av-fjarrvarme-radnr"
-
-[[variable]]
-native_id = "200.35364.antab"
-slug = "leveranser-av-fardig-varme"
-
-[[variable]]
-native_id = "200.35364.mwh"
-slug = "leveranser-av-fardig-varme-mwh"
-
-[[variable]]
-native_id = "200.35364.radnr"
-slug = "leveranser-av-fardig-varme-radnr"
-
-[[variable]]
-native_id = "200.35365.antab"
-slug = "leveranser-av-fjarrkyla"
-
-[[variable]]
-native_id = "200.35365.mwh"
-slug = "leveranser-av-fjarrkyla-mwh"
-
-[[variable]]
-native_id = "200.35365.radnr"
-slug = "leveranser-av-fjarrkyla-radnr"
-
-[[variable]]
-native_id = "200.35398.fjarr-mwh"
-slug = "mottagen-varmemangd"
-
-[[variable]]
-native_id = "200.35398.radnr"
-slug = "mottagen-varmemangd-radnr"
-
-[[variable]]
-native_id = "200.35429.mwh"
-slug = "vissa-rorelsekostnader-samt-inkopt-el"
-
-[[variable]]
-native_id = "200.35429.radnr"
-slug = "rorelsekostnader-inkopt-el-radnr"
-
-[[variable]]
-native_id = "200.35429.tkr"
-slug = "rorelsekostnader-inkopt-el-tkr"
-
-[[variable]]
-native_id = "200.35434.mwh"
-slug = "rorelseintakter-el-varme-kyla"
-
-[[variable]]
-native_id = "200.35434.radnr"
-slug = "rorelseintakter-el-varme-kyla-radnr"
-
-[[variable]]
-native_id = "200.35434.tkr"
-slug = "rorelseintakter-el-varme-kyla-tkr"
-
-[[variable]]
-native_id = "200.35435.kvant"
-slug = "bransle-lokaluppvarmning-transport-kvant"
-
-[[variable]]
-native_id = "200.35435.radnr"
-slug = "bransle-lokaluppvarmning-transport-radnr"
-
-[[variable]]
-native_id = "200.35435.tkr"
-slug = "bransle-lokaluppvarmning-transport-tkr"
-
-[[variable]]
-native_id = "200.35447.varme-vvarde"
-slug = "forbrukning-bransle-elproduktion"
-
-[[variable]]
-native_id = "200.38850.maxnetto"
-slug = "kompressorkylmaskin"
-
-[[variable]]
-native_id = "200.38850.prod"
-slug = "kompressorkylmaskin-prod"
-
-[[variable]]
-native_id = "200.38851.maxnetto"
-slug = "frikyla"
-
-[[variable]]
-native_id = "200.38851.prod"
-slug = "frikyla-prod"
-
-[[variable]]
-native_id = "200.38855.maxnetto"
-slug = "absorptionskylmaskiner"
-
-[[variable]]
-native_id = "200.38855.prod"
-slug = "absorptionskylmaskiner-prod"
-
-[[variable]]
-native_id = "200.38856.maxnetto"
-slug = "sorptiv-kyla"
-
-[[variable]]
-native_id = "200.38856.prod"
-slug = "sorptiv-kyla-prod"
-
-[[variable]]
-native_id = "200.4049.gatuadr"
-slug = "postadress-2"
-
-[[variable]]
-native_id = "200.45894.aggrtyp"
-slug = "typ-av-produktion"
+"200.35274.mwh" = "tillforsel-av-el-brutto-mwh"
+"200.35274.radnr" = "tillforsel-av-el-brutto-radnr"
+"200.35274.tkr" = "tillforsel-av-el-brutto-tkr"
+"200.35275.mwh" = "egen-slutlig-forbrukning-av-el-mwh"
+"200.35275.radnr" = "egen-slutlig-forbrukning-av-el-radnr"
+"200.35275.tkr" = "egen-slutlig-forbrukning-av-el-tkr"
+"200.35276.mwh" = "forsald-el-mwh"
+"200.35276.radnr" = "forsald-el-radnr"
+"200.35276.tkr" = "forsald-el-tkr"
+"200.35279.radnr" = "vissa-rorelseintakter-radnr"
+"200.35279.tkr" = "vissa-rorelseintakter-tkr"
+"200.35280.mwh" = "vissa-rorelsekostnader-mwh"
+"200.35280.radnr" = "vissa-rorelsekostnader-radnr"
+"200.35280.tkr" = "vissa-rorelsekostnader-tkr"
+"200.35281.radnr" = "sysselsattning-vid-el-radnr"
+"200.35281.tkr" = "sysselsattning-vid-el-tkr"
+"200.35301.brkod" = "bransleforbrukning-transporter-brkod"
+"200.35301.kvant" = "bransleforbrukning-transporter-kvant"
+"200.35301.tkr" = "bransleforbrukning-transporter-tkr"
+"200.35302.maxnetto-1" = "sammanlagd-generatoreffekt-maxnetto"
+"200.35302.maxnettoopt" = "sammanlagd-generatoreffekt-maxnettoopt"
+"200.35317.kvant" = "bransle-fjarrvarme-drivmedel-kvant"
+"200.35317.radnr" = "forbrukning-bransle-drivmedel-od-radnr"
+"200.35317.tkr" = "forbrukning-bransle-drivmedel-od-tkr"
+"200.35324.antab" = "leveranser-av-fjarrvarme"
+"200.35324.antlgh" = "leveranser-av-fjarrvarme-antlgh"
+"200.35324.mwh" = "leveranser-av-fjarrvarme-mwh"
+"200.35324.radnr" = "leveranser-av-fjarrvarme-radnr"
+"200.35364.antab" = "leveranser-av-fardig-varme"
+"200.35364.mwh" = "leveranser-av-fardig-varme-mwh"
+"200.35364.radnr" = "leveranser-av-fardig-varme-radnr"
+"200.35365.antab" = "leveranser-av-fjarrkyla"
+"200.35365.mwh" = "leveranser-av-fjarrkyla-mwh"
+"200.35365.radnr" = "leveranser-av-fjarrkyla-radnr"
+"200.35398.fjarr-mwh" = "mottagen-varmemangd"
+"200.35398.radnr" = "mottagen-varmemangd-radnr"
+"200.35429.mwh" = "vissa-rorelsekostnader-samt-inkopt-el"
+"200.35429.radnr" = "rorelsekostnader-inkopt-el-radnr"
+"200.35429.tkr" = "rorelsekostnader-inkopt-el-tkr"
+"200.35434.mwh" = "rorelseintakter-el-varme-kyla"
+"200.35434.radnr" = "rorelseintakter-el-varme-kyla-radnr"
+"200.35434.tkr" = "rorelseintakter-el-varme-kyla-tkr"
+"200.35435.kvant" = "bransle-lokaluppvarmning-transport-kvant"
+"200.35435.radnr" = "bransle-lokaluppvarmning-transport-radnr"
+"200.35435.tkr" = "bransle-lokaluppvarmning-transport-tkr"
+"200.35447.varme-vvarde" = "forbrukning-bransle-elproduktion"
+"200.38850.maxnetto" = "kompressorkylmaskin"
+"200.38850.prod" = "kompressorkylmaskin-prod"
+"200.38851.maxnetto" = "frikyla"
+"200.38851.prod" = "frikyla-prod"
+"200.38855.maxnetto" = "absorptionskylmaskiner"
+"200.38855.prod" = "absorptionskylmaskiner-prod"
+"200.38856.maxnetto" = "sorptiv-kyla"
+"200.38856.prod" = "sorptiv-kyla-prod"
+"200.4049.gatuadr" = "postadress-2"
+"200.45894.aggrtyp" = "typ-av-produktion"
 
 # register 201 (oljeleveranser-kommunvis)
-
-[[variable]]
-native_id = "200.35302.maxnetto"
-slug = "maxnetto"
-
-[[variable]]
-native_id = "200.7550"
-slug = "foretagsidentitet"
-
-[[variable]]
-native_id = "200.4035"
-slug = "uppgiftslamnare"
-
-[[variable]]
-native_id = "200.7013"
-slug = "anlaggningstyp"
-
-[[variable]]
-native_id = "200.19523"
-slug = "elproduktion"
-
-[[variable]]
-native_id = "200.45845"
-slug = "typkod-land-hav"
+"200.35302.maxnetto" = "maxnetto"
+"200.7550" = "foretagsidentitet"
+"200.4035" = "uppgiftslamnare"
+"200.7013" = "anlaggningstyp"
+"200.19523" = "elproduktion"
+"200.45845" = "typkod-land-hav"
 
 # register 203
-
-[[variable]]
-native_id = "200.35447.bransleslag"
-slug = "forbrukning-bransle-el"
-
-[[variable]]
-native_id = "200.4049.attadr"
-slug = "postadress"
+"200.35447.bransleslag" = "forbrukning-bransle-el"
+"200.4049.attadr" = "postadress"
+"200.35304.varme" = "inkopsvarde"
+"200.35304.bransle" = "inkopsvarde-bransle"
+"200.35304.mot" = "mottagen-varmemangd-inkopsvarde"
+"200.35304.lev" = "varme-annan-leverantor-inkopsvarde"
+"200.35304.fjarr" = "varme-annan-fjarrvarmeproducent-inkopsvarde"
+"200.35402.radnr" = "bransle-for-varmeproduktion"
+"200.35402.bransleslag" = "bransle-for-varmeproduktion-klartext"
+"200.35464.mangd" = "bransle-for-produktion-av-enbart-varme"
+"200.35464.radnr" = "enbart-varme-bransleslag-radnummer"
+"200.35464.bransleslag" = "enbart-varme-bransleslag-klartext"
+"200.35465.mangd" = "bransle-for-kraftvarmeproduktion"
+"200.35465.radnr" = "kraftvarme-bransleslag-radnummer"
+"200.35465.bransleslag" = "kraftvarme-bransleslag-klartext"
+"200.537.postnr" = "postnr"
+"200.35295.antaggr" = "antaggr"
+"200.35401.elforb-sum" = "elforb-sum"
+"200.4049.padr" = "padr"
 
 # register 203
 
@@ -4356,58 +3339,6 @@ columns = [{column = "Ftyp", valid_from = "2024-01-01", valid_to = "2024-12-31",
 expected_evidence_sha256 = "f94df1cde8fd4e7e6fee4530ed512566ec5f6fced835eb8ed1eb95ec6d45b565"
 evidence = "Complete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
 noted = "2026-10-01"
-
-[[variable]]
-native_id = "200.35304.varme"
-slug = "inkopsvarde"
-
-[[variable]]
-native_id = "200.35304.bransle"
-slug = "inkopsvarde-bransle"
-
-[[variable]]
-native_id = "200.35304.mot"
-slug = "mottagen-varmemangd-inkopsvarde"
-
-[[variable]]
-native_id = "200.35304.lev"
-slug = "varme-annan-leverantor-inkopsvarde"
-
-[[variable]]
-native_id = "200.35304.fjarr"
-slug = "varme-annan-fjarrvarmeproducent-inkopsvarde"
-
-[[variable]]
-native_id = "200.35402.radnr"
-slug = "bransle-for-varmeproduktion"
-
-[[variable]]
-native_id = "200.35402.bransleslag"
-slug = "bransle-for-varmeproduktion-klartext"
-
-[[variable]]
-native_id = "200.35464.mangd"
-slug = "bransle-for-produktion-av-enbart-varme"
-
-[[variable]]
-native_id = "200.35464.radnr"
-slug = "enbart-varme-bransleslag-radnummer"
-
-[[variable]]
-native_id = "200.35464.bransleslag"
-slug = "enbart-varme-bransleslag-klartext"
-
-[[variable]]
-native_id = "200.35465.mangd"
-slug = "bransle-for-kraftvarmeproduktion"
-
-[[variable]]
-native_id = "200.35465.radnr"
-slug = "kraftvarme-bransleslag-radnummer"
-
-[[variable]]
-native_id = "200.35465.bransleslag"
-slug = "kraftvarme-bransleslag-klartext"
 
 [[identity.partition]]
 variable = "200.35304"
@@ -12234,14 +11165,6 @@ reason = "The source question “Radnummer” links the co-delivered physical co
 evidence = "Reviewed complete own-native family under the approved unavailable-mapping policy. Native35437 co-delivers n2radn/radn/n2radtext under an electricity-transfer quantity: grouped-SNI prose does not establish how its two integer coordinates differ and supplies no own codes. Native40052 co-delivers radnr/radnr1/radnr2 without defining their relation. Preserve all source facts; no quantities, code meanings or source identity equivalence inferred. Exact physical audit Batch48-energy-nonmatrix12-complete-roles.json and Batch48-energy-unavailable2-proof.json."
 expected_evidence_sha256 = "d99b9f5e70af0f42f293f223bf93f92321e9c7d23a3816fb2a983eee47a2528d"
 
-[[variable]]
-native_id = "200.537.postnr"
-slug = "postnr"
-
-[[variable]]
-native_id = "200.35295.antaggr"
-slug = "antaggr"
-
 [[identity.partition]]
 variable = "200.537"
 columns = {PostNr = "200.537.postnr", ForetagsPostnr = "200.537.postnr"}
@@ -13131,14 +12054,6 @@ fields = ["identity"]
 reason = "The source postal-number question also links GatuAdr and padr. GatuAdr denotes street-address spelling, while a2018 padr operation explicitly combines postal number and post town. Those co-delivered ambiguous mappings remain unavailable; PostNr/ForetagsPostnr retain the supported postal-number role. All source metadata and physical fields are preserved."
 evidence = "Complete own-native physical family reviewed under the approved unavailable-mapping policy. Retain positively source-defined postal-number/aggregate-count literals, while keeping unsupported co-delivered field relationships unavailable. Exact all-original fields/parents/coding references and complete physical membership are guarded. All source originals remain unchanged. Proof Batch48-energy-partial2-proof.json."
 expected_evidence_sha256 = "27baef68b1eb8a83837bf815d1738bf791cd027d9d7125ba9ea294795096504d"
-
-[[variable]]
-native_id = "200.35401.elforb-sum"
-slug = "elforb-sum"
-
-[[variable]]
-native_id = "200.4049.padr"
-slug = "padr"
 
 [[identity.partition]]
 variable = "200.35401"

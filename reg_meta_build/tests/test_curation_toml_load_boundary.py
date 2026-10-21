@@ -43,7 +43,10 @@ def test_malformed_doc_source_url_is_a_located_config_error(
         f'[sources."some-slug"]\n{entry}\n', encoding="utf-8"
     )
     write_register_doc(tmp_path / "docs")
-    run = run_build_docs(doc_builder, tmp_path / "docs", tmp_path / "db")
+    (tmp_path / "related").mkdir()
+    run = run_build_docs(
+        doc_builder, tmp_path / "docs", tmp_path / "related", tmp_path / "db"
+    )
     assert run.exit_code == EXIT_CONFIG
     assert run.payload["error"]["code"] == "doc_sources_invalid"
     assert "some-slug" in run.payload["error"]["message"]

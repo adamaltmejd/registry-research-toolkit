@@ -5,9 +5,10 @@ native_id = "3"
 [[variant]]
 native_id = "3.30"
 slug = "people"
-[[variable]]
-native_id = "3.304"
-slug = "lonfinkapr"
+
+[variable]
+"3.304" = "lonfinkapr"
+
 [[representation.period_family]]
 register = "scb/checked"
 family_stem = "lonfink"

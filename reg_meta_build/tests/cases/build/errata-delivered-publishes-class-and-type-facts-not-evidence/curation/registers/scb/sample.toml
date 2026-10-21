@@ -5,17 +5,15 @@ native_id = "1"
 [[variant]]
 native_id = "1.2"
 slug = "people"
-[[variable]]
-native_id = "1.99"
-slug = "v99"
-[[variable]]
-native_id = "1.5"
-slug = "v5"
+
+[variable]
+"1.99" = "v99"
+"1.5" = "v5"
 
 [[errata.delivered]]
 variant = "people"
 column = "Q"
 versions = ["2020"]
 expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:5}}
-evidence = "SWECOV extract per Operator ruling #1234\n\nMONA aggregate check"
+evidence = "SWECOV extract per Operator ruling #1234\nRows: secret-row\n\nMONA aggregate check"
 noted = "2026-10-18"

@@ -8,21 +8,14 @@ slug = "people"
 [[variant]]
 native_id = "1.11"
 slug = "other"
-[[variable]]
-native_id = "1.101"
-slug = "value"
-[[variable]]
-native_id = "1.102"
-slug = "key"
-[[variable]]
-native_id = "1.103"
-slug = "two"
-[[variable]]
-native_id = "1.104"
-slug = "gone"
-[[variable]]
-native_id = "1.105"
-slug = "else"
+
+[variable]
+"1.101" = "value"
+"1.102" = "key"
+"1.103" = "two"
+"1.104" = "gone"
+"1.105" = "else"
+
 [[group]]
 register = "scb/sample"
 key = "pair"

@@ -16,27 +16,15 @@ native_id = "159.226"
 slug = "_default"
 display_group = "Tätorter"
 
+[variable]
 # Utrikes och inrikes trafik med fartyg (HAMN)
-
-[[variable]]
-native_id = "159.2188"
-slug = "folkmangd"
-
-[[variable]]
-native_id = "159.17810"
-slug = "nordlig-koordinat-sweref"
-
-[[variable]]
-native_id = "159.17812"
-slug = "ostlig-koordinat-sweref"
-
-[[variable]]
-native_id = "159.39461"
-slug = "datatyp-for-geometri"
-
-[[variable]]
-native_id = "159.39462"
-slug = "objekt-id"
+"159.2188" = "folkmangd"
+"159.17810" = "nordlig-koordinat-sweref"
+"159.17812" = "ostlig-koordinat-sweref"
+"159.39461" = "datatyp-for-geometri"
+"159.39462" = "objekt-id"
+"159.39462.objectid" = "objectid"
+"159.39462.uuid" = "uuid"
 
 # register 161
 
@@ -46,11 +34,3 @@ variable = "159.39462"
 columns = { OBJECTID = "159.39462.objectid", UUID = "159.39462.uuid" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "a6118d1c5ed0a99697744b2161699be12f07e5d55b1347b6e2a0fb4e897c159a"
-
-[[variable]]
-native_id = "159.39462.objectid"
-slug = "objectid"
-
-[[variable]]
-native_id = "159.39462.uuid"
-slug = "uuid"

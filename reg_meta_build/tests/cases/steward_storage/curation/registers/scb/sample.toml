@@ -109,26 +109,10 @@ data_type = "date"
 evidence = "the documented variable's delivery of AGREES, typed date by its own storage"
 noted = "2026-10-18"
 
-[[variable]]
-native_id = "1.HELD"
-slug = "held"
-
-[[variable]]
-native_id = "1.MIXED"
-slug = "mixed"
-
-[[variable]]
-native_id = "1.WIDE"
-slug = "wide"
-
-[[variable]]
-native_id = "1.ELSEWHERE"
-slug = "elsewhere"
-
-[[variable]]
-native_id = "1.AGREES"
-slug = "agrees"
-
-[[variable]]
-native_id = "1.DOCONLY"
-slug = "doconly"
+[variable]
+"1.HELD" = "held"
+"1.MIXED" = "mixed"
+"1.WIDE" = "wide"
+"1.ELSEWHERE" = "elsewhere"
+"1.AGREES" = "agrees"
+"1.DOCONLY" = "doconly"

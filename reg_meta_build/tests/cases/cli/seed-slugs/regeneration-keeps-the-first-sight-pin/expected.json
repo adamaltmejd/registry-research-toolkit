@@ -3,12 +3,9 @@
   "files": {
     "curation/registers/scb/sample.auto.toml": {
       "toml": {
-        "variable": [
-          {
-            "native_id": "1.101",
-            "slug": "first-sight"
-          }
-        ]
+        "variable": {
+          "1.101": "first-sight"
+        }
       }
     }
   }

@@ -15,7 +15,7 @@ name = "Avregistreringsår"
 definition = "Avregistreringsår"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[enrichment.description]]
@@ -82,6 +82,7 @@ panel_entity_key = "venr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Y-167 (maintainer decision 2026-09-18): FDB VarId 830 literal column ownership.
 # Native VarId 830 delivers three literal spellings across FDB variants
 # Arbetsställeenheter (424) and Juridiska enheter (427), 1999–2025: GatuRest and
@@ -93,235 +94,66 @@ panel_time_grain = "delivery"
 # resolved away: AE variable-dict row 31477 documents GatuRest→PGaturest as one
 # variable, and JE GatuRest also carries row 12814 whose text matches
 # PGaturest's row 6139.
-
 # Registret över totalbefolkningen (RTB)
-
-[[variable]]
-native_id = "1.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "1.29"
-slug = "fenr"
-
-
-[[variable]]
-native_id = "1.48"
-slug = "lvenr"
-
-
-[[variable]]
-native_id = "1.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "1.1454"
-slug = "venr"
-
-
-[[variable]]
-native_id = "1.413"
-slug = "c-o-adress"
-
-[[variable]]
-native_id = "1.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "1.668"
-slug = "arbstalle-status"
-
-[[variable]]
-native_id = "1.675"
-slug = "anstallda-ku"
-
-[[variable]]
-native_id = "1.832"
-slug = "hjalpverksamhetskod"
-
-[[variable]]
-native_id = "1.880"
-slug = "ng-rangordning"
-
-[[variable]]
-native_id = "1.881"
-slug = "ng-tid-oms-pct"
-
-[[variable]]
-native_id = "1.885"
-slug = "ngs-rangordning"
-
-[[variable]]
-native_id = "1.887"
-slug = "procent-tid-omsattning"
-
-[[variable]]
-native_id = "1.905"
-slug = "lon-enligt-kontrolluppgifterna"
-
-[[variable]]
-native_id = "1.941"
-slug = "antal-ve"
-
-[[variable]]
-native_id = "1.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "1.998"
-slug = "antal-rorligt-anstallda"
-
-[[variable]]
-native_id = "1.1006"
-slug = "redovisningsgrupp-moms"
-
-[[variable]]
-native_id = "1.1047"
-slug = "je-foretagsstatus"
-
-[[variable]]
-native_id = "1.1052"
-slug = "je-status"
-
-[[variable]]
-native_id = "1.1054"
-slug = "sateskommun"
-
-[[variable]]
-native_id = "1.1134"
-slug = "bolagsstatus"
-
-[[variable]]
-native_id = "1.46424"
-slug = "ae-statistisk-status"
-
-[[variable]]
-native_id = "1.46437"
-slug = "je-statistisk-foretagsstatus"
-
-[[variable]]
-native_id = "1.46471"
-slug = "ve-antal-allman"
-
-[[variable]]
-native_id = "1.48346"
-slug = "antal-anstallda-arbetsstalle"
-
-[[variable]]
-native_id = "1.48347"
-slug = "antal-anstallda-juridisk-enhet"
+"1.14" = "cfar-nummer"
+"1.29" = "fenr"
+"1.48" = "lvenr"
+"1.56" = "person-orgnr"
+"1.1454" = "venr"
+"1.413" = "c-o-adress"
+"1.667" = "kommun-for-arbetsstalle"
+"1.668" = "arbstalle-status"
+"1.675" = "anstallda-ku"
+"1.832" = "hjalpverksamhetskod"
+"1.880" = "ng-rangordning"
+"1.881" = "ng-tid-oms-pct"
+"1.885" = "ngs-rangordning"
+"1.887" = "procent-tid-omsattning"
+"1.905" = "lon-enligt-kontrolluppgifterna"
+"1.941" = "antal-ve"
+"1.972" = "aktuellt-antal-anstallda"
+"1.998" = "antal-rorligt-anstallda"
+"1.1006" = "redovisningsgrupp-moms"
+"1.1047" = "je-foretagsstatus"
+"1.1052" = "je-status"
+"1.1054" = "sateskommun"
+"1.1134" = "bolagsstatus"
+"1.46424" = "ae-statistisk-status"
+"1.46437" = "je-statistisk-foretagsstatus"
+"1.46471" = "ve-antal-allman"
+"1.48346" = "antal-anstallda-arbetsstalle"
+"1.48347" = "antal-anstallda-juridisk-enhet"
 
 # register 2 (rtb)
-
-[[variable]]
-native_id = "1.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "1.55"
-slug = "omsattning-enligt-moms"
-
-[[variable]]
-native_id = "1.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "1.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "1.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "1.666"
-slug = "anstallda-storleksklass"
-
-[[variable]]
-native_id = "1.680"
-slug = "antal-anstallda-statistiskt-matt"
-
-[[variable]]
-native_id = "1.781"
-slug = "benamning"
-
-[[variable]]
-native_id = "1.799"
-slug = "belagenhetsadress-gata"
-
-[[variable]]
-native_id = "1.803"
-slug = "belagenhetsadress-postnr"
-
-[[variable]]
-native_id = "1.804"
-slug = "besokspostort"
-
-[[variable]]
-native_id = "1.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "1.834"
-slug = "antal-lokala-ve"
-
-[[variable]]
-native_id = "1.903"
-slug = "antal-kontrolluppgifter"
-
-[[variable]]
-native_id = "1.925"
-slug = "antal-juridiska-enheter"
-
-[[variable]]
-native_id = "1.971"
-slug = "aktiekapital"
-
-[[variable]]
-native_id = "1.1009"
-slug = "arbetsgivarstatus"
-
-[[variable]]
-native_id = "1.1038"
-slug = "antal-firmor"
-
-[[variable]]
-native_id = "1.1058"
-slug = "sateslan"
-
-[[variable]]
-native_id = "1.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "1.1133"
-slug = "privat-publikt-foretag"
-
-[[variable]]
-native_id = "1.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "1.1350"
-slug = "anstallda-storleksklass-stat"
-
-[[variable]]
-native_id = "1.1593"
-slug = "antal-ast"
-
-[[variable]]
-native_id = "1.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "1.19052"
-slug = "naringsgren-for-statistiken"
-
-[[variable]]
-native_id = "1.29697"
-slug = "antal-arbetsstallen-aeant"
+"1.34" = "juridisk-form"
+"1.55" = "omsattning-enligt-moms"
+"1.74" = "agarkontroll"
+"1.467" = "telefonnummer"
+"1.473" = "lan-arbetsstalle"
+"1.666" = "anstallda-storleksklass"
+"1.680" = "antal-anstallda-statistiskt-matt"
+"1.781" = "benamning"
+"1.799" = "belagenhetsadress-gata"
+"1.803" = "belagenhetsadress-postnr"
+"1.804" = "besokspostort"
+"1.814" = "faxnummer"
+"1.834" = "antal-lokala-ve"
+"1.903" = "antal-kontrolluppgifter"
+"1.925" = "antal-juridiska-enheter"
+"1.971" = "aktiekapital"
+"1.1009" = "arbetsgivarstatus"
+"1.1038" = "antal-firmor"
+"1.1058" = "sateslan"
+"1.1086" = "namn-juridiska-enheten"
+"1.1133" = "privat-publikt-foretag"
+"1.1141" = "sektortillhorighet"
+"1.1350" = "anstallda-storleksklass-stat"
+"1.1593" = "antal-ast"
+"1.4027" = "naringsgren"
+"1.19052" = "naringsgren-for-statistiken"
+"1.29697" = "antal-arbetsstallen-aeant"
+"1.regdatktid" = "regdatktid"
+"1.jurform" = "jurform"
 
 # register 2
 
@@ -766,11 +598,3 @@ holdings_period = "2015-2022"
 source = "steward-holdings"
 evidence = "SWECOV holds jurform in FDB_AE_2015..FDB_AE_2022; Leveransrapport 2023-2024 (Postbeskrivning) lists it on FDB_AE_2021/2022; SCB's Registerinformation export carries no row for it on this variant (JurForm is documented on juridiska-enheter only, which these tables are not) (#1302)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "1.regdatktid"
-slug = "regdatktid"
-
-[[variable]]
-native_id = "1.jurform"
-slug = "jurform"

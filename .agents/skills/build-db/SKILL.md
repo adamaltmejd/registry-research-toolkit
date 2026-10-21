@@ -94,11 +94,15 @@ selected repositories. Record the code revision and curation digest alongside th
 Never substitute a branch name, infer a newer input revision, or rewrite guards to make
 an update pass.
 
-Raw bundles and the SWECOV candidate live in the private repository
-`adamaltmejd/registry-catalog-inputs`: `catalog/` holds the SCB snapshot and input
-bundles, `swecov/` the private holdings candidate. A pin's checks need a clean checkout
-whose HEAD is the pinned commit, and a commit in either folder moves HEAD, so run each
-pinned command against a worktree at its pin
+Every input lives in the private repository `adamaltmejd/registry-catalog-inputs`; the
+public repository holds code and authored curation only. `catalog/` holds the SCB
+snapshot, the input bundles, the `source/` tree a new bundle is captured from
+(classification books, canonical code lists, Socialstyrelsen workbooks, the LISA
+workbook) and the doc-build inputs (`docs/markdown/`, `docs/related/`); `swecov/` is the
+private holdings candidate; `swecov-delivery-docs/` feeds
+`build_catalog.py enrich --docs-root`. A pin's checks need a clean checkout whose HEAD
+is the pinned commit, and a commit in either folder moves HEAD, so run each pinned
+command against a worktree at its pin
 (`git -C <inputs-checkout> worktree add --detach <dir> <commit>`), never the default
 branch. Paths then sit under that worktree (`<dir>/catalog/bundles/<name>`,
 `<dir>/swecov`). Commits from before the 2026-10-14 move keep their old layout (content
@@ -114,6 +118,14 @@ uv run --no-project scripts/real_seed_cache.py prepare --input-bundle "$raw_bund
   --input-commit "$raw_bundle_commit" --input-manifest-sha256 "$raw_bundle_sha256" \
   --output-dir "$new_prepared_dir"
 ```
+
+Preparation also reads the maintainer-authored sources from the curation tree
+(`--curation-dir`, default this checkout's `reg_meta_build/curation`):
+`providers/<slug>.toml` and `scb_canonical/scb_canonical.toml`. It pins their digests as
+`curation` entries, and the cache key includes them. `build-db` and `check-curation`
+refuse a prepared root whose pinned authored sources differ from the curation tree
+(`prepared_authored_source_stale`), so an edit to one of those files needs a fresh
+prepare.
 
 On a miss the cache runs `reg-meta-build prepare-sources` with these options into
 `--output-dir`. On a hit `--output-dir` is unused, and the result names the stored
@@ -235,11 +247,15 @@ Whether it is right is checked here, by a strict real-seed build: committed regi
 owners, roles and naming slugs (including IoT and LISA SNI renames), and every
 column-owning split resolving to a slug; the committed MFR and LOVA
 classification-reference lists; FDB's two-spelling column ownership; committed SNI and
-other book metadata and labels; RTB edition splits and coding windows; the overlay
-layout and committed curation counts; curated `same_as`/`replaced_by` edges and their
-component bounds; and that the committed `scb.toml` still names the LISA variant the
-SWECOV column candidates carry. A strict build that passes but changes one of these is a
-content change: read the dbdiff.
+other book metadata and labels; every declared classification book (a `codes_file` the
+bundle lacks refuses the build with `classification_codes_file_missing`, and a
+`resolve_canonical_codes` diagnostic, such as conflicting labels, a blank code, an
+unresolved parent or an empty book, is an error that blocks a strict build; CI no longer
+checks books, so a bad one surfaces only here); RTB edition splits and coding windows;
+the overlay layout and committed curation counts; curated `same_as`/`replaced_by` edges
+and their component bounds; and that the committed `scb.toml` still names the LISA
+variant the SWECOV column candidates carry. A strict build that passes but changes one
+of these is a content change: read the dbdiff.
 
 ## Private SWECOV extension
 
@@ -257,7 +273,7 @@ regenerate and accept a fresh candidate whenever the inventory, the global DB by
 `reg_webapp/stewards/swecov/` change. Generate against the exact global you will extend:
 
 ```sh
-uv run python reg_meta_build/input_data/swecov/build_catalog.py \
+uv run python reg_webapp/stewards/swecov/build_catalog.py \
     --csv <census CSV> inventory \
     --base-db <global reg_meta.db> --providers <candidate>/providers \
     --storage-csv <storage-schema export> --out <scratch dir>

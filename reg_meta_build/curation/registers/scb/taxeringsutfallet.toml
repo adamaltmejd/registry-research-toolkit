@@ -8,289 +8,82 @@ native_id = "118.135"
 slug = "_default"
 display_group = "Taxeringsutfallet"
 
+[variable]
 # Företagsregister och individdatabas (FRIDA)
-
-[[variable]]
-native_id = "118.8217"
-slug = "avgsyrortpat"
-
-[[variable]]
-native_id = "118.8238"
-slug = "nedsattn-egenavg"
-
-[[variable]]
-native_id = "118.8317"
-slug = "antbeskinksyrortpat"
-
-[[variable]]
-native_id = "118.8357"
-slug = "underlag-fastighetsskatt-lokaler-10"
-
-[[variable]]
-native_id = "118.8358"
-slug = "underlag-fastighetsskatt-smahus-05"
-
-[[variable]]
-native_id = "118.8359"
-slug = "underlag-fastighetsskatt-smahus-10"
-
-[[variable]]
-native_id = "118.15303"
-slug = "ulagsfavg-over75"
-
-[[variable]]
-native_id = "118.16183"
-slug = "underlag-fastighetsskatt-hyreshus-02"
-
-[[variable]]
-native_id = "118.16184"
-slug = "underlag-fastighetsskatt-hyreshus-04"
-
-[[variable]]
-native_id = "118.16186"
-slug = "ulagforaldraforsavg-220"
-
-[[variable]]
-native_id = "118.16188"
-slug = "ulagsfavg-foregar"
-
-[[variable]]
-native_id = "118.19778"
-slug = "avksk-kapfors"
-
-[[variable]]
-native_id = "118.19785"
-slug = "skfastvtn280"
-
-[[variable]]
-native_id = "118.19799"
-slug = "ulagarbskadeavg"
-
-[[variable]]
-native_id = "118.19801"
-slug = "ulageftpensavg-ar"
-
-[[variable]]
-native_id = "118.19883"
-slug = "ulagforaldraforsavg-tot"
-
-[[variable]]
-native_id = "118.22681"
-slug = "ulagarbskadeavg-foregar"
-
-[[variable]]
-native_id = "118.28858"
-slug = "ulageftpensavg-foregar"
-
-[[variable]]
-native_id = "118.30721"
-slug = "ulagsfavg-over75-2012"
-
-[[variable]]
-native_id = "118.32915"
-slug = "antbeskink-svkyrkan"
-
-[[variable]]
-native_id = "118.37010"
-slug = "ulagallmloneavg-foregar"
-
-[[variable]]
-native_id = "118.38423"
-slug = "underlag-avkastningsskatt-utl-pens"
-
-[[variable]]
-native_id = "118.38425"
-slug = "underlag-avkastningsskatt-30-forsak"
+"118.8217" = "avgsyrortpat"
+"118.8238" = "nedsattn-egenavg"
+"118.8317" = "antbeskinksyrortpat"
+"118.8357" = "underlag-fastighetsskatt-lokaler-10"
+"118.8358" = "underlag-fastighetsskatt-smahus-05"
+"118.8359" = "underlag-fastighetsskatt-smahus-10"
+"118.15303" = "ulagsfavg-over75"
+"118.16183" = "underlag-fastighetsskatt-hyreshus-02"
+"118.16184" = "underlag-fastighetsskatt-hyreshus-04"
+"118.16186" = "ulagforaldraforsavg-220"
+"118.16188" = "ulagsfavg-foregar"
+"118.19778" = "avksk-kapfors"
+"118.19785" = "skfastvtn280"
+"118.19799" = "ulagarbskadeavg"
+"118.19801" = "ulageftpensavg-ar"
+"118.19883" = "ulagforaldraforsavg-tot"
+"118.22681" = "ulagarbskadeavg-foregar"
+"118.28858" = "ulageftpensavg-foregar"
+"118.30721" = "ulagsfavg-over75-2012"
+"118.32915" = "antbeskink-svkyrkan"
+"118.37010" = "ulagallmloneavg-foregar"
+"118.38423" = "underlag-avkastningsskatt-utl-pens"
+"118.38425" = "underlag-avkastningsskatt-30-forsak"
 
 # register 121 (frida)
-
-[[variable]]
-native_id = "118.652"
-slug = "underskott-passiv-naringsverksamhet-hb"
-
-[[variable]]
-native_id = "118.8212"
-slug = "arbetsskadeavgift"
-
-[[variable]]
-native_id = "118.8229"
-slug = "efterlevandepensionsavgift"
-
-[[variable]]
-native_id = "118.8270"
-slug = "statlig-fastighetsskatt"
-
-[[variable]]
-native_id = "118.8274"
-slug = "kommunal-inkomstskatt-forvarvsinkomst"
-
-[[variable]]
-native_id = "118.8283"
-slug = "skattepliktig-formogenhet"
-
-[[variable]]
-native_id = "118.8285"
-slug = "skattereduktion-avgift-akassa"
-
-[[variable]]
-native_id = "118.8286"
-slug = "skattereduktion-for-fackforeningsavgift"
-
-[[variable]]
-native_id = "118.8288"
-slug = "skattereduktion-fastighetsskatt"
-
-[[variable]]
-native_id = "118.8291"
-slug = "skattereduktion-byggnadsarbete"
-
-[[variable]]
-native_id = "118.8292"
-slug = "sarskild-skattereduktion"
-
-[[variable]]
-native_id = "118.8295"
-slug = "skattereduktion-formogenhetsskatt"
-
-[[variable]]
-native_id = "118.8297"
-slug = "skattereduktion-underskott-kapital"
-
-[[variable]]
-native_id = "118.8299"
-slug = "statlig-inkomstskatt-kapitalinkomster"
-
-[[variable]]
-native_id = "118.8302"
-slug = "alderspensionsavgift"
-
-[[variable]]
-native_id = "118.8331"
-slug = "arbetsmarknadsavgift"
-
-[[variable]]
-native_id = "118.8343"
-slug = "underlag-avkastningsskatt-27"
-
-[[variable]]
-native_id = "118.8351"
-slug = "underlag-avkastningsskatt-utl-pens-2"
-
-[[variable]]
-native_id = "118.8354"
-slug = "underlag-fastighetsskatt-hyreshus-025"
-
-[[variable]]
-native_id = "118.8355"
-slug = "underlag-fastighetsskatt-hyreshus-05"
-
-[[variable]]
-native_id = "118.8356"
-slug = "underlag-fastighetsskatt-industri-05"
-
-[[variable]]
-native_id = "118.8360"
-slug = "underlag-fastighetsskatt-smahus-utl-10"
-
-[[variable]]
-native_id = "118.8370"
-slug = "sarskild-loneskatt-pensionsforsakring"
-
-[[variable]]
-native_id = "118.8372"
-slug = "underskott-aktiv-naringsverksamhet-hb"
-
-[[variable]]
-native_id = "118.8375"
-slug = "regional-nedsattning-egenavgifter"
-
-[[variable]]
-native_id = "118.8376"
-slug = "sjoinkomstavdrag"
-
-[[variable]]
-native_id = "118.8377"
-slug = "sjukforsakringsavgift"
-
-[[variable]]
-native_id = "118.8380"
-slug = "loneskatt-pens-forsakring-egen"
-
-[[variable]]
-native_id = "118.15313"
-slug = "forhojt-grundavdrag-stodomrade-a"
-
-[[variable]]
-native_id = "118.15319"
-slug = "ulagfastvarm050"
-
-[[variable]]
-native_id = "118.15320"
-slug = "underlag-fastighetsskatt-vattenkraft-17"
-
-[[variable]]
-native_id = "118.16176"
-slug = "skattereduktion-hushallsarbete"
-
-[[variable]]
-native_id = "118.16185"
-slug = "underlag-fastighetsskatt-vindkraft-02"
-
-[[variable]]
-native_id = "118.19872"
-slug = "underlag-fastighetsskatt-vattenkraft-22"
-
-[[variable]]
-native_id = "118.19874"
-slug = "underlag-fastighetsskatt-tomt-hyr-04"
-
-[[variable]]
-native_id = "118.19875"
-slug = "underlag-fastighetsskatt-tomt-sma-10"
-
-[[variable]]
-native_id = "118.19876"
-slug = "underlag-fastighetsavg-hyreshus-02"
-
-[[variable]]
-native_id = "118.19877"
-slug = "underlag-fastighetsavg-hyreshus-04"
-
-[[variable]]
-native_id = "118.19878"
-slug = "underlag-fastighetsavgift-smahus-0375"
-
-[[variable]]
-native_id = "118.22679"
-slug = "skattereduktion-husarbete"
-
-[[variable]]
-native_id = "118.28856"
-slug = "underlag-fastighetsskatt-vattenkraft-28"
-
-[[variable]]
-native_id = "118.29587"
-slug = "skattereduktion-gava"
-
-[[variable]]
-native_id = "118.38421"
-slug = "avkastningsskatt-30-forsakring"
-
-[[variable]]
-native_id = "118.38422"
-slug = "avkastningsskatt-15-forsakring"
-
-[[variable]]
-native_id = "118.38426"
-slug = "underlag-avkastningsskatt-15-pens"
-
-[[variable]]
-native_id = "118.39337"
-slug = "skattereduktion-sjuk-aktivitet"
-
-[[variable]]
-native_id = "118.42254"
-slug = "public-service-avgift"
+"118.652" = "underskott-passiv-naringsverksamhet-hb"
+"118.8212" = "arbetsskadeavgift"
+"118.8229" = "efterlevandepensionsavgift"
+"118.8270" = "statlig-fastighetsskatt"
+"118.8274" = "kommunal-inkomstskatt-forvarvsinkomst"
+"118.8283" = "skattepliktig-formogenhet"
+"118.8285" = "skattereduktion-avgift-akassa"
+"118.8286" = "skattereduktion-for-fackforeningsavgift"
+"118.8288" = "skattereduktion-fastighetsskatt"
+"118.8291" = "skattereduktion-byggnadsarbete"
+"118.8292" = "sarskild-skattereduktion"
+"118.8295" = "skattereduktion-formogenhetsskatt"
+"118.8297" = "skattereduktion-underskott-kapital"
+"118.8299" = "statlig-inkomstskatt-kapitalinkomster"
+"118.8302" = "alderspensionsavgift"
+"118.8331" = "arbetsmarknadsavgift"
+"118.8343" = "underlag-avkastningsskatt-27"
+"118.8351" = "underlag-avkastningsskatt-utl-pens-2"
+"118.8354" = "underlag-fastighetsskatt-hyreshus-025"
+"118.8355" = "underlag-fastighetsskatt-hyreshus-05"
+"118.8356" = "underlag-fastighetsskatt-industri-05"
+"118.8360" = "underlag-fastighetsskatt-smahus-utl-10"
+"118.8370" = "sarskild-loneskatt-pensionsforsakring"
+"118.8372" = "underskott-aktiv-naringsverksamhet-hb"
+"118.8375" = "regional-nedsattning-egenavgifter"
+"118.8376" = "sjoinkomstavdrag"
+"118.8377" = "sjukforsakringsavgift"
+"118.8380" = "loneskatt-pens-forsakring-egen"
+"118.15313" = "forhojt-grundavdrag-stodomrade-a"
+"118.15319" = "ulagfastvarm050"
+"118.15320" = "underlag-fastighetsskatt-vattenkraft-17"
+"118.16176" = "skattereduktion-hushallsarbete"
+"118.16185" = "underlag-fastighetsskatt-vindkraft-02"
+"118.19872" = "underlag-fastighetsskatt-vattenkraft-22"
+"118.19874" = "underlag-fastighetsskatt-tomt-hyr-04"
+"118.19875" = "underlag-fastighetsskatt-tomt-sma-10"
+"118.19876" = "underlag-fastighetsavg-hyreshus-02"
+"118.19877" = "underlag-fastighetsavg-hyreshus-04"
+"118.19878" = "underlag-fastighetsavgift-smahus-0375"
+"118.22679" = "skattereduktion-husarbete"
+"118.28856" = "underlag-fastighetsskatt-vattenkraft-28"
+"118.29587" = "skattereduktion-gava"
+"118.38421" = "avkastningsskatt-30-forsakring"
+"118.38422" = "avkastningsskatt-15-forsakring"
+"118.38426" = "underlag-avkastningsskatt-15-pens"
+"118.39337" = "skattereduktion-sjuk-aktivitet"
+"118.42254" = "public-service-avgift"
+"118.8349.source-positive" = "ulagavksk-utlkap30"
+"118.38424.source-positive" = "underlag-avkastningsskatt-30-utl-kap"
 
 # register 121
 
@@ -356,14 +149,6 @@ columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AntBe
 expected_evidence_sha256 = "32cf35d926afd23a9402254049f354428c24900d3587bebe6e0b1cd45d1400f8"
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
-
-[[variable]]
-native_id = "118.8349.source-positive"
-slug = "ulagavksk-utlkap30"
-
-[[variable]]
-native_id = "118.38424.source-positive"
-slug = "underlag-avkastningsskatt-30-utl-kap"
 
 [[identity.column_owner]]
 data_warning = "The source describes two native variables for one physical column in the excluded edition(s). Only positively distinct source coordinates are mapped; collided rows remain unavailable and every source meaning is retained."

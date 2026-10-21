@@ -5,6 +5,6 @@ native_id = "3243033723806452835"
 [[variant]]
 slug = "default"
 native_id = "3243033723806452835.3738957366889914633"
-[[variable]]
-slug = "value"
-native_id = "3243033723806452835.NAMED"
+
+[variable]
+"3243033723806452835.NAMED" = "value"

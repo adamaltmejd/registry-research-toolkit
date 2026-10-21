@@ -7,6 +7,7 @@ Actual edition co-delivery controls the existing code/label and shape guards.
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from itertools import combinations, product
@@ -22,8 +23,9 @@ from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_intervals import scope_bounds
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Iterable, Mapping
 
+    from reg_meta_build.resolved_catalog import ResolvedState, ResolvedVariable
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import SourceRecordRef
     from reg_meta_build.source_occurrences import EffectiveOccurrence
@@ -73,6 +75,174 @@ def _latest_shapes(
         ranked.append((latest, (shape[0], shape[1])))
     maximum = max(rank for rank, _ in ranked)
     return {shape for rank, shape in ranked if rank == maximum}
+
+
+# The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
+# (conformance/api/operations.toml). Change both together.
+SEARCH_QUERY_MAX_CHARS = 200
+
+# A period ends a sentence unless the word it closes is an abbreviation: one with an
+# inner period (t.ex., fr.o.m., m.m.), a single letter, or one of these.
+_ABBREVIATIONS = frozenset(
+    {"ca", "dvs", "exkl", "inkl", "jfr", "kap", "nr", "resp", "s", "st"}
+)
+_SENTENCE_BREAK = re.compile(r"[.?!] +(?=[^\W\d_])")
+
+
+def _one_line(text: str | None) -> str | None:
+    return (" ".join(text.split()) or None) if text is not None else None
+
+
+def _first_sentence(text: str) -> str:
+    """The first line's first sentence, without a closing period.
+
+    A sentence ends at `.`, `?` or `!` followed by a space and an upper-case letter,
+    and a period only where the word it closes is not an abbreviation.
+    """
+    line = next((" ".join(row.split()) for row in text.splitlines() if row.strip()), "")
+    for match in _SENTENCE_BREAK.finditer(line):
+        end = match.start()
+        if not line[match.end()].isupper():
+            continue
+        if line[end] == ".":
+            word = line[:end].rsplit(" ", 1)[-1]
+            if "." in word or len(word) == 1 or word.casefold() in _ABBREVIATIONS:
+                continue
+            return line[:end]
+        return line[: end + 1]
+    return line.removesuffix(".")
+
+
+def source_name(occurrences: Iterable[EffectiveOccurrence]) -> str | None:
+    """The one name a variable's catalog source records carry, before corrections."""
+    found = set()
+    for occurrence in occurrences:
+        if occurrence.use != "catalog":
+            continue
+        for record in occurrence.source_records:
+            field = record.fields.name
+            text = (
+                field.value if field is not None and field.status == "value" else None
+            )
+            found.add(text.strip() or None if isinstance(text, str) else None)
+    return found.pop() if len(found) == 1 else None
+
+
+def _years(states: tuple[ResolvedState, ...]) -> str | None:
+    starts = [s.valid_from[:4] for s in states if s.valid_from is not None]
+    ends = [s.valid_to[:4] for s in states if s.valid_to is not None]
+    if not starts:
+        return None
+    first, last = min(starts), max(ends)
+    if last == "9999":
+        return f"{first}–"
+    return first if first == last else f"{first}–{last}"
+
+
+def name_colliding_variables(
+    variables: Mapping[NativeKey, ResolvedVariable],
+    source_names: Mapping[NativeKey, str],
+) -> dict[NativeKey, str]:
+    """Name variables that share a source name in one variant apart (#1736).
+
+    `source_names` holds each variable's one source name. Variables of one register
+    that share it in a variant are a group; a variable in several groups is compared
+    with all of their members. A member still named by its source name (no
+    `[[errata.field]]` name correction) takes the first step that names it apart:
+
+    1. `<name> — <operational definition>` when the definition is one text across its
+       states that no step-1/2 sibling shares;
+    2. else `<name> — <first sentence>` of that definition, when distinct;
+    3. else `<name> (<COLUMN>)`, the latest state's column, when distinct (case-folded);
+    4. else `<name> (<COLUMN>, <first>–<last year>)`, when distinct.
+
+    No step writes a name over the search cap. A member none of them separates keeps its
+    name; the caller refuses every variable whose name still collides.
+    Returns the new name of each renamed variable.
+    """
+    groups: dict[tuple[str, str, str, str], set[NativeKey]] = defaultdict(set)
+    for key, name in source_names.items():
+        register = variables[key].register_ref
+        for state in variables[key].states:
+            groups[register.provider, register.slug, state.variant.slug, name].add(key)
+    siblings: dict[NativeKey, set[NativeKey]] = defaultdict(set)
+    for members in groups.values():
+        for key in members:
+            siblings[key] |= members - {key}
+    pending = {
+        key
+        for key, others in siblings.items()
+        if others and variables[key].name == source_names[key]
+    }
+    named: dict[NativeKey, str] = {}
+
+    def latest(key: NativeKey) -> ResolvedState:
+        return max(
+            variables[key].states,
+            key=lambda s: (
+                s.valid_to or "",
+                s.valid_from or "",
+                s.delivery_column_name,
+            ),
+        )
+
+    texts: dict[NativeKey, str] = {}
+    for key in pending:
+        variable = variables[key]
+        found = {
+            _one_line(s.operational_definition or variable.operational_definition)
+            for s in variable.states
+        }
+        if len(found) == 1 and (text := found.pop()) is not None:
+            texts[key] = text
+    distinct = {
+        key
+        for key, text in texts.items()
+        if all(texts.get(other) != text for other in siblings[key])
+    }
+    firsts = {
+        key: _first_sentence(
+            latest(key).operational_definition
+            or variables[key].operational_definition
+            or ""
+        )
+        for key in distinct
+    }
+    for key in distinct:
+        name = source_names[key]
+        rivals = {
+            text
+            for other in siblings[key] & distinct
+            for text in (texts[other], firsts[other])
+        }
+        for text in (texts[key], firsts[key]):
+            if (
+                text
+                and text not in rivals
+                and len(f"{name} — {text}") <= SEARCH_QUERY_MAX_CHARS
+            ):
+                named[key] = f"{name} — {text}"
+                break
+    for label in (
+        lambda key: latest(key).delivery_column_name,
+        lambda key: (
+            f"{latest(key).delivery_column_name}, {years}"
+            if (years := _years(variables[key].states))
+            else None
+        ),
+    ):
+        left = pending - named.keys()
+        labels = {key: label(key) for key in left}
+        for key in left:
+            mine = labels[key]
+            if mine is None or any(
+                (labels[other] or "").casefold() == mine.casefold()
+                for other in siblings[key] & left
+            ):
+                continue
+            if len(new := f"{source_names[key]} ({mine})") <= SEARCH_QUERY_MAX_CHARS:
+                named[key] = new
+    return named
 
 
 def resolve_sibling_pairs(

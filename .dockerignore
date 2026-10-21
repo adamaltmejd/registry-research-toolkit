@@ -14,7 +14,7 @@
 **/*.db-wal
 **/*.zst
 
-# --- Real SCB/SOS seed + build inputs (untracked, large, never in the image) ---
+# --- Stale local input copies (see .gitignore), never in the image ---
 reg_meta_build/input_data/
 
 # --- VCS / agent / editor cruft ---

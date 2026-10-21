@@ -9,6 +9,6 @@ slug = "people"
 variable = "1.5"
 expected_evidence_sha256 = {{evidence_sha256 variable=5}}
 evidence = "complete source review"
-[[variable]]
-native_id = "1.5.answer"
-slug = "answer"
+
+[variable]
+"1.5.answer" = "answer"

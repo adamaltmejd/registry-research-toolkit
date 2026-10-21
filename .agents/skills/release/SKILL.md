@@ -181,24 +181,30 @@ provider is present.
 Build fresh if **any** is true:
 
 - The docs schema version was bumped since the prior release.
-- `git diff <tag>..HEAD -- reg_meta_build/docs/ reg_meta_build/related_documents.toml`
+- `git diff <tag>..HEAD -- reg_meta_build/related_documents.toml reg_meta_build/doc_sources.toml`
   is non-empty.
-- A gitignored related-document PDF under `reg_meta_build/input_data/SCB/docs/` was
-  added, replaced or refetched (git cannot see it; compare `related_document.sha256`
-  against the prior asset when in doubt).
+- `catalog/docs/` in `adamaltmejd/registry-catalog-inputs` changed since the commit the
+  prior docs asset was built from (markdown or a related-document PDF added, replaced or
+  refetched).
 - The release is a **major** bump.
 
 Otherwise copy forward (8d). If a new SCB PDF must be converted first, the recipe is the
 docstring of `scripts/parse_lisa_docs.py`.
 
-`build-docs` refuses (`related_documents_binary_missing`) when a required PDF in
-`related_documents.toml` is absent, so first place every PDF under
-`reg_meta_build/input_data/SCB/docs/<register>/` in the checkout that runs `build-docs`.
+Both inputs live in the private inputs repo: the markdown under `catalog/docs/markdown/`
+and the related-document PDFs under `catalog/docs/related/<register>/`. Run against a
+worktree of that repo at an exact pinned commit (build-db skill, "Select inputs") and
+record the commit as release evidence. `build-docs` refuses
+(`related_documents_binary_missing`) when a required PDF in `related_documents.toml` is
+absent under `--related-docs-dir`.
 
 ```sh
 set -euo pipefail
+inputs=<worktree of registry-catalog-inputs at the pinned commit>
 docs_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_docs.XXXXXX")"
-uv run reg-meta-build --db "$docs_dir" build-docs
+uv run reg-meta-build --db "$docs_dir" build-docs \
+  --docs-dir "$inputs/catalog/docs/markdown" \
+  --related-docs-dir "$inputs/catalog/docs/related"
 zstd -3 -T0 "$docs_dir/reg_meta_docs.db" -o reg_meta_docs.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
 rm -rf "$docs_dir" reg_meta_docs.db.zst

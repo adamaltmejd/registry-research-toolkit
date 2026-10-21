@@ -13,10 +13,6 @@ variable = "34.4"
 columns = { Kon2 = "34.4.kon" }
 columns_ref = "second"
 
-[[variable]]
-native_id = "34.4"
-slug = "kon"
-
-[[variable]]
-native_id = "34.4.kon"
-slug = "kon"
+[variable]
+"34.4" = "kon"
+"34.4.kon" = "kon"

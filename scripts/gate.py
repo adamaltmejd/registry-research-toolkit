@@ -106,9 +106,9 @@ def lint() -> None:
 def g0(packages: list[str] | None = None) -> None:
     lint()
     crates()
-    # No paths runs every root `testpaths` entry, conformance included.
-    paths = ["conformance", *packages] if packages else []
-    run(["uv", "run", "python", "-m", "pytest", *paths, "-n", "auto", "-q"])
+    # No packages runs every root `testpaths` entry. Conformance needs the Rust
+    # server, so it runs in `rust`, not here.
+    run(["uv", "run", "python", "-m", "pytest", *(packages or []), "-n", "auto", "-q"])
 
 
 def rust() -> None:
@@ -120,10 +120,13 @@ def release() -> None:
     # The steward artifact only: on a selected catalog artifact `validate_built_db`
     # applies the real-corpus floors (register, edge and FTS counts), which the
     # synthetic catalog cannot meet. Every other artifact check already runs on both
-    # synthetic kinds in `rust`.
+    # synthetic kinds in `rust`. `-m release` runs only the selected-artifact checks:
+    # the rest of the suite does not read `--artifact-dir` and already ran in `rust`.
     artifact = reader_artifact("steward")
     run("cargo build --workspace --locked")
-    run(f"{CONFORMANCE} --run-release --artifact-dir={artifact} {SERVER_CMD}")
+    run(
+        f"{CONFORMANCE} -m release --run-release --artifact-dir={artifact} {SERVER_CMD}"
+    )
 
 
 def flows() -> None:
@@ -259,7 +262,7 @@ def main() -> int:
     parser.add_argument(
         "--packages",
         nargs="+",
-        help="g0's pytest paths besides conformance (default: every testpaths entry)",
+        help="g0's pytest paths (default: every testpaths entry)",
     )
     args = parser.parse_args()
     names = [n for step in args.steps for n in (ALL if step == "all" else [step])]

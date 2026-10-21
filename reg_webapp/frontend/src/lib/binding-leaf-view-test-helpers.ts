@@ -1,41 +1,27 @@
 // Shared fixtures for the BindingLeafView.*.browser.test.ts split (state/node
 // builders, picker states, SEED). Used by every BindingLeafView browser suite.
-import type { VariableShow, VariableStateModel } from "./api";
+import { vi } from "vitest";
+import {
+  getDocsForVariable,
+  getGraph,
+  getLineage,
+  getStates,
+  getValues,
+  type VariableShow,
+  type VariableStateModel,
+} from "./api";
+import { variableState } from "./api-test-helpers";
+import { projectStore } from "./project_store.svelte";
+import { router } from "./router.svelte";
+import { windowStore } from "./window.svelte";
 
 /** A minimal VariableStateModel — only the fields the add planner reads. */
 export function state(over: Partial<VariableStateModel>): VariableStateModel {
-  return {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
-    period_token: null,
-    variant: "v",
-    variant_label: null,
-    variant_family: null,
-    variant_family_label: null,
-    register_variant_id: "1",
+  return variableState({
     valid_from: "1992-01-01",
     valid_to: "9999-12-31",
-    coding_window_from: null,
-    name: null,
-    definition: null,
-    description: null,
-    operational_definition: null,
-    measurement_unit: null,
-    data_type: null,
-    data_length: null,
-    delivery_column_name: null,
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
-    value_set_id: null,
-    value_set: null,
-    value_set_summary: null,
-    is_identifier: false,
-    classifications: [],
     ...over,
-  };
+  });
 }
 
 /** A minimal `variable` show: metadata only (its states are a separate prop).
@@ -100,3 +86,53 @@ export const SEED = {
   steward: "global",
   windowMinYear: 1960,
 } as const;
+
+/** Each suite's `beforeEach`: the mocked reads answer empty (states from
+ * `pickerStates` by variant), the route sits on `scb/lisa/kon` with no `?period`,
+ * no project window, and a fresh project. The `vi.mock("./api")` factory that
+ * makes these reads mocks stays in each file (vitest hoists it per file). */
+export function resetLeaf(): void {
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
+    const variant =
+      typeof params?.variant === "string" ? params.variant : undefined;
+    return pickerStates.filter(
+      (s) => variant === undefined || s.variant === variant,
+    );
+  });
+  // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
+  // itself and the header derives no qualifier. Member-identity cases override it.
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
+    nodes: [],
+    edges: [],
+    focus_id: null,
+  });
+  vi.mocked(getLineage).mockReset();
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
+  vi.mocked(getDocsForVariable).mockReset();
+  vi.mocked(getDocsForVariable).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+    register_ingested: true,
+  });
+  // No `?period` — the embedded states drive the plan.
+  window.history.pushState({}, "", "/__reset__");
+  router.navigate("/catalog/scb/lisa/kon");
+  windowStore.set(null);
+  projectStore.newProject({
+    reg_meta_version: "reg_meta/v1.0.0",
+    steward: "global",
+  });
+}

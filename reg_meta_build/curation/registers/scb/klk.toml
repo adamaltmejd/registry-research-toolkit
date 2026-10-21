@@ -15,73 +15,29 @@ panel_entity_key = "orgnr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
+[variable]
 # Konjunkturstatistik, löner för regioner (KLR)
-
-[[variable]]
-native_id = "89.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "89.2533"
-slug = "kod-insandningssatt"
-
-[[variable]]
-native_id = "89.19066"
-slug = "arsarbetstid"
+"89.1839" = "orgnr"
+"89.2533" = "kod-insandningssatt"
+"89.19066" = "arsarbetstid"
 
 # register 90 (klr)
-
-[[variable]]
-native_id = "89.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "89.446"
-slug = "kommunnamn"
-
-[[variable]]
-native_id = "89.2522"
-slug = "antal-arbetade-timmar-manadsavlonade"
-
-[[variable]]
-native_id = "89.2524"
-slug = "antal-arbetade-timmar-timavlonade"
-
-[[variable]]
-native_id = "89.2525"
-slug = "anstallningsavtal"
-
-[[variable]]
-native_id = "89.3081"
-slug = "imputering"
-
-[[variable]]
-native_id = "89.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "89.5061"
-slug = "antal-heltidsanstallda"
-
-[[variable]]
-native_id = "89.5071"
-slug = "antal-deltidsanstallda"
-
-[[variable]]
-native_id = "89.5074"
-slug = "antal-timanstallda"
-
-[[variable]]
-native_id = "89.5735"
-slug = "avtalad-veckoarbetstid"
+"89.36" = "kommun"
+"89.446" = "kommunnamn"
+"89.2522" = "antal-arbetade-timmar-manadsavlonade"
+"89.2524" = "antal-arbetade-timmar-timavlonade"
+"89.2525" = "anstallningsavtal"
+"89.3081" = "imputering"
+"89.4027" = "naringsgren"
+"89.5061" = "antal-heltidsanstallda"
+"89.5071" = "antal-deltidsanstallda"
+"89.5074" = "antal-timanstallda"
+"89.5735" = "avtalad-veckoarbetstid"
 
 # register 90
-
-[[variable]]
-native_id = "89.50"
-slug = "manad"
-deprecated = false
+"89.50" = { slug = "manad", deprecated = false }
+"89.19066.avttarm" = "avttarm"
+"89.19066.avttarml" = "avttarml"
 
 [[identity.partition]]
 variable = "89.50"
@@ -545,11 +501,3 @@ variable = "89.19066"
 columns = { AvtTArM = "89.19066.avttarm", AvtTArML = "89.19066.avttarml" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "cbd356a48577e78a4de024a87ebe9e860bcd3d24df3a29d63080f7ade7c0321b"
-
-[[variable]]
-native_id = "89.19066.avttarm"
-slug = "avttarm"
-
-[[variable]]
-native_id = "89.19066.avttarml"
-slug = "avttarml"

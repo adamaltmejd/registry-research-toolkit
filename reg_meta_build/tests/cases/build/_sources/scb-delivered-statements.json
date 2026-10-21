@@ -4,7 +4,7 @@
     "registerinformation": [
       {
         "colname": "EDITION",
-        "cvid": 101,
+        "cvid": 101, "varname": "GenericVar v99",
         "var_id": 99,
         "year": "2020",
         "regver_id": 2020,
@@ -13,7 +13,7 @@
       },
       {
         "colname": "EDITION",
-        "cvid": 102,
+        "cvid": 102, "varname": "GenericVar v99",
         "var_id": 99,
         "year": "2022",
         "regver_id": 2022,
@@ -22,7 +22,7 @@
       },
       {
         "colname": "EDITION",
-        "cvid": 103,
+        "cvid": 103, "varname": "GenericVar v99",
         "var_id": 99,
         "year": "2018",
         "regver_id": 2018,
@@ -31,7 +31,7 @@
       },
       {
         "colname": "V1",
-        "cvid": 104,
+        "cvid": 104, "varname": "GenericVar v5",
         "var_id": 5,
         "year": "2022",
         "regver_id": 2022,
@@ -41,7 +41,7 @@
       },
       {
         "colname": "V2",
-        "cvid": 105,
+        "cvid": 105, "varname": "GenericVar v6",
         "var_id": 6,
         "year": "2022",
         "regver_id": 2022,
@@ -50,7 +50,7 @@
       },
       {
         "colname": "V3",
-        "cvid": 106,
+        "cvid": 106, "varname": "GenericVar v7",
         "var_id": 7,
         "year": "2022",
         "regver_id": 2022,
@@ -59,7 +59,7 @@
       },
       {
         "colname": "V4",
-        "cvid": 107,
+        "cvid": 107, "varname": "GenericVar v8",
         "var_id": 8,
         "year": "2022",
         "regver_id": 2022,
@@ -68,7 +68,7 @@
       },
       {
         "colname": "V5",
-        "cvid": 108,
+        "cvid": 108, "varname": "GenericVar v9",
         "var_id": 9,
         "year": "2022",
         "regver_id": 2022,
@@ -86,7 +86,7 @@
       },
       {
         "colname": "V7",
-        "cvid": 110,
+        "cvid": 110, "varname": "GenericVar v11",
         "var_id": 11,
         "year": "2022",
         "regver_id": 2022,
@@ -95,7 +95,7 @@
       },
       {
         "colname": "V8",
-        "cvid": 111,
+        "cvid": 111, "varname": "GenericVar v12",
         "var_id": 12,
         "year": "2022",
         "regver_id": 2022,
@@ -104,7 +104,7 @@
       },
       {
         "colname": "AMB",
-        "cvid": 112,
+        "cvid": 112, "varname": "GenericVar v20",
         "var_id": 20,
         "year": "2018",
         "regver_id": 2018,
@@ -113,7 +113,7 @@
       },
       {
         "colname": "AMB",
-        "cvid": 113,
+        "cvid": 113, "varname": "GenericVar v21",
         "var_id": 21,
         "year": "2022",
         "regver_id": 2022,
@@ -122,7 +122,7 @@
       },
       {
         "colname": "ANC",
-        "cvid": 114,
+        "cvid": 114, "varname": "GenericVar v22",
         "var_id": 22,
         "year": "2018",
         "regver_id": 2018,
@@ -131,7 +131,7 @@
       },
       {
         "colname": "ANC",
-        "cvid": 115,
+        "cvid": 115, "varname": "GenericVar v23",
         "var_id": 23,
         "year": "2022",
         "regver_id": 2022,
@@ -140,7 +140,7 @@
       },
       {
         "colname": "MISS",
-        "cvid": 116,
+        "cvid": 116, "varname": "GenericVar v24",
         "var_id": 24,
         "year": "2018",
         "regver_id": 2018,
@@ -149,7 +149,7 @@
       },
       {
         "colname": "MISS",
-        "cvid": 117,
+        "cvid": 117, "varname": "GenericVar v25",
         "var_id": 25,
         "year": "2022",
         "regver_id": 2022,
@@ -158,7 +158,7 @@
       },
       {
         "colname": "NOW",
-        "cvid": 118,
+        "cvid": 118, "varname": "GenericVar v26",
         "var_id": 26,
         "year": "2018",
         "regver_id": 2018,
@@ -167,7 +167,7 @@
       },
       {
         "colname": "NOW",
-        "cvid": 119,
+        "cvid": 119, "varname": "GenericVar v26",
         "var_id": 26,
         "year": "2020",
         "regver_id": 2020,
@@ -176,7 +176,7 @@
       },
       {
         "colname": "ADD",
-        "cvid": 120,
+        "cvid": 120, "varname": "GenericVar v27-add",
         "var_id": 27,
         "year": "2022",
         "regver_id": 2022,
@@ -185,7 +185,7 @@
       },
       {
         "colname": "OTHER",
-        "cvid": 121,
+        "cvid": 121, "varname": "GenericVar v27-other",
         "var_id": 27,
         "year": "2020",
         "regver_id": 2020,
@@ -194,7 +194,7 @@
       },
       {
         "colname": "SECOND",
-        "cvid": 122,
+        "cvid": 122, "varname": "GenericVar v27-second",
         "var_id": 27,
         "year": "2020",
         "regver_id": 2020,
@@ -203,7 +203,7 @@
       },
       {
         "colname": "EARLIER",
-        "cvid": 123,
+        "cvid": 123, "varname": "GenericVar v27-earlier",
         "var_id": 27,
         "year": "2018",
         "regver_id": 2018,
@@ -212,7 +212,7 @@
       },
       {
         "colname": "ADDP",
-        "cvid": 124,
+        "cvid": 124, "varname": "GenericVar v28-addp",
         "var_id": 28,
         "year": "2022",
         "regver_id": 2022,
@@ -221,7 +221,7 @@
       },
       {
         "colname": "OTHERP",
-        "cvid": 125,
+        "cvid": 125, "varname": "GenericVar v28-otherp",
         "var_id": 28,
         "year": "2020",
         "regver_id": 2020,
@@ -230,7 +230,7 @@
       },
       {
         "colname": "ADDW",
-        "cvid": 126,
+        "cvid": 126, "varname": "GenericVar v29",
         "var_id": 29,
         "year": "2022",
         "regver_id": 2022,
@@ -239,7 +239,7 @@
       },
       {
         "colname": "OTHERW",
-        "cvid": 127,
+        "cvid": 127, "varname": "GenericVar v29",
         "var_id": 29,
         "year": "2020",
         "regver_id": 2020,
@@ -248,7 +248,7 @@
       },
       {
         "colname": "ADDN",
-        "cvid": 128,
+        "cvid": 128, "varname": "GenericVar v30",
         "var_id": 30,
         "year": "2022",
         "regver_id": 2022,
@@ -257,7 +257,7 @@
       },
       {
         "colname": "ADDN",
-        "cvid": 129,
+        "cvid": 129, "varname": "GenericVar v30",
         "var_id": 30,
         "year": "2020",
         "regver_id": 2020,
@@ -266,7 +266,7 @@
       },
       {
         "colname": "Blk",
-        "cvid": 130,
+        "cvid": 130, "varname": "GenericVar v31",
         "var_id": 31,
         "year": "2022",
         "regver_id": 2022,
@@ -276,7 +276,7 @@
       },
       {
         "colname": "\"\"",
-        "cvid": 131,
+        "cvid": 131, "varname": "GenericVar v31",
         "var_id": 31,
         "year": "2020",
         "regver_id": 2020,
@@ -285,7 +285,7 @@
       },
       {
         "colname": "STMT",
-        "cvid": 132,
+        "cvid": 132, "varname": "GenericVar v32",
         "var_id": 32,
         "year": "2018",
         "regver_id": 2018,
@@ -294,7 +294,7 @@
       },
       {
         "colname": "STMT",
-        "cvid": 133,
+        "cvid": 133, "varname": "GenericVar v32",
         "var_id": 32,
         "year": "2022",
         "regver_id": 2022,
@@ -302,6 +302,6 @@
         "data_type": "int"
       }
     ],
-    "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V1|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V2|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V3|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V4|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V5|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V6|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V7|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V8|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|AMB|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|AMB|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ANC|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ANC|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|MISS|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|MISS|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|NOW|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|NOW|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADD|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHER|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|SECOND|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|EARLIER|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDP|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHERP|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDW|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHERW|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDN|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDN|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|Blk|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|STMT|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|STMT|2022|2022|0|0|0"]
+    "unika": ["TEST|Testregistret|Individer|Individer|GenericVar v99|EDITION|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v99|EDITION|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v99|EDITION|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v5|V1|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v6|V2|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v7|V3|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v8|V4|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v9|V5|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V6|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v11|V7|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v12|V8|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v20|AMB|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v20|AMB|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v22|ANC|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v22|ANC|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v24|MISS|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v24|MISS|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v26|NOW|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v26|NOW|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v27-add|ADD|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v27-other|OTHER|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v27-second|SECOND|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v27-earlier|EARLIER|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v28-addp|ADDP|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v28-otherp|OTHERP|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v29|ADDW|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v29|OTHERW|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v30|ADDN|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v30|ADDN|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v31|Blk|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v32|STMT|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar v32|STMT|2022|2022|0|0|0"]
   }
 }

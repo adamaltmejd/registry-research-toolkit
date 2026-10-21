@@ -47,8 +47,8 @@ k-anonymity/disclosure control, determinism/byte-identity, JSON-contract
 validation, fail-fast. If the work grows past the ticket, do less and file a
 proposal.
 
-SWECOV curation lives in reg_webapp/stewards/swecov/ and
-reg_meta_build/input_data/swecov/. Curated entries come from the ticket's
+SWECOV curation lives in reg_webapp/stewards/swecov/; its private inputs are
+in the registry-catalog-inputs repository. Curated entries come from the ticket's
 evidence; do not invent values the evidence leaves open, and propose a
 follow-up instead. Never read, create or commit a holdings extract or any
 .local/ file.

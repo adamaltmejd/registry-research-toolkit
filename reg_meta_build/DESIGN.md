@@ -414,6 +414,20 @@ A branch name is not a pin: selection names the exact accepted commit and manife
 digest. Preparing a candidate never commits it, replaces accepted inputs or changes the
 active catalog.
 
+Every third-party or private input lives there; this repository holds code and authored
+curation only, and no reader defaults to a path inside the package. `catalog/source/` is
+the tree a bundle is captured from (classification books, the SCB canonical code lists,
+the Socialstyrelsen workbooks); `catalog/docs/` holds the `build-docs` inputs. The
+maintainer-authored sources (the thin-provider declarations in
+`curation/providers/<slug>.toml` and `curation/scb_canonical/scb_canonical.toml`) are
+curation, not deliveries. `prepare-sources --curation-dir` reads them and records each
+as a `curation` inventory entry with its SHA-256, so the prepared root carries them like
+any other source. `build-db` and `check-curation` refuse a prepared root whose pinned
+authored sources differ from the curation tree (`prepared_authored_source_stale`): an
+edit to one of these files needs a fresh prepare, and a stale root cannot build. In
+curation comments and evidence, an `inputs:` prefix names a path in that repository
+(`inputs:catalog/docs/markdown/lisa/SektorKod.md`).
+
 Raw archives can remain compressed outside Git; the original SCB exports are release
 `scb-raw-2026-03` of the inputs repository. The lossless compact SCB snapshot keeps
 original dictionaries, associations and ordering without versioning the wasteful
@@ -477,17 +491,25 @@ missing row also invalidates an omission claim covering that row.
 ### Curation source and layout
 
 Tracked TOML in this repository is the only curation input. The build reads it directly.
-It is not part of the input bundle, and no preparation depends on it, so a curation edit
-never forces a re-prepare. Curation compiles in-process on every build; there is no
-stored selection. The build summary records a hash of the curation tree. An optional
-decision dump serves inspection.
+It is not part of the input bundle, and apart from the authored sources under
+`providers/` and `scb_canonical/` (see "Input storage and preparation") no preparation
+depends on it, so any other curation edit never forces a re-prepare. Curation compiles
+in-process on every build; there is no stored selection. The build summary records a
+hash of the curation tree. An optional decision dump serves inspection.
 
 The target layout:
 
 - `curation/registers/<provider>/<register-slug>.toml` holds one register, its
-  `[register]` slug, `[[variant]]` and `[[variable]]` naming, and the other register
+  `[register]` slug, `[[variant]]` and `[variable]` naming, and the other register
   curation. Generated variable pins live beside it in `<register-slug>.auto.toml`. An
   optional directory holds a register family, e.g. Komvux 248/249/250.
+- A variable pin is one line in the file's single `[variable]` table, keyed by native
+  id: `"121.65" = "bsuninr"`. A pin with more than a slug is an inline table:
+  `"121.65" = { slug = "bsuninr", deprecated = true }`. Authored pins keep the curator's
+  order and section comments. The generated file is written sorted by native id
+  (numeric-aware), and each pin's `# source: <class>` comment records how its slug was
+  derived; `tomllib` drops the comment, so a line scanner reads it back. One line per
+  pin keeps the files short and a pin change a one-line diff.
 - `curation/classifications/<short>.toml` holds one classification: its metadata,
   sentinels, the label list behind the binding rule, and overrides. Its loader refuses
   with one code per rule family, located at the file: `classification_toml_unreadable`,
@@ -683,12 +705,12 @@ variant the anchor's own occurrence lands in: a SOS workbook without a Deldatam�
 sheet places every variable in the synthesized `_default`, and the mint follows it. Its
 optional `data_warning` annotates that occurrence and its optional `measurement_unit` is
 that occurrence's unit, as on the SCB path. A routed token (`[[identity.route]]`) is
-refused as stale: name its destination. Its name is the `[[variable]]` entry
+refused as stale: name its destination. Its name is the `[variable]` pin
 `<register native_id>.<column>`, which is also a documented SOS or thin variable's own
 source id, so the entry is refused (`column_now_documented`) when the register documents
 the column anywhere, or an `[[identity.rename]]` gives a documented variable that
-column. The `[[variable]]` entry then names the documented variable through native
-naming: a documented column extended outside its documented years is an
+column. The `[variable]` pin then names the documented variable through native naming: a
+documented column extended outside its documented years is an
 `[[errata.occurrence_carry]]`. The mint takes its slug by naming conversion's rules
 (`accepted_variable_slugs`): a generated pin in a churning zone is inactive, and an
 authored entry overrides a generated one.
@@ -1778,14 +1800,21 @@ of a build-only warning. Diagnostics a researcher reads as one limitation share 
 code (`PUBLIC_CODES`: `no_supported_states` publishes as `unsupported_occurrence`); the
 build keeps the original code, which acknowledgements name. Published provenance (state,
 classification link, alias window, sentinel certificate, source relationship) follows
-the same rule: it carries a decision's `errata:<class>` line and its structured source
-locators (`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`, a matrix's
-`evidence:` and `source_pages:`) and storage-type facts, never the case pointer, the
-reason or free-text evidence, which go to the case event in the build ledger. A
-correction citing no locator publishes nothing, so equal neighbouring states pool. A
-curated alias window keeps the `curated:alias-window` head, since non-NULL provenance is
-what makes it additive; a book's override binding publishes
-`curated:override -> <slug>`; a source relationship names its declaration row.
+the same rule. A decision carries a `published` value built only from its checked
+fields, never parsed from its text: a constant head (`errata:<class>` for an errata
+class, else `curated:<table>` of its curation entry, such as
+`curated:enrichment.description` or `curated:coding.choice`, or a fixed kind:
+`curated:matrix-answer`, `curated:representations`, `curated:alias-window`), then its
+source locators (`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`) and
+storage-type facts. The case pointer, the reason and free-text evidence go to the case
+event in the build ledger. Only a fact effect publishes it (a field, period or added
+occurrence; a coding, classification, representation or alias decision), so equally
+curated spans pool and a curated span never pools with an uncurated neighbour. Routing
+(identity, variant assignment, edition rebind, source use) claims no fact and publishes
+nothing, and nor does a thin provider's authored record, whose facts are the provider's
+own. A curated alias window's `curated:alias-window` head is also what makes it
+additive; a book's override binding publishes `curated:override -> <slug>`; a source
+relationship names its declaration row.
 
 The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
 forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`
@@ -1810,6 +1839,46 @@ is a located `variable_name_over_search_cap` error, never a catalog `data_warnin
 (#1261): the server cannot find it by exact name. Curation shortens the name, for a
 family of subquestions under one label to `<label> — <short subquestion>`, and leaves
 the full question in the definition fields; the cap does not move.
+
+A variable name is unique within a variant (#1736). After formation, variables of one
+register that carry the same source name in a variant (partition, column-owner and split
+owners of one native variable, and distinct native variables alike) are named apart by a
+deterministic fallback ladder. A variable that shares a name in several variants is
+compared with the members of all of them and gets one name. Each member that still
+carries its source name takes the first step that names it apart:
+
+1. `<name> — <operational definition>`, when its definition is one text across all its
+   states and no sibling that also takes a definition step has the same text.
+   Definitions are compared and written with whitespace collapsed to single spaces.
+2. Else `<name> — <first sentence>` of that definition, when no such sibling's
+   definition or first sentence equals it. The first sentence is the first non-blank
+   line, cut at the first `.`, `?` or `!` followed by a space and an upper-case letter.
+   A period does not end the sentence when the word it closes holds another period
+   (`t.ex.`, `fr.o.m.`, `m.m.`), is a single letter, or is one of `ca`, `dvs`, `exkl`,
+   `inkl`, `jfr`, `kap`, `nr`, `resp`, `s`, `st`. A closing period is dropped.
+3. Else `<name> (<COLUMN>)`, the delivery column of its latest state (latest `valid_to`,
+   then `valid_from`, then column), when no other sibling left for this step has the
+   same column case-folded.
+4. Else `<name> (<COLUMN>, <first>–<last year>)`, over all its states (one year is
+   written alone, an open end as `<first>–`), when distinct the same way.
+
+No step writes a name over the search cap: a member steps 1 and 2 cannot fit falls to
+step 3, and one that steps 3 and 4 cannot fit keeps its source name. The ladder name
+replaces the source name on the variable and on each of its states and per-column alias
+windows that carry the source name; a state with its own corrected name keeps it.
+Siblings that share a definition, and a variable whose definition varies across its
+states or is missing, skip steps 1 and 2. Detection reads source names, so an explicit
+`[[errata.field]]` name correction wins: the corrected variable keeps its name, still
+makes its source-name group collide, and does not block a sibling's step. A correction
+that the ladder would reproduce is redundant and is deleted. Every member the ladder
+cannot separate keeps its source name, and the uniqueness check that follows runs over
+the whole variant, so a ladder name that another variable already carries is also
+caught. Every variable whose name still collides is a located `duplicate_variable_name`
+error, withheld, none of them chosen, so a diagnostic build stays writable; curation
+names them with `[[errata.field]]`, following the `<label> — <short subquestion>` form
+above. Both the check and `validate_built_db` compare the name a reader sees per state
+(the state's own name, else the variable's), so `validate_built_db` refuses an artifact
+in which two variables with states in one variant share a name.
 
 ## Strict and diagnostic builds
 
@@ -2312,7 +2381,7 @@ stage.
 ```text
 reg-meta-build prepare-input-bundle --input-dir DIR --scb-snapshot DIR ...
 reg-meta-build verify-input-bundle --input-bundle DIR ...
-reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR
+reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
 reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
@@ -2397,8 +2466,8 @@ input acceptance remain separate maintainer operations. Diagnostic output remain
 explicitly nonpublishable and cannot replace the active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
-enforces this: every variable needs an authored `[[variable]]` pin, and a variable
-without one is refused as `unresolved_catalog_identity`, entity key or not. A separate
+enforces this: every variable needs an authored `[variable]` pin, and a variable without
+one is refused as `unresolved_catalog_identity`, entity key or not. A separate
 validation gate would add nothing there, so it was retired (#1222). extend-db auto-slugs
 overlay variables, so the steward path keeps the gate (`_check_entity_key_vars_curated`,
 #559). It requires a pin in the steward slug dir for every entity-key variable of the
@@ -3006,15 +3075,15 @@ parses frontmatter, cleans markdown for FTS, resolves source URLs/titles from
 warnings rather than invented links. Related binaries are checked against tracked hashes
 and sizes before being stored verbatim; license metadata determines whether
 redistribution is permitted. A `required` entry (the default) whose binary is absent,
-including when the whole `input_data/SCB/docs` root is absent, refuses the build with
+including when the whole `--related-docs-dir` root is absent, refuses the build with
 `related_documents_binary_missing` naming each `register/filename`, so a release cannot
-ship a docs asset silently missing a document (#1686). There is no opt-out: a checkout
-without the gitignored PDFs cannot run `build-docs` against the repository map. A
-`required = false` entry with no binary and an unregistered PDF are warnings. The build
-stages `reg_meta_docs.db.tmp` beside the destination and installs it through
-`publish_db`, so a refusal leaves the previous docs DB untouched and a successful
-rebuild retains the replaced generation as `.prev` (#1690). This indexing does not
-interpret documents to change catalog facts.
+ship a docs asset silently missing a document (#1686). There is no opt-out: without the
+inputs repository's `catalog/docs/related/` you cannot run `build-docs` against the
+repository map. A `required = false` entry with no binary and an unregistered PDF are
+warnings. The build stages `reg_meta_docs.db.tmp` beside the destination and installs it
+through `publish_db`, so a refusal leaves the previous docs DB untouched and a
+successful rebuild retains the replaced generation as `.prev` (#1690). This indexing
+does not interpret documents to change catalog facts.
 
 `doc_db.py` owns the build and FTS creation. The reader's docs schema gate is
 `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs`, which mirrors `DOC_SCHEMA_VERSION`.

@@ -3,10 +3,87 @@ provider = "scb"
 slug = "lsum"
 native_id = "128"
 
-[[variable]]
-native_id = "128.56"
-slug = "person-orgnr"
+[variable]
+"128.56" = "person-orgnr"
 
+# Lönestrukturstatistik, kommuner (SLK)
+"128.57" = "personnr"
+"128.14" = "cfar-nummer"
+"128.596" = "tjanstepension"
+"128.744" = "antal-km-milersattning"
+"128.1192" = "ovriga-kostnadsersattningar"
+"128.1641" = "naringsgren-arbetsstalle"
+"128.6088" = "institutionell-sektorkod-lsum"
+"128.6091" = "formaner"
+"128.6096" = "kostnadsersattningar"
+"128.6098" = "ovriga-ersattningar"
+"128.6103" = "bransleforman"
+"128.6106" = "typ-av-post"
+"128.6140" = "antal-kontrolluppgifter-per-foretag"
+"128.6199" = "summerade-formaner"
+"128.6203" = "antal-agi-ku"
+"128.29247" = "pensionsutbetalning"
+"128.39365" = "rutunderlag"
+"128.39366" = "rotunderlag"
+"128.39368" = "rotulag"
+"128.41337" = "ej-skatteavdrag"
+
+# register 130 (slk)
+"128.16323.ftgsni2002" = "ftgsni2002"
+"128.16323.ftgsni92" = "ftgsni92"
+"128.19053.ftgsni92" = "naringsgren-huvudsaklig"
+
+# register 13 (moms)
+"128.17" = "arbetsstallenummer"
+"128.24" = "familjestallning"
+"128.25" = "familjetyp"
+"128.33" = "institutionell-sektor"
+"128.34" = "juridisk-form"
+"128.74" = "agarkontroll"
+"128.241" = "alder-31-12"
+"128.257" = "fodelseland-rtb"
+"128.271" = "medborgarskapsland"
+"128.332" = "senaste-invandringsdatum"
+"128.473" = "lan-arbetsstalle"
+"128.667" = "kommun-for-arbetsstalle"
+"128.1068" = "antal-manader-med-bilforman"
+"128.1824" = "avdrag-vissa-lonetillagg"
+"128.1831" = "traktamente-utom-riket"
+"128.1833" = "traktamente-inom-riket"
+"128.4055" = "kostnadsavdrag"
+"128.6056" = "anstalld-fran-manad"
+"128.6057" = "anstalld-till-manad"
+"128.6089" = "delagare-i-famansbolag"
+"128.6090" = "ersattning-egenavgifter"
+"128.6093" = "hyresersattning"
+"128.6097" = "logiersattning"
+"128.6099" = "ovriga-skattepliktiga-ersattningar"
+"128.6104" = "ersattning-resa-utomlands-bosatta"
+"128.6111" = "ersattningsbelopp"
+"128.6112" = "ersattningskod"
+"128.16411" = "fri-parkering"
+"128.19568" = "loneink"
+"128.21879" = "skattepliktiga-ersattningar-ej-sociala"
+"128.28808" = "referensperiod"
+"128.29246" = "antal-personer-vid-arbetsstallet"
+"128.41336" = "antal-dagar-sjoinkomst"
+
+# register 130
+"128.1073.justering" = "rattad-post"
+"128.22251.pensforman" = "forman-som-pension"
+"128.41328.ambassadanstsv" = "ambassad-anstalld-sverige"
+"128.6060.bilers" = "bilersattning"
+"128.6060.bilers-fel" = "bilersattning-fel"
+"128.6092.bostforman" = "bostadsforman"
+"128.6092.bostforman-fel" = "bostadsforman-fel"
+"128.19054.astsni2002" = "astsni200"
+"128.19054.astsni2007" = "astsni2007"
+"128.19054.astsni92" = "astsni92"
+"128.1641.astsni2002" = "astsni2002"
+"128.1641.astsni2007" = "astsni2007-1641"
+"128.19053.ftgsni2002" = "ftgsni200"
+"128.19053.ftgsni2007" = "ftgsni2007"
+"128.16323.ftgsni2007" = "ftgsni2007-16323"
 
 [[variant]]
 native_id = "128.154"
@@ -52,268 +129,6 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
-# Lönestrukturstatistik, kommuner (SLK)
-
-[[variable]]
-native_id = "128.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "128.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "128.596"
-slug = "tjanstepension"
-
-[[variable]]
-native_id = "128.744"
-slug = "antal-km-milersattning"
-
-[[variable]]
-native_id = "128.1192"
-slug = "ovriga-kostnadsersattningar"
-
-[[variable]]
-native_id = "128.1641"
-slug = "naringsgren-arbetsstalle"
-
-[[variable]]
-native_id = "128.6088"
-slug = "institutionell-sektorkod-lsum"
-
-[[variable]]
-native_id = "128.6091"
-slug = "formaner"
-
-[[variable]]
-native_id = "128.6096"
-slug = "kostnadsersattningar"
-
-[[variable]]
-native_id = "128.6098"
-slug = "ovriga-ersattningar"
-
-[[variable]]
-native_id = "128.6103"
-slug = "bransleforman"
-
-[[variable]]
-native_id = "128.6106"
-slug = "typ-av-post"
-
-[[variable]]
-native_id = "128.6140"
-slug = "antal-kontrolluppgifter-per-foretag"
-
-[[variable]]
-native_id = "128.6199"
-slug = "summerade-formaner"
-
-[[variable]]
-native_id = "128.6203"
-slug = "antal-agi-ku"
-
-[[variable]]
-native_id = "128.29247"
-slug = "pensionsutbetalning"
-
-[[variable]]
-native_id = "128.39365"
-slug = "rutunderlag"
-
-[[variable]]
-native_id = "128.39366"
-slug = "rotunderlag"
-
-[[variable]]
-native_id = "128.39368"
-slug = "rotulag"
-
-[[variable]]
-native_id = "128.41337"
-slug = "ej-skatteavdrag"
-
-# register 130 (slk)
-
-[[variable]]
-native_id = "128.16323.ftgsni2002"
-slug = "ftgsni2002"
-
-[[variable]]
-native_id = "128.16323.ftgsni92"
-slug = "ftgsni92"
-
-[[variable]]
-native_id = "128.19053.ftgsni92"
-slug = "naringsgren-huvudsaklig"
-
-# register 13 (moms)
-
-[[variable]]
-native_id = "128.17"
-slug = "arbetsstallenummer"
-
-[[variable]]
-native_id = "128.24"
-slug = "familjestallning"
-
-[[variable]]
-native_id = "128.25"
-slug = "familjetyp"
-
-[[variable]]
-native_id = "128.33"
-slug = "institutionell-sektor"
-
-[[variable]]
-native_id = "128.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "128.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "128.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "128.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "128.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "128.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "128.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "128.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "128.1068"
-slug = "antal-manader-med-bilforman"
-
-[[variable]]
-native_id = "128.1824"
-slug = "avdrag-vissa-lonetillagg"
-
-[[variable]]
-native_id = "128.1831"
-slug = "traktamente-utom-riket"
-
-[[variable]]
-native_id = "128.1833"
-slug = "traktamente-inom-riket"
-
-[[variable]]
-native_id = "128.4055"
-slug = "kostnadsavdrag"
-
-[[variable]]
-native_id = "128.6056"
-slug = "anstalld-fran-manad"
-
-[[variable]]
-native_id = "128.6057"
-slug = "anstalld-till-manad"
-
-[[variable]]
-native_id = "128.6089"
-slug = "delagare-i-famansbolag"
-
-[[variable]]
-native_id = "128.6090"
-slug = "ersattning-egenavgifter"
-
-[[variable]]
-native_id = "128.6093"
-slug = "hyresersattning"
-
-[[variable]]
-native_id = "128.6097"
-slug = "logiersattning"
-
-[[variable]]
-native_id = "128.6099"
-slug = "ovriga-skattepliktiga-ersattningar"
-
-[[variable]]
-native_id = "128.6104"
-slug = "ersattning-resa-utomlands-bosatta"
-
-[[variable]]
-native_id = "128.6111"
-slug = "ersattningsbelopp"
-
-[[variable]]
-native_id = "128.6112"
-slug = "ersattningskod"
-
-[[variable]]
-native_id = "128.16411"
-slug = "fri-parkering"
-
-[[variable]]
-native_id = "128.19568"
-slug = "loneink"
-
-[[variable]]
-native_id = "128.21879"
-slug = "skattepliktiga-ersattningar-ej-sociala"
-
-[[variable]]
-native_id = "128.28808"
-slug = "referensperiod"
-
-[[variable]]
-native_id = "128.29246"
-slug = "antal-personer-vid-arbetsstallet"
-
-[[variable]]
-native_id = "128.41336"
-slug = "antal-dagar-sjoinkomst"
-
-# register 130
-
-[[variable]]
-native_id = "128.1073.justering"
-slug = "rattad-post"
-
-[[variable]]
-native_id = "128.22251.pensforman"
-slug = "forman-som-pension"
-
-[[variable]]
-native_id = "128.41328.ambassadanstsv"
-slug = "ambassad-anstalld-sverige"
-
-[[variable]]
-native_id = "128.6060.bilers"
-slug = "bilersattning"
-
-[[variable]]
-native_id = "128.6060.bilers-fel"
-slug = "bilersattning-fel"
-
-[[variable]]
-native_id = "128.6092.bostforman"
-slug = "bostadsforman"
-
-[[variable]]
-native_id = "128.6092.bostforman-fel"
-slug = "bostadsforman-fel"
-
 # register 132
 
 [[identity.partition]]
@@ -343,35 +158,3 @@ variable = "128.16323"
 columns = { FtgSni2002 = "128.16323.ftgsni2002", FtgSni2007 = "128.16323.ftgsni2007", FtgSni92 = "128.16323.ftgsni92", Ftgsni2002 = "128.16323.ftgsni2002", Ftgsni2007 = "128.16323.ftgsni2007", ftgsni2002 = "128.16323.ftgsni2002", ftgsni92 = "128.16323.ftgsni92" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "eadac0b0fe1d57fcd45f2aca976f844528eb3bce756446e82dd245f02cabfc90"
-
-[[variable]]
-native_id = "128.19054.astsni2002"
-slug = "astsni200"
-
-[[variable]]
-native_id = "128.19054.astsni2007"
-slug = "astsni2007"
-
-[[variable]]
-native_id = "128.19054.astsni92"
-slug = "astsni92"
-
-[[variable]]
-native_id = "128.1641.astsni2002"
-slug = "astsni2002"
-
-[[variable]]
-native_id = "128.1641.astsni2007"
-slug = "astsni2007-1641"
-
-[[variable]]
-native_id = "128.19053.ftgsni2002"
-slug = "ftgsni200"
-
-[[variable]]
-native_id = "128.19053.ftgsni2007"
-slug = "ftgsni2007"
-
-[[variable]]
-native_id = "128.16323.ftgsni2007"
-slug = "ftgsni2007-16323"

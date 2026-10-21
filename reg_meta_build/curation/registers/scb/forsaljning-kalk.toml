@@ -8,8 +8,6 @@ native_id = "152.219"
 slug = "_default"
 display_group = "Försäljning av kalk för jord- och trädgårdsbruk, sjöar och vatten samt skog"
 
+[variable]
 # Vägtrafikolyckor, element, fordon, person, förare (Trafo)
-
-[[variable]]
-native_id = "152.3575"
-slug = "foretagets-namn"
+"152.3575" = "foretagets-namn"

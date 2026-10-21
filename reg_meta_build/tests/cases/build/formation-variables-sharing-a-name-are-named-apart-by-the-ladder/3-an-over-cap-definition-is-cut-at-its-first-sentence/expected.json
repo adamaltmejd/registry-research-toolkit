@@ -1,0 +1,19 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "name"],
+      "rows": [
+        ["a", "Svar — Antal anställda fr.o.m. Januari 2020, ca. Tio procent enligt t.ex. SCB:s register"],
+        ["b", "Svar — Alternativ B"]
+      ],
+      "note": "a takes its first sentence, cut at the first period that closes no abbreviation, without that period; b takes its whole definition."
+    }
+  ]
+}

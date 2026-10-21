@@ -115,2490 +115,586 @@ panel_entity_key = "skolkod-distans"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Tidsanvändningsundersökningen
-
-[[variable]]
-native_id = "366.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "366.104"
-slug = "skolkod"
-
-
-[[variable]]
-native_id = "366.4544"
-slug = "eget-personnr"
-
-
-[[variable]]
-native_id = "366.45133"
-slug = "skolkod-distans"
-
-
-[[variable]]
-native_id = "366.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "366.65"
-slug = "utbildningsinriktning"
-
-[[variable]]
-native_id = "366.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "366.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "366.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "366.1545"
-slug = "utbildningsinriktning-3-positioner"
-
-[[variable]]
-native_id = "366.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "366.3126"
-slug = "faktisk-tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "366.3235"
-slug = "antal-terminer-i-utbildning"
-
-[[variable]]
-native_id = "366.3271"
-slug = "upprakningsvikt"
-
-[[variable]]
-native_id = "366.3614"
-slug = "meritvarde"
-
-[[variable]]
-native_id = "366.4028"
-slug = "storan"
-
-[[variable]]
-native_id = "366.4030"
-slug = "lillan"
-
-[[variable]]
-native_id = "366.4613"
-slug = "populationsstorlek-per-stratum"
-
-[[variable]]
-native_id = "366.4614"
-slug = "urvalsstorlek-per-stratum"
-
-[[variable]]
-native_id = "366.4655"
-slug = "avregkod"
-
-[[variable]]
-native_id = "366.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "366.4697"
-slug = "gymnasiebetyg"
-
-[[variable]]
-native_id = "366.4736"
-slug = "vikt"
-
-[[variable]]
-native_id = "366.5043"
-slug = "aktivt-sokt-arbete"
-
-[[variable]]
-native_id = "366.5078"
-slug = "arbete"
-
-[[variable]]
-native_id = "366.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "366.5090"
-slug = "arbetsmarknadssektor"
-
-[[variable]]
-native_id = "366.5118"
-slug = "verksamhetsomrade"
-
-[[variable]]
-native_id = "366.5124"
-slug = "tillracklig-utbildningsniva"
-
-[[variable]]
-native_id = "366.5125"
-slug = "tid-lara-arbetsuppgifterna"
-
-[[variable]]
-native_id = "366.5664"
-slug = "befattningskod"
-
-[[variable]]
-native_id = "366.5696"
-slug = "stora-n-per-stratum"
-
-[[variable]]
-native_id = "366.5697"
-slug = "lilla-n-per-stratum"
-
-[[variable]]
-native_id = "366.6181"
-slug = "utbildning-bidragit-fa-arbete"
-
-[[variable]]
-native_id = "366.6211"
-slug = "svarande-per-stratum"
-
-[[variable]]
-native_id = "366.6212"
-slug = "vikt-ht"
-
-[[variable]]
-native_id = "366.6290"
-slug = "nuts"
-
-[[variable]]
-native_id = "366.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "366.6418"
-slug = "befattningskod-pedagogisk"
-
-[[variable]]
-native_id = "366.7914"
-slug = "arskurs"
-
-[[variable]]
-native_id = "366.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "366.8773"
-slug = "typ-av-anstallning"
-
-[[variable]]
-native_id = "366.15053"
-slug = "utbildningsniva-sun2000"
-
-[[variable]]
-native_id = "366.15677"
-slug = "storan-ungdejfullf"
-
-[[variable]]
-native_id = "366.15678"
-slug = "lillan-ungdejfullf"
-
-[[variable]]
-native_id = "366.15694"
-slug = "huvudsaklig-avbrottsorsak"
-
-[[variable]]
-native_id = "366.15696"
-slug = "avbrottsorsak-fick-barn"
-
-[[variable]]
-native_id = "366.15697"
-slug = "avbrottsorsak-fick-arbete"
-
-[[variable]]
-native_id = "366.15700"
-slug = "avbrottsorsak-svara-studier"
-
-[[variable]]
-native_id = "366.15704"
-slug = "avbrottsorsak-skoltrott"
-
-[[variable]]
-native_id = "366.15712"
-slug = "stodundervisning"
-
-[[variable]]
-native_id = "366.15713"
-slug = "uteblivit-undervisningen"
-
-[[variable]]
-native_id = "366.15719"
-slug = "angrar"
-
-[[variable]]
-native_id = "366.15722"
-slug = "arbete-efter-gymnasieskolan"
-
-[[variable]]
-native_id = "366.15764"
-slug = "manader-forsta-arbete-eftergy"
-
-[[variable]]
-native_id = "366.15765"
-slug = "arbetslos-efter-gymnasieskolan"
-
-[[variable]]
-native_id = "366.15767"
-slug = "antal-ganger-arbetslos-eftergy"
-
-[[variable]]
-native_id = "366.15768"
-slug = "verksamhet-matveckan"
-
-[[variable]]
-native_id = "366.15830"
-slug = "erbjuden-svartjobb"
-
-[[variable]]
-native_id = "366.15832"
-slug = "arbetstid-per-vecka"
-
-[[variable]]
-native_id = "366.15833"
-slug = "arbeta-mer-eller-mindre"
-
-[[variable]]
-native_id = "366.15835"
-slug = "syn-pa-arbetet-fortsatta-yrket"
-
-[[variable]]
-native_id = "366.15837"
-slug = "syn-pa-arbetet-till-annat-arbete"
-
-[[variable]]
-native_id = "366.15838"
-slug = "syn-pa-arbetet-obekvama-tider"
-
-[[variable]]
-native_id = "366.15839"
-slug = "syn-pa-arbetet-till-utbildning"
-
-[[variable]]
-native_id = "366.15840"
-slug = "syn-pa-arbetet-erfarenhet"
-
-[[variable]]
-native_id = "366.15874"
-slug = "framtiden-for-egen-del"
-
-[[variable]]
-native_id = "366.16341"
-slug = "antal-gymnasiepoang"
-
-[[variable]]
-native_id = "366.17446"
-slug = "inskriven-arbetsformedlingen"
-
-[[variable]]
-native_id = "366.17589"
-slug = "gruppering-av-alder"
-
-[[variable]]
-native_id = "366.25154"
-slug = "nojd-med-avslutad-utbildning"
-
-[[variable]]
-native_id = "366.28679"
-slug = "sysselsattning-aktivitet"
-
-[[variable]]
-native_id = "366.30675"
-slug = "arbete-minst-6-manader-gymnasiet"
-
-[[variable]]
-native_id = "366.30809"
-slug = "anstallningsform-annan"
-
-[[variable]]
-native_id = "366.30824"
-slug = "minst-en-timmes-arbete-under-matveckan"
-
-[[variable]]
-native_id = "366.32454"
-slug = "foraldrarnas-utbildningsniva"
-
-[[variable]]
-native_id = "366.35122"
-slug = "samboforhallande"
-
-[[variable]]
-native_id = "366.35964"
-slug = "heltid-deltid-forvarvsarbetande"
-
-[[variable]]
-native_id = "366.36081"
-slug = "anstalld-aktuellt-yrke-bransch"
-
-[[variable]]
-native_id = "366.36083"
-slug = "avslutsar-senaste-anstallning"
-
-[[variable]]
-native_id = "366.36085"
-slug = "antal-ar-yrket-branschen"
-
-[[variable]]
-native_id = "366.36087"
-slug = "skal-utbilda-yrket-annat"
-
-[[variable]]
-native_id = "366.36088"
-slug = "utbildningen-forberedde-yrket"
-
-[[variable]]
-native_id = "366.36089"
-slug = "utbildningens-nytta-arbetet"
-
-[[variable]]
-native_id = "366.36090"
-slug = "nytta-yrkeserfarenhet-arbetet"
-
-[[variable]]
-native_id = "366.36094"
-slug = "loneforandring-yrkesbyte"
-
-[[variable]]
-native_id = "366.36095"
-slug = "tjanstgoringsomfattning-skal-lamna-yrket"
-
-[[variable]]
-native_id = "366.36097"
-slug = "sannolikhet-aterganga-yrket"
-
-[[variable]]
-native_id = "366.36099"
-slug = "andra-faktorer-aterganga-yrket"
-
-[[variable]]
-native_id = "366.36100"
-slug = "hemmavarande-barn-12-ar-aldre"
-
-[[variable]]
-native_id = "366.36121"
-slug = "yrkesbytet-annan-anledning-txt"
-
-[[variable]]
-native_id = "366.36122"
-slug = "yrkesbyte-skal-admin-uppgifter"
-
-[[variable]]
-native_id = "366.36124"
-slug = "yrkesbyte-skal-arbetsbelastning"
-
-[[variable]]
-native_id = "366.36125"
-slug = "yrkesbyte-skal-kompetensutv"
-
-[[variable]]
-native_id = "366.36126"
-slug = "yrkesbyte-skal-karriar"
-
-[[variable]]
-native_id = "366.36128"
-slug = "yrkesbyte-skal-psykiskt-kravande"
-
-[[variable]]
-native_id = "366.36129"
-slug = "yrkesbyte-skal-styra-arbetet"
-
-[[variable]]
-native_id = "366.36130"
-slug = "yrkesbyte-skal-ledarskap"
-
-[[variable]]
-native_id = "366.36136"
-slug = "lon-skal-yrkesbyte-annat"
-
-[[variable]]
-native_id = "366.36137"
-slug = "lon-skal-yrkesbyte-annat-txt"
-
-[[variable]]
-native_id = "366.36153"
-slug = "aterganga-yrket-andra-skal-txt"
-
-[[variable]]
-native_id = "366.36155"
-slug = "aterganga-yrket-hogre-lon"
-
-[[variable]]
-native_id = "366.36156"
-slug = "aterganga-yrket-karriar"
-
-[[variable]]
-native_id = "366.36157"
-slug = "aterganga-yrket-kompetensutv"
-
-[[variable]]
-native_id = "366.36158"
-slug = "aterganga-yrket-arbetsbelastning"
-
-[[variable]]
-native_id = "366.36159"
-slug = "faktorer-komma-tillbaka-styra"
-
-[[variable]]
-native_id = "366.36165"
-slug = "skal-till-yrkesbytet-annan-anledning"
-
-[[variable]]
-native_id = "366.36166"
-slug = "hemmavarande-barn-11-ar-eller-yngre"
-
-[[variable]]
-native_id = "366.36167"
-slug = "inga-hemmavarande-barn"
-
-[[variable]]
-native_id = "366.36199"
-slug = "studiedeltagande-eftergy-minst-2ar"
-
-[[variable]]
-native_id = "366.36200"
-slug = "utlandsvistelse-eftergy-minst-2ar"
-
-[[variable]]
-native_id = "366.36315"
-slug = "paborjat-gymnasieskolan-eller-inte"
-
-[[variable]]
-native_id = "366.36317"
-slug = "avhopp-fran-gymnasieskolan"
-
-[[variable]]
-native_id = "366.36338"
-slug = "skolpersonal-hjalp-fullfolja-gy"
-
-[[variable]]
-native_id = "366.36347"
-slug = "hur-kontakterna-har-fungerat"
-
-[[variable]]
-native_id = "366.36371"
-slug = "sysselsattning-aktivitet-annan"
-
-[[variable]]
-native_id = "366.36373"
-slug = "hur-man-fatt-arbetet"
-
-[[variable]]
-native_id = "366.37237"
-slug = "tjanstgorande-larare"
-
-[[variable]]
-native_id = "366.37594"
-slug = "skal-utbilda-yrket-intresse-halsa"
-
-[[variable]]
-native_id = "366.37595"
-slug = "skal-utbilda-yrket-arbeta-manniskor"
-
-[[variable]]
-native_id = "366.37716"
-slug = "skal-yrkesbyte-patientkontakter"
-
-[[variable]]
-native_id = "366.37717"
-slug = "yrkesbyte-skal-uppgifter-ej-yrket"
-
-[[variable]]
-native_id = "366.37718"
-slug = "skal-yrkesbyte-fysiskt-kravande"
-
-[[variable]]
-native_id = "366.38782"
-slug = "intryck-forskarutbildningen"
-
-[[variable]]
-native_id = "366.38783"
-slug = "forskarutb-forberett-arbetslivet"
-
-[[variable]]
-native_id = "366.38784"
-slug = "onskemal-om-arbetsplats"
-
-[[variable]]
-native_id = "366.38919"
-slug = "uppmarksammat-negativ-sarbehandling"
-
-[[variable]]
-native_id = "366.38924"
-slug = "uppmarksammat-sexuellt-krankande"
-
-[[variable]]
-native_id = "366.38925"
-slug = "stod-vid-sexuellt-krankande"
-
-[[variable]]
-native_id = "366.38926"
-slug = "stod-vid-negativ-sarbehandling"
-
-[[variable]]
-native_id = "366.38929"
-slug = "arbete-sysselsattning-efter-utbildningen"
-
-[[variable]]
-native_id = "366.38930"
-slug = "arbetat-utomlands-forsta-ar"
-
-[[variable]]
-native_id = "366.38931"
-slug = "huvudsaklig-sysselsattning-forsta-ar"
-
-[[variable]]
-native_id = "366.38941"
-slug = "arbete-inom-amnesomradet-postdoktor"
-
-[[variable]]
-native_id = "366.38942"
-slug = "arbete-amnesomradet-forskarassistent"
-
-[[variable]]
-native_id = "366.38943"
-slug = "arbete-amnesomradet-bitradande-lektor"
-
-[[variable]]
-native_id = "366.38944"
-slug = "tid-examen-till-arbete-amnesomradet"
-
-[[variable]]
-native_id = "366.38945"
-slug = "latt-svart-fa-arbete-amnesomradet"
-
-[[variable]]
-native_id = "366.38948"
-slug = "anknytning-arbetsmarknaden-postdoktor"
-
-[[variable]]
-native_id = "366.38949"
-slug = "anknytning-arbetsmarknaden-stipendium"
-
-[[variable]]
-native_id = "366.41114"
-slug = "behorighet-till-tjansten"
-
-[[variable]]
-native_id = "366.41118"
-slug = "behorighet-till-senaste-tjansten"
-
-[[variable]]
-native_id = "366.41119"
-slug = "behorighet-i-amnen"
-
-[[variable]]
-native_id = "366.41120"
-slug = "huvudman-senast"
-
-[[variable]]
-native_id = "366.41126"
-slug = "arbete-idag"
-
-[[variable]]
-native_id = "366.41131"
-slug = "risk-for-omplacering"
-
-[[variable]]
-native_id = "366.41132"
-slug = "risk-for-entledigande-eller-arbetsloshet"
-
-[[variable]]
-native_id = "366.41134"
-slug = "nytta-lararutb-nuvarande-arbete"
-
-[[variable]]
-native_id = "366.41135"
-slug = "nytta-larare-erfarenhet-arbete"
-
-[[variable]]
-native_id = "366.41137"
-slug = "soka-anstallning-som-larare"
-
-[[variable]]
-native_id = "366.41141"
-slug = "lararexamen"
-
-[[variable]]
-native_id = "366.41142"
-slug = "antal-terminer-till-lararexamen"
-
-[[variable]]
-native_id = "366.41143"
-slug = "skaffa-lararexamen"
-
-[[variable]]
-native_id = "366.41144"
-slug = "komplettera-utbildning"
-
-[[variable]]
-native_id = "366.41145"
-slug = "antal-terminer-for-komplettering"
-
-[[variable]]
-native_id = "366.41939"
-slug = "antal-terminer-till-komplett-lararexamen"
-
-[[variable]]
-native_id = "366.41967"
-slug = "behorighet-som-larare-skolledare"
-
-[[variable]]
-native_id = "366.44869"
-slug = "kontrolleras-narvaro"
-
-[[variable]]
-native_id = "366.44878"
-slug = "grad-lararleddhet-distans"
-
-[[variable]]
-native_id = "366.44885"
-slug = "metod-narvarokontroll-upprop-borjan"
-
-[[variable]]
-native_id = "366.44932"
-slug = "paverkan-tekniska-problem-undervisning"
-
-[[variable]]
-native_id = "366.44933"
-slug = "paverkan-ovana-teknik-undervisning"
-
-[[variable]]
-native_id = "366.44988"
-slug = "andel-undervisning-distans-ht"
-
-[[variable]]
-native_id = "366.44989"
-slug = "distans-organisering-ht"
-
-[[variable]]
-native_id = "366.44991"
-slug = "andel-undervisning-distans-vt"
-
-[[variable]]
-native_id = "366.44992"
-slug = "distans-organisering-vt"
-
-[[variable]]
-native_id = "366.44995"
-slug = "undantag-distans-extra-anpassningar-vt"
-
-[[variable]]
-native_id = "366.44996"
-slug = "undantag-distans-sarskilt-stod-vt"
-
-[[variable]]
-native_id = "366.44999"
-slug = "undantag-distans-extra-anpassningar-ht"
-
-[[variable]]
-native_id = "366.45000"
-slug = "undantag-distans-sarskilt-stod-ht"
-
-[[variable]]
-native_id = "366.45005"
-slug = "larares-undervisning-hemifran-vt"
-
-[[variable]]
-native_id = "366.45007"
-slug = "larares-undervisning-hemifran-ht"
-
-[[variable]]
-native_id = "366.45008"
-slug = "distansundervisning-via-motesverktyg-ht"
-
-[[variable]]
-native_id = "366.45009"
-slug = "distansundervisning-via-motesverktyg-vt"
-
-[[variable]]
-native_id = "366.45091"
-slug = "stod-bedomning-nationella-prov-vet-inte"
-
-[[variable]]
-native_id = "366.45093"
-slug = "metod-narvarokontroll-upprop-flera"
-
-[[variable]]
-native_id = "366.45095"
-slug = "metod-narvarokontroll-kamera-borjan"
-
-[[variable]]
-native_id = "366.45096"
-slug = "metod-narvarokontroll-kamera-hel"
-
-[[variable]]
-native_id = "366.45097"
-slug = "metod-narvarokontroll-inlamning"
-
-[[variable]]
-native_id = "366.45098"
-slug = "metod-narvarokontroll-annat"
-
-[[variable]]
-native_id = "366.45099"
-slug = "metod-narvarokontroll-vet-inte"
-
-[[variable]]
-native_id = "366.45109"
-slug = "distans-nettoveckor-ht-grupp"
-
-[[variable]]
-native_id = "366.45110"
-slug = "distans-nettoveckor-vt-grupp"
-
-[[variable]]
-native_id = "366.45112"
-slug = "distans-bruttoveckor-ht"
-
-[[variable]]
-native_id = "366.45113"
-slug = "distans-bruttoveckor-vt"
-
-[[variable]]
-native_id = "366.45114"
-slug = "distans-bruttoveckor-lasar"
-
-[[variable]]
-native_id = "366.45115"
-slug = "distans-nettoveckor-ht"
-
-[[variable]]
-native_id = "366.45116"
-slug = "distans-nettoveckor-vt"
-
-[[variable]]
-native_id = "366.45119"
-slug = "arskurs-grundskolan"
-
-[[variable]]
-native_id = "366.45122"
-slug = "huvudman-distans"
-
-[[variable]]
-native_id = "366.45123"
-slug = "hjalpvariabel-1-distans"
-
-[[variable]]
-native_id = "366.45124"
-slug = "hjalpvariabel-2-distans"
-
-[[variable]]
-native_id = "366.45126"
-slug = "hjalpvariabel-4-distans"
-
-[[variable]]
-native_id = "366.45127"
-slug = "vikt-distans"
-
-[[variable]]
-native_id = "366.45128"
-slug = "skolstorlek-gymnasieskolan"
-
-[[variable]]
-native_id = "366.45141"
-slug = "skolstorlek-grundskolan"
-
-[[variable]]
-native_id = "366.45961"
-slug = "larares-franvaro-pandemi-anstallt-fler"
-
-[[variable]]
-native_id = "366.45962"
-slug = "larares-franvaro-pandemi-underv-distans"
-
-[[variable]]
-native_id = "366.45963"
-slug = "larares-franvaro-pandemi-andra-losningar"
-
-[[variable]]
-native_id = "366.45964"
-slug = "larares-franvaro-pandemi-annan-personal"
-
-[[variable]]
-native_id = "366.45965"
-slug = "larares-franvaro-pandemi-behoriga-vik"
-
-[[variable]]
-native_id = "366.45966"
-slug = "larares-franvaro-pandemi-larare-beh"
-
-[[variable]]
-native_id = "366.45967"
-slug = "larares-franvaro-pandemi-larare-obeh"
-
-[[variable]]
-native_id = "366.45968"
-slug = "larares-franvaro-pandemi-obehoriga-vik"
-
-[[variable]]
-native_id = "366.45969"
-slug = "pandemi-franvaro-uppskjuten"
-
-[[variable]]
-native_id = "366.45970"
-slug = "pandemi-franvaro-uteblev"
-
-[[variable]]
-native_id = "366.46043"
-slug = "erbjuden-distansundervisning-ht"
-
-[[variable]]
-native_id = "366.46044"
-slug = "erbjuden-distansundervisning-vt"
-
-[[variable]]
-native_id = "366.46048"
-slug = "fortbildning-digitala-verktyg"
-
-[[variable]]
-native_id = "366.46053"
-slug = "skola-bredband-elever"
-
-[[variable]]
-native_id = "366.46071"
-slug = "hjalpvariabel-5-distans"
+"366.57" = "personnr"
+"366.104" = "skolkod"
+"366.4544" = "eget-personnr"
+"366.45133" = "skolkod-distans"
+"366.15" = "civilstand"
+"366.65" = "utbildningsinriktning"
+"366.241" = "alder-31-12"
+"366.257" = "fodelseland-rtb"
+"366.1378" = "fodelsear"
+"366.1545" = "utbildningsinriktning-3-positioner"
+"366.1569" = "fodelseland"
+"366.3126" = "faktisk-tjanstgoringsomfattning"
+"366.3235" = "antal-terminer-i-utbildning"
+"366.3271" = "upprakningsvikt"
+"366.3614" = "meritvarde"
+"366.4028" = "storan"
+"366.4030" = "lillan"
+"366.4613" = "populationsstorlek-per-stratum"
+"366.4614" = "urvalsstorlek-per-stratum"
+"366.4655" = "avregkod"
+"366.4656" = "insamlingsmetod"
+"366.4697" = "gymnasiebetyg"
+"366.4736" = "vikt"
+"366.5043" = "aktivt-sokt-arbete"
+"366.5078" = "arbete"
+"366.5083" = "anstallningsform"
+"366.5090" = "arbetsmarknadssektor"
+"366.5118" = "verksamhetsomrade"
+"366.5124" = "tillracklig-utbildningsniva"
+"366.5125" = "tid-lara-arbetsuppgifterna"
+"366.5664" = "befattningskod"
+"366.5696" = "stora-n-per-stratum"
+"366.5697" = "lilla-n-per-stratum"
+"366.6181" = "utbildning-bidragit-fa-arbete"
+"366.6211" = "svarande-per-stratum"
+"366.6212" = "vikt-ht"
+"366.6290" = "nuts"
+"366.6306" = "antal-arbetade-timmar"
+"366.6418" = "befattningskod-pedagogisk"
+"366.7914" = "arskurs"
+"366.8137" = "huvudman"
+"366.8773" = "typ-av-anstallning"
+"366.15053" = "utbildningsniva-sun2000"
+"366.15677" = "storan-ungdejfullf"
+"366.15678" = "lillan-ungdejfullf"
+"366.15694" = "huvudsaklig-avbrottsorsak"
+"366.15696" = "avbrottsorsak-fick-barn"
+"366.15697" = "avbrottsorsak-fick-arbete"
+"366.15700" = "avbrottsorsak-svara-studier"
+"366.15704" = "avbrottsorsak-skoltrott"
+"366.15712" = "stodundervisning"
+"366.15713" = "uteblivit-undervisningen"
+"366.15719" = "angrar"
+"366.15722" = "arbete-efter-gymnasieskolan"
+"366.15764" = "manader-forsta-arbete-eftergy"
+"366.15765" = "arbetslos-efter-gymnasieskolan"
+"366.15767" = "antal-ganger-arbetslos-eftergy"
+"366.15768" = "verksamhet-matveckan"
+"366.15830" = "erbjuden-svartjobb"
+"366.15832" = "arbetstid-per-vecka"
+"366.15833" = "arbeta-mer-eller-mindre"
+"366.15835" = "syn-pa-arbetet-fortsatta-yrket"
+"366.15837" = "syn-pa-arbetet-till-annat-arbete"
+"366.15838" = "syn-pa-arbetet-obekvama-tider"
+"366.15839" = "syn-pa-arbetet-till-utbildning"
+"366.15840" = "syn-pa-arbetet-erfarenhet"
+"366.15874" = "framtiden-for-egen-del"
+"366.16341" = "antal-gymnasiepoang"
+"366.17446" = "inskriven-arbetsformedlingen"
+"366.17589" = "gruppering-av-alder"
+"366.25154" = "nojd-med-avslutad-utbildning"
+"366.28679" = "sysselsattning-aktivitet"
+"366.30675" = "arbete-minst-6-manader-gymnasiet"
+"366.30809" = "anstallningsform-annan"
+"366.30824" = "minst-en-timmes-arbete-under-matveckan"
+"366.32454" = "foraldrarnas-utbildningsniva"
+"366.35122" = "samboforhallande"
+"366.35964" = "heltid-deltid-forvarvsarbetande"
+"366.36081" = "anstalld-aktuellt-yrke-bransch"
+"366.36083" = "avslutsar-senaste-anstallning"
+"366.36085" = "antal-ar-yrket-branschen"
+"366.36087" = "skal-utbilda-yrket-annat"
+"366.36088" = "utbildningen-forberedde-yrket"
+"366.36089" = "utbildningens-nytta-arbetet"
+"366.36090" = "nytta-yrkeserfarenhet-arbetet"
+"366.36094" = "loneforandring-yrkesbyte"
+"366.36095" = "tjanstgoringsomfattning-skal-lamna-yrket"
+"366.36097" = "sannolikhet-aterganga-yrket"
+"366.36099" = "andra-faktorer-aterganga-yrket"
+"366.36100" = "hemmavarande-barn-12-ar-aldre"
+"366.36121" = "yrkesbytet-annan-anledning-txt"
+"366.36122" = "yrkesbyte-skal-admin-uppgifter"
+"366.36124" = "yrkesbyte-skal-arbetsbelastning"
+"366.36125" = "yrkesbyte-skal-kompetensutv"
+"366.36126" = "yrkesbyte-skal-karriar"
+"366.36128" = "yrkesbyte-skal-psykiskt-kravande"
+"366.36129" = "yrkesbyte-skal-styra-arbetet"
+"366.36130" = "yrkesbyte-skal-ledarskap"
+"366.36136" = "lon-skal-yrkesbyte-annat"
+"366.36137" = "lon-skal-yrkesbyte-annat-txt"
+"366.36153" = "aterganga-yrket-andra-skal-txt"
+"366.36155" = "aterganga-yrket-hogre-lon"
+"366.36156" = "aterganga-yrket-karriar"
+"366.36157" = "aterganga-yrket-kompetensutv"
+"366.36158" = "aterganga-yrket-arbetsbelastning"
+"366.36159" = "faktorer-komma-tillbaka-styra"
+"366.36165" = "skal-till-yrkesbytet-annan-anledning"
+"366.36166" = "hemmavarande-barn-11-ar-eller-yngre"
+"366.36167" = "inga-hemmavarande-barn"
+"366.36199" = "studiedeltagande-eftergy-minst-2ar"
+"366.36200" = "utlandsvistelse-eftergy-minst-2ar"
+"366.36315" = "paborjat-gymnasieskolan-eller-inte"
+"366.36317" = "avhopp-fran-gymnasieskolan"
+"366.36338" = "skolpersonal-hjalp-fullfolja-gy"
+"366.36347" = "hur-kontakterna-har-fungerat"
+"366.36371" = "sysselsattning-aktivitet-annan"
+"366.36373" = "hur-man-fatt-arbetet"
+"366.37237" = "tjanstgorande-larare"
+"366.37594" = "skal-utbilda-yrket-intresse-halsa"
+"366.37595" = "skal-utbilda-yrket-arbeta-manniskor"
+"366.37716" = "skal-yrkesbyte-patientkontakter"
+"366.37717" = "yrkesbyte-skal-uppgifter-ej-yrket"
+"366.37718" = "skal-yrkesbyte-fysiskt-kravande"
+"366.38782" = "intryck-forskarutbildningen"
+"366.38783" = "forskarutb-forberett-arbetslivet"
+"366.38784" = "onskemal-om-arbetsplats"
+"366.38919" = "uppmarksammat-negativ-sarbehandling"
+"366.38924" = "uppmarksammat-sexuellt-krankande"
+"366.38925" = "stod-vid-sexuellt-krankande"
+"366.38926" = "stod-vid-negativ-sarbehandling"
+"366.38929" = "arbete-sysselsattning-efter-utbildningen"
+"366.38930" = "arbetat-utomlands-forsta-ar"
+"366.38931" = "huvudsaklig-sysselsattning-forsta-ar"
+"366.38941" = "arbete-inom-amnesomradet-postdoktor"
+"366.38942" = "arbete-amnesomradet-forskarassistent"
+"366.38943" = "arbete-amnesomradet-bitradande-lektor"
+"366.38944" = "tid-examen-till-arbete-amnesomradet"
+"366.38945" = "latt-svart-fa-arbete-amnesomradet"
+"366.38948" = "anknytning-arbetsmarknaden-postdoktor"
+"366.38949" = "anknytning-arbetsmarknaden-stipendium"
+"366.41114" = "behorighet-till-tjansten"
+"366.41118" = "behorighet-till-senaste-tjansten"
+"366.41119" = "behorighet-i-amnen"
+"366.41120" = "huvudman-senast"
+"366.41126" = "arbete-idag"
+"366.41131" = "risk-for-omplacering"
+"366.41132" = "risk-for-entledigande-eller-arbetsloshet"
+"366.41134" = "nytta-lararutb-nuvarande-arbete"
+"366.41135" = "nytta-larare-erfarenhet-arbete"
+"366.41137" = "soka-anstallning-som-larare"
+"366.41141" = "lararexamen"
+"366.41142" = "antal-terminer-till-lararexamen"
+"366.41143" = "skaffa-lararexamen"
+"366.41144" = "komplettera-utbildning"
+"366.41145" = "antal-terminer-for-komplettering"
+"366.41939" = "antal-terminer-till-komplett-lararexamen"
+"366.41967" = "behorighet-som-larare-skolledare"
+"366.44869" = "kontrolleras-narvaro"
+"366.44878" = "grad-lararleddhet-distans"
+"366.44885" = "metod-narvarokontroll-upprop-borjan"
+"366.44932" = "paverkan-tekniska-problem-undervisning"
+"366.44933" = "paverkan-ovana-teknik-undervisning"
+"366.44988" = "andel-undervisning-distans-ht"
+"366.44989" = "distans-organisering-ht"
+"366.44991" = "andel-undervisning-distans-vt"
+"366.44992" = "distans-organisering-vt"
+"366.44995" = "undantag-distans-extra-anpassningar-vt"
+"366.44996" = "undantag-distans-sarskilt-stod-vt"
+"366.44999" = "undantag-distans-extra-anpassningar-ht"
+"366.45000" = "undantag-distans-sarskilt-stod-ht"
+"366.45005" = "larares-undervisning-hemifran-vt"
+"366.45007" = "larares-undervisning-hemifran-ht"
+"366.45008" = "distansundervisning-via-motesverktyg-ht"
+"366.45009" = "distansundervisning-via-motesverktyg-vt"
+"366.45091" = "stod-bedomning-nationella-prov-vet-inte"
+"366.45093" = "metod-narvarokontroll-upprop-flera"
+"366.45095" = "metod-narvarokontroll-kamera-borjan"
+"366.45096" = "metod-narvarokontroll-kamera-hel"
+"366.45097" = "metod-narvarokontroll-inlamning"
+"366.45098" = "metod-narvarokontroll-annat"
+"366.45099" = "metod-narvarokontroll-vet-inte"
+"366.45109" = "distans-nettoveckor-ht-grupp"
+"366.45110" = "distans-nettoveckor-vt-grupp"
+"366.45112" = "distans-bruttoveckor-ht"
+"366.45113" = "distans-bruttoveckor-vt"
+"366.45114" = "distans-bruttoveckor-lasar"
+"366.45115" = "distans-nettoveckor-ht"
+"366.45116" = "distans-nettoveckor-vt"
+"366.45119" = "arskurs-grundskolan"
+"366.45122" = "huvudman-distans"
+"366.45123" = "hjalpvariabel-1-distans"
+"366.45124" = "hjalpvariabel-2-distans"
+"366.45126" = "hjalpvariabel-4-distans"
+"366.45127" = "vikt-distans"
+"366.45128" = "skolstorlek-gymnasieskolan"
+"366.45141" = "skolstorlek-grundskolan"
+"366.45961" = "larares-franvaro-pandemi-anstallt-fler"
+"366.45962" = "larares-franvaro-pandemi-underv-distans"
+"366.45963" = "larares-franvaro-pandemi-andra-losningar"
+"366.45964" = "larares-franvaro-pandemi-annan-personal"
+"366.45965" = "larares-franvaro-pandemi-behoriga-vik"
+"366.45966" = "larares-franvaro-pandemi-larare-beh"
+"366.45967" = "larares-franvaro-pandemi-larare-obeh"
+"366.45968" = "larares-franvaro-pandemi-obehoriga-vik"
+"366.45969" = "pandemi-franvaro-uppskjuten"
+"366.45970" = "pandemi-franvaro-uteblev"
+"366.46043" = "erbjuden-distansundervisning-ht"
+"366.46044" = "erbjuden-distansundervisning-vt"
+"366.46048" = "fortbildning-digitala-verktyg"
+"366.46053" = "skola-bredband-elever"
+"366.46071" = "hjalpvariabel-5-distans"
 
 # register 367 (tidsanvandning)
-
-[[variable]]
-native_id = "366.11327.f1"
-slug = "hogsta-avslutade-utbildning"
-
-[[variable]]
-native_id = "366.15766.f13"
-slug = "antal-manader-arbetslos-gymnasiet"
-
-[[variable]]
-native_id = "366.1996.f12"
-slug = "skolform"
-
-[[variable]]
-native_id = "366.1996.f2"
-slug = "skolform-2"
-
-[[variable]]
-native_id = "366.1996.skolform"
-slug = "skolform-3"
-
-[[variable]]
-native_id = "366.23477.f25"
-slug = "yrke"
-
-[[variable]]
-native_id = "366.25052.f19"
-slug = "tillracklig-utbildningsniva-arbete"
-
-[[variable]]
-native_id = "366.25054.arbete"
-slug = "arbete-under-matveckan"
-
-[[variable]]
-native_id = "366.30623.f18"
-slug = "skiftarbete-2"
-
-[[variable]]
-native_id = "366.30810.f14"
-slug = "arbetat-eller-studerat-utomlands"
-
-[[variable]]
-native_id = "366.30810.f21"
-slug = "arbetat-eller-studerat-utomlands-2"
-
-[[variable]]
-native_id = "366.30816.f32a-07"
-slug = "framtidsplaner-studera-hogskola-yh"
-
-[[variable]]
-native_id = "366.30816.f32b-05"
-slug = "framtidsplaner-studera-hogskola-yh-2"
-
-[[variable]]
-native_id = "366.35963.f31"
-slug = "veckoarbetstid-forvarvsarbetande"
-
-[[variable]]
-native_id = "366.36084.f3"
-slug = "arbetsomrade-senaste"
-
-[[variable]]
-native_id = "366.36194.f3"
-slug = "utlandsvistelse-utbildning"
-
-[[variable]]
-native_id = "366.36197.f5"
-slug = "plats-utomlands-gymn-yrkesutb"
-
-[[variable]]
-native_id = "366.36197.f5-txt"
-slug = "plats-utomlands-gymn-yrkesutb-txt"
-
-[[variable]]
-native_id = "366.36198.f8"
-slug = "plats-utomlands-gr-gy-eftergy"
-
-[[variable]]
-native_id = "366.36198.f8-txt"
-slug = "plats-utomlands-gr-gy-eftergy-txt"
-
-[[variable]]
-native_id = "366.36203.f13"
-slug = "utlandsvistelse-icke-formellt"
-
-[[variable]]
-native_id = "366.36204.f14-txt"
-slug = "utlandsvistelse-informell-typ"
-
-[[variable]]
-native_id = "366.36205.f11"
-slug = "vistelsetid-utomlands"
-
-[[variable]]
-native_id = "366.36205.f15"
-slug = "vistelsetid-utomlands-2"
-
-[[variable]]
-native_id = "366.36205.f4"
-slug = "vistelsetid-utomlands-3"
-
-[[variable]]
-native_id = "366.36205.f7"
-slug = "vistelsetid-utomlands-4"
-
-[[variable]]
-native_id = "366.36331.f20-01"
-slug = "funktionsnedsattning-sprak"
-
-[[variable]]
-native_id = "366.36332.f20-02"
-slug = "funktionsnedsattning-neuropsykiatrisk"
-
-[[variable]]
-native_id = "366.36333.f20-03"
-slug = "funktionsnedsattning-syn"
-
-[[variable]]
-native_id = "366.36336.f5-txt"
-slug = "funktionsnedsattning-annan"
-
-[[variable]]
-native_id = "366.36337.f6a"
-slug = "vagledning-stod-gymnasiet"
-
-[[variable]]
-native_id = "366.36337.f6b"
-slug = "vagledning-stod-gymnasiet-2"
-
-[[variable]]
-native_id = "366.36339.f8"
-slug = "kontakt-avhopp-gymnasiet"
-
-[[variable]]
-native_id = "366.36339.f9a"
-slug = "kontakt-avhopp-gymnasiet-2"
-
-[[variable]]
-native_id = "366.36339.f9b"
-slug = "kontakt-avhopp-gymnasiet-3"
-
-[[variable]]
-native_id = "366.38908.f5"
-slug = "stod-fran-institutionen"
-
-[[variable]]
-native_id = "366.38908.f6"
-slug = "stod-fran-institutionen-2"
-
-[[variable]]
-native_id = "366.38918.f8-txt"
-slug = "negativ-sarbehandling-utbildning"
-
-[[variable]]
-native_id = "366.38920.f11"
-slug = "ej-uppmarksammat-sarbehandling"
-
-[[variable]]
-native_id = "366.38920.f11-txt"
-slug = "ej-uppmarksammat-sarbehandling-txt"
-
-[[variable]]
-native_id = "366.38927.f15"
-slug = "ej-uppmarksammat-sexuellt-krankande"
-
-[[variable]]
-native_id = "366.38927.f15-txt"
-slug = "ej-uppmarksammat-sexuellt-krankande-txt"
-
-[[variable]]
-native_id = "366.38947.f24-01"
-slug = "anknytning-arbetsmarknaden-fast"
-
-[[variable]]
-native_id = "366.39305.f2"
-slug = "fullfoljd-yrkesutbildning"
-
-[[variable]]
-native_id = "366.40780.f14"
-slug = "formell-tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "366.40780.f7"
-slug = "formell-tjanstgoringsomfattning-2"
-
-[[variable]]
-native_id = "366.41124.f15"
-slug = "onskad-omfattning"
-
-[[variable]]
-native_id = "366.41124.f8"
-slug = "onskad-omfattning-2"
-
-[[variable]]
-native_id = "366.41125.f9a"
-slug = "skal-lamna-skolvasendet"
-
-[[variable]]
-native_id = "366.41125.f9b"
-slug = "skal-lamna-skolvasendet-2"
-
-[[variable]]
-native_id = "366.41136.f20b"
-slug = "arbete-jamfort-skola"
-
-[[variable]]
-native_id = "366.41136.f20c"
-slug = "arbete-jamfort-skola-2"
-
-[[variable]]
-native_id = "366.41136.f20d"
-slug = "arbete-jamfort-skola-3"
-
-[[variable]]
-native_id = "366.41136.f20e"
-slug = "arbete-jamfort-skola-4"
-
-[[variable]]
-native_id = "366.41138.f22a"
-slug = "forandringar-soka-larare"
-
-[[variable]]
-native_id = "366.41138.f22b"
-slug = "forandringar-soka-larare-2"
-
-[[variable]]
-native_id = "366.41138.f22c"
-slug = "forandringar-soka-larare-3"
-
-[[variable]]
-native_id = "366.41138.f22d"
-slug = "forandringar-soka-larare-4"
-
-[[variable]]
-native_id = "366.41138.f22e"
-slug = "forandringar-soka-larare-5"
-
-[[variable]]
-native_id = "366.41146.f26a"
-slug = "overvaga-lararexamen"
-
-[[variable]]
-native_id = "366.41146.f26b"
-slug = "overvaga-lararexamen-2"
-
-[[variable]]
-native_id = "366.41146.f26c"
-slug = "overvaga-lararexamen-3"
-
-[[variable]]
-native_id = "366.41146.f26d"
-slug = "overvaga-lararexamen-4"
-
-[[variable]]
-native_id = "366.41146.f26e"
-slug = "overvaga-lararexamen-5"
-
-[[variable]]
-native_id = "366.42256.f19"
-slug = "missnojd-arbetstider"
-
-[[variable]]
-native_id = "366.42256.f20"
-slug = "missnojd-arbetstider-2"
-
-[[variable]]
-native_id = "366.462.help1"
-slug = "stratum"
-
-[[variable]]
-native_id = "366.462.stratum"
-slug = "stratum-2"
-
-[[variable]]
-native_id = "366.5068.f11"
-slug = "huvudsaklig-sysselsattning"
-
-[[variable]]
-native_id = "366.5068.f23"
-slug = "huvudsaklig-sysselsattning-2"
-
-[[variable]]
-native_id = "366.5068.f5"
-slug = "huvudsaklig-sysselsattning-3"
-
-[[variable]]
-native_id = "366.5068.f5-txt"
-slug = "huvudsaklig-sysselsattning-4"
-
-[[variable]]
-native_id = "366.6267.alderslut"
-slug = "alderslut"
-
-[[variable]]
-native_id = "366.66.help2"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "366.66.sun2000niva"
-slug = "utbildningsniva-2"
-
-[[variable]]
-native_id = "366.67.help5"
-slug = "utlsvbakg"
+"366.11327.f1" = "hogsta-avslutade-utbildning"
+"366.15766.f13" = "antal-manader-arbetslos-gymnasiet"
+"366.1996.f12" = "skolform"
+"366.1996.f2" = "skolform-2"
+"366.1996.skolform" = "skolform-3"
+"366.23477.f25" = "yrke"
+"366.25052.f19" = "tillracklig-utbildningsniva-arbete"
+"366.25054.arbete" = "arbete-under-matveckan"
+"366.30623.f18" = "skiftarbete-2"
+"366.30810.f14" = "arbetat-eller-studerat-utomlands"
+"366.30810.f21" = "arbetat-eller-studerat-utomlands-2"
+"366.30816.f32a-07" = "framtidsplaner-studera-hogskola-yh"
+"366.30816.f32b-05" = "framtidsplaner-studera-hogskola-yh-2"
+"366.35963.f31" = "veckoarbetstid-forvarvsarbetande"
+"366.36084.f3" = "arbetsomrade-senaste"
+"366.36194.f3" = "utlandsvistelse-utbildning"
+"366.36197.f5" = "plats-utomlands-gymn-yrkesutb"
+"366.36197.f5-txt" = "plats-utomlands-gymn-yrkesutb-txt"
+"366.36198.f8" = "plats-utomlands-gr-gy-eftergy"
+"366.36198.f8-txt" = "plats-utomlands-gr-gy-eftergy-txt"
+"366.36203.f13" = "utlandsvistelse-icke-formellt"
+"366.36204.f14-txt" = "utlandsvistelse-informell-typ"
+"366.36205.f11" = "vistelsetid-utomlands"
+"366.36205.f15" = "vistelsetid-utomlands-2"
+"366.36205.f4" = "vistelsetid-utomlands-3"
+"366.36205.f7" = "vistelsetid-utomlands-4"
+"366.36331.f20-01" = "funktionsnedsattning-sprak"
+"366.36332.f20-02" = "funktionsnedsattning-neuropsykiatrisk"
+"366.36333.f20-03" = "funktionsnedsattning-syn"
+"366.36336.f5-txt" = "funktionsnedsattning-annan"
+"366.36337.f6a" = "vagledning-stod-gymnasiet"
+"366.36337.f6b" = "vagledning-stod-gymnasiet-2"
+"366.36339.f8" = "kontakt-avhopp-gymnasiet"
+"366.36339.f9a" = "kontakt-avhopp-gymnasiet-2"
+"366.36339.f9b" = "kontakt-avhopp-gymnasiet-3"
+"366.38908.f5" = "stod-fran-institutionen"
+"366.38908.f6" = "stod-fran-institutionen-2"
+"366.38918.f8-txt" = "negativ-sarbehandling-utbildning"
+"366.38920.f11" = "ej-uppmarksammat-sarbehandling"
+"366.38920.f11-txt" = "ej-uppmarksammat-sarbehandling-txt"
+"366.38927.f15" = "ej-uppmarksammat-sexuellt-krankande"
+"366.38927.f15-txt" = "ej-uppmarksammat-sexuellt-krankande-txt"
+"366.38947.f24-01" = "anknytning-arbetsmarknaden-fast"
+"366.39305.f2" = "fullfoljd-yrkesutbildning"
+"366.40780.f14" = "formell-tjanstgoringsomfattning"
+"366.40780.f7" = "formell-tjanstgoringsomfattning-2"
+"366.41124.f15" = "onskad-omfattning"
+"366.41124.f8" = "onskad-omfattning-2"
+"366.41125.f9a" = "skal-lamna-skolvasendet"
+"366.41125.f9b" = "skal-lamna-skolvasendet-2"
+"366.41136.f20b" = "arbete-jamfort-skola"
+"366.41136.f20c" = "arbete-jamfort-skola-2"
+"366.41136.f20d" = "arbete-jamfort-skola-3"
+"366.41136.f20e" = "arbete-jamfort-skola-4"
+"366.41138.f22a" = "forandringar-soka-larare"
+"366.41138.f22b" = "forandringar-soka-larare-2"
+"366.41138.f22c" = "forandringar-soka-larare-3"
+"366.41138.f22d" = "forandringar-soka-larare-4"
+"366.41138.f22e" = "forandringar-soka-larare-5"
+"366.41146.f26a" = "overvaga-lararexamen"
+"366.41146.f26b" = "overvaga-lararexamen-2"
+"366.41146.f26c" = "overvaga-lararexamen-3"
+"366.41146.f26d" = "overvaga-lararexamen-4"
+"366.41146.f26e" = "overvaga-lararexamen-5"
+"366.42256.f19" = "missnojd-arbetstider"
+"366.42256.f20" = "missnojd-arbetstider-2"
+"366.462.help1" = "stratum"
+"366.462.stratum" = "stratum-2"
+"366.5068.f11" = "huvudsaklig-sysselsattning"
+"366.5068.f23" = "huvudsaklig-sysselsattning-2"
+"366.5068.f5" = "huvudsaklig-sysselsattning-3"
+"366.5068.f5-txt" = "huvudsaklig-sysselsattning-4"
+"366.6267.alderslut" = "alderslut"
+"366.66.help2" = "utbildningsniva"
+"366.66.sun2000niva" = "utbildningsniva-2"
+"366.67.help5" = "utlsvbakg"
 
 # register 367 (tidsanvandning)
-
-[[variable]]
-native_id = "366.46054"
-slug = "f19"
-
-[[variable]]
-native_id = "366.109.f30-1"
-slug = "f30"
+"366.46054" = "f19"
+"366.109.f30-1" = "f30"
 
 # === END #471 SCB slug curation overrides ===
-
 # === BEGIN #471 entity-key/identifier canonicalization (generated) ===
 # 108 new overrides for previously-uncurated identifier vars
 # canonicalized to match their entity-key siblings (#471 entity-key pass).
-
-[[variable]]
-native_id = "366.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "366.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "366.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "366.763"
-slug = "kallkod"
-
-[[variable]]
-native_id = "366.1266"
-slug = "indatamedium"
-
-[[variable]]
-native_id = "366.1396"
-slug = "lasar"
-
-[[variable]]
-native_id = "366.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "366.1665"
-slug = "registreringsdatum"
-
-[[variable]]
-native_id = "366.1719"
-slug = "svarsdatum"
-
-[[variable]]
-native_id = "366.1937"
-slug = "kommentar"
-
-[[variable]]
-native_id = "366.3195"
-slug = "h-region"
-
-[[variable]]
-native_id = "366.3225"
-slug = "hushallets-disponibla-inkomst"
-
-[[variable]]
-native_id = "366.5063"
-slug = "arbete-utomlands"
-
-[[variable]]
-native_id = "366.5768"
-slug = "manadsloneintervall"
-
-[[variable]]
-native_id = "366.6133"
-slug = "fullfoljt-utbildning"
-
-[[variable]]
-native_id = "366.6141"
-slug = "grundlaggande-behorighet-hogskola"
-
-[[variable]]
-native_id = "366.6145"
-slug = "studerat-pa-distans"
-
-[[variable]]
-native_id = "366.6172"
-slug = "lopnummer-for-individ"
-
-[[variable]]
-native_id = "366.6178"
-slug = "utlsvbakgalt"
-
-[[variable]]
-native_id = "366.6192"
-slug = "studerat-pa-hogskola"
-
-[[variable]]
-native_id = "366.6416"
-slug = "utbildningsgrupp"
-
-[[variable]]
-native_id = "366.6556"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "366.8187"
-slug = "utlandsk-bakgrund"
-
-[[variable]]
-native_id = "366.8617"
-slug = "kursinriktning"
-
-[[variable]]
-native_id = "366.8619"
-slug = "kursniva-folkhogskolan"
-
-[[variable]]
-native_id = "366.8622"
-slug = "omfattning-folkhogskolan"
-
-[[variable]]
-native_id = "366.8635"
-slug = "kurstyp-folkhogskolan"
-
-[[variable]]
-native_id = "366.8770"
-slug = "senaste-aktivt-ar"
-
-[[variable]]
-native_id = "366.13330"
-slug = "studieavbrott"
-
-[[variable]]
-native_id = "366.15846"
-slug = "forsorjning-egna-sparade-pengar"
-
-[[variable]]
-native_id = "366.15867"
-slug = "plan-lasa-pa-komvux"
-
-[[variable]]
-native_id = "366.19568"
-slug = "loneink"
-
-[[variable]]
-native_id = "366.21781"
-slug = "behorighet-fran-grundskola"
-
-[[variable]]
-native_id = "366.24763"
-slug = "antal-svarande-personer"
-
-[[variable]]
-native_id = "366.24949"
-slug = "examensbevis-utbildningsbevis"
-
-[[variable]]
-native_id = "366.25135"
-slug = "arbetes-overensstammelse"
-
-[[variable]]
-native_id = "366.27262"
-slug = "svarsstatus"
-
-[[variable]]
-native_id = "366.28505"
-slug = "inflodeskod"
-
-[[variable]]
-native_id = "366.30574"
-slug = "arbetsuppgifter"
-
-[[variable]]
-native_id = "366.30812"
-slug = "framtidsplaner-fortsatta-nuvarande-jobb"
-
-[[variable]]
-native_id = "366.30813"
-slug = "framtidsplaner-skaffa-ett-nytt-jobb"
-
-[[variable]]
-native_id = "366.32788"
-slug = "alder-avslutad-utbildning"
-
-[[variable]]
-native_id = "366.37047"
-slug = "foraldrapenning-antal-bruttodagar"
-
-[[variable]]
-native_id = "366.37468"
-slug = "typ-av-kurs"
-
-[[variable]]
-native_id = "366.37828"
-slug = "huvudsaklig-inkomstkalla"
-
-[[variable]]
-native_id = "366.38974"
-slug = "arbets-overensstammelse-forskning"
-
-[[variable]]
-native_id = "366.41084"
-slug = "orsak-ej-examensbevis"
+"366.98" = "referensar"
+"366.667" = "kommun-for-arbetsstalle"
+"366.749" = "aldersgrupp"
+"366.763" = "kallkod"
+"366.1266" = "indatamedium"
+"366.1396" = "lasar"
+"366.1557" = "kalenderar"
+"366.1665" = "registreringsdatum"
+"366.1719" = "svarsdatum"
+"366.1937" = "kommentar"
+"366.3195" = "h-region"
+"366.3225" = "hushallets-disponibla-inkomst"
+"366.5063" = "arbete-utomlands"
+"366.5768" = "manadsloneintervall"
+"366.6133" = "fullfoljt-utbildning"
+"366.6141" = "grundlaggande-behorighet-hogskola"
+"366.6145" = "studerat-pa-distans"
+"366.6172" = "lopnummer-for-individ"
+"366.6178" = "utlsvbakgalt"
+"366.6192" = "studerat-pa-hogskola"
+"366.6416" = "utbildningsgrupp"
+"366.6556" = "fodelseland-varldsdel"
+"366.8187" = "utlandsk-bakgrund"
+"366.8617" = "kursinriktning"
+"366.8619" = "kursniva-folkhogskolan"
+"366.8622" = "omfattning-folkhogskolan"
+"366.8635" = "kurstyp-folkhogskolan"
+"366.8770" = "senaste-aktivt-ar"
+"366.13330" = "studieavbrott"
+"366.15846" = "forsorjning-egna-sparade-pengar"
+"366.15867" = "plan-lasa-pa-komvux"
+"366.19568" = "loneink"
+"366.21781" = "behorighet-fran-grundskola"
+"366.24763" = "antal-svarande-personer"
+"366.24949" = "examensbevis-utbildningsbevis"
+"366.25135" = "arbetes-overensstammelse"
+"366.27262" = "svarsstatus"
+"366.28505" = "inflodeskod"
+"366.30574" = "arbetsuppgifter"
+"366.30812" = "framtidsplaner-fortsatta-nuvarande-jobb"
+"366.30813" = "framtidsplaner-skaffa-ett-nytt-jobb"
+"366.32788" = "alder-avslutad-utbildning"
+"366.37047" = "foraldrapenning-antal-bruttodagar"
+"366.37468" = "typ-av-kurs"
+"366.37828" = "huvudsaklig-inkomstkalla"
+"366.38974" = "arbets-overensstammelse-forskning"
+"366.41084" = "orsak-ej-examensbevis"
 
 # register 367
-
-[[variable]]
-native_id = "366.14850.astkommungrupp-namn"
-slug = "kommungrupp-namn"
-
-[[variable]]
-native_id = "366.14850.kommungr"
-slug = "kommungrupp"
-
-[[variable]]
-native_id = "366.1573.agegroup"
-slug = "aldersgruppering-31-12"
-
-[[variable]]
-native_id = "366.25052.f33"
-slug = "tillracklig-utbildningsniva-arbete-2"
-
-[[variable]]
-native_id = "366.30623.arbetstider"
-slug = "skiftarbete"
-
-[[variable]]
-native_id = "366.30676.f17a"
-slug = "antal-manader-forsta-arbete-min6man"
-
-[[variable]]
-native_id = "366.30814.f32a-03"
-slug = "framtidsplaner-skaffa-ett-jobb"
-
-[[variable]]
-native_id = "366.30814.f32b-01"
-slug = "framtidsplaner-skaffa-ett-jobb-2"
-
-[[variable]]
-native_id = "366.30815.f32a-04"
-slug = "framtidsplaner-starta-eget-foretag"
-
-[[variable]]
-native_id = "366.30815.f32b-02"
-slug = "framtidsplaner-starta-eget-foretag-2"
-
-[[variable]]
-native_id = "366.30817.f32a-05"
-slug = "framtidsplaner-andra-studier-komvux"
-
-[[variable]]
-native_id = "366.30817.f32b-03"
-slug = "framtidsplaner-andra-studier-komvux-2"
-
-[[variable]]
-native_id = "366.30819.f32a-09"
-slug = "framtidsplaner-annat"
-
-[[variable]]
-native_id = "366.30819.f32a-txt"
-slug = "framtidsplaner-annat-txt"
-
-[[variable]]
-native_id = "366.30819.f32b-07"
-slug = "framtidsplaner-annat-2"
-
-[[variable]]
-native_id = "366.30819.f32b-txt"
-slug = "framtidsplaner-annat-txt-2"
-
-[[variable]]
-native_id = "366.30820.f32a-10"
-slug = "framtidsplaner-vet-inte"
-
-[[variable]]
-native_id = "366.30820.f32b-08"
-slug = "framtidsplaner-vet-inte-2"
-
-[[variable]]
-native_id = "366.35963.f41"
-slug = "veckoarbetstid-forvarvsarbetande-2"
+"366.14850.astkommungrupp-namn" = "kommungrupp-namn"
+"366.14850.kommungr" = "kommungrupp"
+"366.1573.agegroup" = "aldersgruppering-31-12"
+"366.25052.f33" = "tillracklig-utbildningsniva-arbete-2"
+"366.30623.arbetstider" = "skiftarbete"
+"366.30676.f17a" = "antal-manader-forsta-arbete-min6man"
+"366.30814.f32a-03" = "framtidsplaner-skaffa-ett-jobb"
+"366.30814.f32b-01" = "framtidsplaner-skaffa-ett-jobb-2"
+"366.30815.f32a-04" = "framtidsplaner-starta-eget-foretag"
+"366.30815.f32b-02" = "framtidsplaner-starta-eget-foretag-2"
+"366.30817.f32a-05" = "framtidsplaner-andra-studier-komvux"
+"366.30817.f32b-03" = "framtidsplaner-andra-studier-komvux-2"
+"366.30819.f32a-09" = "framtidsplaner-annat"
+"366.30819.f32a-txt" = "framtidsplaner-annat-txt"
+"366.30819.f32b-07" = "framtidsplaner-annat-2"
+"366.30819.f32b-txt" = "framtidsplaner-annat-txt-2"
+"366.30820.f32a-10" = "framtidsplaner-vet-inte"
+"366.30820.f32b-08" = "framtidsplaner-vet-inte-2"
+"366.35963.f41" = "veckoarbetstid-forvarvsarbetande-2"
 
 # register 367
-
-[[variable]]
-native_id = "366.38917.f7h-02"
-slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38917.f7h-01"
-slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38917.f7h-04"
-slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38917.f7h-03"
-slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38911.f7b-02"
-slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38911.f7b-01"
-slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38911.f7b-04"
-slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38911.f7b-03"
-slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38915.f7f-02"
-slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38915.f7f-01"
-slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38915.f7f-04"
-slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38915.f7f-03"
-slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38912.f7c-02"
-slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38912.f7c-01"
-slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38912.f7c-04"
-slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38912.f7c-03"
-slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38913.f7d-02"
-slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38913.f7d-01"
-slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38913.f7d-04"
-slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38913.f7d-03"
-slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38910.f7a-02"
-slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38910.f7a-01"
-slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38910.f7a-04"
-slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38910.f7a-03"
-slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38914.f7e-02"
-slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38914.f7e-01"
-slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38914.f7e-04"
-slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38914.f7e-03"
-slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38916.f7g-02"
-slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38916.f7g-01"
-slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38916.f7g-04"
-slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38916.f7g-03"
-slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38918.f8-06"
-slug = "negativ-sarbehandling-under-utbildningen-f8-06"
-deprecated = false
-
-[[variable]]
-native_id = "366.38918.f8-04"
-slug = "negativ-sarbehandling-under-utbildningen-f8-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38918.f8-05"
-slug = "negativ-sarbehandling-under-utbildningen-f8-05"
-deprecated = false
-
-[[variable]]
-native_id = "366.38918.f8-03"
-slug = "negativ-sarbehandling-under-utbildningen-f8-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38918.f8-02"
-slug = "negativ-sarbehandling-under-utbildningen-f8-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38921.f12a-02"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38921.f12a-01"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38921.f12a-04"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38921.f12a-03"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38923.f12c-02"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38923.f12c-01"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38923.f12c-04"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38923.f12c-03"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.38922.f12b-02"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.38922.f12b-01"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.38922.f12b-04"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.38922.f12b-03"
-slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.15699.f4b-12"
-slug = "avbrottsorsak-psykisk-fysisk-ohalsa-f4b-12"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam1"
-slug = "krav-for-att-ta-examen-kravexam1"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam2"
-slug = "krav-for-att-ta-examen-kravexam2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam3"
-slug = "krav-for-att-ta-examen-kravexam3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam4"
-slug = "krav-for-att-ta-examen-kravexam4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam5"
-slug = "krav-for-att-ta-examen-kravexam5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam6"
-slug = "krav-for-att-ta-examen-kravexam6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam7"
-slug = "krav-for-att-ta-examen-kravexam7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41941.kravexam8"
-slug = "krav-for-att-ta-examen-kravexam8"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor10"
-slug = "skal-arbete-som-larare-skalbor10"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor11"
-slug = "skal-arbete-som-larare-skalbor11"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor2"
-slug = "skal-arbete-som-larare-skalbor2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor3"
-slug = "skal-arbete-som-larare-skalbor3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor4"
-slug = "skal-arbete-som-larare-skalbor4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor5"
-slug = "skal-arbete-som-larare-skalbor5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor6"
-slug = "skal-arbete-som-larare-skalbor6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor7"
-slug = "skal-arbete-som-larare-skalbor7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor8"
-slug = "skal-arbete-som-larare-skalbor8"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalbor9"
-slug = "skal-arbete-som-larare-skalbor9"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor10"
-slug = "skal-arbete-som-larare-skalfor10"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor11"
-slug = "skal-arbete-som-larare-skalfor11"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor12"
-slug = "skal-arbete-som-larare-skalfor12"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor13"
-slug = "skal-arbete-som-larare-skalfor13"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor2"
-slug = "skal-arbete-som-larare-skalfor2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor3"
-slug = "skal-arbete-som-larare-skalfor3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor4"
-slug = "skal-arbete-som-larare-skalfor4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor5"
-slug = "skal-arbete-som-larare-skalfor5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor6"
-slug = "skal-arbete-som-larare-skalfor6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor7"
-slug = "skal-arbete-som-larare-skalfor7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor8"
-slug = "skal-arbete-som-larare-skalfor8"
-deprecated = false
-
-[[variable]]
-native_id = "366.41885.skalfor9"
-slug = "skal-arbete-som-larare-skalfor9"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt1"
-slug = "skal-byta-arbete-som-larare-skalbyt1"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt10"
-slug = "skal-byta-arbete-som-larare-skalbyt10"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt11"
-slug = "skal-byta-arbete-som-larare-skalbyt11"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt12"
-slug = "skal-byta-arbete-som-larare-skalbyt12"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt13"
-slug = "skal-byta-arbete-som-larare-skalbyt13"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt14"
-slug = "skal-byta-arbete-som-larare-skalbyt14"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt15"
-slug = "skal-byta-arbete-som-larare-skalbyt15"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt16"
-slug = "skal-byta-arbete-som-larare-skalbyt16"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt17"
-slug = "skal-byta-arbete-som-larare-skalbyt17"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt18"
-slug = "skal-byta-arbete-som-larare-skalbyt18"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt2"
-slug = "skal-byta-arbete-som-larare-skalbyt2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt3"
-slug = "skal-byta-arbete-som-larare-skalbyt3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt4"
-slug = "skal-byta-arbete-som-larare-skalbyt4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt5"
-slug = "skal-byta-arbete-som-larare-skalbyt5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt6"
-slug = "skal-byta-arbete-som-larare-skalbyt6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt7"
-slug = "skal-byta-arbete-som-larare-skalbyt7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt8"
-slug = "skal-byta-arbete-som-larare-skalbyt8"
-deprecated = false
-
-[[variable]]
-native_id = "366.41928.skalbyt9"
-slug = "skal-byta-arbete-som-larare-skalbyt9"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs1"
-slug = "onskad-utbildning-typkurs1"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs2"
-slug = "onskad-utbildning-typkurs2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs3"
-slug = "onskad-utbildning-typkurs3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs4"
-slug = "onskad-utbildning-typkurs4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs5"
-slug = "onskad-utbildning-typkurs5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs6"
-slug = "onskad-utbildning-typkurs6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41912.typkurs7"
-slug = "onskad-utbildning-typkurs7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag1"
-slug = "karriarvagar-karrvag1"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag2"
-slug = "karriarvagar-karrvag2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag3"
-slug = "karriarvagar-karrvag3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag4"
-slug = "karriarvagar-karrvag4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag5"
-slug = "karriarvagar-karrvag5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag6"
-slug = "karriarvagar-karrvag6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41933.karrvag7"
-slug = "karriarvagar-karrvag7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak1"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak1"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak10"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak10"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak2"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak3"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak4"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak5"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak6"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak7"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak8"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak8"
-deprecated = false
-
-[[variable]]
-native_id = "366.41922.arbfak9"
-slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak9"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill1"
-slug = "skal-ater-i-skolvasendet-skaltill1"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill12"
-slug = "skal-ater-i-skolvasendet-skaltill12"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill10"
-slug = "skal-ater-i-skolvasendet-skaltill10"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill11"
-slug = "skal-ater-i-skolvasendet-skaltill11"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill13"
-slug = "skal-ater-i-skolvasendet-skaltill13"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill14"
-slug = "skal-ater-i-skolvasendet-skaltill14"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill2"
-slug = "skal-ater-i-skolvasendet-skaltill2"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill3"
-slug = "skal-ater-i-skolvasendet-skaltill3"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill4"
-slug = "skal-ater-i-skolvasendet-skaltill4"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill5"
-slug = "skal-ater-i-skolvasendet-skaltill5"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill6"
-slug = "skal-ater-i-skolvasendet-skaltill6"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill7"
-slug = "skal-ater-i-skolvasendet-skaltill7"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill8"
-slug = "skal-ater-i-skolvasendet-skaltill8"
-deprecated = false
-
-[[variable]]
-native_id = "366.41923.skaltill9"
-slug = "skal-ater-i-skolvasendet-skaltill9"
-deprecated = false
-
-[[variable]]
-native_id = "366.6267.f18-2"
-slug = "alder-f18-2"
-deprecated = false
-
-[[variable]]
-native_id = "366.46048.f20a-04"
-slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46048.f20a"
-slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a"
-deprecated = false
-
-[[variable]]
-native_id = "366.46048.f20a-02"
-slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46048.f20a-03"
-slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46048.f20a-01"
-slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.46050.f20c-04"
-slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46050.f20c"
-slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c"
-deprecated = false
-
-[[variable]]
-native_id = "366.46050.f20c-02"
-slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46050.f20c-03"
-slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46050.f20c-01"
-slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.46052.f20e-04"
-slug = "lopande-moten-i-personalgruppen-f20e-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46052.f20e"
-slug = "lopande-moten-i-personalgruppen-f20e"
-deprecated = false
-
-[[variable]]
-native_id = "366.46052.f20e-02"
-slug = "lopande-moten-i-personalgruppen-f20e-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46052.f20e-03"
-slug = "lopande-moten-i-personalgruppen-f20e-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46052.f20e-01"
-slug = "lopande-moten-i-personalgruppen-f20e-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.46049.f20b-04"
-slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46049.f20b"
-slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b"
-deprecated = false
-
-[[variable]]
-native_id = "366.46049.f20b-02"
-slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46049.f20b-03"
-slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46049.f20b-01"
-slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.46051.f20d-04"
-slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46051.f20d"
-slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d"
-deprecated = false
-
-[[variable]]
-native_id = "366.46051.f20d-02"
-slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46051.f20d-03"
-slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46051.f20d-01"
-slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.46054.f19-02"
-slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46054.f19-01"
-slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.46054.f19-04"
-slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46054.f19-03"
-slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46054.f19"
-slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19"
-deprecated = false
-
-[[variable]]
-native_id = "366.46053.f18-02"
-slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.46053.f18-04"
-slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.46053.f18-03"
-slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.46053.f18"
-slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18"
-deprecated = false
-
-[[variable]]
-native_id = "366.46053.f18-01"
-slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-01"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2006"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2006"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2007"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2007"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2008"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2008"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2009"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2009"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2010"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2010"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2011"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2011"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2012"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2012"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2013"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2013"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2014"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2014"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2015"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2015"
-deprecated = false
-
-[[variable]]
-native_id = "366.37047.forpeng-bdag-lisa2016"
-slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2016"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2006"
-slug = "kontant-bruttolon-m-m-loneink-lisa2006"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2007"
-slug = "kontant-bruttolon-m-m-loneink-lisa2007"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2008"
-slug = "kontant-bruttolon-m-m-loneink-lisa2008"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2009"
-slug = "kontant-bruttolon-m-m-loneink-lisa2009"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2010"
-slug = "kontant-bruttolon-m-m-loneink-lisa2010"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2011"
-slug = "kontant-bruttolon-m-m-loneink-lisa2011"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2012"
-slug = "kontant-bruttolon-m-m-loneink-lisa2012"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2013"
-slug = "kontant-bruttolon-m-m-loneink-lisa2013"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2014"
-slug = "kontant-bruttolon-m-m-loneink-lisa2014"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2015"
-slug = "kontant-bruttolon-m-m-loneink-lisa2015"
-deprecated = false
-
-[[variable]]
-native_id = "366.19568.loneink-lisa2016"
-slug = "kontant-bruttolon-m-m-loneink-lisa2016"
-deprecated = false
-
-[[variable]]
-native_id = "366.109.f40-2"
-slug = "tjanstgoringsomfattning-f40-2"
-deprecated = false
-
-[[variable]]
-native_id = "366.109.f30-2"
-slug = "tjanstgoringsomfattning-f30-2"
-deprecated = false
-
-[[variable]]
-native_id = "366.36202.f12-ny"
-slug = "plats-for-vistelse-utomlands-eftergy-utb-minst-2-ar-f12-ny"
-deprecated = false
-
-[[variable]]
-native_id = "366.36194.f6-03"
-slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-03"
-deprecated = false
-
-[[variable]]
-native_id = "366.36194.f6-04"
-slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.36194.f6-02"
-slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-02"
-deprecated = false
-
-[[variable]]
-native_id = "366.36194.f6-06"
-slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-06"
-deprecated = false
-
-[[variable]]
-native_id = "366.36194.f6-05"
-slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-05"
-deprecated = false
-
-[[variable]]
-native_id = "366.36194.f6-07"
-slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-07"
-deprecated = false
-
-[[variable]]
-native_id = "366.36329.f4b-07"
-slug = "avbrottsorsak-blev-daligt-bemott-i-skolan-f4b-07"
-deprecated = false
-
-[[variable]]
-native_id = "366.36329.f4b-08"
-slug = "avbrottsorsak-blev-daligt-bemott-i-skolan-f4b-08"
-deprecated = false
-
-[[variable]]
-native_id = "366.30817.f32a-06"
-slug = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f32a-06"
-deprecated = false
-
-[[variable]]
-native_id = "366.30817.f32b-04"
-slug = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f32b-04"
-deprecated = false
-
-[[variable]]
-native_id = "366.30816.f32a-08"
-slug = "framtidsplaner-studera-pa-universitet-hogskola-eller-yrkeshogskola-f32a-08"
-deprecated = false
-
-[[variable]]
-native_id = "366.30816.f32b-06"
-slug = "framtidsplaner-studera-pa-universitet-hogskola-eller-yrkeshogskola-f32b-06"
-deprecated = false
+"366.38917.f7h-02" = { slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-02", deprecated = false }
+"366.38917.f7h-01" = { slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-01", deprecated = false }
+"366.38917.f7h-04" = { slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-04", deprecated = false }
+"366.38917.f7h-03" = { slug = "krankande-sarbehandling-under-utbildningen-annan-okand-anledning-f7h-03", deprecated = false }
+"366.38911.f7b-02" = { slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-02", deprecated = false }
+"366.38911.f7b-01" = { slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-01", deprecated = false }
+"366.38911.f7b-04" = { slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-04", deprecated = false }
+"366.38911.f7b-03" = { slug = "krankande-sarbehandling-under-utbildningen-etnisk-tillhorighet-f7b-03", deprecated = false }
+"366.38915.f7f-02" = { slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-02", deprecated = false }
+"366.38915.f7f-01" = { slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-01", deprecated = false }
+"366.38915.f7f-04" = { slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-04", deprecated = false }
+"366.38915.f7f-03" = { slug = "krankande-sarbehandling-under-utbildningen-funktionsnedsattning-f7f-03", deprecated = false }
+"366.38912.f7c-02" = { slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-02", deprecated = false }
+"366.38912.f7c-01" = { slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-01", deprecated = false }
+"366.38912.f7c-04" = { slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-04", deprecated = false }
+"366.38912.f7c-03" = { slug = "krankande-sarbehandling-under-utbildningen-kon-f7c-03", deprecated = false }
+"366.38913.f7d-02" = { slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-02", deprecated = false }
+"366.38913.f7d-01" = { slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-01", deprecated = false }
+"366.38913.f7d-04" = { slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-04", deprecated = false }
+"366.38913.f7d-03" = { slug = "krankande-sarbehandling-under-utbildningen-konsoverskridande-identitet-eller-uttryck-f7d-03", deprecated = false }
+"366.38910.f7a-02" = { slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-02", deprecated = false }
+"366.38910.f7a-01" = { slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-01", deprecated = false }
+"366.38910.f7a-04" = { slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-04", deprecated = false }
+"366.38910.f7a-03" = { slug = "krankande-sarbehandling-under-utbildningen-religion-eller-trosuppfattning-f7a-03", deprecated = false }
+"366.38914.f7e-02" = { slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-02", deprecated = false }
+"366.38914.f7e-01" = { slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-01", deprecated = false }
+"366.38914.f7e-04" = { slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-04", deprecated = false }
+"366.38914.f7e-03" = { slug = "krankande-sarbehandling-under-utbildningen-sexuell-laggning-f7e-03", deprecated = false }
+"366.38916.f7g-02" = { slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-02", deprecated = false }
+"366.38916.f7g-01" = { slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-01", deprecated = false }
+"366.38916.f7g-04" = { slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-04", deprecated = false }
+"366.38916.f7g-03" = { slug = "krankande-sarbehandling-under-utbildningen-alder-f7g-03", deprecated = false }
+"366.38918.f8-06" = { slug = "negativ-sarbehandling-under-utbildningen-f8-06", deprecated = false }
+"366.38918.f8-04" = { slug = "negativ-sarbehandling-under-utbildningen-f8-04", deprecated = false }
+"366.38918.f8-05" = { slug = "negativ-sarbehandling-under-utbildningen-f8-05", deprecated = false }
+"366.38918.f8-03" = { slug = "negativ-sarbehandling-under-utbildningen-f8-03", deprecated = false }
+"366.38918.f8-02" = { slug = "negativ-sarbehandling-under-utbildningen-f8-02", deprecated = false }
+"366.38921.f12a-02" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-02", deprecated = false }
+"366.38921.f12a-01" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-01", deprecated = false }
+"366.38921.f12a-04" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-04", deprecated = false }
+"366.38921.f12a-03" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-fysisk-beroring-tafsande-f12a-03", deprecated = false }
+"366.38923.f12c-02" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-02", deprecated = false }
+"366.38923.f12c-01" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-01", deprecated = false }
+"366.38923.f12c-04" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-04", deprecated = false }
+"366.38923.f12c-03" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-kommentarer-bilder-texter-blickar-kroppssprak-eller-liknande-f12c-03", deprecated = false }
+"366.38922.f12b-02" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-02", deprecated = false }
+"366.38922.f12b-01" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-01", deprecated = false }
+"366.38922.f12b-04" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-04", deprecated = false }
+"366.38922.f12b-03" = { slug = "sexuellt-krankande-handlingar-under-utbildningen-sexuellt-overgrepp-f12b-03", deprecated = false }
+"366.15699.f4b-12" = { slug = "avbrottsorsak-psykisk-fysisk-ohalsa-f4b-12", deprecated = false }
+"366.41941.kravexam1" = { slug = "krav-for-att-ta-examen-kravexam1", deprecated = false }
+"366.41941.kravexam2" = { slug = "krav-for-att-ta-examen-kravexam2", deprecated = false }
+"366.41941.kravexam3" = { slug = "krav-for-att-ta-examen-kravexam3", deprecated = false }
+"366.41941.kravexam4" = { slug = "krav-for-att-ta-examen-kravexam4", deprecated = false }
+"366.41941.kravexam5" = { slug = "krav-for-att-ta-examen-kravexam5", deprecated = false }
+"366.41941.kravexam6" = { slug = "krav-for-att-ta-examen-kravexam6", deprecated = false }
+"366.41941.kravexam7" = { slug = "krav-for-att-ta-examen-kravexam7", deprecated = false }
+"366.41941.kravexam8" = { slug = "krav-for-att-ta-examen-kravexam8", deprecated = false }
+"366.41885.skalbor10" = { slug = "skal-arbete-som-larare-skalbor10", deprecated = false }
+"366.41885.skalbor11" = { slug = "skal-arbete-som-larare-skalbor11", deprecated = false }
+"366.41885.skalbor2" = { slug = "skal-arbete-som-larare-skalbor2", deprecated = false }
+"366.41885.skalbor3" = { slug = "skal-arbete-som-larare-skalbor3", deprecated = false }
+"366.41885.skalbor4" = { slug = "skal-arbete-som-larare-skalbor4", deprecated = false }
+"366.41885.skalbor5" = { slug = "skal-arbete-som-larare-skalbor5", deprecated = false }
+"366.41885.skalbor6" = { slug = "skal-arbete-som-larare-skalbor6", deprecated = false }
+"366.41885.skalbor7" = { slug = "skal-arbete-som-larare-skalbor7", deprecated = false }
+"366.41885.skalbor8" = { slug = "skal-arbete-som-larare-skalbor8", deprecated = false }
+"366.41885.skalbor9" = { slug = "skal-arbete-som-larare-skalbor9", deprecated = false }
+"366.41885.skalfor10" = { slug = "skal-arbete-som-larare-skalfor10", deprecated = false }
+"366.41885.skalfor11" = { slug = "skal-arbete-som-larare-skalfor11", deprecated = false }
+"366.41885.skalfor12" = { slug = "skal-arbete-som-larare-skalfor12", deprecated = false }
+"366.41885.skalfor13" = { slug = "skal-arbete-som-larare-skalfor13", deprecated = false }
+"366.41885.skalfor2" = { slug = "skal-arbete-som-larare-skalfor2", deprecated = false }
+"366.41885.skalfor3" = { slug = "skal-arbete-som-larare-skalfor3", deprecated = false }
+"366.41885.skalfor4" = { slug = "skal-arbete-som-larare-skalfor4", deprecated = false }
+"366.41885.skalfor5" = { slug = "skal-arbete-som-larare-skalfor5", deprecated = false }
+"366.41885.skalfor6" = { slug = "skal-arbete-som-larare-skalfor6", deprecated = false }
+"366.41885.skalfor7" = { slug = "skal-arbete-som-larare-skalfor7", deprecated = false }
+"366.41885.skalfor8" = { slug = "skal-arbete-som-larare-skalfor8", deprecated = false }
+"366.41885.skalfor9" = { slug = "skal-arbete-som-larare-skalfor9", deprecated = false }
+"366.41928.skalbyt1" = { slug = "skal-byta-arbete-som-larare-skalbyt1", deprecated = false }
+"366.41928.skalbyt10" = { slug = "skal-byta-arbete-som-larare-skalbyt10", deprecated = false }
+"366.41928.skalbyt11" = { slug = "skal-byta-arbete-som-larare-skalbyt11", deprecated = false }
+"366.41928.skalbyt12" = { slug = "skal-byta-arbete-som-larare-skalbyt12", deprecated = false }
+"366.41928.skalbyt13" = { slug = "skal-byta-arbete-som-larare-skalbyt13", deprecated = false }
+"366.41928.skalbyt14" = { slug = "skal-byta-arbete-som-larare-skalbyt14", deprecated = false }
+"366.41928.skalbyt15" = { slug = "skal-byta-arbete-som-larare-skalbyt15", deprecated = false }
+"366.41928.skalbyt16" = { slug = "skal-byta-arbete-som-larare-skalbyt16", deprecated = false }
+"366.41928.skalbyt17" = { slug = "skal-byta-arbete-som-larare-skalbyt17", deprecated = false }
+"366.41928.skalbyt18" = { slug = "skal-byta-arbete-som-larare-skalbyt18", deprecated = false }
+"366.41928.skalbyt2" = { slug = "skal-byta-arbete-som-larare-skalbyt2", deprecated = false }
+"366.41928.skalbyt3" = { slug = "skal-byta-arbete-som-larare-skalbyt3", deprecated = false }
+"366.41928.skalbyt4" = { slug = "skal-byta-arbete-som-larare-skalbyt4", deprecated = false }
+"366.41928.skalbyt5" = { slug = "skal-byta-arbete-som-larare-skalbyt5", deprecated = false }
+"366.41928.skalbyt6" = { slug = "skal-byta-arbete-som-larare-skalbyt6", deprecated = false }
+"366.41928.skalbyt7" = { slug = "skal-byta-arbete-som-larare-skalbyt7", deprecated = false }
+"366.41928.skalbyt8" = { slug = "skal-byta-arbete-som-larare-skalbyt8", deprecated = false }
+"366.41928.skalbyt9" = { slug = "skal-byta-arbete-som-larare-skalbyt9", deprecated = false }
+"366.41912.typkurs1" = { slug = "onskad-utbildning-typkurs1", deprecated = false }
+"366.41912.typkurs2" = { slug = "onskad-utbildning-typkurs2", deprecated = false }
+"366.41912.typkurs3" = { slug = "onskad-utbildning-typkurs3", deprecated = false }
+"366.41912.typkurs4" = { slug = "onskad-utbildning-typkurs4", deprecated = false }
+"366.41912.typkurs5" = { slug = "onskad-utbildning-typkurs5", deprecated = false }
+"366.41912.typkurs6" = { slug = "onskad-utbildning-typkurs6", deprecated = false }
+"366.41912.typkurs7" = { slug = "onskad-utbildning-typkurs7", deprecated = false }
+"366.41933.karrvag1" = { slug = "karriarvagar-karrvag1", deprecated = false }
+"366.41933.karrvag2" = { slug = "karriarvagar-karrvag2", deprecated = false }
+"366.41933.karrvag3" = { slug = "karriarvagar-karrvag3", deprecated = false }
+"366.41933.karrvag4" = { slug = "karriarvagar-karrvag4", deprecated = false }
+"366.41933.karrvag5" = { slug = "karriarvagar-karrvag5", deprecated = false }
+"366.41933.karrvag6" = { slug = "karriarvagar-karrvag6", deprecated = false }
+"366.41933.karrvag7" = { slug = "karriarvagar-karrvag7", deprecated = false }
+"366.41922.arbfak1" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak1", deprecated = false }
+"366.41922.arbfak10" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak10", deprecated = false }
+"366.41922.arbfak2" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak2", deprecated = false }
+"366.41922.arbfak3" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak3", deprecated = false }
+"366.41922.arbfak4" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak4", deprecated = false }
+"366.41922.arbfak5" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak5", deprecated = false }
+"366.41922.arbfak6" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak6", deprecated = false }
+"366.41922.arbfak7" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak7", deprecated = false }
+"366.41922.arbfak8" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak8", deprecated = false }
+"366.41922.arbfak9" = { slug = "nuvarande-huvudsakliga-arbete-jamfort-med-tidigare-arbfak9", deprecated = false }
+"366.41923.skaltill1" = { slug = "skal-ater-i-skolvasendet-skaltill1", deprecated = false }
+"366.41923.skaltill12" = { slug = "skal-ater-i-skolvasendet-skaltill12", deprecated = false }
+"366.41923.skaltill10" = { slug = "skal-ater-i-skolvasendet-skaltill10", deprecated = false }
+"366.41923.skaltill11" = { slug = "skal-ater-i-skolvasendet-skaltill11", deprecated = false }
+"366.41923.skaltill13" = { slug = "skal-ater-i-skolvasendet-skaltill13", deprecated = false }
+"366.41923.skaltill14" = { slug = "skal-ater-i-skolvasendet-skaltill14", deprecated = false }
+"366.41923.skaltill2" = { slug = "skal-ater-i-skolvasendet-skaltill2", deprecated = false }
+"366.41923.skaltill3" = { slug = "skal-ater-i-skolvasendet-skaltill3", deprecated = false }
+"366.41923.skaltill4" = { slug = "skal-ater-i-skolvasendet-skaltill4", deprecated = false }
+"366.41923.skaltill5" = { slug = "skal-ater-i-skolvasendet-skaltill5", deprecated = false }
+"366.41923.skaltill6" = { slug = "skal-ater-i-skolvasendet-skaltill6", deprecated = false }
+"366.41923.skaltill7" = { slug = "skal-ater-i-skolvasendet-skaltill7", deprecated = false }
+"366.41923.skaltill8" = { slug = "skal-ater-i-skolvasendet-skaltill8", deprecated = false }
+"366.41923.skaltill9" = { slug = "skal-ater-i-skolvasendet-skaltill9", deprecated = false }
+"366.6267.f18-2" = { slug = "alder-f18-2", deprecated = false }
+"366.46048.f20a-04" = { slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-04", deprecated = false }
+"366.46048.f20a" = { slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a", deprecated = false }
+"366.46048.f20a-02" = { slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-02", deprecated = false }
+"366.46048.f20a-03" = { slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-03", deprecated = false }
+"366.46048.f20a-01" = { slug = "fortbildning-i-att-anvanda-digitala-verktyg-f20a-01", deprecated = false }
+"366.46050.f20c-04" = { slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-04", deprecated = false }
+"366.46050.f20c" = { slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c", deprecated = false }
+"366.46050.f20c-02" = { slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-02", deprecated = false }
+"366.46050.f20c-03" = { slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-03", deprecated = false }
+"366.46050.f20c-01" = { slug = "fortbildning-i-pedagogik-vid-undervisning-pa-distans-f20c-01", deprecated = false }
+"366.46052.f20e-04" = { slug = "lopande-moten-i-personalgruppen-f20e-04", deprecated = false }
+"366.46052.f20e" = { slug = "lopande-moten-i-personalgruppen-f20e", deprecated = false }
+"366.46052.f20e-02" = { slug = "lopande-moten-i-personalgruppen-f20e-02", deprecated = false }
+"366.46052.f20e-03" = { slug = "lopande-moten-i-personalgruppen-f20e-03", deprecated = false }
+"366.46052.f20e-01" = { slug = "lopande-moten-i-personalgruppen-f20e-01", deprecated = false }
+"366.46049.f20b-04" = { slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-04", deprecated = false }
+"366.46049.f20b" = { slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b", deprecated = false }
+"366.46049.f20b-02" = { slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-02", deprecated = false }
+"366.46049.f20b-03" = { slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-03", deprecated = false }
+"366.46049.f20b-01" = { slug = "lopande-stod-for-att-anvanda-digitala-verktyg-f20b-01", deprecated = false }
+"366.46051.f20d-04" = { slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-04", deprecated = false }
+"366.46051.f20d" = { slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d", deprecated = false }
+"366.46051.f20d-02" = { slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-02", deprecated = false }
+"366.46051.f20d-03" = { slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-03", deprecated = false }
+"366.46051.f20d-01" = { slug = "lopande-stod-for-att-utveckla-pedagogiken-vid-undervisning-pa-distans-f20d-01", deprecated = false }
+"366.46054.f19-02" = { slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-02", deprecated = false }
+"366.46054.f19-01" = { slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-01", deprecated = false }
+"366.46054.f19-04" = { slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-04", deprecated = false }
+"366.46054.f19-03" = { slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19-03", deprecated = false }
+"366.46054.f19" = { slug = "skolan-har-vid-behov-ordnat-att-elever-fick-komma-till-skolan-f19", deprecated = false }
+"366.46053.f18-02" = { slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-02", deprecated = false }
+"366.46053.f18-04" = { slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-04", deprecated = false }
+"366.46053.f18-03" = { slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-03", deprecated = false }
+"366.46053.f18" = { slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18", deprecated = false }
+"366.46053.f18-01" = { slug = "skolan-har-vid-behov-ordnat-bredband-hos-elever-f18-01", deprecated = false }
+"366.37047.forpeng-bdag-lisa2006" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2006", deprecated = false }
+"366.37047.forpeng-bdag-lisa2007" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2007", deprecated = false }
+"366.37047.forpeng-bdag-lisa2008" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2008", deprecated = false }
+"366.37047.forpeng-bdag-lisa2009" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2009", deprecated = false }
+"366.37047.forpeng-bdag-lisa2010" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2010", deprecated = false }
+"366.37047.forpeng-bdag-lisa2011" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2011", deprecated = false }
+"366.37047.forpeng-bdag-lisa2012" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2012", deprecated = false }
+"366.37047.forpeng-bdag-lisa2013" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2013", deprecated = false }
+"366.37047.forpeng-bdag-lisa2014" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2014", deprecated = false }
+"366.37047.forpeng-bdag-lisa2015" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2015", deprecated = false }
+"366.37047.forpeng-bdag-lisa2016" = { slug = "foraldrapenning-antal-bruttodagar-forpeng-bdag-lisa2016", deprecated = false }
+"366.19568.loneink-lisa2006" = { slug = "kontant-bruttolon-m-m-loneink-lisa2006", deprecated = false }
+"366.19568.loneink-lisa2007" = { slug = "kontant-bruttolon-m-m-loneink-lisa2007", deprecated = false }
+"366.19568.loneink-lisa2008" = { slug = "kontant-bruttolon-m-m-loneink-lisa2008", deprecated = false }
+"366.19568.loneink-lisa2009" = { slug = "kontant-bruttolon-m-m-loneink-lisa2009", deprecated = false }
+"366.19568.loneink-lisa2010" = { slug = "kontant-bruttolon-m-m-loneink-lisa2010", deprecated = false }
+"366.19568.loneink-lisa2011" = { slug = "kontant-bruttolon-m-m-loneink-lisa2011", deprecated = false }
+"366.19568.loneink-lisa2012" = { slug = "kontant-bruttolon-m-m-loneink-lisa2012", deprecated = false }
+"366.19568.loneink-lisa2013" = { slug = "kontant-bruttolon-m-m-loneink-lisa2013", deprecated = false }
+"366.19568.loneink-lisa2014" = { slug = "kontant-bruttolon-m-m-loneink-lisa2014", deprecated = false }
+"366.19568.loneink-lisa2015" = { slug = "kontant-bruttolon-m-m-loneink-lisa2015", deprecated = false }
+"366.19568.loneink-lisa2016" = { slug = "kontant-bruttolon-m-m-loneink-lisa2016", deprecated = false }
+"366.109.f40-2" = { slug = "tjanstgoringsomfattning-f40-2", deprecated = false }
+"366.109.f30-2" = { slug = "tjanstgoringsomfattning-f30-2", deprecated = false }
+"366.36202.f12-ny" = { slug = "plats-for-vistelse-utomlands-eftergy-utb-minst-2-ar-f12-ny", deprecated = false }
+"366.36194.f6-03" = { slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-03", deprecated = false }
+"366.36194.f6-04" = { slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-04", deprecated = false }
+"366.36194.f6-02" = { slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-02", deprecated = false }
+"366.36194.f6-06" = { slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-06", deprecated = false }
+"366.36194.f6-05" = { slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-05", deprecated = false }
+"366.36194.f6-07" = { slug = "utlandsvistelse-inom-olika-utbildningsformer-f6-07", deprecated = false }
+"366.36329.f4b-07" = { slug = "avbrottsorsak-blev-daligt-bemott-i-skolan-f4b-07", deprecated = false }
+"366.36329.f4b-08" = { slug = "avbrottsorsak-blev-daligt-bemott-i-skolan-f4b-08", deprecated = false }
+"366.30817.f32a-06" = { slug = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f32a-06", deprecated = false }
+"366.30817.f32b-04" = { slug = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f32b-04", deprecated = false }
+"366.30816.f32a-08" = { slug = "framtidsplaner-studera-pa-universitet-hogskola-eller-yrkeshogskola-f32a-08", deprecated = false }
+"366.30816.f32b-06" = { slug = "framtidsplaner-studera-pa-universitet-hogskola-eller-yrkeshogskola-f32b-06", deprecated = false }
+"366.PersonNr" = "personnr-elev"
 
 [[identity.column_owner]]
 variable = "366.38917"
@@ -5692,20 +3788,6 @@ field = "name"
 value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av person utanför lärosätet"
 
 [[errata.field]]
-variable = "366.15699"
-variant = "366.1350"
-column = "F4b_12"
-edition = "11797"
-expected_fields = [{ name = "definition", status = "value", value = "Avbrottsorsak - psykisk/fysisk ohälsa" }, { name = "description", status = "value", value = "Beskriver anledningen till att personen slutade sina studier i gymnasieskolan innan han/hon fick ett slutbetyg" }, { name = "name", status = "value", value = "Avbrottsorsak - psykisk/fysisk ohälsa" }, { name = "operational_definition", status = "value", value = "Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg? Svarsalternativ Annat hälsoskäl hindrade dig" }]
-expected_period_text = "Hösten 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Avbrottsorsak - psykisk/fysisk ohälsa — Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg? Svarsalternativ Annat hälsoskäl hindrade dig"
-
-[[errata.field]]
 variable = "366.41941"
 variant = "366.1533"
 column = "KravExam1"
@@ -5816,314 +3898,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Krav för att ta examen — Annat"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor10"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_10 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Privata/sociala skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_10 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Privata/sociala skäl"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor11"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_11 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Annat skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_11 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Annat skäl"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_2 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag ville prova på ett arbete inom yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_2 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag ville prova på ett arbete inom yrket"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_3 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Yrkets status" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_3 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Yrkets status"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_4 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att arbeta med barn/ungdomar/vuxna" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_4 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att arbeta med barn/ungdomar/vuxna"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_5 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att undervisa" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_5 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag tyckte om att undervisa"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_6 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag var intresserad av mina undervisningsämnen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_6 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Jag var intresserad av mina undervisningsämnen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_7 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Lönen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_7 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Lönen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor8"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_8 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Karriärmöjligheterna i yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_8 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Karriärmöjligheterna i yrket"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalBor9"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F7_9 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Det var svårt att få ett annat arbete" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F7_9 Varför valde du att arbeta som lärare/skolledare inom skolväsendet från första början? - Det var svårt att få ett annat arbete"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor10"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_10 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Har arbetat länge inom yrket/svårt att byta yrke" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_10 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Har arbetat länge inom yrket/svårt att byta yrke"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor11"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_11 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_11 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor12"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_12 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Privata/sociala skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_12 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Privata/sociala skäl"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor13"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_13 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Annat" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_13 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Annat"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_2 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_2 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_3 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att arbeta med barn/ungdomar/vuxna" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_3 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att arbeta med barn/ungdomar/vuxna"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_4 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_4 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_5 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Lönen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_5 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Lönen"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_6 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_6 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_7 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_7 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor8"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_8 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_8 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation"
-
-[[errata.field]]
-variable = "366.41885"
-variant = "366.1533"
-column = "SkalFor9"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl arbete som lärare" }, { name = "operational_definition", status = "value", value = "F8_9 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl arbete som lärare — F8_9 Vilka är de viktigaste skälen till att du fortsätter att arbeta som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön"
 
 [[errata.field]]
 variable = "366.41928"
@@ -6378,104 +4152,6 @@ field = "name"
 value = "Skäl byta arbete som lärare — Arbetsledningen/brister i arbetsorganisationen"
 
 [[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs1"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_1 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_1 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_2 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_2 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_3 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_3 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_4 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_4 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_5 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_5 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_6 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_6 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
-variable = "366.41912"
-variant = "366.1533"
-column = "TypKurs7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Önskad utbildning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Önskad utbildning" }, { name = "operational_definition", status = "value", value = "F12_7 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Önskad utbildning — F12_7 Vilken typ av kurser/utbildningar skulle du vilja ha mer av?"
-
-[[errata.field]]
 variable = "366.41933"
 variant = "366.1533"
 column = "Karrvag1"
@@ -6714,202 +4390,6 @@ field = "name"
 value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Psykosociala arbetsmiljön"
 
 [[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill1"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag föredrar att arbeta som lärare/skolledare inom skolväsendet" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag föredrar att arbeta som lärare/skolledare inom skolväsendet"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill12"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_1 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till kompetensutveckling"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill10"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_10 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_10 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Arbetsledningen/arbetets organisation"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill11"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_11 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_11 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Psykosociala arbetsmiljön"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill13"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_13 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Annan" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_13 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Annan"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill14"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_14 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Mitt nuvarande arbete är mitt första inom skolväsendet" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_14 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Mitt nuvarande arbete är mitt första inom skolväsendet"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill2"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_2 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Brist på annat arbete" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_2 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Brist på annat arbete"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill3"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_3 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Privata/sociala skäl" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_3 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Privata/sociala skäl"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill4"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_4 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_4 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag är intresserad av mina undervisningsämnen"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill5"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_5 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycer om att arbete med barn/ungdomar/vuxna" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_5 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycer om att arbete med barn/ungdomar/vuxna"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill6"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_6 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_6 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Jag tycker om att undervisa"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill7"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_7 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Lönen" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_7 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Lönen"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill8"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_8 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_8 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Karriärmöjligheterna i yrket"
-
-[[errata.field]]
-variable = "366.41923"
-variant = "366.1533"
-column = "SkalTill9"
-edition = "14883"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl åter i skolväsendet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl åter i skolväsendet" }, { name = "operational_definition", status = "value", value = "F17_9 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut" }]
-expected_period_text = "2004"
-expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl åter i skolväsendet — F17_9 Varför valde du att komma tillbaka som lärare/skolledare inom skolväsendet? - Möjligheter till medverkan/påverkan vid beslut"
-
-[[errata.field]]
 variable = "366.6267"
 variant = "366.1350"
 column = "F18_2"
@@ -6921,7 +4401,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Ålder — Hur gammal var du när du fick det arbetet?"
+value = "Ålder — Hur gammal var du när du fick det arbetet? (F18_2)"
 
 [[errata.field]]
 variable = "366.46048"
@@ -6964,20 +4444,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Fortbildning i att använda digitala verktyg — F20a_02"
-
-[[errata.field]]
-variable = "366.46048"
-variant = "366.1649"
-column = "F20a_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Fortbildning i att använda digitala verktyg under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i att använda digitala verktyg — Fortbildning i att använda digitala verktyg under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46048"
@@ -7038,20 +4504,6 @@ value = "Fortbildning i att använda digitala verktyg — F20a_04"
 [[errata.field]]
 variable = "366.46048"
 variant = "366.1648"
-column = "F20a_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Fortbildning i att använda digitala verktyg under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i att använda digitala verktyg — Fortbildning i att använda digitala verktyg under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46048"
-variant = "366.1648"
 column = "F20a"
 edition = "18503"
 expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Fortbildning i att använda digitala verktyg under VT2020 - VT2021" }]
@@ -7108,20 +4560,6 @@ value = "Fortbildning i pedagogik vid undervisning på distans — F20c_02"
 [[errata.field]]
 variable = "366.46050"
 variant = "366.1649"
-column = "F20c_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i pedagogik vid undervisning på distans — Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46050"
-variant = "366.1649"
 column = "F20c_01"
 edition = "18504"
 expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans under VT2020 - VT2021" }]
@@ -7174,20 +4612,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Fortbildning i pedagogik vid undervisning på distans — F20c_04"
-
-[[errata.field]]
-variable = "366.46050"
-variant = "366.1648"
-column = "F20c_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Fortbildning i pedagogik vid undervisning på distans — Fortbildning i pedagogik vid undervisning på distans under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46050"
@@ -7248,20 +4672,6 @@ value = "Löpande möten i personalgruppen — F20e_02"
 [[errata.field]]
 variable = "366.46052"
 variant = "366.1649"
-column = "F20e_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande möten i personalgruppen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande möten i personalgruppen" }, { name = "operational_definition", status = "value", value = "Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande möten i personalgruppen — Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46052"
-variant = "366.1649"
 column = "F20e_01"
 edition = "18504"
 expected_fields = [{ name = "definition", status = "value", value = "Löpande möten i personalgruppen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande möten i personalgruppen" }, { name = "operational_definition", status = "value", value = "Löpande möten i personalgruppen för att lära av varandra under VT2020 - VT2021" }]
@@ -7314,20 +4724,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Löpande möten i personalgruppen — F20e_04"
-
-[[errata.field]]
-variable = "366.46052"
-variant = "366.1648"
-column = "F20e_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande möten i personalgruppen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande möten i personalgruppen" }, { name = "operational_definition", status = "value", value = "Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande möten i personalgruppen — Löpande möten i personalgruppen för att lära av varandra under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46052"
@@ -7388,20 +4784,6 @@ value = "Löpande stöd för att använda digitala verktyg — F20b_02"
 [[errata.field]]
 variable = "366.46049"
 variant = "366.1649"
-column = "F20b_03"
-edition = "18504"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande stöd för att använda digitala verktyg — Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022"
-
-[[errata.field]]
-variable = "366.46049"
-variant = "366.1649"
 column = "F20b_01"
 edition = "18504"
 expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under VT2020 - VT2021" }]
@@ -7454,20 +4836,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Löpande stöd för att använda digitala verktyg — F20b_04"
-
-[[errata.field]]
-variable = "366.46049"
-variant = "366.1648"
-column = "F20b_03"
-edition = "18503"
-expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att använda digitala verktyg" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022" }]
-expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Löpande stöd för att använda digitala verktyg — Löpande stöd för att använda digitala verktyg av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46049"
@@ -8128,20 +5496,6 @@ field = "name"
 value = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — huvudsakligt arbete — F30_1"
 
 [[errata.field]]
-variable = "366.36202"
-variant = "366.1320"
-column = "F12_ny"
-edition = "11264"
-expected_fields = [{ name = "definition", status = "value", value = "Plats för vistelse utomlands, eftergy utb minst 2 år" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Plats för vistelse utomlands, eftergy utb minst 2 år" }, { name = "operational_definition", status = "value", value = "Om något av fritextsvaren ändå passade in på ett fast svarsalternativ så har det fasta svarsalternativet ändrats från kod 3 till kod 1 eller 2." }]
-expected_period_text = "2014"
-expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Plats för vistelse utomlands, eftergy utb minst 2 år — Om något av fritextsvaren ändå passade in på ett fast svarsalternativ så har det fasta svarsalternativet ändrats från kod 3 till kod 1 eller 2."
-
-[[errata.field]]
 variable = "366.36194"
 variant = "366.1320"
 column = "F6_03"
@@ -8224,34 +5578,6 @@ evidence = "Complete accepted source audit: Utbildningsanalyser36 native familie
 noted = "2026-10-02"
 field = "name"
 value = "Utlandsvistelse inom olika utbildningsformer — Svar: nej"
-
-[[errata.field]]
-variable = "366.36329"
-variant = "366.1350"
-column = "F4b_07"
-edition = "11797"
-expected_fields = [{ name = "definition", status = "value", value = "Beskriver anledningen till att personen slutade sina studier i gymnasieskolan innan han/hon fick ett slutbetyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Avbrottsorsak - blev dåligt bemött i skolan" }, { name = "operational_definition", status = "value", value = "Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev dåligt bemött i skolan" }]
-expected_period_text = "Hösten 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Avbrottsorsak - blev dåligt bemött i skolan — Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev dåligt bemött i skolan"
-
-[[errata.field]]
-variable = "366.36329"
-variant = "366.1350"
-column = "F4b_08"
-edition = "11797"
-expected_fields = [{ name = "definition", status = "value", value = "Beskriver anledningen till att personen slutade sina studier i gymnasieskolan innan han/hon fick ett slutbetyg" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Avbrottsorsak - blev dåligt bemött i skolan" }, { name = "operational_definition", status = "value", value = "Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev mobbad" }]
-expected_period_text = "Hösten 2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Avbrottsorsak - blev dåligt bemött i skolan — Varför fullföljde du inte gymnasiet genom att ta gymnasieexamen eller få slutbetyg Svarsalternativ Du blev mobbad"
 
 [[errata.field]]
 variable = "366.30817"
@@ -8339,10 +5665,6 @@ holdings_period = "2020-2022"
 source = "steward-holdings"
 evidence = "SWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_gymn_VT20, Distansutb_gymn_HT20_VT21 and Distansutb_gymn_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-gymnasieskolan. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "366.PersonNr"
-slug = "personnr-elev"
 
 # ── #1603 / #1640: SWECOV Distansutb_gymn_VT20 second-wave F6 items ──
 

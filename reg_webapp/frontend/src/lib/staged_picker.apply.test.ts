@@ -279,4 +279,169 @@ describe("applyStagedPicks", () => {
     expect(result).toEqual({ kind: "abandoned" });
     expect(JSON.stringify(projectStore.draft)).toBe(before);
   });
+
+  // The final period gate, through the Apply that owns it. Each refusal sits beside
+  // its allowed twin, so a gate that refuses everything fails as surely as one that
+  // lets the bad case through.
+  it("commits a dated add at its own period and refuses a final source period reg-core rejects (#1462)", async () => {
+    // Alder is an identifier through 2019 and a categorical column from 2020, so the
+    // binding's type says which years it was resolved at.
+    const alder = [
+      openEnded("Alder", "individer", {
+        state_id: "2",
+        valid_to: "2019-12-31",
+        is_identifier: true,
+      }),
+      openEnded("Alder", "individer", {
+        state_id: "3",
+        valid_from: "2020-01-01",
+      }),
+    ];
+    const kon = [openEnded("Kon", "individer")];
+    stubResolveByPeriod([...kon, ...alder]);
+    const at = (period: string | null) => ({
+      scope: { period, window: null },
+      seed: SEED,
+      cancelled: () => false,
+    });
+    const alderPicks = picksOf(pickerRepresentations(alder), "scb/lisa/alder");
+    const konPicks = picksOf(pickerRepresentations(kon), konBandKey);
+
+    // A dated add on a 2018 source resolves at 2020, its own years. Fails if it
+    // resolves at the source's widened 2018..2020 (the identifier era).
+    newProject();
+    await applyStagedPicks({ adds: konPicks, removes: [] }, at("2018"));
+    await applyStagedPicks({ adds: alderPicks, removes: [] }, at("2020"));
+    expect(bindingOf("scb/lisa/alder")?.type).toBe("categorical");
+
+    // A period-less add (no ?period, no window) inherits the period of the source
+    // it extends. Fails if an add with no period of its own is refused when its
+    // source already carries one.
+    newProject();
+    await applyStagedPicks({ adds: konPicks, removes: [] }, at("2018"));
+    const inherited = await applyStagedPicks(
+      { adds: alderPicks, removes: [] },
+      at(null),
+    );
+    expect(inherited.kind).toBe("applied");
+    expect(storedProject()?.sources).toHaveLength(1);
+    expect(storedProject()?.sources[0]?.bindings).toHaveLength(2);
+
+    // `2099` and `LA2099` union to overlapping list members: refused, draft
+    // untouched. Fails if only the add's own (valid) period is checked.
+    newProject();
+    await applyStagedPicks({ adds: konPicks, removes: [] }, at("2099"));
+    const before = JSON.stringify(projectStore.draft);
+    expect(
+      await applyStagedPicks({ adds: alderPicks, removes: [] }, at("LA2099")),
+    ).toEqual({ kind: "period-required" });
+    expect(JSON.stringify(projectStore.draft)).toBe(before);
+
+    // …beside its twin: `2098` and `LA2099` union cleanly.
+    newProject();
+    await applyStagedPicks({ adds: konPicks, removes: [] }, at("2098"));
+    const allowed = await applyStagedPicks(
+      { adds: alderPicks, removes: [] },
+      at("LA2099"),
+    );
+    expect(allowed.kind).toBe("applied");
+  });
+
+  it("commits a year-independent pick only on a concrete variant with an unmixed scope", async () => {
+    const landgrupp = (variant: string) => [
+      openEnded("Landgrupp", variant, { period_scope: "year_independent" }),
+    ];
+    const dated = [openEnded("Kon", "country-groups")];
+    stubResolveByPeriod([...dated, ...landgrupp("country-groups")]);
+    const ctx = {
+      scope: { period: "2020", window: null },
+      seed: SEED,
+      cancelled: () => false,
+    };
+    const yearless = (variant: string) =>
+      picksOf(pickerRepresentations(landgrupp(variant)), "scb/lisa/landgrupp");
+
+    // Allowed: a concrete variant on a fresh draft commits as `_default`.
+    newProject();
+    expect(
+      (
+        await applyStagedPicks(
+          { adds: yearless("country-groups"), removes: [] },
+          ctx,
+        )
+      ).kind,
+    ).toBe("applied");
+    expect(storedProject()?.sources[0]?.period).toBe("_default");
+
+    // Refused: the register's own `_default` variant is no concrete coordinate.
+    // Fails if a year-independent add skips the concrete-variant check.
+    newProject();
+    expect(
+      await applyStagedPicks({ adds: yearless("_default"), removes: [] }, ctx),
+    ).toEqual({ kind: "period-required" });
+    expect(storedProject()?.sources).toHaveLength(0);
+
+    // Refused: a year-independent add onto a dated source of the same variant
+    // would mix the two scopes in one source. Fails if the scopes are not
+    // compared.
+    newProject();
+    await applyStagedPicks(
+      { adds: picksOf(pickerRepresentations(dated)), removes: [] },
+      ctx,
+    );
+    const before = JSON.stringify(projectStore.draft);
+    expect(
+      await applyStagedPicks(
+        { adds: yearless("country-groups"), removes: [] },
+        ctx,
+      ),
+    ).toEqual({ kind: "period-required" });
+    expect(JSON.stringify(projectStore.draft)).toBe(before);
+  });
 });
+
+/** An open-ended (still delivered) `column` on `variant`, from 1990. */
+function openEnded(
+  column: string,
+  variant: string,
+  over: Partial<VariableStateModel> = {},
+): VariableStateModel {
+  return leafState({
+    variant,
+    delivery_column_name: column,
+    valid_from: "1990-01-01",
+    valid_to: "9999-12-31",
+    ...over,
+  });
+}
+
+/** Answer each `period` states read with the picked variable's states (by column),
+ * variant, and the years the period names — what the API's `period` filter does —
+ * so a binding's type records the years it was resolved at. */
+function stubResolveByPeriod(states: VariableStateModel[]): void {
+  vi.mocked(getStates).mockImplementation(async (fqid, params) => {
+    const years = (params?.period ?? "").match(/\d{4}/g)?.map(Number) ?? [];
+    const [lo, hi] = [Math.min(...years), Math.max(...years)];
+    return states.filter(
+      (s) =>
+        s.delivery_column_name?.toLowerCase() === fqid.split("/").at(-1) &&
+        (!params?.variant || s.variant === params.variant) &&
+        (years.length === 0 ||
+          (Number((s.valid_from ?? "").slice(0, 4)) <= hi &&
+            Number((s.valid_to ?? "").slice(0, 4)) >= lo)),
+    );
+  });
+}
+
+function newProject(): void {
+  projectStore.newProject({
+    reg_meta_version: SEED.regMetaVersion,
+    steward: SEED.steward,
+  });
+}
+
+function bindingOf(variable: string): { type?: string } | undefined {
+  return storedProject()
+    ?.sources.flatMap((s) => s.bindings)
+    .find((b) => b.variable === variable);
+}

@@ -3,14 +3,14 @@
   "scb": {
     "registerinformation": [
       {
-        "cvid": 1019,
+        "cvid": 1019, "varname": "GenericVar value",
         "var_id": 101,
         "colname": "VALUE",
         "year": "2019",
         "regver_id": 119
       },
       {
-        "cvid": 1021,
+        "cvid": 1021, "varname": "GenericVar value",
         "var_id": 101,
         "colname": "VALUE",
         "year": "2021",
@@ -18,7 +18,7 @@
         "data_length": "2"
       },
       {
-        "cvid": 1022,
+        "cvid": 1022, "varname": "GenericVar value",
         "var_id": 101,
         "colname": "VALUE",
         "year": "2022",
@@ -26,7 +26,7 @@
         "versionname": "HT 2021 - VT 2022"
       },
       {
-        "cvid": 1023,
+        "cvid": 1023, "varname": "GenericVar value",
         "var_id": 101,
         "colname": "VALUE",
         "year": "2023",
@@ -34,7 +34,7 @@
         "versionname": "okänd"
       },
       {
-        "cvid": 1024,
+        "cvid": 1024, "varname": "GenericVar value",
         "var_id": 101,
         "colname": "VALUE",
         "year": "2022",
@@ -45,7 +45,7 @@
       {"cvid": 1119, "var_id": 102, "colname": "OMIT", "year": "2019", "regver_id": 119},
       {"cvid": 1120, "var_id": 102, "colname": "OMIT", "year": "2020", "regver_id": 120},
       {
-        "cvid": 1220,
+        "cvid": 1220, "varname": "GenericVar untyped",
         "var_id": 103,
         "colname": "UNTYPED",
         "year": "2020",

@@ -11,118 +11,42 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Yrkesregistret med yrkesstatistik (YrkesReg)
-
-[[variable]]
-native_id = "52.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "52.65"
-slug = "utbildningsinriktning"
-
-[[variable]]
-native_id = "52.120"
-slug = "yrkesuppgift"
-
-[[variable]]
-native_id = "52.778"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "52.1846"
-slug = "tjanstledighet"
-
-[[variable]]
-native_id = "52.2499"
-slug = "myndighet"
-
-[[variable]]
-native_id = "52.2519"
-slug = "lopnummer-anstallningar"
-
-[[variable]]
-native_id = "52.2684"
-slug = "tim-dag-och-veckolon"
-
-[[variable]]
-native_id = "52.15936"
-slug = "lon-exklusive-tillagg-ojusterad"
-
-[[variable]]
-native_id = "52.36015"
-slug = "tim-dag-och-veckolon-ny"
+"52.57" = "personnr"
+"52.65" = "utbildningsinriktning"
+"52.120" = "yrkesuppgift"
+"52.778" = "utbildningsniva-3-positioner"
+"52.1846" = "tjanstledighet"
+"52.2499" = "myndighet"
+"52.2519" = "lopnummer-anstallningar"
+"52.2684" = "tim-dag-och-veckolon"
+"52.15936" = "lon-exklusive-tillagg-ojusterad"
+"52.36015" = "tim-dag-och-veckolon-ny"
 
 # register 55 (yrkesreg)
-
-[[variable]]
-native_id = "52.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "52.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "52.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "52.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "52.784"
-slug = "utbildningsinriktning-4-positioner"
-
-[[variable]]
-native_id = "52.1822"
-slug = "fasta-lonetillagg"
-
-[[variable]]
-native_id = "52.1832"
-slug = "lonebeteckning"
-
-[[variable]]
-native_id = "52.1834"
-slug = "lonepopulation"
-
-[[variable]]
-native_id = "52.1837"
-slug = "naturaformaner"
-
-[[variable]]
-native_id = "52.1838"
-slug = "overtidstillagg"
-
-[[variable]]
-native_id = "52.1847"
-slug = "avtal"
-
-[[variable]]
-native_id = "52.1852"
-slug = "tjanstebenamning"
-
-[[variable]]
-native_id = "52.2686"
-slug = "manadslon"
-
-[[variable]]
-native_id = "52.2688"
-slug = "prestationslon"
-
-[[variable]]
-native_id = "52.6349"
-slug = "rorliga-lonetillagg-uppraknade"
-
-[[variable]]
-native_id = "52.8189"
-slug = "utbildningens-niva-och-inriktning"
-
-[[variable]]
-native_id = "52.27263"
-slug = "avtalad-grundlon"
+"52.1839" = "orgnr"
+"52.109" = "tjanstgoringsomfattning"
+"52.473" = "lan-arbetsstalle"
+"52.667" = "kommun-for-arbetsstalle"
+"52.784" = "utbildningsinriktning-4-positioner"
+"52.1822" = "fasta-lonetillagg"
+"52.1832" = "lonebeteckning"
+"52.1834" = "lonepopulation"
+"52.1837" = "naturaformaner"
+"52.1838" = "overtidstillagg"
+"52.1847" = "avtal"
+"52.1852" = "tjanstebenamning"
+"52.2686" = "manadslon"
+"52.2688" = "prestationslon"
+"52.6349" = "rorliga-lonetillagg-uppraknade"
+"52.8189" = "utbildningens-niva-och-inriktning"
+"52.27263" = "avtalad-grundlon"
+"52.66.sunniva" = "sunniva"
+"52.66.sun2000niva" = "sun2000niva"
+"52.66.sun2000niva-old" = "sun2000niva-old-66"
+"52.66.sun2020niva" = "sun2020niva"
+"52.66.sun2020niva-old" = "sun2020niva-old"
 
 # register 55
 
@@ -142,23 +66,3 @@ variable = "52.66"
 columns = { SunNiva = "52.66.sunniva", sun2000niva = "52.66.sun2000niva", sun2000niva_old = "52.66.sun2000niva-old", sun2020niva = "52.66.sun2020niva", sun2020niva_old = "52.66.sun2020niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "6689cebe4323965d29ccd1f9c7e1867cb99f108d4132865843fc24c0611f6a72"
-
-[[variable]]
-native_id = "52.66.sunniva"
-slug = "sunniva"
-
-[[variable]]
-native_id = "52.66.sun2000niva"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "52.66.sun2000niva-old"
-slug = "sun2000niva-old-66"
-
-[[variable]]
-native_id = "52.66.sun2020niva"
-slug = "sun2020niva"
-
-[[variable]]
-native_id = "52.66.sun2020niva-old"
-slug = "sun2020niva-old"

@@ -148,11 +148,11 @@ def test_reader_uses_tracked_register_files_and_relative_provenance(
     path = register / "sample.toml"
     path.write_text(
         '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
-        '[[variable]]\nnative_id = "1.101"\nslug = "authored"\ndeprecated = true\n',
+        '[variable]\n"1.101" = { slug = "authored", deprecated = true }\n',
         encoding="utf-8",
     )
     (register / "sample.auto.toml").write_text(
-        '[[variable]]\nnative_id = "1.101"\nslug = "generated"\n',
+        '[variable]\n"1.101" = "generated"\n',
         encoding="utf-8",
     )
     selection = read_naming_selection(load_curation_tree(root))
@@ -196,7 +196,7 @@ def test_reader_uses_tracked_freeze_state_for_generated_names(tmp_path: Path) ->
         encoding="utf-8",
     )
     (register / "sample.auto.toml").write_text(
-        '[[variable]]\nnative_id = "1.101"\nslug = "generated"\n',
+        '[variable]\n"1.101" = "generated"\n',
         encoding="utf-8",
     )
     state_file = root / "slug_state.toml"
@@ -306,13 +306,12 @@ def _declaration_selection(tmp_path: Path) -> NamingSelection:
     register = curation_dir / "registers" / "scb" / "fdb.toml"
     register.write_text(
         register.read_text(encoding="utf-8")
-        + '[[variable]]\nnative_id = "1.830.gaturest"\n'
-        + '[[variable]]\nnative_id = "1.830.pgaturest"\nslug = "pgaturest"\n',
+        + '[variable]\n"1.830.gaturest" = {}\n'
+        + '"1.830.pgaturest" = "pgaturest"\n',
         encoding="utf-8",
     )
     register.with_name("fdb.auto.toml").write_text(
-        '[[variable]]\nnative_id = "1.830.gaturest"\nslug = "gaturest"\n'
-        '[[variable]]\nnative_id = "1.830.pgaturest"\nslug = "pgaturest"\n',
+        '[variable]\n"1.830.gaturest" = "gaturest"\n"1.830.pgaturest" = "pgaturest"\n',
         encoding="utf-8",
     )
     return read_naming_selection(load_curation_tree(curation_dir))

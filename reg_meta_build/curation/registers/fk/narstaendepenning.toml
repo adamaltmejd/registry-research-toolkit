@@ -11,8 +11,6 @@ panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
+[variable]
 # Smittbärarpenning
-
-[[variable]]
-native_id = "5136717806447986475.personnummer"
-slug = "lopnr-personnr"
+"5136717806447986475.personnummer" = "lopnr-personnr"

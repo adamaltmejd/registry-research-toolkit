@@ -38,178 +38,80 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Förskoleklass
-
-[[variable]]
-native_id = "377.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "377.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "377.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "377.6267"
-slug = "alder"
-
-[[variable]]
-native_id = "377.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "377.38237"
-slug = "studerande-utbildningsform"
-
-[[variable]]
-native_id = "377.38240"
-slug = "antagen-paborjat-studier-startar"
-
-[[variable]]
-native_id = "377.38651"
-slug = "examinerad-fran-yrkeshogskolan"
-
-[[variable]]
-native_id = "377.49709"
-slug = "startar-manad"
-
-[[variable]]
-native_id = "377.49716"
-slug = "startar"
-
-[[variable]]
-native_id = "377.49718"
-slug = "avslutsar-manad"
-
-[[variable]]
-native_id = "377.49719"
-slug = "avslutsar"
-
-[[variable]]
-native_id = "377.49786"
-slug = "studerande-yh"
-
-[[variable]]
-native_id = "377.49914"
-slug = "utbildningspoang-yh"
-
-[[variable]]
-native_id = "377.49984"
-slug = "antagen-som-bedriver-studier"
-
-[[variable]]
-native_id = "377.50084"
-slug = "examen"
+"377.57" = "personnr"
+"377.257" = "fodelseland-rtb"
+"377.1569" = "fodelseland"
+"377.6267" = "alder"
+"377.6809" = "folkbokforingskommun"
+"377.38237" = "studerande-utbildningsform"
+"377.38240" = "antagen-paborjat-studier-startar"
+"377.38651" = "examinerad-fran-yrkeshogskolan"
+"377.49709" = "startar-manad"
+"377.49716" = "startar"
+"377.49718" = "avslutsar-manad"
+"377.49719" = "avslutsar"
+"377.49786" = "studerande-yh"
+"377.49914" = "utbildningspoang-yh"
+"377.49984" = "antagen-som-bedriver-studier"
+"377.50084" = "examen"
 
 # register 378 (forskoleklass)
-
-[[variable]]
-native_id = "377.241.alder"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "377.241.aldersgrupp"
-slug = "aldersgrupp-31-12"
+"377.241.alder" = "alder-31-12"
+"377.241.aldersgrupp" = "aldersgrupp-31-12"
 
 # register 378 (forskoleklass)
-
-[[variable]]
-native_id = "377.25139"
-slug = "startdatum-kurs"
-
-[[variable]]
-native_id = "377.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "377.866"
-slug = "fodd-i-sverige-utomlands"
-
-[[variable]]
-native_id = "377.1810"
-slug = "imputerad"
-
-[[variable]]
-native_id = "377.7062"
-slug = "folkbokforingslan"
-
-[[variable]]
-native_id = "377.25146"
-slug = "slutdatum"
-
-[[variable]]
-native_id = "377.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "377.38135"
-slug = "utbildningsnummer"
-
-[[variable]]
-native_id = "377.38155"
-slug = "utbildningsomrade-inom-yrkeshogskolan"
-
-[[variable]]
-native_id = "377.38249"
-slug = "fodd-i-sverige-eller-utomlands"
-
-[[variable]]
-native_id = "377.39555"
-slug = "studieform"
-
-[[variable]]
-native_id = "377.39842"
-slug = "ar-for-komvuxutbildning"
-
-[[variable]]
-native_id = "377.39845"
-slug = "startdatum-utbildningsomgang"
-
-[[variable]]
-native_id = "377.40103"
-slug = "utbildningsform"
-
-[[variable]]
-native_id = "377.40375"
-slug = "namn-utbildningsanordnare"
+"377.25139" = "startdatum-kurs"
+"377.332" = "senaste-invandringsdatum"
+"377.866" = "fodd-i-sverige-utomlands"
+"377.1810" = "imputerad"
+"377.7062" = "folkbokforingslan"
+"377.25146" = "slutdatum"
+"377.29426" = "tidigaste-invandringsdatum"
+"377.38135" = "utbildningsnummer"
+"377.38155" = "utbildningsomrade-inom-yrkeshogskolan"
+"377.38249" = "fodd-i-sverige-eller-utomlands"
+"377.39555" = "studieform"
+"377.39842" = "ar-for-komvuxutbildning"
+"377.39845" = "startdatum-utbildningsomgang"
+"377.40103" = "utbildningsform"
+"377.40375" = "namn-utbildningsanordnare"
 
 # register 378
-
-[[variable]]
-native_id = "377.39556.studietakt-utb"
-slug = "studietakt"
-
-[[variable]]
-native_id = "377.39556.studietaktklartext-utb"
-slug = "studietakt-klartext"
-
-[[variable]]
-native_id = "377.6556.fodelseland-gruppering"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "377.6556.fodelseland-varldsdel"
-slug = "fodelseland-varldsdel-2"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old"
-slug = "sun2000niva-2"
-
-[[variable]]
-native_id = "377.66.utbildningsniva-grov"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "377.8073.sun2000niva-old-mor"
-slug = "sun-niva-old-mor"
-
-[[variable]]
-native_id = "377.8073.sun2020niva-old-mor"
-slug = "sun-niva-old-mor-2"
+"377.39556.studietakt-utb" = "studietakt"
+"377.39556.studietaktklartext-utb" = "studietakt-klartext"
+"377.6556.fodelseland-gruppering" = "fodelseland-varldsdel"
+"377.6556.fodelseland-varldsdel" = "fodelseland-varldsdel-2"
+"377.66.sun2000niva-old" = "sun2000niva-2"
+"377.66.utbildningsniva-grov" = "utbildningsniva"
+"377.8073.sun2000niva-old-mor" = "sun-niva-old-mor"
+"377.8073.sun2020niva-old-mor" = "sun-niva-old-mor-2"
+"377.66.sun2000niva" = "sun2000niva"
+"377.66.sun2000niva-1" = "sun2000niva-1"
+"377.66.sun2000niva-grov" = "sun2000niva-grov"
+"377.66.sun2000niva-grov-2014" = "sun2000niva-grov-2014"
+"377.66.sun2000niva-grov-2015" = "sun2000niva-grov-2015"
+"377.66.sun2000niva-grov-2016" = "sun2000niva-grov-2016"
+"377.66.sun2000niva-grov-2017" = "sun2000niva-grov-2017"
+"377.66.sun2000niva-grov-2018" = "sun2000niva-grov-2018"
+"377.66.sun2000niva-old-2014" = "sun2000niva-old-2014"
+"377.66.sun2000niva-old-2015" = "sun2000niva-old-2015"
+"377.66.sun2000niva-old-2016" = "sun2000niva-old-2016"
+"377.66.sun2000niva-old-2017" = "sun2000niva-old-2017"
+"377.66.sun2000niva-old-2018" = "sun2000niva-old-2018"
+"377.66.sun2000niva-old-klartext" = "sun2000niva-old-klartext"
+"377.66.sun2020niva" = "sun2020niva"
+"377.66.sun2020niva-grov" = "sun2020niva-grov"
+"377.66.sun2020niva-old" = "sun2020niva-old"
+"377.66.sun2020niva-old-klartext" = "sun2020niva-old-klartext"
+"377.66.utbildningsniva-grov-klartext" = "utbildningsniva-grov-klartext"
+"377.67.svensk-utlandsk-yh" = "svensk-utlandsk-yh"
+"377.67.utlsvbakg" = "utlsvbakg"
+"377.67.utlsvbakg-grov" = "utlsvbakg-grov"
+"377.67.utlsvbakg-yh" = "utlsvbakg-yh"
+"377.749.aldersgrupp" = "aldersgrupp"
+"377.749.aldersgrupp2" = "aldersgrupp2"
 
 # register 378
 
@@ -231,106 +133,6 @@ editions = ["2005-2024"]
 source_editions = ["2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"]
 evidence = "SCB Registerinformation native edition 20121 explicitly labels its source scope 2005–2024 alongside twenty separate annual editions in variant 1397. Preserve its 94 original records and exact range separately from those annual scopes. This is a catalog distinction between source editions, not proof of aggregation or distinct physical delivery. Variants 1774 and 1777 retain their own original range scopes."
 noted = "2026-10-01"
-
-[[variable]]
-native_id = "377.66.sun2000niva"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "377.66.sun2000niva-1"
-slug = "sun2000niva-1"
-
-[[variable]]
-native_id = "377.66.sun2000niva-grov"
-slug = "sun2000niva-grov"
-
-[[variable]]
-native_id = "377.66.sun2000niva-grov-2014"
-slug = "sun2000niva-grov-2014"
-
-[[variable]]
-native_id = "377.66.sun2000niva-grov-2015"
-slug = "sun2000niva-grov-2015"
-
-[[variable]]
-native_id = "377.66.sun2000niva-grov-2016"
-slug = "sun2000niva-grov-2016"
-
-[[variable]]
-native_id = "377.66.sun2000niva-grov-2017"
-slug = "sun2000niva-grov-2017"
-
-[[variable]]
-native_id = "377.66.sun2000niva-grov-2018"
-slug = "sun2000niva-grov-2018"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old-2014"
-slug = "sun2000niva-old-2014"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old-2015"
-slug = "sun2000niva-old-2015"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old-2016"
-slug = "sun2000niva-old-2016"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old-2017"
-slug = "sun2000niva-old-2017"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old-2018"
-slug = "sun2000niva-old-2018"
-
-[[variable]]
-native_id = "377.66.sun2000niva-old-klartext"
-slug = "sun2000niva-old-klartext"
-
-[[variable]]
-native_id = "377.66.sun2020niva"
-slug = "sun2020niva"
-
-[[variable]]
-native_id = "377.66.sun2020niva-grov"
-slug = "sun2020niva-grov"
-
-[[variable]]
-native_id = "377.66.sun2020niva-old"
-slug = "sun2020niva-old"
-
-[[variable]]
-native_id = "377.66.sun2020niva-old-klartext"
-slug = "sun2020niva-old-klartext"
-
-[[variable]]
-native_id = "377.66.utbildningsniva-grov-klartext"
-slug = "utbildningsniva-grov-klartext"
-
-[[variable]]
-native_id = "377.67.svensk-utlandsk-yh"
-slug = "svensk-utlandsk-yh"
-
-[[variable]]
-native_id = "377.67.utlsvbakg"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "377.67.utlsvbakg-grov"
-slug = "utlsvbakg-grov"
-
-[[variable]]
-native_id = "377.67.utlsvbakg-yh"
-slug = "utlsvbakg-yh"
-
-[[variable]]
-native_id = "377.749.aldersgrupp"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "377.749.aldersgrupp2"
-slug = "aldersgrupp2"
 
 [[identity.partition]]
 variable = "377.66"

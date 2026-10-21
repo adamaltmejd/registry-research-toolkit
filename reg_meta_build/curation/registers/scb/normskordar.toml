@@ -8,24 +8,10 @@ native_id = "209.310"
 slug = "_default"
 display_group = "Normskördar"
 
+[variable]
 # Skörd av slåttervall
-
-[[variable]]
-native_id = "209.49"
-slug = "lan"
-
-[[variable]]
-native_id = "209.2323"
-slug = "antal-bearbetade-svar"
-
-[[variable]]
-native_id = "209.2433"
-slug = "produktionsomrade-skordeomrade"
-
-[[variable]]
-native_id = "209.2437"
-slug = "skordeomrade"
-
-[[variable]]
-native_id = "209.7601"
-slug = "hektarskord"
+"209.49" = "lan"
+"209.2323" = "antal-bearbetade-svar"
+"209.2433" = "produktionsomrade-skordeomrade"
+"209.2437" = "skordeomrade"
+"209.7601" = "hektarskord"

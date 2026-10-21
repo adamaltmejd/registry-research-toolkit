@@ -213,8 +213,9 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
   `crates/reg-core-wasm/Cargo.toml` pins.
 - A new worktree needs no setup step: Python syncs on the first `uv run`, and `dev.sh`
   and the gate's `frontend` step run `bun install --frozen-lockfile` on demand.
-- `reg_meta_build/docs/lisa/*.md` are build artifacts — fix
-  `scripts/parse_lisa_docs.py`, not the output.
+- The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private
+  inputs repository) is a build artifact — fix `scripts/parse_lisa_docs.py`, not
+  the output.
 
 # Issue tracker
 

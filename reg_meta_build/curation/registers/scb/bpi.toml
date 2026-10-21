@@ -8,27 +8,13 @@ native_id = "77.189"
 slug = "_default"
 display_group = "Byggnadsprisindex"
 
+[variable]
 # Hushållens utgifter (HUT)
-
-[[variable]]
-native_id = "77.4472"
-slug = "upplatelseform"
-
-[[variable]]
-native_id = "77.5092"
-slug = "hustyp"
-
-[[variable]]
-native_id = "77.15195"
-slug = "redovisningsar"
-
-[[variable]]
-native_id = "77.17046"
-slug = "antal-lagenheter-totalt"
-
-[[variable]]
-native_id = "77.21087"
-slug = "hiss"
+"77.4472" = "upplatelseform"
+"77.5092" = "hustyp"
+"77.15195" = "redovisningsar"
+"77.17046" = "antal-lagenheter-totalt"
+"77.21087" = "hiss"
 
 # register 86
 

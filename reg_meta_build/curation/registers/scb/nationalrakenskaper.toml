@@ -34,92 +34,27 @@ native_id = "285.1783"
 slug = "offentliga-finanser"
 display_group = "Offentliga finanser och dess tillägg till EU:s konvergenskriterier"
 
+[variable]
 # Europaparlamentsval, nominerade och valda
-
-[[variable]]
-native_id = "285.457"
-slug = "varde"
-
-[[variable]]
-native_id = "285.24443"
-slug = "varde-fast-pris-ar"
-
-[[variable]]
-native_id = "285.24638"
-slug = "varde-kvartal-1"
-
-[[variable]]
-native_id = "285.24975"
-slug = "varde-lopande-pris-ar"
-
-[[variable]]
-native_id = "285.24977"
-slug = "varde-kvartal-2"
-
-[[variable]]
-native_id = "285.24978"
-slug = "varde-kvartal-3"
-
-[[variable]]
-native_id = "285.24979"
-slug = "varde-kvartal-4"
-
-[[variable]]
-native_id = "285.25285"
-slug = "statliga-inkomster-redovisning"
-
-[[variable]]
-native_id = "285.25286"
-slug = "statliga-utgifter-redovisning"
-
-[[variable]]
-native_id = "285.25413"
-slug = "kommunala-inkomster-redovisning"
-
-[[variable]]
-native_id = "285.25414"
-slug = "kommunala-utgifter-redovisning"
-
-[[variable]]
-native_id = "285.25415"
-slug = "regionskommunala-inkomster-redovisning"
-
-[[variable]]
-native_id = "285.25416"
-slug = "regionskommunala-utgifter-redovisning"
-
-[[variable]]
-native_id = "285.25417"
-slug = "privata-utgifter-redovisning"
-
-[[variable]]
-native_id = "285.25418"
-slug = "privata-inkomster-redovisning"
-
-[[variable]]
-native_id = "285.32800"
-slug = "offentliga-budgetuppgifter"
-
-[[variable]]
-native_id = "285.32801"
-slug = "offentliga-garantier"
-
-[[variable]]
-native_id = "285.32802"
-slug = "offentliga-bolags-skulder"
-
-[[variable]]
-native_id = "285.32803"
-slug = "offentliga-agarandelar"
-
-[[variable]]
-native_id = "285.32804"
-slug = "offentliga-ppp"
-
-[[variable]]
-native_id = "285.32805"
-slug = "offentliga-nodlidande-lan"
-
-[[variable]]
-native_id = "285.50149"
-slug = "offentliga-inkomster-utgifter-sparande"
+"285.457" = "varde"
+"285.24443" = "varde-fast-pris-ar"
+"285.24638" = "varde-kvartal-1"
+"285.24975" = "varde-lopande-pris-ar"
+"285.24977" = "varde-kvartal-2"
+"285.24978" = "varde-kvartal-3"
+"285.24979" = "varde-kvartal-4"
+"285.25285" = "statliga-inkomster-redovisning"
+"285.25286" = "statliga-utgifter-redovisning"
+"285.25413" = "kommunala-inkomster-redovisning"
+"285.25414" = "kommunala-utgifter-redovisning"
+"285.25415" = "regionskommunala-inkomster-redovisning"
+"285.25416" = "regionskommunala-utgifter-redovisning"
+"285.25417" = "privata-utgifter-redovisning"
+"285.25418" = "privata-inkomster-redovisning"
+"285.32800" = "offentliga-budgetuppgifter"
+"285.32801" = "offentliga-garantier"
+"285.32802" = "offentliga-bolags-skulder"
+"285.32803" = "offentliga-agarandelar"
+"285.32804" = "offentliga-ppp"
+"285.32805" = "offentliga-nodlidande-lan"
+"285.50149" = "offentliga-inkomster-utgifter-sparande"

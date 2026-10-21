@@ -6,15 +6,11 @@ native_id = "8646299464352216667"
 [[variant]]
 slug = "syn-a"
 native_id = "8646299464352216667.8787440101791605432"
-[[variable]]
-slug = "short"
-native_id = "8646299464352216667.SHORT"
-[[variable]]
-slug = "vary"
-native_id = "8646299464352216667.VARY"
-[[variable]]
-slug = "empty"
-native_id = "8646299464352216667.EMPTY"
+
+[variable]
+"8646299464352216667.SHORT" = "short"
+"8646299464352216667.VARY" = "vary"
+"8646299464352216667.EMPTY" = "empty"
 
 [[coding.extend]]
 variable = "8646299464352216667.SHORT"

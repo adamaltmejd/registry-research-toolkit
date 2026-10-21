@@ -5,6 +5,6 @@ native_id = {{naming_id kind=register provider=fk register_key=pooled}}
 [[variant]]
 slug = "table"
 native_id = {{naming_id kind=register_variant provider=fk register_key=pooled member_key=table}}
-[[variable]]
-slug = "poolcol"
-native_id = {{naming_id kind=variable provider=fk register_key=pooled member_key=POOLCOL}}
+
+[variable]
+{{naming_id kind=variable provider=fk register_key=pooled member_key=POOLCOL}} = "poolcol"

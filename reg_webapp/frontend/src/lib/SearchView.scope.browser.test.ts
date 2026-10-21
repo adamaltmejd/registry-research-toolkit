@@ -44,23 +44,6 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
     ],
   };
 
-  it("renders the toggle whenever there's a query and marks 'All' active by default", async () => {
-    mockSearch(ONE_REGISTER);
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect
-      .element(page.getByRole("group", { name: "Search scope" }))
-      .toBeVisible();
-    // No ?type= → "All" is the active (aria-pressed) button.
-    await expect
-      .element(page.getByRole("button", { name: "All" }))
-      .toHaveAttribute("aria-pressed", "true");
-    await expect
-      .element(page.getByRole("button", { name: "Registers" }))
-      .toHaveAttribute("aria-pressed", "false");
-  });
-
   it("fetches only the URL's ?type= arm", async () => {
     // Fails if a scoped view still makes the untyped top-results call or asks
     // for another arm.

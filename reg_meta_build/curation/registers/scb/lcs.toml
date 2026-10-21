@@ -11,104 +11,40 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Växtskyddsmedelsundersökningen
-
-[[variable]]
-native_id = "234.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "234.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "234.5070"
-slug = "arbetade-timmar-heltid"
-
-[[variable]]
-native_id = "234.5073"
-slug = "arbetade-timmar-deltid"
-
-[[variable]]
-native_id = "234.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "234.7142"
-slug = "direkta-loner-bonusar"
-
-[[variable]]
-native_id = "234.7144"
-slug = "direkta-loner"
-
-[[variable]]
-native_id = "234.7146"
-slug = "bonusar"
-
-[[variable]]
-native_id = "234.7147"
-slug = "avsattning-sparprogram"
-
-[[variable]]
-native_id = "234.7149"
-slug = "lon-for-ej-arbetad-tid"
-
-[[variable]]
-native_id = "234.7154"
-slug = "formaner-varor-tjanster"
-
-[[variable]]
-native_id = "234.8148"
-slug = "renr"
-
-[[variable]]
-native_id = "234.8162"
-slug = "antal-svarande-enheter"
-
-[[variable]]
-native_id = "234.8181"
-slug = "anstallda-register"
+"234.14" = "cfar-nummer"
+"234.56" = "person-orgnr"
+"234.5070" = "arbetade-timmar-heltid"
+"234.5073" = "arbetade-timmar-deltid"
+"234.6306" = "antal-arbetade-timmar"
+"234.7142" = "direkta-loner-bonusar"
+"234.7144" = "direkta-loner"
+"234.7146" = "bonusar"
+"234.7147" = "avsattning-sparprogram"
+"234.7149" = "lon-for-ej-arbetad-tid"
+"234.7154" = "formaner-varor-tjanster"
+"234.8148" = "renr"
+"234.8162" = "antal-svarande-enheter"
+"234.8181" = "anstallda-register"
 
 # register 235 (vaxtskyddsmedel)
-
-[[variable]]
-native_id = "234.690"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "234.1972"
-slug = "granskningskod"
-
-[[variable]]
-native_id = "234.4031"
-slug = "storleksklass-pa-foretag"
-
-[[variable]]
-native_id = "234.4032"
-slug = "antal-anstallda-foretaget"
-
-[[variable]]
-native_id = "234.4268"
-slug = "pensionskostnader"
-
-[[variable]]
-native_id = "234.14704"
-slug = "storleksklass-pa-foretag-eu"
-
-[[variable]]
-native_id = "234.14720"
-slug = "urvalskod"
-
-[[variable]]
-native_id = "234.16099"
-slug = "bostadsformaner"
+"234.690" = "antal-anstallda"
+"234.1972" = "granskningskod"
+"234.4031" = "storleksklass-pa-foretag"
+"234.4032" = "antal-anstallda-foretaget"
+"234.4268" = "pensionskostnader"
+"234.14704" = "storleksklass-pa-foretag-eu"
+"234.14720" = "urvalskod"
+"234.16099" = "bostadsformaner"
 
 # register 235
-
-[[variable]]
-native_id = "234.4027.frsni92f"
-slug = "naringsgren"
+"234.4027.frsni92f" = "naringsgren"
+"234.4027.sni2" = "sni"
+"234.4027.sni3" = "sni3"
+"234.4027.sni4" = "sni4"
+"234.4027.sni5" = "sni5"
+"234.4027.snibokst" = "snibokst"
 
 # register 237
 
@@ -118,26 +54,6 @@ variable = "234.4027"
 columns = { FRSNI92F = "234.4027.frsni92f", SNI2 = "234.4027.sni2", SNI3 = "234.4027.sni3", SNI4 = "234.4027.sni4", SNI5 = "234.4027.sni5", SNIbokst = "234.4027.snibokst" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "1c39e751fdc0d2ef80d66fefb142495d8e950a6af049fd94b61a591237f5e482"
-
-[[variable]]
-native_id = "234.4027.sni2"
-slug = "sni"
-
-[[variable]]
-native_id = "234.4027.sni3"
-slug = "sni3"
-
-[[variable]]
-native_id = "234.4027.sni4"
-slug = "sni4"
-
-[[variable]]
-native_id = "234.4027.sni5"
-slug = "sni5"
-
-[[variable]]
-native_id = "234.4027.snibokst"
-slug = "snibokst"
 
 [[acknowledge]]
 code = "missing_coding_period"

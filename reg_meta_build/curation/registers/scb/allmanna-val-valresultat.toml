@@ -37,262 +37,84 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Folkomröstningar, valresultat
-
-[[variable]]
-native_id = "243.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "243.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "243.2651"
-slug = "valdistriktskod"
-
-[[variable]]
-native_id = "243.5059"
-slug = "landstingets-namn"
-
-[[variable]]
-native_id = "243.14781"
-slug = "antal-ogiltiga-roster"
-
-[[variable]]
-native_id = "243.15123"
-slug = "antal-mandat-riksdagsparti"
-
-[[variable]]
-native_id = "243.15143"
-slug = "antal-valda-personer"
-
-[[variable]]
-native_id = "243.24262"
-slug = "antal-giltiga-roster-vansterpartiet"
-
-[[variable]]
-native_id = "243.24265"
-slug = "antal-giltiga-roster-folkpartiet"
-
-[[variable]]
-native_id = "243.24267"
-slug = "antal-giltiga-roster-kristdemokraterna"
-
-[[variable]]
-native_id = "243.25471"
-slug = "antal-mandat-folkpartiet"
-
-[[variable]]
-native_id = "243.25478"
-slug = "antal-mandat-ovriga"
-
-[[variable]]
-native_id = "243.37393"
-slug = "landsting"
-
-[[variable]]
-native_id = "243.38432"
-slug = "antal-mandat-liberalerna"
-
-[[variable]]
-native_id = "243.38433"
-slug = "antal-giltiga-roster-liberalerna"
-
-[[variable]]
-native_id = "243.41789"
-slug = "antal-giltiga-roster-apk"
+"243.57" = "personnr"
+"243.241" = "alder-31-12"
+"243.2651" = "valdistriktskod"
+"243.5059" = "landstingets-namn"
+"243.14781" = "antal-ogiltiga-roster"
+"243.15123" = "antal-mandat-riksdagsparti"
+"243.15143" = "antal-valda-personer"
+"243.24262" = "antal-giltiga-roster-vansterpartiet"
+"243.24265" = "antal-giltiga-roster-folkpartiet"
+"243.24267" = "antal-giltiga-roster-kristdemokraterna"
+"243.25471" = "antal-mandat-folkpartiet"
+"243.25478" = "antal-mandat-ovriga"
+"243.37393" = "landsting"
+"243.38432" = "antal-mandat-liberalerna"
+"243.38433" = "antal-giltiga-roster-liberalerna"
+"243.41789" = "antal-giltiga-roster-apk"
 
 # register 245 (ep-val-deltagande)
-
-[[variable]]
-native_id = "243.16238.lt-valkretskod"
-slug = "landstingsvalkrets-kod"
-
-[[variable]]
-native_id = "243.16238.lt-valkretsnamn"
-slug = "landstingsvalkrets-namn"
-
-[[variable]]
-native_id = "243.16238.ovr-antmand"
-slug = "landstingsvalkrets-ovr-antmand"
-
-[[variable]]
-native_id = "243.16238.valkretsnamn"
-slug = "lt-valkretsnamn"
-
-[[variable]]
-native_id = "243.22871.lt-valkretskod"
-slug = "regionvalkrets-kod"
-
-[[variable]]
-native_id = "243.22871.lt-valkretsnamn"
-slug = "regionvalkrets-namn"
-
-[[variable]]
-native_id = "243.22871.valkretsnamn"
-slug = "regionvalkrets-valkretsnamn"
-
-[[variable]]
-native_id = "243.2907.lk"
-slug = "region"
-
-[[variable]]
-native_id = "243.2907.lk-1"
-slug = "region-alt"
-
-[[variable]]
-native_id = "243.49.ll"
-slug = "lan-2"
-
-[[variable]]
-native_id = "243.5056.lk"
-slug = "landstingskod"
-
-[[variable]]
-native_id = "243.5056.lk-1"
-slug = "landstingskod-alt"
-
-[[variable]]
-native_id = "243.5056.ll"
-slug = "landstingskod-lan"
-
-[[variable]]
-native_id = "243.69.llkkdddd"
-slug = "valdistrikt"
+"243.16238.lt-valkretskod" = "landstingsvalkrets-kod"
+"243.16238.lt-valkretsnamn" = "landstingsvalkrets-namn"
+"243.16238.ovr-antmand" = "landstingsvalkrets-ovr-antmand"
+"243.16238.valkretsnamn" = "lt-valkretsnamn"
+"243.22871.lt-valkretskod" = "regionvalkrets-kod"
+"243.22871.lt-valkretsnamn" = "regionvalkrets-namn"
+"243.22871.valkretsnamn" = "regionvalkrets-valkretsnamn"
+"243.2907.lk" = "region"
+"243.2907.lk-1" = "region-alt"
+"243.49.ll" = "lan-2"
+"243.5056.lk" = "landstingskod"
+"243.5056.lk-1" = "landstingskod-alt"
+"243.5056.ll" = "landstingskod-lan"
+"243.69.llkkdddd" = "valdistrikt"
 
 # register 248 (komvux-sfi)
-
-[[variable]]
-native_id = "243.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "243.99"
-slug = "sammanraknad-forvarvsinkomst"
-
-[[variable]]
-native_id = "243.269"
-slug = "medborgarskapsdatum"
-
-[[variable]]
-native_id = "243.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "243.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "243.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "243.6556"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "243.6818"
-slug = "medborgarland-varldsdel"
-
-[[variable]]
-native_id = "243.7916"
-slug = "forvarvsinkomst-kvintilgrupp"
-
-[[variable]]
-native_id = "243.22348"
-slug = "boende-disponibel-inkomst"
-
-[[variable]]
-native_id = "243.25238"
-slug = "antal-avgivna-roster"
-
-[[variable]]
-native_id = "243.28836"
-slug = "nummer-i-rostlangden"
+"243.15" = "civilstand"
+"243.99" = "sammanraknad-forvarvsinkomst"
+"243.269" = "medborgarskapsdatum"
+"243.271" = "medborgarskapsland"
+"243.332" = "senaste-invandringsdatum"
+"243.1569" = "fodelseland"
+"243.6556" = "fodelseland-varldsdel"
+"243.6818" = "medborgarland-varldsdel"
+"243.7916" = "forvarvsinkomst-kvintilgrupp"
+"243.22348" = "boende-disponibel-inkomst"
+"243.25238" = "antal-avgivna-roster"
+"243.28836" = "nummer-i-rostlangden"
 
 # register 244
-
-[[variable]]
-native_id = "243.14775.ri-valkretskod"
-slug = "riksdagsvalkrets-kod"
-
-[[variable]]
-native_id = "243.14775.ri-valkretsnamn"
-slug = "riksdagsvalkrets-namn"
-
-[[variable]]
-native_id = "243.15053.sun2020niva"
-slug = "sun2000niva-2"
-
-[[variable]]
-native_id = "243.15053.sun2020nivatext"
-slug = "sun2000nivatext-2"
-
-[[variable]]
-native_id = "243.15145.rostbrsv"
-slug = "rostberattigade-svenska"
-
-[[variable]]
-native_id = "243.15145.tottot-antrostbr"
-slug = "antal-rostberattigade"
-
-[[variable]]
-native_id = "243.16239.ko-valkretskod"
-slug = "kommunvalkrets-kod"
-
-[[variable]]
-native_id = "243.16239.ko-valkretsnamn"
-slug = "kommunvalkrets-namn"
-
-[[variable]]
-native_id = "243.23287.sun2000nivagrov"
-slug = "utbildningsniva-grov"
-
-[[variable]]
-native_id = "243.23287.sun2000nivagrov-text"
-slug = "utbildningsniva-grov-text"
-
-[[variable]]
-native_id = "243.49.lansnamn"
-slug = "lan"
-
-[[variable]]
-native_id = "243.69.valdistnamn"
-slug = "valdistriktsnamn"
-
-[[variable]]
-native_id = "243.69.vdnamn"
-slug = "valdistriktsnamn-2"
-
-[[variable]]
-native_id = "243.775.sun2000niva-grov"
-slug = "utbildningsniva-aggregat-grov"
-
-[[variable]]
-native_id = "243.775.sun2000niva-grov-text"
-slug = "utbildningsniva-aggregat-grov-text"
-
-[[variable]]
-native_id = "243.775.sun2020niva-grov"
-slug = "utbildningsniva-aggregat-grov-2"
-
-[[variable]]
-native_id = "243.775.sun2020niva-grov-text"
-slug = "utbildningsniva-aggregat-grov-text-2"
-
-[[variable]]
-native_id = "243.8529.ant-persrost-kv"
-slug = "personroster-kvinnor"
-
-[[variable]]
-native_id = "243.8529.ant-persrost-ma"
-slug = "personroster-man"
-
-[[variable]]
-native_id = "243.8529.tot-ant-persrost"
-slug = "personroster-totalt"
+"243.14775.ri-valkretskod" = "riksdagsvalkrets-kod"
+"243.14775.ri-valkretsnamn" = "riksdagsvalkrets-namn"
+"243.15053.sun2020niva" = "sun2000niva-2"
+"243.15053.sun2020nivatext" = "sun2000nivatext-2"
+"243.15145.rostbrsv" = "rostberattigade-svenska"
+"243.15145.tottot-antrostbr" = "antal-rostberattigade"
+"243.16239.ko-valkretskod" = "kommunvalkrets-kod"
+"243.16239.ko-valkretsnamn" = "kommunvalkrets-namn"
+"243.23287.sun2000nivagrov" = "utbildningsniva-grov"
+"243.23287.sun2000nivagrov-text" = "utbildningsniva-grov-text"
+"243.49.lansnamn" = "lan"
+"243.69.valdistnamn" = "valdistriktsnamn"
+"243.69.vdnamn" = "valdistriktsnamn-2"
+"243.775.sun2000niva-grov" = "utbildningsniva-aggregat-grov"
+"243.775.sun2000niva-grov-text" = "utbildningsniva-aggregat-grov-text"
+"243.775.sun2020niva-grov" = "utbildningsniva-aggregat-grov-2"
+"243.775.sun2020niva-grov-text" = "utbildningsniva-aggregat-grov-text-2"
+"243.8529.ant-persrost-kv" = "personroster-kvinnor"
+"243.8529.ant-persrost-ma" = "personroster-man"
+"243.8529.tot-ant-persrost" = "personroster-totalt"
+"243.14775.ri-valkretskod-mandat" = "riksdagsvalkrets-kod-mandat"
+"243.14775.valkretsnamn" = "riksdagsvalkrets-valkretsnamn"
+"243.16239.valkretsnamn" = "kommunvalkrets-valkretsnamn"
+"243.36.kommunnamn" = "kommunnamn"
+"243.36.llkk" = "llkk"
+"243.36.llkk-avgivna-roster" = "kommun-kod-avgivna-roster"
+"243.2907.ltnamn" = "ltnamn"
+"243.15091" = "giltig-antrost"
 
 # register 245
 
@@ -382,38 +204,6 @@ expected_records = [{ ref = { source = "scb-registerinformation", semantic_recor
 expected_evidence_sha256 = "e9d6ca59df74e8f30185bd5dd8b786f716e6f713f4eccf96d7ac3cd65a7ecadb"
 ref = "Complete source-defined district-name history, excluding the two region-election same-coordinate code/name contradictions. Batch52-election-complete-source-review.json."
 data_warning = "These own windows have the literal district-name field without a supplied coding association. Preserve their source operations and metadata as delivered. Region-election vdnamn in2002 and2006 remains unavailable because peers describe both codes and cleartext at the same coordinate; the2006 list is not borrowed into the supported name histories."
-
-[[variable]]
-native_id = "243.14775.ri-valkretskod-mandat"
-slug = "riksdagsvalkrets-kod-mandat"
-
-[[variable]]
-native_id = "243.14775.valkretsnamn"
-slug = "riksdagsvalkrets-valkretsnamn"
-
-[[variable]]
-native_id = "243.16239.valkretsnamn"
-slug = "kommunvalkrets-valkretsnamn"
-
-[[variable]]
-native_id = "243.36.kommunnamn"
-slug = "kommunnamn"
-
-[[variable]]
-native_id = "243.36.llkk"
-slug = "llkk"
-
-[[variable]]
-native_id = "243.36.llkk-avgivna-roster"
-slug = "kommun-kod-avgivna-roster"
-
-[[variable]]
-native_id = "243.2907.ltnamn"
-slug = "ltnamn"
-
-[[variable]]
-native_id = "243.15091"
-slug = "giltig-antrost"
 
 [[representation.parallel]]
 variable = "243.15091"

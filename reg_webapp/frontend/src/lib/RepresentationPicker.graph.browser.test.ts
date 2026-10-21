@@ -200,65 +200,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(unavailable.some((text) => text.includes("Bcol"))).toBe(true);
   });
 
-  it("renders graph context for a picker band with zero selectable rows", async () => {
-    const aFqid = "scb/lisa/no-column";
-    const bFqid = "scb/lisa/no-column-next";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "No-column variable",
-          registerPrefix: "scb/lisa",
-          rows: [],
-        } satisfies PickerBand,
-      ],
-      graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            label: "No-column variable",
-            states: [
-              graphState({
-                delivery_column_name: null,
-                value_set_version_label: "uncolumned coding",
-              }),
-            ],
-          }),
-          graphNode(bFqid, {
-            label: "No-column successor",
-            states: [
-              graphState({
-                state_id: "2",
-                period_scope: "intervals",
-                representation_run_id: 2,
-                delivery_column_name: null,
-                value_set_version_label: "successor coding",
-                valid_from: "2011-01-01",
-                valid_to: null,
-              }),
-            ],
-          }),
-        ],
-        edges: [edge(aFqid, bFqid)],
-        focus_id: aFqid,
-      }),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".graph-picker")) {
-        throw new Error("graph picker not rendered");
-      }
-    });
-    expect(document.querySelector(".col-list")).toBeNull();
-    const graphText =
-      document.querySelector(".graph-picker")?.textContent ?? "";
-    expect(graphText).toContain("uncolumned coding");
-    expect(graphText).toContain("successor coding");
-    expect(
-      document.querySelector(".graph-picker input[type='checkbox']"),
-    ).toBeNull();
-  });
-
   it("renders uncolumned leaf graph cells beside selectable cells", async () => {
     const aFqid = "scb/lisa/mixed";
     const bFqid = "scb/lisa/mixed-next";

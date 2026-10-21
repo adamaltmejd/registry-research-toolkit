@@ -135,6 +135,12 @@
       "rows": [
         [
           "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
           "2020-12-31",
           "01",
           "Label"
@@ -648,7 +654,7 @@
       "rows": [
         [
           "2020-01-01",
-          null
+          "curated:coding.uncoded"
         ]
       ],
       "note": "Same test: `len(cases) == 1`: period 1 still applies."
@@ -711,7 +717,7 @@
         [
           "2020-01-01",
           "2020-12-31",
-          null
+          "curated:coding.uncoded"
         ]
       ],
       "note": "choice_application.py::test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance: the finite uncoded acceptance applies to 2020 only."
@@ -1566,6 +1572,12 @@
       "rows": [
         [
           "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
           "2020-12-31",
           "01",
           "Label"
@@ -1692,6 +1704,12 @@
         ],
         [
           "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
           "2020-12-31",
           "01",
           "Label"

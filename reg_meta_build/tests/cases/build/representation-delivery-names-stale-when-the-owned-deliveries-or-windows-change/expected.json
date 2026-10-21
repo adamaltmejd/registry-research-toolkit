@@ -37,13 +37,13 @@
         "valid_from",
         "state_name"
       ],
-      "note": "The artifact half of each stale entry, as in the stale twin representation-delivery-names-stale-when-a-guarded-support-record-changes: without the entry, the two KU editions name the variable Income and Taxable income, so ku forms no state. Only in missing, where the 2021 KU row is no longer delivered, does the one remaining 2020 row keep its own name.",
+      "note": "The artifact half of each stale entry, as in the stale twin representation-delivery-names-stale-when-a-guarded-support-record-changes: without the entry, the two KU editions name the variable Income and Taxable income, so ku forms no state. Only in missing, where the 2021 KU row is no longer delivered, does the one remaining 2020 row keep its own name (Income ku: the source names missing's KU row apart from its AGI sibling, because names are unique within a variant, #1736).",
       "rows": [
         [
           "missing",
           "KU",
           "2020-01-01",
-          "Income"
+          "Income ku"
         ]
       ]
     }

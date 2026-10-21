@@ -38,12 +38,7 @@ from .db import (
 )
 from .derive import derive_artifact
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
-from .doc_db import (
-    build_doc_db,
-    load_related_documents,
-    repo_docs_dir,
-    repo_related_document_binaries_dir,
-)
+from .doc_db import build_doc_db, load_related_documents
 from .errors import (
     EXIT_CONFIG,
     EXIT_INTERNAL,
@@ -521,14 +516,22 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Clean and validate a pinned input bundle into new prepared sources.",
         description=(
             "Run provider/format cleaning once and write a new source artifact. "
-            "Preserves source evidence; applies no catalog curation and never "
-            "commits or replaces accepted inputs. Warm builds reuse this artifact."
+            "Preserves source evidence and never commits or replaces accepted "
+            "inputs. Besides the bundle it reads the authored thin-provider TOMLs "
+            "(curation/providers/) and curation/scb_canonical/scb_canonical.toml, "
+            "and pins their digests: a build refuses the artifact once they "
+            "change. Warm builds reuse this artifact."
         ),
     )
     prepare_sources_p.add_argument("--input-bundle", required=True)
     prepare_sources_p.add_argument("--input-commit", required=True)
     prepare_sources_p.add_argument("--input-manifest-sha256", required=True)
     prepare_sources_p.add_argument("--output-dir", required=True)
+    prepare_sources_p.add_argument(
+        "--curation-dir",
+        help="Curation tree holding the authored sources "
+        "(default: the checkout's reg_meta_build/curation).",
+    )
 
     prepare_bundle_p = sub.add_parser(
         "prepare-input-bundle",
@@ -655,19 +658,29 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Rebuild the documentation DB from markdown and related-document files.\n"
             "End users receive the doc DB via `reg-meta update`; this command\n"
-            "is for maintainers rebuilding from a repo checkout before upload.\n\n"
-            "Examples:\n"
-            "  reg-meta-build build-docs\n"
-            "  reg-meta-build build-docs --docs-dir /path/to/docs/"
+            "is for maintainers rebuilding before upload. Both inputs live in a\n"
+            "worktree of the private inputs repo.\n\n"
+            "Example:\n"
+            "  reg-meta-build build-docs \\\n"
+            "    --docs-dir <inputs>/catalog/docs/markdown \\\n"
+            "    --related-docs-dir <inputs>/catalog/docs/related"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     build_docs_p.add_argument(
         "--docs-dir",
-        default=None,
+        required=True,
         help=(
             "Directory containing register doc subdirectories "
-            "(default: reg_meta_build/docs/ if run from a repo checkout)."
+            "(<inputs>/catalog/docs/markdown in the private inputs repo)."
+        ),
+    )
+    build_docs_p.add_argument(
+        "--related-docs-dir",
+        required=True,
+        help=(
+            "Directory holding the related-document PDFs as <register>/<filename> "
+            "(<inputs>/catalog/docs/related in the private inputs repo)."
         ),
     )
 
@@ -745,8 +758,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "into structured JSON. Useful for inspecting upstream deliveries\n"
             "before build-db. Does not modify the database.\n\n"
             "Examples:\n"
-            "  reg-meta-build parse-sos input_data/Socialstyrelsen/\n"
-            "  reg-meta-build parse-sos input_data/Socialstyrelsen/PAR.xlsx"
+            "  reg-meta-build parse-sos <inputs>/catalog/source/Socialstyrelsen/\n"
+            "  reg-meta-build parse-sos <inputs>/catalog/source/Socialstyrelsen/PAR.xlsx"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -828,7 +841,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "pin (precedence 1 in slug population) freezes that slug. The steward\n"
             "curation gate makes the pin MANDATORY, so a new entity-key variable can't\n"
             "ship un-pinned. The global build needs no pins from here: compile refuses\n"
-            "any variable without an authored [[variable]] pin.\n\n"
+            "any variable without an authored [variable] pin.\n\n"
             "REQUIRES --slug-dir pointing at the steward dir (fqid_slugs/<steward>/)\n"
             "that curates the overlay's registers — NOT the global curation/ root\n"
             "(rejected when --slug-dir equals the repo's curation/ OR has\n"
@@ -1288,8 +1301,18 @@ def _cmd_prepare_sources(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         manifest_sha256=args.input_manifest_sha256,
     )
     output = Path(args.output_dir).expanduser().resolve()
+    if args.curation_dir:
+        curation_dir = Path(args.curation_dir)
+    elif (curation_dir := repo_curation_dir()) is None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="no_curation_dir",
+            error_class="configuration",
+            message="No --curation-dir specified and no checkout curation tree found.",
+            remediation="Pass --curation-dir pointing at reg_meta_build/curation.",
+        )
     try:
-        manifest = prepare_catalog_sources(selection, output)
+        manifest = prepare_catalog_sources(selection, output, curation_dir=curation_dir)
     except RegMetaError:
         # A located refusal (e.g. CuratedSourceError, also a ValueError)
         # keeps its own code instead of the command's wrapper code.
@@ -1615,22 +1638,22 @@ def _cmd_derive(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    if args.docs_dir:
-        docs_dir = Path(args.docs_dir).resolve()
-    else:
-        docs_dir = repo_docs_dir()
-        if docs_dir is None:
+    docs_dir = Path(args.docs_dir).resolve()
+    related_docs_dir = Path(args.related_docs_dir).resolve()
+    for flag, path in (
+        ("--docs-dir", docs_dir),
+        ("--related-docs-dir", related_docs_dir),
+    ):
+        if not path.is_dir():
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
-                code="no_docs_dir",
+                code="docs_dir_not_found",
                 error_class="configuration",
-                message=(
-                    "No --docs-dir specified and no in-repo docs found. "
-                    "This command is for maintainers rebuilding the doc DB from a repo checkout."
-                ),
+                message=f"{flag} {path} is not a directory.",
                 remediation=(
-                    "Run from a reg_meta_build checkout with `reg_meta_build/docs/` present, "
-                    "or pass --docs-dir pointing to a directory with register doc subdirectories."
+                    "Point --docs-dir at <inputs>/catalog/docs/markdown and "
+                    "--related-docs-dir at <inputs>/catalog/docs/related in a "
+                    "worktree of the private inputs repo."
                 ),
             )
     db_dir = Path(args.db).resolve() if args.db else default_db_dir().resolve()
@@ -1638,12 +1661,15 @@ def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         docs_dir,
         db_dir,
         related_documents=load_related_documents(),
-        related_docs_dir=repo_related_document_binaries_dir(),
+        related_docs_dir=related_docs_dir,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
         command="build-docs",
-        args_payload={"docs_dir": str(docs_dir)},
+        args_payload={
+            "docs_dir": str(docs_dir),
+            "related_docs_dir": str(related_docs_dir),
+        },
         db_info=None,
         data={"db_path": str(db_path), "docs_dir": str(docs_dir)},
         duration_ms=duration_ms,
@@ -2349,7 +2375,7 @@ COMMAND_DISPATCH: dict[
 
 _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
-        "prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir DIR",
+        "prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir DIR [--curation-dir DIR]",
         "Clean and validate sources once; write a new candidate for acceptance.",
     ),
     (
@@ -2387,7 +2413,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Publish a derived copy of a published artifact with its own identity.",
     ),
     (
-        "build-docs [--docs-dir DIR]",
+        "build-docs --docs-dir DIR --related-docs-dir DIR",
         "Rebuild the doc DB from markdown files.",
     ),
     (

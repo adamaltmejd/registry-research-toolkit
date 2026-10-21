@@ -56,124 +56,98 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Civila samhället
-
-[[variable]]
-native_id = "408.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "408.47187"
-slug = "person-samordningsnummer"
-
-
-[[variable]]
-native_id = "408.56.peorgnr"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "408.1172"
-slug = "kontant-bruttolon"
-
-[[variable]]
-native_id = "408.8170"
-slug = "sektor-organisation"
-
-[[variable]]
-native_id = "408.28808"
-slug = "referensperiod"
+"408.57" = "personnr"
+"408.47187" = "person-samordningsnummer"
+"408.56.peorgnr" = "person-orgnr"
+"408.1172" = "kontant-bruttolon"
+"408.8170" = "sektor-organisation"
+"408.28808" = "referensperiod"
 
 # register 410 (esk)
-
-[[variable]]
-native_id = "408.33.sektor"
-slug = "institutionell-sektor"
-
-[[variable]]
-native_id = "408.47454.indman"
-slug = "anstallning"
+"408.33.sektor" = "institutionell-sektor"
+"408.47454.indman" = "anstallning"
 
 # register 47 (hreg)
-
-[[variable]]
-native_id = "408.56.agipeorgnr"
-slug = "person-orgnr-arbetsgivare"
-
-[[variable]]
-native_id = "408.56.anstpeorgnr"
-slug = "person-orgnr-anstalld"
-
-[[variable]]
-native_id = "408.56.peorgnrram"
-slug = "person-orgnr-3"
-
-[[variable]]
-native_id = "408.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "408.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "408.97"
-slug = "referensmanad"
-
-[[variable]]
-native_id = "408.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "408.4614"
-slug = "urvalsstorlek-per-stratum"
-
-[[variable]]
-native_id = "408.8164"
-slug = "urvalsstratum"
-
-[[variable]]
-native_id = "408.16323"
-slug = "naringsgren-foretag"
-
-[[variable]]
-native_id = "408.17472"
-slug = "anstallningstid-grupperad"
-
-[[variable]]
-native_id = "408.21757"
-slug = "avdrag-regionalt-stod"
-
-[[variable]]
-native_id = "408.24353"
-slug = "kallapersonnr"
-
-[[variable]]
-native_id = "408.42953"
-slug = "markering-lonegaranti"
-
-[[variable]]
-native_id = "408.46663"
-slug = "antal-svarande-per-stratum"
-
-[[variable]]
-native_id = "408.48348"
-slug = "antal-anstallda-enligt-ramen"
+"408.56.agipeorgnr" = "person-orgnr-arbetsgivare"
+"408.56.anstpeorgnr" = "person-orgnr-anstalld"
+"408.56.peorgnrram" = "person-orgnr-3"
+"408.34" = "juridisk-form"
+"408.74" = "agarkontroll"
+"408.97" = "referensmanad"
+"408.4027" = "naringsgren"
+"408.4614" = "urvalsstorlek-per-stratum"
+"408.8164" = "urvalsstratum"
+"408.16323" = "naringsgren-foretag"
+"408.17472" = "anstallningstid-grupperad"
+"408.21757" = "avdrag-regionalt-stod"
+"408.24353" = "kallapersonnr"
+"408.42953" = "markering-lonegaranti"
+"408.46663" = "antal-svarande-per-stratum"
+"408.48348" = "antal-anstallda-enligt-ramen"
 
 # register 409
-
-[[variable]]
-native_id = "408.26835.indagiimputhuvuduppgift"
-slug = "imputerat-varde"
-
-[[variable]]
-native_id = "408.3310.bgr-off"
-slug = "branschgrupp-offentlig"
-
-[[variable]]
-native_id = "408.3310.bgr-priv"
-slug = "branschgrupp-privat"
+"408.26835.indagiimputhuvuduppgift" = "imputerat-varde"
+"408.3310.bgr-off" = "branschgrupp-offentlig"
+"408.3310.bgr-priv" = "branschgrupp-privat"
+"408.47454.indman0" = "indman"
+"408.47454.indman1" = "indman1"
+"408.47454.indman2" = "indman2"
+"408.47454.indman202001" = "indman202001"
+"408.47454.indman202002" = "indman202002"
+"408.47454.indman202003" = "indman202003"
+"408.47454.indman202004" = "indman202004"
+"408.47454.indman202005" = "indman202005"
+"408.47454.indman202006" = "indman202006"
+"408.47454.indman202007" = "indman202007"
+"408.47454.indman202008" = "indman202008"
+"408.47454.indman202009" = "indman202009"
+"408.47454.indman202010" = "indman202010"
+"408.47454.indman202011" = "indman202011"
+"408.47454.indman202012" = "indman202012"
+"408.47454.indman202101" = "indman202101"
+"408.47454.indman202102" = "indman202102"
+"408.47454.indman202103" = "indman202103"
+"408.47454.indman202104" = "indman202104"
+"408.47454.indman202105" = "indman202105"
+"408.47454.indman202106" = "indman202106"
+"408.47454.indman202107" = "indman202107"
+"408.47454.indman202108" = "indman202108"
+"408.47454.indman202109" = "indman202109"
+"408.47454.indman202110" = "indman202110"
+"408.47454.indman202111" = "indman202111"
+"408.47454.indman202112" = "indman202112"
+"408.47454.indman202201" = "indman202201"
+"408.47454.indman202202" = "indman202202"
+"408.47454.indman202203" = "indman202203"
+"408.47454.indman202204" = "indman202204"
+"408.47454.indman202205" = "indman202205"
+"408.47454.indman202206" = "indman202206"
+"408.47454.indman202207" = "indman202207"
+"408.47454.indman202208" = "indman202208"
+"408.47454.indman202209" = "indman202209"
+"408.47454.indman202210" = "indman202210"
+"408.47454.indman202211" = "indman202211"
+"408.47454.indman202212" = "indman202212"
+"408.47454.indman202301" = "indman202301"
+"408.47454.indman202302" = "indman202302"
+"408.47454.indman202303" = "indman202303"
+"408.47454.indman202304" = "indman202304"
+"408.47454.indman202305" = "indman202305"
+"408.47454.indman202306" = "indman202306"
+"408.47454.indman202307" = "indman202307"
+"408.47454.indman202308" = "indman202308"
+"408.47454.indman202309" = "indman202309"
+"408.47454.indman202310" = "indman202310"
+"408.47454.indman202311" = "indman202311"
+"408.47454.indman202312" = "indman202312"
+"408.47454.indman3" = "indman3"
+"408.47454.indman4" = "indman4"
+"408.47454.indman5" = "indman5"
+"408.47454.indman6" = "indman6"
+"408.47454.anstallningar" = "anstallningar"
+"408.Id" = "lopnummer-sjukfall"
 
 # register 4171412747617845054
 
@@ -183,230 +157,6 @@ variable = "408.47454"
 columns = { IndMan = "408.47454.indman", IndMan0 = "408.47454.indman0", IndMan1 = "408.47454.indman1", IndMan2 = "408.47454.indman2", IndMan202001 = "408.47454.indman202001", IndMan202002 = "408.47454.indman202002", IndMan202003 = "408.47454.indman202003", IndMan202004 = "408.47454.indman202004", IndMan202005 = "408.47454.indman202005", IndMan202006 = "408.47454.indman202006", IndMan202007 = "408.47454.indman202007", IndMan202008 = "408.47454.indman202008", IndMan202009 = "408.47454.indman202009", IndMan202010 = "408.47454.indman202010", IndMan202011 = "408.47454.indman202011", IndMan202012 = "408.47454.indman202012", IndMan202101 = "408.47454.indman202101", IndMan202102 = "408.47454.indman202102", IndMan202103 = "408.47454.indman202103", IndMan202104 = "408.47454.indman202104", IndMan202105 = "408.47454.indman202105", IndMan202106 = "408.47454.indman202106", IndMan202107 = "408.47454.indman202107", IndMan202108 = "408.47454.indman202108", IndMan202109 = "408.47454.indman202109", IndMan202110 = "408.47454.indman202110", IndMan202111 = "408.47454.indman202111", IndMan202112 = "408.47454.indman202112", IndMan202201 = "408.47454.indman202201", IndMan202202 = "408.47454.indman202202", IndMan202203 = "408.47454.indman202203", IndMan202204 = "408.47454.indman202204", IndMan202205 = "408.47454.indman202205", IndMan202206 = "408.47454.indman202206", IndMan202207 = "408.47454.indman202207", IndMan202208 = "408.47454.indman202208", IndMan202209 = "408.47454.indman202209", IndMan202210 = "408.47454.indman202210", IndMan202211 = "408.47454.indman202211", IndMan202212 = "408.47454.indman202212", IndMan202301 = "408.47454.indman202301", IndMan202302 = "408.47454.indman202302", IndMan202303 = "408.47454.indman202303", IndMan202304 = "408.47454.indman202304", IndMan202305 = "408.47454.indman202305", IndMan202306 = "408.47454.indman202306", IndMan202307 = "408.47454.indman202307", IndMan202308 = "408.47454.indman202308", IndMan202309 = "408.47454.indman202309", IndMan202310 = "408.47454.indman202310", IndMan202311 = "408.47454.indman202311", IndMan202312 = "408.47454.indman202312", IndMan3 = "408.47454.indman3", IndMan4 = "408.47454.indman4", IndMan5 = "408.47454.indman5", IndMan6 = "408.47454.indman6", anstallningar = "408.47454.anstallningar" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "dde5150f12532c809bf5aecbb62b5024a367f4ad2c1118b88038a833aae11b83"
-
-[[variable]]
-native_id = "408.47454.indman0"
-slug = "indman"
-
-[[variable]]
-native_id = "408.47454.indman1"
-slug = "indman1"
-
-[[variable]]
-native_id = "408.47454.indman2"
-slug = "indman2"
-
-[[variable]]
-native_id = "408.47454.indman202001"
-slug = "indman202001"
-
-[[variable]]
-native_id = "408.47454.indman202002"
-slug = "indman202002"
-
-[[variable]]
-native_id = "408.47454.indman202003"
-slug = "indman202003"
-
-[[variable]]
-native_id = "408.47454.indman202004"
-slug = "indman202004"
-
-[[variable]]
-native_id = "408.47454.indman202005"
-slug = "indman202005"
-
-[[variable]]
-native_id = "408.47454.indman202006"
-slug = "indman202006"
-
-[[variable]]
-native_id = "408.47454.indman202007"
-slug = "indman202007"
-
-[[variable]]
-native_id = "408.47454.indman202008"
-slug = "indman202008"
-
-[[variable]]
-native_id = "408.47454.indman202009"
-slug = "indman202009"
-
-[[variable]]
-native_id = "408.47454.indman202010"
-slug = "indman202010"
-
-[[variable]]
-native_id = "408.47454.indman202011"
-slug = "indman202011"
-
-[[variable]]
-native_id = "408.47454.indman202012"
-slug = "indman202012"
-
-[[variable]]
-native_id = "408.47454.indman202101"
-slug = "indman202101"
-
-[[variable]]
-native_id = "408.47454.indman202102"
-slug = "indman202102"
-
-[[variable]]
-native_id = "408.47454.indman202103"
-slug = "indman202103"
-
-[[variable]]
-native_id = "408.47454.indman202104"
-slug = "indman202104"
-
-[[variable]]
-native_id = "408.47454.indman202105"
-slug = "indman202105"
-
-[[variable]]
-native_id = "408.47454.indman202106"
-slug = "indman202106"
-
-[[variable]]
-native_id = "408.47454.indman202107"
-slug = "indman202107"
-
-[[variable]]
-native_id = "408.47454.indman202108"
-slug = "indman202108"
-
-[[variable]]
-native_id = "408.47454.indman202109"
-slug = "indman202109"
-
-[[variable]]
-native_id = "408.47454.indman202110"
-slug = "indman202110"
-
-[[variable]]
-native_id = "408.47454.indman202111"
-slug = "indman202111"
-
-[[variable]]
-native_id = "408.47454.indman202112"
-slug = "indman202112"
-
-[[variable]]
-native_id = "408.47454.indman202201"
-slug = "indman202201"
-
-[[variable]]
-native_id = "408.47454.indman202202"
-slug = "indman202202"
-
-[[variable]]
-native_id = "408.47454.indman202203"
-slug = "indman202203"
-
-[[variable]]
-native_id = "408.47454.indman202204"
-slug = "indman202204"
-
-[[variable]]
-native_id = "408.47454.indman202205"
-slug = "indman202205"
-
-[[variable]]
-native_id = "408.47454.indman202206"
-slug = "indman202206"
-
-[[variable]]
-native_id = "408.47454.indman202207"
-slug = "indman202207"
-
-[[variable]]
-native_id = "408.47454.indman202208"
-slug = "indman202208"
-
-[[variable]]
-native_id = "408.47454.indman202209"
-slug = "indman202209"
-
-[[variable]]
-native_id = "408.47454.indman202210"
-slug = "indman202210"
-
-[[variable]]
-native_id = "408.47454.indman202211"
-slug = "indman202211"
-
-[[variable]]
-native_id = "408.47454.indman202212"
-slug = "indman202212"
-
-[[variable]]
-native_id = "408.47454.indman202301"
-slug = "indman202301"
-
-[[variable]]
-native_id = "408.47454.indman202302"
-slug = "indman202302"
-
-[[variable]]
-native_id = "408.47454.indman202303"
-slug = "indman202303"
-
-[[variable]]
-native_id = "408.47454.indman202304"
-slug = "indman202304"
-
-[[variable]]
-native_id = "408.47454.indman202305"
-slug = "indman202305"
-
-[[variable]]
-native_id = "408.47454.indman202306"
-slug = "indman202306"
-
-[[variable]]
-native_id = "408.47454.indman202307"
-slug = "indman202307"
-
-[[variable]]
-native_id = "408.47454.indman202308"
-slug = "indman202308"
-
-[[variable]]
-native_id = "408.47454.indman202309"
-slug = "indman202309"
-
-[[variable]]
-native_id = "408.47454.indman202310"
-slug = "indman202310"
-
-[[variable]]
-native_id = "408.47454.indman202311"
-slug = "indman202311"
-
-[[variable]]
-native_id = "408.47454.indman202312"
-slug = "indman202312"
-
-[[variable]]
-native_id = "408.47454.indman3"
-slug = "indman3"
-
-[[variable]]
-native_id = "408.47454.indman4"
-slug = "indman4"
-
-[[variable]]
-native_id = "408.47454.indman5"
-slug = "indman5"
-
-[[variable]]
-native_id = "408.47454.indman6"
-slug = "indman6"
-
-[[variable]]
-native_id = "408.47454.anstallningar"
-slug = "anstallningar"
 
 # #1302 F6: SuS case key, same concept and slug as scb/ksju lopnummer-sjukfall.
 
@@ -422,7 +172,3 @@ holdings_period = "2024-2024"
 source = "steward-holdings"
 evidence = "SWECOV holds P1105_LopNr_Id in SuS_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source SUS for 2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F6, maintainer round 5)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "408.Id"
-slug = "lopnummer-sjukfall"

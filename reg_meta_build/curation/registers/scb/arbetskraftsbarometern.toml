@@ -11,50 +11,20 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Gymnasieskola: betyg
-
-[[variable]]
-native_id = "99.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "99.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "99.17"
-slug = "arbetsstallenummer"
-
-[[variable]]
-native_id = "99.1641"
-slug = "naringsgren-arbetsstalle"
-
-[[variable]]
-native_id = "99.1819"
-slug = "sektorkod"
-
-[[variable]]
-native_id = "99.3575"
-slug = "foretagets-namn"
-
-[[variable]]
-native_id = "99.6392"
-slug = "antal-sysselsatta"
-
-[[variable]]
-native_id = "99.6404"
-slug = "arbstallnamn"
-
-[[variable]]
-native_id = "99.6415"
-slug = "urvalssannolikhet"
+"99.14" = "cfar-nummer"
+"99.1839" = "orgnr"
+"99.17" = "arbetsstallenummer"
+"99.1641" = "naringsgren-arbetsstalle"
+"99.1819" = "sektorkod"
+"99.3575" = "foretagets-namn"
+"99.6392" = "antal-sysselsatta"
+"99.6404" = "arbstallnamn"
+"99.6415" = "urvalssannolikhet"
 
 # register 102
-
-[[variable]]
-native_id = "99.6416.utbgrp"
-slug = "utbildningsgrupp"
+"99.6416.utbgrp" = "utbildningsgrupp"
 
 # === END #747 catalog-wide concept-slug consistency ===
 

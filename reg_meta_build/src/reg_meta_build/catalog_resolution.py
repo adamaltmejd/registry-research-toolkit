@@ -333,7 +333,7 @@ def resolve_parents(
                         f"source {key[0]}) has no curation file.",
                         f"Add curation/registers/{provider}/<slug>.toml naming the "
                         "register ([register] provider, slug and native_id) with its "
-                        "[[variant]] and [[variable]] entries.",
+                        "[[variant]] entries and [variable] pins.",
                     )
                 if key not in names:
                     # The register is named but this variant is not: source-scope

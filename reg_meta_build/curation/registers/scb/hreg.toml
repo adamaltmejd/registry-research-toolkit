@@ -104,7 +104,7 @@ name = "1=För första gången registrerad på lärosätet denna termin. Högsko
 definition = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -115,7 +115,7 @@ name = "1=För första gången registrerad på specifikt lprog denna termin (Ej 
 definition = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -126,7 +126,7 @@ name = "1=För första gången registrerad på svenskt lärosäte denna termin. 
 definition = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -137,7 +137,7 @@ name = "1=För första gången registrerad på specifikt yprog (Synonymt med SCB
 definition = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -148,7 +148,7 @@ name = "År+Termin för första registrering på svenskt lärosäte"
 definition = "År+Termin för första registrering på svenskt lärosäte"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -159,7 +159,7 @@ name = "Kursens terminsnummer"
 definition = "Kursens terminsnummer"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -170,7 +170,7 @@ name = "Kursregistreringens högskolepoäng inom terminen"
 definition = "Kursregistreringens högskolepoäng inom terminen"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -181,7 +181,7 @@ name = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
 definition = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -192,7 +192,7 @@ name = "Examensinriktningsgrupp, detaljerad nivå"
 definition = "Examensinriktningsgrupp, detaljerad nivå"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -203,7 +203,7 @@ name = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
 definition = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -214,7 +214,7 @@ name = "Examensinriktningsgrupp, mellannivå"
 definition = "Examensinriktningsgrupp, mellannivå"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -225,7 +225,7 @@ name = "Examensinriktningsgrupp, mellannivå. Benämning."
 definition = "Examensinriktningsgrupp, mellannivå. Benämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -236,7 +236,7 @@ name = "Examensinriktningsgrupp, grov nivå"
 definition = "Examensinriktningsgrupp, grov nivå"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -247,7 +247,7 @@ name = "Examensinriktningsgrupp, grov nivå. Benämning."
 definition = "Examensinriktningsgrupp, grov nivå. Benämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -258,7 +258,7 @@ name = "SUN-inriktning, 2000-års nomenklatur"
 definition = "SUN-inriktning, 2000-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -269,7 +269,7 @@ name = "SUN-nivå, 2000-års nomenklatur"
 definition = "SUN-nivå, 2000-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -280,7 +280,7 @@ name = "SUN-inriktning, 2020-års nomenklatur"
 definition = "SUN-inriktning, 2020-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -291,7 +291,7 @@ name = "SUN-nivå, 2020-års nomenklatur"
 definition = "SUN-nivå, 2020-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -302,7 +302,7 @@ definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
 data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
 noted = "2026-09-30"
 
 [[errata.column]]
@@ -313,7 +313,7 @@ definition = "Programmets sunnivå på 3-siffernivå (SUN2020)"
 data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
 noted = "2026-09-30"
 
 [[enrichment.description]]
@@ -605,554 +605,187 @@ panel_entity_key = "personnr-motsvarande-2"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Lönestrukturstatistik, privat sektor (SLP)
-
-[[variable]]
-native_id = "47.3636"
-slug = "personnr-samord"
-
-
-[[variable]]
-native_id = "47.1346.fspersonnr"
-slug = "personnr-motsvarande"
-
-
-[[variable]]
-native_id = "47.1346.personnr"
-slug = "personnr-motsvarande-2"
-
-
-[[variable]]
-native_id = "47.45"
-slug = "land"
-
-[[variable]]
-native_id = "47.73"
-slug = "ar"
-
-[[variable]]
-native_id = "47.241.alder-31-12"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "47.326"
-slug = "namn"
-
-[[variable]]
-native_id = "47.748"
-slug = "ar-for-avlagda-poang"
-
-[[variable]]
-native_id = "47.1254"
-slug = "termin-avklarade-poang"
-
-[[variable]]
-native_id = "47.1264"
-slug = "utbildningsprogram-examen"
-
-[[variable]]
-native_id = "47.1270"
-slug = "hogskoleamne"
-
-[[variable]]
-native_id = "47.1274"
-slug = "utbytesland"
-
-[[variable]]
-native_id = "47.1277"
-slug = "studentens-namn"
-
-[[variable]]
-native_id = "47.1279"
-slug = "forkunskapsniva-kurs"
-
-[[variable]]
-native_id = "47.1280"
-slug = "poangomfattning"
-
-[[variable]]
-native_id = "47.1299"
-slug = "prioritet-for-kurs"
-
-[[variable]]
-native_id = "47.1306"
-slug = "termin-ansokan-program"
-
-[[variable]]
-native_id = "47.1307"
-slug = "urvalsresultat-kurs"
-
-[[variable]]
-native_id = "47.1308"
-slug = "ar-ansokan-program"
-
-[[variable]]
-native_id = "47.1312"
-slug = "hemortslan"
-
-[[variable]]
-native_id = "47.1314"
-slug = "sokalternativ-kurs"
-
-[[variable]]
-native_id = "47.1316"
-slug = "utbildningslangd-sun2000"
-
-[[variable]]
-native_id = "47.1375"
-slug = "examensdatum"
-
-[[variable]]
-native_id = "47.1386"
-slug = "amne-for-examen"
-
-[[variable]]
-native_id = "47.1428"
-slug = "ar-for-registreringen"
-
-[[variable]]
-native_id = "47.1429"
-slug = "studiemedel-lan"
-
-[[variable]]
-native_id = "47.1445"
-slug = "termin-registreringen"
-
-[[variable]]
-native_id = "47.1465"
-slug = "utbytesstudier"
-
-[[variable]]
-native_id = "47.1537"
-slug = "ar-for-examensbevis"
-
-[[variable]]
-native_id = "47.1542"
-slug = "scb-grundkod-for-examen"
-
-[[variable]]
-native_id = "47.1554"
-slug = "ar-termin-aktiviteten"
-
-[[variable]]
-native_id = "47.1556"
-slug = "termin-examensbevis"
-
-[[variable]]
-native_id = "47.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "47.1560"
-slug = "aktiv"
-
-[[variable]]
-native_id = "47.1565"
-slug = "datum-for-studieavbrott"
-
-[[variable]]
-native_id = "47.1579"
-slug = "termin"
-
-[[variable]]
-native_id = "47.1713"
-slug = "ar-termin-antagningen"
-
-[[variable]]
-native_id = "47.1714"
-slug = "ar-termin-forsorjning"
-
-[[variable]]
-native_id = "47.1715.ar-och-termin-for-examen"
-slug = "ar-och-termin-for-examen"
-
-[[variable]]
-native_id = "47.1768"
-slug = "examenstyp"
-
-[[variable]]
-native_id = "47.1768.extyp"
-slug = "examenstyp-kod"
-
-[[variable]]
-native_id = "47.1768.extypgrptext"
-slug = "examenstyp-klartext"
-
-[[variable]]
-native_id = "47.1852"
-slug = "tjanstebenamning"
-
-[[variable]]
-native_id = "47.1924"
-slug = "yrkesexamen-1993"
-
-[[variable]]
-native_id = "47.4884"
-slug = "artal-for-utbetalning"
-
-[[variable]]
-native_id = "47.5726"
-slug = "utbildningens-niva"
-
-[[variable]]
-native_id = "47.7591"
-slug = "larosate"
-
-[[variable]]
-native_id = "47.14635"
-slug = "examen-aldre-grundniva"
-
-[[variable]]
-native_id = "47.19344"
-slug = "ar-for-antagningen"
-
-[[variable]]
-native_id = "47.19345"
-slug = "termin-for-antagningen"
-
-[[variable]]
-native_id = "47.19346"
-slug = "ar-for-examen"
-
-[[variable]]
-native_id = "47.19347"
-slug = "ar-for-aktiviteten"
-
-[[variable]]
-native_id = "47.19348"
-slug = "termin-for-aktiviteten"
-
-[[variable]]
-native_id = "47.19349"
-slug = "ar-for-forsorjningen"
-
-[[variable]]
-native_id = "47.19350"
-slug = "termin-for-forsorjningen"
-
-[[variable]]
-native_id = "47.19351"
-slug = "termin-for-examen"
-
-[[variable]]
-native_id = "47.19552"
-slug = "utbildningsniva-hogskola"
-
-[[variable]]
-native_id = "47.24951"
-slug = "utbildningsland"
-
-[[variable]]
-native_id = "47.25047"
-slug = "namn-person"
-
-[[variable]]
-native_id = "47.25809"
-slug = "prioritet-for-program"
-
-[[variable]]
-native_id = "47.25811"
-slug = "sokalternativ-program"
-
-[[variable]]
-native_id = "47.25812"
-slug = "termin-ansokan-kurs"
-
-[[variable]]
-native_id = "47.25822"
-slug = "urvalsresultat-program"
-
-[[variable]]
-native_id = "47.25823"
-slug = "ar-for-ansokan-till-kurs"
-
-[[variable]]
-native_id = "47.25824"
-slug = "larosate-ansokan-program"
-
-[[variable]]
-native_id = "47.25825"
-slug = "larosate-ansokan-kurs"
-
-[[variable]]
-native_id = "47.25826"
-slug = "ar-for-ansokan"
-
-[[variable]]
-native_id = "47.25828"
-slug = "termin-for-ansokan"
-
-[[variable]]
-native_id = "47.29830"
-slug = "avgiftsskyldighet"
-
-[[variable]]
-native_id = "47.29830.studieavg"
-slug = "avgiftsskyldighet-studieavg"
-
-[[variable]]
-native_id = "47.29830.avgskyldig"
-slug = "avgiftsskyldighet-avgskyldig"
-
-[[variable]]
-native_id = "47.29874"
-slug = "programinriktning"
-
-[[variable]]
-native_id = "47.35989"
-slug = "imputerat"
-
-[[variable]]
-native_id = "47.38113"
-slug = "aktiv-inom-forskarskola"
-
-[[variable]]
-native_id = "47.38118"
-slug = "medverkande-hogskola"
-
-[[variable]]
-native_id = "47.38119"
-slug = "anknytande-hogskola"
-
-[[variable]]
-native_id = "47.39023"
-slug = "anstallningsbenamning"
-
-[[variable]]
-native_id = "47.39310"
-slug = "antagningsomgang"
-
-[[variable]]
-native_id = "47.39311"
-slug = "antagningsomgang-program"
-
-[[variable]]
-native_id = "47.39312"
-slug = "antagningsomgang-kurs"
-
-[[variable]]
-native_id = "47.40078"
-slug = "ar-termin-tillgodoraknande"
+"47.3636" = "personnr-samord"
+"47.1346.fspersonnr" = "personnr-motsvarande"
+"47.1346.personnr" = "personnr-motsvarande-2"
+"47.45" = "land"
+"47.73" = "ar"
+"47.241.alder-31-12" = "alder-31-12"
+"47.326" = "namn"
+"47.748" = "ar-for-avlagda-poang"
+"47.1254" = "termin-avklarade-poang"
+"47.1264" = "utbildningsprogram-examen"
+"47.1270" = "hogskoleamne"
+"47.1274" = "utbytesland"
+"47.1277" = "studentens-namn"
+"47.1279" = "forkunskapsniva-kurs"
+"47.1280" = "poangomfattning"
+"47.1299" = "prioritet-for-kurs"
+"47.1306" = "termin-ansokan-program"
+"47.1307" = "urvalsresultat-kurs"
+"47.1308" = "ar-ansokan-program"
+"47.1312" = "hemortslan"
+"47.1314" = "sokalternativ-kurs"
+"47.1316" = "utbildningslangd-sun2000"
+"47.1375" = "examensdatum"
+"47.1386" = "amne-for-examen"
+"47.1428" = "ar-for-registreringen"
+"47.1429" = "studiemedel-lan"
+"47.1445" = "termin-registreringen"
+"47.1465" = "utbytesstudier"
+"47.1537" = "ar-for-examensbevis"
+"47.1542" = "scb-grundkod-for-examen"
+"47.1554" = "ar-termin-aktiviteten"
+"47.1556" = "termin-examensbevis"
+"47.1557" = "kalenderar"
+"47.1560" = "aktiv"
+"47.1565" = "datum-for-studieavbrott"
+"47.1579" = "termin"
+"47.1713" = "ar-termin-antagningen"
+"47.1714" = "ar-termin-forsorjning"
+"47.1715.ar-och-termin-for-examen" = "ar-och-termin-for-examen"
+"47.1768" = "examenstyp"
+"47.1768.extyp" = "examenstyp-kod"
+"47.1768.extypgrptext" = "examenstyp-klartext"
+"47.1852" = "tjanstebenamning"
+"47.1924" = "yrkesexamen-1993"
+"47.4884" = "artal-for-utbetalning"
+"47.5726" = "utbildningens-niva"
+"47.7591" = "larosate"
+"47.14635" = "examen-aldre-grundniva"
+"47.19344" = "ar-for-antagningen"
+"47.19345" = "termin-for-antagningen"
+"47.19346" = "ar-for-examen"
+"47.19347" = "ar-for-aktiviteten"
+"47.19348" = "termin-for-aktiviteten"
+"47.19349" = "ar-for-forsorjningen"
+"47.19350" = "termin-for-forsorjningen"
+"47.19351" = "termin-for-examen"
+"47.19552" = "utbildningsniva-hogskola"
+"47.24951" = "utbildningsland"
+"47.25047" = "namn-person"
+"47.25809" = "prioritet-for-program"
+"47.25811" = "sokalternativ-program"
+"47.25812" = "termin-ansokan-kurs"
+"47.25822" = "urvalsresultat-program"
+"47.25823" = "ar-for-ansokan-till-kurs"
+"47.25824" = "larosate-ansokan-program"
+"47.25825" = "larosate-ansokan-kurs"
+"47.25826" = "ar-for-ansokan"
+"47.25828" = "termin-for-ansokan"
+"47.29830" = "avgiftsskyldighet"
+"47.29830.studieavg" = "avgiftsskyldighet-studieavg"
+"47.29830.avgskyldig" = "avgiftsskyldighet-avgskyldig"
+"47.29874" = "programinriktning"
+"47.35989" = "imputerat"
+"47.38113" = "aktiv-inom-forskarskola"
+"47.38118" = "medverkande-hogskola"
+"47.38119" = "anknytande-hogskola"
+"47.39023" = "anstallningsbenamning"
+"47.39310" = "antagningsomgang"
+"47.39311" = "antagningsomgang-program"
+"47.39312" = "antagningsomgang-kurs"
+"47.40078" = "ar-termin-tillgodoraknande"
 
 # register 50 (slp)
-
-[[variable]]
-native_id = "47.1248.hskod"
-slug = "hogskolekod"
-
-[[variable]]
-native_id = "47.1810.hskod-imp"
-slug = "imputerad"
-
-[[variable]]
-native_id = "47.66.sunniva3"
-slug = "utbildningsniva"
+"47.1248.hskod" = "hogskolekod"
+"47.1810.hskod-imp" = "imputerad"
+"47.66.sunniva3" = "utbildningsniva"
 
 # Y-319: qualified SUN2020 education-field levels; the native fallback stays.
-[[variable]]
-native_id = "47.65.suninr-1"
-slug = "suninr-1"
-
-[[variable]]
-native_id = "47.65.suninr-2"
-slug = "suninr-2"
-
-[[variable]]
-native_id = "47.65.suninr-3"
-slug = "suninr-3"
-
-[[variable]]
-native_id = "47.65.suninr-4"
-slug = "suninr-4"
+"47.65.suninr-1" = "suninr-1"
+"47.65.suninr-2" = "suninr-2"
+"47.65.suninr-3" = "suninr-3"
+"47.65.suninr-4" = "suninr-4"
 
 # register 50 (slp)
-
-[[variable]]
-native_id = "47.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "47.1259"
-slug = "utbildningsomrade"
-
-[[variable]]
-native_id = "47.1311"
-slug = "hemortskommun"
-
-[[variable]]
-native_id = "47.1315"
-slug = "utbildnings-inriktning-sun-2000"
-
-[[variable]]
-native_id = "47.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "47.1460"
-slug = "kurstakt"
-
-[[variable]]
-native_id = "47.1529"
-slug = "ar-avslutad-gymnasieutbildning"
-
-[[variable]]
-native_id = "47.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "47.1543"
-slug = "examens-omfattning-poang"
-
-[[variable]]
-native_id = "47.1573"
-slug = "aldersgruppering-31-12"
-
-[[variable]]
-native_id = "47.1908"
-slug = "hogskolans-huvudman"
-
-[[variable]]
-native_id = "47.1909"
-slug = "hogskolekategori"
-
-[[variable]]
-native_id = "47.1910"
-slug = "hogskolanyborjare"
-
-[[variable]]
-native_id = "47.1917"
-slug = "amnesomrade"
-
-[[variable]]
-native_id = "47.2499"
-slug = "myndighet"
-
-[[variable]]
-native_id = "47.4362"
-slug = "ar-behorighetsgivande-utb"
-
-[[variable]]
-native_id = "47.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "47.5118"
-slug = "verksamhetsomrade"
-
-[[variable]]
-native_id = "47.5249"
-slug = "niva-pa-utlandsstudier"
-
-[[variable]]
-native_id = "47.5249.niva-csn"
-slug = "niva-pa-utlandsstudier-csn"
-
-[[variable]]
-native_id = "47.5249.niva-scb"
-slug = "niva-pa-utlandsstudier-scb"
-
-[[variable]]
-native_id = "47.5976"
-slug = "tjanstledighetsomfattning"
-
-[[variable]]
-native_id = "47.7650"
-slug = "varldsdelkod"
-
-[[variable]]
-native_id = "47.15940"
-slug = "avklarade-hogskolepoang-pa-kurs"
-
-[[variable]]
-native_id = "47.16894"
-slug = "laddningsdatum"
-
-[[variable]]
-native_id = "47.21520"
-slug = "studiemedel-bidrag"
-
-[[variable]]
-native_id = "47.29252"
-slug = "forskningsamnesgrupp"
-
-[[variable]]
-native_id = "47.29507"
-slug = "anstallningskategori"
+"47.109" = "tjanstgoringsomfattning"
+"47.1259" = "utbildningsomrade"
+"47.1311" = "hemortskommun"
+"47.1315" = "utbildnings-inriktning-sun-2000"
+"47.1378" = "fodelsear"
+"47.1460" = "kurstakt"
+"47.1529" = "ar-avslutad-gymnasieutbildning"
+"47.1536" = "studievag-gymnasieskolan"
+"47.1543" = "examens-omfattning-poang"
+"47.1573" = "aldersgruppering-31-12"
+"47.1908" = "hogskolans-huvudman"
+"47.1909" = "hogskolekategori"
+"47.1910" = "hogskolanyborjare"
+"47.1917" = "amnesomrade"
+"47.2499" = "myndighet"
+"47.4362" = "ar-behorighetsgivande-utb"
+"47.5083" = "anstallningsform"
+"47.5118" = "verksamhetsomrade"
+"47.5249" = "niva-pa-utlandsstudier"
+"47.5249.niva-csn" = "niva-pa-utlandsstudier-csn"
+"47.5249.niva-scb" = "niva-pa-utlandsstudier-scb"
+"47.5976" = "tjanstledighetsomfattning"
+"47.7650" = "varldsdelkod"
+"47.15940" = "avklarade-hogskolepoang-pa-kurs"
+"47.16894" = "laddningsdatum"
+"47.21520" = "studiemedel-bidrag"
+"47.29252" = "forskningsamnesgrupp"
+"47.29507" = "anstallningskategori"
 
 # Y-318: qualified owners for the four delivered classification versions.
-[[variable]]
-native_id = "47.29507.anstallningskategori-1995"
-slug = "anstallningskategori-1995"
-
-[[variable]]
-native_id = "47.29507.anstallningskategori-2001"
-slug = "anstallningskategori-2001"
-
-[[variable]]
-native_id = "47.29507.anstallningskategori-2008"
-slug = "anstallningskategori-2008"
-
-[[variable]]
-native_id = "47.29507.anstallningskategori-2012"
-slug = "anstallningskategori-2012"
-
-[[variable]]
-native_id = "47.30008"
-slug = "forsorjningssituation-doktorand"
-
-[[variable]]
-native_id = "47.30036"
-slug = "utbildning-3-manader-i-annat-land"
-
-[[variable]]
-native_id = "47.35421"
-slug = "utbildningsgrupp-csn"
-
-[[variable]]
-native_id = "47.37532"
-slug = "utbildningens-startar"
-
-[[variable]]
-native_id = "47.39021"
-slug = "forskningsamnesomrade"
-
-[[variable]]
-native_id = "47.43117"
-slug = "meritvarde-urval"
+"47.29507.anstallningskategori-1995" = "anstallningskategori-1995"
+"47.29507.anstallningskategori-2001" = "anstallningskategori-2001"
+"47.29507.anstallningskategori-2008" = "anstallningskategori-2008"
+"47.29507.anstallningskategori-2012" = "anstallningskategori-2012"
+"47.30008" = "forsorjningssituation-doktorand"
+"47.30036" = "utbildning-3-manader-i-annat-land"
+"47.35421" = "utbildningsgrupp-csn"
+"47.37532" = "utbildningens-startar"
+"47.39021" = "forskningsamnesomrade"
+"47.43117" = "meritvarde-urval"
 
 # register 50
-
-[[variable]]
-native_id = "47.1248.hsnamn"
-slug = "hogskolenamn"
-
-[[variable]]
-native_id = "47.1396.lar"
-slug = "lasar"
-
-[[variable]]
-native_id = "47.1396.lasar"
-slug = "lasar-2"
-
-[[variable]]
-native_id = "47.17260.fos1siff"
-slug = "forskningsamne-1"
-
-[[variable]]
-native_id = "47.17260.fos3siff"
-slug = "forskningsamne-3"
-
-[[variable]]
-native_id = "47.17260.fos5siff"
-slug = "forskningsamne-5"
-
-[[variable]]
-native_id = "47.29561.natamne"
-slug = "nationellt-forskningsamne"
-
-[[variable]]
-native_id = "47.benamning"
-slug = "examensbenamning-namnare"
+"47.1248.hsnamn" = "hogskolenamn"
+"47.1396.lar" = "lasar"
+"47.1396.lasar" = "lasar-2"
+"47.17260.fos1siff" = "forskningsamne-1"
+"47.17260.fos3siff" = "forskningsamne-3"
+"47.17260.fos5siff" = "forskningsamne-5"
+"47.29561.natamne" = "nationellt-forskningsamne"
+"47.benamning" = "examensbenamning-namnare"
+"47.44.kon" = "kon"
+"47.73.ar" = "ar"
+"47.73.ar-for-tillgodoraknande" = "ar-for-tillgodoraknande"
+"47.326.namn" = "namn"
+"47.1280.poangomfattning" = "poangomfattning"
+"47.1280.tillgodoraknad-omfattning-forskarniva" = "tillgodoraknad-omfattning-forskarniva"
+"47.1375.examensdatum" = "examensdatum"
+"47.1465.utbytesstudier" = "utbytesstudier"
+"47.1465.typ-av-utlandsstudier-csn" = "typ-av-utlandsstudier-csn"
+"47.1537.ar-for-examensbevis" = "ar-for-examensbevis"
+"47.1557.kalenderar" = "kalenderar"
+"47.1557.kalenderar-for-examensbevis" = "kalenderar-for-examensbevis"
+"47.1565.datum-for-studieavbrott" = "datum-for-studieavbrott"
+"47.38118.medverkande-hogskola" = "medverkande-hogskola"
+"47.241.alder-vid-terminens-referensarsslut" = "alder-vid-terminens-referensarsslut"
+"47.29874.linrben" = "hogskolans-programinriktning-linrben-kolumn"
+"47.29874.linr" = "hogskolans-programinriktning-linr-kolumn"
+"47.66.sunniva1" = "utbildningsniva-en-position"
+"47.66.sunniva2" = "utbildningsniva-tva-positioner"
+"47.1396.lar2-forsorjning" = "lasar-lar2-forsorjning"
+"47.1396.lar2-examina" = "lasar-lar2-examina"
+"47.1396.lar2-antagning" = "lasar-lar2-antagning"
+"47.1396.lar2-aktivitet" = "lasar-lar2-aktivitet"
+"47.1468" = "termnr"
+"47.SUN2000Inr3_amnegrupp" = "sun2000inr3-amnegrupp"
+"47.SUN2000Inr3_lprog" = "sun2000inr3-lprog"
+"47.SUN2000Niva_lprog" = "sun2000niva-lprog"
+"47.SUN2020Inr3_amnegrupp" = "sun2020inr3-amnegrupp"
+"47.SUN2020Inr3_lprog" = "sun2020inr3-lprog"
+"47.SUN2020Niva_lprog" = "sun2020niva-lprog"
+"47.omr_amnegrupp" = "omr-amnegrupp"
+"47.omr_yprog" = "omr-yprog"
+"47.Omr" = "utbildningsomrade-examen"
+"47.Termin" = "termin-examen"
+"47.tmgrp" = "tmgrp"
 
 # register 55
 
@@ -1209,66 +842,6 @@ columns_ref = "SCB Registerinformation native 47.1565: reviewed all 3 original o
 variable = "47.38118"
 columns = { "GenomHsKod" = "47.38118.medverkande-hogskola", "MedverkHsKod" = "47.38118.medverkande-hogskola" }
 columns_ref = "SCB Registerinformation native 47.38118: reviewed all 2 original occurrences. Both originals explicitly name a university participating in a doctoral school and share the operational translation from external university name codes to SCB internal codes for universities with doctoral degree rights; preserve the complete 135-code classification and both pooled delivery scopes. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
-
-[[variable]]
-native_id = "47.44.kon"
-slug = "kon"
-
-[[variable]]
-native_id = "47.73.ar"
-slug = "ar"
-
-[[variable]]
-native_id = "47.73.ar-for-tillgodoraknande"
-slug = "ar-for-tillgodoraknande"
-
-[[variable]]
-native_id = "47.326.namn"
-slug = "namn"
-
-[[variable]]
-native_id = "47.1280.poangomfattning"
-slug = "poangomfattning"
-
-[[variable]]
-native_id = "47.1280.tillgodoraknad-omfattning-forskarniva"
-slug = "tillgodoraknad-omfattning-forskarniva"
-
-[[variable]]
-native_id = "47.1375.examensdatum"
-slug = "examensdatum"
-
-[[variable]]
-native_id = "47.1465.utbytesstudier"
-slug = "utbytesstudier"
-
-[[variable]]
-native_id = "47.1465.typ-av-utlandsstudier-csn"
-slug = "typ-av-utlandsstudier-csn"
-
-[[variable]]
-native_id = "47.1537.ar-for-examensbevis"
-slug = "ar-for-examensbevis"
-
-[[variable]]
-native_id = "47.1557.kalenderar"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "47.1557.kalenderar-for-examensbevis"
-slug = "kalenderar-for-examensbevis"
-
-[[variable]]
-native_id = "47.1565.datum-for-studieavbrott"
-slug = "datum-for-studieavbrott"
-
-[[variable]]
-native_id = "47.38118.medverkande-hogskola"
-slug = "medverkande-hogskola"
-
-[[variable]]
-native_id = "47.241.alder-vid-terminens-referensarsslut"
-slug = "alder-vid-terminens-referensarsslut"
 
 [[identity.column_owner]]
 variable = "47.241"
@@ -1364,38 +937,6 @@ valid_from = "2008-01-01"
 valid_to = "2022-12-31"
 source_editions = ["2008-2022"]
 
-[[variable]]
-native_id = "47.29874.linrben"
-slug = "hogskolans-programinriktning-linrben-kolumn"
-
-[[variable]]
-native_id = "47.29874.linr"
-slug = "hogskolans-programinriktning-linr-kolumn"
-
-[[variable]]
-native_id = "47.66.sunniva1"
-slug = "utbildningsniva-en-position"
-
-[[variable]]
-native_id = "47.66.sunniva2"
-slug = "utbildningsniva-tva-positioner"
-
-[[variable]]
-native_id = "47.1396.lar2-forsorjning"
-slug = "lasar-lar2-forsorjning"
-
-[[variable]]
-native_id = "47.1396.lar2-examina"
-slug = "lasar-lar2-examina"
-
-[[variable]]
-native_id = "47.1396.lar2-antagning"
-slug = "lasar-lar2-antagning"
-
-[[variable]]
-native_id = "47.1396.lar2-aktivitet"
-slug = "lasar-lar2-aktivitet"
-
 [[identity.column_owner]]
 variable = "47.1396"
 variant = "47.10"
@@ -1467,10 +1008,6 @@ owner = "47.29874.linrben"
 source_editions = ["Läsåren 1993/1994 - 2024/2025"]
 expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "Linrben" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "60" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Inriktning av utbildningsprogram från högskolor som har studiedokumentationssystemet Ladok." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Högskolans programinriktning" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Lärosätenas studiedokumentationsregister" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
 ref = "Complete native source peers and exact literal/edition/fields identify a supplied physical role. Retain every original definition, operation, width, coding and period. Column names do not prove classification continuity or code-vs-label equivalence. Admission/activity/exam/funding meanings remain distinct; internally inconsistent year prose is not repaired."
-
-[[variable]]
-native_id = "47.1468"
-slug = "termnr"
 
 [[coding.choice]]
 variable = "47.38116"
@@ -1720,50 +1257,6 @@ source = "steward-holdings"
 evidence = "SWECOV holds tmgrp in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024; SCB's P1105 Leveransrapport 2023-2024 (Postbeskrivning) lists it for Hreg_Examina_1990_2022. It is in no variable list and SCB's Registerinformation export carries no row for it on grundutbildning-examina. LOVA's TMGRP name match is not used as evidence. holdings_period is the SWECOV holdings range (#1302)."
 noted = "2026-10-12"
 data_warning = "Delivery is documented; the column's meaning and codes are not."
-
-[[variable]]
-native_id = "47.SUN2000Inr3_amnegrupp"
-slug = "sun2000inr3-amnegrupp"
-
-[[variable]]
-native_id = "47.SUN2000Inr3_lprog"
-slug = "sun2000inr3-lprog"
-
-[[variable]]
-native_id = "47.SUN2000Niva_lprog"
-slug = "sun2000niva-lprog"
-
-[[variable]]
-native_id = "47.SUN2020Inr3_amnegrupp"
-slug = "sun2020inr3-amnegrupp"
-
-[[variable]]
-native_id = "47.SUN2020Inr3_lprog"
-slug = "sun2020inr3-lprog"
-
-[[variable]]
-native_id = "47.SUN2020Niva_lprog"
-slug = "sun2020niva-lprog"
-
-[[variable]]
-native_id = "47.omr_amnegrupp"
-slug = "omr-amnegrupp"
-
-[[variable]]
-native_id = "47.omr_yprog"
-slug = "omr-yprog"
-
-[[variable]]
-native_id = "47.Omr"
-slug = "utbildningsomrade-examen"
-
-[[variable]]
-native_id = "47.Termin"
-slug = "termin-examen"
-
-[[variable]]
-native_id = "47.tmgrp"
-slug = "tmgrp"
 
 # Hreg columns SCB documents on a sibling Hreg variant but delivers on this one
 # (#1516, maintainer-decided 2026-10-13).

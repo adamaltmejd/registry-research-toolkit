@@ -3,20 +3,20 @@
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "CONTESTED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Twin register (TWN) : People"},
-      {"cvid": 1002, "var_id": 102, "colname": "BARE", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Shared register (SHR)"},
-      {"cvid": 1003, "var_id": 103, "colname": "NAMED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Shared register (SHR) : People"},
-      {"cvid": 1004, "var_id": 104, "colname": "FORMER", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Former source (PFX) : People"},
-      {"cvid": 1005, "var_id": 105, "colname": "EXTERNAL", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "External source (EXT) : People"},
-      {"cvid": 1006, "var_id": 106, "colname": "MISSING", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "External source (MISSING) : People"},
+      {"cvid": 1002, "varname": "GenericVar specific-bare", "var_id": 102, "colname": "BARE", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Shared register (SHR)"},
+      {"cvid": 1003, "varname": "GenericVar specific-variant", "var_id": 103, "colname": "NAMED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Shared register (SHR) : People"},
+      {"cvid": 1004, "varname": "GenericVar former", "var_id": 104, "colname": "FORMER", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Former source (PFX) : People"},
+      {"cvid": 1005, "varname": "GenericVar external", "var_id": 105, "colname": "EXTERNAL", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "External source (EXT) : People"},
+      {"cvid": 1006, "varname": "GenericVar missing", "var_id": 106, "colname": "MISSING", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "External source (MISSING) : People"},
       {"cvid": 2001, "var_id": 201, "colname": "CONTESTED", "year": "2000", "register": ["Twin register (TWN)", 2, 20], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 3001, "var_id": 301, "colname": "FILLER", "year": "2000", "register": ["Twin register (TWN)", 3, 30], "cells": {"Registervariantnamn": "People"}},
-      {"cvid": 4001, "var_id": 401, "colname": "BARE", "year": "2000", "register": ["Shared register (SHR)", 4, 40], "cells": {"Registervariantnamn": "People"}},
-      {"cvid": 4002, "var_id": 402, "colname": "NAMED", "year": "2000", "register": ["Shared register (SHR)", 4, 40], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 4001, "varname": "GenericVar specific-bare", "var_id": 401, "colname": "BARE", "year": "2000", "register": ["Shared register (SHR)", 4, 40], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 4002, "varname": "GenericVar specific-variant", "var_id": 402, "colname": "NAMED", "year": "2000", "register": ["Shared register (SHR)", 4, 40], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 5001, "var_id": 501, "colname": "FILLER", "year": "2000", "register": ["Other register (SHR)", 5, 50], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 6001, "var_id": 601, "colname": "FORMER", "year": "2000", "register": ["Prefix register (PFX)", 6, 60], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 7001, "var_id": 701, "colname": "FILLER", "year": "2000", "register": ["Another register (PFX)", 7, 70], "cells": {"Registervariantnamn": "People"}},
-      {"cvid": 8001, "var_id": 801, "colname": "EXTERNAL", "year": "2000", "register": ["Extra register (EXT)", 8, 80], "cells": {"Registervariantnamn": "People"}},
-      {"cvid": 8002, "var_id": 802, "colname": "MISSING", "year": "2000", "register": ["Extra register (EXT)", 8, 80], "cells": {"Registervariantnamn": "People"}}
+      {"cvid": 8001, "varname": "GenericVar external", "var_id": 801, "colname": "EXTERNAL", "year": "2000", "register": ["Extra register (EXT)", 8, 80], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 8002, "varname": "GenericVar missing", "var_id": 802, "colname": "MISSING", "year": "2000", "register": ["Extra register (EXT)", 8, 80], "cells": {"Registervariantnamn": "People"}}
     ]
   }
 }

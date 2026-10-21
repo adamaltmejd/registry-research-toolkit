@@ -385,9 +385,9 @@ noted = "2026-09-12"
 # ══ Shared SWECOV steward-holdings conventions (Y-116) ═════════════════════════
 # Columns a SWECOV delivery holds on an existing (register, variant) that SCB's
 # machine metadata never documents. GENERATED from maintainer-local review
-# artifacts under input_data/swecov/derived/ — `build_catalog.py grafts` for the
-# original #405 set, plus the #856 survey-wave residue in steward_coverage.json
-# (FOU/CIS/IT) — so regenerate rather than hand-edit.
+# artifacts: `reg_webapp/stewards/swecov/build_catalog.py grafts` for the
+# original #405 set, plus the #856 survey-wave residue from the SWECOV delivery
+# lists (FOU/CIS/IT) — so regenerate rather than hand-edit.
 #
 # Scope follows what the fact is about: these are global SCB survey columns, not
 # steward-local flavor rows. Columns already carrying a delivery alias in
@@ -411,7 +411,7 @@ name = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för r
 definition = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för redovisningsperioden."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -422,7 +422,7 @@ name = "1:a anställd"
 definition = "1:a anställd"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -433,7 +433,7 @@ name = "Konvention med"
 definition = "Konvention med"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -444,7 +444,7 @@ name = "Landskod arbetsland"
 definition = "Landskod arbetsland"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -455,7 +455,7 @@ name = "Landskod medborgarskap ej svenskt"
 definition = "Landskod medborgarskap ej svenskt"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -466,7 +466,7 @@ name = "Landskod postort (om ifylld)"
 definition = "Landskod postort (om ifylld)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -477,7 +477,7 @@ name = "Landskod TIN"
 definition = "Landskod TIN"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -488,7 +488,7 @@ name = "Lokalanställd"
 definition = "Lokalanställd"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -499,7 +499,7 @@ name = "Närfart/Fjärrfart"
 definition = "Närfart/Fjärrfart"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -510,7 +510,7 @@ name = "Redovisningsperiod"
 definition = "Redovisningsperiod"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -521,7 +521,7 @@ name = "Personaloption som inte ska förmånbeskattas har utnyttjats för förv�
 definition = "Personaloption som inte ska förmånbeskattas har utnyttjats för förvärv av andel"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -532,7 +532,7 @@ name = "Skattebefriad enligt skatteavtal"
 definition = "Skattebefriad enligt skatteavtal"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -543,7 +543,7 @@ name = "Betalningsmottagaren utsänd under tid"
 definition = "Betalningsmottagaren utsänd under tid"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 # Y-113..Y-120 AGI evidence comes from the SWECOV inventory and SCB's
@@ -723,72 +723,27 @@ panel_entity_key = "person-samordnings-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Transportsektorns energianvändning (inrikes sjöfart)
-
-[[variable]]
-native_id = "392.22865"
-slug = "person-samordnings-orgnr"
-
-
-[[variable]]
-native_id = "392.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "392.17"
-slug = "arbetsstallenummer"
-
-[[variable]]
-native_id = "392.1172"
-slug = "kontant-bruttolon"
-
-[[variable]]
-native_id = "392.1192"
-slug = "ovriga-kostnadsersattningar"
-
-[[variable]]
-native_id = "392.1824"
-slug = "avdrag-vissa-lonetillagg"
-
-[[variable]]
-native_id = "392.4055"
-slug = "kostnadsavdrag"
-
-[[variable]]
-native_id = "392.6104"
-slug = "ersattning-resa-utomlands-bosatta"
-
-[[variable]]
-native_id = "392.6111"
-slug = "ersattningsbelopp"
-
-[[variable]]
-native_id = "392.6112"
-slug = "ersattningskod"
-
-[[variable]]
-native_id = "392.21209"
-slug = "underlag-skattereduktion-rut-forman"
-
-[[variable]]
-native_id = "392.21816"
-slug = "avdragen-preliminar-a-skatt-arbetsgivare"
-
-[[variable]]
-native_id = "392.21879"
-slug = "skattepliktiga-ersattningar-ej-sociala"
-
-[[variable]]
-native_id = "392.24169"
-slug = "underlag-skattereduktion-rot-forman"
-
-[[variable]]
-native_id = "392.28808"
-slug = "referensperiod"
-
-[[variable]]
-native_id = "392.41337"
-slug = "ej-skatteavdrag"
+"392.22865" = "person-samordnings-orgnr"
+"392.56" = "person-orgnr"
+"392.17" = "arbetsstallenummer"
+"392.1172" = "kontant-bruttolon"
+"392.1192" = "ovriga-kostnadsersattningar"
+"392.1824" = "avdrag-vissa-lonetillagg"
+"392.4055" = "kostnadsavdrag"
+"392.6104" = "ersattning-resa-utomlands-bosatta"
+"392.6111" = "ersattningsbelopp"
+"392.6112" = "ersattningskod"
+"392.21209" = "underlag-skattereduktion-rut-forman"
+"392.21816" = "avdragen-preliminar-a-skatt-arbetsgivare"
+"392.21879" = "skattepliktiga-ersattningar-ej-sociala"
+"392.24169" = "underlag-skattereduktion-rot-forman"
+"392.28808" = "referensperiod"
+"392.41337" = "ej-skatteavdrag"
+"392.KONTROLLSTATUS" = "kontrollstatus"
+"392.FARTYGETS_NAMN" = "fartygets-namn"
+"392.FARTYGSSIGNAL" = "fartygssignal"
 
 # register 393
 
@@ -940,18 +895,6 @@ holdings_period = "2019-2023"
 source = "steward-holdings"
 evidence = "SWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
 noted = "2026-10-16"
-
-[[variable]]
-native_id = "392.KONTROLLSTATUS"
-slug = "kontrollstatus"
-
-[[variable]]
-native_id = "392.FARTYGETS_NAMN"
-slug = "fartygets-namn"
-
-[[variable]]
-native_id = "392.FARTYGSSIGNAL"
-slug = "fartygssignal"
 
 # ── #1603 batch-e / #1495: same-name carries of the Soc_ wide-pivot ERSATTNINGS_KOD/BELOPP slots into 2021-2023 ──
 # Meaning and any documented unit are carried (maintainer unit ruling 2026-10-17); code

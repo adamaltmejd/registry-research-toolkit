@@ -10,9 +10,7 @@ slug = "par-ov"
 variable = "ATC"
 by = "data_type"
 parts = [{ data_type = "integer", owner = "5891427617861710725.ATC.atc" }, { data_type = "text", owner = "5891427617861710725.ATC.atc-1" }]
-[[variable]]
-native_id = "5891427617861710725.ATC.atc"
-slug = "atc"
-[[variable]]
-native_id = "5891427617861710725.ATC.atc-1"
-slug = "atc-1"
+
+[variable]
+"5891427617861710725.ATC.atc" = "atc"
+"5891427617861710725.ATC.atc-1" = "atc-1"

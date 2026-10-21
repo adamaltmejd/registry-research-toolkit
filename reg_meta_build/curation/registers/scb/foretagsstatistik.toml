@@ -56,522 +56,154 @@ panel_entity_key = "velopnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Europeiska socialfonden (ESF)
-
-[[variable]]
-native_id = "375.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "375.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "375.38071"
-slug = "velopnr"
-
-
-[[variable]]
-native_id = "375.971"
-slug = "aktiekapital"
-
-[[variable]]
-native_id = "375.4098"
-slug = "medelantal-anstallda"
-
-[[variable]]
-native_id = "375.4206"
-slug = "kundfordringar"
-
-[[variable]]
-native_id = "375.4228"
-slug = "leverantorsskulder"
-
-[[variable]]
-native_id = "375.4243"
-slug = "ovriga-avsattningar"
-
-[[variable]]
-native_id = "375.4245"
-slug = "ovriga-obeskattade-reserver"
-
-[[variable]]
-native_id = "375.4291"
-slug = "ovriga-bokslutsdispositioner"
-
-[[variable]]
-native_id = "375.4323"
-slug = "nedsattning-aktiekapital"
-
-[[variable]]
-native_id = "375.19939"
-slug = "byggnader-mark-markanlaggningar"
-
-[[variable]]
-native_id = "375.19945"
-slug = "andra-langfristiga-fordringar"
-
-[[variable]]
-native_id = "375.20894"
-slug = "ravaror-fornodenheter"
-
-[[variable]]
-native_id = "375.29725"
-slug = "ovriga-fordringar"
-
-[[variable]]
-native_id = "375.38002"
-slug = "lagerforandring-produkter"
-
-[[variable]]
-native_id = "375.38014"
-slug = "vinst-forlust-avyttring-aktier"
-
-[[variable]]
-native_id = "375.38015"
-slug = "andra-ranteintakter"
-
-[[variable]]
-native_id = "375.38023"
-slug = "ovriga-forandringar"
-
-[[variable]]
-native_id = "375.38025"
-slug = "aktier-andelar-bostadsratter"
-
-[[variable]]
-native_id = "375.38041"
-slug = "naringsgren-sni5"
-
-[[variable]]
-native_id = "375.40593"
-slug = "arets-totala-fakturering"
-
-[[variable]]
-native_id = "375.40634"
-slug = "produktion-el-gas-anga"
-
-[[variable]]
-native_id = "375.40653"
-slug = "forskning-utveckling"
-
-[[variable]]
-native_id = "375.40744"
-slug = "bostader"
+"375.56" = "person-orgnr"
+"375.14" = "cfar-nummer"
+"375.38071" = "velopnr"
+"375.971" = "aktiekapital"
+"375.4098" = "medelantal-anstallda"
+"375.4206" = "kundfordringar"
+"375.4228" = "leverantorsskulder"
+"375.4243" = "ovriga-avsattningar"
+"375.4245" = "ovriga-obeskattade-reserver"
+"375.4291" = "ovriga-bokslutsdispositioner"
+"375.4323" = "nedsattning-aktiekapital"
+"375.19939" = "byggnader-mark-markanlaggningar"
+"375.19945" = "andra-langfristiga-fordringar"
+"375.20894" = "ravaror-fornodenheter"
+"375.29725" = "ovriga-fordringar"
+"375.38002" = "lagerforandring-produkter"
+"375.38014" = "vinst-forlust-avyttring-aktier"
+"375.38015" = "andra-ranteintakter"
+"375.38023" = "ovriga-forandringar"
+"375.38025" = "aktier-andelar-bostadsratter"
+"375.38041" = "naringsgren-sni5"
+"375.40593" = "arets-totala-fakturering"
+"375.40634" = "produktion-el-gas-anga"
+"375.40653" = "forskning-utveckling"
+"375.40744" = "bostader"
 
 # register 376 (esf)
-
-[[variable]]
-native_id = "375.38051.bl0201"
-slug = "industriverksamhet"
-
-[[variable]]
-native_id = "375.4027.ng-5"
-slug = "naringsgren"
+"375.38051.bl0201" = "industriverksamhet"
+"375.4027.ng-5" = "naringsgren"
 
 # register 377 (yrkeshogskolan)
-
-[[variable]]
-native_id = "375.19"
-slug = "a-region"
-
-[[variable]]
-native_id = "375.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "375.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "375.87"
-slug = "foradlingsvarde"
-
-[[variable]]
-native_id = "375.666"
-slug = "anstallda-storleksklass"
-
-[[variable]]
-native_id = "375.1133"
-slug = "privat-publikt-foretag"
-
-[[variable]]
-native_id = "375.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "375.2951"
-slug = "arbetskraftskostnader"
-
-[[variable]]
-native_id = "375.4065"
-slug = "maskiner-och-inventarier"
-
-[[variable]]
-native_id = "375.4080"
-slug = "summa-nettoinvesteringar"
-
-[[variable]]
-native_id = "375.4094"
-slug = "nettoinvesteringar-mark"
-
-[[variable]]
-native_id = "375.4157"
-slug = "nettoinvesteringar-i-aktier"
-
-[[variable]]
-native_id = "375.4175"
-slug = "summa-bruttoinvesteringar"
-
-[[variable]]
-native_id = "375.4179"
-slug = "bruttoinv-ny-ombygg-byggnader-mark"
-
-[[variable]]
-native_id = "375.4204"
-slug = "forutbetalda-kostnader-upplupna-intakter"
-
-[[variable]]
-native_id = "375.4205"
-slug = "kassa-och-bank"
-
-[[variable]]
-native_id = "375.4207"
-slug = "anlaggningstillgangar"
-
-[[variable]]
-native_id = "375.4209"
-slug = "summa-immateriella-anlaggningstillgangar"
-
-[[variable]]
-native_id = "375.4213"
-slug = "summa-omsattningstillgangar"
-
-[[variable]]
-native_id = "375.4214"
-slug = "summa-tillgangar"
-
-[[variable]]
-native_id = "375.4215"
-slug = "varulager"
-
-[[variable]]
-native_id = "375.4217"
-slug = "ovriga-kortfristiga-placeringar"
-
-[[variable]]
-native_id = "375.4218"
-slug = "forskott-anlaggningstillgangar"
-
-[[variable]]
-native_id = "375.4224"
-slug = "summa-eget-kapital"
-
-[[variable]]
-native_id = "375.4226"
-slug = "avsattningar-for-pensioner"
-
-[[variable]]
-native_id = "375.4227"
-slug = "forskott-fran-kunder"
-
-[[variable]]
-native_id = "375.4229"
-slug = "skatteskulder"
-
-[[variable]]
-native_id = "375.4230"
-slug = "avsattningar"
-
-[[variable]]
-native_id = "375.4231"
-slug = "uppskrivningsfond"
-
-[[variable]]
-native_id = "375.4232"
-slug = "overkursfond"
-
-[[variable]]
-native_id = "375.4244"
-slug = "ovriga-kortfristiga-skulder"
-
-[[variable]]
-native_id = "375.4247"
-slug = "eget-kapital-och-skulder"
-
-[[variable]]
-native_id = "375.4248"
-slug = "summa-kortfristiga-skulder"
-
-[[variable]]
-native_id = "375.4249"
-slug = "summa-langfristiga-skulder"
-
-[[variable]]
-native_id = "375.4250"
-slug = "summa-obeskattade-reserver"
-
-[[variable]]
-native_id = "375.4251"
-slug = "upplupna-kostnader-forutbetalda-intakter"
-
-[[variable]]
-native_id = "375.4256"
-slug = "nettoomsattning"
-
-[[variable]]
-native_id = "375.4257"
-slug = "ovriga-rorelseintakter"
-
-[[variable]]
-native_id = "375.4259"
-slug = "avskrivningar-immateriella-tillgangar"
-
-[[variable]]
-native_id = "375.4262"
-slug = "kostnader-handelsvaror"
-
-[[variable]]
-native_id = "375.4272"
-slug = "ovriga-externa-kostnader"
-
-[[variable]]
-native_id = "375.4276"
-slug = "aktieagartillskott-eget-kapital"
-
-[[variable]]
-native_id = "375.4279"
-slug = "rorelseresultat"
-
-[[variable]]
-native_id = "375.4280"
-slug = "resultat-efter-finansiella-poster"
-
-[[variable]]
-native_id = "375.4283"
-slug = "valutakursvinster"
-
-[[variable]]
-native_id = "375.4284"
-slug = "valutakursforluster"
-
-[[variable]]
-native_id = "375.4288"
-slug = "forandring-periodiseringsfond"
-
-[[variable]]
-native_id = "375.4289"
-slug = "koncernbidrag-bokslutsdispositioner"
-
-[[variable]]
-native_id = "375.4290"
-slug = "aktieagartillskott-bokslutsdispositioner"
-
-[[variable]]
-native_id = "375.4296"
-slug = "mark"
-
-[[variable]]
-native_id = "375.4304"
-slug = "ranteintakter-koncernforetag"
-
-[[variable]]
-native_id = "375.4305"
-slug = "rantekostnader-koncernforetag"
-
-[[variable]]
-native_id = "375.4306"
-slug = "ovriga-finansiella-intakter"
-
-[[variable]]
-native_id = "375.4307"
-slug = "ovriga-finansiella-kostnader"
-
-[[variable]]
-native_id = "375.4309"
-slug = "aktier-och-andelar"
-
-[[variable]]
-native_id = "375.4310"
-slug = "ackumulerade-overavskrivningar"
-
-[[variable]]
-native_id = "375.4313"
-slug = "aktiverat-arbete-for-egen-rakning"
-
-[[variable]]
-native_id = "375.4316"
-slug = "aretsresultat"
-
-[[variable]]
-native_id = "375.4320"
-slug = "nyemission-inkl-overkurs"
-
-[[variable]]
-native_id = "375.4325"
-slug = "egna-uttag-hb-kb"
-
-[[variable]]
-native_id = "375.4822"
-slug = "intakter-av-ovrigt"
-
-[[variable]]
-native_id = "375.4827"
-slug = "internleveranser-egenproducerade-varor"
-
-[[variable]]
-native_id = "375.4828"
-slug = "internleveranser-handelsvaror-tjanster"
-
-[[variable]]
-native_id = "375.4834"
-slug = "nettoinvesteringar-maskiner-inventarier"
-
-[[variable]]
-native_id = "375.4836"
-slug = "personalkostnader"
-
-[[variable]]
-native_id = "375.4843"
-slug = "loner-och-andra-ersattningar"
-
-[[variable]]
-native_id = "375.4863"
-slug = "summa-ravaror-handelsvaror"
-
-[[variable]]
-native_id = "375.4872"
-slug = "forbrukningsvarde"
-
-[[variable]]
-native_id = "375.4873"
-slug = "produktionsvarde"
-
-[[variable]]
-native_id = "375.5021"
-slug = "avsattningar-for-skatter"
-
-[[variable]]
-native_id = "375.18639"
-slug = "sociala-avgifter-enl-lag-och-avtal"
-
-[[variable]]
-native_id = "375.19560"
-slug = "bokslutsdispositioner"
-
-[[variable]]
-native_id = "375.19656"
-slug = "sociala-kostnader-personalkostnader"
-
-[[variable]]
-native_id = "375.19657"
-slug = "ovriga-rorelsekostnader"
-
-[[variable]]
-native_id = "375.19918"
-slug = "andelar-koncernforetag"
-
-[[variable]]
-native_id = "375.19919"
-slug = "andelar-intresseforetag"
-
-[[variable]]
-native_id = "375.19954"
-slug = "nettoinvesteringar-byggnader-mark"
-
-[[variable]]
-native_id = "375.20888"
-slug = "forskott-immateriella-anlaggning"
-
-[[variable]]
-native_id = "375.20891"
-slug = "lan-till-delagare"
-
-[[variable]]
-native_id = "375.20897"
-slug = "pagaende-arbeten-for-annans-rakning"
-
-[[variable]]
-native_id = "375.20906"
-slug = "skulder-till-kreditinstitut"
-
-[[variable]]
-native_id = "375.20910"
-slug = "vaxelskulder"
-
-[[variable]]
-native_id = "375.24251"
-slug = "erhallna-bidrag"
-
-[[variable]]
-native_id = "375.26054"
-slug = "avsattning-till-reservfond"
-
-[[variable]]
-native_id = "375.27610"
-slug = "ovriga-rantekostnader"
-
-[[variable]]
-native_id = "375.27650"
-slug = "ovriga-rorelsekostnader-ovrigt"
-
-[[variable]]
-native_id = "375.27746"
-slug = "skatt-pa-arets-resultat"
-
-[[variable]]
-native_id = "375.27867"
-slug = "nyemission-inkl-overkurs-i411"
-
-[[variable]]
-native_id = "375.28266"
-slug = "transporter-och-frakter-spec"
-
-[[variable]]
-native_id = "375.29705"
-slug = "pagaende-nyanlaggningar-materiella"
-
-[[variable]]
-native_id = "375.30118"
-slug = "ovriga-langfristiga-skulder"
-
-[[variable]]
-native_id = "375.35242"
-slug = "utdelning-pa-aktier-andelar-koncernen"
-
-[[variable]]
-native_id = "375.38019"
-slug = "ovriga-skulder"
-
-[[variable]]
-native_id = "375.38038"
-slug = "naringsgrens-indelning-2-siffrig-sni"
-
-[[variable]]
-native_id = "375.38042"
-slug = "naringsgren-sni-2-siffer"
-
-[[variable]]
-native_id = "375.38045"
-slug = "naringsgren-sni-5-siffer"
-
-[[variable]]
-native_id = "375.38074"
-slug = "energikostnader"
-
-[[variable]]
-native_id = "375.40746"
-slug = "aterforing-skatteutjamningsreserv"
-
-[[variable]]
-native_id = "375.40784"
-slug = "skatteutjamningsreserv"
-
-[[variable]]
-native_id = "375.41299"
-slug = "nettoinv-byggnader-mark"
+"375.19" = "a-region"
+"375.34" = "juridisk-form"
+"375.74" = "agarkontroll"
+"375.87" = "foradlingsvarde"
+"375.666" = "anstallda-storleksklass"
+"375.1133" = "privat-publikt-foretag"
+"375.1141" = "sektortillhorighet"
+"375.2951" = "arbetskraftskostnader"
+"375.4065" = "maskiner-och-inventarier"
+"375.4080" = "summa-nettoinvesteringar"
+"375.4094" = "nettoinvesteringar-mark"
+"375.4157" = "nettoinvesteringar-i-aktier"
+"375.4175" = "summa-bruttoinvesteringar"
+"375.4179" = "bruttoinv-ny-ombygg-byggnader-mark"
+"375.4204" = "forutbetalda-kostnader-upplupna-intakter"
+"375.4205" = "kassa-och-bank"
+"375.4207" = "anlaggningstillgangar"
+"375.4209" = "summa-immateriella-anlaggningstillgangar"
+"375.4213" = "summa-omsattningstillgangar"
+"375.4214" = "summa-tillgangar"
+"375.4215" = "varulager"
+"375.4217" = "ovriga-kortfristiga-placeringar"
+"375.4218" = "forskott-anlaggningstillgangar"
+"375.4224" = "summa-eget-kapital"
+"375.4226" = "avsattningar-for-pensioner"
+"375.4227" = "forskott-fran-kunder"
+"375.4229" = "skatteskulder"
+"375.4230" = "avsattningar"
+"375.4231" = "uppskrivningsfond"
+"375.4232" = "overkursfond"
+"375.4244" = "ovriga-kortfristiga-skulder"
+"375.4247" = "eget-kapital-och-skulder"
+"375.4248" = "summa-kortfristiga-skulder"
+"375.4249" = "summa-langfristiga-skulder"
+"375.4250" = "summa-obeskattade-reserver"
+"375.4251" = "upplupna-kostnader-forutbetalda-intakter"
+"375.4256" = "nettoomsattning"
+"375.4257" = "ovriga-rorelseintakter"
+"375.4259" = "avskrivningar-immateriella-tillgangar"
+"375.4262" = "kostnader-handelsvaror"
+"375.4272" = "ovriga-externa-kostnader"
+"375.4276" = "aktieagartillskott-eget-kapital"
+"375.4279" = "rorelseresultat"
+"375.4280" = "resultat-efter-finansiella-poster"
+"375.4283" = "valutakursvinster"
+"375.4284" = "valutakursforluster"
+"375.4288" = "forandring-periodiseringsfond"
+"375.4289" = "koncernbidrag-bokslutsdispositioner"
+"375.4290" = "aktieagartillskott-bokslutsdispositioner"
+"375.4296" = "mark"
+"375.4304" = "ranteintakter-koncernforetag"
+"375.4305" = "rantekostnader-koncernforetag"
+"375.4306" = "ovriga-finansiella-intakter"
+"375.4307" = "ovriga-finansiella-kostnader"
+"375.4309" = "aktier-och-andelar"
+"375.4310" = "ackumulerade-overavskrivningar"
+"375.4313" = "aktiverat-arbete-for-egen-rakning"
+"375.4316" = "aretsresultat"
+"375.4320" = "nyemission-inkl-overkurs"
+"375.4325" = "egna-uttag-hb-kb"
+"375.4822" = "intakter-av-ovrigt"
+"375.4827" = "internleveranser-egenproducerade-varor"
+"375.4828" = "internleveranser-handelsvaror-tjanster"
+"375.4834" = "nettoinvesteringar-maskiner-inventarier"
+"375.4836" = "personalkostnader"
+"375.4843" = "loner-och-andra-ersattningar"
+"375.4863" = "summa-ravaror-handelsvaror"
+"375.4872" = "forbrukningsvarde"
+"375.4873" = "produktionsvarde"
+"375.5021" = "avsattningar-for-skatter"
+"375.18639" = "sociala-avgifter-enl-lag-och-avtal"
+"375.19560" = "bokslutsdispositioner"
+"375.19656" = "sociala-kostnader-personalkostnader"
+"375.19657" = "ovriga-rorelsekostnader"
+"375.19918" = "andelar-koncernforetag"
+"375.19919" = "andelar-intresseforetag"
+"375.19954" = "nettoinvesteringar-byggnader-mark"
+"375.20888" = "forskott-immateriella-anlaggning"
+"375.20891" = "lan-till-delagare"
+"375.20897" = "pagaende-arbeten-for-annans-rakning"
+"375.20906" = "skulder-till-kreditinstitut"
+"375.20910" = "vaxelskulder"
+"375.24251" = "erhallna-bidrag"
+"375.26054" = "avsattning-till-reservfond"
+"375.27610" = "ovriga-rantekostnader"
+"375.27650" = "ovriga-rorelsekostnader-ovrigt"
+"375.27746" = "skatt-pa-arets-resultat"
+"375.27867" = "nyemission-inkl-overkurs-i411"
+"375.28266" = "transporter-och-frakter-spec"
+"375.29705" = "pagaende-nyanlaggningar-materiella"
+"375.30118" = "ovriga-langfristiga-skulder"
+"375.35242" = "utdelning-pa-aktier-andelar-koncernen"
+"375.38019" = "ovriga-skulder"
+"375.38038" = "naringsgrens-indelning-2-siffrig-sni"
+"375.38042" = "naringsgren-sni-2-siffer"
+"375.38045" = "naringsgren-sni-5-siffer"
+"375.38074" = "energikostnader"
+"375.40746" = "aterforing-skatteutjamningsreserv"
+"375.40784" = "skatteutjamningsreserv"
+"375.41299" = "nettoinv-byggnader-mark"
+"375.4027.ngs-2" = "ngs"
+"375.4027.ngs-3" = "ngs-3-4027"
+"375.4027.ngs-4" = "ngs-4-4027"
+"375.4027.ngs-5" = "ngs-5"
+"375.4316.gem0190" = "gem0190"
+"375.4316.gem2209" = "gem2209"
+"375.20906.bl2312" = "bl2312"
+"375.20906.bl2321" = "bl2321"
+"375.38051.bl0604" = "bl0604"
+"375.38051.gem0201" = "gem0201"
+"375.38051.har0004" = "har0004"
+"375.40639.bl3332" = "bl3332"
+"375.40641.bl3342" = "bl33"
+"375.40665.bl0299" = "bl0299"
+"375.40665.bl0599" = "bl0599"
 
 # register 376
 
@@ -754,66 +386,6 @@ noted = "2026-10-01"
 expected_records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["register:375", "variant:1369", "edition:12416", "variable:1141", "member:544362"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "Sektor" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "2" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikation är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Sektortillhörighet" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Företagens ekonomi (FEK) : FEK Slutdata (FE)" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }, edition_period_scope = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }, subject = { provider = "scb", register = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, variant = { status = "value", native_id = 1369, name = "FS Slutdata (företagsenhet)" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = 1141, name = "Sektortillhörighet" }, member = { status = "value", native_id = 544362, name = "Sektortillhörighet" }, native = { register_id = 375, register_variant_id = 1369, edition_id = 12416, variable_id = 1141, member_id = 544362 } }, parent_facts = [{ kind = "object_type", coordinate = { status = "value", name = "Företagsenhet" }, register = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, variant = { status = "value", native_id = 1369, name = "FS Slutdata (företagsenhet)" }, edition = { status = "value", native_id = 12416, name = "1997" }, fields = [{ name = "definition", status = "value", value = "En företagsenhet (FE) är en organisatorisk enhet som producerar varor eller tjänster. Enheten har själv beslutanderätt, särskilt för hur den fördelar sina produktionsresurser. En företagsenhet bedriver en eller flera verksamheter vid en eller flera platser. Dessutom har företagsenhet en fullständig bokföring, om inte ska det vara möjligt och meningsfullt, både från ekonomisk och juridisk synpunkt, att sammanställa en fullständig bokföring om så krävs." }, { name = "name", status = "value", value = "Företagsenhet" }] }, { kind = "population", coordinate = { status = "value", name = "Samtliga företag i Sverige" }, register = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, variant = { status = "value", native_id = 1369, name = "FS Slutdata (företagsenhet)" }, edition = { status = "value", native_id = 12416, name = "1997" }, fields = [{ name = "name", status = "value", value = "Samtliga företag i Sverige" }, { name = "population_comment", status = "unknown" }, { name = "population_date", status = "value", value = "1997-01-01 - 1997-12-31" }, { name = "population_definition", status = "value", value = "Samtliga aktiva företagsenheter. Varje juridisk person och enskild näringsidkare tillhör en företagsenhet (FE). Dessutom icke aktiva företagsenheter med större anläggningstillgångar." }] }, { kind = "variant", coordinate = { status = "value", native_id = 1369, name = "FS Slutdata (företagsenhet)" }, register = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, variant = { status = "value", native_id = 1369, name = "FS Slutdata (företagsenhet)" }, fields = [{ name = "description", status = "value", value = "Statistikens syfte är att belysa näringslivets struktur med avseende på  lönsamhet, tillväxt, utveckling, finansiering och produktion mm. Strukturstatistiken används främst som underlag för beräkning av national- och finansräkenskaper. Resultaten redovisas per företagsenhet." }, { name = "name", status = "value", value = "FS Slutdata (företagsenhet)" }] }, { kind = "edition", coordinate = { status = "value", native_id = 12416, name = "1997" }, register = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, variant = { status = "value", native_id = 1369, name = "FS Slutdata (företagsenhet)" }, edition = { status = "value", native_id = 12416, name = "1997" }, fields = [{ name = "description", status = "value", value = "Syftet med statistiken är att belysa näringslivets struktur (exklusive den finansiella sektorn) med avseende på exempelvis lönsamhet, tillväxt, utveckling, finansiering och produktion under år 1997. Resultaten redovisas per företagsenhet." }, { name = "documentation_status", status = "value", value = "Offentlig" }, { name = "first_approved_at", status = "unknown" }, { name = "last_approved_at", status = "value", value = "2018-08-16" }, { name = "measurement_information", status = "value", value = "Företagsstatistiken är en årlig totalundersökning. Samtliga företag med minst 50 anställda enligt SCB:s företagsdatabas (FDB) samt vissa företag med färre anställda, men med betydande verksamhet undersöks via frågeformulär s.k. postenkät. För frågeformulären föreligger uppgiftslämnarskyldighet. De uppgifter som samlas in utgörs till stor del av information som återfinns i företagens årsredovisningar. Utöver dessa officiella uppgifter efterfrågas dock även mer specificerad information. För frågeformulärer som inte kommer in hämtas möjliga uppgifter från företagets årsredovisning. Resterande variabler skattas. De mindre företagen undersöks via administrativt material från Skatteverket. Uppgifter för företag som saknas i det administrativa materialet, eller vars lämnade uppgifter är oanvändbara, skattas med hjälp av medelvärden för företagets bransch och storleksklass. I målpopulationen ingår samtliga företag som bedrivit verksamhet under referensåret exklusive finansiella företag." }, { name = "name", status = "value", value = "1997" }] }, { kind = "register", coordinate = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, register = { status = "value", native_id = 375, name = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, fields = [{ name = "name", status = "value", value = "Företagsstatistik för industri-, bygg och tjänstesektorn" }, { name = "purpose", status = "value", value = "Statistikens syfte är att belysa näringslivets struktur med avseende på  lönsamhet, tillväxt, utveckling, finansiering och produktion mm. Statistiken redovisas på nationell nivå, branschmässigt avgränsad samt för tillverkningsindustrin även på regional nivå. Strukturstatistiken används främst som underlag för beräkning av national- och finansräkenskaper." }] }] }] }]
 field = "source_attribution"
 value = "Företagens ekonomi (FEK) : FEK Slutdata (företagsenhet)"
-
-[[variable]]
-native_id = "375.4027.ngs-2"
-slug = "ngs"
-
-[[variable]]
-native_id = "375.4027.ngs-3"
-slug = "ngs-3-4027"
-
-[[variable]]
-native_id = "375.4027.ngs-4"
-slug = "ngs-4-4027"
-
-[[variable]]
-native_id = "375.4027.ngs-5"
-slug = "ngs-5"
-
-[[variable]]
-native_id = "375.4316.gem0190"
-slug = "gem0190"
-
-[[variable]]
-native_id = "375.4316.gem2209"
-slug = "gem2209"
-
-[[variable]]
-native_id = "375.20906.bl2312"
-slug = "bl2312"
-
-[[variable]]
-native_id = "375.20906.bl2321"
-slug = "bl2321"
-
-[[variable]]
-native_id = "375.38051.bl0604"
-slug = "bl0604"
-
-[[variable]]
-native_id = "375.38051.gem0201"
-slug = "gem0201"
-
-[[variable]]
-native_id = "375.38051.har0004"
-slug = "har0004"
-
-[[variable]]
-native_id = "375.40639.bl3332"
-slug = "bl3332"
-
-[[variable]]
-native_id = "375.40641.bl3342"
-slug = "bl33"
-
-[[variable]]
-native_id = "375.40665.bl0299"
-slug = "bl0299"
-
-[[variable]]
-native_id = "375.40665.bl0599"
-slug = "bl0599"
 
 [[identity.partition]]
 data_warning = "Literal source components remain separate. Original varying operational texts and coding stay on their own delivered states; no common operation or equality of values is inferred."

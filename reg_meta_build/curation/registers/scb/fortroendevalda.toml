@@ -28,178 +28,80 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Namnstatistik
-
-[[variable]]
-native_id = "270.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "270.22"
-slug = "disponibel-inkomst"
-
-[[variable]]
-native_id = "270.125"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst"
-
-[[variable]]
-native_id = "270.511"
-slug = "ssyk4-huvud"
-
-[[variable]]
-native_id = "270.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "270.778"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "270.784"
-slug = "utbildningsinriktning-4-positioner"
-
-[[variable]]
-native_id = "270.2692"
-slug = "institutionell-sektorkod"
-
-[[variable]]
-native_id = "270.2736"
-slug = "sektor"
-
-[[variable]]
-native_id = "270.4633"
-slug = "antal-barn-under-6"
-
-[[variable]]
-native_id = "270.5056"
-slug = "landstingskod"
-
-[[variable]]
-native_id = "270.7071"
-slug = "medborgarskapsar"
-
-[[variable]]
-native_id = "270.29608"
-slug = "antal-barn-under-18"
-
-[[variable]]
-native_id = "270.32957"
-slug = "kommunkod"
-
-[[variable]]
-native_id = "270.37393"
-slug = "landsting"
+"270.57" = "personnr"
+"270.22" = "disponibel-inkomst"
+"270.125" = "sammanraknad-forvarvs-och-kapitalinkomst"
+"270.511" = "ssyk4-huvud"
+"270.517" = "senaste-invandringsar"
+"270.778" = "utbildningsniva-3-positioner"
+"270.784" = "utbildningsinriktning-4-positioner"
+"270.2692" = "institutionell-sektorkod"
+"270.2736" = "sektor"
+"270.4633" = "antal-barn-under-6"
+"270.5056" = "landstingskod"
+"270.7071" = "medborgarskapsar"
+"270.29608" = "antal-barn-under-18"
+"270.32957" = "kommunkod"
+"270.37393" = "landsting"
 
 # register 271 (namnstatistik)
-
-[[variable]]
-native_id = "270.332.arinv"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "270.36.kommun"
-slug = "kommun"
-
-[[variable]]
-native_id = "270.36.kommunkod"
-slug = "kommunindelning"
-
-[[variable]]
-native_id = "270.510.ssyk3"
-slug = "yrke-ssyk3-huvud"
-
-[[variable]]
-native_id = "270.99.cfviki"
-slug = "sammanraknad-forvarvsinkomst"
+"270.332.arinv" = "senaste-invandringsdatum"
+"270.36.kommun" = "kommun"
+"270.36.kommunkod" = "kommunindelning"
+"270.510.ssyk3" = "yrke-ssyk3-huvud"
+"270.99.cfviki" = "sammanraknad-forvarvsinkomst"
 
 # register 273 (stativ)
-
-[[variable]]
-native_id = "270.4544"
-slug = "eget-personnr"
-
-[[variable]]
-native_id = "270.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "270.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "270.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "270.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "270.389"
-slug = "antal-barn-under-18-ar"
-
-[[variable]]
-native_id = "270.391"
-slug = "antal-barn-under-6-ar"
-
-[[variable]]
-native_id = "270.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "270.1305"
-slug = "disponibel-inkomst-familj"
-
-[[variable]]
-native_id = "270.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "270.1930"
-slug = "ssykar"
-
-[[variable]]
-native_id = "270.2351"
-slug = "regionkod"
-
-[[variable]]
-native_id = "270.2907"
-slug = "region"
-
-[[variable]]
-native_id = "270.6556"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "270.6818"
-slug = "medborgarland-varldsdel"
-
-[[variable]]
-native_id = "270.19052"
-slug = "naringsgren-for-statistiken"
-
-[[variable]]
-native_id = "270.21517"
-slug = "disponibel-inkomst-familj-2004"
+"270.4544" = "eget-personnr"
+"270.15" = "civilstand"
+"270.241" = "alder-31-12"
+"270.257" = "fodelseland-rtb"
+"270.271" = "medborgarskapsland"
+"270.389" = "antal-barn-under-18-ar"
+"270.391" = "antal-barn-under-6-ar"
+"270.667" = "kommun-for-arbetsstalle"
+"270.1305" = "disponibel-inkomst-familj"
+"270.1378" = "fodelsear"
+"270.1930" = "ssykar"
+"270.2351" = "regionkod"
+"270.2907" = "region"
+"270.6556" = "fodelseland-varldsdel"
+"270.6818" = "medborgarland-varldsdel"
+"270.19052" = "naringsgren-for-statistiken"
+"270.21517" = "disponibel-inkomst-familj-2004"
 
 # register 271
-
-[[variable]]
-native_id = "270.269.medbar"
-slug = "medborgarskapsdatum"
-
-[[variable]]
-native_id = "270.269.medbdat"
-slug = "medborgarskapsdatum-3"
-
-[[variable]]
-native_id = "270.63.syssstat"
-slug = "sysselsattningsstatus-november"
-
-[[variable]]
-native_id = "270.99.csfvi"
-slug = "sammanraknad-forvarvsinkomst-2"
+"270.269.medbar" = "medborgarskapsdatum"
+"270.269.medbdat" = "medborgarskapsdatum-3"
+"270.63.syssstat" = "sysselsattningsstatus-november"
+"270.99.csfvi" = "sammanraknad-forvarvsinkomst-2"
+"270.7942.parti" = "parti"
+"270.7942.partikortnamn" = "partikortnamn"
+"270.7942.parti-kort" = "parti-kort"
+"270.7942.partinamn" = "partinamn"
+"270.5059.landsting" = "landsting-5059"
+"270.5059.landsting-old" = "landsting-old"
+"270.332.datinv" = "datinv"
+"270.332.seninvar" = "seninvar"
+"270.5041.arbstod05" = "arbstod"
+"270.5041.arbstod97" = "arbstod97"
+"270.5041.arblos01" = "arblos"
+"270.5041.arblos97" = "arblos97"
+"270.63.r-syssst01" = "r-syssst"
+"270.63.r-syssst97" = "r-syssst97"
+"270.510.ssyk3-2012" = "ssyk3-2012"
+"270.510.ssyk3-2012-egf" = "ssyk3-2012-egf"
+"270.16225.ssyk4" = "ssyk4"
+"270.16225.ssyk4-2012" = "ssyk4-2012"
+"270.16225.ssyk4-2012-egf" = "ssyk4-2012-egf"
+"270.8534.skl-grupp-2011" = "skl-grupp-2011"
+"270.8534.skl-grupp" = "skl-grupp"
+"270.8534.skl-gruppnamn" = "skl-gruppnamn"
+"270.8534.skl-gruppnamn-2011" = "skl-gruppnamn-2011"
+"270.8534.skr-grupp" = "skr-grupp"
+"270.8534.skr-grupp-namn" = "skr-grupp-namn"
 
 # register 273
 
@@ -574,106 +476,6 @@ variable = "270.8534"
 columns = { SKL_Grupp_2011 = "270.8534.skl-grupp-2011", SKL_grupp = "270.8534.skl-grupp", SKL_grupp_2011 = "270.8534.skl-grupp-2011", SKL_gruppnamn = "270.8534.skl-gruppnamn", SKL_gruppnamn_2011 = "270.8534.skl-gruppnamn-2011", SKR_grupp = "270.8534.skr-grupp", SKR_grupp_namn = "270.8534.skr-grupp-namn" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "1469c0ee2359067f2fe8cc243fd39b048d46f2bec302e1928a7292967ae3e198"
-
-[[variable]]
-native_id = "270.7942.parti"
-slug = "parti"
-
-[[variable]]
-native_id = "270.7942.partikortnamn"
-slug = "partikortnamn"
-
-[[variable]]
-native_id = "270.7942.parti-kort"
-slug = "parti-kort"
-
-[[variable]]
-native_id = "270.7942.partinamn"
-slug = "partinamn"
-
-[[variable]]
-native_id = "270.5059.landsting"
-slug = "landsting-5059"
-
-[[variable]]
-native_id = "270.5059.landsting-old"
-slug = "landsting-old"
-
-[[variable]]
-native_id = "270.332.datinv"
-slug = "datinv"
-
-[[variable]]
-native_id = "270.332.seninvar"
-slug = "seninvar"
-
-[[variable]]
-native_id = "270.5041.arbstod05"
-slug = "arbstod"
-
-[[variable]]
-native_id = "270.5041.arbstod97"
-slug = "arbstod97"
-
-[[variable]]
-native_id = "270.5041.arblos01"
-slug = "arblos"
-
-[[variable]]
-native_id = "270.5041.arblos97"
-slug = "arblos97"
-
-[[variable]]
-native_id = "270.63.r-syssst01"
-slug = "r-syssst"
-
-[[variable]]
-native_id = "270.63.r-syssst97"
-slug = "r-syssst97"
-
-[[variable]]
-native_id = "270.510.ssyk3-2012"
-slug = "ssyk3-2012"
-
-[[variable]]
-native_id = "270.510.ssyk3-2012-egf"
-slug = "ssyk3-2012-egf"
-
-[[variable]]
-native_id = "270.16225.ssyk4"
-slug = "ssyk4"
-
-[[variable]]
-native_id = "270.16225.ssyk4-2012"
-slug = "ssyk4-2012"
-
-[[variable]]
-native_id = "270.16225.ssyk4-2012-egf"
-slug = "ssyk4-2012-egf"
-
-[[variable]]
-native_id = "270.8534.skl-grupp-2011"
-slug = "skl-grupp-2011"
-
-[[variable]]
-native_id = "270.8534.skl-grupp"
-slug = "skl-grupp"
-
-[[variable]]
-native_id = "270.8534.skl-gruppnamn"
-slug = "skl-gruppnamn"
-
-[[variable]]
-native_id = "270.8534.skl-gruppnamn-2011"
-slug = "skl-gruppnamn-2011"
-
-[[variable]]
-native_id = "270.8534.skr-grupp"
-slug = "skr-grupp"
-
-[[variable]]
-native_id = "270.8534.skr-grupp-namn"
-slug = "skr-grupp-namn"
 
 [[representation.parallel]]
 valid_from = "2015-01-01"

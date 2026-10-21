@@ -6,6 +6,6 @@ native_id = "8040492341804158214"
 [[variant]]
 slug = "_default"
 native_id = "8040492341804158214.9146169223263456133"
-[[variable]]
-slug = "col"
-native_id = "8040492341804158214.COL"
+
+[variable]
+"8040492341804158214.COL" = "col"

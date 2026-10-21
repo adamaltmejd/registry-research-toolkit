@@ -182,6 +182,7 @@ def test_moved_occurrence_population_key_resolves_to_parent() -> None:
             effects=(CheckedEditionRebind(ref=ref, variant_key=split),),
             reason="SCB population distinguishes stock",
             provenance="fixture",
+            published=None,
         ),
     )
     (moved,) = apply_occurrence_cases((record,), (case,)).occurrences

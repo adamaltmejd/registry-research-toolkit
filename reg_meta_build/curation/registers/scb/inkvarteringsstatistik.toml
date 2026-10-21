@@ -29,50 +29,25 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Försäljning av kalk för jord- och trädgårdsbruk, sjöar och vatten samt skog
-
-[[variable]]
-native_id = "151.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "151.1810"
-slug = "imputerad"
-
-[[variable]]
-native_id = "151.7048"
-slug = "stangdorsak"
+"151.14" = "cfar-nummer"
+"151.1810" = "imputerad"
+"151.7048" = "stangdorsak"
 
 # register 155 (trafo)
-
-[[variable]]
-native_id = "151.4370.bbd"
-slug = "belagda-baddar"
-
-[[variable]]
-native_id = "151.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "151.537"
-slug = "postnr"
-
-[[variable]]
-native_id = "151.1797"
-slug = "gatuadress"
-
-[[variable]]
-native_id = "151.27262"
-slug = "svarsstatus"
-
-[[variable]]
-native_id = "151.27294"
-slug = "ar-och-manad"
-
-[[variable]]
-native_id = "151.27307"
-slug = "boendeform-camping"
+"151.4370.bbd" = "belagda-baddar"
+"151.1839" = "orgnr"
+"151.537" = "postnr"
+"151.1797" = "gatuadress"
+"151.27262" = "svarsstatus"
+"151.27294" = "ar-och-manad"
+"151.27307" = "boendeform-camping"
+"151.4370.bbdh" = "bbdh"
+"151.4370.bbdtot" = "bbdtot"
+"151.4370.bbdv" = "bbdv"
+"151.7013.atyp" = "atyp"
+"151.7013.atypa" = "atypa"
 
 # register 152
 
@@ -567,26 +542,6 @@ variable = "151.7013"
 columns = { Atyp = "151.7013.atyp", AtypA = "151.7013.atypa" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "afcc298c7caea658f2b49b43d352fbfeaa36a78ace30fb0525d74b440886e6a2"
-
-[[variable]]
-native_id = "151.4370.bbdh"
-slug = "bbdh"
-
-[[variable]]
-native_id = "151.4370.bbdtot"
-slug = "bbdtot"
-
-[[variable]]
-native_id = "151.4370.bbdv"
-slug = "bbdv"
-
-[[variable]]
-native_id = "151.7013.atyp"
-slug = "atyp"
-
-[[variable]]
-native_id = "151.7013.atypa"
-slug = "atypa"
 
 [[representation.parallel]]
 valid_from = "2008-01-01"

@@ -5,12 +5,10 @@ native_id = "31"
 [[variant]]
 native_id = "31.310"
 slug = "people"
-[[variable]]
-native_id = "31.5"
-slug = "value"
-[[variable]]
-native_id = "31.6"
-slug = "later"
+
+[variable]
+"31.5" = "value"
+"31.6" = "later"
 
 [[representation.alias_window]]
 variable = "scb/owned/value"

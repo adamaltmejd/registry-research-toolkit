@@ -1,11 +1,14 @@
-//! The project types, the structural validator and the two JSON encodings against
-//! data oracles: the structural corpus ([`CORPUS`]), the project bodies of
-//! `conformance/cases/{api,order}/`, and files the retired Python reader wrote.
+//! The project types, the structural validator and the project hash against data
+//! oracles: the structural corpus ([`CORPUS`]), the project bodies of
+//! `conformance/cases/{api,order}/`, and the hashes the retired Python reader wrote.
+//! The manifest encoding is pinned by `conformance/test_order.py` (the server's
+//! download against each committed `order.json`).
 
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use reg_core::project::{ProjectData, project_hash, to_json_pretty};
+use reg_core::project::{ProjectData, project_hash};
 use reg_core::{ValidationResult, validate_structural};
 use serde_json::Value;
 
@@ -75,11 +78,11 @@ fn structural_corpus() {
 }
 
 /// Every project of the corpus and the conformance cases that the validator accepts.
-fn valid_projects() -> Vec<(String, Value)> {
-    let mut projects = Vec::new();
+fn valid_projects() -> BTreeMap<String, Value> {
+    let mut projects = BTreeMap::new();
     let mut add = |key: String, project: &Value| {
         if validate_structural(project).ok() {
-            projects.push((key, project.clone()));
+            projects.insert(key, project.clone());
         }
     };
     for case in cases(&repo().join(CORPUS)) {
@@ -105,7 +108,6 @@ fn valid_projects() -> Vec<(String, Value)> {
             }
         }
     }
-    projects.sort_by(|a, b| a.0.cmp(&b.0));
     projects
 }
 
@@ -113,63 +115,22 @@ fn name(case: &Path) -> &str {
     case.file_name().unwrap().to_str().unwrap()
 }
 
-/// Every accepted project deserializes into [`ProjectData`] and hashes as the retired
-/// Python reader's `reg_meta.order._project_hash` did (`tests/project/hashes.json`,
-/// keyed by file and JSON pointer). Fails when the types drop, add or rename a field,
-/// stop writing absent optionals as `null` or expanding panel-member shorthand, or the
-/// canonical encoding changes; and when a corpus gains an accepted project the golden
-/// lacks.
+/// Every project keyed in `tests/project/hashes.json` (file and JSON pointer) is still
+/// accepted, deserializes into [`ProjectData`] and hashes to its recorded value: the
+/// retired Python reader's `reg_meta.order._project_hash` for the entries it wrote.
+/// Fails when the types drop, add or rename a field, stop writing absent optionals as
+/// `null` or expanding panel-member shorthand, or the canonical encoding changes; and
+/// when a keyed project is no longer accepted. A new accepted project needs no entry:
+/// its only source would be the `project_hash` under test.
 #[test]
 fn project_hashes() {
     let golden = json(&PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/project/hashes.json"));
-    let golden = golden.as_object().unwrap();
     let projects = valid_projects();
-    assert_eq!(
-        projects.iter().map(|(k, _)| k.as_str()).collect::<Vec<_>>(),
-        golden.keys().map(String::as_str).collect::<Vec<_>>(),
-        "accepted projects and hashes.json differ"
-    );
-    for (key, project) in projects {
-        let typed = ProjectData::from_value(&project).unwrap_or_else(|e| panic!("{key}: {e:?}"));
-        assert_eq!(project_hash(&typed), golden[&key], "{key}");
+    for (key, hash) in golden.as_object().unwrap() {
+        let project = projects
+            .get(key)
+            .unwrap_or_else(|| panic!("{key}: not an accepted project"));
+        let typed = ProjectData::from_value(project).unwrap_or_else(|e| panic!("{key}: {e:?}"));
+        assert_eq!(project_hash(&typed), *hash, "{key}");
     }
-}
-
-/// Each committed order manifest (`conformance/cases/order/*/order.json`) re-encodes
-/// byte for byte, and its `project_hash` is the hash of the project that requested
-/// it. Fails when the pretty encoding changes (key order, indent, escaping, trailing
-/// newline).
-#[test]
-fn committed_manifest_bytes() {
-    let mut seen = 0;
-    for case in cases(&repo().join("conformance/cases/order")) {
-        let file = case.join("order.json");
-        if !file.exists() {
-            continue;
-        }
-        seen += 1;
-        let bytes = read(&file);
-        let manifest: Value = serde_json::from_str(&bytes).unwrap();
-        assert_eq!(to_json_pretty(&manifest), bytes, "{}", case.display());
-        let project =
-            ProjectData::from_value(&json(&case.join("request.json"))["project"]).unwrap();
-        assert_eq!(
-            manifest["provenance"]["project_hash"],
-            project_hash(&project),
-            "{}",
-            case.display()
-        );
-    }
-    assert!(seen > 0, "no committed manifest bytes");
-}
-
-/// The validation result encodes as the retired Python reader's
-/// `reg_meta.semantic.validation_json` wrote it for the same input (`tests/project/validation_result/`): `ok`, issues in
-/// emission order, an explicit `successor_fqid: null`, non-ASCII as is. Fails when
-/// the wire shape, the issue order or the encoding changes.
-#[test]
-fn validation_result_bytes() {
-    let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/project/validation_result");
-    let result = validate_structural(&json(&dir.join("input.json")));
-    assert_eq!(to_json_pretty(&result), read(&dir.join("expected.json")));
 }

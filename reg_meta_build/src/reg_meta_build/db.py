@@ -928,12 +928,13 @@ CREATE TABLE variable_state (
     -- multi-response members can share one variable and value set while each
     -- column carries a distinct SCB `VariabelOperationell_definition`.
     operational_definition TEXT,
-    -- NULL for ordinary provider-exported states. Curated corrections carry a
-    -- stable `errata:<class>` line followed by the decision's source locators
-    -- and storage-type facts, never curator evidence or a case pointer (#1708);
-    -- a correction that cites no locator publishes nothing, so its state reads
-    -- as documented and pools with equal neighbours; when corrected source editions
-    -- overlap a documented claim, `errata:scoped-attributions` carries JSON
+    -- NULL for ordinary provider-exported states, and for states a curation
+    -- entry only routed. A curated fact carries a constant `errata:<class>` or
+    -- `curated:<kind>` head followed by the decision's source locators and
+    -- storage-type facts, never curator evidence or a case pointer (#1708), so
+    -- equally corrected spans pool and never with uncorrected ones; when
+    -- corrected source editions overlap a documented claim,
+    -- `errata:scoped-attributions` carries JSON
     -- records pairing each edition set with its class/evidence; correction-only
     -- overlaps use `errata:overlapping-attributions`. A source-less interval
     -- retained by resolution carries `inferred:resolution-gap`, never provider

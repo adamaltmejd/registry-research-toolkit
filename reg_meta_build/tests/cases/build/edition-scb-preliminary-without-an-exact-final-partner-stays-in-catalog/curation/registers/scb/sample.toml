@@ -26,9 +26,7 @@ slug = "v27"
 [[variant]]
 native_id = "1.28"
 slug = "v28"
-[[variable]]
-native_id = "1.5"
-slug = "value"
-[[variable]]
-native_id = "1.6"
-slug = "other"
+
+[variable]
+"1.5" = "value"
+"1.6" = "other"

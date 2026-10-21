@@ -1,7 +1,10 @@
 """Prepare all selected machine sources once; reopen their accepted proofs cheaply.
 
-The bundle remains the inventory authority. It carries no curation or naming
-files; older prepared manifests list them as excluded inputs. No catalog identities
+The bundle remains the inventory authority for third-party machine sources. The
+maintainer-authored thin-provider TOMLs and `scb_canonical.toml` are curation: they
+are read from the selected curation tree (`AUTHORED_SOURCES`) and pinned by digest
+as `origin = "curation"` inputs, and a build refuses a prepared root whose pins
+differ from its own curation tree (`check_authored_sources`). No catalog identities
 are formed here.
 """
 
@@ -22,6 +25,7 @@ from reg_meta_build._accepted_prepared import (
     read_accepted_manifest,
 )
 from reg_meta_build._resolved_common import _CURATED_PROVIDERS
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.input_snapshot import (
     LISA_BUNDLE_PATH,
     SCB_CSV_FILES,
@@ -74,7 +78,7 @@ from reg_meta_build.sources.sos_records import clean_sos_source
 from .source_evidence import SourceRevision
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Iterable, Iterator
 
     from reg_meta_build.source_values import SourceValueValidity
     from reg_meta_build.sources.code_lists import CleanedCodeList
@@ -82,10 +86,13 @@ if TYPE_CHECKING:
 
 _RECORDS = "files/records"
 _EVIDENCE = "files/evidence.jsonl"
-_THIN = {
-    f"catalog/{directory}/{provider}.toml": provider
-    for provider, directory in _CURATED_PROVIDERS
-} | {"catalog/scb_canonical/scb_canonical.toml": "scb"}
+# Authored occurrence sources, relative to the curation directory. Each path is also
+# the source's dataset name (`--registers providers/fk.toml:<key>`).
+CANONICAL_SOURCE = "scb_canonical/scb_canonical.toml"
+AUTHORED_SOURCES = {
+    f"providers/{provider}.toml": provider for provider in _CURATED_PROVIDERS
+} | {CANONICAL_SOURCE: "scb"}
+_CANONICAL_LISTS = "catalog/scb_canonical"
 
 
 class PreparedCatalogError(ValueError):
@@ -124,7 +131,7 @@ type InputRole = Literal[
 
 
 class PreparedInputAccounting(_Model):
-    origin: Literal["snapshot", "bundle"]
+    origin: Literal["bundle", "curation", "snapshot"]
     path: str
     role: InputRole
     record_usage: Literal["occurrence", "field_support", "support", "none"]
@@ -186,7 +193,7 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-catalog-sources"] = (
         "reg-meta-prepared-catalog-sources"
     )
-    schema_version: Literal[3] = 3
+    schema_version: Literal[4] = 4
     input_commit: str
     bundle_path: str
     bundle_manifest_sha256: str
@@ -359,14 +366,15 @@ def _role(path: str, *, origin: str) -> InputRole:
         }
         if path in roles:
             return roles[path]
-    elif path in _THIN:
-        return "thin_provider"
+    elif origin == "curation":
+        if path in AUTHORED_SOURCES:
+            return "thin_provider"
     elif path == LISA_BUNDLE_PATH:
         return "lisa_workbook"
     elif path.startswith("catalog/Socialstyrelsen/") and Path(path).suffix == ".xlsx":
         return "sos_workbook"
     elif (
-        Path(path).parent.as_posix() == "catalog/scb_canonical"
+        Path(path).parent.as_posix() == _CANONICAL_LISTS
         or Path(path).is_relative_to("catalog/classifications")
     ) and Path(path).suffix == ".csv":
         return "code_list"
@@ -390,7 +398,25 @@ def _record_usage(
     return "none"
 
 
-def _inventory(bundle: CatalogBundleReader) -> tuple[PreparedInputAccounting, ...]:
+def _authored_revision(curation_dir: Path, path: str) -> SourceRevision | None:
+    source = curation_dir / path
+    if not source.is_file():
+        return None
+    digest = _file_sha256(source)
+    return SourceRevision.create(
+        dataset=path,
+        publisher="Maintainer curation",
+        purpose="Maintainer-authored source declarations",
+        upstream_revision=f"sha256:{digest}",
+        artifact_path=f"curation/{path}",
+        artifact_size=source.stat().st_size,
+        artifact_sha256=digest,
+    )
+
+
+def _inventory(
+    bundle: CatalogBundleReader, curation_dir: Path
+) -> tuple[PreparedInputAccounting, ...]:
     entries = []
     if {item.name for item in bundle.snapshot.manifest.files} != set(SCB_CSV_FILES):
         raise PreparedCatalogError(
@@ -452,14 +478,33 @@ def _inventory(bundle: CatalogBundleReader) -> tuple[PreparedInputAccounting, ..
                     exclusion_reason=exclusion,
                 )
             )
+    for path in AUTHORED_SOURCES:
+        revision = _authored_revision(curation_dir, path)
+        entries.append(
+            PreparedInputAccounting(
+                origin="curation",
+                path=path,
+                role="thin_provider",
+                record_usage=_record_usage("thin_provider", revision is not None),
+                present=revision is not None,
+                disposition="prepared" if revision is not None else "absent",
+                revision=revision,
+            )
+        )
     return tuple(sorted(entries, key=lambda entry: (entry.origin, entry.path)))
 
 
 def prepare_catalog_sources(
-    selection: CatalogBundleSelection, output: Path
+    selection: CatalogBundleSelection, output: Path, *, curation_dir: Path
 ) -> PreparedCatalogManifest:
-    """Validate every selected input and write a new, not-yet-accepted candidate."""
+    """Validate every selected input and write a new, not-yet-accepted candidate.
+
+    The authored sources (`AUTHORED_SOURCES`) are read from `curation_dir`.
+    """
     output = output.expanduser().absolute()
+    curation_dir = curation_dir.expanduser().resolve()
+    if not curation_dir.is_dir():
+        raise PreparedCatalogError(f"curation directory does not exist: {curation_dir}")
     if output.exists() or output.is_symlink():
         raise PreparedCatalogError(f"prepared catalog output already exists: {output}")
     bundle = open_input_bundle(selection)
@@ -470,7 +515,7 @@ def prepare_catalog_sources(
         raise PreparedCatalogError(
             "prepared output must be outside the selected source directories"
         )
-    inventory = _inventory(bundle)
+    inventory = _inventory(bundle, curation_dir)
     selected_roots = (
         bundle.root.relative_to(bundle.repository),
         bundle.snapshot.root.relative_to(bundle.repository),
@@ -668,7 +713,9 @@ def prepare_catalog_sources(
                                 "selected validity source lacks its value source"
                             )
                     else:
-                        path = bundle.root / entry.path
+                        path = (
+                            curation_dir if entry.origin == "curation" else bundle.root
+                        ) / entry.path
                         if entry.role == "lisa_workbook":
                             result = read_lisa_source(path, revision)
                             evidence(
@@ -707,8 +754,12 @@ def prepare_catalog_sources(
                             yield from result.records
                         elif entry.role == "thin_provider":
                             result = read_curated_source(
-                                path, revision, provider=_THIN[entry.path]
+                                path, revision, provider=AUTHORED_SOURCES[entry.path]
                             )
+                            if entry.path == CANONICAL_SOURCE:
+                                _require_canonical_lists(
+                                    result.declared_value_lists, inventory
+                                )
                             tables(result.tables, count)
                             count["records"] = len(result.records)
                             yield from result.records
@@ -716,14 +767,9 @@ def prepare_catalog_sources(
                             result = read_code_list(path, revision, name=path.stem)
                             tables(result.tables, count)
                             canonical = (
-                                entries.get(
-                                    (
-                                        "bundle",
-                                        "catalog/scb_canonical/scb_canonical.toml",
-                                    )
-                                )
+                                entries.get(("curation", CANONICAL_SOURCE))
                                 if Path(entry.path).parent.as_posix()
-                                == "catalog/scb_canonical"
+                                == _CANONICAL_LISTS
                                 else None
                             )
                             target_sources = (
@@ -887,6 +933,60 @@ def prepare_catalog_sources(
     finally:
         if staging.exists():
             shutil.rmtree(staging)
+
+
+def _require_canonical_lists(
+    declared: Iterable[str], inventory: tuple[PreparedInputAccounting, ...]
+) -> None:
+    """Each list `scb_canonical.toml` declares must be a captured bundle code list."""
+    captured = {
+        Path(entry.path).stem
+        for entry in inventory
+        if entry.origin == "bundle"
+        and entry.present
+        and Path(entry.path).parent.as_posix() == _CANONICAL_LISTS
+    }
+    if missing := sorted(set(declared) - captured):
+        raise PreparedCatalogError(
+            f"{CANONICAL_SOURCE} declares code lists the input bundle lacks: "
+            f"{[f'{_CANONICAL_LISTS}/{name}.csv' for name in missing]}; capture them "
+            "from scb_canonical/ under the inputs repository's catalog/source"
+        )
+
+
+def check_authored_sources(
+    manifest: PreparedCatalogManifest, curation_dir: Path
+) -> None:
+    """Refuse a prepared root whose authored-source pins differ from `curation_dir`.
+
+    The thin-provider TOMLs and `scb_canonical.toml` are curation, but they enter
+    the build as prepared records: an edit after `prepare-sources` would otherwise
+    build silently from the stale prepared copy.
+    """
+    pinned = {
+        entry.path: entry.revision
+        for entry in manifest.inputs
+        if entry.origin == "curation"
+    }
+    stale = sorted(
+        path
+        for path in pinned.keys() | AUTHORED_SOURCES.keys()
+        if pinned.get(path) != _authored_revision(curation_dir, path)
+    )
+    if stale:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="prepared_authored_source_stale",
+            error_class="configuration",
+            message=(
+                f"The prepared root pins authored sources {stale} whose content "
+                f"differs from the curation tree {curation_dir}."
+            ),
+            remediation=(
+                "Run prepare-sources --curation-dir on this curation tree into a new "
+                "directory, accept it, and build from that prepared root."
+            ),
+        )
 
 
 @dataclass(frozen=True)
@@ -1060,6 +1160,7 @@ __all__ = [
     "PreparedCatalogManifest",
     "PreparedCatalogSources",
     "PreparedInputAccounting",
+    "check_authored_sources",
     "open_prepared_catalog_sources",
     "prepare_catalog_sources",
 ]

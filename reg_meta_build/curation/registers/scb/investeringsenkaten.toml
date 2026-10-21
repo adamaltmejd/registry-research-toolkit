@@ -29,539 +29,123 @@ panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Lönestrukturstatistik, hela ekonomin (SLH)
-
-[[variable]]
-native_id = "183.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "183.1653"
-slug = "kommentar-uppgiftslamnare"
-
-[[variable]]
-native_id = "183.1728"
-slug = "blankett-statuskod"
-
-[[variable]]
-native_id = "183.1795"
-slug = "blankettnummer"
-
-[[variable]]
-native_id = "183.1811"
-slug = "variabelnummer"
-
-[[variable]]
-native_id = "183.1937"
-slug = "kommentar"
-
-[[variable]]
-native_id = "183.2475"
-slug = "populationsstorlek-strata"
-
-[[variable]]
-native_id = "183.2783"
-slug = "investeringar-verkstallda-ny-ombyggnad"
-
-[[variable]]
-native_id = "183.2784"
-slug = "investeringar-verkstallda-bostader"
-
-[[variable]]
-native_id = "183.2785"
-slug = "investeringar-verkstallda-anlaggningar"
-
-[[variable]]
-native_id = "183.2786"
-slug = "investeringar-verkstallda-maskiner"
-
-[[variable]]
-native_id = "183.2788"
-slug = "verkstallda-transport-bilar"
-
-[[variable]]
-native_id = "183.2789"
-slug = "verkstallda-transport-bussar"
-
-[[variable]]
-native_id = "183.2790"
-slug = "verkstallda-transport-rullande"
-
-[[variable]]
-native_id = "183.2791"
-slug = "verkstallda-transport-flygplan"
-
-[[variable]]
-native_id = "183.2792"
-slug = "verkstallda-transport-ovrigt"
-
-[[variable]]
-native_id = "183.2794"
-slug = "investeringar-verkstallda-programvaror"
-
-[[variable]]
-native_id = "183.2796"
-slug = "investeringar-leasing-transport"
-
-[[variable]]
-native_id = "183.2797"
-slug = "investeringar-leasing-datorstryda"
-
-[[variable]]
-native_id = "183.2798"
-slug = "investeringar-leasing-ovrig-data"
-
-[[variable]]
-native_id = "183.2799"
-slug = "investeringar-leasing-ovriga-maskiner"
-
-[[variable]]
-native_id = "183.2859"
-slug = "investeringar-underhall-maskiner"
-
-[[variable]]
-native_id = "183.4028"
-slug = "storan"
-
-[[variable]]
-native_id = "183.5151"
-slug = "blankettstatus-kvartal"
-
-[[variable]]
-native_id = "183.43"
-slug = "kvartal"
-
-[[variable]]
-native_id = "183.781"
-slug = "benamning"
-
-[[variable]]
-native_id = "183.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "183.1853"
-slug = "naringsgren-enligt-nr"
-
-[[variable]]
-native_id = "183.2464"
-slug = "antal-svarande"
-
-[[variable]]
-native_id = "183.2474"
-slug = "datum-inkommet-svar"
-
-[[variable]]
-native_id = "183.2478"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "183.2802"
-slug = "varde-investeringar"
-
-[[variable]]
-native_id = "183.2846"
-slug = "lopnummer-urvalsenheter"
-
-[[variable]]
-native_id = "183.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "183.4042"
-slug = "firmanamn"
-
-[[variable]]
-native_id = "183.19538"
-slug = "upprakningsfaktor"
+"183.1839" = "orgnr"
+"183.1653" = "kommentar-uppgiftslamnare"
+"183.1728" = "blankett-statuskod"
+"183.1795" = "blankettnummer"
+"183.1811" = "variabelnummer"
+"183.1937" = "kommentar"
+"183.2475" = "populationsstorlek-strata"
+"183.2783" = "investeringar-verkstallda-ny-ombyggnad"
+"183.2784" = "investeringar-verkstallda-bostader"
+"183.2785" = "investeringar-verkstallda-anlaggningar"
+"183.2786" = "investeringar-verkstallda-maskiner"
+"183.2788" = "verkstallda-transport-bilar"
+"183.2789" = "verkstallda-transport-bussar"
+"183.2790" = "verkstallda-transport-rullande"
+"183.2791" = "verkstallda-transport-flygplan"
+"183.2792" = "verkstallda-transport-ovrigt"
+"183.2794" = "investeringar-verkstallda-programvaror"
+"183.2796" = "investeringar-leasing-transport"
+"183.2797" = "investeringar-leasing-datorstryda"
+"183.2798" = "investeringar-leasing-ovrig-data"
+"183.2799" = "investeringar-leasing-ovriga-maskiner"
+"183.2859" = "investeringar-underhall-maskiner"
+"183.4028" = "storan"
+"183.5151" = "blankettstatus-kvartal"
+"183.43" = "kvartal"
+"183.781" = "benamning"
+"183.972" = "aktuellt-antal-anstallda"
+"183.1853" = "naringsgren-enligt-nr"
+"183.2464" = "antal-svarande"
+"183.2474" = "datum-inkommet-svar"
+"183.2478" = "antal-anstallda"
+"183.2802" = "varde-investeringar"
+"183.2846" = "lopnummer-urvalsenheter"
+"183.4027" = "naringsgren"
+"183.4042" = "firmanamn"
+"183.19538" = "upprakningsfaktor"
 
 # register 186
-
-[[variable]]
-native_id = "183.29.fenr"
-slug = "fenr"
-deprecated = false
-
-[[variable]]
-native_id = "183.49.lan"
-slug = "lan"
-deprecated = false
-
-[[variable]]
-native_id = "183.56.peorgnr"
-slug = "person-orgnr"
-deprecated = false
-
-[[variable]]
-native_id = "183.1350.samustrl"
-slug = "anstallda-storleksklass-stat"
-deprecated = false
-
-[[variable]]
-native_id = "183.1454.foregvenr"
-slug = "verksamhetsenhetens-identitetsnummer-foregvenr"
-deprecated = false
-
-[[variable]]
-native_id = "183.1454.venr"
-slug = "venr"
-deprecated = false
-
-[[variable]]
-native_id = "183.2297.tillfalle"
-slug = "undersokningsomgang"
-deprecated = false
-
-[[variable]]
-native_id = "183.2325.urval"
-slug = "urval"
-deprecated = false
-
-[[variable]]
-native_id = "183.2463.ar"
-slug = "undersokningsar"
-deprecated = false
-
-[[variable]]
-native_id = "183.2466.ag"
-slug = "funktionell-bransch"
-deprecated = false
-
-[[variable]]
-native_id = "183.2467.fg"
-slug = "institutionell-bransch"
-deprecated = false
-
-[[variable]]
-native_id = "183.2483.mig"
-slug = "industrigruppering-eu"
-deprecated = false
-
-[[variable]]
-native_id = "183.2793.v026"
-slug = "investeringar-verkstallda-ovrigt"
-deprecated = false
-
-[[variable]]
-native_id = "183.2793.v027"
-slug = "investeringar-verkstallda-ovrigt-v027"
-deprecated = false
-
-[[variable]]
-native_id = "183.2823.v103"
-slug = "investeringar-planerade-ny-ombyggnad"
-deprecated = false
-
-[[variable]]
-native_id = "183.2823.v203"
-slug = "investeringar-planerade-ny-till-och-ombyggnad-v203"
-deprecated = false
-
-[[variable]]
-native_id = "183.2823.v303"
-slug = "investeringar-planerade-ny-till-och-ombyggnad-v303"
-deprecated = false
-
-[[variable]]
-native_id = "183.2823.v403"
-slug = "investeringar-planerade-ny-till-och-ombyggnad-v403"
-deprecated = false
-
-[[variable]]
-native_id = "183.2823.v503"
-slug = "investeringar-planerade-ny-till-och-ombyggnad-v503"
-deprecated = false
-
-[[variable]]
-native_id = "183.2823.v603"
-slug = "investeringar-planerade-ny-till-och-ombyggnad-v603"
-deprecated = false
-
-[[variable]]
-native_id = "183.2824.v102"
-slug = "investeringar-planerade-bostader"
-deprecated = false
-
-[[variable]]
-native_id = "183.2824.v202"
-slug = "investeringar-planerade-bostader-v202"
-deprecated = false
-
-[[variable]]
-native_id = "183.2824.v302"
-slug = "investeringar-planerade-bostader-v302"
-deprecated = false
-
-[[variable]]
-native_id = "183.2824.v402"
-slug = "investeringar-planerade-bostader-v402"
-deprecated = false
-
-[[variable]]
-native_id = "183.2824.v502"
-slug = "investeringar-planerade-bostader-v502"
-deprecated = false
-
-[[variable]]
-native_id = "183.2824.v602"
-slug = "investeringar-planerade-bostader-v602"
-deprecated = false
-
-[[variable]]
-native_id = "183.2825.v101"
-slug = "investeringar-planerade-anlaggningar"
-deprecated = false
-
-[[variable]]
-native_id = "183.2825.v201"
-slug = "investeringar-planerade-ovriga-anlaggningar-v201"
-deprecated = false
-
-[[variable]]
-native_id = "183.2825.v301"
-slug = "investeringar-planerade-ovriga-anlaggningar-v301"
-deprecated = false
-
-[[variable]]
-native_id = "183.2825.v401"
-slug = "investeringar-planerade-ovriga-anlaggningar-v401"
-deprecated = false
-
-[[variable]]
-native_id = "183.2825.v501"
-slug = "investeringar-planerade-ovriga-anlaggningar-v501"
-deprecated = false
-
-[[variable]]
-native_id = "183.2825.v601"
-slug = "investeringar-planerade-ovriga-anlaggningar-v601"
-deprecated = false
-
-[[variable]]
-native_id = "183.2826.v111"
-slug = "investeringar-planerade-maskiner"
-deprecated = false
-
-[[variable]]
-native_id = "183.2826.v211"
-slug = "investeringar-planerade-maskiner-inventarier-v211"
-deprecated = false
-
-[[variable]]
-native_id = "183.2826.v311"
-slug = "investeringar-planerade-maskiner-inventarier-v311"
-deprecated = false
-
-[[variable]]
-native_id = "183.2826.v411"
-slug = "investeringar-planerade-maskiner-inventarier-v411"
-deprecated = false
-
-[[variable]]
-native_id = "183.2826.v511"
-slug = "investeringar-planerade-maskiner-inventarier-v511"
-deprecated = false
-
-[[variable]]
-native_id = "183.2826.v611"
-slug = "investeringar-planerade-maskiner-inventarier-v611"
-deprecated = false
-
-[[variable]]
-native_id = "183.2828.v112"
-slug = "planerade-transport-bilar"
-deprecated = false
-
-[[variable]]
-native_id = "183.2828.v212"
-slug = "investeringar-planerade-transportmedel-bilar-v212"
-deprecated = false
-
-[[variable]]
-native_id = "183.2828.v312"
-slug = "investeringar-planerade-transportmedel-bilar-v312"
-deprecated = false
-
-[[variable]]
-native_id = "183.2828.v412"
-slug = "investeringar-planerade-transportmedel-bilar-v412"
-deprecated = false
-
-[[variable]]
-native_id = "183.2828.v512"
-slug = "investeringar-planerade-transportmedel-bilar-v512"
-deprecated = false
-
-[[variable]]
-native_id = "183.2828.v612"
-slug = "investeringar-planerade-transportmedel-bilar-v612"
-deprecated = false
-
-[[variable]]
-native_id = "183.2829.v113"
-slug = "planerade-transport-bussar"
-deprecated = false
-
-[[variable]]
-native_id = "183.2829.v213"
-slug = "investeringar-planerade-transportmedel-bussar-v213"
-deprecated = false
-
-[[variable]]
-native_id = "183.2829.v313"
-slug = "investeringar-planerade-transportmedel-bussar-v313"
-deprecated = false
-
-[[variable]]
-native_id = "183.2829.v413"
-slug = "investeringar-planerade-transportmedel-bussar-v413"
-deprecated = false
-
-[[variable]]
-native_id = "183.2829.v513"
-slug = "investeringar-planerade-transportmedel-bussar-v513"
-deprecated = false
-
-[[variable]]
-native_id = "183.2829.v613"
-slug = "investeringar-planerade-transportmedel-bussar-v613"
-deprecated = false
-
-[[variable]]
-native_id = "183.2830.v114"
-slug = "planerade-transport-rullande"
-deprecated = false
-
-[[variable]]
-native_id = "183.2830.v214"
-slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v214"
-deprecated = false
-
-[[variable]]
-native_id = "183.2830.v314"
-slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v314"
-deprecated = false
-
-[[variable]]
-native_id = "183.2830.v414"
-slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v414"
-deprecated = false
-
-[[variable]]
-native_id = "183.2830.v514"
-slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v514"
-deprecated = false
-
-[[variable]]
-native_id = "183.2830.v614"
-slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v614"
-deprecated = false
-
-[[variable]]
-native_id = "183.2831.v115"
-slug = "planerade-transport-flygplan"
-deprecated = false
-
-[[variable]]
-native_id = "183.2831.v215"
-slug = "investeringar-planerade-transportmedel-flygplan-v215"
-deprecated = false
-
-[[variable]]
-native_id = "183.2831.v315"
-slug = "investeringar-planerade-transportmedel-flygplan-v315"
-deprecated = false
-
-[[variable]]
-native_id = "183.2831.v415"
-slug = "investeringar-planerade-transportmedel-flygplan-v415"
-deprecated = false
-
-[[variable]]
-native_id = "183.2831.v515"
-slug = "investeringar-planerade-transportmedel-flygplan-v515"
-deprecated = false
-
-[[variable]]
-native_id = "183.2831.v615"
-slug = "investeringar-planerade-transportmedel-flygplan-v615"
-deprecated = false
-
-[[variable]]
-native_id = "183.2832.v116"
-slug = "planerade-transport-ovrigt"
-deprecated = false
-
-[[variable]]
-native_id = "183.2832.v216"
-slug = "investeringar-planerade-transportmedel-ovrigt-v216"
-deprecated = false
-
-[[variable]]
-native_id = "183.2832.v316"
-slug = "investeringar-planerade-transportmedel-ovrigt-v316"
-deprecated = false
-
-[[variable]]
-native_id = "183.2832.v416"
-slug = "investeringar-planerade-transportmedel-ovrigt-v416"
-deprecated = false
-
-[[variable]]
-native_id = "183.2832.v516"
-slug = "investeringar-planerade-transportmedel-ovrigt-v516"
-deprecated = false
-
-[[variable]]
-native_id = "183.2832.v616"
-slug = "investeringar-planerade-transportmedel-ovrigt-v616"
-deprecated = false
-
-[[variable]]
-native_id = "183.2858.v040"
-slug = "investeringar-underhall"
-deprecated = false
-
-[[variable]]
-native_id = "183.2858.v041"
-slug = "investeringar-underhall-v041"
-deprecated = false
-
-[[variable]]
-native_id = "183.2861.v021"
-slug = "investeringar-verkstallda-fastigheter"
-deprecated = false
-
-[[variable]]
-native_id = "183.2861.v023"
-slug = "investeringar-verkstallda-inkop-fastigheter-v023"
-deprecated = false
-
-[[variable]]
-native_id = "183.2861.v028"
-slug = "investeringar-verkstallda-inkop-fastigheter-v028"
-deprecated = false
-
-[[variable]]
-native_id = "183.2862.v022"
-slug = "investeringar-inkop-av-mark"
-deprecated = false
-
-[[variable]]
-native_id = "183.2862.v024"
-slug = "investeringar-inkop-av-mark-v024"
-deprecated = false
-
-[[variable]]
-native_id = "183.2862.v029"
-slug = "investeringar-inkop-av-mark-v029"
-deprecated = false
-
-[[variable]]
-native_id = "183.19052.ngs1o"
-slug = "naringsgren-for-statistiken"
-deprecated = false
+"183.29.fenr" = { slug = "fenr", deprecated = false }
+"183.49.lan" = { slug = "lan", deprecated = false }
+"183.56.peorgnr" = { slug = "person-orgnr", deprecated = false }
+"183.1350.samustrl" = { slug = "anstallda-storleksklass-stat", deprecated = false }
+"183.1454.foregvenr" = { slug = "verksamhetsenhetens-identitetsnummer-foregvenr", deprecated = false }
+"183.1454.venr" = { slug = "venr", deprecated = false }
+"183.2297.tillfalle" = { slug = "undersokningsomgang", deprecated = false }
+"183.2325.urval" = { slug = "urval", deprecated = false }
+"183.2463.ar" = { slug = "undersokningsar", deprecated = false }
+"183.2466.ag" = { slug = "funktionell-bransch", deprecated = false }
+"183.2467.fg" = { slug = "institutionell-bransch", deprecated = false }
+"183.2483.mig" = { slug = "industrigruppering-eu", deprecated = false }
+"183.2793.v026" = { slug = "investeringar-verkstallda-ovrigt", deprecated = false }
+"183.2793.v027" = { slug = "investeringar-verkstallda-ovrigt-v027", deprecated = false }
+"183.2823.v103" = { slug = "investeringar-planerade-ny-ombyggnad", deprecated = false }
+"183.2823.v203" = { slug = "investeringar-planerade-ny-till-och-ombyggnad-v203", deprecated = false }
+"183.2823.v303" = { slug = "investeringar-planerade-ny-till-och-ombyggnad-v303", deprecated = false }
+"183.2823.v403" = { slug = "investeringar-planerade-ny-till-och-ombyggnad-v403", deprecated = false }
+"183.2823.v503" = { slug = "investeringar-planerade-ny-till-och-ombyggnad-v503", deprecated = false }
+"183.2823.v603" = { slug = "investeringar-planerade-ny-till-och-ombyggnad-v603", deprecated = false }
+"183.2824.v102" = { slug = "investeringar-planerade-bostader", deprecated = false }
+"183.2824.v202" = { slug = "investeringar-planerade-bostader-v202", deprecated = false }
+"183.2824.v302" = { slug = "investeringar-planerade-bostader-v302", deprecated = false }
+"183.2824.v402" = { slug = "investeringar-planerade-bostader-v402", deprecated = false }
+"183.2824.v502" = { slug = "investeringar-planerade-bostader-v502", deprecated = false }
+"183.2824.v602" = { slug = "investeringar-planerade-bostader-v602", deprecated = false }
+"183.2825.v101" = { slug = "investeringar-planerade-anlaggningar", deprecated = false }
+"183.2825.v201" = { slug = "investeringar-planerade-ovriga-anlaggningar-v201", deprecated = false }
+"183.2825.v301" = { slug = "investeringar-planerade-ovriga-anlaggningar-v301", deprecated = false }
+"183.2825.v401" = { slug = "investeringar-planerade-ovriga-anlaggningar-v401", deprecated = false }
+"183.2825.v501" = { slug = "investeringar-planerade-ovriga-anlaggningar-v501", deprecated = false }
+"183.2825.v601" = { slug = "investeringar-planerade-ovriga-anlaggningar-v601", deprecated = false }
+"183.2826.v111" = { slug = "investeringar-planerade-maskiner", deprecated = false }
+"183.2826.v211" = { slug = "investeringar-planerade-maskiner-inventarier-v211", deprecated = false }
+"183.2826.v311" = { slug = "investeringar-planerade-maskiner-inventarier-v311", deprecated = false }
+"183.2826.v411" = { slug = "investeringar-planerade-maskiner-inventarier-v411", deprecated = false }
+"183.2826.v511" = { slug = "investeringar-planerade-maskiner-inventarier-v511", deprecated = false }
+"183.2826.v611" = { slug = "investeringar-planerade-maskiner-inventarier-v611", deprecated = false }
+"183.2828.v112" = { slug = "planerade-transport-bilar", deprecated = false }
+"183.2828.v212" = { slug = "investeringar-planerade-transportmedel-bilar-v212", deprecated = false }
+"183.2828.v312" = { slug = "investeringar-planerade-transportmedel-bilar-v312", deprecated = false }
+"183.2828.v412" = { slug = "investeringar-planerade-transportmedel-bilar-v412", deprecated = false }
+"183.2828.v512" = { slug = "investeringar-planerade-transportmedel-bilar-v512", deprecated = false }
+"183.2828.v612" = { slug = "investeringar-planerade-transportmedel-bilar-v612", deprecated = false }
+"183.2829.v113" = { slug = "planerade-transport-bussar", deprecated = false }
+"183.2829.v213" = { slug = "investeringar-planerade-transportmedel-bussar-v213", deprecated = false }
+"183.2829.v313" = { slug = "investeringar-planerade-transportmedel-bussar-v313", deprecated = false }
+"183.2829.v413" = { slug = "investeringar-planerade-transportmedel-bussar-v413", deprecated = false }
+"183.2829.v513" = { slug = "investeringar-planerade-transportmedel-bussar-v513", deprecated = false }
+"183.2829.v613" = { slug = "investeringar-planerade-transportmedel-bussar-v613", deprecated = false }
+"183.2830.v114" = { slug = "planerade-transport-rullande", deprecated = false }
+"183.2830.v214" = { slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v214", deprecated = false }
+"183.2830.v314" = { slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v314", deprecated = false }
+"183.2830.v414" = { slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v414", deprecated = false }
+"183.2830.v514" = { slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v514", deprecated = false }
+"183.2830.v614" = { slug = "investeringar-planerade-transportmedel-rullande-sparbunden-materiel-v614", deprecated = false }
+"183.2831.v115" = { slug = "planerade-transport-flygplan", deprecated = false }
+"183.2831.v215" = { slug = "investeringar-planerade-transportmedel-flygplan-v215", deprecated = false }
+"183.2831.v315" = { slug = "investeringar-planerade-transportmedel-flygplan-v315", deprecated = false }
+"183.2831.v415" = { slug = "investeringar-planerade-transportmedel-flygplan-v415", deprecated = false }
+"183.2831.v515" = { slug = "investeringar-planerade-transportmedel-flygplan-v515", deprecated = false }
+"183.2831.v615" = { slug = "investeringar-planerade-transportmedel-flygplan-v615", deprecated = false }
+"183.2832.v116" = { slug = "planerade-transport-ovrigt", deprecated = false }
+"183.2832.v216" = { slug = "investeringar-planerade-transportmedel-ovrigt-v216", deprecated = false }
+"183.2832.v316" = { slug = "investeringar-planerade-transportmedel-ovrigt-v316", deprecated = false }
+"183.2832.v416" = { slug = "investeringar-planerade-transportmedel-ovrigt-v416", deprecated = false }
+"183.2832.v516" = { slug = "investeringar-planerade-transportmedel-ovrigt-v516", deprecated = false }
+"183.2832.v616" = { slug = "investeringar-planerade-transportmedel-ovrigt-v616", deprecated = false }
+"183.2858.v040" = { slug = "investeringar-underhall", deprecated = false }
+"183.2858.v041" = { slug = "investeringar-underhall-v041", deprecated = false }
+"183.2861.v021" = { slug = "investeringar-verkstallda-fastigheter", deprecated = false }
+"183.2861.v023" = { slug = "investeringar-verkstallda-inkop-fastigheter-v023", deprecated = false }
+"183.2861.v028" = { slug = "investeringar-verkstallda-inkop-fastigheter-v028", deprecated = false }
+"183.2862.v022" = { slug = "investeringar-inkop-av-mark", deprecated = false }
+"183.2862.v024" = { slug = "investeringar-inkop-av-mark-v024", deprecated = false }
+"183.2862.v029" = { slug = "investeringar-inkop-av-mark-v029", deprecated = false }
+"183.19052.ngs1o" = { slug = "naringsgren-for-statistiken", deprecated = false }
 
 [[identity.column_owner]]
 variable = "183.29"

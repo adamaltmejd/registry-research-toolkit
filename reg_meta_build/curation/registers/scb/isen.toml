@@ -11,438 +11,120 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Regional omsättningsstatistik (REGO)
-
-[[variable]]
-native_id = "132.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "132.18"
-slug = "arbetsstallestatus"
-
-[[variable]]
-native_id = "132.83"
-slug = "bransleslag"
-
-[[variable]]
-native_id = "132.326"
-slug = "namn"
-
-[[variable]]
-native_id = "132.803"
-slug = "belagenhetsadress-postnr"
-
-[[variable]]
-native_id = "132.1639"
-slug = "anstallda-arbetsstallet"
-
-[[variable]]
-native_id = "132.1653"
-slug = "kommentar-uppgiftslamnare"
-
-[[variable]]
-native_id = "132.2581"
-slug = "bransleslaget-i-klartext"
-
-[[variable]]
-native_id = "132.2595"
-slug = "bransle-maxvarde"
-
-[[variable]]
-native_id = "132.2598"
-slug = "bransleslag-varmevarden"
-
-[[variable]]
-native_id = "132.2602"
-slug = "enheten-naturliga-mattet"
-
-[[variable]]
-native_id = "132.2605"
-slug = "elanvandning-mwh"
-
-[[variable]]
-native_id = "132.2609"
-slug = "statuskod-fdb"
-
-[[variable]]
-native_id = "132.2617"
-slug = "orgnr-redovisningsenheten"
-
-[[variable]]
-native_id = "132.2620"
-slug = "adress-redovisningsenhet"
-
-[[variable]]
-native_id = "132.2622"
-slug = "benamning-redovisningsenhet"
-
-[[variable]]
-native_id = "132.2624"
-slug = "epost-redovisningsenheten"
-
-[[variable]]
-native_id = "132.2629"
-slug = "scb-kommentar-redovisningsenh"
-
-[[variable]]
-native_id = "132.2630"
-slug = "kommentar-paverkar-resultat"
-
-[[variable]]
-native_id = "132.2635"
-slug = "postnr-redovisningsenheten"
-
-[[variable]]
-native_id = "132.2636"
-slug = "kontrollnr-redovisningsenh"
-
-[[variable]]
-native_id = "132.2639"
-slug = "panneffekt-redovisningsenheten"
-
-[[variable]]
-native_id = "132.3575"
-slug = "foretagets-namn"
-
-[[variable]]
-native_id = "132.7844"
-slug = "bransleanvandning-transport"
-
-[[variable]]
-native_id = "132.16314"
-slug = "antal-anstallda-arbetsstallet"
-
-[[variable]]
-native_id = "132.16315"
-slug = "cfar-nummer-arbetsstalle"
-
-[[variable]]
-native_id = "132.16328"
-slug = "benamning-arbetsstallet"
-
-[[variable]]
-native_id = "132.16413"
-slug = "bransleanvandning-ovrigt"
-
-[[variable]]
-native_id = "132.16414"
-slug = "bransleslaget-varmevarden"
-
-[[variable]]
-native_id = "132.16415"
-slug = "bransle-maxpris"
-
-[[variable]]
-native_id = "132.16416"
-slug = "bransleslaget-enhet"
-
-[[variable]]
-native_id = "132.16417"
-slug = "epost-arbetsstallet"
-
-[[variable]]
-native_id = "132.16418"
-slug = "inkopsvarde-kvantitet"
-
-[[variable]]
-native_id = "132.16419"
-slug = "blankett-indatum"
-
-[[variable]]
-native_id = "132.16420"
-slug = "kommentar-uppgiftslamnaren"
-
-[[variable]]
-native_id = "132.16421"
-slug = "scb-kommentar-granskning"
-
-[[variable]]
-native_id = "132.16422"
-slug = "kontrollnr-arbetsstallet"
-
-[[variable]]
-native_id = "132.16423"
-slug = "orgnr-foretaget"
-
-[[variable]]
-native_id = "132.16424"
-slug = "statuskod-scb-granskning"
-
-[[variable]]
-native_id = "132.16425"
-slug = "telefon-direktnr-kontaktperson"
-
-[[variable]]
-native_id = "132.16427"
-slug = "adress-till-arbetsstallet"
-
-[[variable]]
-native_id = "132.16428"
-slug = "postort-for-arbetsstallet"
-
-[[variable]]
-native_id = "132.16429"
-slug = "postnummer-arbetsstallet"
-
-[[variable]]
-native_id = "132.16432"
-slug = "inkopsvarde-av-el"
-
-[[variable]]
-native_id = "132.16437"
-slug = "panneffekt-arbetsstallet"
-
-[[variable]]
-native_id = "132.19754"
-slug = "telefonnummer-till-kontaktperson"
-
-[[variable]]
-native_id = "132.22805"
-slug = "inkopsvarde-av-elenergi"
+"132.14" = "cfar-nummer"
+"132.18" = "arbetsstallestatus"
+"132.83" = "bransleslag"
+"132.326" = "namn"
+"132.803" = "belagenhetsadress-postnr"
+"132.1639" = "anstallda-arbetsstallet"
+"132.1653" = "kommentar-uppgiftslamnare"
+"132.2581" = "bransleslaget-i-klartext"
+"132.2595" = "bransle-maxvarde"
+"132.2598" = "bransleslag-varmevarden"
+"132.2602" = "enheten-naturliga-mattet"
+"132.2605" = "elanvandning-mwh"
+"132.2609" = "statuskod-fdb"
+"132.2617" = "orgnr-redovisningsenheten"
+"132.2620" = "adress-redovisningsenhet"
+"132.2622" = "benamning-redovisningsenhet"
+"132.2624" = "epost-redovisningsenheten"
+"132.2629" = "scb-kommentar-redovisningsenh"
+"132.2630" = "kommentar-paverkar-resultat"
+"132.2635" = "postnr-redovisningsenheten"
+"132.2636" = "kontrollnr-redovisningsenh"
+"132.2639" = "panneffekt-redovisningsenheten"
+"132.3575" = "foretagets-namn"
+"132.7844" = "bransleanvandning-transport"
+"132.16314" = "antal-anstallda-arbetsstallet"
+"132.16315" = "cfar-nummer-arbetsstalle"
+"132.16328" = "benamning-arbetsstallet"
+"132.16413" = "bransleanvandning-ovrigt"
+"132.16414" = "bransleslaget-varmevarden"
+"132.16415" = "bransle-maxpris"
+"132.16416" = "bransleslaget-enhet"
+"132.16417" = "epost-arbetsstallet"
+"132.16418" = "inkopsvarde-kvantitet"
+"132.16419" = "blankett-indatum"
+"132.16420" = "kommentar-uppgiftslamnaren"
+"132.16421" = "scb-kommentar-granskning"
+"132.16422" = "kontrollnr-arbetsstallet"
+"132.16423" = "orgnr-foretaget"
+"132.16424" = "statuskod-scb-granskning"
+"132.16425" = "telefon-direktnr-kontaktperson"
+"132.16427" = "adress-till-arbetsstallet"
+"132.16428" = "postort-for-arbetsstallet"
+"132.16429" = "postnummer-arbetsstallet"
+"132.16432" = "inkopsvarde-av-el"
+"132.16437" = "panneffekt-arbetsstallet"
+"132.19754" = "telefonnummer-till-kontaktperson"
+"132.22805" = "inkopsvarde-av-elenergi"
 
 # register 133 (rego)
-
-[[variable]]
-native_id = "132.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "132.2604"
-slug = "inkopt-kvantitet"
-
-[[variable]]
-native_id = "132.2628"
-slug = "insamlingsdatum"
-
-[[variable]]
-native_id = "132.2634"
-slug = "postort-redovisningsenhet"
-
-[[variable]]
-native_id = "132.2855"
-slug = "kontaktperson2"
+"132.667" = "kommun-for-arbetsstalle"
+"132.2604" = "inkopt-kvantitet"
+"132.2628" = "insamlingsdatum"
+"132.2634" = "postort-redovisningsenhet"
+"132.2855" = "kontaktperson2"
 
 # register 133
-
-[[variable]]
-native_id = "132.1641.ng2002"
-slug = "naringsgren-arbetsstalle"
+"132.1641.ng2002" = "naringsgren-arbetsstalle"
 
 # register 135
-
-[[variable]]
-native_id = "132.2620.adress"
-slug = "vilken-adress-har-redovisningsenheten-adress"
-
-[[variable]]
-native_id = "132.2620.anladr"
-slug = "vilken-adress-har-redovisningsenheten-anladr"
-
-[[variable]]
-native_id = "132.2634.poanst"
-slug = "vilken-postort-har-redovisningsenheten-poanst"
-
-[[variable]]
-native_id = "132.2634.postort"
-slug = "vilken-postort-har-redovisningsenheten-postort"
-
-[[variable]]
-native_id = "132.16328.ben"
-slug = "benamning-pa-arbetsstallet-ben"
-
-[[variable]]
-native_id = "132.16328.benamning"
-slug = "benamning-pa-arbetsstallet-benamning"
-
-[[variable]]
-native_id = "132.16428.poanst"
-slug = "postort-for-arbetsstallet-poanst"
-
-[[variable]]
-native_id = "132.16428.postort"
-slug = "postort-for-arbetsstallet-postort"
-
-[[variable]]
-native_id = "132.16428.postnr"
-slug = "postort-for-arbetsstallet-postnr"
-
-[[variable]]
-native_id = "132.16428.ppostort"
-slug = "postort-for-arbetsstallet-ppostort"
-
-[[variable]]
-native_id = "132.1639.anst"
-slug = "anstallda-pa-arbetsstallet-anst"
-
-[[variable]]
-native_id = "132.1639.anstallda"
-slug = "anstallda-pa-arbetsstallet-anstallda"
-
-[[variable]]
-native_id = "132.2617.peorgnr"
-slug = "organisationsnummer-redovisningsenheten-peorgnr"
-
-[[variable]]
-native_id = "132.2617.peorgnrhe"
-slug = "organisationsnummer-redovisningsenheten-peorgnrhe"
-
-[[variable]]
-native_id = "132.1641.naringsgren2002"
-slug = "naringsgren-for-arbetsstalle-naringsgren2002"
-
-[[variable]]
-native_id = "132.1641.ng2007"
-slug = "naringsgren-for-arbetsstalle-ng2007"
-
-[[variable]]
-native_id = "132.1641.naringsgren2007"
-slug = "naringsgren-for-arbetsstalle-naringsgren2007"
-
-[[variable]]
-native_id = "132.2631.kpers1"
-slug = "kontaktperson-1-kpers1"
-
-[[variable]]
-native_id = "132.2631.kontaktperson1"
-slug = "kontaktperson-1-kontaktperson1"
-
-[[variable]]
-native_id = "132.2855.kpers2"
-slug = "kontaktperson-2-kpers2"
-
-[[variable]]
-native_id = "132.2855.kontaktperson2"
-slug = "kontaktperson-2-kontaktperson2"
-
-[[variable]]
-native_id = "132.2605.mwh"
-slug = "elanvandningen-i-kvantitet-mwh-mwh"
-
-[[variable]]
-native_id = "132.2605.el-mwh"
-slug = "elanvandningen-i-kvantitet-mwh-el-mwh"
-
-[[variable]]
-native_id = "132.7844.forbtrans"
-slug = "bransleanvandning-for-transporter-forbtrans"
-
-[[variable]]
-native_id = "132.7844.bransleforbr-transp"
-slug = "bransleanvandning-for-transporter-bransleforbr-transp"
-
-[[variable]]
-native_id = "132.16413.forbovr"
-slug = "bransleanvandning-for-ovrigt-forbovr"
-
-[[variable]]
-native_id = "132.16413.bransleforbr-ovrig"
-slug = "bransleanvandning-for-ovrigt-bransleforbr-ovrig"
-
-[[variable]]
-native_id = "132.16414.vv"
-slug = "bransleslagets-varmevarden-vv"
-
-[[variable]]
-native_id = "132.16414.varmevarde"
-slug = "bransleslagets-varmevarden-varmevarde"
-
-[[variable]]
-native_id = "132.16418.varde"
-slug = "inkopsvardet-av-den-inkopta-kvantiteten-varde"
-
-[[variable]]
-native_id = "132.16418.inkopsvarde"
-slug = "inkopsvardet-av-den-inkopta-kvantiteten-inkopsvarde"
-
-[[variable]]
-native_id = "132.2604.inkopt"
-slug = "inkopt-kvantitet-inkopt"
-
-[[variable]]
-native_id = "132.2604.inkoptkvantitet"
-slug = "inkopt-kvantitet-inkoptkvantitet"
-
-[[variable]]
-native_id = "132.16314.anst"
-slug = "antal-anstallda-pa-arbetsstallet-anst"
-
-[[variable]]
-native_id = "132.16314.anstallda"
-slug = "antal-anstallda-pa-arbetsstallet-anstallda"
-
-[[variable]]
-native_id = "132.3575.fnamn"
-slug = "foretagets-namn-fnamn"
-
-[[variable]]
-native_id = "132.3575.foretagsnamn"
-slug = "foretagets-namn-foretagsnamn"
-
-[[variable]]
-native_id = "132.2581.btext"
-slug = "bransleslaget-i-klartext-btext"
-
-[[variable]]
-native_id = "132.2581.bransleslag"
-slug = "bransleslaget-i-klartext-bransleslag"
-
-[[variable]]
-native_id = "132.18.aestat"
-slug = "arbetsstallestatus-aestat"
-
-[[variable]]
-native_id = "132.18.arbetsstallestatus"
-slug = "arbetsstallestatus-arbetsstallestatus"
-
-[[variable]]
-native_id = "132.16432.varde"
-slug = "inkopsvarde-av-el-varde"
-
-[[variable]]
-native_id = "132.16432.elvarde"
-slug = "inkopsvarde-av-el-elvarde"
-
-[[variable]]
-native_id = "132.2622.ben"
-slug = "benamning-pa-redovisningsenheten-ben"
-
-[[variable]]
-native_id = "132.2622.benamning"
-slug = "benamning-pa-redovisningsenheten-benamning"
-
-[[variable]]
-native_id = "132.2598.vv"
-slug = "bransleslagens-varmevarden-vv"
-
-[[variable]]
-native_id = "132.2598.varmevarde"
-slug = "bransleslagens-varmevarden-varmevarde"
-
-[[variable]]
-native_id = "132.7845.bransleforbr-ovrig"
-slug = "bransleforbrukning-ovrigt-bransleforbr-ovrig"
-
-[[variable]]
-native_id = "132.7845.forbovr"
-slug = "bransleforbrukning-ovrigt-forbovr"
-
-[[variable]]
-native_id = "132.2607.varde"
-slug = "inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-varde"
-
-[[variable]]
-native_id = "132.2607.inkopsvarde"
-slug = "inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-inkopsvarde"
-
-[[variable]]
-native_id = "132.2606.varde"
-slug = "vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-varde"
-
-[[variable]]
-native_id = "132.2606.elvarde"
-slug = "vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-elvarde"
+"132.2620.adress" = "vilken-adress-har-redovisningsenheten-adress"
+"132.2620.anladr" = "vilken-adress-har-redovisningsenheten-anladr"
+"132.2634.poanst" = "vilken-postort-har-redovisningsenheten-poanst"
+"132.2634.postort" = "vilken-postort-har-redovisningsenheten-postort"
+"132.16328.ben" = "benamning-pa-arbetsstallet-ben"
+"132.16328.benamning" = "benamning-pa-arbetsstallet-benamning"
+"132.16428.poanst" = "postort-for-arbetsstallet-poanst"
+"132.16428.postort" = "postort-for-arbetsstallet-postort"
+"132.16428.postnr" = "postort-for-arbetsstallet-postnr"
+"132.16428.ppostort" = "postort-for-arbetsstallet-ppostort"
+"132.1639.anst" = "anstallda-pa-arbetsstallet-anst"
+"132.1639.anstallda" = "anstallda-pa-arbetsstallet-anstallda"
+"132.2617.peorgnr" = "organisationsnummer-redovisningsenheten-peorgnr"
+"132.2617.peorgnrhe" = "organisationsnummer-redovisningsenheten-peorgnrhe"
+"132.1641.naringsgren2002" = "naringsgren-for-arbetsstalle-naringsgren2002"
+"132.1641.ng2007" = "naringsgren-for-arbetsstalle-ng2007"
+"132.1641.naringsgren2007" = "naringsgren-for-arbetsstalle-naringsgren2007"
+"132.2631.kpers1" = "kontaktperson-1-kpers1"
+"132.2631.kontaktperson1" = "kontaktperson-1-kontaktperson1"
+"132.2855.kpers2" = "kontaktperson-2-kpers2"
+"132.2855.kontaktperson2" = "kontaktperson-2-kontaktperson2"
+"132.2605.mwh" = "elanvandningen-i-kvantitet-mwh-mwh"
+"132.2605.el-mwh" = "elanvandningen-i-kvantitet-mwh-el-mwh"
+"132.7844.forbtrans" = "bransleanvandning-for-transporter-forbtrans"
+"132.7844.bransleforbr-transp" = "bransleanvandning-for-transporter-bransleforbr-transp"
+"132.16413.forbovr" = "bransleanvandning-for-ovrigt-forbovr"
+"132.16413.bransleforbr-ovrig" = "bransleanvandning-for-ovrigt-bransleforbr-ovrig"
+"132.16414.vv" = "bransleslagets-varmevarden-vv"
+"132.16414.varmevarde" = "bransleslagets-varmevarden-varmevarde"
+"132.16418.varde" = "inkopsvardet-av-den-inkopta-kvantiteten-varde"
+"132.16418.inkopsvarde" = "inkopsvardet-av-den-inkopta-kvantiteten-inkopsvarde"
+"132.2604.inkopt" = "inkopt-kvantitet-inkopt"
+"132.2604.inkoptkvantitet" = "inkopt-kvantitet-inkoptkvantitet"
+"132.16314.anst" = "antal-anstallda-pa-arbetsstallet-anst"
+"132.16314.anstallda" = "antal-anstallda-pa-arbetsstallet-anstallda"
+"132.3575.fnamn" = "foretagets-namn-fnamn"
+"132.3575.foretagsnamn" = "foretagets-namn-foretagsnamn"
+"132.2581.btext" = "bransleslaget-i-klartext-btext"
+"132.2581.bransleslag" = "bransleslaget-i-klartext-bransleslag"
+"132.18.aestat" = "arbetsstallestatus-aestat"
+"132.18.arbetsstallestatus" = "arbetsstallestatus-arbetsstallestatus"
+"132.16432.varde" = "inkopsvarde-av-el-varde"
+"132.16432.elvarde" = "inkopsvarde-av-el-elvarde"
+"132.2622.ben" = "benamning-pa-redovisningsenheten-ben"
+"132.2622.benamning" = "benamning-pa-redovisningsenheten-benamning"
+"132.2598.vv" = "bransleslagens-varmevarden-vv"
+"132.2598.varmevarde" = "bransleslagens-varmevarden-varmevarde"
+"132.7845.bransleforbr-ovrig" = "bransleforbrukning-ovrigt-bransleforbr-ovrig"
+"132.7845.forbovr" = "bransleforbrukning-ovrigt-forbovr"
+"132.2607.varde" = "inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-varde"
+"132.2607.inkopsvarde" = "inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-inkopsvarde"
+"132.2606.varde" = "vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-varde"
+"132.2606.elvarde" = "vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-elvarde"
 
 [[identity.column_owner]]
 data_warning = "Exact source limitations for this native family, applying only to annotated owner originals:\nAdress: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes this source quantity, but no detailed operation for this exact physical field. Retain its literal source ownership and own delivery metadata/coding. No reference context, industry version, component role or field meaning is inferred from the column suffix or neighbouring field.\nAdress: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes this source quantity, but no detailed operation for this exact physical field. Retain its literal source ownership and own delivery metadata/coding. No reference context, industry version, component role or field meaning is inferred from the column suffix or neighbouring field.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\nAnlAdr: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes this source quantity, but no detailed operation for this exact physical field. Retain its literal source ownership and own delivery metadata/coding. No reference context, industry version, component role or field meaning is inferred from the column suffix or neighbouring field.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred."
@@ -2310,7 +1992,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Organisationsnummer, redovisningsenheten — Organisationsnummer, 12-siffrigt nummer från Företagsdatabasen (FDB)"
+value = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)"
 
 [[errata.field]]
 variable = "132.2617"
@@ -2324,7 +2006,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Organisationsnummer, redovisningsenheten — Organisationsnummer, 12-siffrigt nummer från Företagsdatabasen (FDB)"
+value = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)"
 
 [[errata.field]]
 variable = "132.2617"
@@ -2338,7 +2020,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Organisationsnummer, redovisningsenheten — Organisationsnummer, 12-siffrigt nummer från Företagsdatabasen (FDB)"
+value = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeorgNrHe)"
 
 [[errata.field]]
 variable = "132.1641"
@@ -2352,7 +2034,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end
 evidence = "Complete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Näringsgren för arbetsställe — Äldre standard än Ng2002."
+value = "Näringsgren för arbetsställe — Äldre standard än Ng2002 (Näringsgren2002)"
 
 [[errata.field]]
 variable = "132.1641"

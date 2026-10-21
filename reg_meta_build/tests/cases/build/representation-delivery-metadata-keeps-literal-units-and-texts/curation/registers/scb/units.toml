@@ -9,9 +9,10 @@ display_group = "Population tables"
 panel_entity_key = ["income"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
-[[variable]]
-native_id = "1.1"
-slug = "income"
+
+[variable]
+"1.1" = "income"
+
 [[representation.delivery_metadata]]
 variable = "1.1"
 fields = ["name"]

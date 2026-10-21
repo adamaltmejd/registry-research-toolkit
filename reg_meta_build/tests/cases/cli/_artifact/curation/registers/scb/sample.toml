@@ -8,10 +8,6 @@ native_id = "1.10"
 slug = "people"
 panel_entity_key = ["value", "kon"]
 
-[[variable]]
-native_id = "1.101"
-slug = "value"
-
-[[variable]]
-native_id = "1.102"
-slug = "kon"
+[variable]
+"1.101" = "value"
+"1.102" = "kon"

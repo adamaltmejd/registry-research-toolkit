@@ -68,7 +68,7 @@ def test_committed_lova_routes_choose_distinct_labelled_rows(
     (register / "scb" / "sample.toml").write_text(
         '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
         '[[variant]]\nnative_id = "1.10"\nslug = "people"\n'
-        '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
+        '[variable]\n"1.101" = "value"\n',
         encoding="utf-8",
     )
     (register / "sos" / "lova.toml").write_text(
@@ -79,9 +79,9 @@ def test_committed_lova_routes_choose_distinct_labelled_rows(
             f'native_id = "{native("register_variant", row)}"\n'
             for row in (lisa, main)
         )
+        + "[variable]\n"
         + "".join(
-            f'[[variable]]\nslug = "{name.lower()}"\n'
-            f'native_id = "{native("variable", name)}"\n'
+            f'"{native("variable", name)}" = "{name.lower()}"\n'
             for name in ("HUVUD", "LISA")
         )
         + "".join(

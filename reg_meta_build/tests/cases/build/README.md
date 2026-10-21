@@ -115,7 +115,7 @@ case cannot fail and does not belong here.
   },
   "sos": [{"abbrev": "PAR", "title": "Patientregistret", "subsets": [], "variables": [], "code_lists": {}}],
   "files": {
-    "Forsakringskassan/fk.toml": ["[[register]]", "key = \"remote\"", "..."],
+    "providers/fk.toml": ["[[register]]", "key = \"remote\"", "..."],
     "classifications/a.csv": ["code,label", "1,One"]
   }
 }
@@ -153,7 +153,7 @@ case cannot fail and does not belong here.
     explicit "not a linkage variable" claim; a variable's optional `linkage` text fills
     its cell, which declares it a linkage (identifier) variable.
 - `files` maps a path under the source directory to its text, for deliveries the other
-  keys do not model: an authored `Forsakringskassan/fk.toml` or a
+  keys do not model: an authored `providers/fk.toml` or a
   `classifications/<slug>.csv` code list. The text is a string, or a list of lines
   joined with newlines.
 

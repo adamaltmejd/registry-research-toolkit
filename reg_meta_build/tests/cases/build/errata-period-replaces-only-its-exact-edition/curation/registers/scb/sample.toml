@@ -5,9 +5,10 @@ native_id = "1"
 [[variant]]
 native_id = "1.2"
 slug = "people"
-[[variable]]
-native_id = "1.5"
-slug = "answer"
+
+[variable]
+"1.5" = "answer"
+
 [[errata.occurrence_period]]
 variable = "1.5"
 variant = "1.2"

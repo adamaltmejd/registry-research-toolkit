@@ -7,74 +7,22 @@ native_id = "11"
 native_id = "11.110"
 slug = "people"
 
-[[variable]]
-native_id = "11.1101"
-slug = "diag"
-
-[[variable]]
-native_id = "11.1102"
-slug = "bidiag"
-
-[[variable]]
-native_id = "11.1103"
-slug = "alder"
-
-[[variable]]
-native_id = "11.1104"
-slug = "civ"
-
-[[variable]]
-native_id = "11.1105"
-slug = "munic"
-
-[[variable]]
-native_id = "11.1106"
-slug = "ha"
-
-[[variable]]
-native_id = "11.1107"
-slug = "hb"
-
-[[variable]]
-native_id = "11.1111"
-slug = "famvar"
-
-[[variable]]
-native_id = "11.1112"
-slug = "famvar2"
-
-[[variable]]
-native_id = "11.1113"
-slug = "boundvar"
-
-[[variable]]
-native_id = "11.1114"
-slug = "safevar"
-
-[[variable]]
-native_id = "11.1115"
-slug = "dualvar"
-
-[[variable]]
-native_id = "11.1116"
-slug = "conflvar"
-
-[[variable]]
-native_id = "11.1117"
-slug = "mixedvar"
-
-[[variable]]
-native_id = "11.1118"
-slug = "diffvar"
-
-[[variable]]
-native_id = "11.1121"
-slug = "samevar"
-
-[[variable]]
-native_id = "11.1119"
-slug = "onevar"
-
-[[variable]]
-native_id = "11.1120"
-slug = "snivar"
+[variable]
+"11.1101" = "diag"
+"11.1102" = "bidiag"
+"11.1103" = "alder"
+"11.1104" = "civ"
+"11.1105" = "munic"
+"11.1106" = "ha"
+"11.1107" = "hb"
+"11.1111" = "famvar"
+"11.1112" = "famvar2"
+"11.1113" = "boundvar"
+"11.1114" = "safevar"
+"11.1115" = "dualvar"
+"11.1116" = "conflvar"
+"11.1117" = "mixedvar"
+"11.1118" = "diffvar"
+"11.1121" = "samevar"
+"11.1119" = "onevar"
+"11.1120" = "snivar"

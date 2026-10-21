@@ -60,6 +60,15 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
         manifest=SimpleNamespace(inputs=inputs),
         iter_evidence=lambda: iter(()),
         records=_prepared().records,
+        # make_tree declares the ALPHA and BETA books; the bundle must deliver them.
+        value_sources=tuple(
+            SimpleNamespace(
+                manifest=SimpleNamespace(
+                    revision=SimpleNamespace(dataset=f"classifications/{slug}.csv")
+                )
+            )
+            for slug in ("alpha", "beta")
+        ),
     )
     scopes = tuple(
         _scope().model_copy(update={"source": source})

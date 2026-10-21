@@ -15,7 +15,7 @@ name = "År"
 definition = "År"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -26,7 +26,7 @@ name = "Anger om eleven är inskriven i fritidshem"
 definition = "Anger om eleven är inskriven i fritidshem"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -37,7 +37,7 @@ name = "Gemensam rektor med fritidshem"
 definition = "Gemensam rektor med fritidshem"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -48,7 +48,7 @@ name = "Huvudman fritidshem"
 definition = "Huvudman fritidshem"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -59,7 +59,7 @@ name = "Moderna språk inom ramen för elevens val (språk)"
 definition = "Moderna språk inom ramen för elevens val (språk)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -70,7 +70,7 @@ name = "Moderna språk inom ramen för språkval (språk)"
 definition = "Moderna språk inom ramen för språkval (språk)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -81,7 +81,7 @@ name = "Eleven är inskriven på fritidshem under obekväma tider."
 definition = "Eleven är inskriven på fritidshem under obekväma tider."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[enrichment.description]]
@@ -164,172 +164,60 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Kostnader för förskola, fritidshem, annan pedagogisk verksamhet, skola och vuxenutbildning
-
-[[variable]]
-native_id = "193.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "193.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "193.1554"
-slug = "ar-termin-aktiviteten"
-
-[[variable]]
-native_id = "193.1579"
-slug = "termin"
-
-[[variable]]
-native_id = "193.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "193.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "193.7914"
-slug = "arskurs"
-
-[[variable]]
-native_id = "193.25186"
-slug = "moderna-sprak-val"
+"193.57" = "personnr"
+"193.56" = "person-orgnr"
+"193.1554" = "ar-termin-aktiviteten"
+"193.1579" = "termin"
+"193.1839" = "orgnr"
+"193.6809" = "folkbokforingskommun"
+"193.7914" = "arskurs"
+"193.25186" = "moderna-sprak-val"
 
 # register 194 (skolvasendet-kostnader)
-
-[[variable]]
-native_id = "193.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "193.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "193.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "193.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "193.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "193.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "193.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "193.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "193.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "193.4642"
-slug = "faderns-fodelseland"
-
-[[variable]]
-native_id = "193.4643"
-slug = "moderns-fodelseland"
-
-[[variable]]
-native_id = "193.7814"
-slug = "atgardsprogram"
-
-[[variable]]
-native_id = "193.7816"
-slug = "anpassad-studigang"
-
-[[variable]]
-native_id = "193.7817"
-slug = "deltagit-sva"
-
-[[variable]]
-native_id = "193.15712"
-slug = "stodundervisning"
-
-[[variable]]
-native_id = "193.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "193.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "193.30654"
-slug = "skolenhetens-namn"
-
-[[variable]]
-native_id = "193.31989"
-slug = "lopnr-elev"
-
-[[variable]]
-native_id = "193.32721"
-slug = "distansundervisning"
-
-[[variable]]
-native_id = "193.35887"
-slug = "nyligen-invandrad"
-
-[[variable]]
-native_id = "193.40833"
-slug = "central-insamlingsenhet"
+"193.34" = "juridisk-form"
+"193.323" = "personnr-far"
+"193.324" = "personnr-mor"
+"193.332" = "senaste-invandringsdatum"
+"193.517" = "senaste-invandringsar"
+"193.1378" = "fodelsear"
+"193.1993" = "skolans-identitetsnummer"
+"193.1996" = "skolform"
+"193.3635" = "skolans-namn"
+"193.4642" = "faderns-fodelseland"
+"193.4643" = "moderns-fodelseland"
+"193.7814" = "atgardsprogram"
+"193.7816" = "anpassad-studigang"
+"193.7817" = "deltagit-sva"
+"193.15712" = "stodundervisning"
+"193.23867" = "klassbeteckning"
+"193.29426" = "tidigaste-invandringsdatum"
+"193.30654" = "skolenhetens-namn"
+"193.31989" = "lopnr-elev"
+"193.32721" = "distansundervisning"
+"193.35887" = "nyligen-invandrad"
+"193.40833" = "central-insamlingsenhet"
 
 # register 194
-
-[[variable]]
-native_id = "193.8073.sun2000niva-1-mor"
-slug = "sun-niva-1-mor"
-
-[[variable]]
-native_id = "193.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "193.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "193.8073.sun2000niva-old-mor"
-slug = "sun-niva-old-mor"
-
-[[variable]]
-native_id = "193.8073.sun2000niva-sv-mor"
-slug = "sun-niva-sv-mor"
-
-[[variable]]
-native_id = "193.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "193.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "193.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "193.8137.hmannamn"
-slug = "huvudman-namn"
-
-[[variable]]
-native_id = "193.MSPR2_SPRAK"
-slug = "moderna-sprak-sprakval-sprak"
+"193.8073.sun2000niva-1-mor" = "sun-niva-1-mor"
+"193.8073.sun2000niva-mor" = "sun-niva-mor"
+"193.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"193.8073.sun2000niva-old-mor" = "sun-niva-old-mor"
+"193.8073.sun2000niva-sv-mor" = "sun-niva-sv-mor"
+"193.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"193.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"193.8137.hman" = "huvudman"
+"193.8137.hmannamn" = "huvudman-namn"
+"193.MSPR2_SPRAK" = "moderna-sprak-sprakval-sprak"
+"193.67.utlbakgr" = "utlbakgr"
+"193.67.utlbakgr2" = "utlbakgr2"
+"193.67.utlsvbakg" = "utlsvbakg"
+"193.67.utl-bakg" = "utl-bakg"
+"193.MSPR2_ALT" = "mspr2-alt"
+"193.AvdFTH" = "avdelningsbeteckning-fritidshem"
+"193.SkolKodFTH" = "skolkod-fritidshem"
+"193.SkolenhetsKodFTH" = "skolenhetskod-fritidshem"
 
 # register 194
 
@@ -339,22 +227,6 @@ variable = "193.67"
 columns = { UtlBakGr = "193.67.utlbakgr", UtlBakGr2 = "193.67.utlbakgr2", UtlSvBakg = "193.67.utlsvbakg", Utl_BakG = "193.67.utl-bakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "ec6f9356528d28802ee3956e31cd4084137b286103c7a3c8a88852191145c1c7"
-
-[[variable]]
-native_id = "193.67.utlbakgr"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "193.67.utlbakgr2"
-slug = "utlbakgr2"
-
-[[variable]]
-native_id = "193.67.utlsvbakg"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "193.67.utl-bakg"
-slug = "utl-bakg"
 
 # ── #1302 SWECOV-held columns SCB's export omits (2026-10-12) ──
 # Each column is placed in the table's own view by SWECOV's P1105 delivery list.
@@ -371,10 +243,6 @@ holdings_period = "2008-2008"
 source = "steward-holdings"
 evidence = "SWECOV holds MSPR2_ALT in Grund_Fkl_Fth_2008 (2008); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individregister. holdings_period is the SWECOV holdings range (#1302)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "193.MSPR2_ALT"
-slug = "mspr2-alt"
 
 # Grund_Fkl_Fth_2008-2024 is one combined annual (15 October) pupil delivery owned by
 # individregister (#1579); its fritidshem columns have no owner column here.
@@ -411,15 +279,3 @@ versions = ["15 oktober 2013", "15 oktober 2014", "15 oktober 2015", "15 oktober
 source = "steward-holdings"
 evidence = "SCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 noted = "2026-10-13"
-
-[[variable]]
-native_id = "193.AvdFTH"
-slug = "avdelningsbeteckning-fritidshem"
-
-[[variable]]
-native_id = "193.SkolKodFTH"
-slug = "skolkod-fritidshem"
-
-[[variable]]
-native_id = "193.SkolenhetsKodFTH"
-slug = "skolenhetskod-fritidshem"

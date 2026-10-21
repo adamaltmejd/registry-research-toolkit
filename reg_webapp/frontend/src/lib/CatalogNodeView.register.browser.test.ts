@@ -6,12 +6,12 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { RegisterShow } from "./api";
 import { getRelatedDocuments, getShow, getStates } from "./api";
+import { registerShow } from "./api-test-helpers";
 import CatalogNodeView from "./CatalogNodeView.svelte";
 import {
   clickVariantChip,
   columnedRegisterNode,
   delivery,
-  registerShow,
   splitColumnRegisterNode,
   withLisaVariants,
 } from "./catalog-node-view-test-helpers";

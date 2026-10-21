@@ -11,82 +11,34 @@ panel_entity_key = "fastighetsbeteckning"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Månatlig bränsle-, gas och lagerstatistik (MABRA)
-
-[[variable]]
-native_id = "140.26"
-slug = "fastighetsbeteckning"
-
-
-[[variable]]
-native_id = "140.145"
-slug = "fastbet-id"
-
-[[variable]]
-native_id = "140.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "140.7838"
-slug = "graddagar"
-
-[[variable]]
-native_id = "140.7860"
-slug = "taxeringsid"
-
-[[variable]]
-native_id = "140.7865"
-slug = "franluftsvarmepump"
-
-[[variable]]
-native_id = "140.7868"
-slug = "utevarmepump"
-
-[[variable]]
-native_id = "140.7869"
-slug = "bergvarmepump"
-
-[[variable]]
-native_id = "140.7891"
-slug = "elvvarme-inkl-varmvatten"
-
-[[variable]]
-native_id = "140.7900"
-slug = "byggnadsar"
-
-[[variable]]
-native_id = "140.7998"
-slug = "varmvattenforbrukning"
-
-[[variable]]
-native_id = "140.8162"
-slug = "antal-svarande-enheter"
-
-[[variable]]
-native_id = "140.19574"
-slug = "installationsar-luft-luftvarmepump"
-
-[[variable]]
-native_id = "140.19575"
-slug = "installationsar-franluft-varmepump"
-
-[[variable]]
-native_id = "140.19576"
-slug = "installationsar-bergvarmepump"
-
-[[variable]]
-native_id = "140.21246"
-slug = "avregistreringskod-lokaler"
-
-[[variable]]
-native_id = "140.21260"
-slug = "nutsregion"
+"140.26" = "fastighetsbeteckning"
+"140.145" = "fastbet-id"
+"140.1839" = "orgnr"
+"140.7838" = "graddagar"
+"140.7860" = "taxeringsid"
+"140.7865" = "franluftsvarmepump"
+"140.7868" = "utevarmepump"
+"140.7869" = "bergvarmepump"
+"140.7891" = "elvvarme-inkl-varmvatten"
+"140.7900" = "byggnadsar"
+"140.7998" = "varmvattenforbrukning"
+"140.8162" = "antal-svarande-enheter"
+"140.19574" = "installationsar-luft-luftvarmepump"
+"140.19575" = "installationsar-franluft-varmepump"
+"140.19576" = "installationsar-bergvarmepump"
+"140.21246" = "avregistreringskod-lokaler"
+"140.21260" = "nutsregion"
 
 # register 141
-
-[[variable]]
-native_id = "140.49.lansnamn"
-slug = "lan-2"
+"140.49.lansnamn" = "lan-2"
+"140.7869.vpberg" = "vpberg"
+"140.7869.vpumpberg" = "vpumpberg"
+"140.7865.vpfran" = "vpfran"
+"140.7865.vpumpfran" = "vpumpfran"
+"140.7868.vpute" = "vpute"
+"140.7868.vpumpute" = "vpumpute"
 
 # register 142
 
@@ -110,27 +62,3 @@ variable = "140.7868"
 columns = { VpUte = "140.7868.vpute", vpumpute = "140.7868.vpumpute" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "52d7c09a4a616680aa458cf420dbae7597805c5cbdbf47aa6f2a81034e45667d"
-
-[[variable]]
-native_id = "140.7869.vpberg"
-slug = "vpberg"
-
-[[variable]]
-native_id = "140.7869.vpumpberg"
-slug = "vpumpberg"
-
-[[variable]]
-native_id = "140.7865.vpfran"
-slug = "vpfran"
-
-[[variable]]
-native_id = "140.7865.vpumpfran"
-slug = "vpumpfran"
-
-[[variable]]
-native_id = "140.7868.vpute"
-slug = "vpute"
-
-[[variable]]
-native_id = "140.7868.vpumpute"
-slug = "vpumpute"

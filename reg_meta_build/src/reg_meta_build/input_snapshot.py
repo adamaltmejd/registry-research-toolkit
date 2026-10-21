@@ -37,7 +37,6 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from ._resolved_common import _CURATED_PROVIDERS
 from .dbdiff import TableIgnore, diff_db_content, format_report
 from .source_evidence import SourceRevision
 from .source_files import _file_sha256
@@ -2638,11 +2637,11 @@ def _classification_csvs(catalog: Path) -> list[Path]:
     )
 
 
-# Relative to the input directory; each lands under `catalog/` in the bundle.
-_FIXED_CATALOG_SOURCES = (
-    "scb_canonical/scb_canonical.toml",
-    *(f"{directory}/{provider}.toml" for provider, directory in _CURATED_PROVIDERS),
-)
+def _canonical_code_lists(catalog: Path) -> list[Path]:
+    """Every SCB canonical code list (`scb_canonical/<name>.csv`)."""
+    return sorted(
+        path for path in (catalog / "scb_canonical").glob("*.csv") if path.is_file()
+    )
 
 
 def _bundle_source_files(
@@ -2654,10 +2653,6 @@ def _bundle_source_files(
         raise SnapshotError(f"input directory not found: {input_dir}")
 
     resolved: dict[str, Path | None] = {}
-    for relative in _FIXED_CATALOG_SOURCES:
-        source = input_dir / relative
-        resolved[f"catalog/{relative}"] = source if source.is_file() else None
-
     if lisa_workbook is None:
         resolved[LISA_BUNDLE_PATH] = None
     else:
@@ -2690,19 +2685,10 @@ def _bundle_source_files(
     for source in _classification_csvs(input_dir):
         resolved[f"catalog/{source.relative_to(input_dir).as_posix()}"] = source
 
-    canonical_toml = input_dir / "scb_canonical" / "scb_canonical.toml"
-    if canonical_toml.is_file():
-        from .sources.curated_records import read_curated_source
-
-        source = read_curated_source(
-            canonical_toml,
-            _bundle_source_revision(canonical_toml, input_dir),
-            provider="scb",
-        )
-        for name in source.declared_value_lists:
-            csv_path = _canonical_code_list_path(canonical_toml.parent, name)
-            relative = f"catalog/scb_canonical/{csv_path.name}"
-            resolved[relative] = csv_path if csv_path.is_file() else None
+    # The SCB canonical code lists; the authored `scb_canonical.toml` that declares
+    # them is curation, and `prepare-sources` checks each declared list is here.
+    for source in _canonical_code_lists(input_dir):
+        resolved[f"catalog/{source.relative_to(input_dir).as_posix()}"] = source
 
     catalog_root = input_dir.resolve()
     validated: dict[str, Path | None] = {}
@@ -2778,15 +2764,6 @@ def _verify_bundle_inventory(
             )
 
 
-def _canonical_code_list_path(directory: Path, name: str) -> Path:
-    filename = f"{name}.csv"
-    if Path(filename).name != filename or "\\" in filename:
-        raise SnapshotError(
-            f"canonical code-list reference must be a local filename: {name!r}"
-        )
-    return directory / filename
-
-
 def _bundle_source_revision(path: Path, root: Path) -> SourceRevision:
     """Pin a small file while validating a not-yet-accepted input bundle."""
     digest = _file_sha256(path)
@@ -2805,7 +2782,6 @@ def _bundle_source_revision(path: Path, root: Path) -> SourceRevision:
 def _validate_bundle_contract(root: Path) -> None:
     """Validate source formats without forming a catalog."""
     from .sources.code_lists import read_code_list
-    from .sources.curated_records import read_curated_source
     from .sources.sos import parse_directory
 
     catalog = root / "catalog"
@@ -2816,24 +2792,8 @@ def _validate_bundle_contract(root: Path) -> None:
     if sos.is_dir():
         parse_directory(sos)
 
-    for provider, directory in _CURATED_PROVIDERS:
-        path = catalog / directory / f"{provider}.toml"
-        if path.is_file():
-            read_curated_source(
-                path, _bundle_source_revision(path, root), provider=provider
-            )
-
-    canonical_dir = catalog / "scb_canonical"
-    canonical_toml = canonical_dir / "scb_canonical.toml"
-    if canonical_toml.is_file():
-        source = read_curated_source(
-            canonical_toml,
-            _bundle_source_revision(canonical_toml, root),
-            provider="scb",
-        )
-        for name in source.declared_value_lists:
-            path = _canonical_code_list_path(canonical_dir, name)
-            read_code_list(path, _bundle_source_revision(path, root), name=name)
+    for path in _canonical_code_lists(catalog):
+        read_code_list(path, _bundle_source_revision(path, root), name=path.stem)
 
     manifest_path = root / BUNDLE_MANIFEST_NAME
     if manifest_path.is_file():
@@ -2893,23 +2853,6 @@ def prepare_input_bundle(
             "catalog bundle candidate must stay outside the SCB snapshot"
         )
     sources = _bundle_source_files(input_dir, lisa_workbook=lisa_workbook)
-    missing_references = sorted(
-        path for path, source in sources.items() if source is None
-    )
-    # Fixed optional paths intentionally remain absent. Canonical code references,
-    # however, were introduced only by a manifest that requires them and therefore
-    # must exist.
-    required_missing = [
-        path
-        for path in missing_references
-        if path.startswith("catalog/scb_canonical/")
-        and path != "catalog/scb_canonical/scb_canonical.toml"
-    ]
-    if required_missing:
-        raise SnapshotError(
-            f"referenced catalog input files are missing: {required_missing}"
-        )
-
     source_state = {
         path: None if source is None else (source, _file_identity(source.stat()))
         for path, source in sources.items()

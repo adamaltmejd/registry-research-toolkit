@@ -20,585 +20,154 @@ panel_entity_key = "region"
 panel_time_key = ["kalenderar", "kvartal-period"]
 panel_time_grain = "row"
 
+[variable]
 # Finansiella företag, årsbokslut
-
-[[variable]]
-native_id = "290.36"
-slug = "kommun"
-
-
-[[variable]]
-native_id = "290.2907"
-slug = "region"
-
-[[variable]]
-native_id = "290.4270"
-slug = "summa-personalkostnader"
-
-[[variable]]
-native_id = "290.4307"
-slug = "ovriga-finansiella-kostnader"
-
-[[variable]]
-native_id = "290.4819"
-slug = "ovriga-kostnader"
-
-[[variable]]
-native_id = "290.5635"
-slug = "ovriga-intakter"
-
-[[variable]]
-native_id = "290.16605"
-slug = "summa-finansiella-intakter"
-
-[[variable]]
-native_id = "290.18125"
-slug = "taxor-och-avgifter"
-
-[[variable]]
-native_id = "290.18139"
-slug = "pensionskostnad-avgiftsbestamd-del"
-
-[[variable]]
-native_id = "290.18144"
-slug = "forsaljning-exploateringsfastigheter"
-
-[[variable]]
-native_id = "290.18212"
-slug = "driftbidrag-fran-staten"
-
-[[variable]]
-native_id = "290.18419"
-slug = "investeringsutgifter"
-
-[[variable]]
-native_id = "290.18421"
-slug = "investeringsutgifter-inventarier"
-
-[[variable]]
-native_id = "290.18422"
-slug = "investeringsutgifter-entreprenader"
-
-[[variable]]
-native_id = "290.18423"
-slug = "investeringsutgifter-mark-byggnader"
-
-[[variable]]
-native_id = "290.18424"
-slug = "investeringsinkomster-statliga-bidrag"
-
-[[variable]]
-native_id = "290.18433"
-slug = "finansiell-kostnad-pensionsavsattningar"
-
-[[variable]]
-native_id = "290.18455"
-slug = "summa-verksamhetens-intakter-enligt-rr"
-
-[[variable]]
-native_id = "290.18631"
-slug = "bidrag-till-enskilda"
-
-[[variable]]
-native_id = "290.18633"
-slug = "bostadssociala-bidrag"
-
-[[variable]]
-native_id = "290.18634"
-slug = "bidrag-till-foreningar-foretag-m-fl"
-
-[[variable]]
-native_id = "290.18635"
-slug = "bidrag-juridiska-personer-ersattning-fk"
-
-[[variable]]
-native_id = "290.18637"
-slug = "loner-m-m"
-
-[[variable]]
-native_id = "290.18638"
-slug = "loner-darav-sjuklon"
-
-[[variable]]
-native_id = "290.18639"
-slug = "sociala-avgifter-enl-lag-och-avtal"
-
-[[variable]]
-native_id = "290.18640"
-slug = "pensionsutbetalningar"
-
-[[variable]]
-native_id = "290.18653"
-slug = "material"
-
-[[variable]]
-native_id = "290.18659"
-slug = "tjanster-inkl-kop-av-huvudverksamhet"
-
-[[variable]]
-native_id = "290.18662"
-slug = "entreprenad-kop-huvudverksamhet"
-
-[[variable]]
-native_id = "290.18670"
-slug = "tjanster-inkl-kop-lokalhyror"
-
-[[variable]]
-native_id = "290.18685"
-slug = "rantekostnader-pa-lan"
-
-[[variable]]
-native_id = "290.18693"
-slug = "forsaljningspris-maskiner-inventarier"
-
-[[variable]]
-native_id = "290.18694"
-slug = "forsaljningspris-mark-byggnader"
-
-[[variable]]
-native_id = "290.18700"
-slug = "forsaljningsmedel"
-
-[[variable]]
-native_id = "290.18703"
-slug = "hyror-och-arrenden"
-
-[[variable]]
-native_id = "290.18707"
-slug = "bidrag"
-
-[[variable]]
-native_id = "290.18716"
-slug = "forsaljning-verksamhet-kommuner-regioner"
-
-[[variable]]
-native_id = "290.19732"
-slug = "summa-bidrag-och-transfereringar"
-
-[[variable]]
-native_id = "290.19802"
-slug = "summa-finansiella-kostnader"
-
-[[variable]]
-native_id = "290.24182"
-slug = "verksamhetens-intakter-landsting"
-
-[[variable]]
-native_id = "290.24183"
-slug = "summa-verksamhetens-kostnader"
-
-[[variable]]
-native_id = "290.24184"
-slug = "loner-exkl-skattefria-ersattningar"
-
-[[variable]]
-native_id = "290.24206"
-slug = "ovriga-kostnader-for-personal"
-
-[[variable]]
-native_id = "290.24207"
-slug = "pensionsutbetalningar-exkl-loneskatt"
-
-[[variable]]
-native_id = "290.24209"
-slug = "sociala-avgifter-inkl-loneskatt"
-
-[[variable]]
-native_id = "290.24211"
-slug = "kostnader-for-kopt-verksamhet-regioner"
-
-[[variable]]
-native_id = "290.24212"
-slug = "kostnader-kopt-verksamhet-fran-kommuner"
-
-[[variable]]
-native_id = "290.24213"
-slug = "kostnader-kopt-verksamhet-regionsagda"
-
-[[variable]]
-native_id = "290.24214"
-slug = "verksamhetsanknutna-tjanster"
-
-[[variable]]
-native_id = "290.24215"
-slug = "verksamhetsanknutna-tjanster-inhyrd"
-
-[[variable]]
-native_id = "290.24216"
-slug = "verksamhetsanknutna-tjanster-kommuner"
-
-[[variable]]
-native_id = "290.24217"
-slug = "verksamhetsanknutna-tjanster-regionsagda"
-
-[[variable]]
-native_id = "290.24218"
-slug = "material-och-tjanster"
-
-[[variable]]
-native_id = "290.24219"
-slug = "material-och-tjanster-lakemedel"
-
-[[variable]]
-native_id = "290.24220"
-slug = "material-tjanster-fastighetsunderhall"
-
-[[variable]]
-native_id = "290.24221"
-slug = "lamnade-bidrag-inkl-trafik"
-
-[[variable]]
-native_id = "290.24222"
-slug = "lamnade-bidrag-inkl-trafik-varav-trafik"
-
-[[variable]]
-native_id = "290.24223"
-slug = "lamnade-bidrag-inkl-trafik-kommuner"
-
-[[variable]]
-native_id = "290.24225"
-slug = "lamnade-bidrag-inkl-trafik-regionsagda"
-
-[[variable]]
-native_id = "290.24227"
-slug = "lamnade-bidrag-inkl-trafik-ovriga"
-
-[[variable]]
-native_id = "290.24228"
-slug = "ovriga-kostnader-regioner"
-
-[[variable]]
-native_id = "290.24229"
-slug = "finansiella-kostnader-regioner"
-
-[[variable]]
-native_id = "290.24230"
-slug = "finansiella-kostnader-rantekostnader"
-
-[[variable]]
-native_id = "290.24231"
-slug = "investeringsutgifter-landsting"
-
-[[variable]]
-native_id = "290.24232"
-slug = "investeringsutgifter-byggnader-regioner"
-
-[[variable]]
-native_id = "290.24233"
-slug = "investeringsutgifter-medtek-inventarier"
-
-[[variable]]
-native_id = "290.24234"
-slug = "investeringsutgifter-for-inventarier"
-
-[[variable]]
-native_id = "290.24235"
-slug = "investeringsutgifter-immateriella"
-
-[[variable]]
-native_id = "290.24236"
-slug = "investeringsutgifter-darav-leasing"
-
-[[variable]]
-native_id = "290.24237"
-slug = "investeringsutgifter-kopt-mark-byggnader"
-
-[[variable]]
-native_id = "290.24238"
-slug = "investeringsinkomster-landsting"
-
-[[variable]]
-native_id = "290.24239"
-slug = "investeringsinkomster-statsbidrag"
-
-[[variable]]
-native_id = "290.24240"
-slug = "forsaljning-anlaggningstillgangar"
-
-[[variable]]
-native_id = "290.24241"
-slug = "interna-lokalhyror-landsting"
-
-[[variable]]
-native_id = "290.24242"
-slug = "patientavgifter-och-andra-avgifter"
-
-[[variable]]
-native_id = "290.24243"
-slug = "patientavgifter-oppen-vard"
-
-[[variable]]
-native_id = "290.24244"
-slug = "patientavgifter-inom-slutenvarden"
-
-[[variable]]
-native_id = "290.24245"
-slug = "patientavgifter-for-tandvard"
-
-[[variable]]
-native_id = "290.24246"
-slug = "forsaljning-av-verksamhet-regioner"
-
-[[variable]]
-native_id = "290.24247"
-slug = "forsaljning-verksamhet-till-kommuner"
-
-[[variable]]
-native_id = "290.24248"
-slug = "forsaljning-verksamhet-till-regionsagda"
-
-[[variable]]
-native_id = "290.24249"
-slug = "forsaljning-av-tjanster"
-
-[[variable]]
-native_id = "290.24250"
-slug = "forsaljning-av-material-och-varor"
-
-[[variable]]
-native_id = "290.24251"
-slug = "erhallna-bidrag"
-
-[[variable]]
-native_id = "290.24252"
-slug = "erhallna-bidrag-riktade-statsbidrag"
-
-[[variable]]
-native_id = "290.24254"
-slug = "ovriga-intakter-landsting"
-
-[[variable]]
-native_id = "290.24256"
-slug = "generella-statsbidrag-och-utjamning"
-
-[[variable]]
-native_id = "290.24257"
-slug = "generella-statsbidrag-lakemedelsforman"
-
-[[variable]]
-native_id = "290.24258"
-slug = "finansiella-intakter-regioner"
-
-[[variable]]
-native_id = "290.24259"
-slug = "finansiella-intakter-darav-ranteintakter"
-
-[[variable]]
-native_id = "290.24260"
-slug = "finansiella-intakter-utdelning-aktier"
-
-[[variable]]
-native_id = "290.27977"
-slug = "rad"
-
-[[variable]]
-native_id = "290.28209"
-slug = "summa-verksamhetens-kostnader-enligt-rr"
-
-[[variable]]
-native_id = "290.28232"
-slug = "erhallna-bidrag-varav-alf-medel"
-
-[[variable]]
-native_id = "290.28314"
-slug = "bidrag-privata-aktorer-offentliga"
-
-[[variable]]
-native_id = "290.28326"
-slug = "kostnadsersattningar-bidrag-kommuner"
-
-[[variable]]
-native_id = "290.28327"
-slug = "ersattning-fk-personlig-assistans"
-
-[[variable]]
-native_id = "290.28328"
-slug = "momsbidrag-kop-ej-skattepliktig"
-
-[[variable]]
-native_id = "290.28329"
-slug = "eu-bidrag-intakter"
-
-[[variable]]
-native_id = "290.28332"
-slug = "forsaljning-verksamhet-tjanster-ovriga"
-
-[[variable]]
-native_id = "290.28413"
-slug = "kundforluster-riskkostnader"
-
-[[variable]]
-native_id = "290.28438"
-slug = "utdelning-pa-aktier-och-andelar-kommunen"
-
-[[variable]]
-native_id = "290.28439"
-slug = "ranteintakter-from-2011"
-
-[[variable]]
-native_id = "290.28444"
-slug = "ovriga-finansiella-intakter-from-2011"
-
-[[variable]]
-native_id = "290.29299"
-slug = "biljettintakter-kollektivtrafik"
-
-[[variable]]
-native_id = "290.32743"
-slug = "bidrag-till-infrastruktur"
-
-[[variable]]
-native_id = "290.32746"
-slug = "tjanster-darav-fastighets-entreprenader"
-
-[[variable]]
-native_id = "290.37171"
-slug = "skatteintakter"
-
-[[variable]]
-native_id = "290.37393"
-slug = "landsting"
-
-[[variable]]
-native_id = "290.39808"
-slug = "kop-huvudverksamhet-fran-andra-kommuner"
-
-[[variable]]
-native_id = "290.39809"
-slug = "summa-forsaljning-verksamhet-tjanster"
-
-[[variable]]
-native_id = "290.39810"
-slug = "investeringsutgifter-affarsverksamhet"
-
-[[variable]]
-native_id = "290.39811"
-slug = "investeringar-affarsverksamhet-maskiner"
-
-[[variable]]
-native_id = "290.39849"
-slug = "forsaljning-av-verksamhet-darav-trafik"
-
-[[variable]]
-native_id = "290.39852"
-slug = "forsaljning-verksamhet-kommuner-trafik"
-
-[[variable]]
-native_id = "290.39854"
-slug = "forsaljning-regionsagda-foretag-trafik"
-
-[[variable]]
-native_id = "290.39855"
-slug = "forsaljning-av-tjanster-darav-trafik"
-
-[[variable]]
-native_id = "290.39856"
-slug = "forsaljning-material-varor-trafik"
-
-[[variable]]
-native_id = "290.39857"
-slug = "erhallna-bidrag-darav-trafik"
-
-[[variable]]
-native_id = "290.39861"
-slug = "erhallna-bidrag-statsbidrag-trafik"
-
-[[variable]]
-native_id = "290.39862"
-slug = "ovriga-intakter-darav-trafik"
-
-[[variable]]
-native_id = "290.39863"
-slug = "summa-verksamhetens-intakter-trafik"
-
-[[variable]]
-native_id = "290.39866"
-slug = "loner-forandring-semesterloneskuld"
-
-[[variable]]
-native_id = "290.39870"
-slug = "ovriga-personalkostnader-kap-kl-pension"
-
-[[variable]]
-native_id = "290.39876"
-slug = "kostnader-kopt-verksamhet-trafik"
-
-[[variable]]
-native_id = "290.39877"
-slug = "kostnader-kop-verksamhet-kommuner-trafik"
-
-[[variable]]
-native_id = "290.39878"
-slug = "kostnader-kopt-regionsagda-trafik"
-
-[[variable]]
-native_id = "290.39879"
-slug = "summa-verksamhetens-kostnader-trafik"
-
-[[variable]]
-native_id = "290.39880"
-slug = "investeringsutgifter-byggnader-trafik"
-
-[[variable]]
-native_id = "290.39881"
-slug = "investeringsutgifter-ovriga-tillgangar"
-
-[[variable]]
-native_id = "290.39882"
-slug = "summa-investeringsutgifter"
-
-[[variable]]
-native_id = "290.39883"
-slug = "investeringsutgifter-medicintekniska"
-
-[[variable]]
-native_id = "290.42874"
-slug = "intakter-exploatering-ersattningar"
-
-[[variable]]
-native_id = "290.42879"
-slug = "aktivering-arbete-anlaggningstillgangar"
-
-[[variable]]
-native_id = "290.42881"
-slug = "forsakringsavg-och-riskkotn-div-kost"
-
-[[variable]]
-native_id = "290.42882"
-slug = "kop-huvudverksamhet-fran-enskilda"
-
-[[variable]]
-native_id = "290.42884"
-slug = "forsaljningspris-finansiella-tillgangar"
-
-[[variable]]
-native_id = "290.47633"
-slug = "summa-investeringsutgifter-materiella"
-
-[[variable]]
-native_id = "290.47635"
-slug = "investeringar-immateriella-forvarvade"
-
-[[variable]]
-native_id = "290.47636"
-slug = "investeringar-immateriella-internt"
+"290.36" = "kommun"
+"290.2907" = "region"
+"290.4270" = "summa-personalkostnader"
+"290.4307" = "ovriga-finansiella-kostnader"
+"290.4819" = "ovriga-kostnader"
+"290.5635" = "ovriga-intakter"
+"290.16605" = "summa-finansiella-intakter"
+"290.18125" = "taxor-och-avgifter"
+"290.18139" = "pensionskostnad-avgiftsbestamd-del"
+"290.18144" = "forsaljning-exploateringsfastigheter"
+"290.18212" = "driftbidrag-fran-staten"
+"290.18419" = "investeringsutgifter"
+"290.18421" = "investeringsutgifter-inventarier"
+"290.18422" = "investeringsutgifter-entreprenader"
+"290.18423" = "investeringsutgifter-mark-byggnader"
+"290.18424" = "investeringsinkomster-statliga-bidrag"
+"290.18433" = "finansiell-kostnad-pensionsavsattningar"
+"290.18455" = "summa-verksamhetens-intakter-enligt-rr"
+"290.18631" = "bidrag-till-enskilda"
+"290.18633" = "bostadssociala-bidrag"
+"290.18634" = "bidrag-till-foreningar-foretag-m-fl"
+"290.18635" = "bidrag-juridiska-personer-ersattning-fk"
+"290.18637" = "loner-m-m"
+"290.18638" = "loner-darav-sjuklon"
+"290.18639" = "sociala-avgifter-enl-lag-och-avtal"
+"290.18640" = "pensionsutbetalningar"
+"290.18653" = "material"
+"290.18659" = "tjanster-inkl-kop-av-huvudverksamhet"
+"290.18662" = "entreprenad-kop-huvudverksamhet"
+"290.18670" = "tjanster-inkl-kop-lokalhyror"
+"290.18685" = "rantekostnader-pa-lan"
+"290.18693" = "forsaljningspris-maskiner-inventarier"
+"290.18694" = "forsaljningspris-mark-byggnader"
+"290.18700" = "forsaljningsmedel"
+"290.18703" = "hyror-och-arrenden"
+"290.18707" = "bidrag"
+"290.18716" = "forsaljning-verksamhet-kommuner-regioner"
+"290.19732" = "summa-bidrag-och-transfereringar"
+"290.19802" = "summa-finansiella-kostnader"
+"290.24182" = "verksamhetens-intakter-landsting"
+"290.24183" = "summa-verksamhetens-kostnader"
+"290.24184" = "loner-exkl-skattefria-ersattningar"
+"290.24206" = "ovriga-kostnader-for-personal"
+"290.24207" = "pensionsutbetalningar-exkl-loneskatt"
+"290.24209" = "sociala-avgifter-inkl-loneskatt"
+"290.24211" = "kostnader-for-kopt-verksamhet-regioner"
+"290.24212" = "kostnader-kopt-verksamhet-fran-kommuner"
+"290.24213" = "kostnader-kopt-verksamhet-regionsagda"
+"290.24214" = "verksamhetsanknutna-tjanster"
+"290.24215" = "verksamhetsanknutna-tjanster-inhyrd"
+"290.24216" = "verksamhetsanknutna-tjanster-kommuner"
+"290.24217" = "verksamhetsanknutna-tjanster-regionsagda"
+"290.24218" = "material-och-tjanster"
+"290.24219" = "material-och-tjanster-lakemedel"
+"290.24220" = "material-tjanster-fastighetsunderhall"
+"290.24221" = "lamnade-bidrag-inkl-trafik"
+"290.24222" = "lamnade-bidrag-inkl-trafik-varav-trafik"
+"290.24223" = "lamnade-bidrag-inkl-trafik-kommuner"
+"290.24225" = "lamnade-bidrag-inkl-trafik-regionsagda"
+"290.24227" = "lamnade-bidrag-inkl-trafik-ovriga"
+"290.24228" = "ovriga-kostnader-regioner"
+"290.24229" = "finansiella-kostnader-regioner"
+"290.24230" = "finansiella-kostnader-rantekostnader"
+"290.24231" = "investeringsutgifter-landsting"
+"290.24232" = "investeringsutgifter-byggnader-regioner"
+"290.24233" = "investeringsutgifter-medtek-inventarier"
+"290.24234" = "investeringsutgifter-for-inventarier"
+"290.24235" = "investeringsutgifter-immateriella"
+"290.24236" = "investeringsutgifter-darav-leasing"
+"290.24237" = "investeringsutgifter-kopt-mark-byggnader"
+"290.24238" = "investeringsinkomster-landsting"
+"290.24239" = "investeringsinkomster-statsbidrag"
+"290.24240" = "forsaljning-anlaggningstillgangar"
+"290.24241" = "interna-lokalhyror-landsting"
+"290.24242" = "patientavgifter-och-andra-avgifter"
+"290.24243" = "patientavgifter-oppen-vard"
+"290.24244" = "patientavgifter-inom-slutenvarden"
+"290.24245" = "patientavgifter-for-tandvard"
+"290.24246" = "forsaljning-av-verksamhet-regioner"
+"290.24247" = "forsaljning-verksamhet-till-kommuner"
+"290.24248" = "forsaljning-verksamhet-till-regionsagda"
+"290.24249" = "forsaljning-av-tjanster"
+"290.24250" = "forsaljning-av-material-och-varor"
+"290.24251" = "erhallna-bidrag"
+"290.24252" = "erhallna-bidrag-riktade-statsbidrag"
+"290.24254" = "ovriga-intakter-landsting"
+"290.24256" = "generella-statsbidrag-och-utjamning"
+"290.24257" = "generella-statsbidrag-lakemedelsforman"
+"290.24258" = "finansiella-intakter-regioner"
+"290.24259" = "finansiella-intakter-darav-ranteintakter"
+"290.24260" = "finansiella-intakter-utdelning-aktier"
+"290.27977" = "rad"
+"290.28209" = "summa-verksamhetens-kostnader-enligt-rr"
+"290.28232" = "erhallna-bidrag-varav-alf-medel"
+"290.28314" = "bidrag-privata-aktorer-offentliga"
+"290.28326" = "kostnadsersattningar-bidrag-kommuner"
+"290.28327" = "ersattning-fk-personlig-assistans"
+"290.28328" = "momsbidrag-kop-ej-skattepliktig"
+"290.28329" = "eu-bidrag-intakter"
+"290.28332" = "forsaljning-verksamhet-tjanster-ovriga"
+"290.28413" = "kundforluster-riskkostnader"
+"290.28438" = "utdelning-pa-aktier-och-andelar-kommunen"
+"290.28439" = "ranteintakter-from-2011"
+"290.28444" = "ovriga-finansiella-intakter-from-2011"
+"290.29299" = "biljettintakter-kollektivtrafik"
+"290.32743" = "bidrag-till-infrastruktur"
+"290.32746" = "tjanster-darav-fastighets-entreprenader"
+"290.37171" = "skatteintakter"
+"290.37393" = "landsting"
+"290.39808" = "kop-huvudverksamhet-fran-andra-kommuner"
+"290.39809" = "summa-forsaljning-verksamhet-tjanster"
+"290.39810" = "investeringsutgifter-affarsverksamhet"
+"290.39811" = "investeringar-affarsverksamhet-maskiner"
+"290.39849" = "forsaljning-av-verksamhet-darav-trafik"
+"290.39852" = "forsaljning-verksamhet-kommuner-trafik"
+"290.39854" = "forsaljning-regionsagda-foretag-trafik"
+"290.39855" = "forsaljning-av-tjanster-darav-trafik"
+"290.39856" = "forsaljning-material-varor-trafik"
+"290.39857" = "erhallna-bidrag-darav-trafik"
+"290.39861" = "erhallna-bidrag-statsbidrag-trafik"
+"290.39862" = "ovriga-intakter-darav-trafik"
+"290.39863" = "summa-verksamhetens-intakter-trafik"
+"290.39866" = "loner-forandring-semesterloneskuld"
+"290.39870" = "ovriga-personalkostnader-kap-kl-pension"
+"290.39876" = "kostnader-kopt-verksamhet-trafik"
+"290.39877" = "kostnader-kop-verksamhet-kommuner-trafik"
+"290.39878" = "kostnader-kopt-regionsagda-trafik"
+"290.39879" = "summa-verksamhetens-kostnader-trafik"
+"290.39880" = "investeringsutgifter-byggnader-trafik"
+"290.39881" = "investeringsutgifter-ovriga-tillgangar"
+"290.39882" = "summa-investeringsutgifter"
+"290.39883" = "investeringsutgifter-medicintekniska"
+"290.42874" = "intakter-exploatering-ersattningar"
+"290.42879" = "aktivering-arbete-anlaggningstillgangar"
+"290.42881" = "forsakringsavg-och-riskkotn-div-kost"
+"290.42882" = "kop-huvudverksamhet-fran-enskilda"
+"290.42884" = "forsaljningspris-finansiella-tillgangar"
+"290.47633" = "summa-investeringsutgifter-materiella"
+"290.47635" = "investeringar-immateriella-forvarvade"
+"290.47636" = "investeringar-immateriella-internt"
 
 # register 293 (statliga-anslag-fou)
+"290.1557" = "kalenderar"
+"290.3758" = "blankettyp"
+"290.19079" = "kvartal-period"
+"290.27318" = "berakningsperiod"
 
-[[variable]]
-native_id = "290.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "290.3758"
-slug = "blankettyp"
-
-[[variable]]
-native_id = "290.19079"
-slug = "kvartal-period"
-
-[[variable]]
-native_id = "290.27318"
-slug = "berakningsperiod"
 
 # register 292

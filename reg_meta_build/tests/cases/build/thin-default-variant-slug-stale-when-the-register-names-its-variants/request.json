@@ -18,7 +18,7 @@
       ]
     },
     "files": {
-      "Forsakringskassan/fk.toml": "\n[[register]]\nkey = \"r\"\nname = \"Register with unknown inception\"\n[[register.variant]]\nkey = \"table\"\nname = \"Pooled table\"\nvalid_from = \"2020-01-01\"\nvalid_to = \"2021-12-31\"\nperiod_scope = \"pooled\"\n[[register.variable]]\nname = \"Literal header\"\ncolumn = \"HEADER\"\ndata_type = \"text\"\ndata_warning = \"Header-only metadata; response codes unavailable.\"\nvariants = [\"table\"]\nvalid_from = \"2020-06-01\"\nvalid_to = \"2021-06-30\"\n"
+      "providers/fk.toml": "\n[[register]]\nkey = \"r\"\nname = \"Register with unknown inception\"\n[[register.variant]]\nkey = \"table\"\nname = \"Pooled table\"\nvalid_from = \"2020-01-01\"\nvalid_to = \"2021-12-31\"\nperiod_scope = \"pooled\"\n[[register.variable]]\nname = \"Literal header\"\ncolumn = \"HEADER\"\ndata_type = \"text\"\ndata_warning = \"Header-only metadata; response codes unavailable.\"\nvariants = [\"table\"]\nvalid_from = \"2020-06-01\"\nvalid_to = \"2021-06-30\"\n"
     }
   }
 }

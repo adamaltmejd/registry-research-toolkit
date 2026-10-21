@@ -18,7 +18,6 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked
-from reg_meta_build.source_occurrences import published_provenance
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -364,19 +363,9 @@ def apply_alias_cases(
                             valid_from=lower,
                             valid_to=upper,
                             # Non-NULL provenance is what marks a curated,
-                            # additive window (`derive/states.py`), so the class
-                            # head stays when no source locator does (#1708).
-                            provenance="\n".join(
-                                filter(
-                                    None,
-                                    (
-                                        "curated:alias-window",
-                                        published_provenance(
-                                            decision.provenance, case.case_id
-                                        ),
-                                    ),
-                                )
-                            ),
+                            # additive window (`derive/states.py`); its head is
+                            # constant, never the case (#1708).
+                            provenance="curated:alias-window",
                         )
                     )
             variable = resolved[decision.variable_key]

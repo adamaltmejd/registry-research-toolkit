@@ -5,12 +5,10 @@ native_id = "2"
 [[variant]]
 native_id = "2.20"
 slug = "people"
-[[variable]]
-native_id = "2.201"
-slug = "value"
-[[variable]]
-native_id = "2.202"
-slug = "value-2"
+
+[variable]
+"2.201" = "value"
+"2.202" = "value-2"
 
 [[acknowledge]]
 code = "ambiguous_support_target"

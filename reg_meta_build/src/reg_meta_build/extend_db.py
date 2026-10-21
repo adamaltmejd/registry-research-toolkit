@@ -62,15 +62,9 @@ def _cfg_error(message: str, remediation: str) -> RegMetaError:
     )
 
 
-def resolve_steward_providers_dir(providers_dir: Path | None, steward: str) -> Path:
-    """Resolve an explicit provider directory or the checkout's steward input."""
-    resolved = (
-        providers_dir.expanduser().resolve()
-        if providers_dir is not None
-        else (
-            Path(__file__).resolve().parents[2] / "input_data" / steward / "providers"
-        ).resolve()
-    )
+def resolve_steward_providers_dir(providers_dir: Path) -> Path:
+    """Resolve the caller's explicit steward provider directory."""
+    resolved = providers_dir.expanduser().resolve()
     if not resolved.is_dir():
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -251,7 +245,7 @@ def resolve_steward_slug_dir(slug_dir: Path | None, steward: str) -> Path:
 
 def extend_db(
     base_db: Path,
-    providers_dir: Path | None,
+    providers_dir: Path,
     db_dir: Path,
     *,
     steward: str,
@@ -330,7 +324,6 @@ def extend_db(
                 raise ValueError(
                     "Publishable extension requires committed steward naming without diagnostic overrides"
                 )
-            providers_dir = providers_dir or holdings_input / "providers"
             if providers_dir.expanduser().resolve() != holdings_input / "providers":
                 raise ValueError(
                     "Private providers must come from the accepted holdings candidate"
@@ -371,7 +364,7 @@ def extend_db(
         else:
             pinned_slug_dir = None
 
-        resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
+        resolved_providers_dir = resolve_steward_providers_dir(providers_dir)
         with base_db.open("rb") as base_file:
             base_digest = hashlib.file_digest(base_file, "sha256").hexdigest()
         expected_base = (

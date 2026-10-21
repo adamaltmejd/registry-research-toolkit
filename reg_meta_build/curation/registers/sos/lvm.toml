@@ -47,39 +47,27 @@ panel_entity_key = "personnr"
 panel_time_key = "stdatumn"
 panel_time_grain = "row"
 
+[variable]
 # Registret över socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)
+"6293204766641962219.PNR" = "personnr"
+"6293204766641962219.ANSDATUM" = "ansokningsdatum"
+"6293204766641962219.BHEM" = "behandlingshem"
+"6293204766641962219.FODLAND" = "fodelseland"
+"6293204766641962219.FRIV" = "frivillig-vard"
+"6293204766641962219.PNRQ" = "personnummerkvalitet"
+"6293204766641962219.PROVN" = "provningsbeslut"
+"6293204766641962219.BESDATUMN.court" = "beslutsdatum-forvaltningsrat-numerisk"
+"6293204766641962219.BESDATUMN.immediate" = "besdatumn"
+"6293204766641962219.AR.court" = "beslutsar"
+"6293204766641962219.AR.immediate" = "beslutsar-omedelbart-omhandertagande"
+"6293204766641962219.AR.discharge" = "utskrivningsar"
+"6293204766641962219.BESDATUM.court" = "beslutsdatum"
+"6293204766641962219.BESDATUM.immediate" = "beslutsdatum-omedelbart-omhandertagande"
+"6293204766641962219.INDIKAT.application" = "indikat"
+"6293204766641962219.INDIKAT.immediate" = "indikation-omedelbart-omhandertagande"
+"6293204766641962219.LK.placing" = "placerande-kommun"
+"6293204766641962219.LK.immediate" = "kommunkod-omedelbart-omhandertagande"
 
-[[variable]]
-native_id = "6293204766641962219.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "6293204766641962219.ANSDATUM"
-slug = "ansokningsdatum"
-
-
-
-[[variable]]
-native_id = "6293204766641962219.BHEM"
-slug = "behandlingshem"
-
-[[variable]]
-native_id = "6293204766641962219.FODLAND"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "6293204766641962219.FRIV"
-slug = "frivillig-vard"
-
-
-[[variable]]
-native_id = "6293204766641962219.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "6293204766641962219.PROVN"
-slug = "provningsbeslut"
 # register 6512206290021964828
 
 # Batch47: exact unresolved dictionary links remain visible limitations.
@@ -190,14 +178,6 @@ expected_records = [{"ref" = {"source" = "Socialstyrelsen/Metadata_Registret öv
 expected_evidence_sha256 = "fb06169f4f16e166bf3e698b2cda889f2a77ac1f9ec01a166b152c2b720a2690"
 data_warning = "BESDATUMN has two source-defined decision-date roles: the administrative-court decision date in lvm_ansok (identifier true), and the immediate-custody decision date in lvm_omhtg (identifier false). Keep their literal dates, descriptions, flags and source scopes separate. The immediate-custody occurrence still has unknown availability; no date scope or equivalence is inferred."
 
-[[variable]]
-native_id = "6293204766641962219.BESDATUMN.court"
-slug = "beslutsdatum-forvaltningsrat-numerisk"
-
-[[variable]]
-native_id = "6293204766641962219.BESDATUMN.immediate"
-slug = "besdatumn"
-
 [[acknowledge]]
 code = "no_supported_states"
 subject = "sos/lvm/besdatumn"
@@ -215,18 +195,6 @@ expected_records = [{"ref" = {"source" = "Socialstyrelsen/Metadata_Registret öv
 expected_evidence_sha256 = "8a67f5f7e754014e45d77081d9be11cd29ddd479ef55af6d229f00888220722d"
 data_warning = "Separate only the source-explicit LVM role contexts: court decision, immediate custody, discharge or placement as documented in each original. Keep all literal fields, source periods, flags, encodings and own domains; no statistical equivalence, municipality residence, date scope or recoding is assumed. Complete source review Batch51-LVM-residual-proof.json."
 
-[[variable]]
-native_id = "6293204766641962219.AR.court"
-slug = "beslutsar"
-
-[[variable]]
-native_id = "6293204766641962219.AR.immediate"
-slug = "beslutsar-omedelbart-omhandertagande"
-
-[[variable]]
-native_id = "6293204766641962219.AR.discharge"
-slug = "utskrivningsar"
-
 [[identity.split]]
 variable = "BESDATUM"
 by = "deldatamangd"
@@ -234,14 +202,6 @@ parts = [{"deldatamangd" = "lvm_ansok", "owner" = "6293204766641962219.BESDATUM.
 expected_records = [{"ref" = {"source" = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "semantic_record_key" = ["register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "deldatamangd:lvm_ansok", "variable:BESDATUM"]}, "alternatives" = [{"fields" = [{"name" = "access_rights", "status" = "absent"}, {"name" = "access_url", "status" = "absent"}, {"name" = "aggregation_level", "status" = "absent"}, {"name" = "availability", "status" = "value", "value" = true}, {"name" = "base_register", "status" = "absent"}, {"name" = "classification_declared", "status" = "unknown"}, {"name" = "column_name", "status" = "value", "value" = "BESDATUM"}, {"name" = "conditional_sensitivity", "status" = "absent"}, {"name" = "coverage", "status" = "absent"}, {"name" = "coverage_from", "status" = "value", "value" = "1994"}, {"name" = "coverage_to", "status" = "unknown"}, {"name" = "data_length", "status" = "absent"}, {"name" = "data_type", "status" = "value", "value" = "text"}, {"name" = "dataset_label", "status" = "absent"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Datum för förvaltningsrättens beslut"}, {"name" = "documentation_status", "status" = "absent"}, {"name" = "documentation_url", "status" = "absent"}, {"name" = "first_approved_at", "status" = "absent"}, {"name" = "geographic_coverage", "status" = "absent"}, {"name" = "identifier", "status" = "value", "value" = true}, {"name" = "landing_page", "status" = "absent"}, {"name" = "last_approved_at", "status" = "absent"}, {"name" = "legislation", "status" = "absent"}, {"name" = "measurement_information", "status" = "absent"}, {"name" = "measurement_unit", "status" = "absent"}, {"name" = "name", "status" = "value", "value" = "Beslutsdatum"}, {"name" = "operational_definition", "status" = "absent"}, {"name" = "population_comment", "status" = "absent"}, {"name" = "population_date", "status" = "absent"}, {"name" = "population_definition", "status" = "absent"}, {"name" = "purpose", "status" = "absent"}, {"name" = "reference_period", "status" = "absent"}, {"name" = "representation", "status" = "value", "value" = "YYYYMMDD"}, {"name" = "sensitivity", "status" = "value", "value" = true}, {"name" = "source_attribution", "status" = "value", "value" = "Förvaltningsrätter"}, {"name" = "source_date", "status" = "absent"}, {"name" = "source_version", "status" = "absent"}, {"name" = "update_frequency", "status" = "absent"}, {"name" = "value_set_declared", "status" = "absent"}], "edition_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "edition_period_scope" = {"kind" = "not_applicable", "intervals" = []}, "subject" = {"provider" = "sos", "register" = {"status" = "value", "name" = "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"}, "variant" = {"status" = "value", "name" = "lvm_ansok"}, "variant_references" = [], "population" = {"status" = "unknown"}, "variable" = {"status" = "value", "native_id" = "BESDATUM", "name" = "Beslutsdatum"}, "member" = {"status" = "value", "name" = "BESDATUM"}, "native" = {}}, "parent_facts" = []}]}, {"ref" = {"source" = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "semantic_record_key" = ["register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "deldatamangd:lvm_omhtg", "variable:BESDATUM"]}, "alternatives" = [{"fields" = [{"name" = "access_rights", "status" = "absent"}, {"name" = "access_url", "status" = "absent"}, {"name" = "aggregation_level", "status" = "absent"}, {"name" = "availability", "status" = "value", "value" = true}, {"name" = "base_register", "status" = "absent"}, {"name" = "classification_declared", "status" = "unknown"}, {"name" = "column_name", "status" = "value", "value" = "BESDATUM"}, {"name" = "conditional_sensitivity", "status" = "absent"}, {"name" = "coverage", "status" = "absent"}, {"name" = "coverage_from", "status" = "value", "value" = "1994"}, {"name" = "coverage_to", "status" = "unknown"}, {"name" = "data_length", "status" = "absent"}, {"name" = "data_type", "status" = "value", "value" = "text"}, {"name" = "dataset_label", "status" = "absent"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Datum då beslut om omedelbart omhändertagande fattades."}, {"name" = "documentation_status", "status" = "absent"}, {"name" = "documentation_url", "status" = "absent"}, {"name" = "first_approved_at", "status" = "absent"}, {"name" = "geographic_coverage", "status" = "absent"}, {"name" = "identifier", "status" = "value", "value" = true}, {"name" = "landing_page", "status" = "absent"}, {"name" = "last_approved_at", "status" = "absent"}, {"name" = "legislation", "status" = "absent"}, {"name" = "measurement_information", "status" = "absent"}, {"name" = "measurement_unit", "status" = "absent"}, {"name" = "name", "status" = "value", "value" = "Beslutsdatum"}, {"name" = "operational_definition", "status" = "absent"}, {"name" = "population_comment", "status" = "absent"}, {"name" = "population_date", "status" = "absent"}, {"name" = "population_definition", "status" = "absent"}, {"name" = "purpose", "status" = "absent"}, {"name" = "reference_period", "status" = "absent"}, {"name" = "representation", "status" = "value", "value" = "YYYYMMDD"}, {"name" = "sensitivity", "status" = "value", "value" = true}, {"name" = "source_attribution", "status" = "value", "value" = "Förvaltningsrätter"}, {"name" = "source_date", "status" = "absent"}, {"name" = "source_version", "status" = "absent"}, {"name" = "update_frequency", "status" = "absent"}, {"name" = "value_set_declared", "status" = "absent"}], "edition_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "edition_period_scope" = {"kind" = "not_applicable", "intervals" = []}, "subject" = {"provider" = "sos", "register" = {"status" = "value", "name" = "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"}, "variant" = {"status" = "value", "name" = "lvm_omhtg"}, "variant_references" = [], "population" = {"status" = "unknown"}, "variable" = {"status" = "value", "native_id" = "BESDATUM", "name" = "Beslutsdatum"}, "member" = {"status" = "value", "name" = "BESDATUM"}, "native" = {}}, "parent_facts" = []}]}]
 expected_evidence_sha256 = "b822b54f5b58a56de05b6a08f09c745526984349cb6853c7bc0ab461a029deb6"
 data_warning = "Separate only the source-explicit LVM role contexts: court decision, immediate custody, discharge or placement as documented in each original. Keep all literal fields, source periods, flags, encodings and own domains; no statistical equivalence, municipality residence, date scope or recoding is assumed. Complete source review Batch51-LVM-residual-proof.json."
-
-[[variable]]
-native_id = "6293204766641962219.BESDATUM.court"
-slug = "beslutsdatum"
-
-[[variable]]
-native_id = "6293204766641962219.BESDATUM.immediate"
-slug = "beslutsdatum-omedelbart-omhandertagande"
 
 [[identity.split]]
 variable = "INDIKAT"
@@ -251,14 +211,6 @@ expected_records = [{"ref" = {"source" = "Socialstyrelsen/Metadata_Registret öv
 expected_evidence_sha256 = "a57f5091460987b1312e77729cd2c9d8b648f7b3376d253801993f83dc4e9ce8"
 data_warning = "Separate only the source-explicit LVM role contexts: court decision, immediate custody, discharge or placement as documented in each original. Keep all literal fields, source periods, flags, encodings and own domains; no statistical equivalence, municipality residence, date scope or recoding is assumed. Complete source review Batch51-LVM-residual-proof.json."
 
-[[variable]]
-native_id = "6293204766641962219.INDIKAT.application"
-slug = "indikat"
-
-[[variable]]
-native_id = "6293204766641962219.INDIKAT.immediate"
-slug = "indikation-omedelbart-omhandertagande"
-
 [[identity.split]]
 variable = "LK"
 by = "deldatamangd"
@@ -266,14 +218,6 @@ parts = [{"deldatamangd" = "lvm_ansok", "owner" = "6293204766641962219.LK.placin
 expected_records = [{"ref" = {"source" = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "semantic_record_key" = ["register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "deldatamangd:lvm_ansok", "variable:LK"]}, "alternatives" = [{"fields" = [{"name" = "access_rights", "status" = "absent"}, {"name" = "access_url", "status" = "absent"}, {"name" = "aggregation_level", "status" = "absent"}, {"name" = "availability", "status" = "value", "value" = true}, {"name" = "base_register", "status" = "absent"}, {"name" = "classification_declared", "status" = "unknown"}, {"name" = "column_name", "status" = "value", "value" = "LK"}, {"name" = "conditional_sensitivity", "status" = "absent"}, {"name" = "coverage", "status" = "absent"}, {"name" = "coverage_from", "status" = "unknown"}, {"name" = "coverage_to", "status" = "unknown"}, {"name" = "data_length", "status" = "absent"}, {"name" = "data_type", "status" = "value", "value" = "text"}, {"name" = "dataset_label", "status" = "absent"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Placerande kommun, kod"}, {"name" = "documentation_status", "status" = "absent"}, {"name" = "documentation_url", "status" = "absent"}, {"name" = "first_approved_at", "status" = "absent"}, {"name" = "geographic_coverage", "status" = "absent"}, {"name" = "identifier", "status" = "value", "value" = false}, {"name" = "landing_page", "status" = "absent"}, {"name" = "last_approved_at", "status" = "absent"}, {"name" = "legislation", "status" = "absent"}, {"name" = "measurement_information", "status" = "absent"}, {"name" = "measurement_unit", "status" = "absent"}, {"name" = "name", "status" = "value", "value" = "Placerande kommun"}, {"name" = "operational_definition", "status" = "absent"}, {"name" = "population_comment", "status" = "absent"}, {"name" = "population_date", "status" = "absent"}, {"name" = "population_definition", "status" = "absent"}, {"name" = "purpose", "status" = "absent"}, {"name" = "reference_period", "status" = "absent"}, {"name" = "representation", "status" = "unknown"}, {"name" = "sensitivity", "status" = "value", "value" = true}, {"name" = "source_attribution", "status" = "value", "value" = "Förvaltningsrätter"}, {"name" = "source_date", "status" = "absent"}, {"name" = "source_version", "status" = "absent"}, {"name" = "update_frequency", "status" = "absent"}, {"name" = "value_set_declared", "status" = "absent"}], "edition_scope" = {"kind" = "unknown", "intervals" = [], "label" = "Data från=<blank>; Data till=<blank>"}, "edition_period_scope" = {"kind" = "not_applicable", "intervals" = []}, "subject" = {"provider" = "sos", "register" = {"status" = "value", "name" = "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"}, "variant" = {"status" = "value", "name" = "lvm_ansok"}, "variant_references" = [], "population" = {"status" = "unknown"}, "variable" = {"status" = "value", "native_id" = "LK", "name" = "Placerande kommun"}, "member" = {"status" = "value", "name" = "LK"}, "native" = {}}, "parent_facts" = []}]}, {"ref" = {"source" = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "semantic_record_key" = ["register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "deldatamangd:lvm_omhtg", "variable:LK"]}, "alternatives" = [{"fields" = [{"name" = "access_rights", "status" = "absent"}, {"name" = "access_url", "status" = "absent"}, {"name" = "aggregation_level", "status" = "absent"}, {"name" = "availability", "status" = "value", "value" = true}, {"name" = "base_register", "status" = "absent"}, {"name" = "classification_declared", "status" = "value", "value" = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/lan-och-kommuner-i-kodnummerordning/"}, {"name" = "column_name", "status" = "value", "value" = "LK"}, {"name" = "conditional_sensitivity", "status" = "absent"}, {"name" = "coverage", "status" = "absent"}, {"name" = "coverage_from", "status" = "value", "value" = "1994"}, {"name" = "coverage_to", "status" = "unknown"}, {"name" = "data_length", "status" = "absent"}, {"name" = "data_type", "status" = "value", "value" = "text"}, {"name" = "dataset_label", "status" = "absent"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Den omhändertagnas kommun"}, {"name" = "documentation_status", "status" = "absent"}, {"name" = "documentation_url", "status" = "absent"}, {"name" = "first_approved_at", "status" = "absent"}, {"name" = "geographic_coverage", "status" = "absent"}, {"name" = "identifier", "status" = "value", "value" = false}, {"name" = "landing_page", "status" = "absent"}, {"name" = "last_approved_at", "status" = "absent"}, {"name" = "legislation", "status" = "absent"}, {"name" = "measurement_information", "status" = "absent"}, {"name" = "measurement_unit", "status" = "absent"}, {"name" = "name", "status" = "value", "value" = "Kommunkod"}, {"name" = "operational_definition", "status" = "absent"}, {"name" = "population_comment", "status" = "absent"}, {"name" = "population_date", "status" = "absent"}, {"name" = "population_definition", "status" = "absent"}, {"name" = "purpose", "status" = "absent"}, {"name" = "reference_period", "status" = "absent"}, {"name" = "representation", "status" = "unknown"}, {"name" = "sensitivity", "status" = "value", "value" = true}, {"name" = "source_attribution", "status" = "value", "value" = "Förvaltningsrätter"}, {"name" = "source_date", "status" = "absent"}, {"name" = "source_version", "status" = "absent"}, {"name" = "update_frequency", "status" = "absent"}, {"name" = "value_set_declared", "status" = "absent"}], "edition_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "edition_period_scope" = {"kind" = "not_applicable", "intervals" = []}, "subject" = {"provider" = "sos", "register" = {"status" = "value", "name" = "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"}, "variant" = {"status" = "value", "name" = "lvm_omhtg"}, "variant_references" = [], "population" = {"status" = "unknown"}, "variable" = {"status" = "value", "native_id" = "LK", "name" = "Kommunkod"}, "member" = {"status" = "value", "name" = "LK"}, "native" = {}}, "parent_facts" = []}]}, {"ref" = {"source" = "Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx", "semantic_record_key" = ["register:Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM", "deldatamangd:lvm_utskr", "variable:LK"]}, "alternatives" = [{"fields" = [{"name" = "access_rights", "status" = "absent"}, {"name" = "access_url", "status" = "absent"}, {"name" = "aggregation_level", "status" = "absent"}, {"name" = "availability", "status" = "value", "value" = true}, {"name" = "base_register", "status" = "absent"}, {"name" = "classification_declared", "status" = "value", "value" = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/lan-och-kommuner-i-kodnummerordning/"}, {"name" = "column_name", "status" = "value", "value" = "LK"}, {"name" = "conditional_sensitivity", "status" = "absent"}, {"name" = "coverage", "status" = "absent"}, {"name" = "coverage_from", "status" = "value", "value" = "1994"}, {"name" = "coverage_to", "status" = "unknown"}, {"name" = "data_length", "status" = "absent"}, {"name" = "data_type", "status" = "value", "value" = "text"}, {"name" = "dataset_label", "status" = "absent"}, {"name" = "definition", "status" = "absent"}, {"name" = "description", "status" = "value", "value" = "Placerande kommun, kod"}, {"name" = "documentation_status", "status" = "absent"}, {"name" = "documentation_url", "status" = "absent"}, {"name" = "first_approved_at", "status" = "absent"}, {"name" = "geographic_coverage", "status" = "absent"}, {"name" = "identifier", "status" = "value", "value" = false}, {"name" = "landing_page", "status" = "absent"}, {"name" = "last_approved_at", "status" = "absent"}, {"name" = "legislation", "status" = "absent"}, {"name" = "measurement_information", "status" = "absent"}, {"name" = "measurement_unit", "status" = "absent"}, {"name" = "name", "status" = "value", "value" = "Placerande kommun"}, {"name" = "operational_definition", "status" = "absent"}, {"name" = "population_comment", "status" = "absent"}, {"name" = "population_date", "status" = "absent"}, {"name" = "population_definition", "status" = "absent"}, {"name" = "purpose", "status" = "absent"}, {"name" = "reference_period", "status" = "absent"}, {"name" = "representation", "status" = "unknown"}, {"name" = "sensitivity", "status" = "value", "value" = true}, {"name" = "source_attribution", "status" = "value", "value" = "Statens institutionsstyrelse, SiS"}, {"name" = "source_date", "status" = "absent"}, {"name" = "source_version", "status" = "absent"}, {"name" = "update_frequency", "status" = "absent"}, {"name" = "value_set_declared", "status" = "absent"}], "edition_scope" = {"kind" = "intervals", "intervals" = [{"start" = "1994"}]}, "edition_period_scope" = {"kind" = "not_applicable", "intervals" = []}, "subject" = {"provider" = "sos", "register" = {"status" = "value", "name" = "Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"}, "variant" = {"status" = "value", "name" = "lvm_utskr"}, "variant_references" = [], "population" = {"status" = "unknown"}, "variable" = {"status" = "value", "native_id" = "LK", "name" = "Placerande kommun"}, "member" = {"status" = "value", "name" = "LK"}, "native" = {}}, "parent_facts" = []}]}]
 expected_evidence_sha256 = "f98e763143b0d3d56e1852056ba5af6f856655e892c58e954b680cabcc96307f"
 data_warning = "Separate only the source-explicit LVM role contexts: court decision, immediate custody, discharge or placement as documented in each original. Keep all literal fields, source periods, flags, encodings and own domains; no statistical equivalence, municipality residence, date scope or recoding is assumed. Complete source review Batch51-LVM-residual-proof.json."
-
-[[variable]]
-native_id = "6293204766641962219.LK.placing"
-slug = "placerande-kommun"
-
-[[variable]]
-native_id = "6293204766641962219.LK.immediate"
-slug = "kommunkod-omedelbart-omhandertagande"
 
 [[errata.field]]
 variable = "6293204766641962219.FODDATN"

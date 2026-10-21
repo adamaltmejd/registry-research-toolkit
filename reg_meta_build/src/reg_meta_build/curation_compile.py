@@ -660,6 +660,16 @@ def _column_partition_plan(
     return _ColumnPartitionPlan(columns, partition_columns, scoped_owners, unassigned)
 
 
+def _curated_head(ref: str) -> str:
+    """The constant, case-free head the facts a curation entry `<file>#/<table>/<n>…`
+    curates publish (#1708): `errata:<class>` for an `errata.<class>` table, else
+    `curated:<table>`."""
+    table = ref.split("#/", 1)[1].split("/", 1)[0]
+    if table.startswith("errata."):
+        return "errata:" + table.removeprefix("errata.")
+    return "curated:" + table
+
+
 def convert_column_partitions(
     records: tuple[SourceRecord, ...],
     *,
@@ -816,6 +826,7 @@ def convert_column_partitions(
                     else ""
                 )
             ),
+            published=None,
         ),
     )
     return ColumnPartitionConversion(tuple(bindings), case, diagnostics)
@@ -1121,6 +1132,7 @@ def compile_period_families(
                         effects=effects,
                         reason="Reviewed month columns form one period family.",
                         provenance=ref,
+                        published=_curated_head(ref),
                     ),
                 )
             )
@@ -2256,7 +2268,7 @@ def _partition_family_relevant(
 _UNASSIGNED_COMPETING = "unassigned_identity_competing_ownership"
 _UNASSIGNED_COMPETING_FIX = (
     "Keep one [[identity.unassigned]] entry per native family and remove that "
-    "family's split naming ([[variable]] native_id = '<family>.<split>'), "
+    "family's split naming ([variable] pin '<family>.<split>'), "
     "[[identity.partition]], [[identity.column_owner]], [[identity.split]] and "
     "[[identity.rename]]: an unassigned family has no owner."
 )
@@ -2858,6 +2870,7 @@ def compile_partitions(
                             data_warning_fields=("identity",)
                             if sos_splits and sos_splits[0][1].data_warning is not None
                             else (),
+                            published=None,
                         ),
                     )
                 )
@@ -4028,6 +4041,7 @@ def compile_scb_preliminary(
                         ),
                         reason="The final SCB edition supersedes this native variable's preliminary delivery.",
                         provenance="SCB edition-name rule",
+                        published=None,
                     ),
                 )
             )
@@ -4319,6 +4333,7 @@ def compile_edition_splits(
                         ),
                         reason=entry.evidence,
                         provenance=ref,
+                        published=None,
                     ),
                 )
             )
@@ -4465,6 +4480,7 @@ def _compile_sos_register(
                     ),
                     reason="Lookup-table records are source support.",
                     provenance=register.source_file,
+                    published=None,
                 ),
             )
         )
@@ -4526,6 +4542,7 @@ def _compile_sos_register(
                     effects=tuple(effects[ref] for ref in sorted(effects, key=str)),
                     reason="Route the declared Deldatamängd token to its named variants.",
                     provenance=register.source_file,
+                    published=None,
                 ),
             )
         )
@@ -4673,6 +4690,7 @@ def _compile_sos_register(
                         ),
                         reason=entry.evidence,
                         provenance=f"{case_id}: {entry.evidence}",
+                        published=_curated_head(case_id),
                     ),
                 )
             )
@@ -4861,6 +4879,7 @@ def _compile_thin_register(
                     effects=tuple(effects),
                     reason="Authored thin-provider record declares its own finite coverage.",
                     provenance=record.source,
+                    published=None,
                 ),
             )
         )
@@ -5510,6 +5529,41 @@ def compile_coding_register(
                     ),
                     *witness_guards,
                 )
+                # The entry's source locators, built from its checked fields only:
+                # the catalog publishes these, never the free-text source (#1708).
+                locators = (
+                    (
+                        # The rows of the delivery this build read: the
+                        # authority pins their content, not their position.
+                        "Source rows: "
+                        + ", ".join(
+                            sorted(
+                                {
+                                    record.source_revision_id
+                                    for record in pinned_originals(column, witness_keys)
+                                }
+                            )
+                        ),
+                        "Rows: "
+                        + ", ".join(
+                            locator.physical_table + ":" + locator.physical_record
+                            for record in pinned_originals(column, witness_keys)
+                            for locator in record.locators
+                        ),
+                    )
+                    if isinstance(
+                        entry,
+                        (CodingDocumentedEntry, CodingChoiceEntry, CodingExtendEntry),
+                    )
+                    and entry.source_authority is not None
+                    else (
+                        f"Document: {entry.document_url}",
+                        f"SHA256: {entry.document_sha256}",
+                        f"Pages: {', '.join(map(str, entry.document_pages or ()))}",
+                    )
+                    if isinstance(entry, CodingDocumentedEntry)
+                    else ()
+                )
                 if isinstance(entry, CodingWarningEntry):
                     cases.append(
                         CurationCase(
@@ -5553,6 +5607,9 @@ def compile_coding_register(
                                 sentinel_members=tuple(map(tuple, entry.members)),
                                 reason=entry.reason,
                                 provenance=entry.source,
+                                published="\n".join(
+                                    (f"curated:coding.{kind}", *locators)
+                                ),
                             ),
                         )
                     )
@@ -5572,27 +5629,8 @@ def compile_coding_register(
                             selection=selection,
                             data_warning=getattr(entry, "data_warning", None),
                             reason=entry.reason,
-                            provenance=(
-                                # The rows of the delivery this build read: the
-                                # authority pins their content, not their position.
-                                f"{entry.source}\nSource rows: "
-                                f"{', '.join(sorted({record.source_revision_id for record in pinned_originals(column, witness_keys)}))}\n"
-                                f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for record in pinned_originals(column, witness_keys) for locator in record.locators)}"
-                                if isinstance(
-                                    entry,
-                                    (
-                                        CodingDocumentedEntry,
-                                        CodingChoiceEntry,
-                                        CodingExtendEntry,
-                                    ),
-                                )
-                                and entry.source_authority is not None
-                                else f"{entry.source}\nDocument: {entry.document_url}\n"
-                                f"SHA256: {entry.document_sha256}\n"
-                                f"Pages: {', '.join(map(str, entry.document_pages or ()))}"
-                                if isinstance(entry, CodingDocumentedEntry)
-                                else entry.source
-                            ),
+                            provenance="\n".join((entry.source, *locators)),
+                            published="\n".join((f"curated:coding.{kind}", *locators)),
                         ),
                     )
                 )
@@ -6543,6 +6581,7 @@ def compile_occurrence_corrections(
                             data_warning_fields=("availability",)
                             if isinstance(entry, ErrataOccurrenceCarryEntry)
                             else (),
+                            published=_curated_head(case_id),
                         ),
                     )
                 )
@@ -6778,6 +6817,7 @@ def _compile_provider_columns(
                     data_warning_fields=("data_type",)
                     if row.data_warning is not None
                     else (),
+                    published=f"errata:{entry.source}",
                 ),
             )
         )
@@ -7702,6 +7742,7 @@ def compile_enrichment(
                         reason=row.provenance
                         or f"Accepted delivery description for {target_name}",
                         provenance=row.provenance or f"curation:{case_id}",
+                        published=_curated_head(case_id),
                     )
                     peer_guards = target.target.peer_guards
                 else:
@@ -7898,6 +7939,20 @@ def compile_curation(
     metadata, class_successions = compile_declared_metadata(
         tree, selected=selected, unmatched=unmatched
     )
+    # Book code lists are pinned bundle inputs, not repo files: a declared book
+    # whose file the bundle lacks is refused at its own TOML.
+    delivered = {v.manifest.revision.dataset for v in prepared.value_sources}
+    for entry in tree.classifications:
+        codes_file = entry.classification.codes_file
+        if f"classifications/{codes_file}" not in delivered:
+            raise curation_error(
+                "classification_codes_file_missing",
+                f"classifications/{entry.classification.short_name}.toml: "
+                f"codes_file {codes_file!r} is not in the input bundle "
+                f"(classifications/{codes_file}).",
+                "Add the code list to the input bundle's classifications/ "
+                "directory and re-pin it, or correct codes_file.",
+            )
     books = tuple(
         CompiledCodebook(
             source=f"classifications/{entry.classification.codes_file}",

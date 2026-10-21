@@ -17,348 +17,132 @@ native_id = "124.1418"
 slug = "arbetsorsakade-besvar-2018"
 display_group = "Arbetsorsakade besvär fr.om. 2018"
 
+[variable]
 # Situationen på arbetsmarknaden för personer med funktionsnedsättning
-
-[[variable]]
-native_id = "124.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "124.509"
-slug = "hussyk2"
-
-[[variable]]
-native_id = "124.511"
-slug = "ssyk4-huvud"
-
-[[variable]]
-native_id = "124.544"
-slug = "sektor-i-huvudsysslan"
-
-[[variable]]
-native_id = "124.3881"
-slug = "sei-i-huvudsysslan"
-
-[[variable]]
-native_id = "124.6439"
-slug = "hjalp-arbetssokande-ams"
-
-[[variable]]
-native_id = "124.6440"
-slug = "hjalp-alder-kon"
-
-[[variable]]
-native_id = "124.6442"
-slug = "hjalp-fodelseland"
-
-[[variable]]
-native_id = "124.6443"
-slug = "hjalp-region"
-
-[[variable]]
-native_id = "124.6444"
-slug = "hjalp-naringsgren-sysselsatta"
-
-[[variable]]
-native_id = "124.6499"
-slug = "nattarbete-huvudsysslan"
-
-[[variable]]
-native_id = "124.6508"
-slug = "antal-anstallda-arbetsplatsen"
-
-[[variable]]
-native_id = "124.6514"
-slug = "kvallsarbete-frekvens"
-
-[[variable]]
-native_id = "124.6522"
-slug = "nattarbete-frekvens"
-
-[[variable]]
-native_id = "124.6587"
-slug = "anstallningsar-huvudsysslan"
-
-[[variable]]
-native_id = "124.6588"
-slug = "hussyk1"
-
-[[variable]]
-native_id = "124.6590"
-slug = "hussyk3"
-
-[[variable]]
-native_id = "124.6771"
-slug = "overtid-med-ersattning"
-
-[[variable]]
-native_id = "124.6775"
-slug = "overtidstimmar-totalt-huvudsyssla"
-
-[[variable]]
-native_id = "124.6776"
-slug = "overtid-totalt"
-
-[[variable]]
-native_id = "124.6837"
-slug = "antal-personer-stratum-urval"
-
-[[variable]]
-native_id = "124.7074"
-slug = "kvallsarbete-harledd"
-
-[[variable]]
-native_id = "124.7102"
-slug = "lordagsarbete-i-huvudsysslan-harledd"
-
-[[variable]]
-native_id = "124.7103"
-slug = "nattarbete-harledd"
-
-[[variable]]
-native_id = "124.7105"
-slug = "sondagsarbete-i-huvudsysslan-harledd"
-
-[[variable]]
-native_id = "124.7179"
-slug = "arbete-enbart-vardagar"
-
-[[variable]]
-native_id = "124.7949"
-slug = "besvar-andra-forhallanden"
-
-[[variable]]
-native_id = "124.7954"
-slug = "besvar-andra-forhallanden-aret"
-
-[[variable]]
-native_id = "124.7958"
-slug = "besvar-minskat-andrade-uppg"
-
-[[variable]]
-native_id = "124.7963"
-slug = "besvar-i-buk-backen"
-
-[[variable]]
-native_id = "124.7965"
-slug = "forandrade-arbetsuppg"
-
-[[variable]]
-native_id = "124.7976"
-slug = "sjukskriven-tid-fore-rehab"
-
-[[variable]]
-native_id = "124.8013"
-slug = "rehabiliteringsutredning"
-
-[[variable]]
-native_id = "124.8022"
-slug = "sjukfranvaro-matveckan-besvar"
-
-[[variable]]
-native_id = "124.8024"
-slug = "anmalan-forsakringskassan"
-
-[[variable]]
-native_id = "124.15298"
-slug = "arbetskraftsstatus"
-
-[[variable]]
-native_id = "124.17410"
-slug = "anmalan-senaste-12-manader"
-
-[[variable]]
-native_id = "124.18002"
-slug = "arbete-enbart-dagtid"
-
-[[variable]]
-native_id = "124.18005"
-slug = "heltid-deltid-huvudsysslan"
-
-[[variable]]
-native_id = "124.18006"
-slug = "skiftarbete-anstallda-huvudsyssla"
-
-[[variable]]
-native_id = "124.18007"
-slug = "sni2007-1bokstav"
-
-[[variable]]
-native_id = "124.18008"
-slug = "sni2007-2siffror"
-
-[[variable]]
-native_id = "124.18009"
-slug = "sni2007-3siffror"
-
-[[variable]]
-native_id = "124.18010"
-slug = "sni2007-4siffror"
-
-[[variable]]
-native_id = "124.18011"
-slug = "sni2007-5siffror"
-
-[[variable]]
-native_id = "124.23406"
-slug = "antal-svarande-stratum-referensmanad"
-
-[[variable]]
-native_id = "124.24349"
-slug = "overtid-minst-5-timmar"
-
-[[variable]]
-native_id = "124.24350"
-slug = "overtid-minst-10-timmar"
-
-[[variable]]
-native_id = "124.24763"
-slug = "antal-svarande-personer"
-
-[[variable]]
-native_id = "124.24932"
-slug = "nattarbete-minst-halften"
-
-[[variable]]
-native_id = "124.25604"
-slug = "anstallningsar-arbetsplats"
-
-[[variable]]
-native_id = "124.31256"
-slug = "overtid-utan-ersattning-anstallda"
-
-[[variable]]
-native_id = "124.32464"
-slug = "ej-anmalt-avvaktar-besvar"
-
-[[variable]]
-native_id = "124.32582"
-slug = "besvar-buk-och-backen"
-
-[[variable]]
-native_id = "124.32598"
-slug = "besvar-gatt-ned-tid"
-
-[[variable]]
-native_id = "124.32600"
-slug = "besvar-blivit-omplacerad"
-
-[[variable]]
-native_id = "124.32603"
-slug = "antal-svarande-fas2"
-
-[[variable]]
-native_id = "124.32690"
-slug = "besvar-andra-forhallanden-fore-aret"
-
-[[variable]]
-native_id = "124.32698"
-slug = "hjalp-alder-arbetskraftsstatus"
-
-[[variable]]
-native_id = "124.32711"
-slug = "besvar-fardvag-olycka-fore-aret"
-
-[[variable]]
-native_id = "124.32728"
-slug = "antal-fas2"
-
-[[variable]]
-native_id = "124.32734"
-slug = "andel-urvalstillfalle-fas1"
-
-[[variable]]
-native_id = "124.32735"
-slug = "andel-urvalstillfalle-fas2"
-
-[[variable]]
-native_id = "124.35738"
-slug = "besvar-minskat-forandring"
-
-[[variable]]
-native_id = "124.35879"
-slug = "stratum-fas2"
-
-[[variable]]
-native_id = "124.35924"
-slug = "sjukskriven-matveckan-arbetsolycka"
-
-[[variable]]
-native_id = "124.35929"
-slug = "sjukskriven-matveckan-fardvag"
-
-[[variable]]
-native_id = "124.35931"
-slug = "arbetar-pa-helgen"
-
-[[variable]]
-native_id = "124.35932"
-slug = "sjukskriven-matveckan-andra-forhallanden"
-
-[[variable]]
-native_id = "124.40083"
-slug = "ej-anmalt-okand-skyldighet"
-
-[[variable]]
-native_id = "124.40084"
-slug = "ej-anmalt-avvaktar-utredning"
-
-[[variable]]
-native_id = "124.40085"
-slug = "ej-anmalt-inte-allvarliga"
-
-[[variable]]
-native_id = "124.40086"
-slug = "ej-anmalt-ingen-ersattning"
-
-[[variable]]
-native_id = "124.40087"
-slug = "ej-anmalt-radd-arbetsgivare"
-
-[[variable]]
-native_id = "124.40088"
-slug = "ej-anmalt-andra-skal"
-
-[[variable]]
-native_id = "124.41955"
-slug = "besvar-minskat-uppg-eller-tid"
-
-[[variable]]
-native_id = "124.41980"
-slug = "sjukskriven-matveckan-orsak"
+"124.57" = "personnr"
+"124.509" = "hussyk2"
+"124.511" = "ssyk4-huvud"
+"124.544" = "sektor-i-huvudsysslan"
+"124.3881" = "sei-i-huvudsysslan"
+"124.6439" = "hjalp-arbetssokande-ams"
+"124.6440" = "hjalp-alder-kon"
+"124.6442" = "hjalp-fodelseland"
+"124.6443" = "hjalp-region"
+"124.6444" = "hjalp-naringsgren-sysselsatta"
+"124.6499" = "nattarbete-huvudsysslan"
+"124.6508" = "antal-anstallda-arbetsplatsen"
+"124.6514" = "kvallsarbete-frekvens"
+"124.6522" = "nattarbete-frekvens"
+"124.6587" = "anstallningsar-huvudsysslan"
+"124.6588" = "hussyk1"
+"124.6590" = "hussyk3"
+"124.6771" = "overtid-med-ersattning"
+"124.6775" = "overtidstimmar-totalt-huvudsyssla"
+"124.6776" = "overtid-totalt"
+"124.6837" = "antal-personer-stratum-urval"
+"124.7074" = "kvallsarbete-harledd"
+"124.7102" = "lordagsarbete-i-huvudsysslan-harledd"
+"124.7103" = "nattarbete-harledd"
+"124.7105" = "sondagsarbete-i-huvudsysslan-harledd"
+"124.7179" = "arbete-enbart-vardagar"
+"124.7949" = "besvar-andra-forhallanden"
+"124.7954" = "besvar-andra-forhallanden-aret"
+"124.7958" = "besvar-minskat-andrade-uppg"
+"124.7963" = "besvar-i-buk-backen"
+"124.7965" = "forandrade-arbetsuppg"
+"124.7976" = "sjukskriven-tid-fore-rehab"
+"124.8013" = "rehabiliteringsutredning"
+"124.8022" = "sjukfranvaro-matveckan-besvar"
+"124.8024" = "anmalan-forsakringskassan"
+"124.15298" = "arbetskraftsstatus"
+"124.17410" = "anmalan-senaste-12-manader"
+"124.18002" = "arbete-enbart-dagtid"
+"124.18005" = "heltid-deltid-huvudsysslan"
+"124.18006" = "skiftarbete-anstallda-huvudsyssla"
+"124.18007" = "sni2007-1bokstav"
+"124.18008" = "sni2007-2siffror"
+"124.18009" = "sni2007-3siffror"
+"124.18010" = "sni2007-4siffror"
+"124.18011" = "sni2007-5siffror"
+"124.23406" = "antal-svarande-stratum-referensmanad"
+"124.24349" = "overtid-minst-5-timmar"
+"124.24350" = "overtid-minst-10-timmar"
+"124.24763" = "antal-svarande-personer"
+"124.24932" = "nattarbete-minst-halften"
+"124.25604" = "anstallningsar-arbetsplats"
+"124.31256" = "overtid-utan-ersattning-anstallda"
+"124.32464" = "ej-anmalt-avvaktar-besvar"
+"124.32582" = "besvar-buk-och-backen"
+"124.32598" = "besvar-gatt-ned-tid"
+"124.32600" = "besvar-blivit-omplacerad"
+"124.32603" = "antal-svarande-fas2"
+"124.32690" = "besvar-andra-forhallanden-fore-aret"
+"124.32698" = "hjalp-alder-arbetskraftsstatus"
+"124.32711" = "besvar-fardvag-olycka-fore-aret"
+"124.32728" = "antal-fas2"
+"124.32734" = "andel-urvalstillfalle-fas1"
+"124.32735" = "andel-urvalstillfalle-fas2"
+"124.35738" = "besvar-minskat-forandring"
+"124.35879" = "stratum-fas2"
+"124.35924" = "sjukskriven-matveckan-arbetsolycka"
+"124.35929" = "sjukskriven-matveckan-fardvag"
+"124.35931" = "arbetar-pa-helgen"
+"124.35932" = "sjukskriven-matveckan-andra-forhallanden"
+"124.40083" = "ej-anmalt-okand-skyldighet"
+"124.40084" = "ej-anmalt-avvaktar-utredning"
+"124.40085" = "ej-anmalt-inte-allvarliga"
+"124.40086" = "ej-anmalt-ingen-ersattning"
+"124.40087" = "ej-anmalt-radd-arbetsgivare"
+"124.40088" = "ej-anmalt-andra-skal"
+"124.41955" = "besvar-minskat-uppg-eller-tid"
+"124.41980" = "sjukskriven-matveckan-orsak"
 
 # register 127 (kv)
-
-[[variable]]
-native_id = "124.8044.tff"
-slug = "fardvagsolycka"
+"124.8044.tff" = "fardvagsolycka"
 
 # register 128 (lsum)
-
-[[variable]]
-native_id = "124.6498"
-slug = "kvallsarbete-i-huvudsysslan"
-
-[[variable]]
-native_id = "124.6586"
-slug = "anknytningsgrad"
-
-[[variable]]
-native_id = "124.7112"
-slug = "anstallningsar-harledd"
-
-[[variable]]
-native_id = "124.24928"
-slug = "kvallsarbete-minst-halvdag"
-
-[[variable]]
-native_id = "124.32699"
-slug = "overtid-enbart-med-ersattning"
-
-[[variable]]
-native_id = "124.36575"
-slug = "utbildningsniva-grupperad"
+"124.6498" = "kvallsarbete-i-huvudsysslan"
+"124.6586" = "anknytningsgrad"
+"124.7112" = "anstallningsar-harledd"
+"124.24928" = "kvallsarbete-minst-halvdag"
+"124.32699" = "overtid-enbart-med-ersattning"
+"124.36575" = "utbildningsniva-grupperad"
+"124.38415.olar1" = "olar1"
+"124.38415.olar2" = "olar2"
+"124.38415.olar3" = "olar3"
+"124.38415.olar4" = "olar4"
+"124.38415.olar5" = "olar5"
+"124.38415.olar6" = "olar6"
+"124.38415.olar7" = "olar7"
+"124.38415.olar8" = "olar8"
+"124.38415.olar9" = "olar9"
+"124.38443.olorsak1" = "olorsak1"
+"124.38443.olorsak2" = "olorsak2"
+"124.38443.olorsak3" = "olorsak3"
+"124.38443.olorsak4" = "olorsak4"
+"124.38443.olorsak5" = "olorsak5"
+"124.38443.olorsak6" = "olorsak6"
+"124.38443.olorsak7" = "olorsak7"
+"124.38443.olorsak8" = "olorsak8"
+"124.38443.olorsak9" = "olorsak9"
+"124.38444.olanm1" = "olanm1"
+"124.38444.olanm2" = "olanm2"
+"124.38444.olanm3" = "olanm3"
+"124.38444.olanm4" = "olanm4"
+"124.38444.olanm5" = "olanm5"
+"124.38444.olanm6" = "olanm6"
+"124.38444.olanm7" = "olanm7"
+"124.38444.olanm8" = "olanm8"
+"124.38444.olanm9" = "olanm9"
+"124.44350.olaranm1" = "olaranm1"
+"124.44350.olaranm2" = "olaranm2"
+"124.44350.olaranm3" = "olaranm3"
+"124.44350.olaranm4" = "olaranm4"
+"124.44350.olaranm5" = "olaranm5"
+"124.44350.olaranm6" = "olaranm6"
+"124.44350.olaranm7" = "olaranm7"
+"124.44350.olaranm8" = "olaranm8"
+"124.44350.olaranm9" = "olaranm9"
 
 # register 125
 
@@ -428,147 +212,3 @@ variable = "124.7965"
 columns = { ATGARBUPP = "124.7965", AndraUppg = "124.7965", FORANDRA = "124.7965", ForAndra = "124.7965", Forandra = "124.7965" }
 columns_ref = "Complete native families, actual primary physical peers and auxiliary joins reviewed. Repeated simultaneous accident fields remain distinct by literal column spelling. Exported definitions establish occurrence year, cause, report indicator and report year, but do not establish ordinal slot meanings. No ordinal interpretation or storage equivalence is asserted. Native7965 retains the stable exported question16_1 across non-simultaneous labels; its blank original remains unattached. Complete own-binding review: Batch52-workplace-nongap-current-own-binding-review.json."
 expected_evidence_sha256 = "c4334a790f3e1950ebb3d585250dbb3226ffb8d566a1c9fb9db537abb27d2796"
-
-[[variable]]
-native_id = "124.38415.olar1"
-slug = "olar1"
-
-[[variable]]
-native_id = "124.38415.olar2"
-slug = "olar2"
-
-[[variable]]
-native_id = "124.38415.olar3"
-slug = "olar3"
-
-[[variable]]
-native_id = "124.38415.olar4"
-slug = "olar4"
-
-[[variable]]
-native_id = "124.38415.olar5"
-slug = "olar5"
-
-[[variable]]
-native_id = "124.38415.olar6"
-slug = "olar6"
-
-[[variable]]
-native_id = "124.38415.olar7"
-slug = "olar7"
-
-[[variable]]
-native_id = "124.38415.olar8"
-slug = "olar8"
-
-[[variable]]
-native_id = "124.38415.olar9"
-slug = "olar9"
-
-[[variable]]
-native_id = "124.38443.olorsak1"
-slug = "olorsak1"
-
-[[variable]]
-native_id = "124.38443.olorsak2"
-slug = "olorsak2"
-
-[[variable]]
-native_id = "124.38443.olorsak3"
-slug = "olorsak3"
-
-[[variable]]
-native_id = "124.38443.olorsak4"
-slug = "olorsak4"
-
-[[variable]]
-native_id = "124.38443.olorsak5"
-slug = "olorsak5"
-
-[[variable]]
-native_id = "124.38443.olorsak6"
-slug = "olorsak6"
-
-[[variable]]
-native_id = "124.38443.olorsak7"
-slug = "olorsak7"
-
-[[variable]]
-native_id = "124.38443.olorsak8"
-slug = "olorsak8"
-
-[[variable]]
-native_id = "124.38443.olorsak9"
-slug = "olorsak9"
-
-[[variable]]
-native_id = "124.38444.olanm1"
-slug = "olanm1"
-
-[[variable]]
-native_id = "124.38444.olanm2"
-slug = "olanm2"
-
-[[variable]]
-native_id = "124.38444.olanm3"
-slug = "olanm3"
-
-[[variable]]
-native_id = "124.38444.olanm4"
-slug = "olanm4"
-
-[[variable]]
-native_id = "124.38444.olanm5"
-slug = "olanm5"
-
-[[variable]]
-native_id = "124.38444.olanm6"
-slug = "olanm6"
-
-[[variable]]
-native_id = "124.38444.olanm7"
-slug = "olanm7"
-
-[[variable]]
-native_id = "124.38444.olanm8"
-slug = "olanm8"
-
-[[variable]]
-native_id = "124.38444.olanm9"
-slug = "olanm9"
-
-[[variable]]
-native_id = "124.44350.olaranm1"
-slug = "olaranm1"
-
-[[variable]]
-native_id = "124.44350.olaranm2"
-slug = "olaranm2"
-
-[[variable]]
-native_id = "124.44350.olaranm3"
-slug = "olaranm3"
-
-[[variable]]
-native_id = "124.44350.olaranm4"
-slug = "olaranm4"
-
-[[variable]]
-native_id = "124.44350.olaranm5"
-slug = "olaranm5"
-
-[[variable]]
-native_id = "124.44350.olaranm6"
-slug = "olaranm6"
-
-[[variable]]
-native_id = "124.44350.olaranm7"
-slug = "olaranm7"
-
-[[variable]]
-native_id = "124.44350.olaranm8"
-slug = "olaranm8"
-
-[[variable]]
-native_id = "124.44350.olaranm9"
-slug = "olaranm9"
