@@ -6949,6 +6949,13 @@ noted = "2026-10-02"
 field = "name"
 value = "Delkomponent till disponibel inkomst, källfält DIN91"
 
+# Shared-column succession fold 2026-10-21 (maintainer-approved high-confidence
+# worklist batch): CIVR and CIV are one taxeringshushåll civilstånd column.
+[[identity.partition]]
+variable = "29.15"
+columns = { CIVR = "29.15.civ", CIV = "29.15.civ", BCIV = "29.15.bciv", BCIVAKT = "29.15.bcivakt", BCIVR = "29.15.bcivr", BCIVRTB = "29.15.bcivrtb" }
+columns_ref = "Shared-column succession fold 2026-10-21: SCB VarId 15 'Civilstånd' sequential rename {CIVR 1978-1986, CIV 1987-1992} owned by 29.15.civ; identical operational definition, the same 23 codes (CIV additionally lists the sentinel 00 'Okänt värde'), never co-delivered in any LINDA variant (reg_meta v0.57.0). The later BCIV, BCIVAKT, BCIVR and BCIVRTB keep their own owners. Y-211/Y-276 sequential-rename policy."
+
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "29.39924"

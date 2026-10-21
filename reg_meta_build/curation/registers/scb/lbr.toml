@@ -288,6 +288,13 @@ panel_time_grain = "delivery"
 
 # register 102
 
+# Shared-column succession fold 2026-10-21 (maintainer-approved high-confidence
+# worklist batch): po and po8 are one produktionsområde column under a rename.
+[[identity.partition]]
+variable = "10.2432"
+columns = { po = "10.2432.po8", PO = "10.2432.po8", po8 = "10.2432.po8", po18 = "10.2432.po18" }
+columns_ref = "Shared-column succession fold 2026-10-21: SCB VarId 2432 'Produktionsområde' sequential rename {PO/po 1989-1991, 1998-1999 and 2005-2014, po8 2014-2025} owned by 10.2432.po8; identical definition 'Geografisk indelning i 8 områden.', the same eight area codes (po additionally lists the sentinel 0 'Okänt produktionsområde'), never co-delivered in arealer, foretag or uppdragsregistret (reg_meta v0.57.0). po18 is the separate concurrent 18-area grouping. Y-211/Y-276 sequential-rename policy."
+
 [[identity.partition]]
 data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
 variable = "10.46"

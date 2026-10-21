@@ -715,6 +715,230 @@ variant = "punktskatter-for-energi"
 effective_year = 2018
 note = "FRIDA firm key resumes delivery as borgnr from 2018 in the punktskatter-for-energi variant (end of the 2014–2017 PERSORGNR gap-fill)"
 
+# ── Shared-column succession worklist, high-confidence rows (2026-10-21) ──
+#    Maintainer-approved batch: the high-confidence `replaced_by` rows of the
+#    shared-column succession worklist (one SCB VarId, the same or a near-twin
+#    delivery column, adjacent disjoint eras). Each pair was re-checked against
+#    the reg_meta v0.57.0 catalog: full operational definitions, value-code sets
+#    and state windows per variant. Kept only where the definition itself changed;
+#    pure re-wordings, documentation errors, role swaps and concurrent pairs were
+#    dropped (listed in the PR). `effective_year` is the successor's first year.
+
+#    AES: the 2016 questionnaire narrowed or split two 2011–2012 items.
+[[edge]]
+type = "replaced_by"
+from = "scb/aes/svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet-vid-distansstudier"
+to = "scb/aes/svarighet-vid-utbildningsdeltagande-det-svara-med-utbildningen-var-att-det-saknades-tillgang-till-dator-eller-internet"
+effective_year = 2016
+note = "DIFFTYPE_06 (VarId 35197) widened from lacking computer/Internet access for distance studies (2011–2012) to lacking access in general (2016); value set 3 → 4 codes"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/aes/fedreason-01"
+to = "scb/aes/fedreason-01a"
+effective_year = 2016
+note = "fedreason_01 (VarId 35190, 'do the job better and/or improve career prospects', 2011–2012) split in 2016 into FEDREASON_01A (do the job better) and FEDREASON_01B (career prospects)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/aes/fedreason-01"
+to = "scb/aes/fedreason-01b"
+effective_year = 2016
+note = "fedreason_01 (VarId 35190, 'do the job better and/or improve career prospects', 2011–2012) split in 2016 into FEDREASON_01A (do the job better) and FEDREASON_01B (career prospects)"
+
+#    Gymnasieskola sökande: meritvärde recut from 16 to 17 best grades.
+[[edge]]
+type = "replaced_by"
+from = "scb/gymnasieskola-sokande/meritv"
+to = "scb/gymnasieskola-sokande/meritv2"
+effective_year = 2015
+note = "Meritvärde (VarId 3614) recut from the sum of the 16 best grades (MeritV, 2002–2014) to the 17 best (MeritV2, 2015–)"
+
+#    IoT: one VarId per income measure, recut each era as the summed components
+#    changed (owners already split by component basis in iot.toml). The three
+#    PKONTR* 2019 edges follow the maintainer-approved component-basis split in
+#    iot.toml (SCB 2019 DOKSTAR pp19-20, Appendix 1 p27), which keeps the 2019
+#    pension-input basis separate although the exported formula text is equal.
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/arbetsinkomst-tjanst-rorelse-jordbruk"
+to = "scb/iot/arbetsinkomst-a-inkomster"
+effective_year = 1971
+note = "Arbetsinkomst (CARB, VarId 75) recut from total to A-inkomst of tjänst, rörelse and jordbruksfastighet"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/arbetsinkomst-a-inkomster"
+to = "scb/iot/arbetsinkomst-a-inkomster-dagpenning-pension-utbildning"
+effective_year = 1974
+note = "Arbetsinkomst (CARB, VarId 75) recut to deduct dagpenning, pension and utbildningsbidrag"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/arbetsinkomst-a-inkomster-dagpenning-pension-utbildning"
+to = "scb/iot/arbetsinkomst-a-inkomster-dagpenning-pension"
+effective_year = 1976
+note = "Arbetsinkomst (CARB, VarId 75) recut: utbildningsbidrag no longer deducted"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/arbetsinkomst-a-inkomster-dagpenning-pension"
+to = "scb/iot/arbetsinkomst-a-inkomster-pension-arbetsloshet-livranta"
+effective_year = 1978
+note = "Arbetsinkomst (CARB, VarId 75) recut to deduct pension, arbetslöshetsersättning and livränta"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/forvarvs-och-kapitalinkomst-individ-forvarvsinkomst-kapital-sjoinkomst"
+to = "scb/iot/forvarvs-och-kapitalinkomst"
+effective_year = 1998
+note = "Förvärvs- och kapitalinkomst (CFVIKI, VarId 335) recut to CSFVI plus KKAP from 1998"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/sammanraknad-forvarvsinkomst-alternativmax-inkomstslag"
+to = "scb/iot/sammanraknad-forvarvsinkomst-alternativmax-ab-inkomster"
+effective_year = 1971
+note = "Sammanräknad förvärvsinkomst (CSFVI, VarId 99) alternative-maximum computation recut to A- and B-inkomster"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/sammanraknad-forvarvsinkomst-deklarerade-delbelopp"
+to = "scb/iot/sammanraknad-forvarvsinkomst"
+effective_year = 2017
+note = "Sammanräknad förvärvsinkomst (CSFVI, VarId 99) recut to positive tjänst (TTJ>0) plus NRV"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/studiemedel-studiehjalp-lan-och-bidrag-individ-utlandsbidrag-utlandslan"
+to = "scb/iot/studiemedel-studiehjalp-lan-och-bidrag"
+effective_year = 2017
+note = "Studiemedel/studiehjälp (ISTUD, VarId 1430) recut from a sum including utlandsbidrag/utlandslån to four components (ISMBID, ISMLAN, ISHBID, ISHEXT)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/pensionsbeloppskontroll-per-person-individ-alternativa-pensionssummor-ku"
+to = "scb/iot/pensionsbeloppskontroll-per-person-individ-villkor-ku"
+effective_year = 2017
+note = "Pensionsbeloppskontroll, per person (PKONTR, VarId 21783) recut from alternative pension sums to the conditional PKUPENS>0 formula"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/pensionsbeloppskontroll-per-person-individ-villkor-ku"
+to = "scb/iot/pensionsbeloppskontroll-per-person"
+effective_year = 2019
+note = "Pensionsbeloppskontroll, per person (PKONTR, VarId 21783) moved to the 2019 pension-input component basis (SCB 2019 DOKSTAR pp19-20)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/pensionsbeloppskontroll-familj-familj-alternativa-pensionssummor-ku"
+to = "scb/iot/pensionsbeloppskontroll-familj-familj-villkor-ku"
+effective_year = 2017
+note = "Pensionsbeloppskontroll, familj (PKONTRH, VarId 21784) recut from alternative pension sums to the conditional PKUPENS>0 formula"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/pensionsbeloppskontroll-familj-familj-villkor-ku"
+to = "scb/iot/pensionsbeloppskontroll-familj"
+effective_year = 2019
+note = "Pensionsbeloppskontroll, familj (PKONTRH, VarId 21784) moved to the 2019 pension-input component basis (SCB 2019 DOKSTAR pp19-20)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/pensionsbeloppskontroll-per-person-hushall-alternativa-pensionssummor-ku"
+to = "scb/iot/pensionsbeloppskontroll-per-person-hushall-komponentbas-2019"
+effective_year = 2019
+note = "Pensionsbeloppskontroll, per person (PKONTRHB, VarId 21783, bostadshushåll variant) moved to the 2019 pension-input component basis (SCB 2019 DOKSTAR pp19-20)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/summa-pension-ku-individ-pension-transfereringar-ku"
+to = "scb/iot/summa-pension-ku"
+effective_year = 2017
+note = "Summa pension enligt KU (PKUPENS, VarId 1520) recut to PKUAPEN+PKUSSP+TPRIV"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/loneinkomst-tjanst-sjoinkomst"
+to = "scb/iot/loneinkomst-a-tjanst"
+effective_year = 1971
+note = "Löneinkomst (TLONT, VarId 1198) recut from inkomst av tjänst to A-inkomst av tjänst"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/loneinkomst-a-tjanst"
+to = "scb/iot/loneinkomst-a-tjanst-sjukpenning-dagpenning-pension-utbildning"
+effective_year = 1974
+note = "Löneinkomst (TLONT, VarId 1198) recut to deduct sjukpenning, dagpenning, pension and utbildningsbidrag"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/loneinkomst-a-tjanst-sjukpenning-dagpenning-pension-utbildning"
+to = "scb/iot/loneinkomst-a-tjanst-sjukpenning-dagpenning-pension"
+effective_year = 1976
+note = "Löneinkomst (TLONT, VarId 1198) recut: utbildningsbidrag no longer deducted"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/loneinkomst-a-tjanst-sjukpenning-dagpenning-pension"
+to = "scb/iot/loneinkomst-deklarerade-tjanstposter"
+effective_year = 1978
+note = "Löneinkomst (TLONT, VarId 1198) recut to declared tjänst items 1 and 2 plus sjöinkomst"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/iot/loneinkomst-deklarerade-tjanstposter"
+to = "scb/iot/loneinkomst-deklarerade-tjanstposter-delpension"
+effective_year = 1979
+note = "Löneinkomst (TLONT, VarId 1198) recut to also deduct delpension"
+
+#    LINDA: BNGR coding SNI92 → combined SNI2002/SNI92 (2002) → SNI2002 (2003).
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/naringsgren-fran-kontrolluppgifter-och-foretagsdatabasen-sni92"
+to = "scb/linda/naringsgren-fran-kontrolluppgifter-och-foretagsdatabasen-sni2002-sni92"
+effective_year = 2002
+note = "BNGR (VarId 2702) moved from SNI92 to a combined SNI2002/SNI92 coding in 2002"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/linda/naringsgren-fran-kontrolluppgifter-och-foretagsdatabasen-sni2002-sni92"
+to = "scb/linda/naringsgren-fran-kontrolluppgifter-och-foretagsdatabasen-sni2002"
+effective_year = 2003
+note = "BNGR (VarId 2702) moved from combined SNI2002/SNI92 to SNI2002 in 2003"
+
+#    LISA: institutionell sektorkod re-derived from BAS instead of RAMS/JOBB.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/institutionell-sektorkod-huvudsaklig-sysselsattning-2014-fore-bas"
+to = "scb/lisa/institutionell-sektorkod-huvudsaklig-sysselsattning-2014-bas"
+effective_year = 2022
+note = "InstKod10 (VarId 31110) re-derived from BAS Årsuppgifter-Jobb instead of Aktivitetsregister-JOBB from 2022; 242/242 codes"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/institutionell-sektorkod-foretag-2014-fore-bas"
+to = "scb/lisa/institutionell-sektorkod-foretag-2014-bas"
+effective_year = 2022
+note = "Org_InstKod10 (VarId 31110) re-derived from BAS Årsuppgifter from 2022; 242/242 codes"
+
+#    Yrkesregistret: arbetsställets näringsgren moved from SNI92 to SNI2002.
+#    The forvarvsarbetande AstSni opdef says SNI 2002 for 2001; the grundregister
+#    opdef and the 755-code list say SNI92, so this is an edge, not a fold.
+[[edge]]
+type = "replaced_by"
+from = "scb/yrkesreg/astsni"
+to = "scb/yrkesreg/astsni0"
+effective_year = 2002
+note = "Näringsgren, huvudsaklig sysselsättning (VarId 17509) moved from SNI92 (AstSni, 2001) to SNI2002 (AstSni02, 2002–2010)"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/yrkesreg/ku1astsni"
+to = "scb/yrkesreg/ku1astsni0"
+effective_year = 2002
+note = "Näringsgren, största förvärvskälla (VarId 16221) moved from SNI92 (KU1AstSni, 2001) to SNI2002 (KU1AstSni02, 2002–2010)"
+
 # ── #508 tier-1 same_as: auto-curated canonical-family identities ──
 # Reproducible derivation (re-runnable for the deferred follow-up):
 #  1. `reg-meta-build same-as-candidates --max-tier 1` on a real scb,sos build

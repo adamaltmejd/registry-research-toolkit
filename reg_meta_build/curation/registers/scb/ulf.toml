@@ -2765,6 +2765,13 @@ expected_evidence_sha256 = "9ee0132d960c41c43f5c422495d81357ee534fe60c74c50de744
 reason = "The2012 occurrence names ICD10 but supplies no own stored-code association or historical edition authority. The2013 source list is a generic international diagnosis list; a modern ICD10-SE book does not establish the exact2012 encoding, source additions or missing codes. Retain the classification wording and all later source domains; leave this exact value set unavailable without choosing a modern edition."
 evidence = "Complete955-original ULF27-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-ULF73-source-proof.json."
 
+# Shared-column succession fold 2026-10-21 (maintainer-approved high-confidence
+# worklist batch): SSYK12UP_1 and SSYK12UP are one SSYK 2012 occupation column.
+[[identity.partition]]
+variable = "237.31143"
+columns = { SSYK12UP_1 = "237.31143.ssyk12up", SSYK12UP = "237.31143.ssyk12up", SSYKUP_1 = "237.31143.ssykup-1", SSYKUp_1 = "237.31143.ssykup-1" }
+columns_ref = "Shared-column succession fold 2026-10-21: SCB VarId 31143 'Yrke, huvudsakliga sysselsättningen' sequential rename {SSYK12UP_1 2014-2019, SSYK12UP 2020} owned by 237.31143.ssyk12up; identical operational definition (SSYK 2012, question PL050A_1), the same 636 codes, never co-delivered (reg_meta v0.57.0). The SSYK 96 columns SSYKUP_1/SSYKUp_1 keep their own owner. Y-211/Y-276 sequential-rename policy."
+
 [[identity.partition]]
 variable = "237.5639"
 columns = { KI1119 = "237.5639", KM1119 = "237.5639" }
