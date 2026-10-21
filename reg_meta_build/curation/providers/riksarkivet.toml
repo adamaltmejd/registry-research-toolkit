@@ -138,26 +138,28 @@ definition = "Hälsoprofil"
 data_type = "text"
 is_sensitive = true
 
+# The field list names SKO1/SKO2 and YRK1/YRK2 alike, so each name carries its
+# column: a name is unique within a variant (#1739).
 [[register.variable]]
-name = "Skolutbildning"
+name = "Skolutbildning (SKO1)"
 column = "SKO1"
 definition = "Skolutbildning"
 data_type = "text"
 
 [[register.variable]]
-name = "Skolutbildning"
+name = "Skolutbildning (SKO2)"
 column = "SKO2"
 definition = "Skolutbildning"
 data_type = "text"
 
 [[register.variable]]
-name = "Yrkesutbildning"
+name = "Yrkesutbildning (YRK1)"
 column = "YRK1"
 definition = "Yrkesutbildning"
 data_type = "text"
 
 [[register.variable]]
-name = "Yrkesutbildning"
+name = "Yrkesutbildning (YRK2)"
 column = "YRK2"
 definition = "Yrkesutbildning"
 data_type = "text"

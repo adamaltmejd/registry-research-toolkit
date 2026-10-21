@@ -356,7 +356,12 @@ def convert_matrix(
         key = (*register_key, "accepted-matrix", case_id, answer.key)
         provider_keys[key] = str(selector.var_id)
         authored = {
-            "name": value_field(answer.label_en),
+            # Waves repeat the answer labels and a name is unique within a variant
+            # (#1736), so the name carries the wave's period, "2002 - 2004" as the
+            # name ladder writes a year range: "(CIS 2002–2004)".
+            "name": value_field(
+                f"{answer.label_en} (CIS {selector.edition.replace(' - ', '–')})"
+            ),
             "definition": value_field(answer.definition_en),
             "description": value_field(
                 f"{matrix.question_label} ({', '.join(answer.columns)}; {selector.edition})."
