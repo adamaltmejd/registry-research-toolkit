@@ -156,8 +156,7 @@ function resolveCss(property: string): string {
 
 /** The only tokens with no custom property: they name something CSS cannot hold. */
 const EXEMPT: Record<string, string> = {
-  "colors.primary":
-    "spec-required palette name for the accent role it aliases",
+  "colors.primary": "spec-required palette name for the accent role it aliases",
   "colors.neutral":
     "spec-required palette name for the ramp stop --gray-12 aliases",
   "colors.white":
