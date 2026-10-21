@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+
+[variable]
+"1.101" = "extended"
+"1.102" = "sentinel"
+"1.103" = "scoped"
+"1.104" = "typeless"

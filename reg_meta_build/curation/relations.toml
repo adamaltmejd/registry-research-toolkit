@@ -371,7 +371,7 @@ note = "FÅMANS (rank 3) source switched from kontrolluppgift to arbetsgivardekl
 # ── LISA RAMS → BAS: the årgång 2022 re-mint (Y-88) ──
 #    From årgång 2022 LISA's arbetsmarknadsvariabler come from Befolkningens
 #    arbetsmarknadsstatus (BAS) instead of RAMS
-#    (`reg_meta_build/docs/lisa/_changelog-2022.md` § "Ny källa för
+#    (`inputs:catalog/docs/markdown/lisa/_changelog-2022.md` § "Ny källa för
 #    arbetsmarknadsvariabler"). BAS carries no aktiv/passiv status for
 #    egenföretagare and adds utländsk beskattad lön to the förvärvsarbete income
 #    variables (same file, § "Inkomst av förvärvskälla"), so SCB re-minted the
@@ -420,12 +420,12 @@ note = "Huvudsaklig inkomstkälla moved from RAKS to BAS in 2022 (Raks_HuvInkKal
 # ── LISA sysselsättningsstatus: justerad metod 2011 → 2019 (Y-88) ──
 #    The same 2019 KU → AGI source switch as the näringsgren and FÅMANS edges
 #    above, seen in the status column
-#    (`reg_meta_build/docs/lisa/_changelog-2019.md` § "Förvärvsarbetande"): the
+#    (`inputs:catalog/docs/markdown/lisa/_changelog-2019.md` § "Förvärvsarbetande"): the
 #    column is re-cut as `SyssStat19`, "Sysselsättningsstatus enligt justerad
 #    metod 2019". The code set moves with the source: classes 5/6 read "AGI från
 #    arbetsgivare" where `SyssStat11` read "kontrolluppgift från arbetsgivare",
 #    and class 8 (förvärvsarbetande 75-) is new
-#    (`reg_meta_build/docs/lisa/_changelog-2022.md` § "Sysselsättningsstatus och
+#    (`inputs:catalog/docs/markdown/lisa/_changelog-2022.md` § "Sysselsättningsstatus och
 #    Befolkningens arbetsmarknadsstatus"). One VarId (63), two
 #    never-co-delivered columns — representation grain.
 [[edge]]
@@ -446,7 +446,7 @@ note = "Sysselsättningsstatus, november moved from justerad metod 2011 to juste
 #    renames and are not modeled here. From årgång 2016 the Sreg siblings stop
 #    and the surviving column carries the `_LISA` suffix. The documentation names
 #    the column `CfarNr_LISA` / `PeOrgNr_LISA` across the whole 1990–2017 span
-#    (`reg_meta_build/docs/lisa/_appendix-year-coverage.md`, Bilaga 9), so the
+#    (`inputs:catalog/docs/markdown/lisa/_appendix-year-coverage.md`, Bilaga 9), so the
 #    2016 step is a delivery-header rename, not a new measure. Representation
 #    grain and VARIANT-SCOPED: `arbetsstallen` and `foretag` keep delivering the
 #    unsuffixed headers through 2023, so a variable-grain edge would assert a
@@ -476,7 +476,7 @@ note = "LISA företag delivery column renamed PeOrgNr → PeOrgNr_LISA in the in
 #    gruppering", 2015) and then by VarId 35848 ("Europeisk socioekonomisk
 #    gruppering", 2016) — never together. ESeG itself was presented in late 2016
 #    and is derived from ISCO-08 via SSYK 2012
-#    (`reg_meta_build/docs/lisa/ESeG.md`), so the 2016 re-mint restates the
+#    (`inputs:catalog/docs/markdown/lisa/ESeG.md`), so the 2016 re-mint restates the
 #    yrkesbaserad grouping as the European standard: the two carry the same
 #    1.1–9.9 grouping structure and the 2016 era drops the predecessor's `0`
 #    (Ej aktuellt) class. Variable grain.

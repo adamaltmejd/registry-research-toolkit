@@ -9,7 +9,7 @@
       ]
     },
     "files": {
-      "Forsakringskassan/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2000-01-01\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\", \"w\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n"
+      "providers/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2000-01-01\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\", \"w\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n"
     }
   }
 }

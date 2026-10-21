@@ -39,7 +39,10 @@ probe): the extension the build loads, not the toolchain `PATH` selects, which n
 not have built it (#1650). An extension rebuilt to the same bytes keeps every key.
 
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
-in its repository (the manifest records it); the content of every file in the code
+in its repository (the manifest records it); the digest of each authored source
+`prepare-sources` reads from the curation tree (`prepared_catalog.AUTHORED_SOURCES`:
+the thin-provider TOMLs and `scb_canonical.toml`, an absent one as null), not the
+whole curation digest, so other curation edits keep the entry; the content of every file in the code
 boundary (`prepare_code_files`: the builder's own static import walk from the
 `prepare-sources` entry point, which the probe runs, less the comparison-only modules
 it reaches (`PREPARE_UNKEYED`), plus `uv.lock`, and the native extension sources
@@ -189,9 +192,10 @@ PACKAGE_SOURCE = "reg_meta_build/src"
 #
 # Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
 # starts calling a module outside this walk, or when a module in the walk starts
-# reading a repository file outside its package (today only `_curation`,
-# `curation_tree` and `fqid_slugs` can read the curation tree, and the prepare path
-# calls none of those readers).
+# reading a repository file outside its package. The prepare path reads exactly the
+# curation tree's authored sources (`AUTHORED_SOURCES`), which the key holds by
+# content (`authored_sources`); `curation_tree` and `fqid_slugs` read the rest of the
+# tree, and the prepare path calls neither.
 #
 # A missing root stops the tool rather than shrinking the key.
 PREPARE_ROOTS = (
@@ -246,6 +250,15 @@ facts["reg_core_py"] = native_digests()
 if request.get("curation"):
     from reg_meta_build.curation_compile import tree_sha256
     facts["curation_tree_sha256"] = tree_sha256(Path(request["curation"]))
+if request.get("authored"):
+    import hashlib
+    from reg_meta_build.prepared_catalog import AUTHORED_SOURCES
+    authored = Path(request["authored"])
+    facts["authored_sources"] = {
+        path: hashlib.sha256((authored / path).read_bytes()).hexdigest()
+        if (authored / path).is_file() else None
+        for path in sorted(AUTHORED_SOURCES)
+    }
 if request.get("resolve_code"):
     try:
         from reg_meta_build.resolve_code import resolve_code_sha256
@@ -292,12 +305,16 @@ if request.get("prepared"):
 if request.get("admit"):
     admit = request["admit"]
     try:
-        from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
-        open_prepared_catalog_sources(
+        from reg_meta_build.prepared_catalog import (
+            check_authored_sources,
+            open_prepared_catalog_sources,
+        )
+        opened = open_prepared_catalog_sources(
             Path(admit["prepared"]),
             input_commit=admit["input_commit"],
             expected_sha256=admit["manifest_sha256"],
         )
+        check_authored_sources(opened.manifest, Path(admit["curation"]))
         if admit["builder_commit"] is not None:
             from reg_meta_build.artifact_identity import builder_commit
             if builder_commit() != admit["builder_commit"]:
@@ -478,8 +495,16 @@ def prepare_code(walk: dict) -> dict[str, str]:
 # -- prepare -----------------------------------------------------------------------
 
 
+def curation_dir(args: argparse.Namespace) -> str:
+    return args.curation_dir or str(ROOT / "reg_meta_build/curation")
+
+
 def prepare_fields(args: argparse.Namespace) -> dict:
-    facts = probe(source_root=str(ROOT / PACKAGE_SOURCE), prepare_roots=PREPARE_ROOTS)
+    facts = probe(
+        source_root=str(ROOT / PACKAGE_SOURCE),
+        prepare_roots=PREPARE_ROOTS,
+        authored=curation_dir(args),
+    )
     if error := facts.pop("probe_error", None):
         sys.exit(f"real-seed-cache: {error['code']}: {error['message']}")
     return {
@@ -487,6 +512,7 @@ def prepare_fields(args: argparse.Namespace) -> dict:
         "bundle_commit": args.input_commit,
         "bundle_manifest_sha256": args.input_manifest_sha256,
         "bundle_path": git(Path(args.input_bundle), "rev-parse", "--show-prefix"),
+        "authored_sources": facts.pop("authored_sources"),
         "code": prepare_code(facts.pop("prepare_code")),
         "runtime": facts,
     }
@@ -575,6 +601,8 @@ def run_prepare(args: argparse.Namespace, output: Path) -> dict | None:
             args.input_manifest_sha256,
             "--output-dir",
             str(output),
+            "--curation-dir",
+            curation_dir(args),
         ],
         cwd=ROOT,
         stdout=subprocess.PIPE,
@@ -740,7 +768,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
     """The build key's fields and the resolve key's, from one probe."""
     code = build_code(args)
     facts = probe(
-        curation=args.curation_dir or str(ROOT / "reg_meta_build/curation"),
+        curation=curation_dir(args),
         resolve_code=True,
         # Run on every lookup, hit or miss: a hit must refuse exactly what the build
         # would refuse before it starts.
@@ -751,6 +779,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
             "input_commit": args.input_commit,
             "manifest_sha256": args.input_manifest_sha256,
             "builder_commit": code["builder_commit"],
+            "curation": curation_dir(args),
         },
     )
     if error := facts.pop("probe_error", None):
@@ -1146,6 +1175,9 @@ def main() -> int:
         "--adopt",
         metavar="DIR",
         help="record an accepted prepared tree of the same bundle under this key",
+    )
+    prepare.add_argument(
+        "--curation-dir", help="curation tree holding the authored sources"
     )
     build = sub.add_parser("build", help="build-db, or its stored entry")
     build.add_argument("--prepared", required=True)

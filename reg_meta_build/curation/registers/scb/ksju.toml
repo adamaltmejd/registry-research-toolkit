@@ -33,7 +33,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 10) documents it as the unweighted counterpart of ersdagar (row 11). SWECOV holds it as float in every KSju quarterly table, KSju_20151 through KSju_20234, and ordered the same variables in each, so holdings are 2015-2023 (2026-10-13 maintainer decision, replacing the pooled 1990-2024 range from Y-213). is_sensitive/is_identifier follow sibling ersdagar."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 10) documents it as the unweighted counterpart of ersdagar (row 11). SWECOV holds it as float in every KSju quarterly table, KSju_20151 through KSju_20234, and ordered the same variables in each, so holdings are 2015-2023 (2026-10-13 maintainer decision, replacing the pooled 1990-2024 range from Y-213). is_sensitive/is_identifier follow sibling ersdagar."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -46,7 +46,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 13) documents ersk1 verbatim as the unweighted (oviktade) counterpart of ersk (row 12, Registerinformation \"Antal ersättningsdagar, kvinna\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (input_data/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling ersk (is_sensitive=true, is_identifier=false)."
+evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 13) documents ersk1 verbatim as the unweighted (oviktade) counterpart of ersk (row 12, Registerinformation \"Antal ersättningsdagar, kvinna\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling ersk (is_sensitive=true, is_identifier=false)."
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -59,7 +59,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 15) documents ersm1 verbatim as the unweighted (oviktade) counterpart of ersm (row 14, Registerinformation \"Antal ersättningsdagar, man\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (input_data/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling ersm (is_sensitive=true, is_identifier=false)."
+evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 15) documents ersm1 verbatim as the unweighted (oviktade) counterpart of ersm (row 14, Registerinformation \"Antal ersättningsdagar, man\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling ersm (is_sensitive=true, is_identifier=false)."
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -73,7 +73,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 19) lists fallk1 as \"Vikt som justerar för ej inkomna månader, för kvinna (0 för man), oviktade\", the unweighted (oviktade) counterpart of fallk (row 18); that label contradicts the sibling's Registerinformation name \"Markering för sjukfall, kvinna\", which the name follows. SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (input_data/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling fallk (is_sensitive=true, is_identifier=false)."
+evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 19) lists fallk1 as \"Vikt som justerar för ej inkomna månader, för kvinna (0 för man), oviktade\", the unweighted (oviktade) counterpart of fallk (row 18); that label contradicts the sibling's Registerinformation name \"Markering för sjukfall, kvinna\", which the name follows. SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling fallk (is_sensitive=true, is_identifier=false)."
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -87,7 +87,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 21) lists fallm1 as \"Vikt som justerar för ej inkomna månader, för man (0 för kvinna), oviktade\", the unweighted (oviktade) counterpart of fallm (row 20); that label contradicts the sibling's Registerinformation name \"Markering för sjukfall, man\", which the name follows. SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (input_data/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling fallm (is_sensitive=true, is_identifier=false)."
+evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 21) lists fallm1 as \"Vikt som justerar för ej inkomna månader, för man (0 för kvinna), oviktade\", the unweighted (oviktade) counterpart of fallm (row 20); that label contradicts the sibling's Registerinformation name \"Markering för sjukfall, man\", which the name follows. SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling fallm (is_sensitive=true, is_identifier=false)."
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -100,7 +100,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 31) documents kdagk1 verbatim as the unweighted (oviktade) counterpart of kdagk (row 30, Registerinformation \"Antal sjukdagar, kvinna\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (input_data/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling kdagk (is_sensitive=true, is_identifier=false)."
+evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 31) documents kdagk1 verbatim as the unweighted (oviktade) counterpart of kdagk (row 30, Registerinformation \"Antal sjukdagar, kvinna\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling kdagk (is_sensitive=true, is_identifier=false)."
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -113,7 +113,7 @@ is_sensitive = true
 is_identifier = false
 holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 33) documents kdagm1 verbatim as the unweighted (oviktade) counterpart of kdagm (row 32, Registerinformation \"Antal sjukdagar, man\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (input_data/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling kdagm (is_sensitive=true, is_identifier=false)."
+evidence = "SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 33) documents kdagm1 verbatim as the unweighted (oviktade) counterpart of kdagm (row 32, Registerinformation \"Antal sjukdagar, man\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling kdagm (is_sensitive=true, is_identifier=false)."
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -124,7 +124,7 @@ name = "Är alltid 0 (eller NULL)"
 definition = "Är alltid 0 (eller NULL)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -135,7 +135,7 @@ name = "1 eller NULL (1 om det bara finns ett arbetsställe)"
 definition = "1 eller NULL (1 om det bara finns ett arbetsställe)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -146,7 +146,7 @@ name = "? - (inehåller värde 0 eller 1)"
 definition = "? - (inehåller värde 0 eller 1)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -157,7 +157,7 @@ name = "Alltid tom för de godkända, men kod för de med statuskod 18"
 definition = "Alltid tom för de godkända, men kod för de med statuskod 18"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[enrichment.description]]

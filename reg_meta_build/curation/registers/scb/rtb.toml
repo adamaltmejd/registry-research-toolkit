@@ -59,7 +59,7 @@ name = "Födelseland, enskilda länder"
 definition = "Födelseland, enskilda länder"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). 2026-10-01 maintainer-authorized storage-type assumption: interpret this exact pooled 1990-2024 Fodelseland holdings declaration as text. The retained four 2020/2021/2022/2024 exact-column DDL snapshots use varchar, but do not independently prove the historical storage encoding. Do not infer a length, change the source period, alter country meanings or replace any original source field."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). 2026-10-01 maintainer-authorized storage-type assumption: interpret this exact pooled 1990-2024 Fodelseland holdings declaration as text. The retained four 2020/2021/2022/2024 exact-column DDL snapshots use varchar, but do not independently prove the historical storage encoding. Do not infer a length, change the source period, alter country meanings or replace any original source field."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -70,7 +70,7 @@ name = "Tidigare postnummer"
 definition = "Tidigare postnummer"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -81,7 +81,7 @@ name = "Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnam
 definition = "Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnamn."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -92,7 +92,7 @@ name = "Tidigare Folkbokföringsadress fortsättning. Kan också innehålla ett 
 definition = "Tidigare Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnamn."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]

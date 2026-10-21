@@ -1,0 +1,1 @@
+A curation tree with no authored sources, so the case does not depend on the committed one.

@@ -66,7 +66,7 @@ def test_parse_frontmatter_plain_multiline_flow_scalar() -> None:
 def test_parse_frontmatter_committed_lisa_shape() -> None:
     """Golden-style: a real committed lisa ``>-`` frontmatter parses fully.
 
-    Mirrors reg_meta_build/docs/lisa/KU2AstSNI2007G.md so a change in the
+    Mirrors inputs:catalog/docs/markdown/lisa/KU2AstSNI2007G.md so a change in the
     generator's block-scalar output surfaces here.
     """
     text = (

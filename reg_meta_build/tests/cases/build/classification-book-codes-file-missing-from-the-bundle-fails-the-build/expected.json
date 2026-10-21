@@ -1,0 +1,11 @@
+{
+  "error": {
+    "code": "classification_codes_file_missing",
+    "exit_code": 10,
+    "message_contains": [
+      "classifications/MISSING.toml",
+      "codes_file 'missing.csv'",
+      "classifications/missing.csv"
+    ]
+  }
+}

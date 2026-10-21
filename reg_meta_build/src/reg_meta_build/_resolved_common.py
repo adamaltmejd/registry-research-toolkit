@@ -143,18 +143,17 @@ _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
 
 # Thin CURATED global providers (#422): public agencies with no machine-readable
 # native export — their catalog content is a maintainer-authored TOML read by the
-# shared `CuratedAdapter` (sources/curated.py). Each entry is
-# (provider_slug, input_data subdir holding `<provider_slug>.toml`). Unlike the
-# untracked SCB/SOS seed, this TOML is committed, so the subdir always exists on
-# any checkout — which requires a per-agency `.gitignore` un-ignore line (the
-# `input_data/*` rule otherwise hides it). See DESIGN.md → Curated thin providers.
-_CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
-    ("fohm", "Folkhalsomyndigheten"),
-    ("fk", "Forsakringskassan"),
-    ("lakemedelsverket", "Lakemedelsverket"),
-    ("pliktverket", "Pliktverket"),
-    ("riksarkivet", "Riksarkivet"),
-    ("umu", "UMU"),
+# shared `CuratedAdapter` (sources/curated.py), at `curation/providers/<slug>.toml`.
+# `prepare-sources` reads them (and `curation/scb_canonical/scb_canonical.toml`)
+# from the curation tree and pins their digests; a build refuses a prepared root
+# whose pins differ from its curation tree. See DESIGN.md → Curated thin providers.
+_CURATED_PROVIDERS: tuple[str, ...] = (
+    "fohm",
+    "fk",
+    "lakemedelsverket",
+    "pliktverket",
+    "riksarkivet",
+    "umu",
 )
 
 

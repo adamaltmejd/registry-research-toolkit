@@ -11,7 +11,7 @@
       ]
     },
     "files": {
-      "Forsakringskassan/fk.toml": [
+      "providers/fk.toml": [
         "[[register]]",
         "key = \"remote\"",
         "name = \"Remote\"",

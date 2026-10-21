@@ -1,8 +1,9 @@
 # Curated register-version related documents (#740).
 #
-# Binaries are maintainer-supplied, gitignored seed files under
-# `reg_meta_build/input_data/SCB/docs/<register>/`. `sha256` and `byte_size`
-# pin the exact gitignored bytes so release assets are reproducible. The build
+# Binaries live in the private inputs repo under
+# `catalog/docs/related/<register>/`, passed to `build-docs` as
+# `--related-docs-dir <inputs>/catalog/docs/related`. `sha256` and `byte_size`
+# pin the exact bytes so release assets are reproducible. The build
 # stores the bytes plus this provenance in `reg_meta_docs.db` so the released
 # asset can rehost permitted documents as one file. `build-docs` refuses when an
 # entry's binary is absent, unless the entry sets `required = false`.

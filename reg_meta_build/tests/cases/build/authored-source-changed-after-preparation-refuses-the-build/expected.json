@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "prepared_authored_source_stale",
+    "exit_code": 10,
+    "message_contains": [
+      "['providers/umu.toml']"
+    ]
+  }
+}

@@ -15,6 +15,7 @@ from _prepared_fixtures import accept_prepared
 from reg_meta_build.materialize import build_catalog
 from reg_meta_build.pipeline import check_curation
 from reg_meta_build.prepared_catalog import (
+    AUTHORED_SOURCES,
     prepare_catalog_sources,
 )
 
@@ -114,11 +115,12 @@ def catalog(tmp_path: Path, request, prepared_cache) -> CatalogFixture:
         "scb": {"registerinformation": rows},
     }
     if mode == "thin_twin":
-        spec["files"] = {"Forsakringskassan/fk.toml": _THIN_TWIN}
+        spec["files"] = {"providers/fk.toml": _THIN_TWIN}
     prepared = prepared_cache.get(spec)
     curation = tmp_path / "curation"
     registers = curation / "registers" / "scb"
     registers.mkdir(parents=True)
+    write_authored(spec, curation)
     (curation / "classifications").mkdir()
     (registers / "sample.toml").write_text(
         '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
@@ -147,12 +149,40 @@ def built_db_dir(
     return output.parent
 
 
-def prepare_accepted(tmp_path: Path, source: Path) -> tuple[Path, str, str]:
-    """Bundle, prepare and accept ``source``; return (prepared dir, commit, digest)."""
+def prepare_accepted(
+    tmp_path: Path, source: Path, curation: Path
+) -> tuple[Path, str, str]:
+    """Bundle and prepare ``source`` with the authored sources under ``curation``,
+    accept it, and return (prepared dir, commit, digest)."""
     bundle = write_input_bundle(tmp_path / "inputs", source)
     prepared = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(bundle, prepared)
+    manifest = prepare_catalog_sources(bundle, prepared, curation_dir=curation)
     return prepared, accept_prepared(prepared), manifest.sha256
+
+
+def _file_text(text: str | list[str]) -> str:
+    return text if isinstance(text, str) else "\n".join(text) + "\n"
+
+
+def write_authored(spec: dict, curation: Path) -> None:
+    """Write a source spec's authored sources (`AUTHORED_SOURCES` paths in its
+    `files`) into a curation tree: `prepare-sources` pins them from there, and a
+    build refuses a curation tree whose copies differ."""
+    curation.mkdir(parents=True, exist_ok=True)
+    for relative, text in spec.get("files", {}).items():
+        if relative in AUTHORED_SOURCES:
+            path = curation / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(_file_text(text), encoding="utf-8")
+
+
+def write_delivered(spec: dict, source: Path) -> None:
+    """Write a source spec's other `files` as provider deliveries under ``source``."""
+    for relative, text in spec.get("files", {}).items():
+        if relative not in AUTHORED_SOURCES:
+            path = source / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(_file_text(text), encoding="utf-8")
 
 
 def write_curation_tree(root: Path, files: dict[str, str]) -> Path:

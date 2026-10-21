@@ -7939,6 +7939,20 @@ def compile_curation(
     metadata, class_successions = compile_declared_metadata(
         tree, selected=selected, unmatched=unmatched
     )
+    # Book code lists are pinned bundle inputs, not repo files: a declared book
+    # whose file the bundle lacks is refused at its own TOML.
+    delivered = {v.manifest.revision.dataset for v in prepared.value_sources}
+    for entry in tree.classifications:
+        codes_file = entry.classification.codes_file
+        if f"classifications/{codes_file}" not in delivered:
+            raise curation_error(
+                "classification_codes_file_missing",
+                f"classifications/{entry.classification.short_name}.toml: "
+                f"codes_file {codes_file!r} is not in the input bundle "
+                f"(classifications/{codes_file}).",
+                "Add the code list to the input bundle's classifications/ "
+                "directory and re-pin it, or correct codes_file.",
+            )
     books = tuple(
         CompiledCodebook(
             source=f"classifications/{entry.classification.codes_file}",

@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """Parse LISA bakgrundsfakta PDF into per-variable and topic markdown files.
 
-Outputs to reg_meta_build/docs/lisa/ with YAML frontmatter, standard markdown
-links ([X](X.md)), and hierarchical tags.
+Inputs and output live in a worktree `<inputs>` of the private inputs repo: the
+source PDFs are under `<inputs>/catalog/docs/lisa-pdf/`, and `--out` (required) is
+`<inputs>/catalog/docs/markdown/lisa`, the tree `reg-meta-build build-docs
+--docs-dir <inputs>/catalog/docs/markdown` indexes. Output files carry YAML
+frontmatter, standard markdown links ([X](X.md)), and hierarchical tags.
 
-Two-step workflow:
+Two-step workflow (marker's intermediate markdown goes to a scratch dir `<raw>`):
 
 1. Convert PDFs to markdown with marker (requires GEMINI_API_KEY):
 
     # Bakgrundsfakta (the big 467-page reference doc):
-    caffeinate -i uv run marker_single lisa-bakgrundsfakta-1990-2017.pdf \
+    caffeinate -i uv run marker_single \
+      <inputs>/catalog/docs/lisa-pdf/lisa-bakgrundsfakta-1990-2017.pdf \
       --use_llm --gemini_model_name gemini-3-flash-preview \
       --gemini_api_key "$GEMINI_API_KEY" \
-      --output_dir reg_meta_build/docs/_raw \
+      --output_dir <raw> \
       --disable_image_extraction \
       --MarkdownRenderer_keep_pageheader_in_output \
       --disable_multiprocessing
@@ -21,20 +25,20 @@ Two-step workflow:
     for pdf in lisa-2019---forandringar.pdf lisa_2020-forandringar.pdf \
                lisa-2022-forandringar.pdf lisa_2023-forandringar.pdf \
                hushallsinformation-i-lisa-2011-.pdf; do
-      uv run marker_single "$pdf" --use_llm \
+      uv run marker_single "<inputs>/catalog/docs/lisa-pdf/$pdf" --use_llm \
         --gemini_model_name gemini-3-flash-preview \
         --gemini_api_key "$GEMINI_API_KEY" \
-        --output_dir reg_meta_build/docs/_raw \
+        --output_dir <raw> \
         --disable_image_extraction
     done
 
 2. Split markdown into per-variable files with this script:
 
     uv run python scripts/parse_lisa_docs.py \
-      --cached-md reg_meta_build/docs/_raw/lisa-bakgrundsfakta-1990-2017/lisa-bakgrundsfakta-1990-2017.md \
-      --forandringar reg_meta_build/docs/_raw/*-forandringar*/*.md \
-                     reg_meta_build/docs/_raw/hushallsinformation*/*.md \
-      --out reg_meta_build/docs/lisa
+      --cached-md <raw>/lisa-bakgrundsfakta-1990-2017/lisa-bakgrundsfakta-1990-2017.md \
+      --forandringar <raw>/*-forandringar*/*.md \
+                     <raw>/hushallsinformation*/*.md \
+      --out <inputs>/catalog/docs/markdown/lisa
 
 Notes:
 - marker + Gemini 3 Flash costs ~$1-2 for the full bakgrundsfakta.
@@ -60,8 +64,8 @@ from pathlib import Path
 # Config
 # ---------------------------------------------------------------------------
 
-REPO = Path(__file__).resolve().parent.parent
-OUT_DIR = REPO / "reg_meta_build" / "docs" / "lisa"
+# The output lives outside this repo, so panache gets this repo's config explicitly.
+PANACHE_CONFIG = Path(__file__).resolve().parent.parent / ".panache.toml"
 
 # Footer pattern from pymupdf4llm output
 FOOTER_RE = re.compile(
@@ -1298,8 +1302,8 @@ def main() -> None:
     parser.add_argument(
         "--out",
         type=Path,
-        default=OUT_DIR,
-        help=f"Output directory (default: {OUT_DIR})",
+        required=True,
+        help="Output directory (<inputs>/catalog/docs/markdown/lisa)",
     )
     parser.add_argument(
         "--dry-run",
@@ -1392,9 +1396,8 @@ def _panache_format(out_dir: Path) -> None:
     """Format generated docs with panache so committed output is panache-clean.
 
     panache is the repo's markdown formatter; running it as the build's final
-    stage keeps generated docs consistent with hand-written ones and green under
-    CI's `panache format --check` (the only feasible check there — the full doc
-    build needs the untracked SCB seed). Config is the repo-root .panache.toml.
+    stage keeps generated docs consistent with hand-written ones. Config is this
+    repo's root .panache.toml.
     """
     if shutil.which("uvx") is None:
         print("WARNING: uvx not found; skipping panache format pass", file=sys.stderr)
@@ -1402,7 +1405,16 @@ def _panache_format(out_dir: Path) -> None:
     print(f"Formatting {out_dir} with panache...")
     # Pinned; see .panache.toml for why, and for the bump ritual.
     subprocess.run(
-        ["uvx", "--from", "panache-cli==3.17.0", "panache", "format", str(out_dir)],
+        [
+            "uvx",
+            "--from",
+            "panache-cli==3.17.0",
+            "panache",
+            "--config",
+            str(PANACHE_CONFIG),
+            "format",
+            str(out_dir),
+        ],
         check=True,
         env=os.environ | {"UV_EXCLUDE_NEWER": "false"},  # as scripts/gate.py
     )

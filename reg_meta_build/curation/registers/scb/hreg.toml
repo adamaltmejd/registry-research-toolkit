@@ -104,7 +104,7 @@ name = "1=För första gången registrerad på lärosätet denna termin. Högsko
 definition = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -115,7 +115,7 @@ name = "1=För första gången registrerad på specifikt lprog denna termin (Ej 
 definition = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -126,7 +126,7 @@ name = "1=För första gången registrerad på svenskt lärosäte denna termin. 
 definition = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -137,7 +137,7 @@ name = "1=För första gången registrerad på specifikt yprog (Synonymt med SCB
 definition = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -148,7 +148,7 @@ name = "År+Termin för första registrering på svenskt lärosäte"
 definition = "År+Termin för första registrering på svenskt lärosäte"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -159,7 +159,7 @@ name = "Kursens terminsnummer"
 definition = "Kursens terminsnummer"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -170,7 +170,7 @@ name = "Kursregistreringens högskolepoäng inom terminen"
 definition = "Kursregistreringens högskolepoäng inom terminen"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -181,7 +181,7 @@ name = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
 definition = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -192,7 +192,7 @@ name = "Examensinriktningsgrupp, detaljerad nivå"
 definition = "Examensinriktningsgrupp, detaljerad nivå"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -203,7 +203,7 @@ name = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
 definition = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -214,7 +214,7 @@ name = "Examensinriktningsgrupp, mellannivå"
 definition = "Examensinriktningsgrupp, mellannivå"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -225,7 +225,7 @@ name = "Examensinriktningsgrupp, mellannivå. Benämning."
 definition = "Examensinriktningsgrupp, mellannivå. Benämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -236,7 +236,7 @@ name = "Examensinriktningsgrupp, grov nivå"
 definition = "Examensinriktningsgrupp, grov nivå"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -247,7 +247,7 @@ name = "Examensinriktningsgrupp, grov nivå. Benämning."
 definition = "Examensinriktningsgrupp, grov nivå. Benämning."
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -258,7 +258,7 @@ name = "SUN-inriktning, 2000-års nomenklatur"
 definition = "SUN-inriktning, 2000-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -269,7 +269,7 @@ name = "SUN-nivå, 2000-års nomenklatur"
 definition = "SUN-nivå, 2000-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -280,7 +280,7 @@ name = "SUN-inriktning, 2020-års nomenklatur"
 definition = "SUN-inriktning, 2020-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -291,7 +291,7 @@ name = "SUN-nivå, 2020-års nomenklatur"
 definition = "SUN-nivå, 2020-års nomenklatur"
 holdings_period = "1990-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -302,7 +302,7 @@ definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
 data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
 noted = "2026-09-30"
 
 [[errata.column]]
@@ -313,7 +313,7 @@ definition = "Programmets sunnivå på 3-siffernivå (SUN2020)"
 data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
 noted = "2026-09-30"
 
 [[enrichment.description]]
