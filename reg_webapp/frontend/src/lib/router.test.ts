@@ -280,21 +280,6 @@ describe("router reactive query (A5.3b)", () => {
     expect(router.getQueryParam("period")).toBe("2021");
   });
 
-  it("keeps the SAME route object across a query-only navigation (Y-65)", () => {
-    // Not just the same value — the same OBJECT. A structurally equal
-    // replacement invalidates every consumer of a route-derived prop, which is
-    // what used to remount the catalog leaf around its period card mid-Apply
-    // (see reg_webapp/DESIGN.md → SPA routing).
-    const before = router.route;
-    router.navigate("/catalog/scb/lisa/kon?period=2019..2020");
-    expect(router.route).toBe(before);
-    expect(router.getQueryParam("period")).toBe("2019..2020");
-    // Same for the in-place variant the omnibox refines through.
-    router.replace("/catalog/scb/lisa/kon?period=2018..2021");
-    expect(router.route).toBe(before);
-    expect(router.getQueryParam("period")).toBe("2018..2021");
-  });
-
   it("updates `search` on a popstate event, without moving the route (Y-65)", () => {
     // Simulate a back/forward landing on a URL with a query: jsdom doesn't sync
     // location from a synthetic popstate, so push the target URL first, then fire

@@ -70,8 +70,8 @@ issues are compared in emission order.
 ## Consumers
 
 1. **`reg-core`** — `tests/project.rs` runs `validate_structural` on every case
-   (`structural_corpus`) and hashes every accepted project (`project_hashes`, keyed in
-   `../hashes.json`).
+   (`structural_corpus`) and checks the recorded hashes in `../hashes.json`
+   (`project_hashes`).
 2. **SPA TypeScript tests** — `reg_webapp/frontend/src/lib/reg_core.test.ts` runs every
    case through `reg-core-wasm`'s `check_project` (the browser's copy of the server's
    structural door), and `validation.test.ts` checks that the SPA can locate each
@@ -83,5 +83,5 @@ issues are compared in emission order.
 2. Create `<case_id>/input.json` with the payload.
 3. Create `<case_id>/expected_ValidationResult.json` with the validator output the
    structural rules must produce.
-4. Run `cargo test -p reg-core --test project`. An accepted project also needs its hash
-   in `../hashes.json`, from `reg_core::project::project_hash`.
+4. Run `cargo test -p reg-core --test project`. A new case needs no `../hashes.json`
+   entry: its only source would be the `project_hash` under test.

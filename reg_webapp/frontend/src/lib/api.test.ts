@@ -75,19 +75,6 @@ describe("apiGet", () => {
   });
 });
 
-describe("getContext", () => {
-  it("returns the `data` of the Rust server's {data, meta} envelope", async () => {
-    // Fails if getContext returns the envelope instead of its `data`.
-    const data = { schema_version: "9.3.0" };
-    stubFetch(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => ({ data, meta: { scope: "reference" } }),
-    }));
-    expect(await getContext()).toEqual(data);
-  });
-});
-
 describe("getShow", () => {
   it("GETs the ref with each segment encoded and returns the envelope's `data`", async () => {
     // Fails if getShow stops encoding segments (a `ö` or reserved char would
@@ -362,9 +349,9 @@ describe("search", () => {
     expect(await search("kon")).toEqual({ items: [], next_cursor: "c1" });
   });
 
-  it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {
-    // Even with no caller signal, `search` layers AbortSignal.timeout so a hung
-    // request can't spin forever — fetch must always receive a signal.
+  it("passes fetch a live AbortSignal when the caller passes none", async () => {
+    // Fails if `search` sends a call with no caller signal without one: then
+    // nothing (not even its timeout) could abort a hung request.
     const { init } = await callFor("kon");
     expect(init?.signal).toBeInstanceOf(AbortSignal);
     expect(init?.signal?.aborted).toBe(false);

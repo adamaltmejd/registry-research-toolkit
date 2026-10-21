@@ -1,11 +1,10 @@
-"""Public requests and adapter agreement; never retain real identifiers as files."""
+"""Public requests and artifact/HTTP agreement; never retain real identifiers as files."""
 
 from __future__ import annotations
 
 import json
 import unicodedata
 
-import pytest
 from acceptance_requests import response_fqids
 from http_cases import CASES
 from reg_meta_build.db import get_manifest, open_db
@@ -107,18 +106,8 @@ def require(condition, message):
 def server_client(request, directory):
     """An HTTP client on the Rust server (`--server-cmd`) for the artifact in
     `directory`: it answers `/api/search`, `/api/catalog`, `/api/states` and
-    `/api/project/order`.
-
-    Without `--server-cmd` the test skips, except under `--run-release`: release
-    admission must not pass without its browse and search traversals."""
+    `/api/project/order`."""
     servers = request.getfixturevalue("http_servers")
-    if servers is None:
-        if request.config.getoption("--run-release"):
-            pytest.fail(
-                "Release admission browses and searches the Rust server: "
-                "pass --server-cmd"
-            )
-        pytest.skip("browse and search run against --server-cmd")
     with open_db(directory / "reg_meta.db") as conn:
         steward = get_manifest(conn).get("steward", "global")
     return servers.client(
