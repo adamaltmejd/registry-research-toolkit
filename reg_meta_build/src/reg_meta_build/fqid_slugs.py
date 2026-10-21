@@ -895,10 +895,11 @@ def _uncommitted_pin_errors(
     """One ``slug_pin_uncommitted`` error per pinned (curating/frozen) auto file
     on disk that a clean checkout of HEAD would not reproduce, sorted by path.
 
-    A pinned zone reads its slugs back from its ``*.auto.toml``. The file is
-    gitignored, so a leftover from a churning build, or one that was ``git add -f``'d
-    but never committed, passes every on-disk check and then vanishes on a clean
-    checkout, taking the pin with it. A committed file edited (staged or not) but
+    A pinned zone reads its slugs back from its ``*.auto.toml``. A leftover from a
+    churning build, or one that was staged but never committed, passes every
+    on-disk check and then vanishes on a clean checkout, taking the pin with it.
+    Uncommitted pins are refused by the strict build's clean-tree guard; commit
+    them. A committed file edited (staged or not) but
     not committed is the same defect: the checkout restores the old pins. The
     build is git-agnostic, so ``precheck-slugs`` reports both. A pinned zone with no auto file on disk is not reported: the build's
     ``slug_freeze_auto_missing`` guard owns that case and exempts a provider without
@@ -953,7 +954,7 @@ def _uncommitted_pin_errors(
                     f"{shown}: pinned auto file is not in the committed HEAD tree, "
                     "so a clean checkout would lose its slugs.",
                     "Commit it from the repository root: "
-                    f"`git add -f {shown} && git commit`.",
+                    f"`git add {shown} && git commit`.",
                 )
             )
         elif rel in changed:
@@ -962,7 +963,7 @@ def _uncommitted_pin_errors(
                     "slug_pin_uncommitted",
                     f"{shown}: pinned auto file differs from the committed HEAD "
                     "tree, so a clean checkout would restore its old slugs.",
-                    f"From the repository root, commit the edit (`git add -f {shown} "
+                    f"From the repository root, commit the edit (`git add {shown} "
                     "&& git commit`) or discard it (`git restore --source=HEAD "
                     f"--staged --worktree {shown}`).",
                 )
@@ -980,7 +981,7 @@ def load_slug_dir(
     tree, the dominant cost. ``None`` parses it here.
 
     A ``churning`` zone's ``<provider>.auto.toml`` is SKIPPED: while churning the
-    auto file is gitignored/ephemeral (rewritten every build, not committed — see
+    auto file is ephemeral (rewritten every build, not committed — see
     DESIGN.md § "Slug immutability"), so a leftover untracked file from a prior
     build is not part of the in-memory baseline. Loading it would inflate
     ``snapshot_payload`` with phantom variable slugs and false-fail the
@@ -2446,14 +2447,14 @@ def populate_variable_slugs(
         # rows it isn't re-deriving; Pass 3 below overwrites/adds for first-sight
         # slugs. A churning provider (#470) reads NEITHER the prior slugs nor
         # their markers — it regenerates the whole file from scratch, so every
-        # slug is freshly classed (the gitignored auto.toml is still rewritten).
+        # slug is freshly classed (the uncommitted auto.toml is still rewritten).
         auto_derivation: dict[str, str] = {}
         state = freeze_state(states, provider_slug)
         if state != "churning":
             # #471 pin guard: a pinned provider (curating/frozen) reads slugs
             # back from its committed `<provider>.auto.toml` and never recomputes
-            # them. `*.auto.toml` is gitignored, so if the maintainer set the
-            # state without force-adding the file, a silent fall-through to the
+            # them. If the maintainer set the state without generating and
+            # committing the file, a silent fall-through to the
             # churning re-derivation would defeat the pin. Fail loud instead.
             # Gated on the provider actually having variables — the loop iterates
             # `_live_providers` (providers with >= 1 register), which is a
@@ -2486,7 +2487,8 @@ def populate_variable_slugs(
                     f"{missing_auto[0]} is missing. A pinned provider reads its slugs "
                     "back from that file; without it the slugs would silently "
                     "re-derive and the pin would fail.",
-                    f"Generate and commit {missing_auto[0]} (use git add -f if ignored).",
+                    f"Generate and commit {missing_auto[0]}; uncommitted pins are "
+                    "refused by the strict build's clean-tree guard.",
                 )
             for reg_id, path in auto_paths:
                 if path.is_file():

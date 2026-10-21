@@ -1,0 +1,38 @@
+{
+  "note": "Authored from step 1's sources, built after the operational definition changed: the field digest no longer matches.",
+  "fails_if": "`_scoped_column_owners` stops comparing `expected_fields_sha256` with the matched originals' field projections, so the ANSWER owner still claims the column after its operational definition changed from Amount to Changed",
+  "sources": {
+    "description": "The guarded ANSWER delivery with its operational definition changed.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "unit": "SEK",
+          "varopdef": "Changed",
+          "varsource": "Authority"
+        }
+      ]
+    }
+  },
+  "authored_from": {
+    "description": "Step 1's sources.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "unit": "SEK",
+          "varopdef": "Amount",
+          "varsource": "Authority"
+        }
+      ]
+    }
+  }
+}

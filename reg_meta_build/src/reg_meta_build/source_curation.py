@@ -387,6 +387,21 @@ def acknowledgement_evidence_sha256(
     )
 
 
+def field_projection_sha256(fields: Iterable[FieldExpectation]) -> str:
+    """Pin one original's complete field projection in field-name order.
+
+    A digest-guarded column owner (`expected_fields_sha256`) compares this over every
+    `SourceFields` field of each matched original; a verbose `expected_fields` list
+    over the same names hashes to the same value.
+    """
+    return evidence_sha256(tuple(sorted(fields, key=lambda field: field.name)))
+
+
+def record_projections_sha256(records: Iterable[RecordExpectation]) -> str:
+    """Pin a coding authority's original projections in their pinned order."""
+    return evidence_sha256(tuple(records))
+
+
 def acknowledgement_hashes_sha256(
     originals_sha256: Iterable[str], coding_sha256: Iterable[str] = ()
 ) -> str:

@@ -153,9 +153,8 @@ case cannot fail and does not belong here.
     explicit "not a linkage variable" claim; a variable's optional `linkage` text fills
     its cell, which declares it a linkage (identifier) variable.
 - `files` maps a path under the source directory to its text, for deliveries the other
-  keys do not model: an authored `providers/fk.toml` or a
-  `classifications/<slug>.csv` code list. The text is a string, or a list of lines
-  joined with newlines.
+  keys do not model: an authored `providers/fk.toml` or a `classifications/<slug>.csv`
+  code list. The text is a string, or a list of lines joined with newlines.
 
 The runner prepares each distinct spec once and caches it by the spec's content hash.
 The cache is the reader fixture cache (see `conformance/README.md`, "Fixture cache"):
@@ -178,27 +177,29 @@ helpers a curator uses:
 expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
 ```
 
-  | Placeholder              | Renders                                                                                                                    |
-  | ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-  | `evidence_sha256`        | `acknowledgement_evidence_sha256` of the selected records                                                                  |
-  | `coding_evidence_sha256` | the same, plus the bound physical code-list evidence of each record (`evidence_sha256`)                                    |
-  | `expected_records`       | `capture_expectations(..., parents=True, coding=True)` of the selected records                                             |
-  | `expected_fields`        | the captured fields of one record                                                                                          |
-  | `period_text`            | one record's original period text                                                                                          |
-  | `edition_scope`          | one record's edition scope; `end=` replaces its first interval's end                                                       |
-  | `period_scope`           | one record's edition period scope                                                                                          |
-  | `revision`               | one record's source revision                                                                                               |
-  | `locators`               | the locators of the selected records                                                                                       |
-  | `marker_bindings`        | one record's marker-binding fingerprints over `from=`..`to=`                                                               |
-  | `raw_codings`            | the sorted distinct `evidence_sha256` of the code-list claims bound to the selected records                                |
-  | `association`            | the locator of the one source-list association behind member `code=`/`label=` (a blank label when omitted) of those claims |
-  | `association_sha256`     | that association's `evidence_sha256`                                                                                       |
-  | `source_codings`         | `copied_coding_fingerprints` of those claims                                                                               |
-  | `relationship_row`       | the physical row of the one literal relationship delivered in `table=`                                                     |
-  | `relationship_sha256`    | `evidence_sha256` of that relationship's declaration                                                                       |
-  | `table_sha256`           | `evidence_sha256` of the one prepared evidence table named `table=`                                                        |
-  | `naming_id`              | `authored_naming_id(kind=, provider=, register_key=, member_key=)`, a thin or SOS native id                                |
-  | `variant_key`            | one record's native variant key                                                                                            |
+  | Placeholder                 | Renders                                                                                                                    |
+  | --------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+  | `evidence_sha256`           | `acknowledgement_evidence_sha256` of the selected records                                                                  |
+  | `coding_evidence_sha256`    | the same, plus the bound physical code-list evidence of each record (`evidence_sha256`)                                    |
+  | `expected_records`          | `capture_expectations(..., parents=True, coding=True)` of the selected records                                             |
+  | `record_projections_sha256` | `record_projections_sha256` of those captured records (a coding authority's `records_sha256`)                              |
+  | `expected_fields`           | the captured fields of one record                                                                                          |
+  | `field_projection_sha256`   | `field_projection_sha256` of one record's captured fields (a column owner's `expected_fields_sha256`)                      |
+  | `period_text`               | one record's original period text                                                                                          |
+  | `edition_scope`             | one record's edition scope; `end=` replaces its first interval's end                                                       |
+  | `period_scope`              | one record's edition period scope                                                                                          |
+  | `revision`                  | one record's source revision                                                                                               |
+  | `locators`                  | the locators of the selected records                                                                                       |
+  | `marker_bindings`           | one record's marker-binding fingerprints over `from=`..`to=`                                                               |
+  | `raw_codings`               | the sorted distinct `evidence_sha256` of the code-list claims bound to the selected records                                |
+  | `association`               | the locator of the one source-list association behind member `code=`/`label=` (a blank label when omitted) of those claims |
+  | `association_sha256`        | that association's `evidence_sha256`                                                                                       |
+  | `source_codings`            | `copied_coding_fingerprints` of those claims                                                                               |
+  | `relationship_row`          | the physical row of the one literal relationship delivered in `table=`                                                     |
+  | `relationship_sha256`       | `evidence_sha256` of that relationship's declaration                                                                       |
+  | `table_sha256`              | `evidence_sha256` of the one prepared evidence table named `table=`                                                        |
+  | `naming_id`                 | `authored_naming_id(kind=, provider=, register_key=, member_key=)`, a thin or SOS native id                                |
+  | `variant_key`               | one record's native variant key                                                                                            |
 
 Record selectors are `key=value` arguments, and all of them must match. A
 comma-separated value lists alternatives. An argument value cannot contain a space.

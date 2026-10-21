@@ -30,7 +30,7 @@ members = [["J", "Yes"], ["N", "No"]]
 version_label = "Source list"
 reason = "Exact supplied source domain"
 source = "fixture"
-source_authority = { records = {{expected_records key=member:20}}, codings = ["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"], source_scope = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] } }
+source_authority = { records_sha256 = {{record_projections_sha256 key=member:20}}, codings = ["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"], source_scope = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] } }
 [[coding.documented]]
 variable = "1.998"
 variant = "1.2"
@@ -39,4 +39,4 @@ members = [["J", "Yes"], ["N", "No"]]
 version_label = "Source list"
 reason = "Exact supplied source domain"
 source = "fixture"
-source_authority = { records = {{expected_records key=member:20}}, codings = ["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"], source_scope = { kind = "intervals", intervals = [{ start = "2020-01-01" }] } }
+source_authority = { records_sha256 = {{record_projections_sha256 key=member:20}}, codings = ["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"], source_scope = { kind = "intervals", intervals = [{ start = "2020-01-01" }] } }

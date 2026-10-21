@@ -23,4 +23,4 @@ members = [["0", "giltigt pnr"], ["8", "Ogiltigt pnr"]]
 version_label = "Exact source decimal meanings"
 reason = "Reviewed own enumeration"
 source = "fixture"
-source_authority = { records = {{expected_records source=Socialstyrelsen/ member=KON}}, codings = [], raw_codings = [], enumeration = { field = "representation", syntax = "ascii-decimal-comma-equals", assignment_separators = [","], lines = ["0=giltigt pnr", "8=Ogiltigt pnr"] } }
+source_authority = { records_sha256 = {{record_projections_sha256 source=Socialstyrelsen/ member=KON}}, codings = [], raw_codings = [], enumeration = { field = "representation", syntax = "ascii-decimal-comma-equals", assignment_separators = [","], lines = ["0=giltigt pnr", "8=Ogiltigt pnr"] } }

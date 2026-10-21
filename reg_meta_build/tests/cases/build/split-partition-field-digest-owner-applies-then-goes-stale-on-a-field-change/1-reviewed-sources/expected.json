@@ -13,15 +13,6 @@
       "rows": [
         ["amount", "ANSWER"]
       ]
-    },
-    {
-      "table": "uses",
-      "where": {"source": "scb-registerinformation"},
-      "fields": ["column_name", "key", "use", "variable"],
-      "rows": [
-        ["ANSWER", "member:20", "catalog", "scb/sample/amount"],
-        ["ANSWER", "member:21", "catalog", "scb/sample/amount"]
-      ]
     }
   ]
 }

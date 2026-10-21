@@ -1315,33 +1315,40 @@ class IdentityColumnOwnerEntry(_CurationModel):
     source_editions: list[str] = Field(default_factory=list)
 
     expected_fields: list[FieldExpectation] = Field(default_factory=list)
-    expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
+    # `field_projection_sha256` of each matched original's complete field projection.
+    expected_fields_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     expected_evidence_sha256: str | None = Field(
         default=None, pattern=r"^[0-9a-f]{64}$"
     )
 
-    @field_validator("expected_records", mode="before")
-    @classmethod
-    def _original_shapes(cls, values):
-        return None if values is None else _record_expectation_shapes(values)
+    @property
+    def guarded(self) -> bool:
+        return bool(
+            self.expected_fields
+            or self.expected_fields_sha256 is not None
+            or self.expected_evidence_sha256 is not None
+        )
 
     @model_validator(mode="after")
     def _guarded_editions(self) -> IdentityColumnOwnerEntry:
-        if self.expected_records is not None and self.expected_evidence_sha256 is None:
+        # A complete field list is the digest pin spelled out; one spelling only.
+        if {field.name for field in self.expected_fields} == set(
+            SourceFields.model_fields
+        ):
             raise ValueError(
-                "guarded owner alternatives require original records and evidence hash"
+                "expected_fields lists every source field; pin the complete "
+                "projection with expected_fields_sha256 instead"
             )
-        if self.expected_evidence_sha256 is not None and (
+        digests = (self.expected_fields_sha256, self.expected_evidence_sha256)
+        if None not in digests:
+            raise ValueError(
+                "expected_fields_sha256 and expected_evidence_sha256 are exclusive"
+            )
+        if digests != (None, None) and (
             self.expected_fields or not self.source_editions
         ):
             raise ValueError(
                 "digest-guarded owners require finite editions and no expected_fields"
-            )
-        if self.expected_records is not None and (
-            not _complete_original_expectations(self.expected_records)
-        ):
-            raise ValueError(
-                "owner alternatives require finite editions, complete original projections and no expected_fields"
             )
         if self.expected_fields:
             names = [field.name for field in self.expected_fields]
@@ -1810,12 +1817,13 @@ class PreparedCodingAuthority(_CurationModel):
 
     Pinned by content only: no delivery revision, row number or physical cell, so a
     re-snapshot or a row re-sort leaves an authority whose members are unchanged
-    fresh (#1436).
+    fresh (#1436). `records_sha256` is `record_projections_sha256` of the column's
+    complete original projections (every field, scopes, subject, parent facts).
     """
 
     period_block: str | None = Field(default=None, min_length=1)
     source_scope: TemporalScope | None = None
-    records: list[RecordExpectation] = Field(min_length=1)
+    records_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]]
     enumeration: SourceEnumeration | None = None
     raw_codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]] | None = None
@@ -1887,23 +1895,6 @@ class PreparedCodingAuthority(_CurationModel):
                 raise ValueError(
                     "source coding authority requires one exact supplied interval"
                 )
-        if len({record.ref for record in self.records}) != len(self.records):
-            raise ValueError("source authority must name distinct original members")
-        if len({record.ref.source for record in self.records}) != 1:
-            raise ValueError("source authority rows must come from one source")
-        for record in self.records:
-            for alternative in record.alternatives:
-                if (
-                    {field.name for field in alternative.fields}
-                    != set(SourceFields.model_fields)
-                    or alternative.subject is None
-                    or alternative.edition_scope is None
-                    or alternative.edition_period_scope is None
-                    or alternative.parent_facts is None
-                ):
-                    raise ValueError(
-                        "source authority requires complete original facts and scopes"
-                    )
         return self
 
 
@@ -1911,18 +1902,10 @@ def _prepared_coding_authority(value: object) -> object:
     if not isinstance(value, dict):
         return value
     value = json.loads(json.dumps(value))
-    scope_locations = [(value, "source_scope")]
-    scope_locations.extend(
-        (alternative, name)
-        for record in value.get("records", [])
-        for alternative in record.get("alternatives", [])
-        for name in ("edition_scope", "edition_period_scope")
-    )
-    for location, name in scope_locations:
-        if name in location and location[name] is not None:
-            location[name] = _OccurrenceCorrectionEntry._scope(
-                location[name]
-            ).model_dump(mode="json")
+    if value.get("source_scope") is not None:
+        value["source_scope"] = _OccurrenceCorrectionEntry._scope(
+            value["source_scope"]
+        ).model_dump(mode="json")
     return PreparedCodingAuthority.model_validate_json(json.dumps(value))
 
 
