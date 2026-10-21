@@ -28,6 +28,7 @@ from http_cases import (
     run_http_requests,
     select_json,
 )
+from jsonschema import Draft202012Validator
 
 PROTOCOL = "2025-11-25"
 HEADERS = {
@@ -131,8 +132,10 @@ def path_arguments(op, path):
 def test_tool_matches_http(http_servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
     # error fields, argument conversion, a POST body as an object argument, the
-    # `operation` argument of a tool of several), or when the cases stop covering an
-    # error.
+    # `operation` argument of a tool of several), when the cases stop covering an
+    # error, or when a document fails the tool's advertised `outputSchema` (reg-meta
+    # 0.57.0: a state's `{code, label}` value row also matched `ClassificationCode`
+    # in the `ValueRow` oneOf, so clients rejected every `values` call on a state).
     op = OPERATIONS[operation]
     (tool,) = (t for t in TOOLS if t["name"] == op["tool"])
     selector = (
@@ -175,6 +178,7 @@ def test_tool_matches_http(http_servers, operation):
                 clients[step.get("artifact")], tool["name"], arguments
             )
             documents[index] = document
+            Draft202012Validator(tool["outputSchema"]).validate(document)
             assert (is_error, document) == (
                 http[index]["status"] != 200,
                 http[index]["body"],

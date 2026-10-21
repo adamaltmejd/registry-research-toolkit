@@ -29,7 +29,7 @@ vi.mock("./api", async (importOriginal) => {
 });
 
 const DEFAULT_CODES: ClassificationCodeModel[] = [
-  { code: "1", label: "Man", level: 1, is_valid: true },
+  { code: "1", label: "Man", level: 1, is_valid: true, child_count: null },
 ];
 let groupShow: ShowNode | null = null;
 let groupError: Error | null = null;
@@ -310,7 +310,13 @@ describe("ClassificationGroupView (#756)", () => {
         name: "ICD-10",
         short_name: "ICD10",
         codes: [
-          { code: "A", label: "Current diagnosis", level: 1, is_valid: true },
+          {
+            code: "A",
+            label: "Current diagnosis",
+            level: 1,
+            is_valid: true,
+            child_count: null,
+          },
         ],
       }),
     );
@@ -334,7 +340,15 @@ describe("ClassificationGroupView (#756)", () => {
         fqid: "class/ssyk2012",
         name: "SSYK 2012",
         short_name: "SSYK2012",
-        codes: [{ code: "9", label: "Yrke", level: 1, is_valid: true }],
+        codes: [
+          {
+            code: "9",
+            label: "Yrke",
+            level: 1,
+            is_valid: true,
+            child_count: null,
+          },
+        ],
       }),
     );
 
@@ -397,7 +411,13 @@ describe("ClassificationGroupView (#756)", () => {
         name: "ICD-10",
         short_name: "ICD10",
         codes: [
-          { code: "A", label: "Current diagnosis", level: 1, is_valid: true },
+          {
+            code: "A",
+            label: "Current diagnosis",
+            level: 1,
+            is_valid: true,
+            child_count: null,
+          },
         ],
       }),
     );
@@ -419,7 +439,15 @@ describe("ClassificationGroupView (#756)", () => {
       fqid: "class/niva-test",
       name: "Nivå aggregat",
       short_name: "NIVA",
-      codes: [{ code: "A", label: "Aggregatnivå", level: 1, is_valid: true }],
+      codes: [
+        {
+          code: "A",
+          label: "Aggregatnivå",
+          level: 1,
+          is_valid: true,
+          child_count: null,
+        },
+      ],
     });
     showGroup(node());
 
@@ -441,7 +469,15 @@ describe("ClassificationGroupView (#756)", () => {
       fqid: "class/niva-test",
       name: "Nivå aggregat",
       short_name: "NIVA",
-      codes: [{ code: "A", label: "Aggregatnivå", level: 1, is_valid: true }],
+      codes: [
+        {
+          code: "A",
+          label: "Aggregatnivå",
+          level: 1,
+          is_valid: true,
+          child_count: null,
+        },
+      ],
       derived_from: [
         {
           fqid: "class/sun2020",

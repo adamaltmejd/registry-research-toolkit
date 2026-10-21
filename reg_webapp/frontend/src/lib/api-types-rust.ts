@@ -494,16 +494,16 @@ export interface components {
              * @description How many codes name this one as their parent: null when the book has no
              *     code tree, 0 for a leaf.
              */
-            child_count?: number | null;
+            child_count: number | null;
             code: string;
             /** @description True for a canonical code, null when no canonical list exists. */
-            is_valid?: boolean | null;
+            is_valid: boolean | null;
             label: string;
             /**
              * Format: int64
              * @description The hierarchy depth; null when the classification is flat.
              */
-            level?: number | null;
+            level: number | null;
         };
         /**
          * @description A delivered pair outside its declared book: today's
@@ -517,7 +517,7 @@ export interface components {
             /** @description The certificates that make a source-local code a sentinel. */
             scoped_sentinels: components["schemas"]["ScopedSentinel"][];
             /** @description The book's curated meaning of a sentinel code. */
-            sentinel_meaning?: string | null;
+            sentinel_meaning: string | null;
         };
         /** @description A curated group of classifications. */
         ClassificationGroup: {
