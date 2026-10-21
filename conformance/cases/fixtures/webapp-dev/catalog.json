@@ -356,6 +356,49 @@
   {
     "register": {
       "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "samarb-univ",
+    "provider_key": "991",
+    "name": "Samarbete med universitet",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "SAMARB_UNIV",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": "curated:matrix-answer\nDocument: https://www.scb.se/cis2016.pdf\nSHA256: 90140a04b0e3e592a0f9b6814aa09005ed655441336747cec5f1cfbe3fc7b0d7\nPages: SAMARB_UNIV=12",
+        "value_set": {
+          "members": [
+            [
+              "0",
+              "Nej"
+            ],
+            [
+              "1",
+              "Ja"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
       "slug": "rams",
       "name": "RAMS"
     },
