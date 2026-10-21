@@ -33,6 +33,7 @@ from _swecov_fixtures import (
 )
 from reg_meta_build.errors import RegMetaError
 from reg_meta_build.inventory import (
+    PeriodColumn,
     edition_bounds,
     load_inventory as load_delivery_inventory,
 )
@@ -250,15 +251,16 @@ def test_an_unknown_edition_spelling_is_refused(
 
 
 @pytest.mark.parametrize("token", ["barn", "Barn Kid"])
-def test_a_curated_projection_reaches_the_inventory(
+def test_a_curated_projection_and_period_column_reach_the_inventory(
     tmp_path: Path, flavored_db: Path, token: str
 ) -> None:
-    """A series table's `projection = { of, token }` is emitted on that table's
-    inventory entry, which the inventory loader admits as a projection of its
-    parent; a token outside the slug grammar is refused at the spec, located at
-    its series file, before anything is emitted. Fails if the generator drops the
-    declaration (the two tables' shared column is then a cell conflict) or the
-    spec admits a token no extract file name can carry."""
+    """A series table's `projection = { of, token }` and `period_column` are
+    emitted on that table's inventory entry, which the inventory loader admits
+    as a projection of its parent; a token outside the slug grammar is refused
+    at the spec, located at its series file, before anything is emitted. Fails
+    if the generator drops either declaration (the two tables' shared column is
+    then a cell conflict; an order could not filter the dated table) or the spec
+    admits a token no extract file name can carry."""
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     csv_path.write_text(
         "Category,Detail,Table\n"
@@ -269,6 +271,7 @@ def test_a_curated_projection_reaches_the_inventory(
     series = (
         one_table_series("T2012") + f'\n[[table]]\ntable = "TKid2012"\nedition = 2012\n'
         f'projection = {{ of = "T2012", token = "{token}" }}\n'
+        'period_column = { name = "T_kolumn", encoding = "yyyymmdd" }\n'
     )
     spec = write_spec(tmp_path / "steward", csv_path, {"s": series})
     run = argparse.Namespace(csv=csv_path, spec=spec, out=spec)
@@ -286,6 +289,10 @@ def test_a_curated_projection_reaches_the_inventory(
     assert tables["T2012"].projection is None
     projection = tables["TKid2012"].projection
     assert (projection.of, projection.token) == ("T2012", "barn")
+    assert tables["TKid2012"].period_column == PeriodColumn(
+        name="T_kolumn", encoding="yyyymmdd"
+    )
+    assert tables["T2012"].period_column is None
 
 
 def test_a_stage_refuses_a_census_table_the_spec_does_not_dispose_of(

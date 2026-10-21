@@ -2337,7 +2337,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (12.0.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (12.1.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward
@@ -2595,17 +2595,17 @@ builder code remain separately pinned.
 A steward's delivery decisions are authored as `stewards/<id>/scope.toml` plus one
 `series/<series>.toml` per delivery series; `steward_spec.py` holds the schema. A series
 is one register's tables across years: it names the register, the variants its tables
-deliver, each member table's explicit edition (or year-independent scope and partition),
-how a bare-year edition is spelled (`edition_spelling`: annual, or a school-year anchor)
-and its curated column decisions. Only a series whose every column decision is an
-`unmap` (tables with no catalog owner) may omit the register; any mapping, hold or
-`graft_onto` refuses without one. Membership is the only grouping authority; nothing
-groups tables by name. A column decision selects whole member tables and is exactly one
-of a reviewed mapping, a permanent `unmap`, an interim `hold` (its `follow_up` must
-parse as an issue reference; the build never reads the issue) or a `graft_onto`. The
-scope holds the census guard (`census_sha256`), the lookup, exclude and retain-unknown
-dispositions, census-holding routes for the enrichment stages and the steward-owned
-flavor registers.
+deliver, each member table's explicit edition (or year-independent scope), partition,
+projection and period column, how a bare-year edition is spelled (`edition_spelling`:
+annual, or a school-year anchor) and its curated column decisions. Only a series whose
+every column decision is an `unmap` (tables with no catalog owner) may omit the
+register; any mapping, hold or `graft_onto` refuses without one. Membership is the only
+grouping authority; nothing groups tables by name. A column decision selects whole
+member tables and is exactly one of a reviewed mapping, a permanent `unmap`, an interim
+`hold` (its `follow_up` must parse as an issue reference; the build never reads the
+issue) or a `graft_onto`. The scope holds the census guard (`census_sha256`), the
+lookup, exclude and retain-unknown dispositions, census-holding routes for the
+enrichment stages and the steward-owned flavor registers.
 
 A series boundary is a documented break in the source (a changed population frame, unit
 or subject key, cited in a comment at the top of each split series file), never a change
@@ -2697,6 +2697,20 @@ the whole-edition rule unchanged. `holding_mapping` stores the window's ISO boun
 `window_lo`/`window_hi`, separate from a member's period: a one-year window is not a
 year member, which belongs to a member set and labels the manifest entry. A CHECK keeps
 a window off member mappings.
+
+`period_column = { name = "<column>", encoding = "date" | "year" | "yyyymm" | "yyyymmdd" }`
+names the physical column that dates each row of a dated table, so an order can extract
+only the rows of its requested period instead of the whole table. It is curated per
+table, never inferred from a column name. The `encoding` is the value's shape whatever
+its storage type (MONA stores a year as a float, a date as `int` `yyyymmdd` or as text);
+the extract runner reads the storage type from the database at run time. The column must
+be one the table lists, exactly as spelled, and a year-independent table takes none
+(`inventory_period_column_invalid`); the column need not be mapped.
+`holding_table.period_column`/`period_encoding` store it, with CHECKs that both or
+neither are set and only on a dated table. The bump is minor (12.1.0): a 12.0 reader
+ignores the column and orders the whole table, as it does today; the manifest's row
+filter and the reader gate that needs 12.1 come together later. extend-db opens its base
+at this exact schema, so the next steward build rebuilds the global base.
 
 A mapping may carry a steward-scoped `data_warning` (#1684):
 `data_warning = { summary = "…", detail = "…", window = … }`. The author writes both

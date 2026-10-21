@@ -6,6 +6,7 @@
       "edition": "_default",
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     }
   ],

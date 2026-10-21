@@ -2534,6 +2534,11 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 f"projection = {{ of = {_toml_str(projection.of)}, "
                 f"token = {_toml_str(projection.token)} }}"
             )
+        if (period := members[table].period_column) is not None:
+            lines.append(
+                f"period_column = {{ name = {_toml_str(period.name)}, "
+                f"encoding = {_toml_str(period.encoding)} }}"
+            )
         for col in cols:
             n_cols += 1
             decision = decisions.get((table, col))

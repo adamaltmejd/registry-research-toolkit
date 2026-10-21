@@ -188,6 +188,11 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
                     "partition": table["partition"],
                     "projection": table["projection_of"]
                     and {"of": table["projection_of"], "token": table["projection"]},
+                    "period_column": table["period_column"]
+                    and {
+                        "name": table["period_column"],
+                        "encoding": table["period_encoding"],
+                    },
                     "column": columns,
                 }
             )

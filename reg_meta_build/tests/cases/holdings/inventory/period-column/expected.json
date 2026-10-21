@@ -1,0 +1,15 @@
+{
+  "note": "Both arms of the period-column rule: a column the table does not list (names are exact, so a case twin of a listed column misses) and a period column on a year-independent table. The valid declaration is the period-column compile case.",
+  "fails_if": "load_inventory admits a period column the table does not deliver, or one on a table with no period to filter",
+  "error": {
+    "code": "inventory_period_column_invalid",
+    "locators": [
+      "table['Par.csv']",
+      "table['Lookup.csv']"
+    ],
+    "message_contains": [
+      "period column 'INDATUM' is not a column of the table",
+      "a year-independent table has no period column"
+    ]
+  }
+}

@@ -66,6 +66,7 @@ _PERIOD_SCOPE = "inventory_period_scope_invalid"
 _CELL_CONFLICT = "inventory_cell_conflict"
 _MEMBER = "inventory_member_invalid"
 _PROJECTION = "inventory_projection_invalid"
+_PERIOD_COLUMN = "inventory_period_column_invalid"
 # Public: the steward spec refuses a mapping warning that misses every table
 # under the same code (#1684).
 WINDOW_INVALID = "inventory_window_invalid"
@@ -492,6 +493,20 @@ class InventoryProjection(_InventoryModel):
         return value
 
 
+class PeriodColumn(_InventoryModel):
+    """A table's `period_column = { name = ..., encoding = ... }`: the physical
+    column whose value dates each row, so an order can filter a multi-period
+    table to the requested period.
+
+    `encoding` is the value's shape, whatever its storage type: `date` a SQL
+    date or datetime, `year` a year number, `yyyymm` and `yyyymmdd` the packed
+    digits (stored as a number or as text). The extract runner reads the
+    storage type from the database at run time, so it is not authored here."""
+
+    name: str = Field(min_length=1)
+    encoding: Literal["date", "year", "yyyymm", "yyyymmdd"]
+
+
 class InventoryTable(_InventoryModel):
     """One delivered table: an opaque exact identifier, ONE explicit physical
     edition or explicit year-independent scope, and its physical columns.
@@ -515,13 +530,18 @@ class InventoryTable(_InventoryModel):
     (#1634): the same delivery under other columns, at the parent's grain or a
     finer one, extracted as its own file. A cell both map is one claim the parent
     serves, not a conflict. Like `partition` it is curated, never inferred, and an
-    inventory/order concept only."""
+    inventory/order concept only.
+
+    `period_column` names the column that dates each row of a dated table, so
+    an order can take only the rows of its requested period. Curated, never
+    inferred from a column name; without one an order takes the whole table."""
 
     id: str = Field(min_length=1)
     edition: Edition
     period_scope: Literal["intervals", "year_independent"] = "intervals"
     partition: str | None = None
     projection: InventoryProjection | None = None
+    period_column: PeriodColumn | None = None
     columns: tuple[InventoryColumn, ...] = Field(alias="column")
 
     @field_validator("partition")
@@ -595,6 +615,24 @@ class InventoryTable(_InventoryModel):
             raise _InventoryGuardError(
                 _PERIOD_SCOPE,
                 "edition='_default' requires year-independent period_scope",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _check_period_column(self) -> InventoryTable:
+        """A period column the table lacks would make the extract fail or filter
+        on nothing; on a year-independent table there is no period to filter."""
+        if self.period_column is None:
+            return self
+        if self.period_scope == "year_independent":
+            raise _InventoryGuardError(
+                _PERIOD_COLUMN, "a year-independent table has no period column"
+            )
+        if self.period_column.name not in {column.name for column in self.columns}:
+            raise _InventoryGuardError(
+                _PERIOD_COLUMN,
+                f"period column {self.period_column.name!r} is not a column of "
+                "the table — name one of its listed columns, exactly as spelled",
             )
         return self
 

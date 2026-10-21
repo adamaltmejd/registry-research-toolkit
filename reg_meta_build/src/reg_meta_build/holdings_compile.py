@@ -467,6 +467,7 @@ def compile_holdings(
             index, original = authored[physical_id]
             edition = original["edition"]
             scope, partition, reason = table.period_scope, table.partition, None
+            period = table.period_column
             source_ref = f"policy/inventory.toml:table[{index}]"
             periods = edition_bounds(table.edition) if scope == "intervals" else ()
             columns = tuple(
@@ -481,6 +482,7 @@ def compile_holdings(
                 entry.partition,
                 entry.reason,
             )
+            period = None
             source_ref = f"{scope_locator(steward)}:retain_unknown[{index}]"
             periods = ()
             # A retained-unknown table is disposed as a whole by its
@@ -489,13 +491,15 @@ def compile_holdings(
                 (name, None, ()) for name in sorted(accounting.columns[physical_id])
             )
         conn.execute(
-            "INSERT INTO holding_table(table_id, physical_id, scope, edition_json, partition, retain_unknown_reason, source_ref) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO holding_table(table_id, physical_id, scope, edition_json, partition, period_column, period_encoding, retain_unknown_reason, source_ref) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 table_id,
                 physical_id,
                 scope,
                 canonical_json(edition) if edition is not None else None,
                 partition,
+                period and period.name,
+                period and period.encoding,
                 reason,
                 source_ref,
             ),

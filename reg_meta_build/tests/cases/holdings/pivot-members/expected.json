@@ -6,6 +6,7 @@
       "edition": 2020,
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     },
     {
@@ -17,6 +18,7 @@
       },
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     },
     {
@@ -28,6 +30,7 @@
       },
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     },
     {
@@ -36,6 +39,7 @@
       "edition": 2018,
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     }
   ],

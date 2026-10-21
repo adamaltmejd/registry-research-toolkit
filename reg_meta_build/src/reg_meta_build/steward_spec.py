@@ -72,6 +72,7 @@ from .inventory import (
     WINDOW_INVALID,
     ColumnMapping,
     EditionRange,
+    PeriodColumn,
     edition_bounds,
 )
 from .slug_grammar import validate_slug
@@ -379,6 +380,10 @@ class SeriesTable(_SpecModel):
     `projection` declares the table a projection of another table's delivery
     (#1634), with the token naming its own extract file; the inventory loader
     judges the pair.
+
+    `period_column` names the column that dates each row, so an order can
+    filter the table to its requested period; the inventory loader checks it
+    against the table's columns.
     """
 
     table: LiteralName
@@ -387,6 +392,7 @@ class SeriesTable(_SpecModel):
     period_scope: Literal["year_independent"] | None = None
     partition: str | None = None
     projection: SeriesProjection | None = None
+    period_column: PeriodColumn | None = None
 
     @field_validator("partition")
     @classmethod

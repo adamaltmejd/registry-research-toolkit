@@ -9,6 +9,7 @@
       },
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     },
     {
@@ -20,6 +21,7 @@
       },
       "partition": null,
       "projection": null,
+      "period_column": null,
       "retain_unknown_reason": null
     }
   ],

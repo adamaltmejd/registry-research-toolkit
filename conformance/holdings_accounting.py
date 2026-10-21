@@ -310,12 +310,15 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
         for index, table in enumerate(inventory):
             physical = table["id"]
             period_scope = table.get("period_scope", "intervals")
+            period_column = table.get("period_column") or {}
             expected_tables.append(
                 (
                     physical,
                     period_scope,
                     canonical(table["edition"]),
                     table.get("partition"),
+                    period_column.get("name"),
+                    period_column.get("encoding"),
                     None,
                     f"policy/inventory.toml:table[{index}]",
                 )
@@ -356,6 +359,8 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
                     if table.get("edition") is not None
                     else None,
                     table.get("partition"),
+                    None,
+                    None,
                     table["reason"],
                     f"{scope_ref}:retain_unknown[{index}]",
                 )
@@ -364,7 +369,7 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
                 (table["table"], name, None) for name in sorted(raw[table["table"]])
             )
         queries = {
-            "holding_table": "SELECT physical_id,scope,edition_json,partition,retain_unknown_reason,source_ref FROM holding_table",
+            "holding_table": "SELECT physical_id,scope,edition_json,partition,period_column,period_encoding,retain_unknown_reason,source_ref FROM holding_table",
             "holding_column": "SELECT ht.physical_id,hc.name,hc.unmapped_reason FROM holding_column hc JOIN holding_table ht USING(table_id)",
             "holding_period": "SELECT ht.physical_id,hp.lo,hp.hi FROM holding_period hp JOIN holding_table ht USING(table_id)",
             "holding_mapping": "SELECT ht.physical_id,hc.name,hm.variant_id,hm.variable_id,hm.representation_literal FROM holding_mapping hm JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id)",

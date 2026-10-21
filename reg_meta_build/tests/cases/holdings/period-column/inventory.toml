@@ -1,0 +1,18 @@
+version = 1
+steward = "swecov"
+
+# One delivery of three years; AR dates each row, so an order can take only the
+# rows of its requested years. The period column need not be mapped.
+[[table]]
+id = "Range"
+edition = { from = 2018, to = 2020 }
+period_column = { name = "AR", encoding = "year" }
+[[table.column]]
+name = "AR"
+unmapped_reason = "Delivery year of the row"
+[[table.column]]
+name = "Observed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value"
+representation = "Value"

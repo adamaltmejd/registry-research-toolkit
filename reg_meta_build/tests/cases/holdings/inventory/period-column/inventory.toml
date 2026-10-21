@@ -1,0 +1,19 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Par.csv"
+edition = { from = 2018, to = 2020 }
+period_column = { name = "INDATUM", encoding = "yyyymmdd" }
+[[table.column]]
+name = "Indatum"
+unmapped_reason = "Admission date"
+
+[[table]]
+id = "Lookup.csv"
+edition = "_default"
+period_scope = "year_independent"
+period_column = { name = "Kod", encoding = "year" }
+[[table.column]]
+name = "Kod"
+unmapped_reason = "Code"

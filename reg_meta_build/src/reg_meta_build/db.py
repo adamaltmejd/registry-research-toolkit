@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "12.0.0"
+SCHEMA_VERSION = "12.1.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -1754,6 +1754,13 @@ CREATE TABLE holding_table (
         AND projection GLOB '[a-z]*' AND projection NOT GLOB '*[^a-z0-9-]*'
         AND projection NOT LIKE '%--%' AND substr(projection, -1) <> '-'
         AND projection <> 'class')),
+    -- Authored physical column dating each row, for an order's period filter;
+    -- never inferred from a column name. A column of this table (validated through
+    -- the inventory model, which a CHECK cannot reach).
+    period_column TEXT CHECK (period_column IS NULL OR length(period_column) > 0),
+    -- The authored value shape of period_column, whatever its storage type.
+    period_encoding TEXT CHECK (period_encoding IS NULL
+        OR period_encoding IN ('date', 'year', 'yyyymm', 'yyyymmdd')),
     -- Authored retain_unknown reason only; never an invented reason or warning witness JSON.
     retain_unknown_reason TEXT CHECK (retain_unknown_reason IS NULL
         OR length(trim(retain_unknown_reason)) > 0),
@@ -1764,6 +1771,8 @@ CREATE TABLE holding_table (
     CHECK (scope = 'unknown' OR edition_json IS NOT NULL),
     CHECK (projection_of IS NULL OR (scope <> 'unknown' AND projection_of <> physical_id)),
     CHECK ((projection IS NULL) = (projection_of IS NULL)),
+    CHECK ((period_column IS NULL) = (period_encoding IS NULL)),
+    CHECK (period_column IS NULL OR scope = 'intervals'),
     CHECK (scope <> 'year_independent' OR
         (json_type(edition_json) = 'text' AND json_extract(edition_json, '$') = '_default'))
 );

@@ -20,8 +20,8 @@
   ],
   "provenance": {
     "artifact_kind": "catalog",
-    "catalog_generation_id": "74c941b3cdd2667215984a2990a1e480f3bf40e367af429034bcd2170311fab1",
-    "catalog_schema_version": "12.0.0",
+    "catalog_generation_id": "640c620a60613cf2eca8025e1fb4574d7c5f489c03bc5479a3f17a15814d0350",
+    "catalog_schema_version": "12.1.0",
     "mode": "global_fallback",
     "project_hash": "82a86951ad3ebee2da9b469639c37bb8fa852914360714496906d9a3127ba603",
     "project_name": "Synthetic semantic",
