@@ -37,15 +37,19 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 The central multi-tenancy axis. Some research organizations re-license registry data
 from their own warehouses instead of each project going through SCB directly:
 
-- **global** — the full multi-agency catalog; orders go to the relevant agency.
+- **global** — the full multi-agency catalog, served over MCP only (#1709). Its `order`
+  answers in `global_fallback` mode (canonical columns, no steward table) to describe
+  data a researcher already holds; no channel receives it.
 - **ifau** — the subset in IFAU's warehouse.
 - **swecov** — the subset in the SWECOV research program.
 
-One codebase, steward-scoped views: same UX, different holdings and order target. The
-compiled-holdings contract below gives each steward one self-identifying SQLite artifact
-containing full reference metadata plus its physical holdings. TOML inventory and policy
-are accepted builder inputs; readers do not load them. SWECOV proves the first cut; IFAU
-delivery authoring remains outside it. See
+One codebase, steward-scoped views: same UX, different holdings. A steward's order is an
+extract from its own holdings: the researcher sends `order.json` through the steward's
+request channel and a data manager runs the planned MONA extract runner (#707) inside
+MONA. The compiled-holdings contract below gives each steward one self-identifying
+SQLite artifact containing full reference metadata plus its physical holdings. TOML
+inventory and policy are accepted builder inputs; readers do not load them. SWECOV
+proves the first cut; IFAU delivery authoring remains outside it. See
 [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) § "Steward extension" and
 [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the build and runtime boundaries.
 
