@@ -1951,21 +1951,26 @@ facts, physical delivered cells, and raw coding associations and validity eviden
 changed fingerprint leaves the original error intact and adds a stale acknowledgement
 error. Unguarded entries retain exact issue matching.
 
-A `missing_coding_period` entry names a run instead of one issue: one entry per
-contiguous run of periods of one subject and fields, with the run's window and the refs
-of every issue in it. It takes each error of its code, subject and fields whose period
-lies inside the window and whose refs it lists; an undated issue only an undated entry.
-Runs of one code, subject and fields never overlap (`register_duplicate_entry`). Its
+A `missing_coding_period` entry names a run instead of one issue: by convention one
+entry per contiguous run of periods of one subject and fields, with the run's window and
+the refs of every issue in it. The build does not enforce contiguity; the digest makes
+that check unnecessary, because an issue of a listed ref in a gap is taken and changes
+it. It takes each error of its code, subject and fields whose period lies inside the
+window and whose refs it lists; an undated issue only an undated entry. Runs of one
+code, subject and fields never overlap (`register_duplicate_entry`). Its
 `expected_diagnostic_sha256` is mandatory (`acknowledge_run_digest_missing` at load) and
 pins the set of issues it takes (`issue_run_sha256`): the sorted digests of each issue's
 identity, the code, subject, refs, fields and period an exact entry names. A period that
 appears in the run or leaves it changes the set, so the entry is stale and its issues
 stay errors; the detail prints the current digest. The digest hashes identities, not
-complete diagnostics: the run's coordinates are what a curator reviews, and an identity
-is fully determined by the entry itself, so a run is pinned without a build. Detail
-prose and withheld outputs are not pinned. An optional `expected_evidence_sha256` is the
-`digest_set_sha256` of each taken issue's evidence digest over its own refs. Every
-acknowledged issue names the run entry. Other codes keep exact one-issue entries.
+complete diagnostics: the run's coordinates are what a curator reviews. It is a function
+of issue coordinates, not of originals, but the entry alone does not determine it: the
+entry carries the union of refs and the span, not which (ref, period) pairs are issues.
+A curator pins it from the reviewed per-issue coordinates, or copies it from the stale
+detail. Detail prose and withheld outputs are not pinned. An optional
+`expected_evidence_sha256` is the `digest_set_sha256` of each taken issue's evidence
+digest over its own refs. Every acknowledged issue names the run entry. Other codes keep
+exact one-issue entries.
 
 A `[[coding.warning]]` declaration records a reviewed source metadata conflict while
 retaining its type and response domain unchanged. It uses the coding compiler's exact
@@ -2013,7 +2018,8 @@ acknowledgement names its current pins the same way, from the issues its scope e
 the evidence digest when the entry pins one (a placeholder counts), and the issue digest
 when its code, subject, refs, fields and period select exactly one error of its own
 register that no other entry acknowledges. An over-broad entry prints none. A stale run
-entry prints the digests of the issues it now takes, when it takes any.
+entry prints one run digest over the issues it now takes, when it takes any, and its
+current evidence digest when it pins one.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 prepared scope set and writes only independently supported output to a separate new

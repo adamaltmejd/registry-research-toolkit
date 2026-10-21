@@ -16,6 +16,7 @@ from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
+    digest_set_sha256,
     field_projection_sha256,
     record_projections_sha256,
     toml_inline,
@@ -146,6 +147,12 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     ),
     "coding_evidence_sha256": lambda s, a: acknowledgement_evidence_sha256(
         selected := _select(s.records(), a), s.coding_sha256(selected)
+    ),
+    # A run's evidence pin: one per-issue digest per selected record, so each member
+    # issue must name exactly one original.
+    "run_evidence_sha256": lambda s, a: digest_set_sha256(
+        acknowledgement_evidence_sha256((record,), s.coding_sha256((record,)))
+        for record in _select(s.records(), a)
     ),
     "expected_records": lambda s, a: [
         expectation.model_dump(mode="json")

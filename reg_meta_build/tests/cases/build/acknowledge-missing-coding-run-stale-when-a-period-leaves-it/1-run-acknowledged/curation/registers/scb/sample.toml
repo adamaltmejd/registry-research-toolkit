@@ -22,3 +22,4 @@ valid_to = "2023-12-31"
 reason = "Accepted while the source stays unresolved."
 evidence = "Synthetic fixture issue."
 expected_diagnostic_sha256 = "446a5571747542327f79cce938f62212f6cac0d3393ab98f0d2d4b9e6e4c7145"
+expected_evidence_sha256 = {{run_evidence_sha256 source=scb-registerinformation key=member:1005,member:1007}}
