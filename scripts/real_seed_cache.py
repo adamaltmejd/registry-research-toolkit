@@ -44,10 +44,13 @@ boundary (`prepare_code_files`: the builder's own static import walk from the
 `prepare-sources` entry point, which the probe runs, less the comparison-only modules
 it reaches (`PREPARE_UNKEYED`), plus `uv.lock`, and the native extension sources
 because a walked module imports `reg_core_py`); the Python and SQLite
-versions and the loaded extension. A release's version bumps leave it unchanged (`prepare_code`): a walked
+versions and the loaded extension. Every key holds `uv.lock` as `lock_sha256` does:
+only the locked runtime closure of `reg-meta-build` (`keyed_cache.uv_lock_sha256`: its
+transitive dependencies, never a dev group), so a dev-only pin (pytest, ruff, ...)
+moves no key. A release's version bumps leave it unchanged (`prepare_code`): a walked
 file's `__version__` value is normalized as the resolve fingerprint does, and
 `uv.lock` and `Cargo.lock` leave out the workspace members' own versions; a
-third-party pin still moves it. A prepare entry is an index record (prepared path and
+third-party runtime pin still moves it. A prepare entry is an index record (prepared path and
 top-level manifest digest), not a copy of the 14 GB tree the maintainer commits to a
 local acceptance repository. A lookup runs the builder's own warm-build check
 (`open_prepared_catalog_sources`) against that repository's current HEAD; a hit
@@ -58,8 +61,11 @@ accepted tree of the same bundle under the current key without a rerun (one prep
 under an earlier key, when the maintainer judges the code change cannot reach it); the
 record must pass the same lookup check.
 
-Build key: the raw content of `reg_meta_build/src`, `uv.lock` and the native extension
-sources (a build may record versions); the builder's own `curation_tree_sha256` of the
+Build key: the raw content of `reg_meta_build/src` and the native extension sources,
+and `uv.lock`'s runtime closure (`lock_sha256`). The database records no dependency
+version: the only lock-dependent value it records is a publishable build's
+`builder_commit`, and that commit is keyed itself (below); a release's `__version__`
+bump is in the raw `reg_meta_build/src`. It also holds the builder's own `curation_tree_sha256` of the
 selected curation tree; the prepared commit and manifest digest; the mode and the
 `--registers` scopes as a sorted set (the builder selects by set); the Python and SQLite
 versions and the loaded extension; and for a publishable build the checkout's HEAD, which
@@ -76,9 +82,8 @@ entries stay, and so does any entry used within 6 hours.
 
 Resolve key: the builder's own `resolve_code_sha256` (`reg_meta_build.resolve_code`:
 the static import closure of `pipeline`, the `reg_core_py` package files and the
-Python version, reported by the probe), `uv.lock` (third-party versions, which that
-fingerprint leaves out; `lock_sha256` leaves out the workspace members' own
-versions), the `curation_tree_sha256`, the prepared commit and manifest
+Python version, reported by the probe), `uv.lock` (the third-party runtime versions,
+which that fingerprint leaves out, as `lock_sha256` holds them), the `curation_tree_sha256`, the prepared commit and manifest
 digest, the `--registers` scopes as a sorted set, and the Python and SQLite
 versions and the loaded extension; never HEAD (`materialize-db` stamps the running commit) and
 never the mode: `materialize-db` places a bundle of either mode in the requested one,
@@ -139,6 +144,7 @@ from keyed_cache import (
     owned_root,
     staged,
     tree_digest,
+    uv_lock_sha256,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -199,9 +205,9 @@ PREPARE_ROOTS = (
 # build-lock comparison. The walk still follows their imports, and the key refuses an
 # entry the walk no longer reaches, so a stale one names itself.
 PREPARE_UNKEYED = ("reg_meta_build/src/reg_meta_build/dbdiff.py",)
-# Lock files whose workspace members' own versions the prepare key leaves out
-# (`lock_sha256`; the resolve key holds `uv.lock` the same way): a release bumps them,
-# and nothing prepared or resolved reads them.
+# Lock files whose workspace members' own versions the keys leave out (`lock_sha256`;
+# the build and resolve keys hold `uv.lock` the same way): a release bumps them, and
+# nothing prepared, resolved or recorded reads them.
 VERSIONED_LOCKS = ("uv.lock", "Cargo.lock")
 # Keyed by content but not walked: the CLI imports every subcommand's module at load,
 # so walking it would key prepare on the whole builder. Their import-time code runs
@@ -460,8 +466,8 @@ def prepare_code(walk: dict) -> dict[str, str]:
 
     A walked file keeps the digest the probe reported, which normalizes `__version__`
     as the resolve fingerprint does; a lock leaves out its workspace members' own
-    versions (`lock_sha256`). Every other change, a third-party pin included, still
-    moves the key.
+    versions and every package outside the builder's runtime closure (`lock_sha256`).
+    Every other change, a third-party runtime pin included, still moves the key.
     """
     code = code_digests(prepare_code_files(walk))
     code.update({path: sha for path, sha in walk["files"].items() if path in code})
@@ -692,34 +698,36 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
 
 def lock_sha256(name: str) -> str:
-    """The lock file `name` (one of `VERSIONED_LOCKS`) as the prepare and resolve
-    keys hold it: every third-party pin, without the workspace members' own versions.
+    """The lock file `name` (one of `VERSIONED_LOCKS`) as every key holds it: without
+    the workspace members' own versions, and for `uv.lock` only the builder's runtime
+    closure (`keyed_cache.uv_lock_sha256`, shared with the G1 cache).
 
     A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
-    the builder's fingerprint normalizes), and no preparation or resolution reads it,
-    so the release build keeps reusing the preparation and bundle its candidate made.
-    The build key still holds the raw files. The resolve key holds only `uv.lock`;
-    for `Cargo.lock`, which a `reg_meta` release bumps, its fingerprint holds the
-    compiled `reg_core_py` instead.
+    the builder's fingerprint normalizes), and nothing a build loads or records reads
+    it, so the release build keeps reusing the preparation and bundle its candidate
+    made. A dev-only pin is outside the closure and moves no key. `Cargo.lock` is held
+    whole: for it the keys also hold the compiled `reg_core_py`.
     """
-    lock = tomllib.loads((ROOT / name).read_text())
+    text = (ROOT / name).read_text()
     if name == "uv.lock":
-        members = set(lock["manifest"]["members"])
-        local = [p for p in lock["package"] if p["name"] in members]
-    else:
-        # Cargo records no `source` for a workspace (path) package, and one for every
-        # registry or git dependency.
-        local = [p for p in lock["package"] if "source" not in p]
-    for package in local:
-        del package["version"]
+        return uv_lock_sha256(text)
+    lock = tomllib.loads(text)
+    # Cargo records no `source` for a workspace (path) package, and one for every
+    # registry or git dependency.
+    for package in lock["package"]:
+        if "source" not in package:
+            del package["version"]
     return digest(lock)
 
 
 def build_code(args: argparse.Namespace) -> dict:
-    """The builder code a build runs. A publishable build also records the
-    checkout's commit in the database, so that commit is keyed too."""
+    """The builder code a build runs, with `uv.lock` as `lock_sha256` holds it. A
+    publishable build also records the checkout's commit in the database, so that
+    commit is keyed too."""
+    code = code_digests(BUILDER_SOURCES)
+    code["uv.lock"] = lock_sha256("uv.lock")
     return {
-        "code": code_digests(BUILDER_SOURCES),
+        "code": code,
         "builder_commit": (
             git(ROOT, "rev-parse", "HEAD")
             if not args.diagnostic and not args.registers

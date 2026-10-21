@@ -15,12 +15,14 @@ entry and concurrent builders of one key keep the first rename.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import runpy
 import shutil
 import sys
 import tempfile
 import time
+import tomllib
 from contextlib import contextmanager, suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -45,9 +47,78 @@ def native_doc(path: str) -> bool:
     return _NATIVE["native_doc"](path, NATIVE_SOURCES)
 
 
-# What builder output depends on: the builder, the locked dependencies and the
-# native extension. Repo-relative, in key order.
-BUILDER_SOURCES = ("reg_meta_build/src", "uv.lock", *NATIVE_SOURCES)
+# What builder output depends on, besides the locked runtime dependencies
+# (`uv_lock_sha256`): the builder and the native extension. Repo-relative, in key
+# order.
+BUILDER_SOURCES = ("reg_meta_build/src", *NATIVE_SOURCES)
+# The `uv.lock` package whose runtime closure every cache of builder output keys.
+BUILDER_PACKAGE = "reg-meta-build"
+
+
+def uv_runtime_closure(lock: dict) -> list[dict]:
+    """The `uv.lock` packages the builder loads: the transitive `dependencies` of
+    `BUILDER_PACKAGE`, with an edge's `extra` followed into the target's
+    `optional-dependencies`. Never `dev-dependencies`: pytest, ruff and the other dev
+    tools are installed beside the builder but never imported by it.
+
+    Generous where the lock is ambiguous: an edge reaches every locked version of its
+    target and ignores its `marker`, so a spurious miss is possible, a stale hit not.
+    """
+    tables: dict[str, list[dict]] = {}
+    for package in lock["package"]:
+        tables.setdefault(package["name"], []).append(package)
+    reached: set[tuple[str, str | None]] = set()
+    pending: list[tuple[str, str | None]] = [(BUILDER_PACKAGE, None)]
+    while pending:
+        name, extra = pending.pop()
+        if (name, extra) in reached:
+            continue
+        reached.add((name, extra))
+        if name not in tables:
+            raise RuntimeError(f"uv.lock has no package {name!r}")
+        for package in tables[name]:
+            edges = (
+                package.get("dependencies", [])
+                if extra is None
+                else package.get("optional-dependencies", {}).get(extra, [])
+            )
+            for edge in edges:
+                pending.append((edge["name"], None))
+                pending.extend((edge["name"], e) for e in edge.get("extra", ()))
+    names = {name for name, _ in reached}
+    return [p for p in lock["package"] if p["name"] in names]
+
+
+def uv_lock_sha256(text: str) -> str:
+    """The `uv.lock` text as every cache of builder output keys it: only the
+    builder's runtime closure (`uv_runtime_closure`), and the workspace members
+    without their own versions, which a release bumps and nothing built reads.
+
+    Each closure package is held by name, version, `source` and artifact hashes
+    (`sdist`, `wheels`), so a re-published artifact moves the key; its
+    `dependencies` and `metadata` are left out, since the closure's own pins already
+    fix what loads. A dev-only pin moves no key.
+    """
+    lock = tomllib.loads(text)
+    members = set(lock["manifest"]["members"])
+    held = ("name", "version", "source", "sdist", "wheels")
+    packages = [
+        {
+            field: package[field]
+            for field in held
+            if field in package
+            and not (field == "version" and package["name"] in members)
+        }
+        for package in uv_runtime_closure(lock)
+    ]
+    packages.sort(key=lambda p: json.dumps(p, sort_keys=True))
+    return hashlib.sha256(
+        json.dumps(
+            {"package": packages}, sort_keys=True, separators=(",", ":")
+        ).encode()
+    ).hexdigest()
+
+
 STAGING_PREFIX = ".staging-"
 # A staging directory older than this belongs to a build that died.
 STAGING_RETENTION_SECONDS = 6 * 3600
