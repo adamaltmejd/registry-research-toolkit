@@ -14,7 +14,7 @@ import {
 // @types/node dep for one lookup. REG_META_SERVER_URL repoints the dev /api proxy at
 // the Rust server (`reg-meta serve`) so concurrent instances (parallel worktrees /
 // PR lanes) can each target their own port — see
-// reg_webapp/.claude/skills/run-reg-webapp "Parallel instances".
+// .agents/skills/run-reg-webapp "Parallel instances".
 const runtimeProcess = (
   globalThis as {
     process?: { env?: Record<string, string | undefined> };

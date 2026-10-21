@@ -54,9 +54,9 @@ second copy held in step by a parity test.
   | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it |
 
 The SPA never parses period grammar or computes a project period's bounds: it composes
-`reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)); the catalog's
-delivery-window fusing in `catalog.ts` is the one remaining copy (#1426). Its
-type-to-filter fold is `fold_search` through the same module.
+`reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
+interval merge that fuses delivery windows in `catalog.ts`. Its type-to-filter fold is
+`fold_search` through the same module.
 
 **Text folds.** Two named folds, specified rather than inherited from a library:
 

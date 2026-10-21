@@ -121,10 +121,10 @@ bash reg_webapp/dev/dev.sh --fixture-db smoke
 there is no desktop-only exception. `--fixture-db` builds a deterministic synthetic
 catalog, so no released catalog DB is needed — `dev.sh` installs the venv and the
 frontend dependencies itself; the remaining prerequisites (the wasm toolchain,
-Playwright's Chromium) are in `reg_webapp/.claude/skills/run-reg-webapp/SKILL.md`. Pass
-`REG_META_DB=<db_dir>` instead when the rendered behavior depends on specific catalog
-content. `smoke` is a catalog-browsing flow at the default desktop viewport only — it
-does not stand in for the four widths.
+Playwright's Chromium) are in the [run-reg-webapp skill](../run-reg-webapp/SKILL.md).
+Pass `REG_META_DB=<db_dir>` instead when the rendered behavior depends on specific
+catalog content. `smoke` is a catalog-browsing flow at the default desktop viewport only
+— it does not stand in for the four widths.
 
 `dev.sh` prints the checkout it resolved, the full HEAD, and the unique output directory
 of that invocation as its first line:
@@ -178,11 +178,11 @@ where the evidence in hand establishes a candidate defect with that user impact.
 Fill every field of the rendered template below, and report the routes, states and
 viewports you actually inspected — not the ones the command could have produced. Author
 iteration captures and retained candidate gate evidence are different things: say which
-you are reporting. The flow gates cover only their named scenarios — `project-flows` the
-`/project` error and retry states, `catalog-flows` the one catalog leaf and `/project`
-state of the catalog-authored draft flow — so neither is evidence for a search, a
-different catalog view or a new one. Approval needs evidence for the surfaces the
-candidate actually changes.
+you are reporting. The `gate.py flows` step (`dev.sh --fixture-db flows`) covers only
+its named driver scenarios — the `/project` error and retry states, the catalog-authored
+draft and period flows, and the deliberate replacement — so it is not evidence for a
+search, a different catalog view or a new one. Approval needs evidence for the surfaces
+the candidate actually changes.
 
 ## Severity, findings and fixes
 

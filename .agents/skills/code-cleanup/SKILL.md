@@ -82,8 +82,9 @@ the split below misses joins its nearest module. Today's split: `reg_meta_build/
 `sources/`, `ir/` and the top-level modules by size, with
 `input_data/swecov/build_catalog.py`; `reg_webapp/frontend` (the app root, `lib/`,
 config and `scripts/`); `reg_webapp/edge` with the Dockerfile and deploy scripts; the
-repo-local skills' helper scripts; `scripts/`; and `crates/` (Rust). The test trees are
-the `test-audit` skill's: run its sweep in the same waves and merge its list into step 3.
+dev tooling in `reg_webapp/dev/` (`dev.sh` and its Playwright driver); `scripts/`; and
+`crates/` (Rust). The test trees are the `test-audit` skill's: run its sweep in the same
+waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -141,8 +142,9 @@ Edit directly, in an isolated worktree. One commit per module, the message namin
 was removed. Before each push, run the gate steps CI runs for the touched module
 (`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0 --packages <dir>` for
 a Python package, `crates` for `crates/`, `frontend` for the frontend. For the edge
-worker, after `bun run gen:types && bun run build` in `reg_webapp/frontend` (the worker
-binds its `dist/`), `bunx wrangler@<pin> deploy --dry-run --config <c>` for each of
+worker, after `bun run gen:types && bun run build` in `reg_webapp/frontend` (only
+`wrangler.swecov.jsonc` binds its `dist/`),
+`bunx wrangler@<pin> deploy --dry-run --config <c>` for each of
 `reg_webapp/edge/wrangler.jsonc` and `wrangler.swecov.jsonc`, with the wrangler pin
 `.github/workflows/container-build.yml` deploys with. A change that redesigns a module
 rather than deleting from it, or needs more than one sitting, becomes a GitHub issue

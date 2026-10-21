@@ -1,4 +1,5 @@
-// Cloudflare edge worker for the reg_webapp `swecov` deployment (§11).
+// Cloudflare edge worker for the reg_webapp `swecov` deployment
+// (reg_webapp/DESIGN.md, "Deployment").
 //
 // Serves the SPA as Workers static assets on data.swecov.se and passes API
 // traffic through to the zone's DNS origin (the Fly app — the proxied A/AAAA

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Run Registry Webapp"
+  short_description: "Run, screenshot and drive the reg_webapp dev setup"
+  default_prompt: "Use $run-reg-webapp to start the reg_webapp dev servers and screenshot or drive the SPA."
+policy:
+  allow_implicit_invocation: true

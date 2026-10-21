@@ -1,10 +1,11 @@
 ---
 name: upgrade-deps
 description: >-
-  Upgrade Registry Research Toolkit dependencies and pinned toolchains directly in an
-  isolated worktree, including necessary compatibility fixes and verification. Use for
-  dependency refreshes or package/runtime upgrades; publishing is handled separately by
-  the release skill.
+  Repair Registry Research Toolkit dependency upgrades in an isolated worktree,
+  including necessary compatibility fixes and verification. Routine updates come from
+  Renovate; use this to fix a red Renovate PR or for a manual, larger upgrade (a major
+  version, a toolchain or runtime move). Publishing is handled separately by the release
+  skill.
 ---
 
 # Upgrade dependencies
@@ -34,8 +35,8 @@ together, reading actual files rather than a saved version list:
 - Frontend `package.json`, `bun.lock`, `bunfig.toml`, including peer constraints and npm
   aliases such as the native TypeScript checker.
 - Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
-  pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
-  dependencies.
+  pins), `reg_webapp/Dockerfile`, `.yard/Dockerfile`, and the Rust toolchain and
+  `Cargo.toml`/`Cargo.lock` dependencies.
 - `wasm-bindgen`, pinned in three places that move together: the `=` pin in
   `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
   `ci.yml`'s frontend job, and the same tool in `container-build.yml`'s
@@ -110,9 +111,10 @@ result. Preserve seed inputs and keep row-level data on MONA.
 
 Commit only this upgrade and its required fixes. Prepare a PR with the tested head,
 version changes, compatibility constraints and verification limits. A manual PR requires
-green CI and the maintainer's review before merge; a skill does not supply that review
-or grant publication authority. Coordinate the merge so only one writer advances main at
-a time, then verify the integrated source.
+green CI and an independent review before merge; a fresh agent that did not write the
+change counts (AGENTS.md, "Git"). A skill does not grant publication authority.
+Coordinate the merge so only one writer advances main at a time, then verify the
+integrated source.
 
 Keep detailed, temporary evidence in ignored `archive/reports/`; the PR carries the
 concise durable result. Report the branch/PR, checks and unresolved holds. If release

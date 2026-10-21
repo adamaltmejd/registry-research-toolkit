@@ -91,7 +91,7 @@ registry-research-toolkit/
   plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
     frontend/       # Svelte 5 + Vite (bun)
-    edge/           # edge worker serving the SPA
+    edge/           # edge workers: global is MCP-only, swecov also serves the SPA
     stewards/
       global/       # steward.json only (full universe)
       swecov/       # steward.json (compiled holdings artifact)
@@ -230,11 +230,11 @@ artifact admission".
 
 The reader and webapp open the selected artifact read-only and validate its identity.
 `REG_WEBAPP_STEWARD` must equal its manifest steward; unset/global selects the `catalog`
-kind, not an implicit fallback for a named steward. Orders use
-`materialize_order(project, conn)` and the artifact's kind, independent of browse scope.
-Accepted inventory/policy/raw-census accounting is a build gate with counts and digests
-in the manifest; exclusions and lookups are not runtime holdings. Failures leave prior
-artifacts and accepted inputs unchanged.
+kind, not an implicit fallback for a named steward. Orders use `order`
+(`crates/reg-catalog/src/ops/order.rs`) and the artifact's kind, independent of browse
+scope. Accepted inventory/policy/raw-census accounting is a build gate with counts and
+digests in the manifest; exclusions and lookups are not runtime holdings. Failures leave
+prior artifacts and accepted inputs unchanged.
 
 ## Repo-wide invariants
 
