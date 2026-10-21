@@ -940,8 +940,37 @@ def resolve_source_scope(
             if name is not None:
                 formed_names[key] = variable
                 source_names[key] = name
+    # The ladder name also replaces the source name on the variable's states and
+    # per-column alias windows, which readers show in place of the variable's name;
+    # a state with its own (corrected) name keeps it.
     for key, name in name_colliding_variables(formed_names, source_names).items():
-        variables[key] = formed_names[key].model_copy(update={"name": name})
+        variable, source = formed_names[key], source_names[key]
+        variables[key] = variable.model_copy(
+            update={
+                "name": name,
+                "states": tuple(
+                    state.model_copy(update={"name": name})
+                    if state.name == source
+                    else state
+                    for state in variable.states
+                ),
+                "aliases": tuple(
+                    alias.model_copy(
+                        update={
+                            "windows": tuple(
+                                window.model_copy(update={"name": name})
+                                if window.name == source
+                                else window
+                                for window in alias.windows
+                            )
+                        }
+                    )
+                    for alias in variable.aliases
+                ),
+            }
+        )
+    # Uniqueness is over the name a reader sees per state, as `validate_built_db`
+    # checks it.
     holders: dict[tuple[str, str, str, str], set[NativeKey]] = defaultdict(set)
     for key, variable in variables.items():
         if variable is None or variable.name is None:
@@ -949,7 +978,10 @@ def resolve_source_scope(
         register = variable.register_ref
         for state in variable.states:
             holders[
-                register.provider, register.slug, state.variant.slug, variable.name
+                register.provider,
+                register.slug,
+                state.variant.slug,
+                state.name or variable.name,
             ].add(key)
     clashes: dict[NativeKey, list[str]] = defaultdict(list)
     clashing_names: dict[NativeKey, str] = {}

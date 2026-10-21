@@ -7,14 +7,14 @@
       "rows": []
     },
     {
-      "table": "variables",
-      "fields": ["variable", "name", "operational_definition"],
+      "table": "states",
+      "fields": ["variable", "name", "state_name", "operational_definition"],
       "rows": [
-        ["a", "Svar — Alternativ A", "Alternativ A"],
-        ["b", "Svar — Alternativ B", "Alternativ B"],
-        ["c", "Svar, annat", "Alternativ C"]
+        ["a", "Svar — Alternativ A", "Svar — Alternativ A", "Alternativ A"],
+        ["b", "Svar — Alternativ B", "Svar — Alternativ B", "Alternativ B"],
+        ["c", "Svar, annat", "Svar, annat", "Alternativ C"]
       ],
-      "note": "a and b take the source name with their own operational definition appended; c keeps its reviewed correction."
+      "note": "a and b take the source name with their own operational definition appended, on the variable and on each state that carries the source name; c keeps its reviewed correction."
     }
   ]
 }

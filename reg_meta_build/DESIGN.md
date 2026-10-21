@@ -1842,24 +1842,28 @@ carries its source name takes the first step that names it apart:
    (`t.ex.`, `fr.o.m.`, `m.m.`), is a single letter, or is one of `ca`, `dvs`, `exkl`,
    `inkl`, `jfr`, `kap`, `nr`, `resp`, `s`, `st`. A closing period is dropped.
 3. Else `<name> (<COLUMN>)`, the delivery column of its latest state (latest `valid_to`,
-   then `valid_from`), when no other sibling left for this step has the same column
-   case-folded.
+   then `valid_from`, then column), when no other sibling left for this step has the
+   same column case-folded.
 4. Else `<name> (<COLUMN>, <first>–<last year>)`, over all its states (one year is
    written alone, an open end as `<first>–`), when distinct the same way.
 
-Steps 1 and 2 never write a name over the search cap; a member they cannot fit falls to
-step 3. Siblings that share a definition, and a variable whose definition varies across
-its states or is missing, skip steps 1 and 2. Detection reads source names, so an
-explicit `[[errata.field]]` name correction wins: the corrected variable keeps its name,
-still makes its source-name group collide, and does not block a sibling's step. A
-correction that the ladder would reproduce is redundant and is deleted. Every member the
-ladder cannot separate keeps its source name, and the uniqueness check that follows runs
-over the whole variant, so a ladder name that another variable already carries is also
+No step writes a name over the search cap: a member steps 1 and 2 cannot fit falls to
+step 3, and one that steps 3 and 4 cannot fit keeps its source name. The ladder name
+replaces the source name on the variable and on each of its states and per-column alias
+windows that carry the source name; a state with its own corrected name keeps it.
+Siblings that share a definition, and a variable whose definition varies across its
+states or is missing, skip steps 1 and 2. Detection reads source names, so an explicit
+`[[errata.field]]` name correction wins: the corrected variable keeps its name, still
+makes its source-name group collide, and does not block a sibling's step. A correction
+that the ladder would reproduce is redundant and is deleted. Every member the ladder
+cannot separate keeps its source name, and the uniqueness check that follows runs over
+the whole variant, so a ladder name that another variable already carries is also
 caught. Every variable whose name still collides is a located `duplicate_variable_name`
 error, withheld, none of them chosen, so a diagnostic build stays writable; curation
 names them with `[[errata.field]]`, following the `<label> — <short subquestion>` form
-above. `validate_built_db` refuses an artifact in which two variables with states in one
-variant share a name.
+above. Both the check and `validate_built_db` compare the name a reader sees per state
+(the state's own name, else the variable's), so `validate_built_db` refuses an artifact
+in which two variables with states in one variant share a name.
 
 ## Strict and diagnostic builds
 

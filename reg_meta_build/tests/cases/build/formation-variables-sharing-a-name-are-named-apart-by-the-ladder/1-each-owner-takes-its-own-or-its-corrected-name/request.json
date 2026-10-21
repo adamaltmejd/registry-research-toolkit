@@ -1,6 +1,6 @@
 {
   "note": "Three partition owners of variable 5 share the source name 'Svar' in one variant (#1736). The ladder's first step appends each owner's own operational definition; owner c carries a reviewed [[errata.field]] name, which wins over the ladder.",
-  "fails_if": "the ladder stops appending the operational definition (a and b publish 'Svar' and are refused as duplicate_variable_name, or take a later step), or applies it over an explicit name correction (c becomes 'Svar — Alternativ C')",
+  "fails_if": "the ladder stops appending the operational definition (a and b publish 'Svar' and are refused as duplicate_variable_name, or take a later step), renames the variable but leaves its states on the bare source name 'Svar', or applies it over an explicit name correction (c becomes 'Svar — Alternativ C')",
   "sources": {
     "description": "Variable 5, named 'Svar', delivers A (CVID 21), B (CVID 22) and C (CVID 23) in edition 2020, with operational definitions 'Alternativ A', 'Alternativ B' and 'Alternativ C'.",
     "scb": {

@@ -156,7 +156,7 @@ def name_colliding_variables(
     3. else `<name> (<COLUMN>)`, the latest state's column, when distinct (case-folded);
     4. else `<name> (<COLUMN>, <first>–<last year>)`, when distinct.
 
-    Steps 1 and 2 stop at the search cap. A member none of them separates keeps its
+    No step writes a name over the search cap. A member none of them separates keeps its
     name; the caller refuses every variable whose name still collides.
     Returns the new name of each renamed variable.
     """

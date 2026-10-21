@@ -1161,15 +1161,18 @@ def _check_variable_names_unique_per_variant(
     if not {"variable", "variable_state", "register_variant"}.issubset(tables):
         result.ok("variable / variable_state / register_variant absent — skipped")
         return
+    # A reader sees a state's own name where it has one, so a variable renamed
+    # without its states still collides through them.
     duplicates = conn.execute(
-        "SELECT rv.slug, v.name, COUNT(DISTINCT v.variable_id) "
+        "SELECT rv.slug, COALESCE(vs.name, v.name) AS seen, "
+        "COUNT(DISTINCT v.variable_id) "
         "FROM variable_state vs "
         "JOIN variable v ON v.variable_id = vs.variable_id "
         "JOIN register_variant rv ON rv.register_variant_id = vs.register_variant_id "
         "WHERE v.name IS NOT NULL "
-        "GROUP BY vs.register_variant_id, v.name "
+        "GROUP BY vs.register_variant_id, seen "
         "HAVING COUNT(DISTINCT v.variable_id) > 1 "
-        "ORDER BY rv.slug, v.name"
+        "ORDER BY rv.slug, seen"
     ).fetchall()
     if duplicates:
         sample = "; ".join(
