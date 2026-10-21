@@ -1,0 +1,31 @@
+{
+  "note": "Fails if `validate` stops warning on a binding whose variable is `is_sensitive` (#1547), or blocks it: `ok` stays true and the one issue is the located `variable_sensitive` warning.",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": 2020,
+            "bindings": [
+              {
+                "variable": "scb/example/bransch-ny",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

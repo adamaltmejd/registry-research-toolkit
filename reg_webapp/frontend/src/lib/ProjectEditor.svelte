@@ -42,10 +42,14 @@ import { windowCoverageHints, windowDisjointFindings } from "./validation";
 const {
   regMetaVersion,
   steward,
+  orderInstructions = null,
   providerQualified,
 }: {
   regMetaVersion: string;
   steward: string;
+  /** The steward's order hand-off (`steward.json` → `order_instructions`): how a
+   * researcher sends the project in. Absent where the deployment takes no orders. */
+  orderInstructions?: string | null;
   /** Whether this deployment serves more than one provider, so a source card's
    * title carries its provider. A deployment fact, read once at the app root and
    * passed down like `steward` — this page fetches nothing of its own. */
@@ -239,6 +243,11 @@ onDestroy(() => {
       <code>project_data.json</code> is the editable project draft;
       <code>order.json</code> is the order manifest generated from it.
     </p>
+    <!-- The steward's own words on how to hand the project in, beside the downloads
+         they refer to. Plain body text, not muted: it is the next step, not an aside. -->
+    {#if orderInstructions}
+      <p>{orderInstructions}</p>
+    {/if}
 
     <!-- `name` is the one editable top-level field on this page — the label a
          researcher always sets. The read-only deployment-seed identifiers are in

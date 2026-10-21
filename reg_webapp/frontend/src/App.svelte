@@ -177,7 +177,12 @@ const qualified = $derived(providerQualified());
              register changes. -->
         <VariantBrowser registerFqid={`${route.provider}/${route.register}`} />
       {:else if route.name === "project"}
-        <ProjectEditor {regMetaVersion} {steward} providerQualified={qualified} />
+        <ProjectEditor
+          {regMetaVersion}
+          {steward}
+          orderInstructions={context?.steward.order_instructions ?? null}
+          providerQualified={qualified}
+        />
       {:else if route.name === "search"}
         <SearchView />
       {:else if route.name === "doc"}

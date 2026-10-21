@@ -86,7 +86,7 @@
     "description": null,
     "operational_definition": null,
     "measurement_unit": null,
-    "is_sensitive": false,
+    "is_sensitive": true,
     "is_identifier": false,
     "states": [
       {

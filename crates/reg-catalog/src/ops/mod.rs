@@ -60,6 +60,10 @@ pub struct Steward {
     pub id: String,
     pub name: String,
     pub long_name: String,
+    /// How a researcher hands a project to this steward for ordering, plain text shown
+    /// beside the downloads; absent when the deployment takes no orders.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub order_instructions: Option<String>,
 }
 
 impl Steward {

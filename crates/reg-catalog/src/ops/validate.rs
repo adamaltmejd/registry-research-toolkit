@@ -237,8 +237,8 @@ impl Semantic<'_> {
         self.value_set(base, binding)
     }
 
-    /// The non-blocking hints: a deprecated variable, and each successor whose
-    /// succession is effective by the requested period's last year.
+    /// The non-blocking hints: a deprecated variable, a sensitive one, and each
+    /// successor whose succession is effective by the requested period's last year.
     fn hints(
         &mut self,
         path: &str,
@@ -247,10 +247,10 @@ impl Semantic<'_> {
         slugs: &[String; 3],
         requested: Option<&[Interval]>,
     ) -> Result<(), Error> {
-        let deprecated: bool = self
+        let (deprecated, sensitive): (bool, bool) = self
             .conn
-            .prepare_cached("SELECT deprecated FROM variable WHERE variable_id = ?")?
-            .query_row([id], |row| row.get(0))?;
+            .prepare_cached("SELECT deprecated, is_sensitive FROM variable WHERE variable_id = ?")?
+            .query_row([id], |row| Ok((row.get(0)?, row.get(1)?)))?;
         if deprecated {
             self.push(
                 IssueLevel::Info,
@@ -259,6 +259,19 @@ impl Semantic<'_> {
                 format!(
                     "column {} resolves to a deprecated catalog variable; prefer a current \
                      successor when one is available",
+                    quote(&binding.variable)
+                ),
+            );
+        }
+        // Flagged, never blocked (#1547): the steward decides whether to share it.
+        if sensitive {
+            self.push(
+                IssueLevel::Warning,
+                "variable_sensitive",
+                path.to_owned(),
+                format!(
+                    "column {} is a sensitive variable; it stays in the order, but the \
+                     steward shares it with caution and may decline it",
                     quote(&binding.variable)
                 ),
             );
