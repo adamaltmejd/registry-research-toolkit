@@ -4,4 +4,5 @@ variants = ["iaf/ersattningsperiod/_default"]
 
 [[table]]
 table = "IFA_Ersperiod_Lev3"
-edition = { from = 1985, to = 2023 }
+# Maintainer-decided 2026-10-22 (#1810): IAF ASTAT holdings start 2015; editions 2015–2023.
+edition = { from = 2015, to = 2023 }
