@@ -262,6 +262,11 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
       <SearchField
         aria-label="Search classifications and codes"
         className={styles.field}
+        // One Escape closes the palette; SearchField would spend the first
+        // one clearing its text.
+        onKeyDown={(event) => {
+          if (event.key === "Escape") close();
+        }}
       >
         <Input
           ref={input}

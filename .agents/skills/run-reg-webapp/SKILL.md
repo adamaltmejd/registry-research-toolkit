@@ -91,8 +91,8 @@ from the shared fixture cache (`conformance/fixture_cache.py`, built on a miss),
 into a temp dir that is deleted on exit. It is byte-identical run to run, so a
 screenshot diff means a code change. It covers every route the design reviewer walks
 (`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`, `/catalog/scb/lisa/kon`,
-`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/search?q=kon`, `/project`,
-`/doc/Kon.md`) but has a handful of rows — use a real DB for density questions. With
+`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/project`, `/doc/Kon.md`)
+but has a handful of rows — use a real DB for density questions. With
 `REG_WEBAPP_STEWARD` set, the catalog is the conformance suite's synthetic steward
 artifact (`conformance/fixture_cache.py`) instead.
 

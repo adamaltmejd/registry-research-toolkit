@@ -5,7 +5,7 @@ import type { DocDetail } from "./api";
 import { ApiError, getDoc } from "./api";
 import DocView from "./DocView.svelte";
 
-// Mock the single GET the viewer drives (mirrors SearchView's api-mock style);
+// Mock the single GET the viewer drives;
 // keep the rest of api.ts real (the type exports + the ApiError class the 404
 // branch keys on). Each case stubs `getDoc` and renders `<DocView identifier=… />`.
 vi.mock("./api", async (importOriginal) => {

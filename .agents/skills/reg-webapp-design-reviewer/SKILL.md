@@ -154,8 +154,8 @@ purged, so a path without a description of what it showed is not evidence; never
 
 If no route is given, derive the smallest stable route from the changed files and nearby
 tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
-`/catalog/group/<provider>/<register>/<key>`, `/catalog/group/class/<key>`,
-`/search?q=...`, `/project`, `/doc/<identifier>`.
+`/catalog/group/<provider>/<register>/<key>`, `/catalog/group/class/<key>`, `/project`,
+`/doc/<identifier>`.
 
 ### Inspect
 

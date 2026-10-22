@@ -19,7 +19,11 @@ import { KeyValue } from "./ui/KeyValue";
 import { Panel } from "./ui/Panel";
 import { useProject } from "./use_project";
 import { ValidationPanel } from "./ValidationPanel";
-import { windowCoverageHints, windowDisjointFindings } from "./validation";
+import {
+  PROJECT_HEADING_ID,
+  windowCoverageHints,
+  windowDisjointFindings,
+} from "./validation";
 
 // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
 // Under #991 the project IS the cart: it SHOWS what the researcher picked while
@@ -215,7 +219,7 @@ export function ProjectEditor({
       ) : (
         <>
           <header className={styles.head}>
-            <h1 className={styles.title}>
+            <h1 id={PROJECT_HEADING_ID} className={styles.title} tabIndex={-1}>
               {nameOf(draft) || "Untitled project"}
               {dirty && (
                 <span

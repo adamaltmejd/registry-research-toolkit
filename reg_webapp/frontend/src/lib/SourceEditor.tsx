@@ -35,6 +35,7 @@ import type { KeyValueRow } from "./ui/types";
 import {
   issuesUnderPointer,
   jsonPointer,
+  PROJECT_HEADING_ID,
   sourceAnchorId,
   type ValidationIssue,
 } from "./validation";
@@ -79,6 +80,22 @@ interface RowsProblem {
 }
 
 const BLANK_ROW: YearRow = { from: "", to: "" };
+
+/** After a confirmed removal, focus lands where the removed card was: the next
+ * source's heading, else the previous one's, else the project heading. The card
+ * (and the dialog's trigger with it) is gone, so RAC has nothing to restore to;
+ * this runs after React has committed the shorter list. */
+function focusAfterRemoval(index: number): void {
+  requestAnimationFrame(() => {
+    const heading = (i: number) =>
+      document.getElementById(sourceAnchorId(i))?.querySelector("h3") ?? null;
+    const target =
+      heading(index) ??
+      (index > 0 ? heading(index - 1) : null) ??
+      document.getElementById(PROJECT_HEADING_ID);
+    target?.focus();
+  });
+}
 
 export function SourceEditor({
   sourceIndex,
@@ -357,7 +374,11 @@ export function SourceEditor({
           className={styles.title}
           aria-busy={names.loading ? "true" : undefined}
         >
-          <h3 className={titleIsCoordinate ? styles.mono : undefined}>
+          {/* A focus target (not a tab stop) for focusAfterRemoval. */}
+          <h3
+            className={titleIsCoordinate ? styles.mono : undefined}
+            tabIndex={-1}
+          >
             {heading}
             {errorCount > 0 && (
               <Tag tone="error" glyph="✕">
@@ -391,6 +412,7 @@ export function SourceEditor({
               onPress={() => {
                 setRemoveOpen(false);
                 projectStore.removeSource(sourceIndex);
+                focusAfterRemoval(sourceIndex);
               }}
             >
               Remove source
