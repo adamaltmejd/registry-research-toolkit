@@ -346,9 +346,13 @@ Reports, logs and diagnostics stay on the data side and never enter the output f
 A failed check tells the agent only the refusal category code. Each export is checked
 alone in v1; differencing against earlier approved exports comes later.
 
-The check receipt (gate version, schema id, file hashes) is not an output file. The
-receipt and the diagnostics go in a `.diagnostics/` folder beside the output folder and
-are never exported.
+On a full pass the gate also writes `receipt.json` into the output folder, and it is
+exported with the data. It holds only the gate version, the schema's and policy's name,
+version and hash, and each output file's SHA-256: no values, counts or messages. Anyone
+downstream (the agent, a co-author, a replication) can then verify that these exact
+bytes passed this exact check. Its format is fixed by the toolkit, not by the schema.
+Reports, logs and diagnostics go in a `.diagnostics/` folder beside the output folder
+and are never exported.
 
 ### Output format
 
@@ -363,10 +367,10 @@ No standalone MONA system and no web UI. No agent runs on MONA and the Rust bina
 not run there; the R file is the only toolkit code on MONA. The toolkit ships one fixed,
 version-pinned R file of check functions; the scaffold copies it into the project, and
 the pipeline's last step calls it with the chosen schema and its policy. The
-output-folder model is the same: the folder holds exactly the schema's files, which
-appear only if the whole check passes. Logs, error messages, the receipt and diagnostics
-never go in output files; they go in `.diagnostics/` beside the folder. The user reviews
-the folder, zips it and sends it out through MONA's export.
+output-folder model is the same: the folder holds exactly the schema's files and
+`receipt.json`, which appear only if the whole check passes. Logs, error messages and
+diagnostics never go in output files; they go in `.diagnostics/` beside the folder. The
+user reviews the folder, zips it and sends it out through MONA's export.
 
 The Rust binary and the R file are two implementations of one check, an exception to
 "one implementation per contract". One case corpus (schema and candidate folder →
