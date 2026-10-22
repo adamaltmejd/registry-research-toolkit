@@ -267,10 +267,21 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         x: x(year),
         inWindow: inWindow(year),
       }));
+  // The joined label's run: an axis year keeps clear of all of it, not only
+  // of the bound it hangs from (about 7 px per mono character).
+  const joinedTick = joined ? boundTicks[0] : null;
+  const reach =
+    joinedTick?.label === undefined
+      ? null
+      : joinedTick.anchor === "end"
+        ? [joinedTick.x - joinedTick.label.length * 7, joinedTick.x]
+        : [joinedTick.x, joinedTick.x + joinedTick.label.length * 7];
   const ticks = [
     ...tickYears(input.axis, pxPerYear)
       .filter((year) =>
-        bounds.every((bound) => Math.abs(x(year) - x(bound)) >= 36),
+        reach
+          ? x(year) <= reach[0] - 18 || x(year) >= reach[1] + 18
+          : bounds.every((bound) => Math.abs(x(year) - x(bound)) >= 36),
       )
       .map((year) => ({ year, x: x(year), inWindow: false })),
     ...boundTicks,

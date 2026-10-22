@@ -151,7 +151,7 @@ function check(condition, message) {
 // Ten scenarios × four viewports = 40 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
-// exactly one failing request and the other five inject none: everything else
+// exactly one failing request and the other seven inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //

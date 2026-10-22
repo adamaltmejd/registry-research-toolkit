@@ -73,7 +73,7 @@ function missNote(plan: OverlapPlan, window: ProjectStudyWindow): string {
 /** The divergence summary in words, null when there is nothing dated to judge. */
 function divergence(differing: number, disjoint: number): string {
   if (differing === 0 && disjoint === 0) {
-    return "Every source covers these years where its columns are delivered.";
+    return "Every source matches the window where its columns are delivered.";
   }
   const parts: string[] = [];
   if (differing > 0) {

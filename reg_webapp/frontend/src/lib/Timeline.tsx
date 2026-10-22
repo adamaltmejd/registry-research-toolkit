@@ -104,12 +104,18 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
     window: boolean;
     text?: string;
     edge?: "start" | "end";
+    /** The run the label's text covers, when wider than one year's label. */
+    reach?: [number, number];
   }[] = [];
   const add = (year: number, at: number, window: boolean) => {
     // The window's own bounds always show; only the other ticks give way.
     // A year is labelled once (the axis end can be the window end).
     if (labels.some((l) => l.year === year)) return;
-    if (window || labels.every((l) => Math.abs(l.at - at) >= MIN_GAP_PCT)) {
+    const clear = (l: (typeof labels)[number]) =>
+      l.reach
+        ? at <= l.reach[0] - MIN_GAP_PCT || at >= l.reach[1] + MIN_GAP_PCT
+        : Math.abs(l.at - at) >= MIN_GAP_PCT;
+    if (window || labels.every(clear)) {
       labels.push({ year, at, window });
     }
   };
@@ -117,16 +123,20 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
     const from = pct(band.from);
     const to = pct(band.to + 1);
     if (band.from !== band.to && to - from < MIN_GAP_PCT) {
-      // Bounds too close to stand apart read as one span at its middle, so
-      // the two years never run together ("20182020"). It hangs from the
-      // band's inner edge, so it never runs off either end of the drawing.
+      // Bounds too close to stand apart read as one "2018–2020" label, so
+      // the two years never run together ("20182020"). It is anchored at the
+      // band edge nearer the drawing's middle and runs toward the middle, so
+      // it never runs off either end; axis years keep clear of its whole run,
+      // taken as two labels' gap wide.
       const late = from + to > 100;
+      const at = late ? to : from;
       labels.push({
         year: band.from,
-        at: late ? to : from,
+        at,
         window: true,
         text: span(band),
         edge: late ? "end" : "start",
+        reach: late ? [at - 2 * MIN_GAP_PCT, at] : [at, at + 2 * MIN_GAP_PCT],
       });
     } else {
       add(band.from, from, true);
