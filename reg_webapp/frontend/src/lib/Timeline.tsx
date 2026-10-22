@@ -371,9 +371,10 @@ interface Local {
  * crosses, or falls outside the selectable years is refused with the reason
  * instead of being clamped into another range.
  *
- * A source period that differs from the project window says so in a `warn`
- * row with Reset; a window wider than the variable's availability is an `info`
- * note in the header and an `info-bg` band, not a warning.
+ * A source period that differs from the project window inside the variable's
+ * availability says so in a `warn` row with Reset; a window wider than the
+ * availability is an `info` note in the header and an `info-bg` band, not a
+ * warning, and a period narrowed only to that availability is no deviation.
  *
  * A non-year `?period` (a term, a list, `_default`) is valid URL state this UI
  * does not author: it reads as text with Clear and is never rewritten.
@@ -537,26 +538,35 @@ export function PeriodTimeline({
     onSubmit(yearWindowToWire(selection));
   }
 
-  // The band is the active window: the selection once there is one to show
-  // (a source period, a move, or the project window it starts from).
+  // Periods are compared inside the variable's availability: years it has no
+  // data for are the data's narrowing, not the user's, and say so in the "i"
+  // note, never the ▲ row. So the default seed (window∩coverage), that seed
+  // applied, and the window itself all match the window. A window wholly
+  // outside availability has no part to match: any selection differs.
+  const inAvailability = (w: ProjectStudyWindow): ProjectStudyWindow | null =>
+    covered === null
+      ? w
+      : w.to < covered.from || w.from > covered.to
+        ? null
+        : clampYearWindow(w, covered.from, covered.to);
+  const heldWindow = boundedWindow && inAvailability(boundedWindow);
+  const matchesWindow =
+    boundedWindow !== null &&
+    (heldWindow === null
+      ? sameYearWindow(selection, boundedWindow)
+      : sameYearWindow(inAvailability(selection), heldWindow));
+  const sourceKind = userChosen && !matchesWindow;
+  const differs =
+    boundedWindow !== null && subAnnualPeriod === null && !matchesWindow;
+  // What Reset writes: the window as this variable can hold it.
+  const resetWindow = heldWindow ?? boundedWindow;
+  // The band is the active window: a source period that differs, else the
+  // project window (the thumbs may sit on the narrower seed), so "not
+  // covered" shows for as long as the period only follows availability.
   const showBand =
     subAnnualPeriod === null && (userChosen || boundedWindow !== null);
-  // Before the user chooses, the band is the real project window (the thumbs
-  // sit on the narrower seed), so "not covered" can show.
-  const band = showBand ? (userChosen ? selection : boundedWindow) : null;
+  const band = showBand ? (sourceKind ? selection : boundedWindow) : null;
   const outside = band ? uncovered(band, covered) : [];
-  const sourceKind = userChosen && !sameYearWindow(selection, boundedWindow);
-  // The default seed narrowed to window∩coverage is the data's choice, not
-  // the user's; a seed snapped outside a disjoint window is worth reporting.
-  const seedWithinWindow =
-    boundedWindow !== null &&
-    selection.from >= boundedWindow.from &&
-    selection.to <= boundedWindow.to;
-  const differs =
-    boundedWindow !== null &&
-    subAnnualPeriod === null &&
-    !sameYearWindow(selection, boundedWindow) &&
-    (userChosen || !seedWithinWindow);
 
   const lo = selectableYears.from;
   const hi = selectableYears.to;
@@ -683,10 +693,10 @@ export function PeriodTimeline({
         action={
           subAnnualPeriod === null &&
           differs &&
-          boundedWindow && (
+          resetWindow && (
             <Button
               variant="ghost"
-              onPress={() => onSubmit(yearWindowToWire(boundedWindow))}
+              onPress={() => onSubmit(yearWindowToWire(resetWindow))}
             >
               Reset
             </Button>

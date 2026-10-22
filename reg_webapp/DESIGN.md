@@ -1640,8 +1640,11 @@ too, so a typed year and a dragged thumb reach exactly the same years; an entry 
 does not parse, crosses or falls outside is refused with the reason rather than clamped
 into another range. A local change writes `?period` only (never the global window). A
 window wider than coverage is information, not a warning: the differs-from-window
-warning fires only for a user-chosen selection, or a default seed snapped outside a
-disjoint window, not for the untouched coverage-clamped default.
+warning compares the selection and the window inside coverage, so neither the
+coverage-clamped default nor that default applied raises it (maintainer ruling
+2026-10-22). It fires for a selection that differs within coverage, or for any
+selection against a window wholly outside coverage; Reset writes the window clipped to
+coverage.
 
 The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
 (`coverage.to === null`, "still delivered") projects to — the catalog only knows

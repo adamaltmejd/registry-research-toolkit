@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: eight scenarios (three /project
-// error+retry, four catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: nine scenarios (three /project
+// error+retry, five catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// eight.
+// nine.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,14 +148,14 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
-// Eight scenarios × four viewports = 32 cases, each in a FRESH context against
+// Nine scenarios × four viewports = 36 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
 // exactly one failing request and the other five inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 64 PNGs. A bare `<out-dir>` runs all eight scenarios;
+// These write 68 PNGs. A bare `<out-dir>` runs all nine scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -842,6 +842,50 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   );
 }
 
+/** Scenario 9 — a variable whose availability is NARROWER than the project
+ * window (maintainer ruling 2026-10-22). The project window is 2015..2020 and
+ * `scb/lisa/kon` is delivered from 2018, so the variable's own period card seeds
+ * at 2018..2020 and says what the window asks for that the data lacks in an "i"
+ * note. That narrowing is the data's, not the researcher's: applying the seed
+ * must not raise the ▲ "Differs from the project window" row, which it did when
+ * the comparison ignored availability. A period the researcher narrows past the
+ * data (2019..2020) is a real deviation and must still raise it. */
+async function periodAvailabilityCase(page, _counts, shoot, project) {
+  // (1) A project with the wide window, opened through the editor and autosaved,
+  //     so the cold leaf below restores it.
+  const green = validated(page);
+  await openProjectFile(page, project);
+  await green;
+  await settled(page);
+  await draftSaved(page, ["scb/lisa/individer-15plus"]);
+  await open(page, "/catalog/scb/lisa/kon");
+  await settled(page);
+
+  const card = page.locator("form.period-picker");
+  const differs = card.getByText(/Differs from the project window/);
+  // (2) The seed: availability narrows the window, said as information.
+  await card.getByText("Not covered 2015–2017").waitFor();
+  check((await differs.count()) === 0, "the unapplied seed raised the ▲ row");
+
+  // (3) Applying that seed is still no deviation.
+  await card.getByRole("button", { name: "Apply period" }).click();
+  await periodApplied(page, "2018..2020");
+  await settled(page);
+  check(
+    (await differs.count()) === 0,
+    "applying the availability-narrowed seed raised the ▲ row",
+  );
+  // The band is still the project window, so the "i" note still names the gap.
+  await card.getByText("Not covered 2015–2017").waitFor();
+  await shoot("catalog-period-availability");
+
+  // (4) Narrowing past the data is the researcher's choice: the ▲ row shows.
+  await card.getByRole("textbox", { name: "From" }).fill("2019");
+  await card.getByRole("button", { name: "Apply period" }).click();
+  await periodApplied(page, "2019..2020");
+  await differs.waitFor();
+}
+
 /** Scenario 8 — the period card KEEPS keyboard focus across an Apply (Y-65). A
  * keyboard researcher adjusting the catalog period repeatedly through the From
  * and To fields used to lose focus to the document body on every Apply, because
@@ -1241,6 +1285,17 @@ try {
       shots: 3,
       route: "/catalog/scb/lisa/kon?period=2019..2020",
       run: periodFocusCase,
+    },
+    // Opens the one-source project under a window wider than Kon's
+    // availability, then judges Kon's own period card against it.
+    "catalog-period-availability": {
+      shots: 1,
+      run: (p, c, shoot) =>
+        periodAvailabilityCase(p, c, shoot, {
+          ...project,
+          name: "Synthetic wide window",
+          window: { from: 2015, to: 2020 },
+        }),
     },
   };
   for (const name of selection) {
