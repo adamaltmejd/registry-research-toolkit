@@ -20,11 +20,40 @@ import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useRoute } from "./lib/use_router";
+import { VariableList, type VariableListFocus } from "./lib/VariableList";
 import VariantBrowser from "./lib/VariantBrowser.svelte";
 import { windowStore } from "./lib/window.svelte";
 import { type WindowBounds, windowBounds } from "./lib/window_bounds";
 
 const readWindow = () => windowStore.value;
+
+/** The register whose variables the second browse column lists, and the page
+ * open under it: a register's own page, a variable, a concept group or the
+ * variants page. Null on every other page, which shows no second column. */
+function listedRegister(
+  route: Route,
+): { fqid: string; focus: VariableListFocus | null } | null {
+  switch (route.name) {
+    case "catalog-node": {
+      const [provider, register, ...rest] = route.fqidPath.split("/");
+      if (provider === "class" || register === undefined) return null;
+      return {
+        fqid: `${provider}/${register}`,
+        focus:
+          rest.length > 0 ? { kind: "variable", fqid: route.fqidPath } : null,
+      };
+    }
+    case "group":
+      return {
+        fqid: `${route.provider}/${route.register}`,
+        focus: { kind: "group", key: route.key },
+      };
+    case "variants":
+      return { fqid: `${route.provider}/${route.register}`, focus: null };
+    default:
+      return null;
+  }
+}
 
 // The app's hrefs are root-relative paths already.
 const useHref = (href: string) => href;
@@ -72,6 +101,7 @@ export function App() {
   // The catalog vintage for the site-wide footer (#355 decision 2): the date the
   // reg_meta DB was built, the leading YYYY-MM-DD of `import_date`.
   const ctx = context.data;
+  const listed = listedRegister(route);
   const breadcrumbs = useMemo(
     () => ({ items: routeBreadcrumbs(route) }),
     [route],
@@ -91,8 +121,16 @@ export function App() {
           <div
             className={styles.body}
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
+            data-list={listed !== null}
           >
             <BrowseTree className={styles.browse} />
+            {listed && (
+              <VariableList
+                registerFqid={listed.fqid}
+                focus={listed.focus}
+                className={styles.list}
+              />
+            )}
             <main className={styles.detail}>
               <SvelteIsland
                 component={Breadcrumbs}

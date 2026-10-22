@@ -136,8 +136,9 @@ function providersOf(root: Read<RootChild[]>): RootChild[] {
 
 /** One register's node — its variants (for a source card's name) and its binding
  * children with their deliveries (for the cart's coverage hint) — read once per
- * register and shared by every source on it. Null when the ref is not a register. */
-function registerRead(registerFqid: string): Read<RegisterShow | null> {
+ * register and shared by every source on it and by the browse list of its
+ * variables. Null when the ref is not a register. */
+export function registerRead(registerFqid: string): Read<RegisterShow | null> {
   return read(`register:${registerFqid}`, async () => {
     const node = await getShow(registerFqid);
     return node.kind === "register" ? node : null;
