@@ -1000,6 +1000,16 @@ async function replaceConfirmCase(page, shoot, project) {
   // focus ring as well as the dialog.
   await tabTo(page, cancel, "Cancel");
   await settled(page);
+  // The dialog and its scrim fade in over --duration-slow: shoot the settled
+  // dialog, not its entrance. Finite animations only (a skeleton shimmer loops).
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
+  );
   await shoot("replace-confirm");
 
   // (2) Cancelled: the edited draft is still loaded, and focus comes back.

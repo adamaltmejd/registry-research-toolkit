@@ -49,7 +49,7 @@
 
 .danger {
   background: var(--err);
-  color: var(--accent-fg);
+  color: var(--danger-fg);
 }
 .danger[data-hovered]:not([aria-disabled="true"]) {
   background: color-mix(in srgb, var(--err) 85%, var(--text));
