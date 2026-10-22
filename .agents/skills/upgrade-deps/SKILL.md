@@ -83,8 +83,8 @@ existing checks once; read their current commands and checker pins from
 
 - Python and Rust: frozen installation, lint/format/types and the relevant full test
   suite (`scripts/gate.py all` covers both).
-- Frontend: lint, Svelte/TypeScript checking, tests, production build and generated
-  API-type drift check when its dependency/runtime stack changes.
+- Frontend: lint, TypeScript checking, tests, production build and generated API-type
+  drift check when its dependency/runtime stack changes.
 - Images/toolchains: build affected stages and exercise the existing affected gate
   commands directly in the candidate image, including their documented offline
   environment. A host test pass alone does not verify Linux image tools.

@@ -1,5 +1,5 @@
-// How this machine must launch Playwright's Chromium: shared by the browser test
-// project (vite.config.ts) and the build smoke (scripts/smoke_build.ts).
+// How this machine must launch Playwright's Chromium, for the build smoke
+// (scripts/smoke_build.ts).
 //
 // Playwright 1.61's Chromium build registers a Mach rendezvous port on macOS. The
 // Codex seatbelt sandbox denies that registration; single-process Chromium avoids
@@ -12,7 +12,7 @@ const runtimeProcess = (
   }
 ).process;
 
-export const needsSingleProcessChromium =
+const needsSingleProcessChromium =
   runtimeProcess?.platform === "darwin" &&
   runtimeProcess?.env?.CODEX_SANDBOX === "seatbelt";
 

@@ -11,7 +11,7 @@
  * renders `strong` as a `<mark>` "matched term", `em` as `<em>`).
  *
  * This returns DATA ONLY — never HTML. The caller renders each segment's `text`
- * through normal Svelte interpolation (auto-escaped); NEVER `{@html}`. So special
+ * as a React text child (auto-escaped); NEVER `dangerouslySetInnerHTML`. So special
  * characters (`<`, `>`, `&`) ride through verbatim in `text` and the escape boundary
  * stays intact (republication policy; see reg_webapp/DESIGN.md → Docs library
  * endpoints).

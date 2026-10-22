@@ -51,8 +51,8 @@ user action, no SaaS card kit, sentence case, errors say how to fix it.
    sections that the change touches.
 3. `reg_webapp/frontend/src/tokens.css`: the roles as implemented, held to the front
    matter by `lint:tokens`.
-4. `reg_webapp/frontend/src/lib/ui/`: the primitive barrel plus the one or two
-   primitives closest to what you are building.
+4. `reg_webapp/frontend/src/lib/ui/`: the primitives (one file each) and the one or two
+   closest to what you are building.
 5. The closest existing view: the pattern you extend.
 6. If the change touches a server response shape: `crates/reg-meta/openapi.json` and the
    generated `frontend/src/lib/api-types-rust.ts` before proposing UI.
@@ -68,7 +68,8 @@ Name in the brief which rung you stopped at:
 
 1. **An existing view pattern.** Most "new" views are an existing pattern with different
    data.
-2. **A shared primitive** from `src/lib/ui/` via the barrel (DESIGN.md → "Components").
+2. **A shared primitive** from `src/lib/ui/`, imported by its file (DESIGN.md →
+   "Components").
 3. **A RAC component** for behavior no primitive covers.
 4. **A new CSS Module on semantic roles**, as small as possible. A reusable new unit
    belongs in `lib/ui/` and is a fork to surface first.
@@ -109,6 +110,15 @@ token system.
 - **Pinning.** RAC is pinned exactly. An alpha API (`TreeSection`) is used only under
   that pin and named in the brief.
 
+## Required primitives and classes
+
+- **A verdict or notice is a `ui/StatusRow`** (tone `error`, `warn`, `info`, `ok`;
+  `live` for an alert or status). Never a hand-styled coloured `<p>` or a bare glyph; a
+  data warning, a failed load and a refusal all render as one.
+- **A classed anchor takes the shared `.link` class** (`utilities.css`), so it gets the
+  ink-with-accent-underline look; a plain `<a>` with no class already has it. RAC `Link`
+  inside a styled row keeps its own module class.
+
 ## Swedish text: filtering and sorting
 
 - **Filtering** goes through the existing `rankFilter`/`foldSearch` in `src/lib/`
@@ -145,7 +155,7 @@ token system.
   system (DOM measurement, a listener, a fetch) and returns a cleanup.
 - **StrictMode runs effects twice in dev.** A lifecycle starter is idempotent and
   returns a cleanup.
-- **Fetches** go through the one shared async-resource hook (lands in port PR 1): an
+- **Fetches** go through the one shared async-resource hook (`useAsyncResource`): an
   `AbortController` per request, aborted on unmount or deps change, stale responses
   dropped. No ad-hoc fetch in an effect; never `setState` after an abort.
 - **State** lives in plain-TS stores read with `useSyncExternalStore`; the URL owns
@@ -210,14 +220,12 @@ smallest coherent change that satisfies the brief.
 
 ## Verification
 
-Write no component tests. The port deletes Svelte component tests with their components;
-behavior is pinned black-box by the `flows` driver and the existing pure-TS unit tests
-(AGENTS.md → "Testing policy").
+Write no component tests. Behavior is pinned black-box by the `flows` driver and the
+existing pure-TS unit tests (AGENTS.md → "Testing policy").
 
-1. `uv run --no-project scripts/gate.py frontend`: types, lint (`lint:tokens`), unit
-   tests, build and codegen drift check; none of it is visual. The React lint rules
-   (rules of hooks, compiler-backed, jsx-a11y) arrive with PR 1's Oxlint config; until
-   then the reviewer checks them by reading. Narrower loop: that step's package scripts.
+1. `uv run --no-project scripts/gate.py frontend`: types, lint (Biome, Oxlint with the
+   React rules and jsx-a11y, `lint:tokens`), unit tests, build and codegen drift check;
+   none of it is visual. Narrower loop: that step's package scripts.
 
 2. Render the changed view at the four widths:
 
@@ -230,9 +238,8 @@ behavior is pinned black-box by the `flows` driver and the existing pure-TS unit
    and React or RAC dev warnings. `smoke` is the desktop catalog flow only. Use
    `REG_META_DB=<db_dir>` instead of `--fixture-db` when content matters.
 
-3. Run `dev.sh --fixture-db flows <out-dir>`; compare case count and outcome with
-   `REACT_PORT.md`'s baseline (the Operator compares screenshots). A new flow behavior
-   gets a driver scenario, not a component test.
+3. Run `dev.sh --fixture-db flows <out-dir>`; every case must pass, with no `check(...)`
+   weakened. A new flow behavior gets a driver scenario, not a component test.
 
 4. Run `reg-webapp-design-reviewer` in a clean subagent; fix or explicitly dismiss each
    finding before declaring.

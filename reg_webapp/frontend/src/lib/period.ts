@@ -400,10 +400,10 @@ export interface Coverage {
  * on a 2024-vintage catalog): an inverted band is no band at all, so the track
  * draws nothing and clamps nothing rather than emitting a negative-width cell.
  *
- * This span is the SELECTABLE year range of the period control: the slider
- * passes it to DualThumbTrack's `selectableMin/Max` (#671 hard clamp) and the
- * picker validates its exact year entry against it, so a typed year and a
- * dragged thumb reach exactly the same years. */
+ * This span is the SELECTABLE year range of the period control: the
+ * Timeline clamps its handles to it (#671 hard clamp) and the year entries
+ * validate against it, so a typed year and a dragged handle reach exactly the
+ * same years. */
 export function coverageBandEdges(
   coverage: Coverage | null,
   min: number,

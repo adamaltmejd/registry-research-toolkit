@@ -128,8 +128,7 @@ export function parseRoute(pathname: string): Route {
 }
 
 /** The current location as a vanilla store: React reads it with
- * `useSyncExternalStore` (`use_router.ts`), the unported Svelte views through the
- * `router.svelte.ts` façade. A module-level singleton: one router per SPA. */
+ * `useSyncExternalStore` (`use_router.ts`). A module-level singleton: one router per SPA. */
 class Router {
   /** The location this router is showing, in two halves. `route` moves only when
    * the PATHNAME does: `parseRoute` is pure in the pathname, so a query-only
@@ -220,8 +219,8 @@ export const router = new Router();
  * modifiers, `download`) falls through to the browser. Keyboard activation of an
  * `<a>` dispatches a native `click`, so it's intercepted too.
  *
- * App.tsx listens on the document, so a link anywhere — in a React part, a Svelte
- * island or a portalled dialog — routes. A RAC `Link` routes itself through the
+ * App.tsx listens on the document, so a link anywhere, including one in a portalled
+ * dialog, routes. A RAC `Link` routes itself through the
  * `RouterProvider` and prevents the default, which the first check below honours.
  */
 export function onNavClick(event: MouseEvent): void {

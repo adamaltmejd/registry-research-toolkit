@@ -35,7 +35,7 @@ import {
   projectStore,
   type StagedAdd,
   type StagedRemove,
-} from "./project_store.svelte";
+} from "./project_store";
 import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 
 export interface StagedPickerBand {

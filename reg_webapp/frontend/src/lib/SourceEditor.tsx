@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { BindingEditor } from "./BindingEditor";
 import { fqidSegments, sourceCardHeading } from "./catalog";
-import { sourceNames } from "./catalog_names.svelte";
+import { sourceNames } from "./catalog_names";
 import {
   normalizePeriodRows,
   periodWindowRelation,
@@ -23,10 +23,8 @@ import {
 import { projectStore, type SourcePeriodEditTarget } from "./project_store";
 import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 import { router } from "./router";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import styles from "./SourceEditor.module.css";
-import { SvelteIsland } from "./SvelteIsland";
-import { useRune } from "./svelte_bridge.svelte";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
@@ -34,6 +32,7 @@ import { KeyValue } from "./ui/KeyValue";
 import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
+import { useCatalogRead } from "./use_store_read";
 import {
   issuesUnderPointer,
   jsonPointer,
@@ -121,7 +120,7 @@ export function SourceEditor({
   // the VARIANT it extracts, in the catalog's own words (cached per register);
   // until they land the raw coordinate heads the card. The source's `name` is a
   // generated join key, so it titles nothing; it stays a detail row below.
-  const names = useRune(sourceNames, registerVariant);
+  const names = useCatalogRead(sourceNames, registerVariant);
   const sourceMalformed = source === null;
   const heading = sourceMalformed
     ? "(malformed source)"
@@ -619,10 +618,7 @@ export function SourceEditor({
               />
             ) : (
               <>
-                <SvelteIsland
-                  component={ScopedDataWarnings}
-                  props={warningProps}
-                />
+                <ScopedDataWarnings {...warningProps} />
                 <ul className={styles.bindingList}>
                   {bindings.map((binding, j) => (
                     // Keyed by the store-owned STABLE id (issue #200), so a middle

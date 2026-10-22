@@ -5,7 +5,7 @@ import { type InlineSegment, parseInlineMarkdown } from "./inline_markdown";
 // emphasis grammar (#672): `**…**` → strong (the FTS highlight delimiter), `*…*`
 // and `_…_` → em, everything else literal. The key safety invariant is that nothing
 // is escaped or HTML-ized here — special chars survive verbatim in segment `text`;
-// the auto-escape happens at the Svelte interpolation boundary in DocMentionsPanel.
+// the auto-escape happens at React's text-child boundary in DocMentionsPanel.
 // (A matched span's delimiters ARE dropped — the marker is replaced by the element.)
 
 /** Re-join every segment's text (= the input minus the paired emphasis delimiters). */
@@ -38,7 +38,7 @@ describe("parseInlineMarkdown", () => {
 
   it("preserves `<`, `>`, `&` verbatim in segment text (escape boundary intact)", () => {
     // No HTML is produced here; special chars ride through as literal text so the
-    // downstream Svelte interpolation escapes them. A `<b>` must NOT become markup.
+    // downstream text-child rendering escapes them. A `<b>` must NOT become markup.
     expect(parseInlineMarkdown("foo <b>bar</b> & baz")).toEqual([
       { text: "foo <b>bar</b> & baz", emphasis: null },
     ]);

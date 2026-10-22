@@ -7,8 +7,7 @@
   "ignorePatterns": [
     "dist/**",
     "src/lib/api-types-rust.ts",
-    "src/lib/reg-core-wasm/**",
-    "**/*.svelte"
+    "src/lib/reg-core-wasm/**"
   ],
   "settings": {
     "react": {
@@ -176,13 +175,5 @@
     "react/no-array-index-key": "error",
     "react/only-export-components": "error",
     "react/no-unstable-nested-components": "error"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.svelte.ts"],
-      "rules": {
-        "no-unused-expressions": "off"
-      }
-    }
-  ]
+  }
 }

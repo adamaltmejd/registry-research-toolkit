@@ -11,7 +11,7 @@
  */
 
 import type { RawDraft } from "./project_data";
-import type { ProjectPersistence } from "./project_store.svelte";
+import type { ProjectPersistence } from "./project_store";
 
 /** A persisted draft record. Keyed externally (no `keyPath` on the store), so the
  * stamped `schemaVersion` rides alongside the draft for the load-time gate. */

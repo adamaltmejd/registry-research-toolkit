@@ -295,13 +295,13 @@ export function codeLabel(code: string): string {
   return KNOWN_CODES[code]?.label ?? code;
 }
 
-/** The DOM-anchor id of a source card. Mirrored by `SourceEditor.svelte`'s root
+/** The DOM-anchor id of a source card. Mirrored by `SourceEditor`'s root
  * `id` so the findings panel's click-to-locate can `scrollIntoView`. */
 export function sourceAnchorId(sourceIndex: number): string {
   return `loc-source-${sourceIndex}`;
 }
 
-/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor.svelte`. */
+/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor`. */
 export function bindingAnchorId(
   sourceIndex: number,
   bindingIndex: number,

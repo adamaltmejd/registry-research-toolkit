@@ -23,12 +23,11 @@ import {
   useSettledFilter,
 } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
-import { catalogRootChildren } from "./catalog_names.svelte";
+import { catalogRootChildren } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { safeSourceBindings, safeSourceSlots } from "./project_data";
-import { projectStore } from "./project_store.svelte";
+import { projectStore } from "./project_store";
 import { type Route, router } from "./router";
-import { useRune } from "./svelte_bridge.svelte";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
 import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
@@ -38,6 +37,7 @@ import { StatusRow } from "./ui/StatusRow";
 import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
+import { useCatalogRead, useProjectRead } from "./use_store_read";
 
 /** One row: a provider (or the classification root) at level 1, a register under
  * it. `children` is null while a provider's registers are still loading. */
@@ -203,8 +203,8 @@ export function BrowseTree({ className }: { className?: string }) {
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
   const route = useRoute();
-  const root = useRune(catalogRootChildren, undefined);
-  const counts = useRune(readInProject, undefined);
+  const root = useCatalogRead(catalogRootChildren, undefined);
+  const counts = useProjectRead(readInProject, undefined);
   const providers = (root.value ?? []).filter((c) => c.kind === "provider");
   // One request per provider, all at once: every group starts open.
   const registers = useAsyncResource(

@@ -7,7 +7,7 @@ MONA](https://www.scb.se/mona).
   | ----------------------------------- | ----------------------------------------------------------------------------- |
   | [`crates/`](crates/)                | Rust runtime: the `reg-meta` server (HTTP API and MCP) and the catalog reader |
   | [`reg_meta_build`](reg_meta_build/) | Build the catalog DBs from agency exports (Python, maintainer-only)           |
-  | [`reg_webapp`](reg_webapp/)         | Web app (Svelte SPA over the Rust server): catalog browse + project authoring |
+  | [`reg_webapp`](reg_webapp/)         | Web app (React SPA over the Rust server): catalog browse + project authoring  |
   | [`plugins/`](plugins/)              | The `microdata-tools-se` agent plugin                                         |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.

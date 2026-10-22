@@ -1,12 +1,5 @@
 node_modules/
 dist/
 
-# Vitest browser-mode run artifacts (transient): failure screenshots + attachments.
-__screenshots__/
-.vitest/
-
-# svelte-check --tsgo emission cache (transient).
-.svelte-check/
-
 # reg-core-wasm bindings (`bun run gen:wasm`), generated from crates/reg-core-wasm.
 src/lib/reg-core-wasm/

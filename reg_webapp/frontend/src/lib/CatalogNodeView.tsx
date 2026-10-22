@@ -23,7 +23,7 @@ import {
   nodeLabel,
   rankFilter,
 } from "./catalog";
-import { sharedShow } from "./catalog_names.svelte";
+import { sharedShow } from "./catalog_names";
 import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
 import { Button } from "./ui/Button";

@@ -6,7 +6,7 @@
    tokens. It's CROSS-component (DataTable th, Panel title, KeyValue dt, section
    labels, …), so it can't be component-owned the way a primitive's
    `:global(.ui-btn)` is — it lives in a plain global stylesheet, imported once
-   in main.ts after tokens.css. Being a plain global file (NOT a Svelte <style>),
+   in main.ts after tokens.css. Being a plain global file (NOT a CSS Module),
    the rule is written directly — no `:global()` wrapper needed. */
 .micro-label {
   font-size: var(--micro-label-size);
@@ -132,8 +132,7 @@ input.cbox:indeterminate::after {
   transform: translate(-50%, -50%);
 }
 
-/* App-wide link and text roles, read by the Svelte views still mounted as islands
-   during the React port (they lived in App.svelte's `:global()` block).
+/* App-wide link and text roles.
 
    A link is ink, never pine: pine is ownership (DESIGN.md → Colors). A PLAIN link
    (no class of its own: prose, a member-of line) takes the design system's 1.5px

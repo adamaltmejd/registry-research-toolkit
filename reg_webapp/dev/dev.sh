@@ -346,7 +346,7 @@ fi
 
 dev_url="http://localhost:$frontend_port"
 
-# `networkidle` is NOT "rendered": Svelte swaps fetched data in after the network
+# `networkidle` is NOT "rendered": React swaps fetched data in after the network
 # settles, so a capture right after navigation shows the loading placeholder.
 # Every loading placeholder carries aria-busy="true" (the components' contract
 # with this script — don't key on UI copy); wait for the last one to clear.

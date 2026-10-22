@@ -61,7 +61,10 @@ more than one `primary` button per view.
 
 Changed views compose the shared primitives (DESIGN.md → "Components"). A hand-rolled
 near-duplicate of one — a bespoke table, button, tag, empty state or key-value list,
-visible in the diff as new markup with its own CSS Module — is at least a `P2`.
+visible in the diff as new markup with its own CSS Module — is at least a `P2`. A
+verdict, failed load or warning drawn as a hand-styled coloured line instead of a
+`ui/StatusRow`, or a classed anchor that does not take the shared `.link` class, is a
+`P2`.
 
 ### Behavior layer and React correctness
 
@@ -82,10 +85,9 @@ gotchas" and "React 19 rules"; a breach visible in the diff is a finding:
   `forwardRef` or `.Provider` in new code.
 
 A new component test (a render of a component asserting its markup, classes, props or
-internal state) is a `P2` defect: the port pins behavior only through the `flows` driver
-and pure-TS unit tests. Rules of hooks, the compiler-backed rules and jsx-a11y become
-lint with PR 1's Oxlint config: until then check them by reading; after, don't re-report
-what lint fails.
+internal state) is a `P2` defect: behavior is pinned only through the `flows` driver and
+pure-TS unit tests. Rules of hooks, the compiler-backed rules and jsx-a11y are Oxlint
+rules: don't re-report what lint fails.
 
 ### ARIA and focus semantics
 
@@ -183,8 +185,8 @@ printed console output alongside it.
 
 Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
 tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.
-The frontend gate renders nothing app-level, and jsx-a11y (lint from PR 1) is a floor,
-not the axe audit.
+The frontend gate renders nothing app-level, and jsx-a11y (Oxlint) is a floor, not the
+axe audit.
 
 ### When rendering is unavailable
 
@@ -200,9 +202,8 @@ Fill every field of the rendered template and report the routes, states and view
 you actually inspected. Say whether captures are author iteration or retained gate
 evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`) covers only its driver
 scenarios (the `/project` error and retry states, catalog-authored draft and period
-flows, the deliberate replacement); on the React port compare case count and outcome
-with `REACT_PORT.md`'s baseline (the Operator compares screenshots), where a difference
-the brief does not name is a finding. Approval needs evidence for every surface changed.
+flows, the deliberate replacement); every case must pass, and a `check(...)` that was
+weakened is a finding. Approval needs evidence for every surface changed.
 
 ## Severity, findings and fixes
 

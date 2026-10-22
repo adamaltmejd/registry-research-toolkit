@@ -1,8 +1,7 @@
 /**
  * The active "project window" runtime layer — a MODULE-SINGLETON plain-TS store
- * (the router's shape: one instance per SPA, getters plus `subscribe`; the
- * unported Svelte views read it through `window.svelte.ts`). It is the SINGLE read/write path for the active
- * study window (`{from, to}` int years, or `null` = no window → full history);
+ * (the router's shape: one instance per SPA, getters plus `subscribe`). It is the
+ * SINGLE read/write path for the active study window (`{from, to}` int years, or `null` = no window → full history);
  * the header year slider and (later, #615) each page's period picker go through
  * it rather than touching the project store or `localStorage` directly.
  *

@@ -21,7 +21,7 @@ import {
   pickerWindowYears,
   registerPrefixOf,
 } from "./catalog";
-import { registerRead } from "./catalog_names.svelte";
+import { registerRead } from "./catalog_names";
 import {
   clampYearPeriodWire,
   clampYearWindow,
@@ -42,7 +42,6 @@ import {
   type StagedApplyPayload,
   stagedApplyRefusal,
 } from "./staged_picker";
-import { useRune } from "./svelte_bridge.svelte";
 import { Timeline } from "./Timeline";
 import { Button } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
@@ -53,6 +52,7 @@ import { Tag } from "./ui/Tag";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
+import { useCatalogRead } from "./use_store_read";
 
 interface Props extends PeriodProps {
   provider: string;
@@ -223,7 +223,7 @@ export function ConceptGroupView({
   const graphResource = useAsyncResource(ref, (signal) =>
     getGraph(ref, { signal }),
   );
-  const registerNode = useRune(registerRead, registerFqid).value;
+  const registerNode = useCatalogRead(registerRead, registerFqid).value;
 
   const period = useQueryParam("period");
   const memberHint = useQueryParam("member");

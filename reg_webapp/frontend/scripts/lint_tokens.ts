@@ -5,10 +5,9 @@
 //    components consume SEMANTIC roles only. A raw color literal or a raw font stack
 //    inside a component's <style> block renders identically today and still breaks
 //    the light-first, dark-ready contract (the [data-theme="dark"] remap cannot reach
-//    it). Screenshots cannot catch that bypass and biome does not lint <style> blocks
-//    inside .svelte, so this scans every .svelte <style> block, every stylesheet
-//    under src/ but tokens.css (CSS Modules included) and every `style={{…}}` object
-//    in a .tsx for a literal that should be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
+//    it). Screenshots cannot catch that bypass and biome does not lint CSS values,
+//    so this scans every stylesheet under src/ but tokens.css (CSS Modules
+//    included) and every `style={{…}}` object in a .tsx for a literal that should be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
 //    mask is alpha/luminance geometry, not palette, so `#000` there is the only
 //    correct spelling). Named colors (`transparent`, `currentColor`, the
 //    `black`/`white` in a color-mix darkening) are not flagged — they are not palette
@@ -26,10 +25,9 @@
 //
 // 3. Reference resolution. A `var(--name)` whose name no stylesheet defines renders
 //    the fallback (or the property's initial value) without a warning, so a typo like
-//    `var(--txet)` ships silently. Every reference in a .svelte, .css or .tsx file under
+//    `var(--txet)` ships silently. Every reference in a .css or .tsx file under
 //    src/ must name a custom property tokens.css declares or the same file declares (in
-//    a <style> block, an inline `style="--x: …"`, a `style:--x` directive, or a
-//    `"--x":` key of a React style object). A property
+//    a rule, or as a `"--x":` key of a React style object). A property
 //    set in one file and read in another is named in CROSS_FILE with its reason.
 import { lint, type ResolvedDimension } from "@google/design.md/linter";
 
@@ -38,7 +36,6 @@ const failures: string[] = [];
 
 // ── 1. Token discipline ──────────────────────────────────────────────────────
 
-const STYLE_BLOCK = /<style\b[^>]*>([\s\S]*?)<\/style>/g;
 const BLOCK_COMMENT = /\/\*[\s\S]*?\*\//g;
 // A declaration: property, colon, value up to the next `;` or brace. Rough on purpose —
 // it only has to find literals, not parse CSS.
@@ -61,8 +58,8 @@ const STYLE_OBJECT = /style=\{\{([\s\S]*?)\}\}/g;
 const OBJECT_ENTRY =
   /([\w-]+|"[^"]*"|'[^']*')\s*:\s*("[^"]*"|'[^']*'|`[^`]*`|[^,}]+)/g;
 
-/** The style bodies of one file, each with its offset into `source`: a .svelte's
- * <style> blocks, a stylesheet whole, a .tsx's style objects. */
+/** The style bodies of one file, each with its offset into `source`: a stylesheet
+ * whole, a .tsx's style objects. */
 function styleBodies(
   source: string,
   file: string,
@@ -70,13 +67,10 @@ function styleBodies(
   if (file.endsWith(".css")) {
     return [{ body: source, start: 0, entry: DECLARATION }];
   }
-  const [blocks, entry] = file.endsWith(".tsx")
-    ? [STYLE_OBJECT, OBJECT_ENTRY]
-    : [STYLE_BLOCK, DECLARATION];
-  return [...source.matchAll(blocks)].map((block) => ({
+  return [...source.matchAll(STYLE_OBJECT)].map((block) => ({
     body: block[1],
     start: (block.index ?? 0) + block[0].indexOf(block[1]),
-    entry,
+    entry: OBJECT_ENTRY,
   }));
 }
 
@@ -114,25 +108,22 @@ function tokenViolations(source: string, file: string): string[] {
 // The rule's own fixture: it must flag literals and honour the mask exemption, or a
 // regex edit could silently pass every file.
 const SELF_CHECK = [
-  "<div></div>",
-  "<style>",
-  "  .a { color: #fff; }",
-  "  .b { background: rgb(1 2 3 / 50%); }",
-  "  .c { mask-image: linear-gradient(to right, #000, transparent); }",
-  "  .d { font-family: ui-monospace, monospace; }",
-  "  .e { color: var(--text); border: 1px solid var(--border); font-family: var(--font-mono); }",
-  "  .f { background: color-mix(in srgb, var(--err) 85%, black); }",
-  "</style>",
+  ".a { color: #fff; }",
+  ".b { background: rgb(1 2 3 / 50%); }",
+  ".c { mask-image: linear-gradient(to right, #000, transparent); }",
+  ".d { font-family: ui-monospace, monospace; }",
+  ".e { color: var(--text); border: 1px solid var(--border); font-family: var(--font-mono); }",
+  ".f { background: color-mix(in srgb, var(--err) 85%, black); }",
 ].join("\n");
-const selfCheckLines = tokenViolations(SELF_CHECK, "X.svelte")
+const selfCheckLines = tokenViolations(SELF_CHECK, "X.module.css")
   .map((v) => v.split(":")[1])
   .join(",");
-if (selfCheckLines !== "3,4,6") {
+if (selfCheckLines !== "1,2,4") {
   failures.push(
-    `token-discipline self-check flagged lines [${selfCheckLines}], expected [3,4,6]`,
+    `token-discipline self-check flagged lines [${selfCheckLines}], expected [1,2,4]`,
   );
 }
-// The same rule over a React style object and a CSS Module.
+// The same rule over a React style object and a one-line CSS Module.
 const TSX_SELF_CHECK = [
   "<div style={{ color: '#fff', width: 1 }} />",
   "<div style={{ fontFamily: 'ui-monospace, monospace' }} />",
@@ -157,12 +148,11 @@ if (flaggedLines(CSS_SELF_CHECK, "X.module.css") !== "2") {
 
 // tokens.css is the one file whose job is to hold the literals.
 const disciplinedFiles = [
-  ...new Bun.Glob("src/**/*.{svelte,css,tsx}").scanSync({ cwd: ROOT }),
+  ...new Bun.Glob("src/**/*.{css,tsx}").scanSync({ cwd: ROOT }),
 ]
   .filter((file) => file !== "src/tokens.css")
   .sort();
-// A broken glob would pass vacuously. Counted over every styled file, not the
-// .svelte ones, which the React port is deleting.
+// A broken glob would pass vacuously.
 if (disciplinedFiles.length <= 30) {
   failures.push(
     `token discipline saw only ${disciplinedFiles.length} styled files under src/`,
@@ -318,19 +308,15 @@ const CROSS_FILE: Record<string, string> = {
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;
-// `--x:` in CSS or an inline style attribute, a Svelte `style:--x` directive, or a
-// `"--x":` key in a React style object.
+// `--x:` in CSS, or a `"--x":` key in a React style object.
 const DECLARED = /(--[\w-]+)["']?\s*[:=]/g;
-const HTML_COMMENT = /<!--[\s\S]*?-->/g;
 
 const declaredIn = (text: string): Set<string> =>
   new Set([...text.matchAll(DECLARED)].map((m) => m[1]));
 const TOKEN_PROPERTIES = declaredIn(stripComments(tokensCss));
 
 function unresolvedReferences(source: string, file: string): string[] {
-  const text = stripComments(source).replace(HTML_COMMENT, (m) =>
-    m.replace(/[^\n]/g, " "),
-  );
+  const text = stripComments(source);
   const local = declaredIn(text);
   const out: string[] = [];
   for (const ref of text.matchAll(VAR_REFERENCE)) {
@@ -345,29 +331,24 @@ function unresolvedReferences(source: string, file: string): string[] {
 }
 
 const REFERENCE_SELF_CHECK = [
-  "<div style:--local-a={1} style='--local-b: 2'></div>",
-  "<style>",
-  "  .a { color: var(--text); width: var(--local-a); height: var(--local-b); }",
-  "  .b { color: var(--txet); }",
-  "  .c { --local-c: 1px; margin: var(--local-c); }",
-  "  .d { padding: var(--code-depth, 1rem) var(--nope, 0); }",
-  "  /* var(--in-a-comment) */",
-  "</style>",
+  '<div style={{ "--local-a": 1, "--local-b": 2 }} />',
+  ".a { color: var(--text); width: var(--local-a); height: var(--local-b); }",
+  ".b { color: var(--txet); }",
+  ".c { --local-c: 1px; margin: var(--local-c); }",
+  ".d { padding: var(--code-depth, 1rem) var(--nope, 0); }",
+  "/* var(--in-a-comment) */",
 ].join("\n");
-const referenceSelfCheck = unresolvedReferences(
-  REFERENCE_SELF_CHECK,
-  "X.svelte",
-)
+const referenceSelfCheck = unresolvedReferences(REFERENCE_SELF_CHECK, "X.tsx")
   .map((v) => v.split(":")[1])
   .join(",");
-if (referenceSelfCheck !== "4,6") {
+if (referenceSelfCheck !== "3,5") {
   failures.push(
-    `reference-resolution self-check flagged lines [${referenceSelfCheck}], expected [4,6]`,
+    `reference-resolution self-check flagged lines [${referenceSelfCheck}], expected [3,5]`,
   );
 }
 
 const styledFiles = [
-  ...new Bun.Glob("src/**/*.{svelte,css,tsx}").scanSync({ cwd: ROOT }),
+  ...new Bun.Glob("src/**/*.{css,tsx}").scanSync({ cwd: ROOT }),
 ].sort();
 for (const file of styledFiles) {
   const source = await Bun.file(`${ROOT}/${file}`).text();
