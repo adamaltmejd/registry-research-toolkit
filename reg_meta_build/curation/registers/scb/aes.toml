@@ -3,6 +3,16 @@ provider = "scb"
 slug = "aes"
 native_id = "301"
 
+# DIFFMAIN (the main difficulty, one answer) is one variable under three
+# edition owners and not a DIFFTYPE_* item, so it stays out of the
+# svarighet-typ-fold sibling group.
+[[group]]
+register = "scb/aes"
+key = "framsta-svarighet"
+label = "Främsta svårigheten vid utbildningsdeltagande"
+axes = []
+members = [{ variable = "svarighet-vid-utbildningsdeltagande-personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-framsta-svarigheten" }, { variable = "svarighet-vid-utbildningsdeltagande-personen-svarar-pa-fragan-vilken-var-den-viktigaste-anledningen-till-att-du-inte-ville-delta-i-nagon-utbildning-framsta-svarigheten" }, { variable = "svarighet-vid-utbildningsdeltagande-vilken-var-den-viktigaste-anledningen-framsta-svarigheten" }]
+
 [[variant]]
 native_id = "301.849"
 slug = "_default"
