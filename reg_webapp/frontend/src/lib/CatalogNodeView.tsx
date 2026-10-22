@@ -7,8 +7,10 @@ import {
 import { BindingLeafView } from "./BindingLeafView";
 import { useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
-import ClassificationGroupView from "./ClassificationGroupView.svelte";
-import ClassificationLeafView from "./ClassificationLeafView.svelte";
+import {
+  ClassificationGroupView,
+  ClassificationLeafView,
+} from "./ClassificationView";
 import {
   axisNoun,
   catalogHref,
@@ -22,7 +24,6 @@ import {
 import { sharedShow } from "./catalog_names.svelte";
 import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
-import { SvelteIsland } from "./SvelteIsland";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
@@ -111,12 +112,13 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
       // the group or family page with this edition's tab active (#1116).
       const key = node.family?.key ?? node.dimensions[0]?.key ?? null;
       return key ? (
-        <SvelteIsland
-          component={ClassificationGroupView}
-          props={{ key, activeFqid: node.fqid, initialActiveNode: node }}
+        <ClassificationGroupView
+          groupKey={key}
+          activeFqid={node.fqid}
+          initialActiveNode={node}
         />
       ) : (
-        <SvelteIsland component={ClassificationLeafView} props={{ node }} />
+        <ClassificationLeafView node={node} />
       );
     }
     default:
