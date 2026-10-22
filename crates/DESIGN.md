@@ -358,9 +358,9 @@ an edge on, and the edge triple `(provider, register, variable)` is the binding 
   never auto-derived. Within-register `var_id` reuse is the variable itself. The writer
   requires both endpoints to be live, so a lookup never needs to follow an edge.
 - **`replaced_by`**: directional succession. Registers, variables and classification
-  editions each have one. A retired register or variable ref resolves to its terminal
-  successor at the manifest's policy year; a split is ambiguous rather than an arbitrary
-  branch (`succession_terminal`, see the build design note).
+  editions each have one. The writer requires both endpoints to be live, so a ref to an
+  entity the catalog does not hold is `not_found`; the reader never redirects it to a
+  successor.
 - **Representation succession**: curated `representation_replaced_by` rows record a
   column rename within a variable, optionally scoped to one variant.
 

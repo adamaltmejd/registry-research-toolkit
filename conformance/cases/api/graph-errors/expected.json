@@ -7,7 +7,14 @@
     "status": 409,
     "json": {
       "/error/code": "ambiguous_ref",
-      "/error/fields/candidates/*/fqid": ["scb/alpha/alder", "scb/alpha/kon"]
+      "/error/fields/candidates/*/fqid": ["scb/alpha/kon", "scb/beta/kon"]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/candidates/*/fqid": ["scb/alpha/kon", "scb/beta/kon"]
     }
   }
 ]

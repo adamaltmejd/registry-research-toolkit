@@ -190,9 +190,9 @@ export function triggerDownload(blob: Blob, filename: string): void {
 // `show` summarizes any ref (no ref is the catalog root); the heavy parts are
 // facets, each its own request: a variable's `states`, `warnings`, `lineage` and
 // relationship `graph`, and the `values` of a classification or of one state. A
-// retired FQID resolves to its terminal successor (the result carries the
-// canonical `fqid`, no redirect); a ref that a split makes ambiguous is a 409
-// `ambiguous_ref` whose message names the candidates.
+// bare name resolves to its entity (the result carries the canonical `fqid`, no
+// redirect); a name several entities share is a 409 `ambiguous_ref` whose message
+// names the candidates.
 
 /** The Rust server's `context`: branding, artifact identity and headline counts. */
 export type Context = RustSchemas["Context"];

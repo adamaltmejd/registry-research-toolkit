@@ -142,13 +142,6 @@ def prepare_resolved_metadata(
     classification_ids = {
         item.slug: _classification_id(item.slug) for item in classifications
     }
-    historical = {item.target: item for item in metadata.historical_predecessors}
-    for target, declaration in historical.items():
-        live = register_ids if declaration.kind == "register" else variable_ids
-        if target in live:
-            raise ValueError(
-                f"obsolete historical predecessor declaration now names a live entity: {target}"
-            )
     representations = set()
     states = {}
     for variable in variables:
@@ -292,8 +285,7 @@ def prepare_resolved_metadata(
         kind = parse_fqid(edge.predecessor).kind
         targets = register_ids if kind == "register" else variable_ids
         table = "register_replaced_by" if kind == "register" else "variable_replaced_by"
-        if edge.predecessor not in targets:
-            require(historical, edge.predecessor, "succession predecessor")
+        require(targets, edge.predecessor, "succession predecessor")
         require(targets, edge.successor, "succession successor")
         # Only the variable grain stores `note`: validate_built_db selects the
         # vintage-lift edges by it.

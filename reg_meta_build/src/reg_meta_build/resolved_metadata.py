@@ -228,23 +228,6 @@ class ResolvedSuccession(_ResolvedModel):
         return self
 
 
-class ResolvedHistoricalPredecessor(_ResolvedModel):
-    """One reviewed absent predecessor; this declaration creates no catalog entity."""
-
-    target: str
-    kind: Literal["register", "variable"]
-    reason: str
-    decision_reference: str
-
-    _text = field_validator("reason", "decision_reference")(_require_trimmed)
-
-    @model_validator(mode="after")
-    def _kind(self) -> Self:
-        expected = "register" if self.kind == "register" else "variable"
-        _fqid(self.target, expected)
-        return self
-
-
 class ResolvedVariantRef(_ResolvedModel):
     register_ref: str = Field(alias="register")
     variant: str
@@ -345,7 +328,6 @@ class ResolvedMetadata(_ResolvedModel):
     tags: tuple[ResolvedTag, ...] = ()
     variable_same_as: tuple[ResolvedVariableSameAs, ...] = ()
     successions: tuple[ResolvedSuccession, ...] = ()
-    historical_predecessors: tuple[ResolvedHistoricalPredecessor, ...] = ()
     variant_successions: tuple[ResolvedVariantSuccession, ...] = ()
     representation_successions: tuple[ResolvedRepresentationSuccession, ...] = ()
     classification_derivations: tuple[ResolvedClassificationDerivation, ...] = ()
@@ -434,17 +416,6 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
         ((state_reference_key(w.consumer), w.kind) for w in metadata.lineage_warnings),
         "lineage warning",
     )
-    _unique(
-        (item.target for item in metadata.historical_predecessors),
-        "historical predecessor declaration",
-    )
-    unused = {h.target for h in metadata.historical_predecessors} - {
-        e.predecessor for e in metadata.successions
-    }
-    if unused:
-        raise ValueError(
-            f"unused historical predecessor declarations: {sorted(unused)}"
-        )
 
 
 def state_reference_key(ref: ResolvedStateRef) -> tuple[str, str, str, str]:

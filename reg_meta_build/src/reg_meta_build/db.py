@@ -506,8 +506,7 @@ CREATE TABLE IF NOT EXISTS resolver_column (
 -- follows the sole active successor; a split (several active successors) is its own
 -- terminal. A node whose terminal is itself has no row.
 CREATE TABLE IF NOT EXISTS succession_terminal (
-    -- Register, binding or class/ FQID of a node with an active outbound edge;
-    -- may be retired (no live row).
+    -- Register, binding or class/ FQID of a node with an active outbound edge.
     fqid TEXT PRIMARY KEY,
     -- FQID of the same kind where the walk stops; never equal to fqid.
     terminal_fqid TEXT NOT NULL CHECK (terminal_fqid <> fqid)

@@ -2,43 +2,17 @@
   {
     "status": 200,
     "json": {
-      "/data/focus_id": "scb/alpha/kon",
-      "/data/nodes/*/fqid": ["scb/alpha/kon", "scb/alpha/later", "scb/alpha/alder", "scb/alpha/split"],
-      "/data/nodes/*/states/*/variant": [["annual", "older"], [], ["annual"], []],
-      "/data/nodes/*/states/*/representation_run_id": [[0, 1], [], [0], []],
-      "/data/edges/*/id": [
-        "succession:scb/alpha/later->scb/alpha/kon",
-        "succession:scb/alpha/split->scb/alpha/alder"
-      ],
-      "/data/edges/*/effective_year": [2099, null]
-    }
-  },
-  {
-    "status": 409,
-    "json": {
-      "/error/code": "ambiguous_ref",
-      "/error/fields/ref": "scb/alpha/split",
-      "/error/fields/candidates": [
-        {"fqid": "scb/alpha/alder", "kind": "variable", "name": "Ålder"},
-        {"fqid": "scb/alpha/kon", "kind": "variable", "name": "Kön"}
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
       "/data/focus_id": "scb/beta/fodland",
-      "/data/nodes/*/fqid": ["scb/beta/fodland", "scb/alpha/pre-split", "scb/alpha/alder", "scb/alpha/kon"],
+      "/data/nodes/*/fqid": ["scb/beta/fodland", "scb/alpha/alder", "scb/alpha/kon"],
       "/data/edges/*/id": [
-        "succession:scb/alpha/pre-split->scb/beta/fodland",
         "succession:scb/beta/fodland->scb/alpha/alder",
         "succession:scb/beta/fodland->scb/alpha/kon",
         "succession:representation:scb/beta/fodland:FodLandKod:->scb/beta/fodland:FodLand:"
       ],
-      "/data/edges/3/source_column": "FodLandKod",
-      "/data/edges/3/target_column": "FodLand",
-      "/data/edges/3/label": "Code column renamed",
-      "/data/edges/3/effective_year": 2011
+      "/data/edges/2/source_column": "FodLandKod",
+      "/data/edges/2/target_column": "FodLand",
+      "/data/edges/2/label": "Code column renamed",
+      "/data/edges/2/effective_year": 2011
     }
   },
   {

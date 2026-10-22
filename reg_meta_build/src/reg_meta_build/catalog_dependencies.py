@@ -1263,23 +1263,10 @@ def resolve_metadata_dependencies(
                 result.append(item)
         return tuple(result)
 
-    historical = {h.target: h for h in metadata.historical_predecessors}
-    for target, declaration in historical.items():
-        if (declaration.kind, target) in available:
-            raise ValueError(
-                f"obsolete historical predecessor declaration now names a live entity: {target}"
-            )
-        if (declaration.kind, target) in withheld:
-            raise ValueError(
-                f"historical predecessor is a withheld selected entity: {target}"
-            )
     successions = selected(
         metadata.successions,
         "successions",
-        lambda e, o: [
-            True if e.predecessor in historical else entity(e.predecessor, o),
-            entity(e.successor, o),
-        ],
+        lambda e, o: [entity(e.predecessor, o), entity(e.successor, o)],
     )
     updates = {
         "variable_groups": tuple(groups),
@@ -1291,11 +1278,6 @@ def resolve_metadata_dependencies(
             lambda e, o: [entity(e.a, o), entity(e.b, o)],
         ),
         "successions": successions,
-        "historical_predecessors": tuple(
-            h
-            for h in metadata.historical_predecessors
-            if any(e.predecessor == h.target for e in successions)
-        ),
         "variant_successions": selected(
             metadata.variant_successions,
             "variant_successions",

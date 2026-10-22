@@ -1,5 +1,5 @@
 {
-  "note": "Twin of logical/edges-unheld-owner: under holdings an unheld variable has no graph, and as a held variable's successor it is a bare node (its name, no states); under reference it is drawn whole. The unheld-terminal twins are api/show-retired (refs are shared). Fails if graph hydrates or resolves a variable outside the read scope.",
+  "note": "Twin of logical/edges-unheld-owner: under holdings an unheld variable has no graph, and as a held variable's successor it is a bare node (its name, no states); under reference it is drawn whole. Its show twin is api/show-unheld-scope. Fails if graph hydrates or resolves a variable outside the read scope.",
   "fixture": "reader/logical",
   "requests": [
     {"operation": "graph", "path": "/api/graph/scb/example/reference"},

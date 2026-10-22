@@ -1,0 +1,14 @@
+{
+  "note": "Fails if show resolves an unheld variable or register under holdings scope, refuses it under reference scope, or refuses a classification under holdings on a steward catalog: classifications are shared, not held.",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/scb/example/reference"},
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example/reference",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "show", "path": "/api/catalog/fk/unheld"},
+    {"operation": "show", "path": "/api/catalog/fk/unheld", "query": {"scope": "reference"}},
+    {"operation": "show", "path": "/api/catalog/class/example-codes"}
+  ]
+}

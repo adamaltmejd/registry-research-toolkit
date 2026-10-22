@@ -81,10 +81,10 @@ renders the error message rather than re-validating.
   answers a `kind`-tagged node: `root`, `provider`, `register`, `variable`,
   `classification_root`, `classification`, `concept_group`, `classification_group` or
   `classification_family`.
-- **A retired ref resolves to its terminal successor, without a redirect.** `show`
-  answers the successor's node, and its `data.fqid` is the canonical FQID; the page uses
-  that FQID for every facet call. A split (more than one terminal) is `ambiguous_ref`
-  (409), shown in the page's error banner.
+- **A bare-name ref resolves to its entity, without a redirect.** `show` answers the
+  entity's node, and its `data.fqid` is the canonical FQID; the page uses that FQID for
+  every facet call. A name several entities share is `ambiguous_ref` (409), shown in the
+  page's error banner. A FQID the catalog does not hold is `not_found`.
 - **The variable page fetches its facets separately.** `CatalogNodeView` loads the
   variable's full state history (`states`) before it renders `BindingLeafView`. The leaf
   then fetches the `?period` subset (`states` narrowed by `period`, `variant` and
@@ -1760,7 +1760,7 @@ orientation map. Read GETs are edge-cacheable, write POSTs are not.
   | ------ | ------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------- |
   | GET    | `/api/context`                       | Rust   | `context`: branding, build info, period span, catalog sizes.                                                              |
   | GET    | `/api/search`                        | Rust   | `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                      |
-  | GET    | `/api/catalog`, `/api/catalog/{ref}` | Rust   | `show`: the root, or any node by ref (`kind`-tagged); a retired ref answers its terminal successor.                       |
+  | GET    | `/api/catalog`, `/api/catalog/{ref}` | Rust   | `show`: the root, or any node by ref (`kind`-tagged).                                                                     |
   | GET    | `/api/states/{ref}`                  | Rust   | A variable's states, cursor-paged; `period`, `variant`, `value_set_version` narrow.                                       |
   | GET    | `/api/warnings/{ref}`                | Rust   | A register's or variable's data warnings; `period`, `variant`, `representation`, `unassigned_only` filter.                |
   | GET    | `/api/values/{ref}`                  | Rust   | A classification's codes, or a variable state's value set (`state=`), cursor-paged; `q` filters, `total`.                 |

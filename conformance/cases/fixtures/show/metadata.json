@@ -45,51 +45,13 @@
   ],
   "variable_same_as": [{"a": "scb/alpha/kon", "b": "scb/beta/kon"}],
   "successions": [
-    {"predecessor": "scb/old-alpha", "successor": "scb/alpha"},
-    {"predecessor": "scb/alpha/sex", "successor": "scb/alpha/kon"},
-    {"predecessor": "scb/alpha/pre-split", "successor": "scb/beta/fodland"},
     {"predecessor": "scb/beta/fodland", "successor": "scb/alpha/kon"},
     {"predecessor": "scb/beta/fodland", "successor": "scb/alpha/alder"},
-    {"predecessor": "scb/alpha/split", "successor": "scb/alpha/kon"},
-    {"predecessor": "scb/alpha/split", "successor": "scb/alpha/alder"},
-    {"predecessor": "scb/alpha/later", "successor": "scb/alpha/kon", "effective_year": 2099},
     {"predecessor": "scb/beta/kon", "successor": "scb/alpha/kon", "effective_year": 2099},
     {"predecessor": "scb/beta/d-start", "successor": "scb/beta/d-left"},
     {"predecessor": "scb/beta/d-start", "successor": "scb/beta/d-right"},
     {"predecessor": "scb/beta/d-left", "successor": "scb/beta/d-end"},
     {"predecessor": "scb/beta/d-right", "successor": "scb/beta/d-end"}
-  ],
-  "historical_predecessors": [
-    {
-      "target": "scb/old-alpha",
-      "kind": "register",
-      "reason": "Renamed synthetic register",
-      "decision_reference": "fixture"
-    },
-    {
-      "target": "scb/alpha/sex",
-      "kind": "variable",
-      "reason": "Renamed synthetic variable",
-      "decision_reference": "fixture"
-    },
-    {
-      "target": "scb/alpha/pre-split",
-      "kind": "variable",
-      "reason": "Synthetic variable replaced by a live variable that splits",
-      "decision_reference": "fixture"
-    },
-    {
-      "target": "scb/alpha/split",
-      "kind": "variable",
-      "reason": "Split synthetic variable",
-      "decision_reference": "fixture"
-    },
-    {
-      "target": "scb/alpha/later",
-      "kind": "variable",
-      "reason": "Synthetic variable replaced after the policy year",
-      "decision_reference": "fixture"
-    }
   ],
   "variant_successions": [
     {

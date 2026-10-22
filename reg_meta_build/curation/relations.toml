@@ -69,8 +69,7 @@
 #      anninkf18 (VarId 40264) 2018–2023  "…, 2018 års definition"
 #    Modeled as a replaced_by succession, NOT same_as: the definitions genuinely
 #    differ across eras, so the variables are superseded, not interchangeable
-#    (see #375). All three predecessors are live, so the 404→301 redirect stays
-#    dormant; the edges drive the cross-era "same view" grouping.
+#    (see #375). The edges drive the cross-era "same view" grouping.
 [[edge]]
 type = "replaced_by"
 from = "scb/lisa/anninkf"

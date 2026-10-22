@@ -21,10 +21,6 @@
     }
   },
   {
-    "status": 200,
-    "json": {"/data/kind": "variable", "/data/fqid": "scb/alpha/kon"}
-  },
-  {
     "status": 404,
     "json": {"/error/code": "not_found", "/error/fields/ref": "scb/alpha/missing"}
   },

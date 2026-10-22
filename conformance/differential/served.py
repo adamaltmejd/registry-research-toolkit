@@ -16,7 +16,7 @@ original with the configured seed:
 - ``search`` untyped and per ``type``, two pages, for the search-eval corpus terms
   and the edge terms;
 - ``show`` of the root, every provider, register, classification, classification
-  group and family, sampled concept groups and variables, and every retired ref;
+  group and family, and sampled concept groups and variables;
 - ``graph`` of the sampled variables, groups and every classification; ``lineage``
   of the sampled variables;
 - ``states`` of the sampled variables (whole history and a sampled year) and
@@ -159,21 +159,6 @@ def _catalog_requests(
     shown += [("group", g) for g in groups]
     shown += [("classification", c) for c in classifications]
     shown += [("variable", v[0]) for v in variables]
-    # A succession predecessor with no row of its own.
-    shown += [
-        ("retired", f)
-        for (f,) in conn.execute(
-            "SELECT predecessor_provider || '/' || predecessor_register FROM "
-            "register_replaced_by WHERE NOT EXISTS (SELECT 1 FROM register r "
-            "JOIN provider p USING(provider_id) WHERE p.slug = predecessor_provider "
-            "AND r.slug = predecessor_register) UNION SELECT predecessor_provider "
-            "|| '/' || predecessor_register || '/' || predecessor_variable FROM "
-            "variable_replaced_by WHERE NOT EXISTS (SELECT 1 FROM variable v "
-            "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-            "WHERE p.slug = predecessor_provider AND r.slug = predecessor_register "
-            "AND v.slug = predecessor_variable) ORDER BY 1"
-        )
-    ]
     terms = list(dict.fromkeys([*eval_terms(), *EDGE_TERMS]))
     registers = register_samples(conn, catalog, scopes, seed)
 

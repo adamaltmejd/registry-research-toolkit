@@ -1,17 +1,10 @@
 {
-  "note": "Fails if a variable's full history loses a state or its spelling. The retired step fails if states stops resolving a retired ref to its terminal successor, or drops the period filter on it.",
+  "note": "Fails if a variable's full history loses a state or its spelling.",
   "fixture": "compiled",
   "requests": [
     {
       "operation": "states",
       "path": "/api/states/scb/example/value"
-    },
-    {
-      "operation": "states",
-      "path": "/api/states/scb/example/retired",
-      "query": {
-        "period": "2018"
-      }
     }
   ]
 }
