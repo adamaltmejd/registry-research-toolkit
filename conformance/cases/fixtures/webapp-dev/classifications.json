@@ -50,5 +50,22 @@
         "label": "Hög"
       }
     ]
+  },
+  {
+    "slug": "sni-test",
+    "short_name": "SNI",
+    "name": "Näringsgrensindelning – kodträd",
+    "codes": [
+      {"code": "A", "label": "Jordbruk, skogsbruk och fiske", "level": 1},
+      {"code": "01", "label": "Jordbruk och jakt", "level": 2, "parent_code": "A"},
+      {"code": "011", "label": "Odling av ettåriga växter", "level": 3, "parent_code": "01"},
+      {"code": "0111", "label": "Odling av spannmål", "level": 4, "parent_code": "011"},
+      {"code": "0112", "label": "Odling av ris", "level": 4, "parent_code": "011"},
+      {"code": "012", "label": "Odling av fleråriga växter", "level": 3, "parent_code": "01"},
+      {"code": "02", "label": "Skogsbruk", "level": 2, "parent_code": "A"},
+      {"code": "B", "label": "Utvinning av mineral", "level": 1},
+      {"code": "05", "label": "Kolutvinning", "level": 2, "parent_code": "B"},
+      {"code": "U", "label": "Okänd verksamhet", "level": 1}
+    ]
   }
 ]
