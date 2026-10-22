@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-aria-components";
 import {
   type ClassificationGraphNode,
@@ -215,6 +214,21 @@ async function showClassificationSubject(
 // would land on <body>.
 let refocusTabs = false;
 
+// A ref callback, not an effect: RAC renders a collection's items a pass after
+// the component, so an effect would find no tab yet. The flag is cleared only
+// by the selected tab of the page that renders it, so the page being left
+// cannot consume it.
+function focusOnReturn(element: HTMLDivElement | null): void {
+  if (
+    element !== null &&
+    refocusTabs &&
+    element.getAttribute("aria-selected") === "true"
+  ) {
+    refocusTabs = false;
+    element.focus();
+  }
+}
+
 /**
  * A classification umbrella or succession family by key (#756, #771): its head,
  * the edition graph, then one tab per edition holding that edition's codes.
@@ -242,13 +256,11 @@ export function ClassificationGroupView({
   // A group's members take their years from the graph, so its default tab
   // waits for it; a family's editions carry their own.
   const tabsReady = node?.kind !== "classification_group" || !graph.loading;
-  const [picked, setPicked] = useState<string | null>(null);
-  const has = (fqid: string | null) =>
-    fqid != null && tabs.some((tab) => tab.fqid === fqid);
-  const selectedFqid = has(activeFqid)
-    ? activeFqid
-    : has(picked)
-      ? picked
+  // The route carries the selection: a tab press navigates and this page
+  // renders again with `activeFqid`.
+  const selectedFqid =
+    activeFqid != null && tabs.some((tab) => tab.fqid === activeFqid)
+      ? activeFqid
       : tabsReady
         ? latestTab(tabs)
         : null;
@@ -272,19 +284,8 @@ export function ClassificationGroupView({
   const expectsGraph =
     tabs.length > 1 || (initialActiveNode?.family?.editions.length ?? 0) > 1;
 
-  const tabList = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (refocusTabs && selectedFqid !== null) {
-      refocusTabs = false;
-      tabList.current
-        ?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
-        ?.focus();
-    }
-  }, [selectedFqid]);
-
   function selectEdition(fqid: string): void {
     if (fqid === selectedFqid) return;
-    setPicked(fqid);
     refocusTabs = true;
     router.navigate(catalogHref(fqid));
   }
@@ -378,14 +379,14 @@ export function ClassificationGroupView({
             keyboardActivation="manual"
             className={styles.tabs}
           >
-            <div ref={tabList} className={styles.tabScroll}>
+            <div className={styles.tabScroll}>
               <TabList
                 aria-label="Classification editions"
                 items={tabs}
                 className={styles.tabList}
               >
                 {(tab) => (
-                  <Tab id={tab.fqid} className={styles.tab}>
+                  <Tab id={tab.fqid} ref={focusOnReturn} className={styles.tab}>
                     <span className={styles.tabLabel} title={tab.name}>
                       {tab.label}
                     </span>
