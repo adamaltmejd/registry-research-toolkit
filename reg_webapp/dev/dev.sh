@@ -23,7 +23,7 @@
 #                          card's keyboard focus, at four viewports), tear down,
 #                          exit with the driver's status. The PNGs land in
 #                          <out-dir>. Named scenarios run only those cases;
-#                          no names runs all eight.
+#                          no names runs all nine.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive

@@ -389,9 +389,10 @@ Time is the axis every relation is drawn on.
 - A **source period** narrows the window for one variable. It stays allowed but is the
   exception: on a variable page the `Timeline`'s band is a selection, two thumbs bounded
   by the variable's availability, beside exact From/To year fields and Apply. The band
-  always shows the active window: the source period when one is set, else the project
-  window. A source period that differs from the project window says so in a `warn`
-  `StatusRow`, "▲ Differs from the project window", with a "Reset" ghost action. A
+  always shows the active window: the source period when it differs, else the project
+  window. A source period that differs from the project window within the variable's
+  availability says so in a `warn` `StatusRow`, "▲ Differs from the project window",
+  with a "Reset" ghost action; a period narrowed only by availability does not. A
   register or group pane draws the `Timeline` read-only.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: an `info` "i" note in the `Timeline` header names the uncovered years, and
