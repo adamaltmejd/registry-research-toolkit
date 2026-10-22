@@ -167,6 +167,9 @@ export function RepresentationPicker({
   }
 
   const visible = new Set(graphModel.rows.keys());
+  // Committed columns whose source and the study window disagree: the
+  // reason, in words, under the graph.
+  const notes = graphModel.spans.filter((span) => span.note);
   const hidden = [...adds, ...removes].filter((k) => !visible.has(k)).length;
   const summary = stagedDiffSummary({
     added: adds.size,
@@ -251,6 +254,18 @@ export function RepresentationPicker({
           </AriaButton>
         </p>
       )}
+      {notes.length > 0 && (
+        <ul className={styles.notes}>
+          {notes.map((span) => (
+            <li key={span.id} data-tone={span.note?.tone}>
+              {span.note?.tone === "error" && (
+                <span aria-hidden="true">✕ </span>
+              )}
+              <code>{span.name}</code> {span.note?.text}
+            </li>
+          ))}
+        </ul>
+      )}
       <div className={styles.footer}>
         <output className={styles.summary} aria-live="polite">
           {summary === ""
@@ -258,11 +273,15 @@ export function RepresentationPicker({
             : `${summary}${hidden > 0 ? ` (${hidden} hidden by the filters)` : ""}`}
         </output>
         <div className={styles.actions}>
-          {summary !== "" && (
-            <Button size="sm" isInert={applying} onPress={() => stage(EMPTY)}>
-              Clear selection
-            </Button>
-          )}
+          {/* Always mounted, inert with nothing staged: a press that empties
+              the selection keeps focus here instead of dropping to body. */}
+          <Button
+            size="sm"
+            isInert={applying || summary === ""}
+            onPress={() => stage(EMPTY)}
+          >
+            Clear selection
+          </Button>
           <Button
             variant="primary"
             size="sm"

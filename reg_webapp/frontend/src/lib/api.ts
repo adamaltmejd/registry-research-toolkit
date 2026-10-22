@@ -529,8 +529,15 @@ export function getValues(
 
 /** The relationship graph of a variable, classification, concept group or
  * classification group ref. */
-export function getGraph(ref: string): Promise<RelationshipGraph> {
-  return rustGet<RelationshipGraph>(`/graph/${encodeFqid(ref)}`);
+export function getGraph(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<RelationshipGraph> {
+  return rustGet<RelationshipGraph>(
+    `/graph/${encodeFqid(ref)}`,
+    undefined,
+    options,
+  );
 }
 
 /** A variable's lineage: edges, lineage warnings and per-register provenance. */

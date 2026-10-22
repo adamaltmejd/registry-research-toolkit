@@ -204,7 +204,8 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
     string,
     { band: PickerBand; row: PickerRepresentation }
   >();
-  const laneOfFqid = new Map<string, string>();
+  // Every lane of a variable: a group gives one per member column.
+  const lanesOfFqid = new Map<string, string[]>();
   const placedYears: Years[] = [];
   const draft: {
     lane: LaneModel;
@@ -227,7 +228,7 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
       relations: [],
     };
     draft.push({ lane, band, rows: band.rows, selectable: true });
-    if (!laneOfFqid.has(band.key)) laneOfFqid.set(band.key, lane.id);
+    lanesOfFqid.set(band.key, [...(lanesOfFqid.get(band.key) ?? []), lane.id]);
   }
   for (const node of neighbours) {
     const band: PickerBand = {
@@ -244,7 +245,7 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
       relations: [],
     };
     draft.push({ lane, band, rows: band.rows, selectable: false });
-    laneOfFqid.set(node.fqid, lane.id);
+    lanesOfFqid.set(node.fqid, [lane.id]);
   }
 
   // Two lanes under one name say which variable each is.
@@ -348,6 +349,13 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
                 : "out",
           staged,
           blocked: marker?.tone === "error",
+          note:
+            marker?.detail && staged !== "remove"
+              ? {
+                  text: `${marker.label} ${marker.detail}`,
+                  tone: marker.tone === "error" ? "error" : "info",
+                }
+              : null,
           changes,
           selectable: canToggle,
           isSelected: committed ? staged !== "remove" : staged === "add",
@@ -390,15 +398,17 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
   const laneNames = new Map(lanes.map((lane) => [lane.id, lane.name]));
   for (const edge of input.graph?.edges ?? []) {
     if (edge.kind !== "succession") continue;
-    const fromLane = laneOfFqid.get(edge.source);
-    const toLane = laneOfFqid.get(edge.target);
-    if (!fromLane || !toLane) continue;
+    const fromLanes = lanesOfFqid.get(edge.source);
+    const toLanes = lanesOfFqid.get(edge.target);
+    if (!fromLanes || !toLanes) continue;
+    // The edge's column picks the span, and so the lane, across every lane
+    // of the variable.
     const pick = (
-      lane: string,
+      laneIds: string[],
       column: string | null | undefined,
       last: boolean,
     ) => {
-      const candidates = spans.filter((s) => s.lane === lane);
+      const candidates = spans.filter((s) => laneIds.includes(s.lane));
       const named = column
         ? candidates.filter((s) => {
             const entry = rows.get(s.id);
@@ -412,9 +422,11 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
         last ? b.to - a.to : a.from - b.from,
       )[0];
     };
-    const from = pick(fromLane, edge.source_column, true);
-    const to = pick(toLane, edge.target_column, false);
+    const from = pick(fromLanes, edge.source_column, true);
+    const to = pick(toLanes, edge.target_column, false);
     if (!from || !to || from.id === to.id) continue;
+    const fromLane = from.lane;
+    const toLane = to.lane;
     edges.push({ id: edge.id, from: from.id, to: to.id, kind: "succession" });
     const year = edge.effective_year ? ` in ${edge.effective_year}` : "";
     if (fromLane !== toLane) {

@@ -216,7 +216,9 @@ export function ConceptGroupView({
     }
     return shown;
   });
-  const graphResource = useAsyncResource(ref, () => getGraph(ref));
+  const graphResource = useAsyncResource(ref, (signal) =>
+    getGraph(ref, { signal }),
+  );
   const registerNode = useRune(registerRead, registerFqid).value;
 
   const period = useQueryParam("period");

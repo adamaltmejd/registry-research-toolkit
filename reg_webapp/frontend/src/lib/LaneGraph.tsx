@@ -36,6 +36,10 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
   blocked?: boolean;
+  /** How the committed column relates to the study window, where it is more
+   * than "in project": shown as the span's tooltip and listed under the
+   * graph by the consumer. */
+  note?: { text: string; tone: "info" | "error" } | null;
   /** Years the column's coding changed under the same name. */
   changes?: number[];
   /** A checkbox when true; a mark to read otherwise. */
@@ -185,6 +189,7 @@ export function LaneGraph({
         succession={kinds.has("succession")}
         rename={kinds.has("rename")}
         inProject={spans.some((s) => s.state === "in")}
+        blocked={spans.some((s) => s.blocked)}
         window={window !== null}
       />
     </div>
@@ -425,7 +430,7 @@ function Span({
   };
   if (!span.selectable) {
     return (
-      <span className={styles.span} {...attributes}>
+      <span className={styles.span} title={span.note?.text} {...attributes}>
         {body}
         <span className="visually-hidden">{span.accessibleName}</span>
       </span>
@@ -435,6 +440,7 @@ function Span({
     <label
       className={`${styles.span} ${styles.pick}`}
       style={{ height: SPAN_HEIGHT }}
+      title={span.note?.text}
       data-disabled={isDisabled || undefined}
       {...attributes}
     >
@@ -459,11 +465,13 @@ function Legend({
   succession,
   rename,
   inProject,
+  blocked,
   window,
 }: {
   succession: boolean;
   rename: boolean;
   inProject: boolean;
+  blocked: boolean;
   window: boolean;
 }) {
   return (
@@ -483,6 +491,12 @@ function Legend({
       {inProject && (
         <li>
           <ColumnChip name="COL" state="in" /> in project
+        </li>
+      )}
+      {blocked && (
+        <li>
+          <span className={styles.keyBlocked}>✕</span> in project, outside the
+          study window
         </li>
       )}
       {window && (

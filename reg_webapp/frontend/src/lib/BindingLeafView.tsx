@@ -306,7 +306,9 @@ export function BindingLeafView({
   // One `/graph` read (#761/#792) feeds the picker's graph mode and the #670
   // header identity. Its own failure domain: an error leaves the picker on
   // its list and the header on `node.name`.
-  const graphResource = useAsyncResource(node.fqid, () => getGraph(node.fqid));
+  const graphResource = useAsyncResource(node.fqid, (signal) =>
+    getGraph(node.fqid, { signal }),
+  );
   const graph = graphResource.data;
   const graphHasDrawableContext =
     graph !== null &&
@@ -569,8 +571,8 @@ export function BindingLeafView({
           onStageChange={onStageChange}
         />
       )}
-      {/* Applying a period re-resolves this view and clears the picker's
-          staging, hence the refusal's "select and add again". */}
+      {/* Applying a period re-resolves this view; the picker's staging
+          survives it, so the refusal only asks for a period. */}
       <StagedAddStatus outcome={shownOutcome} blocked={shownRefusal} />
       {period && (variant || valueSetVersion) && (
         // Each modifier is clearable, so narrowing to one state is not a

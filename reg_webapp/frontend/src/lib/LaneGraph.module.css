@@ -184,6 +184,9 @@ a.nameText:focus-visible {
   margin: 0;
   cursor: inherit;
   opacity: 0;
+  /* Taller than the picker's sticky Apply footer, wrapped at 375 px, so a
+     focused span is scrolled clear of it (WCAG 2.4.11). */
+  scroll-margin-bottom: 7rem;
 }
 
 .span[data-disabled] {
@@ -319,6 +322,12 @@ a.nameText:focus-visible {
   display: inline-block;
   width: 22px;
   border-top: 1.2px solid var(--viz-edge-succession);
+}
+
+.keyBlocked {
+  color: var(--err);
+  font-family: var(--font-mono);
+  font-weight: 600;
 }
 
 .keyRename {

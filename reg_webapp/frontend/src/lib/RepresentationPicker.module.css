@@ -27,6 +27,21 @@
   gap: var(--space-1);
 }
 
+/* The committed-row markers in words; an error one at err tone. */
+.notes {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  list-style: none;
+}
+
+.notes li[data-tone="error"] {
+  color: var(--err);
+}
+
 .variantKey {
   color: var(--text-muted);
   font-family: var(--font-mono);
