@@ -84,7 +84,15 @@ export interface LaneGeometry {
   axisY: number;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
-  ticks: { year: number; x: number; inWindow: boolean }[];
+  /** `label` and `anchor` are set on the one label that stands for both
+   * window bounds when they are too close to label apart. */
+  ticks: {
+    year: number;
+    x: number;
+    inWindow: boolean;
+    label?: string;
+    anchor?: "start" | "end";
+  }[];
   window: { x: number; width: number } | null;
   /** Drawn from a span's end to the next one's start. A span folding a
    * rename also gets one dashed edge per change of name inside it. */
@@ -238,17 +246,34 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         (year) => year >= first && year <= last,
       )
     : [];
+  // Bounds too close to label apart read as one span hung from its inner
+  // edge, so the two years never run together ("20182020").
+  const [lo, hi] = bounds;
+  const joined =
+    lo !== undefined && hi !== undefined && lo !== hi && x(hi) - x(lo) < 36;
+  const late = joined && x(lo) + x(hi) > x(first) + x(last);
+  const boundTicks: LaneGeometry["ticks"] = joined
+    ? [
+        {
+          year: late ? hi : lo,
+          x: late ? x(hi) : x(lo),
+          inWindow: true,
+          label: `${lo}–${hi}`,
+          anchor: late ? "end" : "start",
+        },
+      ]
+    : [...new Set(bounds)].map((year) => ({
+        year,
+        x: x(year),
+        inWindow: inWindow(year),
+      }));
   const ticks = [
     ...tickYears(input.axis, pxPerYear)
       .filter((year) =>
         bounds.every((bound) => Math.abs(x(year) - x(bound)) >= 36),
       )
       .map((year) => ({ year, x: x(year), inWindow: false })),
-    ...[...new Set(bounds)].map((year) => ({
-      year,
-      x: x(year),
-      inWindow: inWindow(year),
-    })),
+    ...boundTicks,
   ].sort((a, b) => a.x - b.x);
 
   const curve = (x1: number, y1: number, x2: number, y2: number) => {
