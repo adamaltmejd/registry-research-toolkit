@@ -5038,6 +5038,17 @@
         "OrderEntry": {
           "description": "One resolved binding: what was asked for and what the steward delivers.",
           "properties": {
+            "filter": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/OrderRowFilter",
+                  "description": "The output file's row filter: its table's period column and the ranges its\nentries request, the same on every entry of the file; absent when the table\ndeclares no period column or the file requests its whole held period."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "key": {
               "description": "A held key column of the output file that no binding ordered (the row key, or\nany identifier, linking ids included: [`IS_KEY`]), carried so every file joins\non its keys; absent on an ordered entry.",
               "type": "boolean"
@@ -5063,6 +5074,26 @@
             "requested_period",
             "physical"
           ],
+          "type": "object"
+        },
+        "OrderFilterRange": {
+          "description": "One requested range of a row filter. A bound at the table's held edge cuts\nnothing and is absent, so a range may be open-ended on either side.",
+          "properties": {
+            "from": {
+              "description": "The first requested day, `YYYY-MM-DD`; absent from the table's first held day.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "to": {
+              "description": "The last requested day, `YYYY-MM-DD`; absent through the table's last held day.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
           "type": "object"
         },
         "OrderManifest": {
@@ -5144,6 +5175,30 @@
             "catalog_schema_version",
             "catalog_generation_id",
             "artifact_kind"
+          ],
+          "type": "object"
+        },
+        "OrderRowFilter": {
+          "description": "A file's row filter (crates/DESIGN.md, \"Order manifest\"): keep the rows whose\n`column` value falls in any of `ranges`. A range's bounds are inclusive ISO dates;\nthe extract runner reads `column` per `encoding` (`date`, `year`, `yyyymm` or\n`yyyymmdd`, as `holding_table.period_encoding`) and keeps a row whose value's\nyear, month or day lies inside a range.",
+          "properties": {
+            "column": {
+              "type": "string"
+            },
+            "encoding": {
+              "type": "string"
+            },
+            "ranges": {
+              "description": "The file's requested days, ascending and disjoint, joined with OR.",
+              "items": {
+                "$ref": "#/$defs/OrderFilterRange"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "column",
+            "encoding",
+            "ranges"
           ],
           "type": "object"
         },

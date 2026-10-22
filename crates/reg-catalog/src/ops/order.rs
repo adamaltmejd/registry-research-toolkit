@@ -7,7 +7,9 @@
 //! slice by its canonical column (the global fallback). Any finding blocks the
 //! whole order (`order_blocked`, every finding in accumulation order); there is
 //! never a partial manifest. On a steward artifact each output file then gains the
-//! held row keys it lacks ([`held_keys`]).
+//! held row keys it lacks ([`held_keys`]), and every entry of a file whose request
+//! is narrower than its table's held period the table's period-column row filter
+//! ([`row_filters`]).
 //!
 //! The manifest's bytes are `reg_core::project::to_json_pretty`'s, the encoding the
 //! steward-side extractor reads; `order`'s `data` is the same document.
@@ -85,6 +87,12 @@ struct Entry {
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     #[schema(required = false)]
     key: bool,
+    /// The output file's row filter: its table's period column and the ranges its
+    /// entries request, the same on every entry of the file; absent when the table
+    /// declares no period column or the file requests its whole held period.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(required = false)]
+    filter: Option<Filter>,
     /// A projection's key cell its parent also serves (#1634): kept only when
     /// the projection contributes a cell of its own to the same file.
     #[serde(skip)]
@@ -131,6 +139,35 @@ struct Physical {
     /// The column's wide-pivot member index; absent for a plain column.
     #[serde(skip_serializing_if = "Option::is_none")]
     member: Option<Member>,
+}
+
+/// A file's row filter (crates/DESIGN.md, "Order manifest"): keep the rows whose
+/// `column` value falls in any of `ranges`. A range's bounds are inclusive ISO dates;
+/// the extract runner reads `column` per `encoding` (`date`, `year`, `yyyymm` or
+/// `yyyymmdd`, as `holding_table.period_encoding`) and keeps a row whose value's
+/// year, month or day lies inside a range.
+#[derive(Clone, Serialize, ToSchema)]
+#[schema(as = OrderRowFilter)]
+struct Filter {
+    column: String,
+    encoding: String,
+    /// The file's requested days, ascending and disjoint, joined with OR.
+    ranges: Vec<FilterRange>,
+}
+
+/// One requested range of a row filter. A bound at the table's held edge cuts
+/// nothing and is absent, so a range may be open-ended on either side.
+#[derive(Clone, Serialize, ToSchema)]
+#[schema(as = OrderFilterRange)]
+struct FilterRange {
+    /// The first requested day, `YYYY-MM-DD`; absent from the table's first held day.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(required = false)]
+    from: Option<String>,
+    /// The last requested day, `YYYY-MM-DD`; absent through the table's last held day.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(required = false)]
+    to: Option<String>,
 }
 
 /// A wide-pivot member index (#1495): one of N physical columns that together
@@ -255,6 +292,7 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     if order.steward {
         let keys = held_keys(&conn, &order.entries)?;
         order.entries.extend(keys);
+        row_filters(&conn, &mut order.entries)?;
     }
     Ok(Manifest {
         version: VERSION,
@@ -286,21 +324,6 @@ fn placement(entry: &Entry) -> (String, String, String) {
 /// year-independent file's keys request `_default`. Ordered by file (table, variant,
 /// edition), then member index and column, after every ordered entry.
 fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> {
-    struct File<'a> {
-        first: &'a Entry,
-        columns: BTreeSet<&'a str>,
-        days: Vec<Interval>,
-    }
-    let mut files: BTreeMap<(String, String, String), File> = BTreeMap::new();
-    for e in entries {
-        let file = files.entry(placement(e)).or_insert_with(|| File {
-            first: e,
-            columns: BTreeSet::new(),
-            days: Vec::new(),
-        });
-        file.columns.insert(&e.physical.column);
-        file.days.extend(e.days.iter().cloned());
-    }
     let mut stmt = conn.prepare_cached(&format!(
         "SELECT hc.name, p.slug || '/' || r.slug || '/' || v.slug, \
          hm.representation_canonical, hm.member_position, hm.member_lo, hm.member_hi, \
@@ -314,7 +337,7 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
          ORDER BY hc.name, v.slug, hm.representation_canonical"
     ))?;
     let mut keys = Vec::new();
-    for file in files.into_values() {
+    for file in files(entries).into_values() {
         let first = file.first;
         let year_independent = first.requested_period == "_default";
         let union = merge(file.days);
@@ -364,6 +387,7 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
                     ..first.physical.clone()
                 },
                 key: true,
+                filter: None,
                 shared_key: false,
                 variant_id: first.variant_id,
                 days,
@@ -375,6 +399,90 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
         keys.extend(found);
     }
     Ok(keys)
+}
+
+/// An output file: its first entry, its physical columns and every day its entries
+/// request.
+struct File<'a> {
+    first: &'a Entry,
+    columns: BTreeSet<&'a str>,
+    days: Vec<Interval>,
+}
+
+/// The entries grouped by output file ([`placement`]), in file order.
+fn files(entries: &[Entry]) -> BTreeMap<(String, String, String), File<'_>> {
+    let mut files: BTreeMap<(String, String, String), File> = BTreeMap::new();
+    for e in entries {
+        let file = files.entry(placement(e)).or_insert_with(|| File {
+            first: e,
+            columns: BTreeSet::new(),
+            days: Vec::new(),
+        });
+        file.columns.insert(&e.physical.column);
+        file.days.extend(e.days.iter().cloned());
+    }
+    files
+}
+
+/// Each file's row filter (crates/DESIGN.md, "Order manifest"), set on every entry of
+/// the file, held keys included: when its table declares a period column and the union
+/// of its entries' requested days leaves part of the table's held period out, the
+/// union's ranges, each without a bound at the table's held edge. A year-independent
+/// file requests no days and is never filtered.
+fn row_filters(conn: &Connection, entries: &mut [Entry]) -> Result<(), Error> {
+    let mut stmt = conn.prepare_cached(
+        "SELECT ht.period_column, ht.period_encoding, hp.lo, hp.hi \
+         FROM holding_table ht JOIN holding_period hp USING(table_id) \
+         WHERE ht.physical_id = ? AND ht.period_column IS NOT NULL",
+    )?;
+    let mut filters = BTreeMap::new();
+    for (file, File { days, .. }) in files(entries) {
+        if days.is_empty() {
+            continue;
+        }
+        let mut column = None;
+        let mut held = Vec::new();
+        for row in stmt.query_map(params![file.0], |row| {
+            Ok((
+                row.get::<_, String>(0)?,
+                row.get::<_, String>(1)?,
+                (row.get(2)?, row.get(3)?),
+            ))
+        })? {
+            let (name, encoding, period) = row?;
+            column = Some((name, encoding));
+            held.push(period);
+        }
+        let Some((column, encoding)) = column else {
+            continue;
+        };
+        let held = merge(held);
+        let union = merge(days);
+        if gaps(&held, union.clone()).is_empty() {
+            continue;
+        }
+        let first = &held.first().expect("a held period").0;
+        let last = &held.last().expect("a held period").1;
+        let ranges = union
+            .into_iter()
+            .map(|(lo, hi)| FilterRange {
+                from: (lo > *first).then_some(lo),
+                to: (hi < *last).then_some(hi),
+            })
+            .collect();
+        filters.insert(
+            file,
+            Filter {
+                column,
+                encoding,
+                ranges,
+            },
+        );
+    }
+    for e in entries.iter_mut() {
+        e.filter = filters.get(&placement(e)).cloned();
+    }
+    Ok(())
 }
 
 /// `project_invalid`: validate's issues for a project rejected before the catalog.
@@ -780,6 +888,7 @@ impl Order<'_> {
                     member: placement.member,
                 },
                 key: false,
+                filter: None,
                 shared_key: placement.shared_key,
                 variant_id: variant,
                 days: Vec::new(),
@@ -897,6 +1006,7 @@ impl Order<'_> {
                     member: c.placement.member,
                 },
                 key: false,
+                filter: None,
                 shared_key: c.placement.shared_key,
                 variant_id: variant,
                 days,

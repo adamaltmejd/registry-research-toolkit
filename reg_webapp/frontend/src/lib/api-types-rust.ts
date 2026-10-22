@@ -984,6 +984,7 @@ export interface components {
         };
         /** @description One resolved binding: what was asked for and what the steward delivers. */
         OrderEntry: {
+            filter?: components["schemas"]["OrderRowFilter"] | null;
             /**
              * @description A held key column of the output file that no binding ordered (the row key, or
              *     any identifier, linking ids included: [`IS_KEY`]), carried so every file joins
@@ -1000,6 +1001,16 @@ export interface components {
             requested_period: string;
             /** @description The project source's name. */
             source: string;
+        };
+        /**
+         * @description One requested range of a row filter. A bound at the table's held edge cuts
+         *     nothing and is absent, so a range may be open-ended on either side.
+         */
+        OrderFilterRange: {
+            /** @description The first requested day, `YYYY-MM-DD`; absent from the table's first held day. */
+            from?: string | null;
+            /** @description The last requested day, `YYYY-MM-DD`; absent through the table's last held day. */
+            to?: string | null;
         };
         /**
          * @description The order manifest: machine-written here, machine-read by the steward-side
@@ -1042,6 +1053,19 @@ export interface components {
             project_reg_meta_version: string;
             project_schema_version: string;
             steward: string;
+        };
+        /**
+         * @description A file's row filter (crates/DESIGN.md, "Order manifest"): keep the rows whose
+         *     `column` value falls in any of `ranges`. A range's bounds are inclusive ISO dates;
+         *     the extract runner reads `column` per `encoding` (`date`, `year`, `yyyymm` or
+         *     `yyyymmdd`, as `holding_table.period_encoding`) and keeps a row whose value's
+         *     year, month or day lies inside a range.
+         */
+        OrderRowFilter: {
+            column: string;
+            encoding: string;
+            /** @description The file's requested days, ascending and disjoint, joined with OR. */
+            ranges: components["schemas"]["OrderFilterRange"][];
         };
         OwningVariable: {
             fqid?: string | null;

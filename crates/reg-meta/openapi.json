@@ -3614,6 +3614,17 @@
           "physical"
         ],
         "properties": {
+          "filter": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OrderRowFilter",
+                "description": "The output file's row filter: its table's period column and the ranges its\nentries request, the same on every entry of the file; absent when the table\ndeclares no period column or the file requests its whole held period."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "key": {
             "type": "boolean",
             "description": "A held key column of the output file that no binding ordered (the row key, or\nany identifier, linking ids included: [`IS_KEY`]), carried so every file joins\non its keys; absent on an ordered entry."
@@ -3631,6 +3642,26 @@
           "source": {
             "type": "string",
             "description": "The project source's name."
+          }
+        }
+      },
+      "OrderFilterRange": {
+        "type": "object",
+        "description": "One requested range of a row filter. A bound at the table's held edge cuts\nnothing and is absent, so a range may be open-ended on either side.",
+        "properties": {
+          "from": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The first requested day, `YYYY-MM-DD`; absent from the table's first held day."
+          },
+          "to": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The last requested day, `YYYY-MM-DD`; absent through the table's last held day."
           }
         }
       },
@@ -3713,6 +3744,30 @@
           },
           "steward": {
             "type": "string"
+          }
+        }
+      },
+      "OrderRowFilter": {
+        "type": "object",
+        "description": "A file's row filter (crates/DESIGN.md, \"Order manifest\"): keep the rows whose\n`column` value falls in any of `ranges`. A range's bounds are inclusive ISO dates;\nthe extract runner reads `column` per `encoding` (`date`, `year`, `yyyymm` or\n`yyyymmdd`, as `holding_table.period_encoding`) and keeps a row whose value's\nyear, month or day lies inside a range.",
+        "required": [
+          "column",
+          "encoding",
+          "ranges"
+        ],
+        "properties": {
+          "column": {
+            "type": "string"
+          },
+          "encoding": {
+            "type": "string"
+          },
+          "ranges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderFilterRange"
+            },
+            "description": "The file's requested days, ascending and disjoint, joined with OR."
           }
         }
       },
