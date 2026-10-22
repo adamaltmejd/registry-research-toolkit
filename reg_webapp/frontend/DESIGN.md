@@ -275,18 +275,18 @@ pure role remaps.
   a column chip's stroke, the axis of a graph.
 - **Pine, the ownership colour (`accent` and its stops):** used for exactly one idea —
   this is yours, or this is where you are. Primary button fill (`accent-fg` text), the
-  bar and count on a column item that has something in the project, the selected row's
-  bar, the focus ring, the study-window bounds. `accent-bg` is the wash: selected
-  variable rows, the study-window band, the active segment. `accent-soft` is the project
-  banner's fill and the current lane in a graph. `accent-ink` is pine as text
-  (in-project counts, window years on an axis). Never use pine for a verdict, a type or
-  decoration; `ok` is a verdict, `accent` is ownership.
+  bar and count on a column item or group that has something in the project, the
+  selected row's bar, the focus ring, the study-window bounds. `accent-bg` is the wash:
+  selected variable rows, the study-window band, the active segment. `accent-soft` is
+  the project banner's fill and the current lane in a graph. `accent-ink` is pine as
+  text (in-project counts, window years on an axis). Never use pine for a verdict, a
+  type or decoration; `ok` is a verdict, `accent` is ownership.
 - **Status (`err`, `warn`, `info`, `ok` and their `-bg` tints):** the only other
   chromatic chrome, each paired with a glyph and text. `warn` also marks a definition
   change on a timeline; `warn-hatch` draws a delivery gap as a hatch. Never use a `-bg`
   tint as a text color, and never use a status hue for emphasis, selection, or brand.
 - **Categorical node type (`cat-reg` teal, `cat-var` indigo, `cat-code` gold,
-  `cat-class` plum, `cat-group` moss):** appears only in a MIXED list — search results,
+  `cat-class` plum, `cat-group` moss):** appears only in a MIXED list — palette results,
   mentions, a project's sources — as a `TypeTag`. Fill and border take the raw hue at a
   10 % tint; label text takes the `-ink` stop so every type label clears AA. In a list
   where every item is the same type (registers under Registers, variables within a
@@ -320,9 +320,10 @@ mono or in a chip.
 
 Hierarchy is size and weight. Labels and headings are **sentence case with normal
 tracking**; nothing is underlined except a ghost button's label, which takes a 2 px
-`accent` underline. Line length stays under 60 characters for prose in a pane; tables,
-lanes and identifiers are exempt. Swedish text with å/ä/ö is the norm, so both families
-ship the latin and latin-ext subsets.
+`accent` underline, and text a search filter matched (see Layout). Line length stays
+under 60 characters for prose in a pane; tables, lanes and identifiers are exempt.
+Swedish text with å/ä/ö is the norm, so both families ship the latin and latin-ext
+subsets.
 
 ## Layout
 
