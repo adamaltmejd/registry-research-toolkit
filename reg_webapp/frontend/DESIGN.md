@@ -480,7 +480,10 @@ not grow new visual language meanwhile.
   pane is one; there is no other ad hoc error row. With no tone it is a bare live region
   that holds no height, so a first message lands in a region the page already had.
 - **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
-  `--elevation-float`, over the scrim. A click on the scrim does not answer it.
+  `--elevation-float`, over the scrim, on `--z-dialog-scrim` and `--z-dialog`. The title
+  is an `h2` (`h2` size, weight 600, −0.01em tracking) and the body is `body-sm` in
+  `text-muted`. Actions are right-aligned, Cancel first and the destructive one last as
+  a `danger` Button. A click on the scrim does not answer it.
 - **Empty and loading states:** `EmptyState` is a centred, muted message: a title at the
   `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
   Button that names the next action ("Browse registers"). The title states what is
