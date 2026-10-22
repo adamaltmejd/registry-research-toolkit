@@ -1,8 +1,8 @@
 // Split from ConceptGroupView.browser.test.ts by contract surface: inter-variable succession fold.
 // Siblings: ConceptGroupView{,.selection,.labels,.navigation,.filters,.succession}.browser.test.ts.
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import type { ConceptGroupShow, RelationshipGraph } from "./api";
 import { getGraph, getShow, getStates } from "./api";
 import {

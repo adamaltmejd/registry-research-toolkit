@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { IndexedDBPersistence } from "./indexeddb_persistence";
 import { newProjectData, type RawDraft } from "./project_data";
 

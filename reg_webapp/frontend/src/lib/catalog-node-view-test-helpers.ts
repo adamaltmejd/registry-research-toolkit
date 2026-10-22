@@ -1,8 +1,8 @@
 // Register-node fixtures and Y-83 add-flow helpers shared by the split
 // CatalogNodeView.{register,add-columns,add-eras}.browser.test.ts files.
 // Browser-only: imports `vitest/browser`.
-import { expect, vi } from "vitest";
-import { page } from "vitest/browser";
+import { expect, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type {
   RegisterShow,

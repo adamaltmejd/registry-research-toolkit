@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
 import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import type { Coverage } from "./period";

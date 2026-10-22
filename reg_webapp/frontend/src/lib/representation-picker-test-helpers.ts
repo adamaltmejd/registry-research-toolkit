@@ -1,8 +1,8 @@
 // Shared fixtures + DOM helpers for the RepresentationPicker.*.browser.test.ts split
 // (graph, graph-fallback, graph-history, labels, filters, staging, row-identity).
 // Browser-only: imports `vitest/browser`.
-import { vi } from "vitest";
-import { page } from "vitest/browser";
+import { vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import type {
   GraphEdge,
   GraphState,

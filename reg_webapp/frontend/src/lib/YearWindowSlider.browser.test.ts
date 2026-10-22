@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
 import type { ProjectStudyWindow } from "./project_data";
 import YearWindowSlider from "./YearWindowSlider.svelte";

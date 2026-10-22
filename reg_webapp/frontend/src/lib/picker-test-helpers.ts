@@ -6,8 +6,8 @@
 //
 // Browser-only: imports `page` from `vitest/browser`, so only import this from
 // `*.browser.test.ts` files (the browser-mode project), never a jsdom `*.test.ts`.
-import { expect } from "vitest";
-import { page } from "vitest/browser";
+import { expect } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 
 /**
  * The picker footer renders ONE commit button whose accessible name follows the

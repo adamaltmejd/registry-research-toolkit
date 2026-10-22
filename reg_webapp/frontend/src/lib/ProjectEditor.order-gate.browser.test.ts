@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
 import { projectStore } from "./project_store.svelte";

@@ -1,5 +1,5 @@
-import { beforeEach, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { beforeEach, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { type DataWarningModel, getWarnings } from "./api";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";

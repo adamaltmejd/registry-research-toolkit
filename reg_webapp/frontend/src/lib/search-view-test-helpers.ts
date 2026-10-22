@@ -1,6 +1,6 @@
 // Shared helpers for the SearchView.*.browser.test.ts suites (browser-only:
 // drives `window.history` and the `router` singleton).
-import { vi } from "vitest";
+import { vi } from "vite-plus/test";
 import type { SearchHit, SearchPage, SearchType } from "./api";
 import { search } from "./api";
 import { router } from "./router.svelte";

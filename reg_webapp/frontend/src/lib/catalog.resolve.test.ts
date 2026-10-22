@@ -2,7 +2,7 @@
 // the single source of truth for the subject-page staged picker's resolve-once-at-
 // pick-time adds (the #991 write-once model). Stubs the `states` read at the HTTP
 // boundary, so the resolve is covered without a backend.
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { stubApi } from "./api-test-helpers";
 import { bindingFieldsFromResolution, resolveBindingAt } from "./catalog";
 import { state } from "./catalog-test-helpers";

@@ -1,5 +1,5 @@
 import { createRawSnippet } from "svelte";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
 import Tag from "./Tag.svelte";
 

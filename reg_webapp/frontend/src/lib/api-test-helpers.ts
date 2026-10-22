@@ -4,7 +4,7 @@
 // own defaults as a thin wrapper (`state`, `vstate`, `columnState`). The builders
 // are pure; `stubApi` stubs the HTTP boundary those shapes cross. Import from any
 // test.
-import { onTestFinished, vi } from "vitest";
+import { onTestFinished, vi } from "vite-plus/test";
 import type { RegisterShow, RootShow, VariableStateModel } from "./api";
 import { variant } from "./variants-test-helpers";
 

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { matrixAnswerSource, pagesLabel } from "./curated_source";
 
 // The input is the string reg_meta_build's `cis2016_matrix.py` publishes for an

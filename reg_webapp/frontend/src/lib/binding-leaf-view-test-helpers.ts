@@ -1,6 +1,6 @@
 // Shared fixtures for the BindingLeafView.*.browser.test.ts split (state/node
 // builders, picker states, SEED). Used by every BindingLeafView browser suite.
-import { vi } from "vitest";
+import { vi } from "vite-plus/test";
 import {
   getDocsForVariable,
   getGraph,

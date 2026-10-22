@@ -1,5 +1,5 @@
 import { flushSync } from "svelte";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { asyncResource } from "./async.svelte";
 
 // `asyncResource` registers an `$effect`, so drive it inside an `$effect.root`

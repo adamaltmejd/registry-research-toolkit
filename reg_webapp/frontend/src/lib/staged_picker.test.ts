@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import type { PickerRepresentation } from "./catalog";
 import type { RawDraft } from "./project_data";
 import {

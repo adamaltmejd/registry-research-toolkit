@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import { bindingFieldsFromResolution } from "./catalog";
 import { type ProjectData, sourceSnapshot } from "./project_data";
 import { projectStore, type StagedAdd } from "./project_store.svelte";

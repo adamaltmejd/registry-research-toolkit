@@ -1,7 +1,7 @@
 import type { Component, Snippet } from "svelte";
 import { createRawSnippet } from "svelte";
-import { describe, expect, it } from "vitest";
-import { page } from "vitest/browser";
+import { describe, expect, it } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import DataTable from "./DataTable.svelte";
 import type { Column } from "./types";

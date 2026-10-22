@@ -1,5 +1,5 @@
-import { expect, it } from "vitest";
-import { page } from "vitest/browser";
+import { expect, it } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type { DataWarningModel } from "./api";
 import DataWarnings from "./DataWarnings.svelte";

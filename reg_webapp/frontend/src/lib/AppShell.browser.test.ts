@@ -1,6 +1,6 @@
 import { createRawSnippet } from "svelte";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import AppShell from "./AppShell.svelte";
 import { getShow } from "./api";

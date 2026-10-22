@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 // The fold corpus the server's `fold_search` is generated from and checked against.
 import foldCorpus from "../../../../conformance/cases/folds/fold_search.jsonl?raw";
 // The period grammar corpora reg-core's own tests run (`crates/reg-core/tests/grammar.rs`).

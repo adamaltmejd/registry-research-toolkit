@@ -1,7 +1,7 @@
 // Split from ConceptGroupView.browser.test.ts by contract surface: picker dimension filters.
 // Siblings: ConceptGroupView{,.selection,.labels,.navigation,.filters,.succession}.browser.test.ts.
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import type { ConceptGroupShow, RelationshipGraph } from "./api";
 import { getGraph, getShow, getStates } from "./api";
 import {

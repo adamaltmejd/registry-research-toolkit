@@ -2,7 +2,7 @@
 // browser suites (ConceptGroupView{,.selection,.labels,.navigation,.filters,
 // .succession}.browser.test.ts). Browser-only (renders via vitest-browser-svelte).
 
-import { vi } from "vitest";
+import { vi } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
 import type {
   ConceptGroupShow,

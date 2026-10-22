@@ -1,10 +1,8 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { playwright } from "@vitest/browser-playwright";
-// defineConfig from vitest/config (not vite): it natively types the `test` block.
-// Vitest 4 dropped the module augmentation that let a `/// <reference types="vitest/config" />`
-// add `test` to vite's own UserConfig, so import the vitest-aware defineConfig directly.
-import { configDefaults, defineConfig } from "vitest/config";
-import type { BrowserCommand } from "vitest/node";
+import { playwright } from "vite-plus/test/browser-playwright";
+// Vite+'s defineConfig types the `test`, `lint` and `fmt` blocks below.
+import { configDefaults, defineConfig } from "vite-plus";
+import type { BrowserCommand } from "vite-plus/test/node";
 import {
   chromiumLaunchArgs,
   needsSingleProcessChromium,
@@ -55,8 +53,109 @@ const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
   return { path: ROUTE_PROBE_PATH, marker: ROUTE_PROBE_MARKER };
 };
 
+// Generated or vendored output the formatter and linter never touch.
+const generated = [
+  "dist/**",
+  "src/lib/reg-core-wasm/**",
+  "src/lib/api-types-rust.ts",
+];
+
 export default defineConfig({
   plugins: [svelte()],
+  // `vp fmt` (Oxfmt). `svelte: true` formats the whole `.svelte` file (template,
+  // script and style), which Biome never did. Markdown belongs to panache
+  // (scripts/gate.py lint) and the lockfile to bun, so neither is formatted here.
+  fmt: {
+    printWidth: 80,
+    svelte: true,
+    sortImports: { newlinesBetween: false },
+    sortPackageJson: false,
+    ignorePatterns: [...generated, "**/*.md", "bun.lock"],
+  },
+  // `vp lint` (Oxlint). Oxlint lints `<script>` in `.svelte`, not the template;
+  // svelte-check (`check`) owns templates, types and a11y. On top of Oxlint's
+  // default `correctness` category these are the Oxlint ports of the rules
+  // Biome's `recommended` preset enforced. CSS lint stays on Biome (biome.json):
+  // Oxlint has no CSS rules.
+  lint: {
+    ignorePatterns: generated,
+    // Oxlint reports its default category as warnings, which do not fail a run.
+    categories: { correctness: "error" },
+    rules: {
+      "array-callback-return": "error",
+      "default-case-last": "error",
+      // Biome's noDoubleEquals allowed `== null`.
+      eqeqeq: ["error", "always", { null: "ignore" }],
+      "no-array-constructor": "error",
+      "no-case-declarations": "error",
+      "no-constructor-return": "error",
+      "no-extra-label": "error",
+      "no-fallthrough": "error",
+      "no-inner-declarations": "error",
+      "no-label-var": "error",
+      "no-labels": "error",
+      "no-lone-blocks": "error",
+      "no-proto": "error",
+      "no-prototype-builtins": "error",
+      "no-redeclare": "error",
+      "no-regex-spaces": "error",
+      "no-script-url": "error",
+      "no-self-compare": "error",
+      "no-sequences": "error",
+      "no-template-curly-in-string": "error",
+      "no-unneeded-ternary": "error",
+      // Biome's noInvalidUseBeforeDeclaration: only a same-scope use that would
+      // throw, not a hoisted function or a reference from a later-called closure.
+      "no-use-before-define": [
+        "error",
+        { functions: false, classes: false, variables: false },
+      ],
+      "no-useless-computed-key": "error",
+      "no-useless-constructor": "error",
+      "prefer-arrow-callback": "error",
+      "prefer-const": "error",
+      "prefer-exponentiation-operator": "error",
+      "prefer-numeric-literals": "error",
+      "prefer-regex-literals": "error",
+      "prefer-rest-params": "error",
+      "prefer-template": "error",
+      radix: "error",
+      "oxc/approx-constant": "error",
+      "oxc/misrefactored-assign-op": "error",
+      "oxc/no-accumulating-spread": "error",
+      "oxc/no-const-enum": "error",
+      "typescript/adjacent-overload-signatures": "error",
+      "typescript/ban-ts-comment": "error",
+      "typescript/ban-types": "error",
+      "typescript/consistent-type-imports": [
+        "error",
+        { disallowTypeAnnotations: false },
+      ],
+      "typescript/no-empty-interface": "error",
+      "typescript/no-explicit-any": "error",
+      "typescript/no-extraneous-class": "error",
+      "typescript/no-non-null-assertion": "error",
+      "typescript/no-unnecessary-type-constraint": "error",
+      "typescript/prefer-function-type": "error",
+      "typescript/prefer-literal-enum-member": "error",
+      "unicorn/new-for-builtins": "error",
+      "unicorn/no-document-cookie": "error",
+      "unicorn/no-instanceof-array": "error",
+      "unicorn/no-useless-switch-case": "error",
+      "unicorn/prefer-array-flat-map": "error",
+      "unicorn/prefer-array-index-of": "error",
+      "unicorn/prefer-date-now": "error",
+      "unicorn/prefer-node-protocol": "error",
+      "unicorn/prefer-number-properties": "error",
+    },
+    overrides: [
+      {
+        // A bare read inside `$effect` is how a rune subscribes to a value.
+        files: ["**/*.svelte", "**/*.svelte.ts"],
+        rules: { "no-unused-expressions": "off" },
+      },
+    ],
+  },
   server: {
     // Dev proxy: the Rust server answers every /api route.
     proxy: {

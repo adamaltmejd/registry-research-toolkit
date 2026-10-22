@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import type { ShowNode } from "./api";
 import { rootShow, stubApi } from "./api-test-helpers";
 import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";

@@ -2,7 +2,7 @@
 // that land something (an edit, a New, a navigation) while a write waits on
 // `projectStore.restored`. A `.svelte.ts` module: it starts the lifecycle in an
 // `$effect.root`, as App.svelte does at its reactive root. Browser-only.
-import { onTestFinished, vi } from "vitest";
+import { onTestFinished, vi } from "vite-plus/test";
 import type { RawDraft } from "./project_data";
 import { initDraftLifecycle, setPersistence } from "./project_store.svelte";
 

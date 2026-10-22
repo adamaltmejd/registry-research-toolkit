@@ -1,8 +1,8 @@
 // Split from CatalogNodeView.browser.test.ts by contract surface: the register
 // list's delivery columns and variant lens (Y-82/Y-94). Siblings: CatalogNodeView
 // .browser / .add-columns / .add-eras.
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type { RegisterShow } from "./api";
 import { getRelatedDocuments, getShow, getStates } from "./api";

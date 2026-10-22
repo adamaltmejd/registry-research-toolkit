@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { type InlineSegment, parseInlineMarkdown } from "./inline_markdown";
 
 // The parser returns DATA segments only (never HTML). These tests pin the SAFE

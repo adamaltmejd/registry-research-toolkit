@@ -8,7 +8,7 @@
 // utility (#836) is a sibling global stylesheet, imported the same way so a
 // component's label header (DataTable th, Panel title, KeyValue dt) renders
 // with its styling under test just as it does in the app.
-import { commands } from "vitest/browser";
+import { commands } from "vite-plus/test/browser";
 import "./tokens.css";
 import "./lib/ui/motion.css";
 import "./lib/ui/utilities.css";

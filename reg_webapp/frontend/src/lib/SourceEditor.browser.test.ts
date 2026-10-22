@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { page } from "vitest/browser";
+import { beforeEach, describe, expect, it } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import { rootShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import type { ProjectSource } from "./project_data";

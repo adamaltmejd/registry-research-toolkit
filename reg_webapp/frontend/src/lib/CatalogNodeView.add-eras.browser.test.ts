@@ -1,8 +1,8 @@
 // Split from CatalogNodeView.browser.test.ts by contract surface: adding columns
 // across eras, gaps and renames (Y-104/Y-110). Siblings: CatalogNodeView.browser
 // / .register / .add-columns.
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { page } from "vite-plus/test/browser";
 import type { RegisterShow } from "./api";
 import { getRelatedDocuments, getShow, getStates } from "./api";
 import { registerShow } from "./api-test-helpers";
