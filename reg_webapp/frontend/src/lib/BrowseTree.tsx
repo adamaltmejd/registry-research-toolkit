@@ -1,4 +1,12 @@
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Collection,
@@ -8,7 +16,7 @@ import {
   TreeItem,
   TreeItemContent,
   TreeLoadMoreItem,
-  type TreeRenderProps,
+  TreeStateContext,
 } from "react-aria-components";
 import { getShow, type RegisterChild, type RootChild } from "./api";
 import styles from "./BrowseTree.module.css";
@@ -30,7 +38,26 @@ interface BrowseNode {
   children: BrowseNode[] | null;
 }
 
-type TreeState = TreeRenderProps["state"];
+type TreeState = NonNullable<React.ContextType<typeof TreeStateContext>>;
+
+/** Where the rows hand the tree's state up to BrowseTree (from an effect, never
+ * during render): RAC creates the state inside `Tree`, out of BrowseTree's reach. */
+const TreeStateSink = createContext<((state: TreeState | null) => void) | null>(
+  null,
+);
+
+/** The row that shows `key` under `expanded`: the key itself, or its outermost
+ * collapsed ancestor. Focusing a hidden row takes every row out of the Tab order
+ * (RAC keeps the focused key's tabIndex only), so focus goes here instead. */
+function visibleKey(state: TreeState, key: Key, expanded: Set<Key>): Key {
+  let target = key;
+  let node = state.collection.getItem(key);
+  while (node?.parentKey != null) {
+    if (!expanded.has(node.parentKey)) target = node.parentKey;
+    node = state.collection.getItem(node.parentKey);
+  }
+  return target;
+}
 
 const COLLAPSED_KEY = "reg_webapp:browse_collapsed";
 
@@ -140,9 +167,10 @@ function browseNodes(
 
 /**
  * The first browse column (DESIGN.md → Layout): every register, grouped under a
- * sticky provider row, as a navigation tree. Rows are links; arrow keys move
- * focus, Enter or a click opens the page, and the current page's row carries the
- * selection bar. Every group starts open; a group's chevron, ← / →, and the
+ * sticky provider row. Selection follows the arrow keys and a click, and
+ * selecting a row opens its page; the current page's row carries the selection
+ * bar. Rows are not links (RAC's selectable rows are not `<a>`). Every group
+ * starts open; a group's chevron, ← / →, and the
  * header's "Collapse all" / "Expand all" fold them, remembered per user.
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
@@ -188,20 +216,26 @@ export function BrowseTree({ className }: { className?: string }) {
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const expandedKeys = new Set(expandable.filter((id) => !collapsed.has(id)));
 
-  // RAC has no controlled focused key. If a collapse hides the focused row, the
-  // tree keeps pointing at it, renders every row out of the Tab order and drops
-  // out of the page's Tab sequence; so move focus to the row's visible group
-  // first. The state comes from the className render prop.
+  // RAC has no controlled focused key, and a focused key on a hidden row takes
+  // the whole tree out of the Tab order; so every focus move goes through
+  // `visibleKey`. The rows hand the state up (TreeStateSink).
   const treeState = useRef<TreeState | null>(null);
+  const keepTreeState = useCallback((state: TreeState | null) => {
+    treeState.current = state;
+  }, []);
+  const treeShown = root.value !== null && !registers.loading;
 
   // A page opened from elsewhere (a link, the search bar, history) moves the
-  // tree's focus to its row, so Tab into the list lands there and the arrows
-  // continue from it.
+  // tree's focus to its row, or to the collapsed group hiding it, so Tab into
+  // the list lands there and the arrows continue from it.
   useEffect(() => {
-    if (currentKey !== null) {
-      treeState.current?.selectionManager.setFocusedKey(currentKey);
+    const state = treeState.current;
+    if (currentKey !== null && treeShown && state) {
+      state.selectionManager.setFocusedKey(
+        visibleKey(state, currentKey, state.expandedKeys),
+      );
     }
-  }, [currentKey]);
+  }, [currentKey, treeShown]);
 
   // Selection follows the arrow keys (DESIGN.md → BrowseTree) and a click, and
   // selecting a row opens its page. Type-ahead moves focus only: React Aria's
@@ -214,13 +248,11 @@ export function BrowseTree({ className }: { className?: string }) {
   }
 
   function onExpandedChange(keys: Set<Key>): void {
-    const manager = treeState.current?.selectionManager;
-    const focused =
-      manager?.focusedKey != null
-        ? treeState.current?.collection.getItem(manager.focusedKey)
-        : null;
-    if (focused?.parentKey != null && !keys.has(focused.parentKey)) {
-      manager?.setFocusedKey(focused.parentKey);
+    const state = treeState.current;
+    const focused = state?.selectionManager.focusedKey;
+    if (state && focused != null) {
+      const target = visibleKey(state, focused, keys);
+      if (target !== focused) state.selectionManager.setFocusedKey(target);
     }
     const next = new Set(expandable.filter((id) => !keys.has(id)));
     setCollapsed(next);
@@ -263,25 +295,24 @@ export function BrowseTree({ className }: { className?: string }) {
               {registers.error}). Reload the page to try again.
             </p>
           )}
-          <Tree
-            aria-labelledby={labelId}
-            className={({ state }) => {
-              treeState.current = state;
-              return styles.tree;
-            }}
-            items={nodes}
-            selectionMode="single"
-            selectionBehavior="replace"
-            selectedKeys={currentKey === null ? [] : [currentKey]}
-            onSelectionChange={onSelectionChange}
-            expandedKeys={expandedKeys}
-            onExpandedChange={onExpandedChange}
-            dependencies={[counts, current?.exact]}
-          >
-            {(node) => (
-              <BrowseItem node={node} counts={counts} current={current} />
-            )}
-          </Tree>
+          <TreeStateSink value={keepTreeState}>
+            <Tree
+              aria-labelledby={labelId}
+              className={styles.tree}
+              items={nodes}
+              selectionMode="single"
+              selectionBehavior="replace"
+              selectedKeys={currentKey === null ? [] : [currentKey]}
+              onSelectionChange={onSelectionChange}
+              expandedKeys={expandedKeys}
+              onExpandedChange={onExpandedChange}
+              dependencies={[counts, currentKey, current?.exact]}
+            >
+              {(node) => (
+                <BrowseItem node={node} counts={counts} current={current} />
+              )}
+            </Tree>
+          </TreeStateSink>
         </>
       )}
     </nav>
@@ -298,6 +329,11 @@ function BrowseItem({
   current: CurrentRow | null;
 }) {
   const count = inProjectCount(node, counts);
+  const state = useContext(TreeStateContext);
+  const sink = useContext(TreeStateSink);
+  useEffect(() => {
+    sink?.(state);
+  }, [sink, state]);
   // "page" only on the row whose own page is open; "true" on the register row
   // while a page under it (a variable, a group, its variants) is open.
   const ariaCurrent =
