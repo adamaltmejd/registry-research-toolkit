@@ -185,9 +185,7 @@ function VersionBlockView({
       {rows.length > 0 && <KeyValue rows={rows} />}
       {populations.length > 0 && (
         <div className={styles.metadata}>
-          <h5 className={`micro-label ${styles.metadataHeading}`}>
-            Population
-          </h5>
+          <h5 className={styles.metadataHeading}>Population</h5>
           {populations.map((population) => (
             <KeyValue key={population.name} rows={populationRows(population)} />
           ))}
@@ -195,9 +193,7 @@ function VersionBlockView({
       )}
       {objectTypes.length > 0 && (
         <div className={styles.metadata}>
-          <h5 className={`micro-label ${styles.metadataHeading}`}>
-            Object type
-          </h5>
+          <h5 className={styles.metadataHeading}>Object type</h5>
           {objectTypes.map((objectType) => (
             <KeyValue key={objectType.name} rows={objectTypeRows(objectType)} />
           ))}

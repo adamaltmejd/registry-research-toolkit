@@ -9,7 +9,7 @@ const ENTRIES = [
   },
   {
     href: "/project",
-    title: "Start a project",
+    title: "Create a project",
     description:
       "Collect columns into a data order and check it before you send it.",
   },

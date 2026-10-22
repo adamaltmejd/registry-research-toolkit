@@ -101,8 +101,13 @@
   margin-top: var(--space-3);
 }
 
+/* A heading over its KeyValue rows, not a term: a term-styled label read as a
+   term with no value. */
 .metadataHeading {
   margin: 0;
+  color: var(--text);
+  font-size: var(--text-body);
+  font-weight: var(--heading-weight);
 }
 
 /* ── The register page's summary (VariantsSummary) ───────────────────── */

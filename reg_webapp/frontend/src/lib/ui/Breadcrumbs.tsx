@@ -20,8 +20,10 @@ export function Breadcrumbs({
   className?: string;
 }) {
   return (
-    <nav aria-label="Breadcrumb" className={className}>
-      <AriaBreadcrumbs className={styles.list}>
+    // RAC always names the list (its fallback is "Breadcrumbs"), so the name
+    // lives there alone; a second one on the nav was announced twice.
+    <nav className={className}>
+      <AriaBreadcrumbs aria-label="Breadcrumb" className={styles.list}>
         {items.map((item, i) => (
           // A label can repeat along a path; its position cannot.
           // oxlint-disable-next-line react/no-array-index-key

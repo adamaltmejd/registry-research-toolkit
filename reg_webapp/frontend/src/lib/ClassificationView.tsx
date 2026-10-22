@@ -38,7 +38,6 @@ export function ClassificationLeafView({ node }: { node: ClassificationShow }) {
     <article className={styles.page}>
       <Definitions
         title={nodeLabel(node)}
-        fqid={node.fqid}
         definitions={
           node.short_name
             ? [
@@ -322,7 +321,13 @@ export function ClassificationGroupView({
   return (
     <article className={styles.page}>
       <Definitions
-        title={family ? node.label : `Classification group: ${node.label}`}
+        title={node.label}
+        facets={[
+          {
+            label: "Kind",
+            value: family ? "Classification family" : "Classification group",
+          },
+        ]}
       />
       {/* Build-derivation metadata, not researcher-facing: demoted. */}
       <TechnicalDetails>
@@ -366,7 +371,7 @@ export function ClassificationGroupView({
         )
       )}
       {tabs.length > 0 && selectedFqid !== null && (
-        <SubjectSection title="Value set">
+        <SubjectSection title="Codes">
           <Tabs
             selectedKey={selectedFqid}
             onSelectionChange={(key) => selectEdition(String(key))}
