@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   Button,
   Collection,
@@ -16,7 +8,7 @@ import {
   TreeItem,
   TreeItemContent,
   TreeLoadMoreItem,
-  TreeStateContext,
+  type TreeRenderProps,
 } from "react-aria-components";
 import { getShow, type RegisterChild, type RootChild } from "./api";
 import styles from "./BrowseTree.module.css";
@@ -38,13 +30,7 @@ interface BrowseNode {
   children: BrowseNode[] | null;
 }
 
-type TreeState = NonNullable<React.ContextType<typeof TreeStateContext>>;
-
-/** Where the rows hand the tree's state up to BrowseTree (from an effect, never
- * during render): RAC creates the state inside `Tree`, out of BrowseTree's reach. */
-const TreeStateSink = createContext<((state: TreeState | null) => void) | null>(
-  null,
-);
+type TreeState = TreeRenderProps["state"];
 
 /** The row that shows `key` under `expanded`: the key itself, or its outermost
  * collapsed ancestor. Focusing a hidden row takes every row out of the Tab order
@@ -218,11 +204,11 @@ export function BrowseTree({ className }: { className?: string }) {
 
   // RAC has no controlled focused key, and a focused key on a hidden row takes
   // the whole tree out of the Tab order; so every focus move goes through
-  // `visibleKey`. The rows hand the state up (TreeStateSink).
+  // `visibleKey`, on the tree's state. RAC creates that state inside `Tree` and
+  // exposes it only to render props: the className render prop captures it (the
+  // spike's capture). TreeStateContext does not reach item components, which
+  // RAC renders in a hidden collection pass first, so it cannot be used.
   const treeState = useRef<TreeState | null>(null);
-  const keepTreeState = useCallback((state: TreeState | null) => {
-    treeState.current = state;
-  }, []);
   const treeShown = root.value !== null && !registers.loading;
 
   // A page opened from elsewhere (a link, the search bar, history) moves the
@@ -295,24 +281,25 @@ export function BrowseTree({ className }: { className?: string }) {
               {registers.error}). Reload the page to try again.
             </p>
           )}
-          <TreeStateSink value={keepTreeState}>
-            <Tree
-              aria-labelledby={labelId}
-              className={styles.tree}
-              items={nodes}
-              selectionMode="single"
-              selectionBehavior="replace"
-              selectedKeys={currentKey === null ? [] : [currentKey]}
-              onSelectionChange={onSelectionChange}
-              expandedKeys={expandedKeys}
-              onExpandedChange={onExpandedChange}
-              dependencies={[counts, currentKey, current?.exact]}
-            >
-              {(node) => (
-                <BrowseItem node={node} counts={counts} current={current} />
-              )}
-            </Tree>
-          </TreeStateSink>
+          <Tree
+            aria-labelledby={labelId}
+            className={({ state }) => {
+              treeState.current = state;
+              return styles.tree;
+            }}
+            items={nodes}
+            selectionMode="single"
+            selectionBehavior="replace"
+            selectedKeys={currentKey === null ? [] : [currentKey]}
+            onSelectionChange={onSelectionChange}
+            expandedKeys={expandedKeys}
+            onExpandedChange={onExpandedChange}
+            dependencies={[counts, currentKey, current?.exact]}
+          >
+            {(node) => (
+              <BrowseItem node={node} counts={counts} current={current} />
+            )}
+          </Tree>
         </>
       )}
     </nav>
@@ -329,11 +316,6 @@ function BrowseItem({
   current: CurrentRow | null;
 }) {
   const count = inProjectCount(node, counts);
-  const state = useContext(TreeStateContext);
-  const sink = useContext(TreeStateSink);
-  useEffect(() => {
-    sink?.(state);
-  }, [sink, state]);
   // "page" only on the row whose own page is open; "true" on the register row
   // while a page under it (a variable, a group, its variants) is open.
   const ariaCurrent =
