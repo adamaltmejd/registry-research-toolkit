@@ -390,7 +390,6 @@ export function SourceEditor({
         </div>
         <Button
           variant="default"
-          size="sm"
           aria-label={
             identified ? `Remove source ${identifiedName}` : undefined
           }
@@ -515,7 +514,6 @@ export function SourceEditor({
                       />
                       {displayRows.length > 1 && (
                         <Button
-                          size="sm"
                           isInert={applying}
                           onPress={() =>
                             editRows((base) => base.filter((_, j) => j !== i))
@@ -529,7 +527,6 @@ export function SourceEditor({
                 </fieldset>
                 <div className={styles.actions}>
                   <Button
-                    size="sm"
                     isInert={applying}
                     onPress={() => editRows((base) => [...base, BLANK_ROW])}
                   >
@@ -540,7 +537,6 @@ export function SourceEditor({
                       (the handler's own guard) without leaving the tab order. */}
                   <Button
                     type="submit"
-                    size="sm"
                     isInert={applying}
                     aria-label={
                       identified

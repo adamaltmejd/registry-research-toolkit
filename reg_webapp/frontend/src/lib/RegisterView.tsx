@@ -650,9 +650,7 @@ export function RegisterView({
                         : "")}
                 </span>
                 {selectedVariants.size > 0 && (
-                  <Button size="sm" onPress={clearVariants}>
-                    Clear variant filter
-                  </Button>
+                  <Button onPress={clearVariants}>Clear variant filter</Button>
                 )}
               </div>
             </div>
@@ -732,7 +730,6 @@ export function RegisterView({
             </output>
             <Button
               variant="primary"
-              size="sm"
               isInert={stagedKeys.size === 0 || !seedReady}
               isBusy={applying}
               onPress={addSelected}

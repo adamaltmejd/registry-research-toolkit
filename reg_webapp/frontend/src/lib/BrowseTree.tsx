@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import {
-  Button,
+  Button as AriaButton,
   Collection,
   type Key,
   type Selection,
@@ -25,6 +25,7 @@ import { projectStore } from "./project_store.svelte";
 import { type Route, router } from "./router";
 import { useRune } from "./svelte_bridge.svelte";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
+import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
@@ -311,7 +312,7 @@ export function BrowseTree({ className }: { className?: string }) {
         {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
             group is open, and expands once all are closed. */}
         <Button
-          className="ghost-button"
+          variant="ghost"
           onPress={() =>
             onExpandedChange(
               expandedKeys.size > 0 ? new Set() : new Set(expandable),
@@ -405,9 +406,9 @@ function BrowseItem({
         {({ hasChildItems }) => (
           <>
             {hasChildItems ? (
-              <Button slot="chevron" className={styles.chevron}>
+              <AriaButton slot="chevron" className={styles.chevron}>
                 <TreeChevron />
-              </Button>
+              </AriaButton>
             ) : (
               <span className={styles.chevronSpacer} />
             )}

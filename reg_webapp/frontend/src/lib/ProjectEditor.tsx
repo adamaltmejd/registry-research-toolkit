@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { Button as AriaButton } from "react-aria-components";
 import { registerChildren } from "./catalog_names.svelte";
 import styles from "./ProjectEditor.module.css";
 import {
@@ -192,12 +191,9 @@ export function ProjectEditor({
           <span className={styles.bannerText}>
             <span aria-hidden="true">✕</span> {openError}
           </span>
-          <AriaButton
-            className="ghost-button"
-            onPress={() => projectStore.clearOpenError()}
-          >
+          <Button variant="ghost" onPress={() => projectStore.clearOpenError()}>
             Dismiss
-          </AriaButton>
+          </Button>
         </p>
       )}
 

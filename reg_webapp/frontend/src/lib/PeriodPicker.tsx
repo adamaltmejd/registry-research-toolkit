@@ -312,14 +312,10 @@ export function PeriodPicker({
           />
         </fieldset>
         <div className={styles.actions}>
-          <Button type="submit" size="sm" aria-label="Apply period">
+          <Button type="submit" aria-label="Apply period">
             Apply
           </Button>
-          {period !== null && (
-            <Button size="sm" onPress={onClear}>
-              Clear
-            </Button>
-          )}
+          {period !== null && <Button onPress={onClear}>Clear</Button>}
         </div>
       </div>
       {/* Always rendered, so a refusal lands in a live region that already
@@ -531,9 +527,7 @@ function PeriodWindowSlider({
           <p className={styles.note}>
             Deviates from project window ({projectWindow.from}–
             {projectWindow.to})
-            <Button size="sm" onPress={onReset}>
-              Reset to project window
-            </Button>
+            <Button onPress={onReset}>Reset to project window</Button>
           </p>
         )
       )}

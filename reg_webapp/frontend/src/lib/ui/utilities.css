@@ -204,24 +204,6 @@ a:hover {
   font-size: var(--text-sm);
 }
 
-/* button-ghost on a React Aria Button: no box, a 2px accent underline under the
-   label (DESIGN.md → Buttons). */
-.ghost-button {
-  padding: 0 0 1px;
-  border: none;
-  border-bottom: 2px solid var(--accent);
-  background: none;
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-sm);
-  cursor: pointer;
-}
-.ghost-button[data-focus-visible] {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
-}
-
 /* `.locate-flash` — briefly rings a /project source or column card when the
    validation panel locates it; the panel toggles the class on the element. */
 .locate-flash {

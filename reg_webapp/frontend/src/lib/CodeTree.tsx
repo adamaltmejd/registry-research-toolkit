@@ -112,9 +112,7 @@ export function CodeTree({
         <p className="error">
           <span aria-hidden="true">✕</span> Could not load codes: {roots.error}
         </p>
-        <Button size="sm" onPress={() => load("")}>
-          Retry
-        </Button>
+        <Button onPress={() => load("")}>Retry</Button>
       </div>
     );
   }

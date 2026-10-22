@@ -448,9 +448,11 @@ the stepping stones: they keep reading the same roles until each is replaced, an
 not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
-  per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box
-  and a 2 px `accent` underline; `danger` is the `err` fill for destructive actions
-  only. There is no success variant. A button says what happens: "Add column to
+  per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box,
+  a 2 px `accent` underline, and `surface-hover` on hover; `danger` is the `err` fill with
+  `danger-fg` text for destructive actions only, with no hover change. One size
+  (`body-sm`, weight 500, `spacing.2` / `spacing.3` padding). A disabled button takes
+  `--opacity-disabled`. There is no success variant. A button says what happens: "Add column to
   project", never "Submit".
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, warnings, save state — on `accent-soft` with a 3 px `accent`

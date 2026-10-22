@@ -131,7 +131,6 @@ export function BindingEditor({
         </div>
         <Button
           variant="danger"
-          size="sm"
           aria-label={columnLabel ? `Remove column ${columnLabel}` : undefined}
           onPress={() => projectStore.removeBinding(sourceIndex, bindingIndex)}
         >

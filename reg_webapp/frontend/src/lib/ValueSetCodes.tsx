@@ -206,9 +206,7 @@ export function ValueSetCodes({
                 <span aria-hidden="true">✕</span> Could not load codes:{" "}
                 {resource.error}
               </p>
-              <Button size="sm" onPress={() => setAttempt((n) => n + 1)}>
-                Retry
-              </Button>
+              <Button onPress={() => setAttempt((n) => n + 1)}>Retry</Button>
             </div>
           ) : (
             codes.length === 0 && (
@@ -221,7 +219,7 @@ export function ValueSetCodes({
             // Outside the status chain, so the pressed button is not swapped
             // for a skeleton mid-page, which would drop focus to <body>.
             <div className={styles.status}>
-              <Button size="sm" onPress={loadMore} isBusy={loading}>
+              <Button onPress={loadMore} isBusy={loading}>
                 Load more codes
               </Button>
               {total !== null && (

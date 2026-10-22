@@ -272,8 +272,7 @@
   /* ── Typography ──────────────────────────────────────────────────────── */
   --font-ui:
     "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono:
-    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Type scale (roles components read). Denser than before: body is 14px. */
   --text-display: 2.75rem;

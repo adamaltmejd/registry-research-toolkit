@@ -231,7 +231,6 @@ export function StudyWindowSummary({ sources, studyWindow }: Props) {
               // the dialog returns focus HERE): inert while it checks, and once
               // the last plan left nothing to change.
               <Button
-                size="sm"
                 isInert={checking || nothingToApply}
                 onPress={() => void prepare()}
               >

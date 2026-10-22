@@ -532,9 +532,7 @@ export function ValueSetView({
             </span>
           )}
           <span className={styles.rowAction}>
-            <Button size="sm" onPress={() => setIsolatedKey(vs.key)}>
-              Isolate
-            </Button>
+            <Button onPress={() => setIsolatedKey(vs.key)}>Isolate</Button>
           </span>
         </div>
         {sourceName(vs)}
@@ -683,9 +681,7 @@ export function ValueSetView({
       </p>
       {isolated ? (
         <div ref={scrollToFocus}>
-          <Button size="sm" onPress={() => setIsolatedKey(null)}>
-            All value sets
-          </Button>
+          <Button onPress={() => setIsolatedKey(null)}>All value sets</Button>
           <h3 className={styles.heading}>
             {isolated.classificationSlugs.length > 0 ? (
               <ClassificationLinks slugs={isolated.classificationSlugs} />

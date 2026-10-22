@@ -27,12 +27,13 @@ export type PlainTone =
  *  - status: `error`/`warn`/`info`/`ok` — paired with a glyph, never hue alone. */
 export type TagTone = PlainTone | StatusTone;
 
+/** A `Button.svelte` size; the React `Button` has one size. Deleted with the Svelte
+ *  island that still passes `sm`. */
+export type ButtonSize = "sm" | "md";
+
 /** A `Button` visual variant. `primary` is the single accent-filled CTA per
  *  view; `default`/`ghost` are the quiet chrome; `danger` is destructive. */
 export type ButtonVariant = "primary" | "default" | "ghost" | "danger";
-
-/** A `Button` size. */
-export type ButtonSize = "sm" | "md";
 
 /** A `DataTable` column definition. `key` indexes into the row object;
  *  `numeric` right-aligns + mono-faces a measure; `mono` mono-faces an

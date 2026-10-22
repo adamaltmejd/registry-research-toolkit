@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Button,
   Label,
   Link,
   Slider,
@@ -13,6 +12,7 @@ import styles from "./ProjectBanner.module.css";
 import { safeSourceBindings, safeSourceSlots } from "./project_data";
 import { projectStore, type ValidationStatus } from "./project_store.svelte";
 import { useRune } from "./svelte_bridge.svelte";
+import { Button } from "./ui/Button";
 import { windowStore } from "./window.svelte";
 import type { WindowBounds } from "./window_bounds";
 
@@ -156,12 +156,11 @@ function StudyWindow({ bounds }: { bounds: WindowBounds }) {
           }
         </SliderOutput>
         {active !== null && (
-          <Button
-            className={`ghost-button ${styles.clear}`}
-            onPress={() => windowStore.set(null)}
-          >
-            Clear
-          </Button>
+          <span className={styles.clear}>
+            <Button variant="ghost" onPress={() => windowStore.set(null)}>
+              Clear
+            </Button>
+          </span>
         )}
       </div>
       <SliderTrack className={styles.track}>

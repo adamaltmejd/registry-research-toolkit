@@ -6,7 +6,10 @@
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-family: var(--font-ui);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
   font-weight: 500;
+  line-height: 1.3;
   cursor: pointer;
   transition:
     background var(--duration-quick) var(--ease-standard),
@@ -17,17 +20,8 @@
   box-shadow: var(--focus-ring);
 }
 .button[aria-disabled="true"] {
-  opacity: 0.5;
+  opacity: var(--opacity-disabled);
   cursor: not-allowed;
-}
-
-.md {
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-sm);
-}
-.sm {
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--text-micro);
 }
 
 .primary {
@@ -47,12 +41,22 @@
   background: var(--surface-hover);
 }
 
+/* Danger has no hover change (DESIGN.md → Buttons). */
 .danger {
   background: var(--err);
   color: var(--danger-fg);
 }
-.danger[data-hovered]:not([aria-disabled="true"]) {
-  background: color-mix(in srgb, var(--err) 85%, var(--text));
+
+.ghost {
+  background: transparent;
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.ghost[data-hovered]:not([aria-disabled="true"]) {
+  background: var(--surface-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {
