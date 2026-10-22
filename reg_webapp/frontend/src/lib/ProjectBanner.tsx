@@ -100,7 +100,7 @@ export function ProjectBanner({ bounds }: { bounds: WindowBounds }) {
               className={styles.unsaved}
               title="Unsaved changes since the last download"
             >
-              Unsaved
+              <span aria-hidden="true">●</span> Unsaved
             </span>
           )}
         </div>
@@ -157,7 +157,7 @@ function StudyWindow({ bounds }: { bounds: WindowBounds }) {
         </SliderOutput>
         {active !== null && (
           <Button
-            className={styles.clear}
+            className={`ghost-button ${styles.clear}`}
             onPress={() => windowStore.set(null)}
           >
             Clear

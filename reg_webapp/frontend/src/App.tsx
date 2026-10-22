@@ -83,7 +83,7 @@ export function App() {
         <div className={styles.app}>
           <TopBar steward={ctx?.steward ?? null} bounds={bounds} />
           {context.error && (
-            <p className={styles.contextError} role="alert">
+            <p className={`banner-error ${styles.contextError}`} role="alert">
               <span aria-hidden="true">✕</span> The deployment details did not
               load ({context.error}). Reload the page to try again.
             </p>

@@ -21,32 +21,14 @@
   margin-right: auto;
 }
 
-/* Ghost buttons: no box, a 2px accent underline (DESIGN.md → Buttons). */
-.ghost {
-  padding: 0 0 1px;
-  border: none;
-  border-bottom: 2px solid var(--accent);
-  background: none;
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-micro);
-  cursor: pointer;
-}
-.ghost[data-focus-visible] {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
-}
-
-.note,
-.error {
+.note {
   margin: 0;
   padding: var(--space-3);
   font-size: var(--text-sm);
   color: var(--text-muted);
 }
 .error {
-  color: var(--err);
+  margin: var(--space-3);
 }
 
 .tree {

@@ -10,12 +10,6 @@
 
 .contextError {
   margin: var(--space-3) var(--space-4) 0;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--err-border);
-  border-radius: var(--radius);
-  background: var(--err-bg);
-  color: var(--err);
-  font-size: var(--text-sm);
 }
 
 .body {

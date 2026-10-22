@@ -20,7 +20,7 @@
 .summary {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-1);
   min-width: 0;
   max-width: 16rem;
 }
@@ -119,22 +119,8 @@
   color: var(--accent-ink);
 }
 
-/* A ghost button: no box, a 2px accent underline. */
 .clear {
   margin-left: auto;
-  padding: 0 0 1px;
-  border: none;
-  border-bottom: 2px solid var(--accent);
-  background: none;
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-micro);
-  cursor: pointer;
-}
-.clear[data-focus-visible] {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
 }
 
 /* The track: a hairline with the window band over it and two thumbs. 20px tall

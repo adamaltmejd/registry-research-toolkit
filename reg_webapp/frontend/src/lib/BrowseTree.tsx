@@ -200,13 +200,13 @@ export function BrowseTree({ className }: { className?: string }) {
           Registers
         </span>
         <Button
-          className={styles.ghost}
+          className="ghost-button"
           onPress={() => onExpandedChange(new Set())}
         >
           Collapse all
         </Button>
         <Button
-          className={styles.ghost}
+          className="ghost-button"
           onPress={() => onExpandedChange(new Set(expandable))}
         >
           Expand all
@@ -217,15 +217,16 @@ export function BrowseTree({ className }: { className?: string }) {
           Loading the catalog…
         </p>
       ) : root.value === null ? (
-        <p className={styles.error} role="alert">
-          The register list did not load. Reload the page to try again.
+        <p className={`banner-error ${styles.error}`} role="alert">
+          <span aria-hidden="true">✕</span> The register list did not load.
+          Reload the page to try again.
         </p>
       ) : (
         <>
           {registers.error && (
-            <p className={styles.error} role="alert">
-              Some registers did not load ({registers.error}). Reload the page
-              to try again.
+            <p className={`banner-error ${styles.error}`} role="alert">
+              <span aria-hidden="true">✕</span> Some registers did not load (
+              {registers.error}). Reload the page to try again.
             </p>
           )}
           <NavigationTree
