@@ -55,6 +55,8 @@ export function DocView({ identifier }: { identifier: string }) {
     // message says which, so it is shown as it came.
     return (
       <div className={styles.page}>
+        {/* The page keeps its heading: the identifier asked for. */}
+        <Definitions title={identifier} />
         <p className="banner-error" role="alert">
           <span aria-hidden="true">✕</span> {resource.error}
         </p>
