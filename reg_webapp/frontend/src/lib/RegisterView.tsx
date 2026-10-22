@@ -366,9 +366,10 @@ export function RegisterView({
       ? groupFilterKeys(row.group, columnNames)
       : leafKeys(row.item),
   );
+  const rankedSet = new Set(ranked);
   const filteredRows = [
     ...ranked,
-    ...narrowedRows.filter((row) => !ranked.includes(row)),
+    ...narrowedRows.filter((row) => !rankedSet.has(row)),
   ];
 
   // ── Y-83: add delivery columns straight from the list ────────────────────
