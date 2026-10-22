@@ -1,0 +1,149 @@
+.editions {
+  margin-top: var(--space-5);
+}
+
+.heading {
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border-strong);
+  font-size: var(--text-h2);
+  font-weight: var(--heading-weight);
+}
+
+.cluster + .cluster {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.clusterHeading {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+}
+
+.scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--space-1) 0;
+}
+
+.dag {
+  position: relative;
+  margin-inline: auto;
+}
+
+.connectors {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.edge {
+  fill: none;
+  stroke: var(--viz-edge-succession);
+  stroke-width: 1.5;
+}
+
+.arrowHead {
+  fill: var(--viz-edge-succession);
+}
+
+.edgeYear {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 34px;
+  padding: 0 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* The list is the nodes' accessible structure; they are placed on the
+   drawing's grid, relative to `.dag`. */
+.nodes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.node {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 168px;
+  height: 58px;
+  padding: var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+/* The edition this page shows: where you are, so the selection's bar and wash. */
+.focused {
+  background: var(--accent-bg);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.name {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text);
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+  line-height: 1.2;
+  text-decoration: none;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+a.name {
+  text-decoration: underline 1.5px var(--accent);
+  text-underline-offset: 2px;
+}
+a.name:hover {
+  color: var(--accent-ink);
+}
+a.name:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.tags {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.viewed,
+.currentTag {
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-micro);
+  font-weight: var(--heading-weight);
+  line-height: 1.45;
+}
+.viewed {
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+}
+.currentTag {
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}

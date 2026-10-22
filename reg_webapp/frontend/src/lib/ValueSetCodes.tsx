@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { getValues, type ValueRow } from "./api";
 import { CodeList } from "./CodeList";
 import styles from "./CodeList.module.css";
-import { CodeTreeLevel, type Levels, type OpenNodes } from "./CodeTreeLevel";
+import { CodeTree } from "./CodeTree";
+import { useCodeTree } from "./code_tree";
 import { FilterInput } from "./FilterInput";
 import { Button } from "./ui/Button";
 import { Skeleton } from "./ui/Skeleton";
@@ -162,22 +163,10 @@ export function ValueSetCodes({
   const showFilter = setSize !== null && setSize >= CODE_FILTER_THRESHOLD;
 
   // Each tree level's read and the open nodes, kept for the panel's life: a
-  // filter round-trip reopens the tree as it was.
-  const [levels] = useState<Levels>(() => new Map());
-  const [openKeys, setOpenKeys] = useState<ReadonlySet<string>>(
-    () => new Set(),
-  );
-  const opened: OpenNodes = {
-    has: (key) => openKeys.has(key),
-    toggle: (key, open) =>
-      setOpenKeys((current) => {
-        if (current.has(key) === open) return current;
-        const next = new Set(current);
-        if (open) next.add(key);
-        else next.delete(key);
-        return next;
-      }),
-  };
+  // filter round-trip reopens the tree as it was. Only a classification's codes
+  // form a tree, and its panel is keyed on the FQID, so a tree never outlives
+  // its classification.
+  const codeTree = useCodeTree(fqid);
 
   const loading = fetching && resource.loading;
   function loadMore(): void {
@@ -201,13 +190,7 @@ export function ValueSetCodes({
       {showTree ? (
         <div className={styles.scroll}>
           {/* The tree owns its loading, error and paging states. */}
-          <CodeTreeLevel
-            fqid={fqid}
-            parent=""
-            expected={null}
-            levels={levels}
-            opened={opened}
-          />
+          <CodeTree tree={codeTree} label="Codes" />
         </div>
       ) : (
         <>
