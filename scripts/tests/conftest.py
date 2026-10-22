@@ -46,4 +46,7 @@ def python_test_files() -> list[Path]:
 @pytest.fixture(scope="session")
 def frontend_test_files() -> list[Path]:
     """Discover tracked and unignored Vitest files (unit and browser projects)."""
-    return _repo_files("reg_webapp/frontend/src/*.test.ts")
+    return sorted(
+        _repo_files("reg_webapp/frontend/src/*.test.ts")
+        + _repo_files("reg_webapp/frontend/src/*.test.tsx")
+    )
