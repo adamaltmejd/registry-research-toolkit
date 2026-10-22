@@ -4,7 +4,7 @@ import {
   getStates,
   type ProviderShow,
 } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
+import { BindingLeafView } from "./BindingLeafView";
 import { useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
@@ -103,12 +103,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
     case "register":
       return <RegisterView node={node} {...period} />;
     case "variable":
-      return (
-        <SvelteIsland
-          component={BindingLeafView}
-          props={{ fqidPath, node, states, ...period }}
-        />
-      );
+      return <BindingLeafView node={node} states={states} {...period} />;
     case "classification_root":
       return <ClassificationRootView node={node} />;
     case "classification": {

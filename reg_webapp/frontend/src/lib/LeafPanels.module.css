@@ -1,0 +1,67 @@
+/* The binding leaf's lineage and parsed-documentation sections. */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  font-size: var(--text-sm);
+}
+
+.sourceRegister {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.warnKind {
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}
+
+.note {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.mention {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+
+.docLabel {
+  font-weight: var(--heading-weight);
+}
+
+.snippet,
+.sourceLink {
+  flex-basis: 100%;
+  min-width: 0;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* The matched term (`**…**` → <mark>): the accent tint, not the browser's
+   yellow, with its text in accent-ink. */
+.snippet mark {
+  padding: 0 0.1em;
+  border-radius: var(--radius-sm);
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+}
