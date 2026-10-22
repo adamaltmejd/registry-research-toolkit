@@ -8,10 +8,10 @@ import { IndexedDBPersistence } from "./lib/indexeddb_persistence";
 import {
   AUTOSAVE_KEY,
   setPersistence,
+  startDraftLifecycle,
   storeSchemaVersion,
-} from "./lib/project_store.svelte";
+} from "./lib/project_store";
 import { initRegCore } from "./lib/reg_core";
-import { startDraftLifecycle } from "./lib/svelte_bridge.svelte";
 
 // A5.4 production persistence wiring (the store default stays InMemoryPersistence
 // for tests; this swaps in the IndexedDB drop-in before the lifecycle starts).

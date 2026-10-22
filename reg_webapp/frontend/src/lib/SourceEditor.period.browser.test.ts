@@ -5,7 +5,7 @@ import { state } from "./catalog-test-helpers";
 import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
-import { holdRestore } from "./restore-test-helpers.svelte";
+import { holdRestore } from "./restore-test-helpers";
 import {
   renderCard,
   seedSource,

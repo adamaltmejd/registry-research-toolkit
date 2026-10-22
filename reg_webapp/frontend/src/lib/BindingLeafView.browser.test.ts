@@ -13,7 +13,7 @@ import {
 import { expectStagedAddColumnVisible } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
-import { holdRestore } from "./restore-test-helpers.svelte";
+import { holdRestore } from "./restore-test-helpers";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 

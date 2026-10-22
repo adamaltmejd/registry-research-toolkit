@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { newProjectData, type RawDraft } from "./project_data";
 import {
-  initDraftLifecycle,
   projectStore,
   setPersistence,
-} from "./project_store.svelte";
+  startDraftLifecycle,
+} from "./project_store";
 
 // The APPLICATION-owned draft lifecycle: the load-at-init restore and the
 // `projectStore.restored` gate the catalog's Add path awaits before it creates or
@@ -57,9 +57,7 @@ describe("draft restore + the authoring gate", () => {
       load: () => Promise.resolve(savedDraft("recovered")),
     });
     const replacements = projectStore.replacementGeneration;
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
+    const stop = startDraftLifecycle();
 
     await projectStore.restored;
     expect(projectStore.draft?.name).toBe("recovered");
@@ -79,9 +77,7 @@ describe("draft restore + the authoring gate", () => {
     const { promise: loaded, resolve: release } =
       Promise.withResolvers<RawDraft | null>();
     setPersistence({ save: () => Promise.resolve(), load: () => loaded });
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
+    const stop = startDraftLifecycle();
 
     // The researcher acts while the restore is still in flight — a deliberate
     // replacement, which a pick queued behind the gate keys off.
@@ -108,9 +104,7 @@ describe("draft restore + the authoring gate", () => {
       },
       load: () => Promise.reject(new Error("IndexedDB unavailable")),
     });
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
+    const stop = startDraftLifecycle();
 
     await expect(projectStore.restored).resolves.toBeUndefined();
 

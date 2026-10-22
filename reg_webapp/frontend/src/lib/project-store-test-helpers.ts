@@ -1,7 +1,7 @@
 // Shared fixtures for the project_store tests: the seed, a resolved staged add,
 // Open, and the draft read for assertions. Pure: import from any test.
 import type { ProjectData } from "./project_data";
-import { projectStore, type StagedAdd } from "./project_store.svelte";
+import { projectStore, type StagedAdd } from "./project_store";
 
 export const SEED = {
   reg_meta_version: "reg_meta/v1.0.0",

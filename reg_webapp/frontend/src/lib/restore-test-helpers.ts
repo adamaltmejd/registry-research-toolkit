@@ -1,10 +1,9 @@
 // Hold the app-owned draft restore open at the persistence boundary, for the cases
 // that land something (an edit, a New, a navigation) while a write waits on
-// `projectStore.restored`. A `.svelte.ts` module: it starts the lifecycle in an
-// `$effect.root`, as App.svelte does at its reactive root. Browser-only.
+// `projectStore.restored`. Browser-only.
 import { onTestFinished, vi } from "vitest";
 import type { RawDraft } from "./project_data";
-import { initDraftLifecycle, setPersistence } from "./project_store.svelte";
+import { setPersistence, startDraftLifecycle } from "./project_store";
 
 /** Start the draft lifecycle over a storage read that has not answered yet (a slow
  * IndexedDB open on a cold entry), and return the release: the read answers with
@@ -29,9 +28,7 @@ export function holdRestore(): () => void {
         : realFetch(input, init),
     ),
   );
-  const stop = $effect.root(() => {
-    initDraftLifecycle();
-  });
+  const stop = startDraftLifecycle();
   let held = true;
   const release = () => {
     if (!held) {
