@@ -56,6 +56,40 @@ export function CodeTree({
   const loadRoots = useEffectEvent(() => load(""));
   useEffect(() => loadRoots(), []);
 
+  // A retry swaps the focused error row for the (unfocusable) loader, so RAC
+  // falls back to the parent row. Once the level settles, focus moves on to
+  // what replaced the error: its first child, or the error row again.
+  const retrying = useRef<string | null>(null);
+  const treeElement = useRef<HTMLDivElement>(null);
+  function retry(parent: string): void {
+    retrying.current = parent;
+    load(parent);
+  }
+  useEffect(() => {
+    const parent = retrying.current;
+    const level = parent === null ? undefined : levels.get(parent);
+    if (parent === null || level === undefined || level.status === "loading")
+      return;
+    retrying.current = null;
+    const next =
+      level.status === "error"
+        ? `${parent}\u0000error`
+        : (level.rows[0]?.code ?? `${parent}\u0000empty`);
+    // RAC renders the new rows a pass later and drops a focused key it does
+    // not yet know, so the row is focused in the DOM once it exists; the row's
+    // own focus handler then moves the tree's focused key to it.
+    requestAnimationFrame(() => {
+      // Matched by attribute value, not a selector: CSS.escape turns the NUL
+      // in an error or empty row's key into U+FFFD.
+      const rows =
+        treeElement.current?.querySelectorAll<HTMLElement>('[role="row"]') ??
+        [];
+      for (const row of rows) {
+        if (row.dataset.key === next) row.focus();
+      }
+    });
+  }, [levels]);
+
   function onExpandedChange(keys: Set<Key>): void {
     keepFocusVisible(treeState.current, keys);
     for (const key of keys) {
@@ -89,6 +123,7 @@ export function CodeTree({
   }
   return (
     <Tree
+      ref={treeElement}
       aria-label={label}
       className={({ state }) => {
         treeState.current = state;
@@ -100,7 +135,7 @@ export function CodeTree({
       onExpandedChange={onExpandedChange}
       dependencies={[levels]}
     >
-      {(node) => <CodeItem node={node} levels={levels} load={load} />}
+      {(node) => <CodeItem node={node} levels={levels} retry={retry} />}
     </Tree>
   );
 }
@@ -108,11 +143,11 @@ export function CodeTree({
 function CodeItem({
   node,
   levels,
-  load,
+  retry,
 }: {
   node: CodeNode;
   levels: ReadonlyMap<string, Level>;
-  load: (parent: string) => void;
+  retry: (parent: string) => void;
 }) {
   const { code } = node;
   const childCount = code.child_count ?? 0;
@@ -156,7 +191,7 @@ function CodeItem({
           expected={childCount}
           level={level}
           levels={levels}
-          load={load}
+          retry={retry}
         />
       )}
     </TreeItem>
@@ -172,13 +207,13 @@ function Children({
   expected,
   level,
   levels,
-  load,
+  retry,
 }: {
   parent: string;
   expected: number;
   level: Level | undefined;
   levels: ReadonlyMap<string, Level>;
-  load: (parent: string) => void;
+  retry: (parent: string) => void;
 }) {
   if (level === undefined || level.status === "loading") {
     const reserved = Array.from(
@@ -209,7 +244,7 @@ function Children({
         id={`${parent}\u0000error`}
         textValue={`Could not load the codes under ${parent}: ${level.error}. Retry`}
         className={`${styles.treeRow} ${styles.treeError}`}
-        onAction={() => load(parent)}
+        onAction={() => retry(parent)}
       >
         <TreeItemContent>
           <span className={styles.chevronSpacer} />
@@ -237,7 +272,7 @@ function Children({
   }
   return (
     <Collection items={nodesOf(level)}>
-      {(child) => <CodeItem node={child} levels={levels} load={load} />}
+      {(child) => <CodeItem node={child} levels={levels} retry={retry} />}
     </Collection>
   );
 }
