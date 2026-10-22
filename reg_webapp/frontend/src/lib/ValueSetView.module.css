@@ -158,22 +158,18 @@
   font-family: var(--font-mono);
 }
 
-/* A source-extension verdict: the warn status row (DESIGN.md → StatusRow). */
+/* A source-extension verdict: the warn StatusRow, then the years and variants
+   it was recorded for and the code disclosures under it. */
 .notice {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-1);
   margin: var(--space-1) 0;
-  padding: var(--space-2);
-  border: 1px solid var(--warn);
-  border-radius: var(--radius);
-  background: var(--warn-bg);
-  color: var(--text);
   font-size: var(--text-sm);
 }
-.notice p {
-  margin: 0;
+.notice > :first-child {
+  align-self: stretch;
 }
 
 .noticeScope {
@@ -181,6 +177,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: var(--space-2);
+  margin: 0;
 }
 
 .noticeDetails {

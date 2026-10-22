@@ -32,7 +32,7 @@
   border: 0;
 }
 
-/* Shared exact-year entry (Y-100/A-220): the catalog's `PeriodPicker` and the
+/* Shared exact-year entry (Y-100/A-220): the catalog's `PeriodTimeline` and the
    /project cart's per-source period editor (`SourceEditor`, Y-81) each hold two
    `<input class="year">` fields resolved by the shared `resolveYearEntry`
    (period.ts) and a `role="status"` line reporting what they resolve to. The

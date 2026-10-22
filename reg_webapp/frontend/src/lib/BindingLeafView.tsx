@@ -10,18 +10,21 @@ import {
 import styles from "./BindingLeafView.module.css";
 import type { PeriodProps } from "./CatalogNodeView";
 import {
+  catalogHref,
   coverageFromStates,
+  deliveredYears,
   formatDataType,
   formatStateWindow,
   groupLinkFromFocus,
   narrowStatesByModifier,
-  parseCodesParam,
+  nodeLabel,
   pickerRepresentations,
   pickerWindowYears,
   qualifierFromFocus,
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
+import { registerRead } from "./catalog_names.svelte";
 import {
   matrixAnswerSource,
   pagesLabel,
@@ -29,7 +32,6 @@ import {
 } from "./curated_source";
 import { DocMentionsPanel } from "./DocMentionsPanel";
 import { LineageDetails } from "./LineageDetails";
-import { PeriodPicker } from "./PeriodPicker";
 import {
   clampYearPeriodWire,
   clampYearWindow,
@@ -51,6 +53,10 @@ import {
   type StagedApplyPayload,
   stagedApplyRefusal,
 } from "./staged_picker";
+import { useRune } from "./svelte_bridge.svelte";
+import { PeriodTimeline } from "./Timeline";
+import { ColumnChip } from "./ui/ColumnChip";
+import type { Definition, MemberOf } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
@@ -153,21 +159,19 @@ function stateKey(state: VariableStateModel): string {
 }
 
 /** The value-set view keeps local state (an isolated value set, a filter, open
- * code panels) that a move of its states or of the `?codes` focus resets: a
- * period Apply re-reads the states without remounting this leaf. */
+ * code panels) that a move of its states resets: a period Apply re-reads the
+ * states without remounting this leaf. */
 function valueSetViewKey(
   states: VariableStateModel[],
   scope: VariableStateModel[] | null,
-  focusColumn: string | null,
-  focusVariant: string | null,
 ): string {
   const ids = (list: VariableStateModel[]) => list.map(stateKey).join(",");
-  return [
-    ids(states),
-    scope === null ? "-" : ids(scope),
-    focusColumn ?? "",
-    focusVariant ?? "",
-  ].join("\u0000");
+  return [ids(states), scope === null ? "-" : ids(scope)].join("\u0000");
+}
+
+/** A facet's axis as a sentence-case term ("enhet" → "Enhet"). */
+function facetTerm(axis: string | null | undefined): string {
+  return axis ? axis.charAt(0).toUpperCase() + axis.slice(1) : "Facet";
 }
 
 /**
@@ -194,11 +198,6 @@ export function BindingLeafView({
   const period = useQueryParam("period");
   const variant = useQueryParam("variant");
   const valueSetVersion = useQueryParam("value_set_version");
-  // #905: `?codes=<variant>::<column>` focuses the value-set view on that
-  // row's coding. View state only: it re-reads nothing.
-  const codesFocus = parseCodesParam(useQueryParam("codes"));
-  const focusColumn = codesFocus?.column ?? null;
-  const focusVariant = codesFocus?.variant ?? null;
 
   const boundedPeriod = enforcePeriodBounds
     ? clampYearPeriodWire(period, windowMinYear, windowMaxYear)
@@ -296,6 +295,7 @@ export function BindingLeafView({
     matrixSources.set(`${source.sha256} ${pages}`, { ...source, pages });
   }
   const registerPrefix = registerPrefixOf(node.fqid);
+  const registerNode = useRune(registerRead, registerPrefix).value;
   // The register's rehosted PDFs, read only when a state cites one, to title
   // and link it by its digest; otherwise the provider URL stands.
   const cited = useAsyncResource(
@@ -345,6 +345,14 @@ export function BindingLeafView({
   // scopes the rows too, so "select all" stays inside the narrowing.
   const seedReady = regMetaVersion !== "" && steward !== "";
   const coverage = useMemo(() => coverageFromStates(history), [history]);
+  const coverageYears = useMemo(
+    () =>
+      deliveredYears(
+        history.map((s) => ({ from: s.valid_from, to: s.valid_to })),
+        windowMaxYear,
+      ),
+    [history, windowMaxYear],
+  );
   const pickerStates = useMemo(
     () => narrowStatesByModifier(history, variant, valueSetVersion),
     [history, variant, valueSetVersion],
@@ -466,32 +474,48 @@ export function BindingLeafView({
 
   const narrowedLabel = (boundedPeriod ?? "").split(",").join(" + ");
   const hasMatrixSources = matrixSources.size > 0;
-  const hasDefinitions = !!(
-    node.definition ||
-    node.description ||
-    node.operational_definition ||
-    node.measurement_unit
-  );
+  // #670: what locates this member, and the group it belongs to. Both wait
+  // for the graph, so nothing flickers in and out.
+  const memberOf: MemberOf[] = [
+    ...(groupLink ? [{ relation: "Member of", ...groupLink }] : []),
+    {
+      relation: "Variable in",
+      label: registerNode ? nodeLabel(registerNode) : registerPrefix,
+      href: catalogHref(registerPrefix),
+    },
+  ];
+  const facets =
+    qualifier?.kind === "facets"
+      ? (focusNode?.facets ?? []).map((f) => ({
+          label: facetTerm(f.axis),
+          value: f.label,
+        }))
+      : [];
+  const definitions: Definition[] = [
+    ...(node.definition
+      ? [{ term: "Definition", value: node.definition }]
+      : []),
+    ...(node.description
+      ? [{ term: "Description", value: node.description }]
+      : []),
+    ...(node.operational_definition
+      ? [{ term: "Operational definition", value: node.operational_definition }]
+      : []),
+    ...(node.measurement_unit
+      ? [{ term: "Unit", value: node.measurement_unit }]
+      : []),
+  ];
 
   return (
-    <SubjectView title={node.name ?? node.fqid}>
-      {/* #670: what locates this member, and the group it belongs to. Both
-          wait for the graph, so nothing flickers in and out. */}
-      {(qualifier || groupLink) && (
-        <p className={styles.identity}>
-          {qualifier &&
-            (qualifier.kind === "slug" ? (
-              <code className={styles.slug}>{qualifier.text}</code>
-            ) : (
-              <span className={styles.qualifier}>{qualifier.text}</span>
-            ))}
-          {groupLink && (
-            <span className="muted">
-              member of <a href={groupLink.href}>{groupLink.label}</a>
-            </span>
-          )}
-        </p>
-      )}
+    <SubjectView
+      title={node.name ?? node.fqid}
+      // A grouped member with no facets: its slug or column is the only
+      // differentiator, an identifier, so the mono line under the title.
+      fqid={qualifier?.kind === "slug" ? qualifier.text : undefined}
+      memberOf={memberOf}
+      facets={facets}
+      definitions={definitions}
+    >
       {node.tags && node.tags.length > 0 && (
         <ul className={styles.tags} aria-label="Thematic tags">
           {node.tags.map((tag) => (
@@ -506,34 +530,6 @@ export function BindingLeafView({
           ))}
         </ul>
       )}
-      {hasDefinitions && (
-        <dl className={`${styles.meta} ${styles.definitions}`}>
-          {node.definition && (
-            <>
-              <dt>Definition</dt>
-              <dd>{node.definition}</dd>
-            </>
-          )}
-          {node.description && (
-            <>
-              <dt>Description</dt>
-              <dd>{node.description}</dd>
-            </>
-          )}
-          {node.operational_definition && (
-            <>
-              <dt>Operational definition</dt>
-              <dd>{node.operational_definition}</dd>
-            </>
-          )}
-          {node.measurement_unit && (
-            <>
-              <dt>Unit</dt>
-              <dd>{node.measurement_unit}</dd>
-            </>
-          )}
-        </dl>
-      )}
 
       <div className={styles.warnings}>
         <SvelteIsland component={ScopedDataWarnings} props={variableWarnings} />
@@ -545,10 +541,11 @@ export function BindingLeafView({
           apply.
         </p>
       ) : (
-        <PeriodPicker
+        <PeriodTimeline
           period={boundedPeriod}
           window={projectWindow}
           coverage={coverage}
+          years={coverageYears}
           windowMinYear={windowMinYear}
           vintageYear={windowMaxYear}
           enforcePeriodBounds={enforcePeriodBounds}
@@ -630,18 +627,11 @@ export function BindingLeafView({
         </h2>
         {valueSetStates ? (
           <ValueSetView
-            key={valueSetViewKey(
-              valueSetStates,
-              valueSetScope,
-              focusColumn,
-              focusVariant,
-            )}
+            key={valueSetViewKey(valueSetStates, valueSetScope)}
             fqid={node.fqid}
             states={valueSetStates}
             narrowed={isNarrowed}
             scopeStates={valueSetScope}
-            focusColumn={focusColumn}
-            focusVariant={focusVariant}
             common={{
               name: node.name ?? null,
               description: node.description ?? null,
@@ -684,7 +674,7 @@ export function BindingLeafView({
             <>
               <dt className="micro-label">Delivery column</dt>
               <dd>
-                <code>{technicalState.delivery_column_name}</code>
+                <ColumnChip name={technicalState.delivery_column_name} />
               </dd>
             </>
           )}

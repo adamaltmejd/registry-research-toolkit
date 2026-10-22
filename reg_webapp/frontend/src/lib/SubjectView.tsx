@@ -1,31 +1,19 @@
-import { type ReactNode, useId } from "react";
+import { type ComponentProps, type ReactNode, useId } from "react";
 import styles from "./SubjectView.module.css";
+import { Definitions } from "./ui/Definitions";
 
-/** The catalog-subject shell (#638): one article, one title header, and the
- * sections in the canonical order the caller passes them — description, period
- * and picker, value set, relationships, docs, technical details. It owns no data
- * and no headings beyond the title. */
+/** The catalog-subject shell (#638): one article whose head is the pane's
+ * `Definitions` (title, member-of line, facets, definition list), then the
+ * sections in the canonical order the caller passes them — period, picker,
+ * value set, relationships, docs, technical details. It owns no data and no
+ * headings beyond the head's. */
 export function SubjectView({
-  title,
-  fqid,
   children,
-}: {
-  title: string;
-  /** The FQID line under the title; omitted where the breadcrumb already ends
-   * in the slug (#670). */
-  fqid?: string;
-  children: ReactNode;
-}) {
+  ...head
+}: ComponentProps<typeof Definitions> & { children: ReactNode }) {
   return (
     <article className={styles.subject}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>{title}</h1>
-        {fqid && (
-          <p className={styles.fqid}>
-            <code>{fqid}</code>
-          </p>
-        )}
-      </header>
+      <Definitions {...head} />
       {children}
     </article>
   );

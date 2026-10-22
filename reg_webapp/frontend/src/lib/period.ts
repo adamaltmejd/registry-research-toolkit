@@ -573,7 +573,7 @@ export function periodWindowRelation(
     : "differs";
 }
 
-// ── Exact-year entry (Y-16 PeriodPicker + Y-81 SourceEditor, hoisted Y-100) ──
+// ── Exact-year entry (Y-16 PeriodTimeline + Y-81 SourceEditor, hoisted Y-100) ──
 // Both the catalog's period card and the /project cart's per-source period
 // editor carry two typed year fields and resolve them the same way; this is
 // the "is this a usable year pair" rule they both call, once.
@@ -606,7 +606,7 @@ export interface YearEntryOptions {
 }
 
 /**
- * The exact-year entry both `PeriodPicker` and `SourceEditor` resolve their two
+ * The exact-year entry both `PeriodTimeline` and `SourceEditor` resolve their two
  * typed year fields against: the year window the pair names, or why it names
  * none — with the field(s) that refusal is about, so the caller's hairline
  * marks the year at fault rather than both. `from`/`to` are the raw field text,

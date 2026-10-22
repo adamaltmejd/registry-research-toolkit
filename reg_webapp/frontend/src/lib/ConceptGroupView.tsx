@@ -12,6 +12,7 @@ import type { PeriodProps } from "./CatalogNodeView";
 import styles from "./ConceptGroupView.module.css";
 import {
   catalogHref,
+  deliveredYears,
   facetLabelJoin,
   leafSlug,
   nodeLabel,
@@ -21,11 +22,12 @@ import {
   registerPrefixOf,
 } from "./catalog";
 import { registerRead } from "./catalog_names.svelte";
-import { PeriodPicker } from "./PeriodPicker";
 import {
   clampYearPeriodWire,
   clampYearWindow,
   periodWireValid,
+  sameYearWindow,
+  yearWindowFromWire,
 } from "./period";
 import type { PickerBand } from "./picker_lanes";
 import { RepresentationPicker } from "./RepresentationPicker";
@@ -41,6 +43,8 @@ import {
   stagedApplyRefusal,
 } from "./staged_picker";
 import { useRune } from "./svelte_bridge.svelte";
+import { Timeline } from "./Timeline";
+import { Button } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
@@ -335,8 +339,25 @@ export function ConceptGroupView({
     period: activePeriod,
     window: pickerWindow,
   });
-  // Where the group as a whole has data: the period card's coverage track.
+  // Where the group as a whole has data: the Timeline's coverage.
   const coverage = unionCoverage(bands);
+  const coverageYears = deliveredYears(
+    bands.flatMap((band) =>
+      band.rows.flatMap((row) =>
+        row.selectable === false ? [] : (row.windows ?? []),
+      ),
+    ),
+    windowMaxYear,
+  );
+  // The band is the active window: a `?period` narrowing (a member link
+  // carries one), else the project window.
+  const periodYears = yearWindowFromWire(activePeriod);
+  const band = periodYears ?? projectWindow;
+  // A `?period` that is not the project window: with a window it differs
+  // from it (a warning), without one it is only a narrowing (information).
+  const periodNarrows =
+    activePeriod !== null &&
+    !(periodYears !== null && sameYearWindow(periodYears, projectWindow));
   const definition = sharedText(group, nodes, "definition");
   const description = sharedText(group, nodes, "description");
   const facetValues = group.axes.map((axis) => ({
@@ -399,16 +420,30 @@ export function ConceptGroupView({
         />
       </TechnicalDetails>
 
-      <PeriodPicker
-        period={boundedPeriod}
-        window={projectWindow}
+      <Timeline
+        axis={{ from: windowMinYear, to: windowMaxYear }}
+        window={band}
+        windowKind={periodYears === null ? "study" : "source"}
         coverage={coverage}
-        windowMinYear={windowMinYear}
+        years={coverageYears}
         vintageYear={windowMaxYear}
-        enforcePeriodBounds={enforcePeriodBounds}
-        onSubmit={writePeriod}
-        onClear={() => writePeriod(null)}
       />
+      {/* The group page draws the period; it does not set one. A `?period`
+          it was opened with is the exception, cleared back to the window. */}
+      {periodNarrows && (
+        <StatusRow
+          tone={projectWindow ? "warn" : "info"}
+          action={
+            <Button variant="ghost" onPress={() => writePeriod(null)}>
+              {projectWindow ? "Reset" : "Clear"}
+            </Button>
+          }
+        >
+          {projectWindow
+            ? `Differs from the project window (${projectWindow.from}–${projectWindow.to}).`
+            : `Narrowed to ${activePeriod}.`}
+        </StatusRow>
+      )}
       {graphResource.loading ? (
         <Skeleton variant="block" />
       ) : graphResource.error ? (
