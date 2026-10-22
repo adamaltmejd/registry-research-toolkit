@@ -757,12 +757,16 @@ function DeliveryColumnTick({
             {eras.hidden.length > 0 && (
               <>
                 {" "}
+                {/* A generic span takes no accessible name, so the hidden
+                    eras are text a screen reader reads after the count. */}
                 <span
                   className={viewStyles.era}
                   title={column.years.join(", ")}
-                  aria-label={`+${eras.hidden.length} more era${eras.hidden.length === 1 ? "" : "s"}: ${eras.hidden.join(", ")}`}
                 >
                   +{eras.hidden.length}
+                  <span className="visually-hidden">
+                    {` more era${eras.hidden.length === 1 ? "" : "s"}: ${eras.hidden.join(", ")}`}
+                  </span>
                 </span>
               </>
             )}
