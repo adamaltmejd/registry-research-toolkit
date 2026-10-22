@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { RegisterShow, VariableShow, VariableStateModel } from "./api";
+import type { RegisterShow } from "./api";
 import {
   getDocsForVariable,
   getGraph,
@@ -11,10 +11,8 @@ import {
   getStates,
 } from "./api";
 import { registerShow } from "./api-test-helpers";
-import BindingLeafView from "./BindingLeafView.svelte";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { delivery, variableChild } from "./catalog-node-view-test-helpers";
-import { state as baseState } from "./catalog-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
 import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -22,12 +20,11 @@ import { storedProject } from "./project-store-test-helpers";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
-// The common study window (reg_webapp/DESIGN.md → "Common study window"), at the
-// two surfaces the decision names: the catalog picker (an add persists the full
-// available intersection, or is refused when there is none; committed columns are
-// marked against the window) and the /project page (a window edit never rewrites a
-// source period, a disjoint source blocks the order, every divergence is marked,
-// and "apply overlap to all" rewrites only the sources that have one).
+// The common study window (reg_webapp/DESIGN.md → "Common study window") on the
+// /project page: a window edit never rewrites a source period, a disjoint source
+// blocks the order, every divergence is marked, and "apply overlap to all"
+// rewrites only the sources that have one. (The catalog picker's cases went with
+// the Svelte binding leaf in React port PR 3.)
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
@@ -48,36 +45,6 @@ const SEED = {
   steward: "global",
 } as const;
 
-function state(over: Partial<VariableStateModel>): VariableStateModel {
-  return baseState({
-    variant: "individer",
-    valid_from: "2010-01-01",
-    valid_to: "2015-12-31",
-    delivery_column_name: "Kon",
-    ...over,
-  });
-}
-
-/** `scb/lisa/kon`'s `show`: metadata only; its states are a separate read. */
-function leaf(): VariableShow {
-  return {
-    kind: "variable",
-    fqid: "scb/lisa/kon",
-    name: "Kön",
-    definition: null,
-    description: null,
-    measurement_unit: null,
-    operational_definition: null,
-    source_register_text: null,
-    is_identifier: false,
-    is_sensitive: false,
-    deprecated: false,
-    group: null,
-    same_as: [],
-    tags: [],
-  };
-}
-
 /** A register's `show` listing `variable` delivered under `variant` from `from` to
  * `to` (null: still delivered) in `Col` — the read the overlap plan works from. */
 function deliveringRegister(
@@ -95,12 +62,6 @@ function deliveringRegister(
     ],
   });
 }
-
-/** `Kon` delivered in two eras with a gap: 2005–2008, then 2012–2020. */
-const interrupted = [
-  state({ state_id: "1", valid_from: "2005-01-01", valid_to: "2008-12-31" }),
-  state({ state_id: "2", valid_from: "2012-01-01", valid_to: "2020-12-31" }),
-];
 
 /** One source of `scb/lisa/kon` at `period` — what an earlier Add left behind. */
 function source(
@@ -174,98 +135,6 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
-});
-
-describe("common study window — catalog picker", () => {
-  function renderLeaf(states: VariableStateModel[]) {
-    // The `?period` subset read answers the same history the page loaded.
-    vi.mocked(getStates).mockResolvedValue(states);
-    return render(BindingLeafView, {
-      fqidPath: "scb/lisa/kon",
-      node: leaf(),
-      states,
-      regMetaVersion: SEED.reg_meta_version,
-      steward: SEED.steward,
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
-  }
-
-  async function addKon(): Promise<void> {
-    await page.getByRole("checkbox", { name: /Kon/ }).click();
-    await page.getByRole("button", { name: "Add to project" }).click();
-  }
-
-  it("persists the full available intersection on add, keeping every disjoint era", async () => {
-    windowStore.set({ from: 2006, to: 2015 });
-    await renderLeaf(interrupted);
-
-    await addKon();
-
-    await expect.element(page.getByText(/Applied \+1 column/)).toBeVisible();
-    expect(sourcePeriods()).toEqual([
-      [
-        { from: 2006, to: 2008 },
-        { from: 2012, to: 2015 },
-      ],
-    ]);
-  });
-
-  it("blocks an add with no overlap and explains it in the picker", async () => {
-    windowStore.set({ from: 2017, to: 2020 });
-    await renderLeaf([state({})]);
-
-    await addKon();
-
-    await expect
-      .element(
-        page.getByText(
-          "Not added: Kon has no years inside the study window 2017–2020. Untick it, or widen the study window in the rail.",
-        ),
-      )
-      .toBeVisible();
-    expect(storedProject()?.sources).toEqual([]);
-  });
-
-  it("blocks a page-period add that falls wholly outside the study window", async () => {
-    windowStore.set({ from: 2018, to: 2024 });
-    router.navigate("/catalog/scb/lisa/kon?period=1960..1970");
-    await renderLeaf([
-      state({ valid_from: "1952-01-01", valid_to: "2023-12-31" }),
-    ]);
-
-    await addKon();
-
-    await expect
-      .element(
-        page.getByText(
-          "Not added: under the selected period, Kon has no years inside the study window 2018–2024. Choose a period that overlaps the study window, or widen the study window in the rail.",
-        ),
-      )
-      .toBeVisible();
-    expect(storedProject()?.sources).toEqual([]);
-  });
-
-  it("marks a committed column the window has moved off as outside it", async () => {
-    loadDraft(
-      [
-        source("LISA", "scb/lisa/individer", "scb/lisa/kon", {
-          from: 2010,
-          to: 2012,
-        }),
-      ],
-      { from: 2017, to: 2020 },
-    );
-    await renderLeaf([state({})]);
-
-    await expect
-      .element(page.getByText("In project, outside study window"))
-      .toBeVisible();
-    // The row's delivery is outside the window too, but the blocking marker keeps
-    // full contrast: the row is not dimmed.
-    const row = page.getByRole("checkbox", { name: /Kon/ }).element();
-    expect(row.closest(".row-btn")?.classList.contains("dimmed")).toBe(false);
-  });
 });
 
 describe("common study window — project page", () => {

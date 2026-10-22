@@ -10,7 +10,13 @@ import {
   TreeLoadMoreItem,
   type TreeRenderProps,
 } from "react-aria-components";
-import { getShow, type RegisterChild, type RootChild } from "./api";
+import {
+  getShow,
+  type RegisterChild,
+  type RootChild,
+  SEARCH_MIN_QUERY_LENGTH,
+  searchFacets,
+} from "./api";
 import styles from "./BrowseTree.module.css";
 import { useBrowseFilter } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
@@ -31,6 +37,8 @@ interface BrowseNode {
   name: string;
   href: string;
   children: BrowseNode[] | null;
+  /** Set on a register the filter keeps only through its variables: how many. */
+  variableMatches?: number;
 }
 
 type TreeState = TreeRenderProps["state"];
@@ -133,16 +141,14 @@ function currentRow(route: Route): CurrentRow | null {
 }
 
 /** The browse filter applied to the tree. A group keeps the registers that
- * match by name or slug, or all of them when its own name matches; those groups
- * are `matched`. A group with no match keeps its whole list, so it still shows
- * and still opens, and starts closed.
- * simplify: a register that matches only through its variables is not shown.
- * DESIGN.md wants it shown "with the count", which needs a per-register count
- * of variable matches for a query that the API does not serve (GET /api/search
- * pages ranked hits, no facet). Add it when the server answers that count. */
+ * match by name or slug, then those that match only through their variables
+ * (`facets`, per register FQID), each with its count; or all of them when its
+ * own name matches. Those groups are `matched`. A group with no match keeps its
+ * whole list, so it still shows and still opens, and starts closed. */
 function filterNodes(
   nodes: BrowseNode[],
   needle: string,
+  facets: ReadonlyMap<string, number>,
 ): { nodes: BrowseNode[]; matched: Set<Key> } {
   const matched = new Set<Key>();
   if (needle.trim() === "") return { nodes, matched };
@@ -153,13 +159,20 @@ function filterNodes(
       matched.add(node.id);
       return node;
     }
-    const children = rankFilter(node.children, needle, named);
+    const byName = rankFilter(node.children, needle, named);
+    const byVariables = node.children
+      .filter((child) => !byName.includes(child) && facets.has(child.id))
+      .map((child) => ({ ...child, variableMatches: facets.get(child.id) }));
+    const children = [...byName, ...byVariables];
     if (children.length === 0) return node;
     matched.add(node.id);
     return { ...node, children };
   });
   return { nodes: filtered, matched };
 }
+
+/** How long the filter text rests before the facet request goes out. */
+const FACET_DEBOUNCE_MS = 200;
 
 function browseNodes(
   root: RootChild[],
@@ -216,11 +229,38 @@ export function BrowseTree({ className }: { className?: string }) {
   );
   const needle = useBrowseFilter();
   const filtering = needle.trim() !== "";
+  // The variable matches per register, asked once the text rests. Keyed on the
+  // settled text, so a newer query aborts the older request and its answer
+  // never lands on other text.
+  const [facetQuery, setFacetQuery] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(
+      () => setFacetQuery(needle.trim()),
+      FACET_DEBOUNCE_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [needle]);
+  const facetKey =
+    filtering &&
+    facetQuery === needle.trim() &&
+    facetQuery.length >= SEARCH_MIN_QUERY_LENGTH
+      ? facetQuery
+      : null;
+  const facetResource = useAsyncResource(facetKey, (signal) =>
+    searchFacets(facetQuery, { signal }),
+  );
+  const facets = new Map(
+    (facetKey === null ? [] : (facetResource.data ?? [])).flatMap((f) =>
+      f.fqid && f.variable_matches > 0
+        ? [[f.fqid, f.variable_matches] as const]
+        : [],
+    ),
+  );
   const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
   );
-  const { nodes, matched } = filterNodes(allNodes, needle);
+  const { nodes, matched } = filterNodes(allNodes, needle, facets);
   const expandable = nodes
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
@@ -242,6 +282,11 @@ export function BrowseTree({ className }: { className?: string }) {
     needle: string;
     keys: Set<Key>;
   } | null>(null);
+  // Cleared with the filter, so typing the same text again starts from its
+  // matches rather than from the toggles made under it last time.
+  if (!filtering && filterExpanded !== null) {
+    setFilterExpanded(null);
+  }
   const expandedKeys: Set<Key> = !filtering
     ? new Set(expandable.filter((id) => !collapsed.has(id)))
     : filterExpanded?.needle === needle
@@ -344,7 +389,13 @@ export function BrowseTree({ className }: { className?: string }) {
             onSelectionChange={onSelectionChange}
             expandedKeys={expandedKeys}
             onExpandedChange={onExpandedChange}
-            dependencies={[counts, currentKey, current?.exact, needle]}
+            dependencies={[
+              counts,
+              currentKey,
+              current?.exact,
+              needle,
+              facetResource.data,
+            ]}
           >
             {(node) => (
               <BrowseItem
@@ -380,7 +431,11 @@ function BrowseItem({
   return (
     <TreeItem
       id={node.id}
-      textValue={node.name}
+      textValue={
+        node.variableMatches === undefined
+          ? node.name
+          : `${node.name}, ${node.variableMatches} matching ${node.variableMatches === 1 ? "variable" : "variables"}`
+      }
       className={styles.row}
       render={(props) => <div {...props} aria-current={ariaCurrent} />}
     >
@@ -397,6 +452,14 @@ function BrowseItem({
             <span className={styles.name}>
               <Highlight text={node.name} needle={needle} />
             </span>
+            {node.variableMatches !== undefined && (
+              <span className={styles.variableMatches}>
+                {node.variableMatches}{" "}
+                {node.variableMatches === 1
+                  ? "matching variable"
+                  : "matching variables"}
+              </span>
+            )}
             <InProjectMark count={count} />
           </>
         )}

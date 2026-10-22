@@ -1,0 +1,167 @@
+/* The code viewer and the classification code tree: one row shape, mono code
+   and wrapping label, in a bounded scroll so a long set stays on screen. */
+
+/* ValueSetCodes: stretched, so the filter spans the panel. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.scroll {
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.codes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+}
+
+/* Below the top loaded level: one indent step per level, with a hairline guide
+   so the depth reads without the parent row on screen. */
+.levelled {
+  margin-inline-start: calc(
+    (var(--code-depth) - 1) *
+    (0.45rem + var(--space-2))
+  );
+  padding-inline-start: calc(0.45rem + var(--space-2) - 1px);
+  border-inline-start: 1px solid var(--border);
+}
+
+/* A code is a machine identifier: mono (DESIGN.md → Typography). */
+.key {
+  flex: 0 0 auto;
+  min-width: 3.5rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sentinel {
+  display: block;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.evidence p {
+  margin: var(--space-1) 0 0;
+}
+
+.evidenceToggle {
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+.evidenceToggle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── The code tree (#1297) ─────────────────────────────────────────────── */
+.treeLevel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A level below the roots: one indent step with a hairline guide. */
+.nested {
+  margin-block-start: var(--space-1);
+  margin-inline-start: calc(0.45rem + var(--space-2));
+  padding-inline-start: calc(0.45rem + var(--space-2) - 1px);
+  border-inline-start: 1px solid var(--border);
+}
+
+/* The disclosure glyph takes a fixed column, so a leaf's code lines up under
+   its open sibling's. */
+.treeRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+}
+.treeRow::before {
+  flex: 0 0 var(--space-3);
+  content: "";
+  color: var(--text-muted);
+}
+
+summary.treeRow {
+  border-radius: var(--radius-sm);
+  list-style: none;
+  cursor: pointer;
+}
+summary.treeRow::-webkit-details-marker {
+  display: none;
+}
+summary.treeRow::before {
+  content: "▸" / "";
+}
+details[open] > summary.treeRow::before {
+  content: "▾" / "";
+}
+summary.treeRow:hover {
+  background: var(--surface-hover);
+}
+summary.treeRow:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.childCount {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.treeLoading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+/* A reserved row is as tall as the code row it stands in for. */
+.treeLoading .treeRow {
+  box-sizing: content-box;
+  min-height: 1lh;
+  align-items: center;
+}
+.reserve {
+  flex: 1;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.status p,
+.empty {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.empty {
+  color: var(--text-muted);
+}

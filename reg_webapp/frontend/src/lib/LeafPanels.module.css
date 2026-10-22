@@ -1,0 +1,67 @@
+/* The binding leaf's lineage and parsed-documentation sections. */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  font-size: var(--text-sm);
+}
+
+.sourceRegister {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.warnKind {
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}
+
+.note {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.mention {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+
+.docLabel {
+  font-weight: var(--heading-weight);
+}
+
+.snippet,
+.sourceLink {
+  flex-basis: 100%;
+  min-width: 0;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* The matched term (`**…**` → <mark>): matched text as everywhere else
+   (DESIGN.md → Layout), an accent underline at weight 600, not a tint. */
+.snippet mark {
+  background: none;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline 2px var(--accent);
+}

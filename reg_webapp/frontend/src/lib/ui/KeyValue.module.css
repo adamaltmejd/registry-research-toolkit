@@ -1,0 +1,27 @@
+.keyValue {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+/* A value is text this primitive does not control (an FQID, a long unbroken
+   label): `min-width: 0` lets the track shrink and the run breaks in place, so
+   a card never pushes past 375 px (#1110). */
+.value {
+  min-width: 0;
+  margin: 0;
+  color: var(--text);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}

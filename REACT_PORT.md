@@ -58,8 +58,8 @@ Measure later PRs the same way, so the numbers compare.
   | 0a  | Vite+ toolchain on Svelte                                                                                                    | closed #1775; toolchain taken into PR 1                     |
   | 0b  | This tracker and the baseline, on `main`                                                                                     | merged #1777                                                |
   | 1   | The toolchain and the shell (below)                                                                                          | merged #1782; JS 241 kB gzip (+115 kB), accepted until PR 9 |
-  | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer; follow-up: arrow keys between the browse columns | in review #1784; JS 250 kB gzip (+9 kB)                     |
-  | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList              | not started                                                 |
+  | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer; follow-up: arrow keys between the browse columns | merged #1784; JS 250 kB gzip (+9 kB)                        |
+  | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList              | in review #1787; JS 253 kB gzip (+3 kB)                     |
   | 4   | ConceptGroupView                                                                                                             | not started                                                 |
   | 5   | RepresentationPicker (split into modules)                                                                                    | not started                                                 |
   | 6   | Classification\*, VariantBrowser, DocView, Home                                                                              | not started                                                 |

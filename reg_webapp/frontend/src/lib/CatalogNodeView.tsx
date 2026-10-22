@@ -4,7 +4,7 @@ import {
   getStates,
   type ProviderShow,
 } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
+import { BindingLeafView } from "./BindingLeafView";
 import { useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
@@ -58,8 +58,8 @@ interface Props extends PeriodProps {
  */
 export function CatalogNodeView({ fqidPath, ...period }: Props) {
   // Shared with the variables column, which reads the same register now.
-  const resource = useAsyncResource(fqidPath, async () => {
-    const node = await sharedShow(fqidPath);
+  const resource = useAsyncResource(fqidPath, async (signal) => {
+    const node = await sharedShow(fqidPath, signal);
     // By the CANONICAL fqid: a retired ref resolves to its successor.
     const states = node.kind === "variable" ? await getStates(node.fqid) : [];
     return { node, states };
@@ -103,12 +103,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
     case "register":
       return <RegisterView node={node} {...period} />;
     case "variable":
-      return (
-        <SvelteIsland
-          component={BindingLeafView}
-          props={{ fqidPath, node, states, ...period }}
-        />
-      );
+      return <BindingLeafView node={node} states={states} {...period} />;
     case "classification_root":
       return <ClassificationRootView node={node} />;
     case "classification": {
