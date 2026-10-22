@@ -6,9 +6,10 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release, flows and frontend; `lint` and `crates`
-are g0's static checks and Rust part, for CI's `lint` and `rust` jobs; `regen` and `g1`
-run only when named. CI calls `lint`, `crates`, `rust`, `release` and `frontend`;
+first failure. `all` runs g0, rust, release, flows, frontend and runner; `lint` and
+`crates` are g0's static checks and Rust part, for CI's `lint` and `rust` jobs; `regen`
+and `g1` run only when named. CI calls `lint`, `crates`, `rust`, `release`, `frontend`
+and `runner`;
 `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
 of the workspace build.
 """
@@ -41,7 +42,11 @@ SERVER_CMD = (
     " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
-ALL = ("g0", "rust", "release", "flows", "frontend")
+ALL = ("g0", "rust", "release", "flows", "frontend", "runner")
+# The R formatter and linter `runner` checks reg_mona_runner/ with; CI's `runner` job
+# installs these releases (bump both).
+AIR = "0.12.0"
+JARL = "0.7.1"
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
 # it, the frontend step fails: raising the budget is a maintainer call. It includes the
 # search fold (about 145 KB gz measured with it).
@@ -144,6 +149,25 @@ def frontend() -> None:
     run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
 
 
+def runner() -> None:
+    # The MONA extract runner (reg_mona_runner/): air and jarl at their pins, then its
+    # testthat suite. The SQL Server cases run only where SWECOV_TEST_CONNECTION is
+    # set (CI's `runner` job); elsewhere they skip.
+    for tool, pin in (("air", AIR), ("jarl", JARL)):
+        version = run([tool, "--version"], stdout=subprocess.PIPE, text=True).stdout
+        if version.split()[-1] != pin:
+            sys.exit(f"gate: {tool} {pin} is pinned; found {version.strip()}")
+    run("air format --check reg_mona_runner")
+    run("jarl check reg_mona_runner")
+    run(
+        [
+            "Rscript",
+            "-e",
+            'testthat::test_dir("reg_mona_runner/tests/testthat", stop_on_failure = TRUE)',
+        ]
+    )
+
+
 def regen() -> None:
     run("cargo build --workspace --locked")
     run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
@@ -183,7 +207,8 @@ def g1() -> None:
 
 
 STEPS = {
-    f.__name__: f for f in (lint, g0, crates, rust, release, flows, frontend, regen, g1)
+    f.__name__: f
+    for f in (lint, g0, crates, rust, release, flows, frontend, runner, regen, g1)
 }
 
 

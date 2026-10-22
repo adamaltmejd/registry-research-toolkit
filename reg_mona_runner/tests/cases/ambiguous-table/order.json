@@ -1,0 +1,33 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Value",
+        "variable": "scb/example/value",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Value",
+        "edition": "2019",
+        "table": "Twin"
+      },
+      "requested_period": "2019",
+      "source": "Annual"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+    "catalog_schema_version": "12.2.0",
+    "mode": "steward_holdings",
+    "project_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "project_name": "Runner case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

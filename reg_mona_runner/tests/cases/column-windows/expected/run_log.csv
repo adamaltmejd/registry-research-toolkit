@@ -1,0 +1,4 @@
+file,rows,columns,filter
+example_new_2015..2019.csv,2,2,""
+example_old_2015..2019.csv,2,2,""
+example_old_2017..2019.csv,1,2,""

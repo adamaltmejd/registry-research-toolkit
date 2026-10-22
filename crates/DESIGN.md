@@ -618,20 +618,47 @@ the project's canonical JSON, catalog schema version and `generation_id`), the e
 the physical edition, table, column, optional partition, optional projection token and
 optional `member` index, `key: true` on a held key no binding ordered, and the file's
 optional row `filter`) and the clips. It is written here and read offline by the
-steward-side extract system, so it is self-contained. That system is the planned MONA
-extract runner (#707): a data manager runs it inside MONA, it writes the files there,
-and nothing row-level leaves. Its bytes are sorted keys, two-space indent, UTF-8 and a
-trailing newline, byte-identical across runs; periods render through the shared grammar,
-except a row filter's ISO day bounds. No timestamps: the only time-shaped values come
-from the artifact and the project. Version 1 stays in definition until the first
-external reader: shape changes stay in version 1, and from that reader on an
-incompatible change bumps it. `partition`, `projection` (the table's token), `member`
-(`{"position": N}`, `{"year": YYYY}` or `{"month": "YYYY-MM"}`), `key`, `filter` and a
-filter range's `from` and `to` are the only optional fields; absent means none (an
-ordered entry for `key`, an unfiltered file for `filter`, an open end for a bound), so
-an inventory without partitions, projections, pivot members or period columns, and an
-order that binds every held key, produces the bytes it did before any existed. The
-parent (`projection_of`) is not in the manifest: the token is the placement.
+steward-side extract system, so it is self-contained. That system is the MONA extract
+runner ([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md)): a data manager
+runs it inside MONA, it writes the files there, and nothing row-level leaves. Its bytes
+are sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across
+runs; periods render through the shared grammar, except a row filter's ISO day bounds.
+No timestamps: the only time-shaped values come from the artifact and the project.
+`partition`, `projection` (the table's token), `member` (`{"position": N}`,
+`{"year": YYYY}` or `{"month": "YYYY-MM"}`), `key`, `filter` and a filter range's `from`
+and `to` are the only optional fields; absent means none (an ordered entry for `key`, an
+unfiltered file for `filter`, an open end for a bound), so an inventory without
+partitions, projections, pivot members or period columns, and an order that binds every
+held key, produces the bytes it did before any existed. The parent (`projection_of`) is
+not in the manifest: the token is the placement.
+
+**Version 1 is frozen** (2026-10-22, with its first reader, the extract runner). Every
+object is closed; this is the whole field set:
+
+- root: `version` (the integer 1), `provenance`, `entries` (non-empty), `clips`;
+- `provenance`: `mode`, `steward`, `project_name`, `project_schema_version`,
+  `project_reg_meta_version`, `project_hash`, `catalog_schema_version`,
+  `catalog_generation_id`, `artifact_kind`, all strings;
+- entry: `source`, `logical`, `requested_period`, `physical`, optional `key` (only
+  `true`) and optional `filter`;
+- `logical`: `provider`, `register`, `variant`, `variable`, `representation`;
+- `physical`: `edition`, `table`, `column`, optional `partition`, `projection` and
+  `member`; `member` holds exactly one of `position`, `year`, `month`;
+- `filter`: `column`, `encoding` (`date`, `year`, `yyyymm` or `yyyymmdd`), `ranges`
+  (non-empty); a range has optional `from` and `to`, inclusive `YYYY-MM-DD` days;
+- clip: `source`, `variable`, `requested_period`, `ordered_period`.
+
+Rust writes only these fields; the runner enforces the set, refusing a version other
+than 1, a mode other than `steward_holdings`, another steward's order and any unknown
+field. So any change to the shape, an added optional field included, is version 2: a v1
+runner refuses it rather than misreading it.
+
+The manifest stays pretty-printed. MONA's upload limit is 10 MB; a typical order is
+about 0.4 MB and the widest LISA order about 7 MB. Compact JSON would roughly halve
+that, but it is a second encoding beside the one the goldens pin, for headroom no real
+order needs yet. The runner parses compact and pretty JSON alike (its tests run a
+compact order), so a compact download needs no runner change. `simplify:` pretty output;
+switch the download to compact when a real order passes 8 MB.
 
 **Extraction keeps delivery topology.** One output file per ordered variant, physical
 table and table edition (`physical.edition`, #1661). `physical.table` is the unique
