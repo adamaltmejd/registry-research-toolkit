@@ -18,6 +18,14 @@
 .name {
   composes: name from "./ui/ColumnList.module.css";
 }
+/* A register the filter keeps only through its variables says so, with the
+   count (DESIGN.md → Search filters in place). */
+.variableMatches {
+  flex: none;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
 
 /* The DOM is flat: every row is a sibling, so depth is `data-level` and RAC's
    `--tree-item-level`, never nesting. */
