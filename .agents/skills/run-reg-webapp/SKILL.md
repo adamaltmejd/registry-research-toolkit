@@ -66,9 +66,9 @@ job.
   design-reviewer skill judges.
 - **`flows`** runs nine project scenarios (blocked order, order/validation retries,
   catalog-authored draft, period-required pick, deliberate replace, per-source period
-  edit, keyboard period focus, period within availability) at four viewports, each in a fresh browser context
-  against the real servers, and writes the PNGs into `<out-dir>`. Name scenarios to run
-  a subset
+  edit, keyboard period focus, period within availability) at four viewports, each in a
+  fresh browser context against the real servers, and writes the PNGs into `<out-dir>`.
+  Name scenarios to run a subset
   (`blocked-order order-retry validation-retry catalog-draft catalog-period-required project-source-period catalog-period-focus catalog-period-availability replace-confirm`).
   It asserts on the `--fixture-db` content (`scb/lisa/kon` at `individer-15plus`,
   `scb/rams/syss`, `scb/lisa/forsamling`), so run it with `--fixture-db`. The gate's

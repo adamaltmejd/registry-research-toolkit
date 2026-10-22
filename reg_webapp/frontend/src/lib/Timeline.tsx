@@ -542,7 +542,8 @@ export function PeriodTimeline({
   // data for are the data's narrowing, not the user's, and say so in the "i"
   // note, never the ▲ row. So the default seed (window∩coverage), that seed
   // applied, and the window itself all match the window. A window wholly
-  // outside availability has no part to match: any selection differs.
+  // outside availability has no part to match: any selection other than the
+  // window itself differs.
   const inAvailability = (w: ProjectStudyWindow): ProjectStudyWindow | null =>
     covered === null
       ? w
@@ -558,8 +559,22 @@ export function PeriodTimeline({
   const sourceKind = userChosen && !matchesWindow;
   const differs =
     boundedWindow !== null && subAnnualPeriod === null && !matchesWindow;
-  // What Reset writes: the window as this variable can hold it.
-  const resetWindow = heldWindow ?? boundedWindow;
+  // What Reset writes: the window as this variable can hold it. Clipped only
+  // at FINITE coverage edges: a "still delivered" variable keeps the window's
+  // years past the vintage, which it will get.
+  const resetWindow =
+    heldWindow === null || boundedWindow === null
+      ? boundedWindow
+      : {
+          from: Math.max(
+            boundedWindow.from,
+            boundedCoverage?.from ?? boundedWindow.from,
+          ),
+          to: Math.min(
+            boundedWindow.to,
+            boundedCoverage?.to ?? boundedWindow.to,
+          ),
+        };
   // The band is the active window: a source period that differs, else the
   // project window (the thumbs may sit on the narrower seed), so "not
   // covered" shows for as long as the period only follows availability.

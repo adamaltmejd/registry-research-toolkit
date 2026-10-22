@@ -1642,9 +1642,9 @@ into another range. A local change writes `?period` only (never the global windo
 window wider than coverage is information, not a warning: the differs-from-window
 warning compares the selection and the window inside coverage, so neither the
 coverage-clamped default nor that default applied raises it (maintainer ruling
-2026-10-22). It fires for a selection that differs within coverage, or for any
-selection against a window wholly outside coverage; Reset writes the window clipped to
-coverage.
+2026-10-22). It fires for a selection that differs within coverage, or, against a window
+wholly outside coverage, for any selection but the window itself; Reset writes the
+window clipped to coverage's finite edges.
 
 The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
 (`coverage.to === null`, "still delivered") projects to — the catalog only knows
