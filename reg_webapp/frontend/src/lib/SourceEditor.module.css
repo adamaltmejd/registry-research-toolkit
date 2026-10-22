@@ -115,13 +115,6 @@
   font-size: var(--text-sm);
 }
 
-/* A standing fact about the source: small, but not muted. */
-.deviation {
-  margin: 0;
-  color: var(--text);
-  font-size: var(--text-sm);
-}
-
 .bindings h4 {
   margin: 0 0 var(--space-2);
   font-weight: var(--heading-weight);

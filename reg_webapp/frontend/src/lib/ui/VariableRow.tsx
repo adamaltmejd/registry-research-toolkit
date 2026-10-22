@@ -62,7 +62,7 @@ export function VariableRow({
     <li className={styles.row} data-in-project={inProject || undefined}>
       <span className={styles.dot} aria-hidden="true" />
       <div className={styles.head}>
-        <a className={styles.name} href={href}>
+        <a className={`link ${styles.name}`} href={href}>
           {name}
         </a>
         {inProject && <span className="visually-hidden">, in the project</span>}

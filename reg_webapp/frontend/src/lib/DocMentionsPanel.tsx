@@ -98,7 +98,7 @@ export function DocMentionsPanel({ node }: { node: VariableShow }) {
                 )}
                 {r.source_url && (
                   <a
-                    className={styles.sourceLink}
+                    className={`link ${styles.sourceLink}`}
                     href={r.source_url}
                     target="_blank"
                     rel="noreferrer"

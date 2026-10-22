@@ -56,24 +56,13 @@
   overflow-wrap: anywhere;
 }
 
-/* The source document's link: classed, so it states the plain-link look
-   itself (DESIGN.md → Typography): text, never pine, over a 1.5px accent
-   bottom border that runs under the words only. */
+/* The source document's link (`link`). */
 .sourceLink {
   min-width: 0;
   max-width: 100%;
-  border-bottom: 1.5px solid var(--accent);
   color: var(--text);
   font-size: var(--text-sm);
   overflow-wrap: anywhere;
-}
-.sourceLink:hover {
-  background: var(--surface-hover);
-}
-.sourceLink:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* The matched term (`**…**` → <mark>): matched text as everywhere else

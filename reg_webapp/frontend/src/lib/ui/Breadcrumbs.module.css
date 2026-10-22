@@ -10,8 +10,10 @@
   font-size: var(--text-column);
 }
 
-/* The first crumb, "Data", is a word, not a slug: the UI face. */
-.crumb:first-child {
+/* The first crumb, "Data", and any `word` crumb ("Project") are words, not
+   slugs: the UI face. */
+.crumb:first-child,
+.word {
   font-family: var(--font-ui);
 }
 

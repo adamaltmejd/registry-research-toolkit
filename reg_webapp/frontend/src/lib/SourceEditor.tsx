@@ -584,11 +584,9 @@ export function SourceEditor({
             )}
 
             {studyWindow && windowRelation === "differs" ? (
-              // The window is an authoring SEED, so this MARKS the divergence
-              // rather than warning about it.
-              <p className={styles.deviation}>
+              <StatusRow tone="warn">
                 Differs from study window {yearWindowLabel(studyWindow)}
-              </p>
+              </StatusRow>
             ) : studyWindow && windowRelation === "disjoint" ? (
               // The one divergence that blocks the order (reg_webapp/DESIGN.md →
               // "Common study window").

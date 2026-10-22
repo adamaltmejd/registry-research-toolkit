@@ -48,15 +48,6 @@
   color: var(--text);
   font-family: var(--font-mono);
   text-decoration: none;
-  border-bottom: 1.5px solid var(--accent);
-}
-.refLink:hover {
-  background: var(--surface-hover);
-}
-.refLink:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 .refName {
   min-width: 0;

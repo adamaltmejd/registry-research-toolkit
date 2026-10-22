@@ -105,7 +105,10 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
 
   const labels: { year: number; at: number; window: boolean }[] = [];
   const add = (year: number, at: number, window: boolean) => {
-    if (labels.every((l) => Math.abs(l.at - at) >= MIN_GAP_PCT)) {
+    // The window's own bounds always show; only the other ticks give way.
+    // A year is labelled once (the axis end can be the window end).
+    if (labels.some((l) => l.year === year)) return;
+    if (window || labels.every((l) => Math.abs(l.at - at) >= MIN_GAP_PCT)) {
       labels.push({ year, at, window });
     }
   };
@@ -538,7 +541,9 @@ export function PeriodTimeline({
   // (a source period, a move, or the project window it starts from).
   const showBand =
     subAnnualPeriod === null && (userChosen || boundedWindow !== null);
-  const band = showBand ? selection : null;
+  // Before the user chooses, the band is the real project window (the thumbs
+  // sit on the narrower seed), so "not covered" can show.
+  const band = showBand ? (userChosen ? selection : boundedWindow) : null;
   const outside = band ? uncovered(band, covered) : [];
   const sourceKind = userChosen && !sameYearWindow(selection, boundedWindow);
   // The default seed narrowed to window∩coverage is the data's choice, not

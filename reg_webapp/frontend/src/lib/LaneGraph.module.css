@@ -123,23 +123,11 @@
   white-space: nowrap;
 }
 
-/* The lane's name opens the variable: a plain link (DESIGN.md → Typography),
-   ink with the accent bottom border, hugging its text. */
+/* The lane's name opens the variable: a plain link (`link`), hugging its text. */
 a.nameText {
   align-self: flex-start;
   max-width: 100%;
-  border-bottom: 1.5px solid var(--accent);
   text-decoration: none;
-}
-
-a.nameText:hover {
-  background: var(--surface-hover);
-}
-
-a.nameText:focus-visible {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
 }
 
 .sub {

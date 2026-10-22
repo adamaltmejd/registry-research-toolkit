@@ -105,7 +105,10 @@ function DerivationGroup({
       {refs.map((ref) => (
         <dd key={ref.fqid ?? `${ref.short_name}\u0000${ref.name}`}>
           {ref.fqid ? (
-            <a className={styles.refLink} href={catalogHref(ref.fqid)}>
+            <a
+              className={`link ${styles.refLink}`}
+              href={catalogHref(ref.fqid)}
+            >
               {ref.short_name ?? ref.fqid}
             </a>
           ) : (

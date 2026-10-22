@@ -200,7 +200,7 @@ function ProviderView({ node }: { node: ProviderShow }) {
               renderCell={(register, column) =>
                 column.key === "name" ? (
                   <a
-                    className={styles.rowLink}
+                    className={`link ${styles.rowLink}`}
                     href={catalogHref(register.fqid)}
                     title={register.fqid}
                   >
@@ -247,7 +247,7 @@ export function ConceptGroupLink({
   const count = distinctMemberCount(group.members);
   return (
     <a className={styles.groupLink} href={href}>
-      <span className={styles.rowLink}>{group.label}</span>
+      <span className={`link ${styles.rowLink}`}>{group.label}</span>
       <Tag>
         {count} {count === 1 ? noun.slice(0, -1) : noun}
       </Tag>
@@ -332,7 +332,7 @@ function ClassificationRootView({ node }: { node: ClassificationRootShow }) {
                 case "family":
                   return (
                     <a
-                      className={styles.rowLink}
+                      className={`link ${styles.rowLink}`}
                       href={classGroupHref(row.family.key)}
                       title={`${row.family.editions.length} editions`}
                     >
@@ -350,7 +350,7 @@ function ClassificationRootView({ node }: { node: ClassificationRootShow }) {
                 case "leaf":
                   return (
                     <a
-                      className={styles.rowLink}
+                      className={`link ${styles.rowLink}`}
                       href={catalogHref(row.item.fqid)}
                       title={row.edition}
                     >

@@ -52,21 +52,11 @@
   min-width: 0;
   font-size: var(--text-sm);
 }
-/* A plain link: `text`, a 1.5px accent bottom border, surface-hover on hover;
-   never pine. */
+/* A plain link (`link`). */
 .variable {
   min-width: 0;
-  border-bottom: 1.5px solid var(--accent);
   color: var(--text);
   overflow-wrap: anywhere;
-}
-.variable:hover {
-  background: var(--surface-hover);
-}
-.variable:focus-visible {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
 }
 .fqid {
   min-width: 0;

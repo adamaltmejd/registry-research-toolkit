@@ -139,18 +139,21 @@ input.cbox:indeterminate::after {
    (no class of its own: prose, a member-of line) takes the design system's 1.5px
    `accent` bottom border and a `surface-hover` wash. An anchor with a class owns its
    look, because most of them wrap a block or a row and a bottom border would draw
-   across all of it. */
+   across all of it. `.link` gives a classed anchor the same look. */
 a {
   color: var(--text);
   text-decoration: none;
 }
-a:not([class]) {
+a:not([class]),
+.link {
   border-bottom: 1.5px solid var(--accent);
 }
-a:not([class]):hover {
+a:not([class]):hover,
+.link:hover {
   background: var(--surface-hover);
 }
-a:not([class]):focus-visible {
+a:not([class]):focus-visible,
+.link:focus-visible {
   border-radius: var(--radius-sm);
   outline: none;
   box-shadow: var(--focus-ring);

@@ -517,7 +517,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
   };
   switch (route.name) {
     case "home":
-      return [browserRoot, { label: "Home" }];
+      return [browserRoot, { label: "Home", word: true }];
     case "root":
       // The data browser IS the current page — a single un-linked crumb.
       return [{ label: DATA_BROWSER_LABEL }];
@@ -552,9 +552,13 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
         label: "variants",
       });
     case "project":
-      return [browserRoot, { label: "Project" }];
+      return [browserRoot, { label: "Project", word: true }];
     case "doc":
-      return [browserRoot, { label: "Docs" }, { label: route.identifier }];
+      return [
+        browserRoot,
+        { label: "Docs", word: true },
+        { label: route.identifier },
+      ];
     default:
       // not-found
       return [browserRoot];

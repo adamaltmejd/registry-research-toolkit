@@ -41,22 +41,13 @@
   min-width: 0;
 }
 
-/* A plain link (DESIGN.md → Typography): ink, the accent bottom border. */
+/* A plain link (`link`). */
 .name {
   align-self: flex-start;
   max-width: 100%;
-  border-bottom: 1.5px solid var(--accent);
   color: var(--text);
   text-decoration: none;
   overflow-wrap: anywhere;
-}
-.name:hover {
-  background: var(--surface-hover);
-}
-.name:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .fqid {

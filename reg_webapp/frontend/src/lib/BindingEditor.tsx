@@ -152,7 +152,10 @@ export function BindingEditor({
               #991), and the FQID in mono under it. */}
           {variable ? (
             <span className={styles.variableLine}>
-              <a className={styles.variable} href={catalogHref(variable)}>
+              <a
+                className={`link ${styles.variable}`}
+                href={catalogHref(variable)}
+              >
                 {variableName ?? variable}
               </a>
               {variableName && <code className={styles.fqid}>{variable}</code>}

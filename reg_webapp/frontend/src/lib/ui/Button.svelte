@@ -5,7 +5,7 @@ import type {
   HTMLAnchorAttributes,
   HTMLButtonAttributes,
 } from "svelte/elements";
-import type { ButtonSize, ButtonVariant } from "./types";
+import type { ButtonVariant } from "./types";
 
 // The shared button (#804). Behavior + polymorphism come from Bits UI's
 // headless `Button` (verified against node_modules/bits-ui/dist/bits/button:
@@ -34,7 +34,6 @@ type RestProps = Omit<
 
 interface Props extends RestProps {
   variant?: ButtonVariant;
-  size?: ButtonSize;
   href?: string;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
@@ -46,7 +45,6 @@ interface Props extends RestProps {
 
 let {
   variant = "default",
-  size = "md",
   href,
   type,
   disabled,
@@ -61,7 +59,7 @@ let {
 // stray `class="btn"` elsewhere can't inherit this foundational primitive's CSS.
 // A caller `class` is appended so call sites can add layout/spacing hooks.
 const classes = $derived(
-  `ui-btn variant-${variant} size-${size}${className ? ` ${className}` : ""}`,
+  `ui-btn variant-${variant}${className ? ` ${className}` : ""}`,
 );
 </script>
 
@@ -91,7 +89,9 @@ const classes = $derived(
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
     font-family: var(--font-ui);
+    font-size: var(--text-sm);
     font-weight: 500;
     border-radius: var(--radius-sm);
     border: 1px solid transparent;
@@ -107,15 +107,6 @@ const classes = $derived(
   :global(.ui-btn[aria-disabled="true"]) {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-
-  :global(.ui-btn.size-md) {
-    padding: var(--space-2) var(--space-3);
-    font-size: var(--text-sm);
-  }
-  :global(.ui-btn.size-sm) {
-    padding: var(--space-1) var(--space-2);
-    font-size: var(--text-micro);
   }
 
   :global(.ui-btn.variant-primary) {

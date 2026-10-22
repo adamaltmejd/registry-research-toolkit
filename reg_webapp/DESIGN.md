@@ -971,14 +971,6 @@ one-sided `until <year>` form when the start is unknown (#658).
   - **Empty** (`states.length === 0`): a clean "no state delivered for this period"
     message (a valid resolved period outside every validity window — not an error).
 
-  **`?codes=<variant>::<column>` deep-link** (#905/#1058): the picker's "codings vary"
-  nudge became a deep link to `?codes=<variant>::<column>#states-heading`.
-  `BindingLeafView` reads `?codes` into value-set focus state (pure view state — no
-  refetch) and passes it to `ValueSetView`, which seeds the local isolation onto the
-  distinct value set `valueSetKeyForColumn` resolves for that row identity. A folded
-  graph cell passes the cell's era column, not the row's latest column. A stale or
-  unknown column degrades silently to the default union view.
-
   The component is kept standalone (not folded back into the leaf) so the graph/picker
   surface can place the same coding display next to the selected representations without
   duplicating value-set rendering.

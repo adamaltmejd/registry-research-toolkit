@@ -321,7 +321,7 @@ function LaneName({ lane, width }: { lane: LaneModel; width: number }) {
   return (
     <div className={styles.name} style={{ width }}>
       {lane.href ? (
-        <a className={styles.nameText} href={lane.href}>
+        <a className={`link ${styles.nameText}`} href={lane.href}>
           {lane.name}
         </a>
       ) : (

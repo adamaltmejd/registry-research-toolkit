@@ -460,6 +460,9 @@ function BrowseItem({
   // while a page under it (a variable, a group, its variants) is open.
   const ariaCurrent =
     current?.key !== node.id ? undefined : current.exact ? "page" : "true";
+  // A group whose register is the open page: ← from the variables column
+  // lands here when a collapse hides that register's row.
+  const holdsCurrent = current?.key.startsWith(`${node.id}/`) ?? false;
   return (
     <TreeItem
       id={node.id}
@@ -469,7 +472,13 @@ function BrowseItem({
           : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
       }
       className={styles.row}
-      render={(props) => <div {...props} aria-current={ariaCurrent} />}
+      render={(props) => (
+        <div
+          {...props}
+          aria-current={ariaCurrent}
+          data-holds-current={holdsCurrent || undefined}
+        />
+      )}
     >
       <TreeItemContent>
         {({ hasChildItems }) => (

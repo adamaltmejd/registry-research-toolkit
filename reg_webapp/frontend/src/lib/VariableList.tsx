@@ -92,6 +92,8 @@ function memberSections(
     section.items.push({
       id: `member:${index}`,
       name,
+      // The same variable name can sit under several facet headers.
+      label: head ? `${head.label}, ${name}` : undefined,
       href: catalogHref(member.fqid),
       inProject: counts[member.fqid] ?? 0,
     });

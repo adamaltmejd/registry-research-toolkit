@@ -5,7 +5,10 @@
  * `data-browse-column`, since they are siblings in the shell with no shared
  * React state.
  *
- * Focus lands on the column's selected row, else its first. Focusing a RAC row
+ * Focus lands on the column's selected row. Failing that, the register column
+ * focuses the collapsed group that holds the selected register
+ * (`data-holds-current`), and nothing else; the variables column its first
+ * row. Focusing a RAC row
  * element moves the collection's focused key with it (its focus handler), so
  * the arrows continue from there; it does not select, so the page stays put.
  * Returns false when there is no such column (the narrow layout, a page with
@@ -19,7 +22,10 @@ export function focusBrowseColumn(column: "registers" | "variables"): boolean {
   const row =
     root.querySelector<HTMLElement>(
       '[role="option"][data-selected], [role="row"][data-selected], [role="row"][aria-current]',
-    ) ?? root.querySelector<HTMLElement>('[role="option"], [role="row"]');
+    ) ??
+    (column === "registers"
+      ? root.querySelector<HTMLElement>('[role="row"][data-holds-current]')
+      : root.querySelector<HTMLElement>('[role="option"], [role="row"]'));
   if (!row) return false;
   row.focus();
   return true;

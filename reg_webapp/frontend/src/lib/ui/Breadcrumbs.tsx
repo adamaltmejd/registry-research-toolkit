@@ -26,8 +26,12 @@ export function Breadcrumbs({
       <AriaBreadcrumbs aria-label="Breadcrumb" className={styles.list}>
         {items.map((item, i) => (
           // A label can repeat along a path; its position cannot.
-          // oxlint-disable-next-line react/no-array-index-key
-          <Breadcrumb key={i} id={i} className={styles.crumb}>
+          <Breadcrumb
+            // oxlint-disable-next-line react/no-array-index-key
+            key={i}
+            id={i}
+            className={`${styles.crumb} ${item.word ? styles.word : ""}`}
+          >
             {item.href || i === items.length - 1 ? (
               <Link href={item.href} className={styles.link}>
                 {item.label}

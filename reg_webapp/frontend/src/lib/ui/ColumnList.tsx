@@ -23,6 +23,9 @@ export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
   id: string;
   name: string;
+  /** The option's accessible name where `name` repeats across sections (a
+   * member under its facet header); the visible text stays `name`. */
+  label?: string;
   href: string;
   /** Columns of this item in the open project; 0 shows no mark. */
   inProject: number;
@@ -108,7 +111,8 @@ export function ColumnList({
     <ListBoxItem
       key={item.id}
       id={item.id}
-      textValue={item.name}
+      textValue={item.label ?? item.name}
+      aria-label={item.label}
       className={styles.row}
       render={(props) => (
         <div
