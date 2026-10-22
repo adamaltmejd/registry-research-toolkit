@@ -8,10 +8,7 @@
 // utility (#836) is a sibling global stylesheet, imported the same way so a
 // component's label header (DataTable th, Panel title, KeyValue dt) renders
 // with its styling under test just as it does in the app.
-import { beforeEach } from "vitest";
-import { commands, page } from "vitest/browser";
-import { cleanup as cleanupReact } from "vitest-browser-react/pure";
-import { cleanup as cleanupSvelte } from "vitest-browser-svelte/pure";
+import { commands } from "vitest/browser";
 import "./tokens.css";
 import "./lib/ui/motion.css";
 import "./lib/ui/utilities.css";
@@ -22,19 +19,6 @@ declare module "vitest/browser" {
     keepRequestInterception: () => Promise<{ path: string; marker: string }>;
   }
 }
-
-// React beside Svelte during the port (REACT_PORT.md). vitest-browser-svelte's
-// setup entry registers Svelte's cleanup; React's comes from its `/pure` entry,
-// because its setup entry would also claim `page.render`. Vitest calls one
-// component-cleanup hook at the end of each file; this one unmounts both
-// renderers, where the Svelte entry's would unmount only Svelte.
-beforeEach(cleanupReact);
-page.extend({
-  [Symbol.for("vitest:component-cleanup")]: async () => {
-    cleanupSvelte();
-    await cleanupReact();
-  },
-});
 
 // Before the test file's `vi.mock` routes, make request interception live for
 // this iframe, or a mocked module can load unmocked — see

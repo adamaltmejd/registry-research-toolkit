@@ -57,8 +57,8 @@ const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
 };
 
 export default defineConfig({
-  // React beside Svelte during the port (REACT_PORT.md): plugin-react takes only
-  // .tsx, so it never touches .svelte, .svelte.ts or plain .ts modules.
+  // React beside Svelte during the port: plugin-react takes only .tsx, so it
+  // never touches .svelte, .svelte.ts or plain .ts modules.
   plugins: [svelte(), react({ include: /\.tsx$/ })],
   server: {
     // Dev proxy: the Rust server answers every /api route.
@@ -72,8 +72,8 @@ export default defineConfig({
   // Two Vitest projects share this one Vite pipeline (so `.svelte` / `.svelte.ts`
   // resolve and compile identically via the svelte() plugin above):
   //   • `unit`    — jsdom, for pure logic + rune-MODULE tests (`*.test.ts`).
-  //   • `browser` — real Chromium via Playwright, for COMPONENT tests, `.svelte`
-  //                 and, during the port, React (`*.browser.test.{ts,tsx}`). jsdom can't faithfully run Svelte 5
+  //   • `browser` — real Chromium via Playwright, for `.svelte` COMPONENT tests
+  //                 (`*.browser.test.ts`). jsdom can't faithfully run Svelte 5
   //                 runes reactivity, so component wiring is tested in a real
   //                 browser (#201). `bun run test` (= `vitest run`) runs both.
   test: {
@@ -117,7 +117,7 @@ export default defineConfig({
         test: {
           name: "browser",
           fileParallelism: !needsSingleProcessChromium,
-          include: ["src/**/*.browser.test.{ts,tsx}"],
+          include: ["src/**/*.browser.test.ts"],
           // vitest-browser-svelte injects `render`/`cleanup` (it auto-cleans
           // BEFORE each test) and its locator types via this setup entry. The
           // second entry loads the global design tokens + fonts into the test
