@@ -6,8 +6,9 @@
 //    inside a component's <style> block renders identically today and still breaks
 //    the light-first, dark-ready contract (the [data-theme="dark"] remap cannot reach
 //    it). Screenshots cannot catch that bypass and biome does not lint <style> blocks
-//    inside .svelte, so this scans every .svelte under src/ for a literal that should
-//    be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
+//    inside .svelte, so this scans every .svelte <style> block, every stylesheet
+//    under src/ but tokens.css (CSS Modules included) and every `style={{…}}` object
+//    in a .tsx for a literal that should be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
 //    mask is alpha/luminance geometry, not palette, so `#000` there is the only
 //    correct spelling). Named colors (`transparent`, `currentColor`, the
 //    `black`/`white` in a color-mix darkening) are not flagged — they are not palette
@@ -25,9 +26,10 @@
 //
 // 3. Reference resolution. A `var(--name)` whose name no stylesheet defines renders
 //    the fallback (or the property's initial value) without a warning, so a typo like
-//    `var(--txet)` ships silently. Every reference in a .svelte or .css file under src/
-//    must name a custom property tokens.css declares or the same file declares (in a
-//    <style> block, an inline `style="--x: …"`, or a `style:--x` directive). A property
+//    `var(--txet)` ships silently. Every reference in a .svelte, .css or .tsx file under
+//    src/ must name a custom property tokens.css declares or the same file declares (in
+//    a <style> block, an inline `style="--x: …"`, a `style:--x` directive, or a
+//    `"--x":` key of a React style object). A property
 //    set in one file and read in another is named in CROSS_FILE with its reason.
 import { lint, type ResolvedDimension } from "@google/design.md/linter";
 
@@ -53,14 +55,46 @@ function lineOf(text: string, offset: number): number {
   return text.slice(0, offset).split("\n").length;
 }
 
+// A React style object, `style={{ … }}`, and one of its entries: a bare, quoted or
+// computed key, then a quoted value or one up to the next comma or brace.
+const STYLE_OBJECT = /style=\{\{([\s\S]*?)\}\}/g;
+const OBJECT_ENTRY =
+  /([\w-]+|"[^"]*"|'[^']*')\s*:\s*("[^"]*"|'[^']*'|`[^`]*`|[^,}]+)/g;
+
+/** The style bodies of one file, each with its offset into `source`: a .svelte's
+ * <style> blocks, a stylesheet whole, a .tsx's style objects. */
+function styleBodies(
+  source: string,
+  file: string,
+): { body: string; start: number; entry: RegExp }[] {
+  if (file.endsWith(".css")) {
+    return [{ body: source, start: 0, entry: DECLARATION }];
+  }
+  const [blocks, entry] = file.endsWith(".tsx")
+    ? [STYLE_OBJECT, OBJECT_ENTRY]
+    : [STYLE_BLOCK, DECLARATION];
+  return [...source.matchAll(blocks)].map((block) => ({
+    body: block[1],
+    start: (block.index ?? 0) + block[0].indexOf(block[1]),
+    entry,
+  }));
+}
+
 function tokenViolations(source: string, file: string): string[] {
   const out: string[] = [];
-  for (const block of source.matchAll(STYLE_BLOCK)) {
-    const bodyStart = (block.index ?? 0) + block[0].indexOf(block[1]);
-    const body = stripComments(block[1]);
-    for (const decl of body.matchAll(DECLARATION)) {
-      const [, property, value] = decl;
-      const prop = property.toLowerCase();
+  for (const { body: raw, start: bodyStart, entry } of styleBodies(
+    source,
+    file,
+  )) {
+    const body = stripComments(raw);
+    for (const decl of body.matchAll(entry)) {
+      const [, property] = decl;
+      const value = decl[2].replace(/^["'`]|["'`]$/g, "");
+      // A React key is camelCase (`fontFamily`); compare in CSS spelling.
+      const prop = property
+        .replace(/^["']|["']$/g, "")
+        .replace(/[A-Z]/g, (c) => `-${c}`)
+        .toLowerCase();
       const line = lineOf(source, bodyStart + (decl.index ?? 0));
       if (!prop.includes("mask") && COLOR_LITERAL.test(value)) {
         out.push(
@@ -98,16 +132,41 @@ if (selfCheckLines !== "3,4,6") {
     `token-discipline self-check flagged lines [${selfCheckLines}], expected [3,4,6]`,
   );
 }
+// The same rule over a React style object and a CSS Module.
+const TSX_SELF_CHECK = [
+  "<div style={{ color: '#fff', width: 1 }} />",
+  "<div style={{ fontFamily: 'ui-monospace, monospace' }} />",
+  '<div style={{ "--tree-indent": "var(--space-5)", color: "var(--text)" }} />',
+].join("\n");
+const CSS_SELF_CHECK = ".a { color: var(--text); }\n.b { color: hsl(0 0% 0%); }";
+const flaggedLines = (source: string, file: string): string =>
+  tokenViolations(source, file)
+    .map((v) => v.split(":")[1])
+    .join(",");
+if (flaggedLines(TSX_SELF_CHECK, "X.tsx") !== "1,2") {
+  failures.push(
+    `token-discipline .tsx self-check flagged lines [${flaggedLines(TSX_SELF_CHECK, "X.tsx")}], expected [1,2]`,
+  );
+}
+if (flaggedLines(CSS_SELF_CHECK, "X.module.css") !== "2") {
+  failures.push(
+    `token-discipline .css self-check flagged lines [${flaggedLines(CSS_SELF_CHECK, "X.module.css")}], expected [2]`,
+  );
+}
 
-const svelteFiles = [
-  ...new Bun.Glob("src/**/*.svelte").scanSync({ cwd: ROOT }),
-].sort();
+// tokens.css is the one file whose job is to hold the literals.
+const disciplinedFiles = [
+  ...new Bun.Glob("src/**/*.{svelte,css,tsx}").scanSync({ cwd: ROOT }),
+]
+  .filter((file) => file !== "src/tokens.css")
+  .sort();
+const svelteFiles = disciplinedFiles.filter((f) => f.endsWith(".svelte"));
 if (svelteFiles.length <= 30) {
   failures.push(
     `token discipline saw only ${svelteFiles.length} .svelte files under src/`,
   );
 }
-for (const file of svelteFiles) {
+for (const file of disciplinedFiles) {
   const source = await Bun.file(`${ROOT}/${file}`).text();
   failures.push(...tokenViolations(source, file));
 }
@@ -262,8 +321,9 @@ const CROSS_FILE: Record<string, string> = {
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;
-// `--x:` in CSS or an inline style attribute, or a Svelte `style:--x` directive.
-const DECLARED = /(--[\w-]+)\s*[:=]/g;
+// `--x:` in CSS or an inline style attribute, a Svelte `style:--x` directive, or a
+// `"--x":` key in a React style object.
+const DECLARED = /(--[\w-]+)["']?\s*[:=]/g;
 const HTML_COMMENT = /<!--[\s\S]*?-->/g;
 
 const declaredIn = (text: string): Set<string> =>
@@ -310,7 +370,7 @@ if (referenceSelfCheck !== "4,6") {
 }
 
 const styledFiles = [
-  ...new Bun.Glob("src/**/*.{svelte,css}").scanSync({ cwd: ROOT }),
+  ...new Bun.Glob("src/**/*.{svelte,css,tsx}").scanSync({ cwd: ROOT }),
 ].sort();
 for (const file of styledFiles) {
   const source = await Bun.file(`${ROOT}/${file}`).text();
@@ -323,5 +383,5 @@ if (failures.length > 0) {
   process.exit(1);
 }
 console.log(
-  `lint:tokens: ${svelteFiles.length} .svelte files, ${SPEC.size} DESIGN.md tokens and var() references in ${styledFiles.length} files clean`,
+  `lint:tokens: ${disciplinedFiles.length} styled files, ${SPEC.size} DESIGN.md tokens and var() references in ${styledFiles.length} files clean`,
 );

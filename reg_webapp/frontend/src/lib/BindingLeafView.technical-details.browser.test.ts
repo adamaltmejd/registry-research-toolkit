@@ -164,15 +164,13 @@ describe("BindingLeafView representation picker (#678)", () => {
           valid_from: "2022-01-01",
           valid_to: "2022-12-31",
           period_token: "2022",
-          provenance:
-            "errata:scoped-attributions\n" +
-            JSON.stringify([
-              {
-                class: "omitted-column-in-version",
-                evidence,
-                source_editions: ["Höstterminen 2022"],
-              },
-            ]),
+          provenance: `errata:scoped-attributions\n${JSON.stringify([
+            {
+              class: "omitted-column-in-version",
+              evidence,
+              source_editions: ["Höstterminen 2022"],
+            },
+          ])}`,
         }),
       ]),
       regMetaVersion: SEED.regMetaVersion,
@@ -214,20 +212,18 @@ describe("BindingLeafView representation picker (#678)", () => {
           valid_from: "2021-01-01",
           valid_to: "2021-12-31",
           period_token: "2021",
-          provenance:
-            "errata:overlapping-attributions\n" +
-            JSON.stringify([
-              {
-                class: "omitted-column-in-version",
-                evidence: springEvidence,
-                source_editions: ["VT2021"],
-              },
-              {
-                class: "omitted-column-in-version",
-                evidence: autumnEvidence,
-                source_editions: ["HT2021"],
-              },
-            ]),
+          provenance: `errata:overlapping-attributions\n${JSON.stringify([
+            {
+              class: "omitted-column-in-version",
+              evidence: springEvidence,
+              source_editions: ["VT2021"],
+            },
+            {
+              class: "omitted-column-in-version",
+              evidence: autumnEvidence,
+              source_editions: ["HT2021"],
+            },
+          ])}`,
         }),
       ]),
       regMetaVersion: SEED.regMetaVersion,
