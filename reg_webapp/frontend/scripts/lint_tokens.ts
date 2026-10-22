@@ -5,7 +5,7 @@
 //    components consume SEMANTIC roles only. A raw color literal or a raw font stack
 //    inside a component's <style> block renders identically today and still breaks
 //    the light-first, dark-ready contract (the [data-theme="dark"] remap cannot reach
-//    it). Screenshots cannot catch that bypass and biome does not lint <style> blocks
+//    it). Screenshots cannot catch that bypass and no linter here lints <style> blocks
 //    inside .svelte, so this scans every .svelte under src/ for a literal that should
 //    be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
 //    mask is alpha/luminance geometry, not palette, so `#000` there is the only

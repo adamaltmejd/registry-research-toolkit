@@ -609,19 +609,33 @@ committed tree must agree. `scripts/gate.py regen` refreshes both.
 
 ## Frontend toolchain
 
-Svelte 5 + Vite + TypeScript, bun-managed. **Biome** (`>=2.3.0`) is the single
-formatter/linter — no prettier/eslint. Biome's experimental Svelte support formats/lints
-the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flow
-(`{#if}` / `{#each}`), so:
+Svelte 5 + TypeScript on **Vite+** (`vp`, the `vite-plus` dev dependency), bun-managed:
+bun stays the package manager and `bunfig.toml` keeps `minimumReleaseAge = 0` written
+out. One `vite.config.ts` configures the dev server and build (`vp dev`, `vp build`),
+the two Vitest projects (`vp test run`), the linter and the formatter (`vp check` runs
+both). No prettier, eslint or standalone vitest/vite invocations.
 
-- `.svelte` formatting is imperfect (an accepted tradeoff).
-- `noUnusedVariables` / `noUnusedImports` are disabled for `.svelte` in `biome.json` —
-  Biome can't see template-bound usage of `<script>` declarations and false-fires.
-  **`svelte-check`** (the `check` script) is the authoritative type/template gate and
-  does see template usage. It runs with `--fail-on-warnings`, so a11y and unused-CSS
-  warnings fail the gate too.
-- The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome entirely (codegen
-  output, never hand-formatted).
+- **Format: Oxfmt** (`vp fmt`, `fmt` block). `svelte: true` formats whole `.svelte`
+  files — template, `<script>` and `<style>` — through `prettier-plugin-svelte`;
+  `sortImports` replaces Biome's organize-imports. Markdown is panache's
+  (`scripts/gate.py lint`), so `**/*.md` is ignored here.
+- **Lint: Oxlint** (`vp lint`, `lint` block): the `correctness` category plus the Oxlint
+  ports of the rules Biome's `recommended` preset enforced, at error. Oxlint lints a
+  `.svelte` file's `<script>`, not its template, and does not report unused variables
+  there (they may be used by the template only). Type-aware linting is off: it would
+  type-check `.ts` without resolving `.svelte` imports, and svelte-check owns types.
+- **`svelte-check`** (the `check` script) is the authoritative type/template gate and
+  sees template usage. It runs with `--tsgo --fail-on-warnings`, so a11y and unused-CSS
+  warnings fail the gate too. Vite+ has no equivalent.
+- **Biome lints CSS only** (`biome lint`, `biome.json`): Oxlint has no CSS rules, and
+  Biome's catch unknown properties, units and functions, duplicate properties and custom
+  properties, and a missing `var()` in `tokens.css` and the `lib/ui` sheets. Neither
+  tool lints a `.svelte` `<style>` block; `lint:tokens` covers the token rules there.
+- `lint:design`, `lint:tokens`, `gen:types` and `gen:wasm` stay package scripts, not
+  `vp run` tasks: `vp run` caches task results by default, and a replayed pass is not a
+  gate run. `scripts/gate.py frontend` calls every step through `bun run`.
+- The codegen'd `src/lib/api-types-rust.ts`, the wasm-bindgen output and `dist/` are
+  excluded from the formatter and the linter (generated output, never hand-formatted).
 
 **UI behavior layer: Bits UI** (`bits-ui@2.19.1`, the Svelte-5-runes major) is the
 sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
@@ -674,9 +688,9 @@ every `<style>` block in every `.svelte` under `src/` must be free of raw color 
 (hex, `rgb()`, `hsl()`, `oklch()`, …) and raw `font-family` stacks — a literal that
 renders identically today still escapes the `[data-theme="dark"]` remap. `mask-image`
 declarations are exempt by rule (a mask is alpha geometry, not palette). This exists
-because biome does not lint `<style>` blocks inside `.svelte`, and because a screenshot
-cannot see a token bypass. It is a source check only: it says nothing about hierarchy,
-copy, layout, or whether the right token was chosen.
+because no linter here (Oxlint, Biome) lints `<style>` blocks inside `.svelte`, and
+because a screenshot cannot see a token bypass. It is a source check only: it says
+nothing about hierarchy, copy, layout, or whether the right token was chosen.
 
 `main.ts` is the SPA entrypoint, but the `*.browser.test.ts` suite renders components
 directly via `vitest-browser-svelte` and does **not** evaluate `main.ts` — so
@@ -1345,7 +1359,7 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
 
 ## Frontend unit tests (Vitest)
 
-`bun run test` runs **Vitest** (`vitest run`) — Vite-native, so it reuses
+`bun run test` runs **Vitest** (`vp test run`) — Vite-native, so it reuses
 `vite.config.ts` and compiles `.svelte` / `.svelte.ts`. The env is `jsdom`
 (`router.svelte.ts` reads `window` at module load; `api.ts` mocks `fetch`). Tests live
 next to source as `*.test.ts` and cover the fetch-wrapper error path, the

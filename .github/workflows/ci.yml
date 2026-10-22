@@ -125,7 +125,7 @@ jobs:
         working-directory: reg_webapp/frontend
     steps:
       - uses: actions/checkout@v7.0.1
-      # The frontend bins (biome, svelte-check, vitest, vite, openapi-typescript)
+      # The frontend bins (vp, biome, svelte-check, openapi-typescript)
       # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
       # they get: without this step the gates run on whatever node the runner
       # happens to ship, and stop exercising the one production builds use.
@@ -166,7 +166,7 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
       # The gate script runs from the repository root on a uv-managed Python; it
       # needs no workspace sync. `frontend`: gen:wasm and its size budget, check,
-      # lint, test (`vitest run`: the jsdom `unit` and Chromium `browser`
+      # lint, test (`vp test run`: the jsdom `unit` and Chromium `browser`
       # projects), build, the codegen drift check (TS types are codegen'd from the
       # committed Rust `openapi.json` snapshot, so regenerating must leave them
       # unchanged) and the built app's bootstrap smoke.

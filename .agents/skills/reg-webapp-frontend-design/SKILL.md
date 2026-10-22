@@ -72,7 +72,7 @@ If a proposed UI needs a new dependency, stop and justify it against the repo la
 popover, tooltip, slider, tabs, accordion.
 
 - Bits UI ships behavior and ARIA only, zero styles. Do not add Tailwind, shadcn, or a
-  parallel token system; Biome is the only formatter/linter (no Prettier/ESLint).
+  parallel token system; Vite+ (Oxfmt, Oxlint) formats and lints (no Prettier/ESLint).
 - Keep app logic the source of truth inside the primitive — e.g. `Command` with
   `shouldFilter={false}` where the app already ranks (`rankFilter`).
 - Known caveat: a nested/expandable row inside a `Command` listbox cannot be a flat
