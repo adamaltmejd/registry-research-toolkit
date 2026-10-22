@@ -5870,6 +5870,13 @@
           "long_name"
         ],
         "properties": {
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "What the deployment is for, one or two plain sentences shown under the name on\nthe landing page; absent where the name says enough."
+          },
           "id": {
             "type": "string"
           },
@@ -6166,6 +6173,7 @@
         "type": "object",
         "required": [
           "fqid",
+          "is_identifier",
           "deliveries"
         ],
         "properties": {
@@ -6189,6 +6197,10 @@
           },
           "fqid": {
             "type": "string"
+          },
+          "is_identifier": {
+            "type": "boolean",
+            "description": "The variable identifies a unit (a person, a firm): the register lists it\nfirst."
           },
           "name": {
             "type": [

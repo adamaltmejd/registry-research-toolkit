@@ -1784,6 +1784,10 @@
             "fqid": {
               "type": "string"
             },
+            "is_identifier": {
+              "description": "The variable identifies a unit (a person, a firm): the register lists it\nfirst.",
+              "type": "boolean"
+            },
             "name": {
               "type": [
                 "string",
@@ -1793,6 +1797,7 @@
           },
           "required": [
             "fqid",
+            "is_identifier",
             "deliveries"
           ],
           "type": "object"

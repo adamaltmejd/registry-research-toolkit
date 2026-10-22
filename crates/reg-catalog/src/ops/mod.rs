@@ -60,6 +60,10 @@ pub struct Steward {
     pub id: String,
     pub name: String,
     pub long_name: String,
+    /// What the deployment is for, one or two plain sentences shown under the name on
+    /// the landing page; absent where the name says enough.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
     /// How a researcher hands a project to this steward for ordering, plain text shown
     /// beside the downloads; absent when the deployment takes no orders.
     #[serde(default, skip_serializing_if = "Option::is_none")]

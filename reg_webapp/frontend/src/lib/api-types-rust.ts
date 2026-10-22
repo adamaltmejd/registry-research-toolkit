@@ -1604,6 +1604,11 @@ export interface components {
         };
         /** @description Deployment branding, `reg_webapp/stewards/<catalog>/steward.json`. */
         Steward: {
+            /**
+             * @description What the deployment is for, one or two plain sentences shown under the name on
+             *     the landing page; absent where the name says enough.
+             */
+            description?: string | null;
             id: string;
             long_name: string;
             name: string;
@@ -1695,6 +1700,11 @@ export interface components {
             /** @description Every `(variant, column)` the variable is delivered under in scope. */
             deliveries: components["schemas"]["Delivery"][];
             fqid: string;
+            /**
+             * @description The variable identifies a unit (a person, a firm): the register lists it
+             *     first.
+             */
+            is_identifier: boolean;
             name?: string | null;
         };
         VariableCoverage: components["schemas"]["Span"] & {

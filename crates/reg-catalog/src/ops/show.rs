@@ -95,6 +95,9 @@ pub struct Register {
 pub struct VariableChild {
     fqid: String,
     name: Option<String>,
+    /// The variable identifies a unit (a person, a firm): the register lists it
+    /// first.
+    is_identifier: bool,
     /// Null in holdings for a variable with no held delivery.
     coverage: Option<ShowCoverage>,
     /// Every `(variant, column)` the variable is delivered under in scope.
@@ -569,19 +572,26 @@ fn register(
         |row| Ok((row.get(0)?, row.get(1)?)),
     )?;
     let sql = format!(
-        "SELECT v.variable_id, v.slug, v.name FROM variable v WHERE v.register_id = ? \
+        "SELECT v.variable_id, v.slug, v.name, v.is_identifier FROM variable v \
+         WHERE v.register_id = ? \
          AND v.slug IS NOT NULL AND {} ORDER BY v.slug",
         held::variable(scope, "v.variable_id", Narrow::default())
     );
     let mut deliveries = browse::deliveries(conn, scope, id)?;
     let coverage = browse::variable_coverage(conn, scope, id, &deliveries)?;
     let children = rows(conn, &sql, [id], |row| {
-        Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?, row.get(2)?))
+        Ok((
+            row.get::<_, i64>(0)?,
+            row.get::<_, String>(1)?,
+            row.get(2)?,
+            row.get(3)?,
+        ))
     })?
     .into_iter()
-    .map(|(variable_id, variable, name)| VariableChild {
+    .map(|(variable_id, variable, name, is_identifier)| VariableChild {
         fqid: format!("{provider}/{slug}/{variable}"),
         name,
+        is_identifier,
         coverage: coverage.get(&variable_id).cloned(),
         deliveries: deliveries.remove(&variable_id).unwrap_or_default(),
     })
