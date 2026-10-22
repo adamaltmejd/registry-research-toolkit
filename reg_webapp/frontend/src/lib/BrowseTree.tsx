@@ -431,7 +431,11 @@ function BrowseItem({
   return (
     <TreeItem
       id={node.id}
-      textValue={node.name}
+      textValue={
+        node.variableMatches === undefined
+          ? node.name
+          : `${node.name}, ${node.variableMatches} matching ${node.variableMatches === 1 ? "variable" : "variables"}`
+      }
       className={styles.row}
       render={(props) => <div {...props} aria-current={ariaCurrent} />}
     >

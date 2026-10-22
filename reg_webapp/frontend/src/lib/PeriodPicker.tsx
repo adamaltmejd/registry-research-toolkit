@@ -455,9 +455,14 @@ function PeriodWindowSlider({
       formatOptions={{ useGrouping: false }}
       onChange={(next) => {
         const [a = from, b = to] = next;
-        // A user move stays inside the delivered span; RAC keeps the order.
+        // The moved thumb stays inside the delivered span; RAC keeps the
+        // order. Only the thumb that moved is clamped: a selection seeded
+        // outside the band must not drag its other end along.
         const clamp = (y: number) => Math.min(hi, Math.max(lo, y));
-        const moved = { from: clamp(a), to: clamp(b) };
+        const moved = {
+          from: a === from ? a : clamp(a),
+          to: b === to ? b : clamp(b),
+        };
         if (!sameYearWindow(moved, selection)) onChange(moved);
       }}
     >
