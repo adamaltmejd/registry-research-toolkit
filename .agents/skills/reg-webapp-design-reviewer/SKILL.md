@@ -73,8 +73,9 @@ gotchas" and "React 19 rules"; a breach visible in the diff is a finding:
 - `P2`: a hand-rolled widget RAC covers; RAC styled with one-off values or a global
   `.react-aria-*` selector; any breach of the collection, `dependencies`,
   controlled-state, filtering, labelling, pinning, Swedish-text or Tree rules; an effect
-  that derives state; an effect without cleanup or not idempotent under StrictMode; a
-  fetch outside `useAsyncResource`; a component defined inside another; a new state
+  that derives state; an effect without cleanup or not idempotent under StrictMode; an
+  ad-hoc fetch in an effect, or one not aborted on unmount or deps change, instead of
+  the shared async-resource hook; a component defined inside another; a new state
   library. `P1` where it causes user-visible breakage.
 - `P3`: a native `<button>`/`<a>` with `onClick` where RAC `Button`/`Link` fits (`P2` if
   keyboard operation breaks); `useMemo`/`useCallback` with no measured reason;
@@ -82,9 +83,9 @@ gotchas" and "React 19 rules"; a breach visible in the diff is a finding:
 
 A new component test (a render of a component asserting its markup, classes, props or
 internal state) is a `P2` defect: the port pins behavior only through the `flows` driver
-and pure-TS unit tests. Don't re-report what the frontend gate's lint already fails
-(rules of hooks, the compiler-backed rules, jsx-a11y); the yield is what lint cannot
-see.
+and pure-TS unit tests. Rules of hooks, the compiler-backed rules and jsx-a11y become
+lint with PR 1's Oxlint config: until then check them by reading; after, don't re-report
+what lint fails.
 
 ### ARIA and focus semantics
 
@@ -149,8 +150,7 @@ too. `smoke` is a desktop-only catalog flow; it does not stand in for the four w
 
 `dev.sh`'s first line names the checkout, the full HEAD and the invocation's output
 directory (`dev: repo … HEAD … shots /tmp/reg-webapp-shots.XXXXXX`). Quote it. `/tmp` is
-purged, so a path without a description of what the image showed is not evidence;
-screenshots are never committed.
+purged, so a path without a description of what it showed is not evidence; never commit.
 
 If no route is given, derive the smallest stable route from the changed files and nearby
 tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
@@ -183,8 +183,8 @@ printed console output alongside it.
 
 Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
 tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.
-The frontend gate renders nothing app-level, and jsx-a11y lint is a floor, not the axe
-audit.
+The frontend gate renders nothing app-level, and jsx-a11y (lint from PR 1) is a floor,
+not the axe audit.
 
 ### When rendering is unavailable
 
@@ -200,9 +200,9 @@ Fill every field of the rendered template and report the routes, states and view
 you actually inspected. Say whether captures are author iteration or retained gate
 evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`) covers only its driver
 scenarios (the `/project` error and retry states, catalog-authored draft and period
-flows, the deliberate replacement); on the React port compare its PNGs with the baseline
-in `REACT_PORT.md`, where a difference the brief does not name is a finding. Approval
-needs evidence for every surface the candidate changes.
+flows, the deliberate replacement); on the React port compare case count and outcome
+with `REACT_PORT.md`'s baseline (the Operator compares screenshots), where a difference
+the brief does not name is a finding. Approval needs evidence for every surface changed.
 
 ## Severity, findings and fixes
 

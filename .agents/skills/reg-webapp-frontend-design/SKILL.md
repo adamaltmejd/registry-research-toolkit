@@ -145,8 +145,9 @@ token system.
   system (DOM measurement, a listener, a fetch) and returns a cleanup.
 - **StrictMode runs effects twice in dev.** A lifecycle starter is idempotent and
   returns a cleanup.
-- **Fetches** use `useAsyncResource` (one `AbortController` per request, aborted in
-  cleanup, stale responses dropped). Never `setState` after an abort.
+- **Fetches** go through the one shared async-resource hook (lands in port PR 1): an
+  `AbortController` per request, aborted on unmount or deps change, stale responses
+  dropped. No ad-hoc fetch in an effect; never `setState` after an abort.
 - **State** lives in plain-TS stores read with `useSyncExternalStore`; the URL owns
   route state. No new state library. Updates that read previous state use functional
   `setState`.
@@ -156,9 +157,8 @@ token system.
   `.Provider`); ref callbacks may return a cleanup; `useEffectEvent` for non-reactive
   reads inside an effect.
 - **No Suspense for data.** Loading is an explicit `Skeleton` with `aria-busy`.
-- **Memoization.** The React Compiler is lint-only (its oxlint rules run in the frontend
-  gate; there is no compiler transform). Memoize only a measured hot path, a value an
-  effect depends on, or a value in RAC `dependencies`.
+- **Memoization.** The React Compiler is lint-only (no compiler transform). Memoize only
+  a measured hot path, a value an effect depends on, or a value in RAC `dependencies`.
 - **No virtualization by default.** Lists of a few thousand rows render whole
   (find-in-page works); measure before changing that.
 
@@ -214,10 +214,10 @@ Write no component tests. The port deletes Svelte component tests with their com
 behavior is pinned black-box by the `flows` driver and the existing pure-TS unit tests
 (AGENTS.md → "Testing policy").
 
-1. `uv run --no-project scripts/gate.py frontend`: types, lint (including the
-   compiler-backed React rules, jsx-a11y and `lint:tokens`), the unit tests, the build
-   and the codegen drift check. For a narrower loop, run the package scripts that step
-   lists from `reg_webapp/frontend/`. None of it is visual inspection.
+1. `uv run --no-project scripts/gate.py frontend`: types, lint (`lint:tokens`), unit
+   tests, build and codegen drift check; none of it is visual. The React lint rules
+   (rules of hooks, compiler-backed, jsx-a11y) arrive with PR 1's Oxlint config; until
+   then the reviewer checks them by reading. Narrower loop: that step's package scripts.
 
 2. Render the changed view at the four widths:
 
@@ -230,9 +230,9 @@ behavior is pinned black-box by the `flows` driver and the existing pure-TS unit
    and React or RAC dev warnings. `smoke` is the desktop catalog flow only. Use
    `REG_META_DB=<db_dir>` instead of `--fixture-db` when content matters.
 
-3. Run `dev.sh --fixture-db flows <out-dir>` and compare its PNGs against the baseline
-   recorded in `REACT_PORT.md`. A new flow behavior gets a driver scenario, not a
-   component test.
+3. Run `dev.sh --fixture-db flows <out-dir>`; compare case count and outcome with
+   `REACT_PORT.md`'s baseline (the Operator compares screenshots). A new flow behavior
+   gets a driver scenario, not a component test.
 
 4. Run `reg-webapp-design-reviewer` in a clean subagent; fix or explicitly dismiss each
    finding before declaring.
