@@ -166,9 +166,6 @@ display_group = "Övriga fordonsslag"
 "8.2969.native-main" = { slug = "agnr", deprecated = false }
 "8.2969.literal-agnr-2-d214e07e" = { slug = "agarnummer-literal-agnr-2-d214e07e", deprecated = false }
 "8.2969.literal-agnr-3-f941dde3" = { slug = "agarnummer-literal-agnr-3-f941dde3", deprecated = false }
-"8.2969.literal-agnr-fb232daf" = { slug = "agarnummer-literal-agnr-fb232daf", deprecated = false }
-"8.2969.literal-agnr-2-a94b2e58" = { slug = "agarnummer-literal-agnr-2-a94b2e58", deprecated = false }
-"8.2969.literal-agnr-3-7a7a57e3" = { slug = "agarnummer-literal-agnr-3-7a7a57e3", deprecated = false }
 "8.2969.literal-agnr-old" = { slug = "agarnummer-literal-agnr-old", deprecated = false }
 "8.3005.literal-inst-2" = { slug = "institutionell-kod-literal-inst-2", deprecated = false }
 "8.3005.literal-inst-3" = { slug = "institutionell-kod-literal-inst-3", deprecated = false }
@@ -2442,8 +2439,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.742"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "73c6faa88f2344d33b2a2232535285b3b129a23f1fba8fa3ad5ac1404df16407"
 
@@ -2452,8 +2449,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.748"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "6ca0d2821617ea5f669748d0cf8b19d74de039f7b53ad146ac06a67e6a5d379b"
 
@@ -2462,8 +2459,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.739"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "6ca0d2821617ea5f669748d0cf8b19d74de039f7b53ad146ac06a67e6a5d379b"
 
@@ -2472,8 +2469,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.743"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "6ca0d2821617ea5f669748d0cf8b19d74de039f7b53ad146ac06a67e6a5d379b"
 
@@ -2482,8 +2479,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.745"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["1999-12-31", "2001-12-31"]
 expected_fields_sha256 = "6ca0d2821617ea5f669748d0cf8b19d74de039f7b53ad146ac06a67e6a5d379b"
 
@@ -2492,8 +2489,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.749"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "ae7c4ffdcd0d7487a613e986765b6b84893fbc75116c9ce9967334190e1934d4"
 
@@ -2502,8 +2499,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.740"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "6ca0d2821617ea5f669748d0cf8b19d74de039f7b53ad146ac06a67e6a5d379b"
 
@@ -2512,8 +2509,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.741"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["1999-12-31", "2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "2e1ef67fdd3c10292f6c8642607c6bedffa37baa9336645417647218ff5c67ec"
 
@@ -2522,8 +2519,8 @@ data_warning = "Exact source limitations for this native family: detailed operat
 variable = "8.2969"
 variant = "8.1188"
 column = "AGNR"
-owner = "8.2969.literal-agnr-fb232daf"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.native-main"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR is SCB's 1999-2001 metadata spelling of AgNr, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr in some, AGNR in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "3e5c74fdbbf4a9670c7a48a2e2f248aeb577541a4cce3d85eac8c1992373f195"
 
@@ -2531,8 +2528,8 @@ expected_fields_sha256 = "3e5c74fdbbf4a9670c7a48a2e2f248aeb577541a4cce3d85eac8c1
 variable = "8.2969"
 variant = "8.742"
 column = "AGNR_2"
-owner = "8.2969.literal-agnr-2-a94b2e58"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.literal-agnr-2-d214e07e"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR_2 is SCB's 1999-2001 metadata spelling of AgNr_2, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr_2 owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr_2 in some, AGNR_2 in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "dcb9455a6872ef4e54034f2849b413b3f6596f5610454624f064917b583ae984"
 
@@ -2540,8 +2537,8 @@ expected_fields_sha256 = "dcb9455a6872ef4e54034f2849b413b3f6596f5610454624f06491
 variable = "8.2969"
 variant = "8.741"
 column = "AGNR_2"
-owner = "8.2969.literal-agnr-2-a94b2e58"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.literal-agnr-2-d214e07e"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR_2 is SCB's 1999-2001 metadata spelling of AgNr_2, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr_2 owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr_2 in some, AGNR_2 in others), so each (variant, edition) keeps one column."
 source_editions = ["1999-12-31", "2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "1261f03d43847af57e1cff445f6dfb148f9c9934b754776b088fd7cb3a647aaf"
 
@@ -2549,8 +2546,8 @@ expected_fields_sha256 = "1261f03d43847af57e1cff445f6dfb148f9c9934b754776b088fd7
 variable = "8.2969"
 variant = "8.742"
 column = "AGNR_3"
-owner = "8.2969.literal-agnr-3-7a7a57e3"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.literal-agnr-3-f941dde3"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR_3 is SCB's 1999-2001 metadata spelling of AgNr_3, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr_3 owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr_3 in some, AGNR_3 in others), so each (variant, edition) keeps one column."
 source_editions = ["2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "888c3037ce678b218fd67f4e9c29146494c83a2f384e41bd94224899c58dc8b3"
 
@@ -2558,8 +2555,8 @@ expected_fields_sha256 = "888c3037ce678b218fd67f4e9c29146494c83a2f384e41bd942248
 variable = "8.2969"
 variant = "8.741"
 column = "AGNR_3"
-owner = "8.2969.literal-agnr-3-7a7a57e3"
-ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+owner = "8.2969.literal-agnr-3-f941dde3"
+ref = "Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact. Case-only spelling fold 2026-10-22 (maintainer ruling): AGNR_3 is SCB's 1999-2001 metadata spelling of AgNr_3, same definition 'Personnummer eller organisationsnummer till fordonets ägare', text, length 12; documentation evidence only (no MONA probe: SWECOV does not hold the vehicle register). Folded into the AgNr_3 owner like DATOVL_2 into DatOvl_2 (#1753). No variant lists both spellings in one edition: the 1999/2000 overlap is across variants (AgNr_3 in some, AGNR_3 in others), so each (variant, edition) keeps one column."
 source_editions = ["1999-12-31", "2000-12-31", "2001-12-31"]
 expected_fields_sha256 = "888c3037ce678b218fd67f4e9c29146494c83a2f384e41bd94224899c58dc8b3"
 
@@ -6759,24 +6756,6 @@ fields = ["identity"]
 reason = "These exact native-edition references include competing exported native meanings on the same physical field, or the identifier original whose operation instead claims vehicle make. Preserve every original, native question, literal physical field, period and bound coding association. The reviewed source supplies no safe discriminator selecting an owner for those contradictory originals, so those exact mappings remain unavailable. Independently supported physical siblings remain separately intact. No source fact or coding claim is corrected, merged or deleted."
 evidence = "Complete accepted Fordons26/FTR15 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch51-Fordons-FTR41-complete-source-review.json; Batch51-Fordons-FTR41-operative-role-review.json; Batch51-Fordons-FTR-physical-coordinate-collisions.json. Proof: Batch51-Fordons-FTR41-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
 expected_evidence_sha256 = "9e447106888e39deaa3f0408360dfce28893009cf93415522a9b559a3bbbaa86"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/fordonsreg/agarnummer-literal-agnr-2-a94b2e58"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:741\",\"edition:15254\",\"variable:2969\",\"member:713918\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:741\",\"edition:15256\",\"variable:2969\",\"member:714064\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:741\",\"edition:15442\",\"variable:2969\",\"member:728722\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:742\",\"edition:15246\",\"variable:2969\",\"member:713405\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:742\",\"edition:15287\",\"variable:2969\",\"member:716562\"]}"]
-fields = ["is_sensitive"]
-reason = "The exact supplied original/support evidence does not establish the sensitivity or identifier flag(s) named by this finding. Keep each unknown flag unknown and retain all source fields, periods, operations and coding claims. This exact quantity and its dependent output remain withheld; do not infer false flags or orderability. Independently supported physical siblings and the supported tax-unit panel identifier remain intact."
-evidence = "Complete accepted Fordons26/FTR15 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch51-Fordons-FTR41-complete-source-review.json; Batch51-Fordons-FTR41-operative-role-review.json; Batch51-Fordons-FTR-physical-coordinate-collisions.json. Proof: Batch51-Fordons-FTR41-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "8f083f627a70f6ba155e2f71f7da8c6d3175dcd4e2d969cd7a7eddf396ea8c61"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/fordonsreg/agarnummer-literal-agnr-3-7a7a57e3"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:741\",\"edition:15254\",\"variable:2969\",\"member:713945\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:741\",\"edition:15256\",\"variable:2969\",\"member:714037\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:741\",\"edition:15442\",\"variable:2969\",\"member:728749\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:742\",\"edition:15246\",\"variable:2969\",\"member:713404\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:8\",\"variant:742\",\"edition:15287\",\"variable:2969\",\"member:716563\"]}"]
-fields = ["is_sensitive"]
-reason = "The exact supplied original/support evidence does not establish the sensitivity or identifier flag(s) named by this finding. Keep each unknown flag unknown and retain all source fields, periods, operations and coding claims. This exact quantity and its dependent output remain withheld; do not infer false flags or orderability. Independently supported physical siblings and the supported tax-unit panel identifier remain intact."
-evidence = "Complete accepted Fordons26/FTR15 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch51-Fordons-FTR41-complete-source-review.json; Batch51-Fordons-FTR41-operative-role-review.json; Batch51-Fordons-FTR-physical-coordinate-collisions.json. Proof: Batch51-Fordons-FTR41-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
-expected_evidence_sha256 = "13eef27414dc842af2a3f9bff763d741046dd979149066dbf1015147fe280c90"
 
 [[acknowledge]]
 code = "unresolved_flag"
