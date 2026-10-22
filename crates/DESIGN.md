@@ -580,12 +580,12 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    make a file on their own, and only what the table holds is added: a key the table
    does not map under the variant is not invented. A key entry takes the source of the
    file's first entry and requests the union of the file's entries' `requested_period`,
-   so a later row filter is not widened; a year or month member or a windowed key column
-   requests that union inside its own period and is left out where the union does not
-   reach it, as an ordered member is; a year-independent file's keys request `_default`.
-   Key entries follow every ordered entry, by table, variant, edition, member index and
-   column. An ordered key stays an ordered entry, unmarked. The global fallback has no
-   physical table and adds none.
+   so the file's row filter is not widened; a year or month member or a windowed key
+   column requests that union inside its own period and is left out where the union does
+   not reach it, as an ordered member is; a year-independent file's keys request
+   `_default`. Key entries follow every ordered entry, by table, variant, edition,
+   member index and column. An ordered key stays an ordered entry, unmarked. The global
+   fallback has no physical table and adds none.
 6. **Row filter.** A file's requested period is the union of its entries'
    `requested_period`, held keys included. When the file's table declares a period
    column (`holding_table.period_column` and `period_encoding`, from the steward spec)
@@ -596,10 +596,12 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    parsing it; a bound at the table's first or last held day cuts nothing and is
    omitted, so a range may be open-ended on either side. The runner reads the column per
    `encoding` (`date`, `year`, `yyyymm`, `yyyymmdd`) and keeps a row whose year, month
-   or day lies in a range: a bound finer than the encoding widens to its whole year or
-   month, never narrowing the request. No filter when the table declares no period
-   column (it is extracted whole), when the request covers every held day, for a
-   year-independent file, or in the global fallback.
+   or day lies in a range (a `datetime2` value compares by its day): a bound finer than
+   the encoding widens to its whole year or month, never narrowing the request. A row
+   whose period value is missing or unreadable is the runner's call, settled when
+   manifest v1 freezes. No filter when the table declares no period column (it is
+   extracted whole), when the request covers every held day, for a year-independent
+   file, or in the global fallback.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,
@@ -639,19 +641,19 @@ days it serves (availability, a column window, a year or month member) but never
 a file: a year or month member, a windowed column and the ordered key of one table land
 in the table's one file, whichever sources and years ordered them. A file's columns are
 the distinct physical columns of its entries: two entries for one column (two sources,
-or two periods) are one extracted column. Since v1 extracts each table whole, a split by
-clipped period would only repeat the same rows and separate columns from their keys; the
-file's row filter (step 6) narrows its rows to the union of its entries' requested
-periods instead. In the global fallback the edition is the entry's merged requested
-period, so nothing changes there. The placement is the partition, the projection or
-neither, named in slug spelling (`lisa_individer-15plus_2019.csv`,
-`agi_individuppgifter-agi_arb_2021-03.csv` for a partition,
-`<register>_<variant>_<token>_<period>.csv` for a projection). What goes in as two
-tables comes out as two files: shard identity (reporter stream, municipality) may exist
-in no column, so a union would destroy information, and a projection may have a finer
-grain than its parent. Each file carries its own keys, ordered or added as held keys
-(step 5), so a researcher who orders one non-key column still gets a joinable file; the
-user joins a projection file to its parent's on the shared key. The extract runner
+or two periods) are one extracted column. Since a file holds its table's rows for every
+requested period, a split by clipped period would only repeat the same rows and separate
+columns from their keys; the file's row filter (step 6) narrows its rows to the union of
+its entries' requested periods instead. In the global fallback the edition is the
+entry's merged requested period, so nothing changes there. The placement is the
+partition, the projection or neither, named in slug spelling
+(`lisa_individer-15plus_2019.csv`, `agi_individuppgifter-agi_arb_2021-03.csv` for a
+partition, `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in
+as two tables comes out as two files: shard identity (reporter stream, municipality) may
+exist in no column, so a union would destroy information, and a projection may have a
+finer grain than its parent. Each file carries its own keys, ordered or added as held
+keys (step 5), so a researcher who orders one non-key column still gets a joinable file;
+the user joins a projection file to its parent's on the shared key. The extract runner
 writes a key entry's column like any other and may tell it apart by `key`. A
 multi-period range is one file, filtered to the requested ranges when its table declares
 a period column.

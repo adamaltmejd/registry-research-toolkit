@@ -8,12 +8,21 @@
     "name": "Reader case",
     "sources": [
       {
-        "name": "Example",
+        "name": "Early",
         "register_variant": "scb/example/annual",
-        "period": [
-          2018,
-          2020
-        ],
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/value",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      },
+      {
+        "name": "Late",
+        "register_variant": "scb/example/annual",
+        "period": 2020,
         "bindings": [
           {
             "variable": "scb/example/value",
