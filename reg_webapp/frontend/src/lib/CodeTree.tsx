@@ -140,7 +140,10 @@ function CodeItem({
                 <span className={styles.childCount}>
                   {" "}
                   ({childCount}
-                  <span className="visually-hidden"> codes</span>)
+                  <span className="visually-hidden">
+                    {childCount === 1 ? " code" : " codes"}
+                  </span>
+                  )
                 </span>
               )}
             </span>
