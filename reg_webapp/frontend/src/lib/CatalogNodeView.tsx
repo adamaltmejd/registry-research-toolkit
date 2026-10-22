@@ -58,8 +58,8 @@ interface Props extends PeriodProps {
  */
 export function CatalogNodeView({ fqidPath, ...period }: Props) {
   // Shared with the variables column, which reads the same register now.
-  const resource = useAsyncResource(fqidPath, async () => {
-    const node = await sharedShow(fqidPath);
+  const resource = useAsyncResource(fqidPath, async (signal) => {
+    const node = await sharedShow(fqidPath, signal);
     // By the CANONICAL fqid: a retired ref resolves to its successor.
     const states = node.kind === "variable" ? await getStates(node.fqid) : [];
     return { node, states };
