@@ -25,12 +25,14 @@ import { registerRead } from "./catalog_names";
 import {
   clampYearPeriodWire,
   clampYearWindow,
+  coverageBandEdges,
+  periodWindowRelation,
   periodWireValid,
-  sameYearWindow,
   yearWindowFromWire,
 } from "./period";
 import type { PickerBand } from "./picker_lanes";
 import { RepresentationPicker } from "./RepresentationPicker";
+import { studyWindowInterval } from "./reg_core";
 import { router } from "./router";
 import { StagedAddStatus } from "./StagedAddStatus";
 import { TechnicalDetails } from "./SubjectView";
@@ -355,9 +357,26 @@ export function ConceptGroupView({
   const band = periodYears ?? projectWindow;
   // A `?period` that is not the project window: with a window it differs
   // from it (a warning), without one it is only a narrowing (information).
+  // Judged inside the group's coverage, as the variable page judges its
+  // period: a member link carrying window ∩ availability is no deviation.
+  const covered = coverageBandEdges(
+    coverage,
+    windowMinYear,
+    windowMaxYear,
+    windowMaxYear,
+  );
+  const coveredDays = covered && studyWindowInterval(covered);
   const periodNarrows =
     activePeriod !== null &&
-    !(periodYears !== null && sameYearWindow(periodYears, projectWindow));
+    !(
+      periodYears !== null &&
+      projectWindow !== null &&
+      periodWindowRelation(
+        periodYears,
+        projectWindow,
+        coveredDays ? [coveredDays] : null,
+      ) === "same"
+    );
   const definition = sharedText(group, nodes, "definition");
   const description = sharedText(group, nodes, "description");
   const facetValues = group.axes.map((axis) => ({

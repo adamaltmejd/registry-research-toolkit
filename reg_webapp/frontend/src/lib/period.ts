@@ -546,12 +546,20 @@ export function periodLabel(period: unknown): string | null {
  * applies to, or one reg-core refuses). Disjointness is judged on the days
  * (reg-core's intervals and overlap), so a sub-annual period is placed at its real
  * grain; sameness on merged year spans, so `2010..2014,2015..2020` is the same as
- * `2010..2020`. */
+ * `2010..2020`.
+ *
+ * With the subject's `availability` (the days its data is delivered in), sameness
+ * is judged inside it (period ruling 2026-10-22): years the data lacks are the
+ * data's narrowing, not the researcher's, so a period of window ∩ availability —
+ * what an add writes — is the same as the window. A window wholly outside the
+ * availability has no part to match, and falls back to the plain test.
+ * Disjointness stays the plain test: it is what blocks an order. */
 export type WindowRelation = "same" | "differs" | "disjoint";
 
 export function periodWindowRelation(
   period: unknown,
   window: ProjectStudyWindow | null,
+  availability: readonly Interval[] | null = null,
 ): WindowRelation | null {
   if (period == null || window === null) {
     return null;
@@ -564,6 +572,13 @@ export function periodWindowRelation(
   }
   if (overlapIntervals(days, [windowDays]).length === 0) {
     return "disjoint";
+  }
+  const available = availability === null ? [] : mergeIntervals(availability);
+  const heldWindow = overlapIntervals([windowDays], available);
+  if (heldWindow.length > 0) {
+    return sameIntervals(overlapIntervals(days, available), heldWindow)
+      ? "same"
+      : "differs";
   }
   const years = sourcePeriodYears(period);
   return years?.length === 1 &&

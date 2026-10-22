@@ -131,6 +131,8 @@
   font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
   color: var(--accent-ink);
+  /* One span of years: it never breaks at the en dash. */
+  white-space: nowrap;
 }
 
 .clear {

@@ -19,7 +19,7 @@ import {
   registerPrefixOf,
   windowsAddPeriod,
 } from "./catalog";
-import { periodWindowRelation } from "./period";
+import { periodWindowRelation, type WindowRelation } from "./period";
 import {
   type ProjectSourcePeriod,
   type ProjectStudyWindow,
@@ -108,6 +108,42 @@ export function sourceDeliveryEras(
     unknown ||= eras.length === before;
   }
   return { eras, unknown };
+}
+
+/** How a source's period sits against the study window, judged inside the years
+ * its columns are delivered in (`periodWindowRelation` with availability): a
+ * source holding window ∩ availability, what an add and this plan write, is the
+ * `same`. `children` is its register's read, null while in flight or failed;
+ * `loading` tells those apart. While the read is out a source that is not
+ * disjoint is `pending`, so no ▲ shows before its availability is known. A
+ * failed read, or a column the read does not list, falls back to the plain
+ * test. */
+export function sourceWindowRelation(
+  source: SafeSource,
+  window: ProjectStudyWindow | null,
+  children: readonly VariableChild[] | null,
+  loading: boolean,
+): WindowRelation | "pending" | null {
+  const period = safeSourcePeriod(source);
+  const plain = periodWindowRelation(period, window);
+  if (plain === null || plain === "disjoint") {
+    return plain;
+  }
+  if (loading) {
+    return "pending";
+  }
+  if (children === null) {
+    return plain;
+  }
+  const { eras, unknown } = sourceDeliveryEras(source, children);
+  if (unknown || eras.length === 0) {
+    return plain;
+  }
+  return periodWindowRelation(
+    period,
+    window,
+    deliveryWindows(eras).map((w) => [w.from, w.to]),
+  );
 }
 
 /** Plan the rewrite. `childrenByRegister` holds each `overlapRegisters` register's
