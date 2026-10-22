@@ -1019,6 +1019,9 @@ export interface PickerRepresentation {
    * Empty for an ordinary single-column row or a genuinely parallel (co-existing)
    * column, which stay their own rows. */
   renamedColumns: string[];
+  /** Each of a folded rename's names over its own years, oldest first; absent
+   * on any other row. */
+  renameEras?: { column: string; from: string; to: string }[];
 }
 
 export interface PickerVariantSegment {
@@ -1448,7 +1451,31 @@ function pickerRow(
     valueSetLabel: latest.value_set_version_label,
     codingsVary,
     renamedColumns,
+    ...(renamedColumns.length > 0
+      ? { renameEras: renameEras(group, validFrom, validTo) }
+      : {}),
   };
+}
+
+/** Each name of a folded rename over its own years, oldest first: the eras a
+ * LaneGraph draws inside the row's one span. */
+function renameEras(
+  group: readonly PickerStateInput[],
+  validFrom: (s: PickerStateInput) => string,
+  validTo: (s: PickerStateInput) => string,
+): { column: string; from: string; to: string }[] {
+  const byColumn = new Map<string, { from: string; to: string }>();
+  for (const s of group) {
+    const column = s.delivery_column_name as string;
+    const era = byColumn.get(column);
+    byColumn.set(column, {
+      from: era && era.from < validFrom(s) ? era.from : validFrom(s),
+      to: era && era.to > validTo(s) ? era.to : validTo(s),
+    });
+  }
+  return [...byColumn]
+    .map(([column, era]) => ({ column, ...era }))
+    .sort((a, b) => a.from.localeCompare(b.from));
 }
 
 function pickerVariantSegments(
