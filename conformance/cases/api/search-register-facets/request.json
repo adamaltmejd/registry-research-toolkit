@@ -1,5 +1,5 @@
 {
-  "note": "Counts come from the fixture: Value matches all four variables, of which scb/example's value and second are held, reference is unheld and sos/unheld is unheld; for 'Example reference' the register name supplies 'example' and only the reference variable's own text supplies 'reference'. Fails if the facet drifts from the variable arm's matching: holdings counting an unheld variable or dropping a held one, reference dropping an unheld register, or the multi-token register-context admission being skipped (0 rows) or loosened to any token (3 in scb/example, 1 in sos/unheld).",
+  "note": "Counts come from the fixture: Value matches all four variables, of which scb/example's value and second are held, reference is unheld and sos/unheld is unheld; for 'Example reference' the register name supplies 'example' and only the reference variable's own text supplies 'reference'. Fails if the facet drifts from the variable arm's matching: holdings counting an unheld variable or dropping a held one, reference dropping an unheld register, or the multi-token register-context admission being skipped (0 rows) or loosened to any token (3 in scb/example, 1 in sos/unheld). The register-scoped step lists scb/example's three Value matches in reference (reference, second, value) and drops sos/unheld; it fails if `register` stops restricting the list or the listed ids drift from the counted admission.",
   "fixture": "reader",
   "requests": [
     {
@@ -16,6 +16,11 @@
       "operation": "search_facets",
       "path": "/api/search/facets",
       "query": {"q": "Example reference", "scope": "reference"}
+    },
+    {
+      "operation": "search_facets",
+      "path": "/api/search/facets",
+      "query": {"q": "Value", "scope": "reference", "register": "scb/example"}
     }
   ]
 }

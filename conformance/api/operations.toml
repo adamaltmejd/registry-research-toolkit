@@ -52,17 +52,21 @@ limit 50, maximum 200."""
 [[operation]]
 name = "search_facets"
 http = ["GET /api/search/facets"]
-params = { q = "string", scope = "scope?" }
-result = "RegisterFacets: {registers: [{fqid, variable_matches}]} in FQID order"
-errors = ["scope_unavailable"]
+params = { q = "string", register = "ref?", scope = "scope?" }
+result = "RegisterFacets: {registers: [{fqid, variable_matches, variables?}]} in FQID order"
+errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
 note = """Per register, the count of its variables that `search`'s variable arm admits \
 for `q` (the same fold, full-text match, scope and multi-token register-context \
 admission), counted in one grouped query: not cut by `limit` or the depth-1000 bound, \
 and before concept groups fold, so a group's members each count. Registers with no \
 match are absent; a query with no letter or digit returns none. Its own route, not a \
 `search` parameter: a facet is neither a page nor a hit list, and `search`'s cursor \
-binds its parameters. No MCP tool: it feeds the SPA's in-place register filter, and an \
-agent narrows with `search`'s `register`."""
+binds its parameters. With `register` (resolved as `search`'s), the list holds only \
+that register, and its entry adds `variables`: the matched variables' FQIDs in FQID \
+order, from the same admission, so the register page narrows by the server's match \
+(which reads definition and description text the page never loads) rather than its own. \
+No MCP tool: it feeds the SPA's in-place register filter, and an agent narrows with \
+`search`'s `register`."""
 
 [[operation]]
 name = "context"
