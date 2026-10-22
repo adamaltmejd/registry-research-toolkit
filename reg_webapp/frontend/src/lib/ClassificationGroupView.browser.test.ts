@@ -13,8 +13,8 @@ import { ApiError, getGraph, getShow, getValues } from "./api";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
 import { router } from "./router.svelte";
 
-// Mock the GETs the view drives (mirrors ConceptGroupView.browser.test's
-// api-mock style); keep the rest of api.ts real (the type exports + router).
+// Mock the GETs the view drives; keep the rest of api.ts real (the type exports +
+// router).
 // `show` answers the group ref with `groupShow` (or rejects with `groupError`) and
 // any other ref with `memberShow`; `values` answers a classification ref with
 // its registered codes, else `DEFAULT_CODES`.
