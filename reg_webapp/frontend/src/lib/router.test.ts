@@ -17,7 +17,7 @@ describe("parseRoute", () => {
 
   it("routes a malformed percent-sequence to not-found (never throws)", () => {
     // `decodeURIComponent("%")` throws a URIError; parseRoute runs at module
-    // import (the Router singleton's $state init), so an unguarded throw would
+    // import (the Router singleton's field init), so an unguarded throw would
     // white-screen the SPA on a cold deep-link. Must degrade to not-found.
     expect(parseRoute("/catalog/%")).toEqual({
       name: "not-found",

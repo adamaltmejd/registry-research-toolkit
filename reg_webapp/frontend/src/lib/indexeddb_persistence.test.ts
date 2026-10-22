@@ -48,7 +48,7 @@ describe("graceful degradation (the mandatory no-throw contract)", () => {
 
   it("save resolves and load returns null when IndexedDB is unavailable", async () => {
     // Private mode / disabled storage: `indexedDB` is absent. The debounced
-    // autosave $effect must never see a rejection, and restore must yield null.
+    // store's debounced autosave must never see a rejection, and restore must yield null.
     vi.stubGlobal("indexedDB", undefined);
     const p = new IndexedDBPersistence("current", 1);
     await expect(

@@ -550,7 +550,7 @@ export function finalSourcePeriodsForStagedAdds(
 // do with a set of picked rows: fan each row out to its concrete register
 // variants, resolve every add's binding fields at the period it commits under, and
 // write the whole batch through `projectStore.applyStagedDiff`. It was three
-// copies of the same forty lines; the hosts now own only their own `$state`
+// copies of the same forty lines; the hosts now own only their own React state
 // (the confirmation / refusal lines) and their scope.
 
 /** One picked row as a host hands it over: the band it belongs to and the row. The
@@ -734,7 +734,7 @@ async function stagedAdd(
 /** Commit a staged batch through ONE synchronous store mutation. `scope` is the
  * host's active (period, window) — the same one its `committedPickerRows` reads,
  * so what an add commits under is what the page showed. `cancelled` reports that the
- * batch no longer describes that page — the host is gone (its `$effect` teardown), or
+ * batch no longer describes that page — the host is gone (its unmount), or
  * a control the host left usable has moved `scope` out from under it. It is asked at
  * BOTH of the awaits below (the restore gate, then the binding resolves), because a
  * pick that waits is a pick the researcher can walk away from mid-wait, and neither

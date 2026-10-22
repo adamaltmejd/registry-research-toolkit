@@ -1,5 +1,5 @@
 /**
- * Pure project_data.json draft helpers (NO runes — unit-tested in isolation;
+ * Pure project_data.json draft helpers (unit-tested in isolation;
  * `project_data.test.ts`).
  *
  * The draft is the uploaded or edited JSON as is (`RawDraft`): `/validate` must see
@@ -164,7 +164,7 @@ export function sourceSnapshot(source: unknown): string {
 
 // ── Immutable top-level edits ───────────────────────────────────────────────
 // Every mutator returns a NEW object (shallow clone + replaced slice) so the
-// store can swap the `$state` reference and `dirty` recomputes. Unmapped keys on
+// store can swap its draft reference and `dirty` recomputes. Unmapped keys on
 // the spread survive (the `...draft` carries known panels and raw invalid keys).
 
 /** Replace a top-level scalar field (`name`, `steward`, `reg_meta_version`, …). */

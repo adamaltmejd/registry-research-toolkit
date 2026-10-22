@@ -47,7 +47,7 @@ export type Route =
 
 /** `decodeURIComponent` that returns `null` on a malformed percent-sequence
  * instead of throwing a `URIError`. Load-bearing: `parseRoute` runs at module
- * import (the `Router` singleton's `$state` initializer), so an unguarded throw
+ * import (the `Router` singleton's field initializer), so an unguarded throw
  * on a cold deep-link to e.g. `/catalog/%` would escape module evaluation and
  * white-screen the whole SPA rather than render a not-found page. */
 function safeDecode(segment: string): string | null {

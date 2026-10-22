@@ -1,6 +1,5 @@
 /**
- * Pure period/query helpers for the binding-leaf resolution state (no runes —
- * unit-testable in isolation; `period.test.ts`). The resolution state lives in
+ * Pure period/query helpers for the binding-leaf resolution state (unit-testable in isolation; `period.test.ts`). The resolution state lives in
  * the URL query (`?period`/`?variant`/`?value_set_version`; see
  * reg_webapp/DESIGN.md → Catalog router structure); these helpers shape the wire
  * period for UI/project behavior and build the query string the router navigates to.
@@ -268,7 +267,7 @@ export function queryFromParams(params: ResolutionParams): string {
  * without one), so clearing the period (`next.period` empty/null) DROPS them —
  * the result is the empty query (full history). A field left `undefined` in
  * `next` inherits from `current`; an explicit empty string clears that field.
- * Pure (no runes / no `window`) so it's unit-tested directly. */
+ * Pure (no `window`) so it's unit-tested directly. */
 export function nextResolutionQuery(
   current: ResolutionParams,
   next: {
@@ -421,7 +420,7 @@ export function coverageBandEdges(
 /** The seed window for the availability slider when there is no explicit
  * `?period` to honour (#671): the part of the data COVERAGE the project window
  * actually frames, so a variable's true coverage shows UP FRONT rather than the
- * full 1960–vintage span reading as available. Pure (no runes) — unit-tested in
+ * full 1960–vintage span reading as available. Pure — unit-tested in
  * `period.test.ts`.
  *
  * The coverage side is `coverageBandEdges` above, resolved against the supplied

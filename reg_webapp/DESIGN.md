@@ -392,10 +392,11 @@ variable pages to add one column each.
   survive, so "add again" is one press. An Add is bound to the window it was pressed
   under for its whole round trip — the study-window slider is not disabled while the
   draft restore and the per-add resolves are out, so a window moved mid-Add ABANDONS the
-  batch (`batchGuard`, asked again after every await, `applyStagedPicks`'s own included)
-  rather than committing it under years the researcher has already left, beside a list
-  redrawn for the years they chose. Abandoned, not refused: nothing is authored, nothing
-  is claimed, and the ticks survive for an Add under the window now on screen.
+  batch (the host's `lapsed` check, passed to `applyStagedPicks` as `cancelled` and
+  asked again after every await) rather than committing it under years the researcher
+  has already left, beside a list redrawn for the years they chose. Abandoned, not
+  refused: nothing is authored, nothing is claimed, and the ticks survive for an Add
+  under the window now on screen.
 - **A column the window has moved off is not tickable.** The list names every column the
   register ever delivered, so a window later than a column's last era, earlier than its
   first, or inside one of its gaps leaves it nothing to commit. The gate is that column
@@ -809,34 +810,37 @@ server contract can't drift. The catch-all returns the `kind`-discriminated
 ## Unified catalog subject page (`SubjectView`) (#611/#638)
 
 The catalog's three *leaf* kinds — a **variable** (`scb/lisa/kon`), a **classification**
-(`class/sun2020`), and a **concept group** (`group/scb/lisa/naringsgren`) — render
-through one shell, `SubjectView` (`SubjectView.tsx`), so they share a single article
-wrapper, one title/fqid header, and one **canonical section order**:
+(`class/sun2020`), and a **concept group** (`group/scb/lisa/naringsgren`) — share one
+head, `Definitions` (`ui/Definitions.tsx`): the title, the member-of line, the facets
+row, then the definition list. They also share one **canonical section order**:
 
-1. **description**
+1. **description** (the `Definitions` head itself)
 2. **picker** — slice axis × time axis
 3. **value set / codes**
 4. **relationships**
 5. **docs**
 6. **technical**
 
-`SubjectView` is a thin *presentational* shell: it owns no data, no headings beyond the
-title, and no restyling. Each section arrives as a `ReactNode` from the leaf view and
-the shell renders the six in the fixed order (`SubjectSection` is the section wrapper,
-`TechnicalDetails` the bottom disclosure). Every slot is **optional** — a kind that has
-nothing for a section simply doesn't pass that node and the slot renders nothing (no
-empty wrapper, no "none found" wall). The variable leaf suppresses the under-header fqid
-line (`showFqid={false}` — its breadcrumb already ends in the slug, making the line
-redundant); the classification leaf keeps the default (`showFqid=true`). A concept group
-has no single fqid (its key lives in the description's Technical details), so it's
-omitted regardless.
+`SubjectView` (`SubjectView.tsx`) is a thin *presentational* shell, used by
+`BindingLeafView`: one `<article>` holding `<Definitions {...head}/>` and then its
+`children`. It has no slots and owns no data, no headings beyond the head's, and no
+restyling. It does not enforce the section order either: each leaf view keeps the order
+by convention, passing its sections as children in sequence. `SubjectSection` (an `h2`
+over a hairline) is the section wrapper and `TechnicalDetails` the bottom disclosure;
+`ClassificationView.tsx` and `ConceptGroupView.tsx` use the same two directly, under
+their own `Definitions` head. A kind with nothing for a section simply renders no node
+for it (no empty wrapper, no "none found" wall). The under-title fqid line shows only
+when the leaf passes `fqid` to `Definitions`. The variable leaf passes it only for a
+grouped member whose qualifier is a slug (its breadcrumb otherwise ends in the slug,
+which would make the line redundant). A concept group has no single fqid (its key lives
+in the description's Technical details), so it passes none.
 
 **Dispatch.** `CatalogNodeView.tsx` resolves a node by FQID (a no-query browse fetch, so
 the response is always a `kind`-tagged node) and switches on `kind`. The **list/browse**
 nodes — `provider`, `register`, `classification-root` — are NOT subjects: they render
 their child lists inline (with #303/#516 concept-group folding), not through
-`SubjectView`. The three **leaf** kinds each delegate to a per-kind view that fills the
-shell: `binding` → `BindingLeafView`; ungrouped `classification` →
+`SubjectView`. The three **leaf** kinds each delegate to a per-kind view that renders
+the head and sections: `binding` → `BindingLeafView`; ungrouped `classification` →
 `ClassificationLeafView`; grouped or family `classification` → `ClassificationGroupView`
 with the requested edition tab active; and the `concept-group` (served by the fixed
 `/catalog/group/{provider}/{register}/{key}` route, see Catalog router structure above)

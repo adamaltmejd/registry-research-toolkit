@@ -1,5 +1,5 @@
 /**
- * Pure validation-presentation helpers (NO runes — unit-tested + corpus-pinned;
+ * Pure validation-presentation helpers (unit-tested + corpus-pinned;
  * `validation.test.ts`). The backend is the CANONICAL validator (see
  * reg_webapp/DESIGN.md → Pydantic boundary): the SPA
  * never re-implements the server's validation rules — it only PARSES the issue list the server

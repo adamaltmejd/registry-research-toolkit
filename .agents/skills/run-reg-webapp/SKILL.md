@@ -127,8 +127,8 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
   ```
 
 Server-only changes rarely need the SPA: the conformance `api` corpus runs the Rust
-server on synthetic fixtures (`uv run --no-project scripts/gate.py rust`). Frontend
-component tests: `(cd reg_webapp/frontend && bun run test)`.
+server on synthetic fixtures (`uv run --no-project scripts/gate.py rust`). Frontend unit
+tests (jsdom, vitest): `(cd reg_webapp/frontend && bun run test)`.
 
 ## Gotchas
 
