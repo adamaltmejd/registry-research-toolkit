@@ -3,7 +3,7 @@ import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
 import { type Context, getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
-import CatalogNodeView from "./lib/CatalogNodeView.svelte";
+import { CatalogNodeView } from "./lib/CatalogNodeView";
 import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
 import ConceptGroupView from "./lib/ConceptGroupView.svelte";
 import { routeBreadcrumbs } from "./lib/catalog";
@@ -122,8 +122,8 @@ interface RoutedViewProps {
   bounds: WindowBounds;
 }
 
-/** The routed page in the detail pane. Every page but the catalog root is still a
- * Svelte view; each is keyed on what identifies its subject, so moving to another
+/** The routed page in the detail pane. Pages not yet ported are Svelte islands;
+ * each is keyed on what identifies its subject, so moving to another
  * subject remounts it (a Svelte `{#key}`), while a query-only move does not. */
 function RoutedView({ route, context, bounds }: RoutedViewProps) {
   // Both fall back to the empty string until /api/context resolves (a new
@@ -162,10 +162,10 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
       );
     case "catalog-node":
       return (
-        <SvelteIsland
+        <CatalogNodeView
           key={route.fqidPath}
-          component={CatalogNodeView}
-          props={{ fqidPath: route.fqidPath, ...periodProps }}
+          fqidPath={route.fqidPath}
+          {...periodProps}
         />
       );
     case "group":

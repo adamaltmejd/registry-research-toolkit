@@ -1,0 +1,17 @@
+.panel {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--elevation-raised);
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.body {
+  padding: var(--space-4);
+}

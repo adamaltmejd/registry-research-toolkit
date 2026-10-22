@@ -1,0 +1,114 @@
+.purpose {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The variable list: chips, the filter, the table, the add bar, its status. */
+.variables {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* The variant chips (Y-82): one fieldset whose legend names the axis in text. */
+.variantFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.variantFilter {
+  /* Hug the chips: a bare fieldset spans the pane. */
+  inline-size: fit-content;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.variantFilter legend {
+  padding: 0 var(--space-1);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.variantStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* One delivery column per line in the cell, the whole line the tick's target. */
+.column,
+.columnLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.column {
+  /* The stacked table mutes non-primary cells; the column name still leads. */
+  color: var(--text);
+  cursor: pointer;
+}
+.columnLine {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.years {
+  color: var(--text-muted);
+}
+.era {
+  white-space: nowrap;
+}
+/* A column the study window has moved off: the tick is disabled and the tag
+   beside it says why. */
+.outOfWindow {
+  color: var(--text-muted);
+  cursor: default;
+}
+/* Years are identifiers, inside the UI-faced sentence of the tag. */
+.windowYears {
+  font-family: var(--font-mono);
+}
+.tick:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* The add bar: the count, then the pane's one primary button. Sticky against
+   the viewport, opaque, no shadow (Y-97). */
+.addBar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.addCount {
+  margin-right: auto;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

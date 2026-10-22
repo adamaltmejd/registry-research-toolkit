@@ -1,0 +1,33 @@
+/* Neutral at rest: the strip's legend names the dimension in text, never hue. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--duration-quick) var(--ease-standard);
+}
+.chip[data-hovered] {
+  background: var(--surface-hover);
+}
+.chip[data-selected] {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+  font-weight: var(--heading-weight);
+}
+.chip[data-focus-visible] {
+  box-shadow: var(--focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

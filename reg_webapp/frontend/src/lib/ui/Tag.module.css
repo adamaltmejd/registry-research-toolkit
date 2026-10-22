@@ -1,0 +1,73 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.1em 0.5em;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.glyph {
+  display: inline-flex;
+  font-size: 0.85em;
+}
+
+.neutral {
+  border-color: var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+}
+
+.accent {
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+}
+
+/* A node type: the hue at a 10% tint as fill and 35% as border, the label in
+   the AA-cleared `-ink` stop. */
+.reg {
+  --tone-hue: var(--cat-reg);
+  --tone-ink: var(--cat-reg-ink);
+}
+.var {
+  --tone-hue: var(--cat-var);
+  --tone-ink: var(--cat-var-ink);
+}
+.code {
+  --tone-hue: var(--cat-code);
+  --tone-ink: var(--cat-code-ink);
+}
+.class {
+  --tone-hue: var(--cat-class);
+  --tone-ink: var(--cat-class-ink);
+}
+.group {
+  --tone-hue: var(--cat-group);
+  --tone-ink: var(--cat-group-ink);
+}
+.category {
+  border-color: color-mix(in srgb, var(--tone-hue) 35%, transparent);
+  background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
+  color: var(--tone-ink);
+}
+
+.error {
+  background: var(--err-bg);
+  color: var(--err);
+}
+.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.info {
+  background: var(--info-bg);
+  color: var(--info);
+}
+.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
