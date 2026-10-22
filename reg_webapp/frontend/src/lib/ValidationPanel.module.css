@@ -31,6 +31,22 @@
   border-radius: var(--radius-sm);
   font-weight: 600;
 }
+/* The verdict's glyph comes first (DESIGN.md → StatusRow). Drawn by CSS with
+   empty alt text, so the line's text and accessible name stay the verdict. */
+.ok::before,
+.warning::before,
+.fail::before {
+  margin-right: var(--space-1);
+}
+.ok::before {
+  content: "✓" / "";
+}
+.warning::before {
+  content: "▲" / "";
+}
+.fail::before {
+  content: "✕" / "";
+}
 .ok {
   border: 1px solid var(--ok);
   background: var(--ok-bg);

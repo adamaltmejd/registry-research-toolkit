@@ -52,7 +52,7 @@
   color: var(--accent-fg);
 }
 .danger[data-hovered]:not([aria-disabled="true"]) {
-  background: color-mix(in srgb, var(--err) 85%, black);
+  background: color-mix(in srgb, var(--err) 85%, var(--text));
 }
 
 @media (prefers-reduced-motion: reduce) {

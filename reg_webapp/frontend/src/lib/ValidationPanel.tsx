@@ -1,3 +1,4 @@
+import { Button as AriaButton } from "react-aria-components";
 import type { OrderBlocking, ValidationResultModel } from "./api";
 import type { SafeSource } from "./project_data";
 import type { RequestErrorSource, ValidationStatus } from "./project_store";
@@ -56,7 +57,8 @@ function locate(anchorId: string): void {
   if (el == null) {
     return;
   }
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
   el.classList.remove("locate-flash");
   void el.offsetWidth;
   el.classList.add("locate-flash");
@@ -110,13 +112,12 @@ function groupByLevel(
 function Locators({ loc }: { loc: FindingLocation }) {
   return (
     <div className={styles.locators}>
-      <button
-        type="button"
+      <AriaButton
         className={styles.locate}
-        onClick={() => locate(loc.anchorId)}
+        onPress={() => locate(loc.anchorId)}
       >
         {loc.label}
-      </button>
+      </AriaButton>
       {/* The cart is read-only (#991): fixes happen on the catalog subject page.
           Omitted when the finding resolves no catalog coordinate. */}
       {loc.catalogHref && (
@@ -173,6 +174,7 @@ export function ValidationPanel({
         // states the verdict once and the group below carries each reason.
         <div className={styles.requestError} role="alert">
           <span className={styles.bannerText}>
+            <span aria-hidden="true">✕</span>{" "}
             {orderFindings.length > 0 ? (
               <>
                 <strong>Order blocked:</strong> the materializer produced no

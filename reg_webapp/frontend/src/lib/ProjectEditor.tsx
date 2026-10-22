@@ -185,7 +185,9 @@ export function ProjectEditor({
 
       {openError && (
         <p className={`banner-error ${styles.openError}`} role="alert">
-          <span className={styles.bannerText}>{openError}</span>
+          <span className={styles.bannerText}>
+            <span aria-hidden="true">✕</span> {openError}
+          </span>
           <AriaButton
             className="ghost-button"
             onPress={() => projectStore.clearOpenError()}
@@ -333,7 +335,7 @@ export function ProjectEditor({
                   mono: true,
                 },
                 {
-                  label: "schema version",
+                  label: "Schema version",
                   value: String(draft.schema_version ?? ""),
                   mono: true,
                 },

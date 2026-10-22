@@ -4,7 +4,7 @@
   box-sizing: border-box;
   width: min(36rem, calc(100vw - 2 * var(--space-4)));
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   background: var(--surface-raised);
   box-shadow: var(--elevation-float);
 }
@@ -43,7 +43,7 @@
   display: none;
 }
 
-/* One line, present even when empty so the list does not jump. */
+/* One line of state above the list; gone when there is nothing to say. */
 .status {
   display: block;
   padding: var(--space-2) var(--space-3) 0;

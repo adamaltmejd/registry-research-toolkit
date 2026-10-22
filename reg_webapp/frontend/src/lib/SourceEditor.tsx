@@ -368,7 +368,7 @@ export function SourceEditor({
           {variantName && <p className={styles.variant}>{variantName}</p>}
         </div>
         <Button
-          variant="danger"
+          variant="default"
           size="sm"
           aria-label={
             identified ? `Remove source ${identifiedName}` : undefined
@@ -406,7 +406,8 @@ export function SourceEditor({
         // A null/non-object slot: a degraded card that still occupies its index
         // so validation addressing lines up.
         <p className="error" role="alert">
-          This source entry is malformed — fix via re-download or hand-edit.
+          <span aria-hidden="true">✕</span> This source entry is malformed — fix
+          via re-download or hand-edit.
         </p>
       ) : (
         <>
@@ -597,8 +598,9 @@ export function SourceEditor({
             <h4>Columns ({bindings.length})</h4>
             {bindingsMalformed ? (
               <p className="error" role="alert">
-                This source's <code>bindings</code> are malformed — fix via
-                re-download or hand-edit.
+                <span aria-hidden="true">✕</span> This source's{" "}
+                <code>bindings</code> are malformed — fix via re-download or
+                hand-edit.
               </p>
             ) : bindings.length === 0 ? (
               <EmptyState title="No columns yet. Browse the catalog to add columns from this register." />

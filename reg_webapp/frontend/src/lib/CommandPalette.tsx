@@ -15,6 +15,7 @@ import {
   type ConceptGroupHit,
   SEARCH_MIN_QUERY_LENGTH,
   type SearchHit,
+  type SearchType,
   search,
 } from "./api";
 import styles from "./CommandPalette.module.css";
@@ -66,7 +67,14 @@ const ACTIONS: readonly Row[] = [
   },
 ];
 
-const SEARCH_LIMIT = 12;
+/** The arms the palette asks, in the order it lists them: the in-place filter
+ * already finds registers and variables (DESIGN.md → Layout). */
+const ARMS: readonly SearchType[] = [
+  "classification",
+  "classification_code",
+  "register_value",
+];
+const ARM_LIMIT = 5;
 const DEBOUNCE_MS = 150;
 
 /** A variable concept group's page lives under its register, so it has one only
@@ -102,24 +110,6 @@ function codeHref(hit: CodeHit): string | null {
 /** A search hit as a palette row, or null for a hit with nowhere to go. */
 function hitRow(hit: SearchHit): Omit<Row, "id"> | null {
   switch (hit.type) {
-    case "register":
-      return hit.fqid
-        ? {
-            label: hit.name ?? hit.fqid,
-            detail: null,
-            href: catalogHref(hit.fqid),
-            type: { tone: "reg", label: "Register" },
-          }
-        : null;
-    case "variable":
-      return hit.fqid
-        ? {
-            label: hit.name ?? hit.fqid,
-            detail: hit.register_name ?? null,
-            href: catalogHref(hit.fqid),
-            type: { tone: "var", label: "Variable" },
-          }
-        : null;
     case "group": {
       const href = conceptGroupHref(hit);
       return href
@@ -152,6 +142,9 @@ function hitRow(hit: SearchHit): Omit<Row, "id"> | null {
           }
         : null;
     }
+    default:
+      // Registers and variables are the in-place filter's, not the palette's.
+      return null;
   }
 }
 
@@ -191,10 +184,10 @@ interface Props {
 }
 
 /** The command palette (DESIGN.md → Layout → Top bar): a RAC `Autocomplete`
- * over a `Menu`, in a popover under the search bar, for the whole catalog (codes
- * and classifications included) and the app's places. Its results are a mixed
- * list, so each row carries its type. The list is controlled: the actions are
- * ranked with `rankFilter`, the catalog by the server, and RAC filters nothing. */
+ * over a `Menu`, in a popover under the search bar, for codes, classifications
+ * and the app's places. Its results are a mixed list, so each row carries its
+ * type. The list is controlled: the actions are ranked with `rankFilter`, the
+ * catalog by the server, and RAC filters nothing. */
 export function CommandPalette({
   isOpen,
   onOpenChange,
@@ -231,15 +224,19 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
   useEffect(() => input.current?.focus(), []);
   const query = useDebounced(text.trim());
   const asked = query.length >= SEARCH_MIN_QUERY_LENGTH ? query : null;
-  const results = useAsyncResource(asked, (signal) =>
-    search(query, { signal, limit: SEARCH_LIMIT }),
+  const results = useAsyncResource(asked, async (signal) =>
+    (
+      await Promise.all(
+        ARMS.map((type) => search(query, { signal, type, limit: ARM_LIMIT })),
+      )
+    ).flatMap((page) => page.items),
   );
 
   const actions = rankFilter([...ACTIONS], text.trim(), (a) => [
     a.label,
     a.detail,
   ]);
-  const hits = hitRows(results.data?.items ?? []);
+  const hits = hitRows(results.data ?? []);
   const byId = new Map([...actions, ...hits].map((row) => [row.id, row]));
   const typing = text.trim() !== query;
   const pending =
@@ -250,23 +247,26 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
   if (results.error) {
     status = `Search failed: ${results.error}`;
   } else if (pending) {
-    status = "Searching the catalog…";
+    status = "Searching classifications and codes…";
   } else if (
     text.trim().length > 0 &&
     text.trim().length < SEARCH_MIN_QUERY_LENGTH
   ) {
-    status = `Type ${SEARCH_MIN_QUERY_LENGTH} characters to search the catalog.`;
+    status = `Type ${SEARCH_MIN_QUERY_LENGTH} characters to search classifications and codes.`;
   } else if (asked && hits.length === 0) {
-    status = `Nothing in the catalog matches “${asked}”.`;
+    status = `No classification or code matches “${asked}”.`;
   }
 
   return (
     <Autocomplete inputValue={text} onInputChange={setText}>
-      <SearchField aria-label="Search the catalog" className={styles.field}>
+      <SearchField
+        aria-label="Search classifications and codes"
+        className={styles.field}
+      >
         <Input
           ref={input}
           className={styles.input}
-          placeholder="Registers, variables, classifications, codes…"
+          placeholder="Classifications, codes, value sets…"
           autoComplete="off"
         />
       </SearchField>
@@ -274,6 +274,7 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
         className={`${styles.status} ${results.error ? "error" : ""}`}
         aria-busy={pending || undefined}
       >
+        {results.error && <span aria-hidden="true">✕ </span>}
         {status}
       </output>
       <Menu
@@ -296,7 +297,9 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
         )}
         {hits.length > 0 && (
           <MenuSection className={styles.section}>
-            <Header className={`micro-label ${styles.header}`}>Catalog</Header>
+            <Header className={`micro-label ${styles.header}`}>
+              Classifications and codes
+            </Header>
             {hits.map((row) => (
               <PaletteItem key={row.id} row={row} />
             ))}

@@ -261,7 +261,14 @@ a:hover {
 /* `.locate-flash` — briefly rings a /project source or column card when the
    validation panel locates it; the panel toggles the class on the element. */
 .locate-flash {
-  animation: locate-flash 1.6s ease-out;
+  animation: locate-flash calc(5 * var(--duration-slow)) var(--ease-out);
+}
+/* Reduced motion: the ring still says which card, without the fade. */
+@media (prefers-reduced-motion: reduce) {
+  .locate-flash {
+    animation: none;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
 }
 @keyframes locate-flash {
   0%,
