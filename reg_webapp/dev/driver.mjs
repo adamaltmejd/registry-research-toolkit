@@ -674,9 +674,9 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   //     again. Applying a period re-resolves the leaf, which clears the picker's
   //     staging — so this really is a fresh pick, which is why the notice says to
   //     select again rather than just retry.
-  const periodSlider = page.getByRole("group", { name: "Period window (years)" });
-  await periodSlider.getByLabel("To year").fill("2018");
-  await periodSlider.getByLabel("From year").fill("2018");
+  const periodCard = page.locator("form.period-picker");
+  await periodCard.getByRole("textbox", { name: "To" }).fill("2018");
+  await periodCard.getByRole("textbox", { name: "From" }).fill("2018");
   await page.getByRole("button", { name: "Apply period" }).click();
   await periodApplied(page, "2018");
   await settled(page);

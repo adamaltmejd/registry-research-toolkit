@@ -21,5 +21,17 @@
     "json": {
       "/data/registers": [{"fqid": "scb/example", "variable_matches": 1}]
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [
+        {
+          "fqid": "scb/example",
+          "variable_matches": 3,
+          "variables": ["scb/example/reference", "scb/example/second", "scb/example/value"]
+        }
+      ]
+    }
   }
 ]

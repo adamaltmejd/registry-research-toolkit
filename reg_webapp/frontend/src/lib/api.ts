@@ -714,7 +714,24 @@ export async function search(
   return (await searchGet<{ data: SearchPage }>("/search", q, options)).data;
 }
 
-// ── Docs surface (#354/#394/#402/#742) ─────────────────────────────────────
+export type RegisterFacet = RustSchemas["RegisterFacet"];
+
+/** Per register, how many of its variables match `q` (#1785): every match, no
+ * paging, before concept groups fold. A register without a match is absent. */
+export async function searchFacets(
+  q: string,
+  options?: { signal?: AbortSignal },
+): Promise<RegisterFacet[]> {
+  return (
+    await searchGet<{ data: RustSchemas["RegisterFacets"] }>(
+      "/search/facets",
+      q,
+      options,
+    )
+  ).data.registers;
+}
+
+// ── Docs surface (#354/#394/#402/#742)─────────────────────────────────────
 // The Rust server's docs operations, each `{data, meta}`: `docs_search`
 // (`GET /api/docs/search?q=&register=`, the binding-leaf "mentioned in
 // documentation" hook #402), `docs_get` (`GET /api/docs/doc/{identifier}`: one

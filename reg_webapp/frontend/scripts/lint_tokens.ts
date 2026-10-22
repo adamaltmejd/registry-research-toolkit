@@ -325,6 +325,10 @@ const CROSS_FILE: Record<string, string> = {
     "measured by TopBar onto :root, read by the shell's browse column",
   "--data-table-columns":
     "set inline by DataTable.tsx on its table, read by DataTable.module.css",
+  "--code-depth":
+    "set inline by CodeList.tsx on each levelled row, read by CodeList.module.css",
+  "--cue-left":
+    "set inline by PeriodPicker.tsx on the coverage cue, read by PeriodPicker.module.css",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;

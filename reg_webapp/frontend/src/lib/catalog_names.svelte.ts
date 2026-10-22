@@ -110,17 +110,78 @@ export function resetCatalogNames(): void {
  * the register it shows ask for the same node at the same moment; this makes that
  * one request. An entry lives only until its read settles, so a failure is not
  * remembered and nothing here outlives the request: what lasts is each reader's
- * own result (the detail page's resource, the `register:` read below). Not
- * abortable, since another reader may be waiting on it. */
-const showsInFlight = new Map<string, Promise<ShowNode>>();
+ * own result (the detail page's resource, the `register:` read below).
+ *
+ * A reader that passes a signal subscribes: its abort rejects its own promise,
+ * and once the last subscriber has left, the request itself is aborted, so
+ * navigating away cancels a page read nobody is still waiting on. A reader
+ * without a signal holds the read until it settles. */
+interface InFlight {
+  readonly promise: Promise<ShowNode>;
+  readonly controller: AbortController;
+  /** Readers still waiting; at zero the request is aborted. */
+  subscribers: number;
+}
 
-export function sharedShow(ref: string): Promise<ShowNode> {
-  let pending = showsInFlight.get(ref);
-  if (!pending) {
-    pending = getShow(ref).finally(() => showsInFlight.delete(ref));
-    showsInFlight.set(ref, pending);
+const showsInFlight = new Map<string, InFlight>();
+
+function abortError(): DOMException {
+  return new DOMException("The catalog read was aborted.", "AbortError");
+}
+
+/** Drop `entry` from the map unless a reset has already put a newer read there. */
+function forget(ref: string, entry: InFlight): void {
+  if (showsInFlight.get(ref) === entry) {
+    showsInFlight.delete(ref);
   }
-  return pending;
+}
+
+export function sharedShow(
+  ref: string,
+  signal?: AbortSignal,
+): Promise<ShowNode> {
+  if (signal?.aborted) {
+    return Promise.reject(abortError());
+  }
+  let entry = showsInFlight.get(ref);
+  if (!entry) {
+    const controller = new AbortController();
+    const created: InFlight = {
+      controller,
+      subscribers: 0,
+      promise: getShow(ref, { signal: controller.signal }).finally(() =>
+        forget(ref, created),
+      ),
+    };
+    showsInFlight.set(ref, created);
+    entry = created;
+  }
+  const held = entry;
+  held.subscribers += 1;
+  if (!signal) {
+    return held.promise;
+  }
+  return new Promise<ShowNode>((resolve, reject) => {
+    const leave = () => {
+      held.subscribers -= 1;
+      if (held.subscribers === 0) {
+        held.controller.abort();
+        forget(ref, held);
+      }
+      reject(abortError());
+    };
+    signal.addEventListener("abort", leave, { once: true });
+    held.promise.then(
+      (node) => {
+        signal.removeEventListener("abort", leave);
+        resolve(node);
+      },
+      (error: unknown) => {
+        signal.removeEventListener("abort", leave);
+        reject(error);
+      },
+    );
+  });
 }
 
 /** The catalog root's children — the deployment's providers (plus the

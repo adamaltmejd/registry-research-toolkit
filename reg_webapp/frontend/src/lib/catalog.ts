@@ -2993,7 +2993,7 @@ export function yearOf(iso: string | null): number | null {
 
 // ── Shared binding resolution (subject-page staged picker adds) ──────────────
 // ONE resolution path, used by the subject-page staged picker's add handlers
-// (`ConceptGroupView.svelte` and `BindingLeafView.svelte`). Keeping it here — not
+// (`ConceptGroupView` and `BindingLeafView`). Keeping it here — not
 // inlined in either caller — keeps final binding-field derivation consistent at
 // pick time.
 

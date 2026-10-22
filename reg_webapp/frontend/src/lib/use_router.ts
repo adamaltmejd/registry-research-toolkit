@@ -8,3 +8,11 @@ const readRoute = (): Route => router.route;
 export function useRoute(): Route {
   return useSyncExternalStore(router.subscribe, readRoute);
 }
+
+/** One query parameter (`router.getQueryParam`: null when absent or empty).
+ * A string snapshot, so a navigation that leaves it alone re-renders nothing. */
+export function useQueryParam(name: string): string | null {
+  return useSyncExternalStore(router.subscribe, () =>
+    router.getQueryParam(name),
+  );
+}

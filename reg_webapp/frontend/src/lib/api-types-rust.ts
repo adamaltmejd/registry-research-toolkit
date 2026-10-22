@@ -388,7 +388,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. */
+        /** @description Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with its matched variables' FQIDs. */
         get: operations["search_facets"];
         put?: never;
         post?: never;
@@ -1255,6 +1255,11 @@ export interface components {
             fqid?: string | null;
             /** Format: int64 */
             variable_matches: number;
+            /**
+             * @description With `register`, the matched variables' FQIDs in FQID order, so the register
+             *     page narrows by the same admission it counts; absent without it.
+             */
+            variables?: string[] | null;
         };
         /**
          * @description `shape.RegisterFacets`: per register, how many of its variables the variable arm
@@ -2378,6 +2383,7 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
+                register?: string;
                 scope?: components["schemas"]["Scope"];
             };
             header?: never;

@@ -39,9 +39,12 @@ pub const OPERATIONS: &[Operation] = &[
         tool: None,
         description: "Per register, how many of its variables match `q` under `search`'s \
             variable matching, every match counted (no paging) and before concept groups \
-            fold; registers without a match are absent.",
+            fold; registers without a match are absent. With `register` (a FQID or a \
+            register name, case-insensitive), only that register, with its matched \
+            variables' FQIDs.",
         params: &[
             Param::required("q", Type::String),
+            Param::optional("register", Type::Ref),
             Param::optional("scope", Type::Scope),
         ],
         cache: Cache::Minute,

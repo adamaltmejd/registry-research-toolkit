@@ -16,11 +16,13 @@ import {
   countFoldedMembers,
   deliveryColumnRows,
   deliveryWindows,
+  distinctMemberCount,
   foldGroupedRows,
   type GroupedRow,
   groupFilterKeys,
   groupHref,
   leafSlug,
+  matchesFilter,
   narrowGroupsToMembers,
   nodeLabel,
   OPEN_ENDED_VALID_TO,
@@ -306,13 +308,14 @@ export function RegisterView({
     }));
     const allRows = foldGroupedRows(children, node.groups);
     // A group the lens leaves with one member gives way to that member's row.
-    const narrowedRows =
+    const lensGroups =
       selectedVariants.size === 0
-        ? allRows
-        : foldGroupedRows(lensed, narrowGroupsToMembers(node.groups, lensed));
-    return { variants, columnsByFqid, bands, allRows, narrowedRows };
+        ? (node.groups ?? [])
+        : narrowGroupsToMembers(node.groups, lensed);
+    return { variants, columnsByFqid, bands, allRows, lensed, lensGroups };
   }, [node, selectedVariants]);
-  const { variants, columnsByFqid, bands, allRows, narrowedRows } = derived;
+  const { variants, columnsByFqid, bands, allRows, lensed, lensGroups } =
+    derived;
   const variantNames = new Map(
     node.variants.map((v) => [v.slug, variantLabel(v)]),
   );
@@ -320,16 +323,54 @@ export function RegisterView({
     (columnsByFqid.get(fqid) ?? []).map((column) => column.name);
   // Y-82: the filter matches delivery column names too, so `ForvErs` finds its
   // variable.
-  const filteredRows = rankFilter(narrowedRows, filter, (row) =>
+  const leafKeys = (item: VariableChild) => [
+    leafSlug(item.fqid),
+    item.fqid,
+    item.name,
+    ...columnNames(item.fqid),
+  ];
+  // The filter narrows a group to its matching members, as the variant lens
+  // does, so a group row counts only the variables that matched and the shown
+  // count agrees with the browse tree's per-register count (#1785). A group
+  // whose own label or key matches keeps every member.
+  const filterGroups = lensGroups.map((group) =>
+    matchesFilter(filter, group.label, group.key)
+      ? group
+      : {
+          ...group,
+          members: group.members.filter((member) =>
+            matchesFilter(
+              filter,
+              ...groupFilterKeys({ ...group, members: [member] }, columnNames),
+            ),
+          ),
+        },
+  );
+  const memberFqids = new Set(
+    filterGroups.flatMap((group) => group.members.map((m) => m.fqid)),
+  );
+  const filteredItems = lensed.filter(
+    (item) =>
+      memberFqids.has(item.fqid) || matchesFilter(filter, ...leafKeys(item)),
+  );
+  // A group the filter leaves with one member gives way to that member's row.
+  const narrowedRows = foldGroupedRows(
+    filteredItems,
+    filterGroups.filter((group) => distinctMemberCount(group.members) > 1),
+  );
+  // Every row here matched; ranking only orders them. A member that matched
+  // through a key its own leaf row does not carry (a facet label) and stands
+  // alone keeps its place after the ranked rows.
+  const ranked = rankFilter(narrowedRows, filter, (row) =>
     row.kind === "group"
       ? groupFilterKeys(row.group, columnNames)
-      : [
-          leafSlug(row.item.fqid),
-          row.item.fqid,
-          row.item.name,
-          ...columnNames(row.item.fqid),
-        ],
+      : leafKeys(row.item),
   );
+  const rankedSet = new Set(ranked);
+  const filteredRows = [
+    ...ranked,
+    ...narrowedRows.filter((row) => !rankedSet.has(row)),
+  ];
 
   // ── Y-83: add delivery columns straight from the list ────────────────────
   const studyWindow = useRune(readWindow, undefined);
@@ -757,12 +798,16 @@ function DeliveryColumnTick({
             {eras.hidden.length > 0 && (
               <>
                 {" "}
+                {/* A generic span takes no accessible name, so the hidden
+                    eras are text a screen reader reads after the count. */}
                 <span
                   className={viewStyles.era}
                   title={column.years.join(", ")}
-                  aria-label={`+${eras.hidden.length} more era${eras.hidden.length === 1 ? "" : "s"}: ${eras.hidden.join(", ")}`}
                 >
                   +{eras.hidden.length}
+                  <span className="visually-hidden">
+                    {` more era${eras.hidden.length === 1 ? "" : "s"}: ${eras.hidden.join(", ")}`}
+                  </span>
                 </span>
               </>
             )}
