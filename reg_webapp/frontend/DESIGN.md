@@ -340,9 +340,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   "Search registers, variables, codes…". While it holds text, focused or not, it takes
   an `accent` border with an `accent-bg` halo, and its hint becomes the match count in
   `accent-ink` with an `Esc` key hint; the key hints are `text-faint` on
-  `surface-sunken`. There are no "Search" or "Project" nav
-  items; the bar and the banner are those. It sticks to the top of the page above
-  `breakpoint-narrow`; below it the bar wraps and scrolls away with the page.
+  `surface-sunken`. There are no "Search" or "Project" nav items; the bar and the banner
+  are those. It sticks to the top of the page above `breakpoint-narrow`; below it the
+  bar wraps and scrolls away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers at
   `col-browse`, then the selected register's or group's variables at `col-list`, then
   the detail pane capped at `content-max`. Every group is open by default; a header
@@ -415,10 +415,10 @@ control is `--opacity-disabled` (0.5), and a segment outside the study window is
 
 Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim
 (`--z-drawer-scrim`, 55) and the drawer itself (`--z-drawer`, 60), popovers and the
-palette (`--z-popover`, 65), then a modal dialog's scrim (`--z-dialog-scrim`, 70) and the
-dialog (`--z-dialog`, 71). A dialog is portalled to `<body>` and must name a layer above
-the shell — a modal the app can paint through is not a modal. The sticky top bar (10) is
-the one in-page layer above 1-4 that has no named token.
+palette (`--z-popover`, 65), then a modal dialog's scrim (`--z-dialog-scrim`, 70) and
+the dialog (`--z-dialog`, 71). A dialog is portalled to `<body>` and must name a layer
+above the shell — a modal the app can paint through is not a modal. The sticky top bar (10)
+is the one in-page layer above 1-4 that has no named token.
 
 ## Shapes
 
@@ -462,11 +462,11 @@ not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
   per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box,
-  a 2 px `accent` underline, and `surface-hover` on hover; `danger` is the `err` fill with
-  `danger-fg` text for destructive actions only, with no hover change. One size
+  a 2 px `accent` underline, and `surface-hover` on hover; `danger` is the `err` fill
+  with `danger-fg` text for destructive actions only, with no hover change. One size
   (`body-sm`, weight 500, `spacing.2` / `spacing.3` padding). A disabled button takes
-  `--opacity-disabled`. There is no success variant. A button says what happens: "Add column to
-  project", never "Submit".
+  `--opacity-disabled`. There is no success variant. A button says what happens: "Add
+  column to project", never "Submit".
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, warnings, save state — on `accent-soft` with a 3 px `accent`
   leading bar. The study window is the period picker. With no project open it is a
