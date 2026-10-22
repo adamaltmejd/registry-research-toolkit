@@ -10,7 +10,7 @@
       },
       "/data/schema_version": "12.2.0",
       "/data/import_date": "2026-06-01T00:00:00Z",
-      "/data/period_span": null,
+      "/data/period_span": {"from": 2010, "to": 2025},
       "/data/sizes": {"providers": 8, "registers": 2, "variables": 4},
       "/meta/scope": "reference"
     }

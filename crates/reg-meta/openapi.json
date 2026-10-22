@@ -3755,7 +3755,7 @@
       },
       "PeriodSpan": {
         "type": "object",
-        "description": "The first and last year of the steward's held periods.",
+        "description": "The catalog's first and last year: a steward's held periods, else the reference\ncatalog's delivered windows. It bounds the SPA's study window.",
         "required": [
           "from",
           "to"

@@ -74,7 +74,8 @@ pub struct Context {
     sizes: Sizes,
 }
 
-/// The first and last year of the steward's held periods.
+/// The catalog's first and last year: a steward's held periods, else the reference
+/// catalog's delivered windows. It bounds the SPA's study window.
 #[derive(Serialize, ToSchema)]
 pub struct PeriodSpan {
     from: i64,
@@ -92,11 +93,7 @@ pub struct Sizes {
 fn context(server: &Server, scope: Scope, _: &Params) -> Result<Value, Error> {
     let catalog = &server.catalog;
     let conn = catalog.connect()?;
-    let period_span = if catalog.is_steward() {
-        period_span(&conn, catalog.manifest("import_date"))?
-    } else {
-        None
-    };
+    let period_span = period_span(&conn, catalog.is_steward(), catalog.manifest("import_date"))?;
     let count = |sql: String| conn.query_row(&sql, [], |row| row.get::<_, i64>(0));
     let sizes = Sizes {
         providers: count(format!(
@@ -132,17 +129,27 @@ fn context(server: &Server, scope: Scope, _: &Params) -> Result<Value, Error> {
     Ok(serde_json::to_value(context).expect("Context serializes"))
 }
 
-/// The years of the admitted physical tables (never semantic validity), clipped to
-/// the import year: today's `catalog_period_span`.
-fn period_span(conn: &Connection, import_date: &str) -> Result<Option<PeriodSpan>, Error> {
-    let (lo, hi): (Option<String>, Option<String>) = conn.query_row(
+/// The catalog's year span, clipped to the import year. A steward's is the years of
+/// its admitted physical tables (never semantic validity): today's
+/// `catalog_period_span`. A reference catalog's is the years of its delivered
+/// windows (`delivery_window`, what browse draws coverage from); an open-ended
+/// window (`9999-12-31`) reaches the import year through the clip.
+fn period_span(
+    conn: &Connection,
+    steward: bool,
+    import_date: &str,
+) -> Result<Option<PeriodSpan>, Error> {
+    let sql = if steward {
         "SELECT MIN(hp.lo), MAX(hp.hi) FROM holding_period hp \
          JOIN holding_table ht USING(table_id) \
          WHERE ht.scope != 'unknown' AND EXISTS (SELECT 1 FROM holding_column hc \
-         JOIN holding_mapping hm USING(column_id) WHERE hc.table_id = ht.table_id)",
-        [],
-        |row| Ok((row.get(0)?, row.get(1)?)),
-    )?;
+         JOIN holding_mapping hm USING(column_id) WHERE hc.table_id = ht.table_id)"
+    } else {
+        "SELECT MIN(dw.valid_from), MAX(dw.valid_to) FROM delivery_window dw \
+         JOIN browse_delivery bd USING(browse_delivery_id) WHERE bd.scope = 'reference'"
+    };
+    let (lo, hi): (Option<String>, Option<String>) =
+        conn.query_row(sql, [], |row| Ok((row.get(0)?, row.get(1)?)))?;
     let (Some(lo), Some(hi)) = (lo, hi) else {
         return Ok(None);
     };
