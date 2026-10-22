@@ -121,6 +121,24 @@
           },
           {
             "register": "scb/foretag",
+            "key": "bidiag",
+            "label": "Bidiagnos",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "bidiag1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "bidiag2",
+                "value": "2",
+                "label": "2"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
             "key": "diag",
             "label": "Diagnos \"kod\" \\rad",
             "axis": "ordinal",
@@ -230,7 +248,7 @@
         ]
       },
       "contains": [
-        "# foldable families: 11",
+        "# foldable families: 12",
         "# excluded batteries (weak label agreement): 1",
         "# skipped (key collides with an existing group): 1",
         "# skipped (trailing-hyphen trim collapsed two distinct stems): 1"
@@ -456,6 +474,39 @@
                 "ordinal",
                 "3",
                 "3"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/bidiag": {
+        "label": "Bidiagnos",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "bidiag1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "bidiag2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
               ]
             ]
           }

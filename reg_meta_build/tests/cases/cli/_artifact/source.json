@@ -1,5 +1,5 @@
 {
-  "description": "The CLI cases' artifact. Register 1 (TESTREG) delivers variable 101 as VALUE in 2019 and VALUE_NY in 2020, and variable 102 as Kön in 2019 and Kon in 2020. Register 2 delivers OTHER; it is single-variant, and its variant name mirrors the register name once the register's parenthetical abbreviation (KLS) is stripped. Register 3 is a single-variant register whose variant name mirrors the register name. Register 4 (PART) delivers variable 5 as FIRST and SECOND. Register 6 (Företag) has two variants, one of which mirrors the register name. Variable names are unique within each variant (#1736): numbered families carry their slot as a trailing number, which concept-group scoring strips.",
+  "description": "The CLI cases' artifact. Register 1 (TESTREG) delivers variable 101 as VALUE in 2019 and VALUE_NY in 2020, and variable 102 as Kön in 2019 and Kon in 2020. Register 2 delivers OTHER; it is single-variant, and its variant name mirrors the register name once the register's parenthetical abbreviation (KLS) is stripped. Register 3 is a single-variant register whose variant name mirrors the register name. Register 4 (PART) delivers variable 5 as FIRST and SECOND. Register 6 (Företag) has two variants, one of which mirrors the register name. Variable names are unique within each variant (#1736): numbered families carry their slot as a trailing number, which concept-group scoring strips. The one exception is BIDIAG1 and BIDIAG2, both named `Bidiagnos` with different operational definitions, so the build's collision ladder names them apart by definition (`Bidiagnos — Första bidiagnos enligt ICD-10`) while each keeps `Bidiagnos` as its source name.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE", "year": "2019", "regver_id": 2019},
@@ -91,7 +91,9 @@
       {"cvid": 7211, "var_id": 9111, "colname": "AGI1LONFINK", "varname": "Arbetsgivarinkomst lön 1", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}},
       {"cvid": 7212, "var_id": 9112, "colname": "AGI2LONFINK", "varname": "Arbetsgivarinkomst lön 2", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}},
       {"cvid": 7221, "var_id": 9121, "colname": "DIAG1", "varname": "Diagnos \"kod\" \\rad 1", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}},
-      {"cvid": 7222, "var_id": 9122, "colname": "DIAG2", "varname": "Diagnos \"kod\" \\rad 2", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}}
+      {"cvid": 7222, "var_id": 9122, "colname": "DIAG2", "varname": "Diagnos \"kod\" \\rad 2", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}},
+      {"cvid": 7231, "var_id": 9131, "colname": "BIDIAG1", "varname": "Bidiagnos", "varopdef": "Första bidiagnos enligt ICD-10", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}},
+      {"cvid": 7232, "var_id": 9132, "colname": "BIDIAG2", "varname": "Bidiagnos", "varopdef": "Andra bidiagnos enligt ICD-10", "year": "2020", "regver_id": 110, "register": ["Företag", 6, 60], "cells": {"Registervariantnamn": "Företag"}}
     ]
   }
 }
