@@ -11,6 +11,32 @@ label = "scb/allmanna-val-valresultat/partinamn"
 code = "scb/allmanna-val-valresultat/riksdagsvalkrets-kod"
 label = "scb/allmanna-val-valresultat/riksdagsvalkrets-namn"
 
+# The kommun-, landstings- and regionvalkrets codes are uncoded, so a
+# [[code_label_pair]] would fail its coding guard. Each kind's two name columns
+# (KO_/LT_valkretsnamn beside the bare valkretsnamn) are one label under two
+# spellings of the same native variable: group them, which also keeps the label
+# out of the code's group (#1760).
+[[group]]
+register = "scb/allmanna-val-valresultat"
+key = "kommunvalkretsnamn"
+label = "Kommunvalkrets (namn)"
+axes = []
+members = [{ variable = "kommunvalkrets-namn" }, { variable = "kommunvalkrets-valkretsnamn" }]
+
+[[group]]
+register = "scb/allmanna-val-valresultat"
+key = "landstingsvalkretsnamn"
+label = "Landstingsvalkrets (namn)"
+axes = []
+members = [{ variable = "landstingsvalkrets-namn" }, { variable = "lt-valkretsnamn" }]
+
+[[group]]
+register = "scb/allmanna-val-valresultat"
+key = "regionvalkretsnamn"
+label = "Regionvalkrets (namn)"
+axes = []
+members = [{ variable = "regionvalkrets-namn" }, { variable = "regionvalkrets-valkretsnamn" }]
+
 [[variant]]
 native_id = "243.472"
 slug = "kommunfullmaktigeval"

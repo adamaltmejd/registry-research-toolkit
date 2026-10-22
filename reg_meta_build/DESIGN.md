@@ -1747,6 +1747,14 @@ the pair. Explicit group membership takes precedence before components form. Mon
 groups use the finite accepted month vocabulary, minimum three distinct months and
 shared-label guard; ambiguous collisions remain separate and diagnosed.
 
+A checked split-sibling pair folds only when no guard keeps it apart. A code column and
+its label column (`<stem>`, `<stem>kod` or `<stem>id` beside `<stem>namn`, by name)
+never fold, whether or not their owners co-deliver; the numeric/text and length shape
+guards apply only to co-delivered columns. The guard holds for the group, not only the
+edge: when foldable edges through a third owner would join a code and its label, the
+label owner's edges are dropped, so the code keeps its own folds (#1760). Only a
+declared `[[code_label_pair]]` puts a code and its label in one group.
+
 Classification succession combines explicit edges with the accepted guarded edition
 rule. Only adjacent recognized editions with matching year-stripped names qualify.
 Variable succession lifts adjacent classification editions only within an unambiguous

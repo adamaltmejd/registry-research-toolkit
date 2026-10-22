@@ -67,8 +67,11 @@ def commit_fixture(repo: Path, message: str, *paths: str) -> str:
     ).stdout.strip()
 
 
-def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
-    """Commit a normalized snapshot of ``scb_dir`` in a synthetic input repo."""
+def write_scb_snapshot(
+    root: Path, scb_dir: Path, *, snapshot_path: str = "snapshot"
+) -> ScbSnapshotSelection:
+    """Commit a normalized snapshot of ``scb_dir`` in a synthetic input repo, at
+    ``snapshot_path`` inside it; a bundle captured from it is written beside it."""
     root.mkdir(parents=True, exist_ok=True)
     archive = root / "retained-delivery.zip"
     archive.write_bytes(b"independently retained archive fixture")
@@ -100,7 +103,7 @@ def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
         encoding="utf-8",
     )
     repo = root / "input-repo"
-    snapshot = repo / "snapshot"
+    snapshot = repo / snapshot_path
     prepare_snapshot(inventory, snapshot, converter_commit="f" * 40)
     init_fixture_repo(repo, name="Test", email="test@example.invalid")
     return ScbSnapshotSelection(
@@ -131,9 +134,10 @@ def write_input_bundle(
     input_dir: Path,
     *,
     lisa_workbook: LisaWorkbookSelection | None = None,
+    snapshot_path: str = "snapshot",
 ) -> CatalogBundleSelection:
     """Commit a partial synthetic bundle for explicit skip-curation test builds."""
-    snapshot = write_scb_snapshot(root, input_dir / "SCB")
+    snapshot = write_scb_snapshot(root, input_dir / "SCB", snapshot_path=snapshot_path)
     return write_input_bundle_from_snapshot(
         input_dir, snapshot, lisa_workbook=lisa_workbook
     )
@@ -146,8 +150,8 @@ def write_input_bundle_from_snapshot(
     lisa_workbook: LisaWorkbookSelection | None = None,
 ) -> CatalogBundleSelection:
     """Capture and commit a bundle referencing an existing fixture snapshot."""
-    repo = snapshot.path.parent
-    bundle = repo / "bundle"
+    bundle = snapshot.path.parent / "bundle"
+    repo = next(path for path in snapshot.path.parents if (path / ".git").is_dir())
     prepare_input_bundle(input_dir, snapshot, bundle, lisa_workbook=lisa_workbook)
     commit = commit_fixture(repo, "catalog bundle")
     return CatalogBundleSelection(

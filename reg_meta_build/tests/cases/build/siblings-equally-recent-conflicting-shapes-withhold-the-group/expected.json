@@ -3,14 +3,18 @@
     {
       "table": "concept_groups",
       "fields": ["variables"],
-      "rows": []
+      "rows": [
+        [
+          ["efternamn", "efternamn-2021"]
+        ]
+      ]
     },
     {
       "table": "issues",
       "where": {"code": "ambiguous_sibling_shape"},
-      "fields": ["code"],
+      "fields": ["code", "subject"],
       "rows": [
-        ["ambiguous_sibling_shape"]
+        ["ambiguous_sibling_shape", "same_definition_pair:scb/sample/efternamn:scb/sample/fornamn"]
       ]
     }
   ]

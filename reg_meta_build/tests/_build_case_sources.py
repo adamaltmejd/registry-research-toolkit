@@ -251,8 +251,12 @@ class PreparedCache:
             try:
                 write_sources(spec, staging / "source")
                 write_authored(spec, staging / "authored")
+                # `snapshot_path` places the SCB snapshot in the input repository.
                 _, commit, digest = prepare_accepted(
-                    staging, staging / "source", staging / "authored"
+                    staging,
+                    staging / "source",
+                    staging / "authored",
+                    snapshot_path=spec.get("snapshot_path", "snapshot"),
                 )
                 # Only the accepted prepared repository is read after preparation.
                 shutil.rmtree(staging / "source")

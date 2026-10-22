@@ -1,0 +1,18 @@
+{
+  "note": "One SCB event says variable 300 (FORNAMN) is replaced by variable 999, which no register delivers, so the build reports unresolved_source_event_endpoint. sample.toml acknowledges it with both digests, copied as a curator copies them from the stale entry's current pins: no placeholder renders an event acknowledgement's digests. Here the input repository holds the SCB snapshot at `snapshot`; step 2 builds the same delivery from `catalog/snapshot` with the same pins (#1763).",
+  "fails_if": "an SCB event's evidence digest stops covering the event row's own content, so an exact acknowledgement goes stale; or `clean_timeseries_row` (reg_meta_build/src/reg_meta_build/sources/scb_reference_records.py) locates the row by the revision's artifact_path instead of the bare Timeseries.csv, which puts the input layout in the digest",
+  "sources": {
+    "description": "Register 1 delivers FORNAMN (variable 300) in 2020; its one event says variable 300 is replaced by variable 999, which no register delivers.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300"}
+      ]
+    },
+    "files": {
+      "SCB/Timeseries.csv": [
+        "Namn|Handelse|Beskrivning|Entitet|ID1|ID2|FilID",
+        "TESTREG|Ersatt av|Ersatt av variabel 999|Variabel|300|999|"
+      ]
+    }
+  }
+}

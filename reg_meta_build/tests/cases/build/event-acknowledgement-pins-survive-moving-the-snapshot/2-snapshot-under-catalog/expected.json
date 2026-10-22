@@ -1,0 +1,13 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": ["unresolved_source_event_endpoint", "stale_curation_entry"]},
+      "fields": ["code", "severity", "acknowledged_by"],
+      "rows": [
+        ["unresolved_source_event_endpoint", "warning", "curation/registers/scb/sample.toml#/acknowledge/1"]
+      ]
+    }
+  ]
+}
