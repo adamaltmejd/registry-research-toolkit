@@ -3,10 +3,10 @@ name: reg-webapp-design-reviewer
 description: >-
   Registry Research Toolkit `reg_webapp` design review skill. Use to judge a frontend
   candidate against the design language in `reg_webapp/frontend/DESIGN.md`: a source
-  review any reader of the diff can perform (token discipline, primitive reuse, ARIA and
-  focus, copy, responsive rules, error/empty affordances) and, with a checkout, a
-  four-width rendered review. This is the post-implementation counterpart to
-  `reg-webapp-frontend-design`.
+  review any reader of the diff can perform (token discipline, primitive reuse, React
+  and React Aria correctness, ARIA and focus, copy, responsive rules, error/empty
+  affordances) and, with a checkout, a four-width rendered review. This is the
+  post-implementation counterpart to `reg-webapp-frontend-design`.
 ---
 
 # Reg webapp design reviewer
@@ -14,7 +14,8 @@ description: >-
 Judge a `reg_webapp` frontend candidate against the committed design language. The skill
 has two parts and they need different inputs:
 
-- **Source review** — decidable from the diff plus `reg_webapp/frontend/DESIGN.md`.
+- **Source review** — decidable from the diff plus `reg_webapp/frontend/DESIGN.md` and
+  the rule sections of `reg-webapp-frontend-design`.
 - **Rendered review** — needs a checkout, a browser and screenshots.
 
 Run the part your inputs support and say in the report which one you ran. Authoring
@@ -24,10 +25,10 @@ happens before this skill, under `reg-webapp-frontend-design`.
 
 An implementer self-checks in a clean subagent (prompt: goal, changed routes, diff, this
 skill) that reports and does not rewrite; the implementer fixes or dismisses each
-finding. A source-only reviewer reads only the diff, this skill and
-`frontend/DESIGN.md`, runs the source review, and never claims or demands rendered
-evidence. Neither substitutes for the maintainer rendering the changed surfaces before
-approval.
+finding. A source-only reviewer reads only the diff, this skill, `frontend/DESIGN.md`
+and `reg-webapp-frontend-design`, runs the source review, and never claims or demands
+rendered evidence. Neither substitutes for the maintainer rendering the changed surfaces
+before approval.
 
 ## The contract
 
@@ -44,11 +45,12 @@ rules is a finding; the checks below are where the yield is.
 
 Components consume semantic roles only (the DESIGN.md front matter, implemented in
 `src/tokens.css`). The `lint:tokens` script already fails a candidate on raw color
-literals and font stacks inside a `<style>` block, so the yield here is what it cannot
-see: a ramp stop read through `var()`, a one-off px spacing/radius/shadow value, and the
-wrong role chosen for the job. The tree carries roles beyond the front matter (the label
-roles `--micro-label-size` and `--micro-label-weight` among them), so an unfamiliar
-`--role` name is not itself a finding; a literal or a ramp stop is.
+literals and font stacks in component styles, so the yield here is what it cannot see: a
+literal in a `style={{}}` object it missed, a ramp stop read through `var()`, a one-off
+px spacing/radius/shadow value, a CSS Module redeclaring a role, and the wrong role
+chosen for the job. The tree carries roles beyond the front matter (the label roles
+`--micro-label-size` and `--micro-label-weight` among them), so an unfamiliar `--role`
+name is not itself a finding; a literal or a ramp stop is.
 
 The four color sub-systems are disjoint; borrowing across them is a finding. So is
 accent used as status or emphasis, accent-colored *text* on a tint that takes `--accent`
@@ -59,19 +61,40 @@ more than one `primary` button per view.
 
 Changed views compose the shared primitives (DESIGN.md → "Components"). A hand-rolled
 near-duplicate of one — a bespoke table, button, tag, empty state or key-value list,
-visible in the diff as new markup with its own scoped CSS — is at least a `P2`.
+visible in the diff as new markup with its own CSS Module — is at least a `P2`.
 
-### Behavior layer
+### Behavior layer and React correctness
 
-Accessibility-critical widgets (combobox, command/listbox, menu, dialog, popover,
-tooltip, slider, tabs, accordion) come from Bits UI (`bits-ui`), styled with scoped CSS
-reading roles. A hand-rolled widget Bits UI covers is at least a `P2`; so is a Bits UI
-usage that ships one-off visual styling instead of roles.
+Accessibility-critical widgets come from React Aria Components (RAC), styled by the
+component's CSS Module reading roles. The rules are stated once, in
+`reg-webapp-frontend-design` → "Behavior layer", "Swedish text", "Tree and sticky-list
+gotchas" and "React 19 rules"; a breach visible in the diff is a finding:
+
+- `P2`: a hand-rolled widget RAC covers; RAC styled with one-off values or a global
+  `.react-aria-*` selector; any breach of the collection, `dependencies`,
+  controlled-state, filtering, labelling, pinning, Swedish-text or Tree rules; an effect
+  that derives state; an effect without cleanup or not idempotent under StrictMode; an
+  ad-hoc fetch in an effect, or one not aborted on unmount or deps change, instead of
+  the shared async-resource hook; a component defined inside another; a new state
+  library. `P1` where it causes user-visible breakage.
+- `P3`: a native `<button>`/`<a>` with `onClick` where RAC `Button`/`Link` fits (`P2` if
+  keyboard operation breaks); `useMemo`/`useCallback` with no measured reason;
+  `forwardRef` or `.Provider` in new code.
+
+A new component test (a render of a component asserting its markup, classes, props or
+internal state) is a `P2` defect: the port pins behavior only through the `flows` driver
+and pure-TS unit tests. Rules of hooks, the compiler-backed rules and jsx-a11y become
+lint with PR 1's Oxlint config: until then check them by reading; after, don't re-report
+what lint fails.
 
 ### ARIA and focus semantics
 
-- Focus follows DESIGN.md: `:focus-visible` in the component's **own** scoped CSS; no
-  global stylesheet owns focus.
+- Focus follows DESIGN.md: `[data-focus-visible]` on RAC parts or `:focus-visible` on
+  plain elements, with `var(--focus-ring)`, in the component's **own** CSS Module; no
+  global stylesheet owns focus. Inside a scroll container with sticky rows the ring is
+  inset.
+- An `aria-label` on a part RAC already labels (the tree chevron) duplicates its name;
+  `text-transform` on a labelling element changes the accessible name.
 - Every interactive element is reachable and operable from the keyboard — a click-only
   handler on a non-interactive element is a finding.
 - `DataTable`'s settled decisions are not re-litigated: explicit unconditional ARIA
@@ -108,8 +131,7 @@ this part entirely if you have neither.
 
 ### Render
 
-From the repo root. `dev.sh` picks free ports, drives agent-browser against them, and
-tears the servers and the browser session down on exit:
+From the repo root; `dev.sh` picks free ports and tears everything down on exit:
 
 ```sh
 bash reg_webapp/dev/dev.sh --fixture-db shot --all <route>
@@ -117,30 +139,18 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot --all <route>
 bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
-`--all` captures the four DESIGN.md widths and it applies to every rendered change;
-there is no desktop-only exception. Each route × width is three files under one name:
-`<name>.png`, `<name>.snapshot.txt` (the accessibility tree) and `<name>.a11y.txt` (an
-axe-core audit); the run prints each capture's axe summary and the page's console errors
-and uncaught exceptions. `--fixture-db` builds a deterministic synthetic catalog, so no
-released catalog DB is needed — `dev.sh` installs the venv and the frontend dependencies
-(agent-browser among them) itself; the remaining prerequisites (the wasm toolchain, a
-Chrome for agent-browser) are in the [run-reg-webapp skill](../run-reg-webapp/SKILL.md).
-A state no route reaches (an open dialog, a filled form) is driven by hand with
-agent-browser in a named session, as that skill shows; capture it with `screenshot`,
-`snapshot` and `a11y` at the four widths too. Pass `REG_META_DB=<db_dir>` instead when
-the rendered behavior depends on specific catalog content. `smoke` is a catalog-browsing
-flow at the default desktop viewport only — it does not stand in for the four widths.
+`--all` captures the four DESIGN.md widths for every rendered change; there is no
+desktop-only exception. Each route × width writes `<name>.png`, `<name>.snapshot.txt`
+(accessibility tree) and `<name>.a11y.txt` (axe), and the run prints axe summaries,
+console errors and uncaught exceptions. `--fixture-db` builds a deterministic synthetic
+catalog; prerequisites are in the [run-reg-webapp skill](../run-reg-webapp/SKILL.md). A
+state no route reaches (an open dialog, a filled form) is driven by hand with
+agent-browser in a named session, as that skill shows, and captured at the four widths
+too. `smoke` is a desktop-only catalog flow; it does not stand in for the four widths.
 
-`dev.sh` prints the checkout it resolved, the full HEAD, and the unique output directory
-of that invocation as its first line:
-
-```
-dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots.C8VNZN
-```
-
-Quote it. Every invocation gets its own directory and `/tmp` is purged, so a path
-without a description of what the image showed is not evidence — and screenshots are
-never committed to the branch.
+`dev.sh`'s first line names the checkout, the full HEAD and the invocation's output
+directory (`dev: repo … HEAD … shots /tmp/reg-webapp-shots.XXXXXX`). Quote it. `/tmp` is
+purged, so a path without a description of what it showed is not evidence; never commit.
 
 If no route is given, derive the smallest stable route from the changed files and nearby
 tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
@@ -153,8 +163,8 @@ tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
 viewport each was captured at. Read each capture's `.snapshot.txt`, `.a11y.txt` and the
 printed console output alongside it.
 
-- Render health: no blank screens, no stuck `aria-busy="true"`, no JS errors, no missing
-  assets, no capture taken before content settled.
+- Render health: no blank screens, no stuck `aria-busy="true"`, no JS errors or
+  React/RAC dev warnings, no missing assets, no capture taken before content settled.
 - Layout at each width: no horizontal page overflow, overlap, clipping, unstable
   wrapping or clipped table/card content.
 - Density: the app reads as a dense research tool — no hero sections, decorative
@@ -171,30 +181,28 @@ printed console output alongside it.
   one and compare type scale, spacing rhythm and table/card/tag treatment. Flag
   divergence from the surrounding app.
 
-`bun run lint/check/build` render nothing. The browser component tests (`bun run test`)
-do render in Chromium, but they exercise primitives in isolation: they are not app-level
-route and state coverage, and they are not visual inspection.
+Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
+tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.
+The frontend gate renders nothing app-level, and jsx-a11y (lint from PR 1) is a floor,
+not the axe audit.
 
 ### When rendering is unavailable
 
-If the app will not boot, agent-browser cannot launch Chrome, or the environment has no
-browser, the outcome is **blocked** — not a product finding. Report the exact command,
-the observed cause (quote the failing line, and `$ab doctor`'s Chrome line (`$ab` as
-run-reg-webapp defines it) where the launch failed), and what stayed unverified. A
-blocked rendered review also cannot support a clean visual approval. Raise a product
-`P1` only where the evidence in hand establishes a candidate defect with that user
-impact.
+If the app will not boot or agent-browser cannot launch Chrome, the outcome is
+**blocked**, not a product finding: report the exact command, the failing line (and
+`$ab doctor`'s Chrome line, `$ab` as run-reg-webapp defines it) and what stayed
+unverified. Blocked cannot support a clean visual approval; raise a product `P1` only
+where the evidence in hand establishes a candidate defect with that impact.
 
 ### Author iteration vs. gate evidence
 
-Fill every field of the rendered template below, and report the routes, states and
-viewports you actually inspected — not the ones the command could have produced. Author
-iteration captures and retained candidate gate evidence are different things: say which
-you are reporting. The `gate.py flows` step (`dev.sh --fixture-db flows`) covers only
-its named driver scenarios — the `/project` error and retry states, the catalog-authored
-draft and period flows, and the deliberate replacement — so it is not evidence for a
-search, a different catalog view or a new one. Approval needs evidence for the surfaces
-the candidate actually changes.
+Fill every field of the rendered template and report the routes, states and viewports
+you actually inspected. Say whether captures are author iteration or retained gate
+evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`) covers only its driver
+scenarios (the `/project` error and retry states, catalog-authored draft and period
+flows, the deliberate replacement); on the React port compare case count and outcome
+with `REACT_PORT.md`'s baseline (the Operator compares screenshots), where a difference
+the brief does not name is a finding. Approval needs evidence for every surface changed.
 
 ## Severity, findings and fixes
 
@@ -207,6 +215,13 @@ report.
 Dismiss a finding only with a concrete reason: "existing behavior outside this
 candidate", "intended clipping", "route not touched by this diff".
 
+Optional cross-check, referenced and not vendored: Vercel's `web-interface-guidelines`
+(no `transition: all`; animate transform and opacity only; `min-width: 0` on flex
+children; links work with Cmd- and middle-click; the URL reflects state;
+`translate="no"` on identifiers; `Intl` formats; destructive actions confirm; never
+block paste; sticky headers never cover focus). Ignore its Title Case, curly quotes,
+virtualize-over-50, identifier truncation, Tailwind, Next.js and hydration rules.
+
 ## Report format
 
 Source-only — a source-only reviewer, or anyone without a checkout:
@@ -215,7 +230,7 @@ Source-only — a source-only reviewer, or anyone without a checkout:
 # Reg webapp design review — source
 
 - Candidate: <change, branch, or diff reviewed>
-- Basis: diff + reg_webapp/frontend/DESIGN.md. Not rendered; no visual claim.
+- Basis: diff + reg_webapp/frontend/DESIGN.md + reg-webapp-frontend-design. Not rendered.
 - Result: <no source findings / findings>
 
 ## Findings
@@ -223,7 +238,7 @@ Source-only — a source-only reviewer, or anyone without a checkout:
 ### [P1|P2|P3] <title>
 
 - File and line: <path:line>
-- Rule: <the DESIGN.md rule or checklist item>
+- Rule: <the DESIGN.md or skill rule>
 - Issue: <what the source establishes>
 - Recommendation: <smallest correction>
 ```
