@@ -39,11 +39,6 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
-/* The verdict row is the shared status row (ui/utilities.css `.problem`): no fill
-   and no height while it says nothing. */
-.outcome {
-  margin: 0;
-}
 .dialogLead {
   margin: 0 0 var(--space-2);
 }

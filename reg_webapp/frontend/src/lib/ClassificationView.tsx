@@ -21,6 +21,7 @@ import { SubjectSection, TechnicalDetails } from "./SubjectView";
 import { Definitions } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 import { ValueSetCodes } from "./ValueSetCodes";
 
@@ -301,8 +302,7 @@ export function ClassificationGroupView({
   }
   if (resource.error || !node) {
     return (
-      <p className="banner-error" role="alert">
-        <span aria-hidden="true">✕</span>{" "}
+      <StatusRow tone="error" live="alert">
         {resource.status === 404 ? (
           <>
             No classification group or family <code>{groupKey}</code> in the
@@ -314,7 +314,7 @@ export function ClassificationGroupView({
             again.
           </>
         )}
-      </p>
+      </StatusRow>
     );
   }
 
@@ -402,10 +402,10 @@ export function ClassificationGroupView({
                   <Skeleton count={3} />
                 </div>
               ) : active.error ? (
-                <p className="banner-error" role="alert">
-                  <span aria-hidden="true">✕</span> This edition did not load (
-                  {active.error}). Reload the page to try again.
-                </p>
+                <StatusRow tone="error" live="alert">
+                  This edition did not load ({active.error}). Reload the page to
+                  try again.
+                </StatusRow>
               ) : (
                 active.data && (
                   <ClassificationCodes

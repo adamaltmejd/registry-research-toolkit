@@ -28,6 +28,7 @@ import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
 import type { Column } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
@@ -80,8 +81,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
   }
   if (resource.error || !resource.data) {
     return (
-      <p className="banner-error" role="alert">
-        <span aria-hidden="true">✕</span>{" "}
+      <StatusRow tone="error" live="alert">
         {resource.status === 404 ? (
           <>
             Nothing in the catalog at <code>{fqidPath}</code>. Check the link,
@@ -93,7 +93,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
             again.
           </>
         )}
-      </p>
+      </StatusRow>
     );
   }
 
@@ -125,10 +125,10 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
       // The router sends the root and group refs to their own views, so a kind
       // landing here is a routing mistake: say so rather than render nothing.
       return (
-        <p className="banner-error" role="alert">
-          <span aria-hidden="true">✕</span> This page cannot show a{" "}
-          <code>{node.kind}</code> node: <code>{fqidPath}</code>
-        </p>
+        <StatusRow tone="error" live="alert">
+          This page cannot show a <code>{node.kind}</code> node:{" "}
+          <code>{fqidPath}</code>
+        </StatusRow>
       );
   }
 }

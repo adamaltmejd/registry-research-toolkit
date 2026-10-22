@@ -27,6 +27,7 @@ import { useRune } from "./svelte_bridge.svelte";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
 import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
+import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
@@ -327,17 +328,16 @@ export function BrowseTree({ className }: { className?: string }) {
           Loading the catalog…
         </p>
       ) : root.value === null ? (
-        <p className={`banner-error ${styles.error}`} role="alert">
-          <span aria-hidden="true">✕</span> The register list did not load.
-          Reload the page to try again.
-        </p>
+        <StatusRow tone="error" live="alert" className={styles.error}>
+          The register list did not load. Reload the page to try again.
+        </StatusRow>
       ) : (
         <>
           {registers.error && (
-            <p className={`banner-error ${styles.error}`} role="alert">
-              <span aria-hidden="true">✕</span> Some registers did not load (
-              {registers.error}). Reload the page to try again.
-            </p>
+            <StatusRow tone="error" live="alert" className={styles.error}>
+              Some registers did not load ({registers.error}). Reload the page
+              to try again.
+            </StatusRow>
           )}
           <Tree
             aria-labelledby={labelId}

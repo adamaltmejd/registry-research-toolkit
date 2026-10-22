@@ -16,6 +16,7 @@ import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
 import { Panel } from "./ui/Panel";
+import { StatusRow } from "./ui/StatusRow";
 import { useProject } from "./use_project";
 import { ValidationPanel } from "./ValidationPanel";
 import {
@@ -187,14 +188,12 @@ export function ProjectEditor({
       </ConfirmDialog>
 
       {openError && (
-        <p className={`banner-error ${styles.openError}`} role="alert">
-          <span className={styles.bannerText}>
-            <span aria-hidden="true">✕</span> {openError}
-          </span>
+        <StatusRow tone="error" live="alert" className={styles.openError}>
+          <span className={styles.bannerText}>{openError}</span>
           <Button variant="ghost" onPress={() => projectStore.clearOpenError()}>
             Dismiss
           </Button>
-        </p>
+        </StatusRow>
       )}
 
       {draft == null ? (

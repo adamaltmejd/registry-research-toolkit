@@ -211,10 +211,12 @@ components:
   tag:
     rounded: "{rounded.sm}"
     typography: "{typography.body-sm}"
-  banner-error:
+  status-row-error:
     backgroundColor: "{colors.err-bg}"
     textColor: "{colors.err}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.md}"
+    typography: "{typography.body-sm}"
+    padding: 6px 10px
 ---
 
 # Registry Research Toolkit design language
@@ -470,9 +472,13 @@ not grow new visual language meanwhile.
 - **FilterChip:** a real checkbox behind an `sm`-radius face, `accent-bg` with an
   `accent` border when on. A LENS: toggling narrows what is shown, never the project.
 - **Timeline, VariableRow, LaneGraph:** see Time.
-- **StatusRow:** the status tint as fill, the status foreground as text and border
-  (`err-border` for error), a glyph first, plain sentence copy that says what went wrong
-  and how to fix it.
+- **StatusRow:** the status tint as fill, the status foreground as text and a 1 px
+  border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph
+  comes first and is `aria-hidden` (✕ error, ▲ warn, i info, ✓ ok), then plain sentence
+  copy that says what went wrong and how to fix it. It rises in with `motion-rise-in`
+  when it appears and never on page load. Every failed load, refusal and verdict in a
+  pane is one; there is no other ad hoc error row. With no tone it is a bare live region
+  that holds no height, so a first message lands in a region the page already had.
 - **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
   `--elevation-float`, over the scrim. A click on the scrim does not answer it.
 - **Empty and loading states:** `EmptyState` names the next action; `Skeleton` exposes

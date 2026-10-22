@@ -4,6 +4,7 @@ import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
 import styles from "./VariantBrowser.module.css";
@@ -90,10 +91,10 @@ export function VariantBrowser({ registerFqid }: { registerFqid: string }) {
           <Skeleton count={3} />
         </div>
       ) : resource.error ? (
-        <p className="banner-error" role="alert">
-          <span aria-hidden="true">✕</span> The variants did not load (
-          {resource.error}). Reload the page to try again.
-        </p>
+        <StatusRow tone="error" live="alert">
+          The variants did not load ({resource.error}). Reload the page to try
+          again.
+        </StatusRow>
       ) : entries.length === 0 ? (
         <EmptyState
           title="This register has no variants."

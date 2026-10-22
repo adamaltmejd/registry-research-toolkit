@@ -6,6 +6,7 @@ import {
 import styles from "./DocView.module.css";
 import { SubjectSection } from "./SubjectView";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
 function bytesLabel(bytes: number): string {
@@ -46,10 +47,10 @@ export function RelatedDocumentsPanel({ register }: { register: string }) {
           <Skeleton count={2} />
         </div>
       ) : resource.error ? (
-        <p className="banner-error" role="alert">
-          <span aria-hidden="true">✕</span> The source documents did not load (
-          {resource.error}). Reload the page to try again.
-        </p>
+        <StatusRow tone="error" live="alert">
+          The source documents did not load ({resource.error}). Reload the page
+          to try again.
+        </StatusRow>
       ) : (
         <ul className={styles.documents}>
           {documents.map((doc) => (

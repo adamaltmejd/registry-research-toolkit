@@ -16,6 +16,7 @@ import { onNavClick, type Route, router } from "./lib/router";
 import { useRune } from "./lib/svelte_bridge.svelte";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
+import { StatusRow } from "./lib/ui/StatusRow";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useRoute } from "./lib/use_router";
 import { VariableList, type VariableListFocus } from "./lib/VariableList";
@@ -108,10 +109,14 @@ export function App() {
         <div className={styles.app}>
           <TopBar steward={ctx?.steward ?? null} bounds={bounds} />
           {context.error && (
-            <p className={`banner-error ${styles.contextError}`} role="alert">
-              <span aria-hidden="true">✕</span> The deployment details did not
-              load ({context.error}). Reload the page to try again.
-            </p>
+            <StatusRow
+              tone="error"
+              live="alert"
+              className={styles.contextError}
+            >
+              The deployment details did not load ({context.error}). Reload the
+              page to try again.
+            </StatusRow>
           )}
           <div
             className={styles.body}

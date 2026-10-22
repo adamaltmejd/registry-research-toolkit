@@ -37,12 +37,6 @@
   gap: var(--space-2);
 }
 
-/* `.problem` and `.refused` are the shared rows in ui/utilities.css; only the
-   spacing under the row above is local. */
-.problem {
-  margin: 0;
-}
-
 /* ── The slider ────────────────────────────────────────────────────────── */
 .slider {
   display: flex;
@@ -196,7 +190,4 @@
   gap: var(--space-2);
   margin: 0;
   font-size: var(--text-sm);
-}
-.warn {
-  color: var(--warn);
 }
