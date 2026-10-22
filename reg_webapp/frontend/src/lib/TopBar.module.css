@@ -104,7 +104,7 @@ kbd.hint,
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface-sunken);
-  color: var(--text-faint);
+  color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: var(--text-micro);
   line-height: 1.3;

@@ -339,7 +339,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   macOS, opens the palette), and the `ProjectBanner` at the right. The field reads
   "Search registers, variables, codes…". While it holds text, focused or not, it takes
   an `accent` border with an `accent-bg` halo, and its hint becomes the match count in
-  `accent-ink` with an `Esc` key hint; the key hints are `text-faint` on
+  `accent-ink` with an `Esc` key hint; the key hints are `text-muted` on
   `surface-sunken`. There are no "Search" or "Project" nav items; the bar and the banner
   are those. It sticks to the top of the page above `breakpoint-narrow`; below it the
   bar wraps and scrolls away with the page.
