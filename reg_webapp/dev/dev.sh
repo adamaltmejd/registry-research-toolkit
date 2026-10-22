@@ -274,8 +274,12 @@ cleanup() {
 	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
 }
 # Tear every server down on ANY exit — including the one-shot smoke/shot paths, so
-# they never leak a dev server (the failure mode that motivated this mode).
-trap cleanup INT TERM EXIT
+# they never leak a dev server (the failure mode that motivated this mode). INT/TERM
+# exit so the run stops (a bare cleanup trap would return and carry on driving the
+# browser against dead servers); the EXIT trap then cleans up.
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 # --fixture-db: point EVERY server at a deterministic synthetic catalog via
 # REG_META_DB, so it wins over whatever the environment resolves. The artifact comes

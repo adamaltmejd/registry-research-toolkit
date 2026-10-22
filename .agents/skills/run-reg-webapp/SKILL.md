@@ -29,8 +29,8 @@ no-op when in sync, so a fresh worktree needs no setup. It then runs
 - For `smoke` / `shot`: a Chrome for agent-browser. It finds an installed Google Chrome;
   with none, run
   `bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js install` once
-  (Chrome for Testing into `~/.agent-browser`). `agent-browser doctor` says which
-  browser it resolves.
+  (Chrome for Testing into `~/.agent-browser`); the same command with `doctor` says
+  which browser it resolves.
 - For `flows`: Playwright's Chromium (the frontend's vitest-browser setup installs it;
   if missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`).
 - A catalog: `--fixture-db` (below), or `REG_META_DB` set to a directory holding a
@@ -134,10 +134,9 @@ component tests: `(cd reg_webapp/frontend && bun run test)`.
 
 - **`networkidle` is not "rendered".** Svelte swaps in data after the network settles.
   `settled()` (in `dev.sh` and in `driver.mjs`) waits for every `[aria-busy="true"]` to
-  clear — by hand,
-  `agent-browser wait --fn '!document.querySelector("[aria-busy=\"true\"]")'` after
-  every navigation/click. Each loading placeholder carries `aria-busy="true"`; new ones
-  must too (don't key on copy like "Loading…").
+  clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
+  after every navigation/click. Each loading placeholder carries `aria-busy="true"`; new
+  ones must too (don't key on copy like "Loading…").
 - **agent-browser 0.39.1's text `errors` prints a bare `✗`** whatever it holds; read
   `errors --json` (`dev.sh` does).
 - **Playwright's `waitForFunction` takes `(fn, arg, options)`** (`driver.mjs`). Options
@@ -161,10 +160,9 @@ component tests: `(cd reg_webapp/frontend && bun run test)`.
   `settled()`'s 10 s timeout.
 - The Rust server exits at boot about the DB/schema → no `REG_META_DB`, or an
   inadmissible schema. Use `--fixture-db` or a current release asset.
-- agent-browser cannot launch Chrome (`smoke` / `shot`) → `agent-browser doctor` names
-  the browser it resolved. In a sandboxed shell that denies Chrome's sandbox or its
-  child processes, pass launch flags through the environment:
-  `AGENT_BROWSER_ARGS=--no-sandbox`, then
+- agent-browser cannot launch Chrome (`smoke` / `shot`) → `$ab doctor` names the browser
+  it resolved. In a sandboxed shell that denies Chrome's sandbox or its child processes,
+  pass launch flags through the environment: `AGENT_BROWSER_ARGS=--no-sandbox`, then
   `AGENT_BROWSER_ARGS=--no-sandbox,--single-process,--disable-gpu`.
 - Chromium fails to launch in `flows` → `driver.mjs` tries a ladder (sandboxed,
   no-sandbox, single-process; `LAUNCH_LADDER`) and reports each rung's error; read the

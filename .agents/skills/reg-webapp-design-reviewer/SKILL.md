@@ -179,10 +179,11 @@ route and state coverage, and they are not visual inspection.
 
 If the app will not boot, agent-browser cannot launch Chrome, or the environment has no
 browser, the outcome is **blocked** — not a product finding. Report the exact command,
-the observed cause (quote the failing line, and `agent-browser doctor`'s Chrome line
-where the launch failed), and what stayed unverified. A blocked rendered review also
-cannot support a clean visual approval. Raise a product `P1` only where the evidence in
-hand establishes a candidate defect with that user impact.
+the observed cause (quote the failing line, and `$ab doctor`'s Chrome line (`$ab` as
+run-reg-webapp defines it) where the launch failed), and what stayed unverified. A
+blocked rendered review also cannot support a clean visual approval. Raise a product
+`P1` only where the evidence in hand establishes a candidate defect with that user
+impact.
 
 ### Author iteration vs. gate evidence
 
