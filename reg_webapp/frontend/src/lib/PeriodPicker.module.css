@@ -117,7 +117,7 @@
 }
 
 .band {
-  background: var(--border-strong);
+  background: var(--border);
   opacity: 0.7;
 }
 
@@ -131,8 +131,8 @@
 .gap {
   background: repeating-linear-gradient(
     45deg,
-    var(--warn) 0,
-    var(--warn) 3px,
+    var(--warn-hatch) 0,
+    var(--warn-hatch) 3px,
     transparent 3px,
     transparent 6px
   );

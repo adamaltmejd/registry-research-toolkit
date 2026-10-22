@@ -26,7 +26,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  padding: 0.2rem 0;
+  padding: var(--space-1) 0;
 }
 
 /* Below the top loaded level: one indent step per level, with a hairline guide
@@ -100,7 +100,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  padding: 0.2rem 0;
+  padding: var(--space-1) 0;
 }
 .treeRow::before {
   flex: 0 0 var(--space-3);

@@ -7,7 +7,13 @@
 .meta dd {
   margin: 0;
   min-width: 0;
+  font-size: var(--text-sm);
   overflow-wrap: anywhere;
+}
+/* The variant is an identifier, set like KeyValue's mono value: mono face at
+   the row's size, not the larger inline-code size. */
+.meta code {
+  font-size: inherit;
 }
 
 .heading {
@@ -130,7 +136,7 @@
   margin: 0;
   color: var(--text-muted);
 }
-@media (min-width: 42rem) {
+@media (min-width: 48rem) {
   .definitions {
     grid-template-columns: minmax(8rem, 16rem) minmax(0, 1fr);
   }

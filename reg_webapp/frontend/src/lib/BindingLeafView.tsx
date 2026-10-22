@@ -502,6 +502,12 @@ export function BindingLeafView({
 
   const narrowedLabel = (boundedPeriod ?? "").split(",").join(" + ");
   const hasMatrixSources = matrixSources.size > 0;
+  const hasDefinitions = !!(
+    node.definition ||
+    node.description ||
+    node.operational_definition ||
+    node.measurement_unit
+  );
 
   return (
     <SubjectView title={node.name ?? node.fqid}>
@@ -536,32 +542,34 @@ export function BindingLeafView({
           ))}
         </ul>
       )}
-      <dl className={styles.meta}>
-        {node.definition && (
-          <>
-            <dt>Definition</dt>
-            <dd>{node.definition}</dd>
-          </>
-        )}
-        {node.description && (
-          <>
-            <dt>Description</dt>
-            <dd>{node.description}</dd>
-          </>
-        )}
-        {node.operational_definition && (
-          <>
-            <dt>Operational definition</dt>
-            <dd>{node.operational_definition}</dd>
-          </>
-        )}
-        {node.measurement_unit && (
-          <>
-            <dt>Unit</dt>
-            <dd>{node.measurement_unit}</dd>
-          </>
-        )}
-      </dl>
+      {hasDefinitions && (
+        <dl className={`${styles.meta} ${styles.definitions}`}>
+          {node.definition && (
+            <>
+              <dt>Definition</dt>
+              <dd>{node.definition}</dd>
+            </>
+          )}
+          {node.description && (
+            <>
+              <dt>Description</dt>
+              <dd>{node.description}</dd>
+            </>
+          )}
+          {node.operational_definition && (
+            <>
+              <dt>Operational definition</dt>
+              <dd>{node.operational_definition}</dd>
+            </>
+          )}
+          {node.measurement_unit && (
+            <>
+              <dt>Unit</dt>
+              <dd>{node.measurement_unit}</dd>
+            </>
+          )}
+        </dl>
+      )}
 
       <div className={styles.warnings}>
         <SvelteIsland component={ScopedDataWarnings} props={variableWarnings} />

@@ -209,6 +209,7 @@ export function PeriodPicker({
     resolution !== null && "problem" in resolution ? resolution : null;
   const refusal = local.committed ? problem : null;
   const problemId = `${uid}-problem`;
+  const labelId = `${uid}-label`;
 
   function editEntry(side: "from" | "to", value: string): void {
     const entry =
@@ -248,8 +249,14 @@ export function PeriodPicker({
 
   return (
     // `period-picker` names the card for the flows driver.
-    <form className={`period-picker ${styles.card}`} onSubmit={apply}>
-      <span className="micro-label">Period</span>
+    <form
+      className={`period-picker ${styles.card}`}
+      onSubmit={apply}
+      aria-labelledby={labelId}
+    >
+      <span id={labelId} className="micro-label">
+        Period
+      </span>
       <div className={styles.row}>
         <PeriodWindowSlider
           min={min}
@@ -506,8 +513,9 @@ function PeriodWindowSlider({
       </SliderTrack>
       {subAnnualPeriod !== null ? (
         <output className={`${styles.note} ${styles.warn}`}>
-          Active period <code>{subAnnualPeriod}</code> isn't year-grain — the
-          slider shows the project-window default.
+          <span aria-hidden="true">▲</span> Active period{" "}
+          <code>{subAnnualPeriod}</code> isn't year-grain — the slider shows the
+          project-window default.
         </output>
       ) : (
         userDeviation &&
@@ -518,7 +526,7 @@ function PeriodWindowSlider({
             Deviates from project window ({projectWindow.from}–
             {projectWindow.to})
             <Button size="sm" onPress={onReset}>
-              reset to project window
+              Reset to project window
             </Button>
           </p>
         )
@@ -529,6 +537,7 @@ function PeriodWindowSlider({
             soft ? `${styles.note} muted` : `${styles.note} ${styles.warn}`
           }
         >
+          {!soft && <span aria-hidden="true">▲ </span>}
           {availabilityNote}
         </output>
       )}

@@ -3,6 +3,7 @@ import { fqidSegments, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
 import styles from "./LeafPanels.module.css";
 import { SubjectSection } from "./SubjectView";
+import { Skeleton } from "./ui/Skeleton";
 import { useAsyncResource } from "./use_async_resource";
 
 function sourceLabel(url: string, title?: string | null): string {
@@ -39,12 +40,13 @@ export function DocMentionsPanel({ node }: { node: VariableShow }) {
   return (
     <SubjectSection title="Parsed documentation">
       {resource.loading ? (
-        <p className="muted" aria-busy="true">
-          Loading…
-        </p>
+        <div aria-busy="true">
+          <Skeleton count={2} />
+        </div>
       ) : resource.error !== null ? (
         <p className="error" role="alert">
-          Failed to load parsed documentation: {resource.error}
+          <span aria-hidden="true">✕</span> Failed to load parsed documentation:{" "}
+          {resource.error}
         </p>
       ) : (
         <>

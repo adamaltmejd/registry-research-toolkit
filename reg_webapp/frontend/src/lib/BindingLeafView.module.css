@@ -46,7 +46,9 @@
   gap: var(--space-1) var(--space-4);
   margin: var(--space-4) 0;
 }
-.meta dt {
+/* The leaf's own definitions read as headed prose; Technical details keeps
+   the micro-label terms. */
+.definitions dt {
   font-weight: var(--heading-weight);
 }
 .meta dd {

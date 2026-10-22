@@ -86,6 +86,9 @@ export function CodeTreeLevel({
           {resource.data.map((code) => (
             <li key={`${code.code}\u0000${code.label}`}>
               {code.child_count ? (
+                // simplify: nested native <details>, carried from the Svelte
+                // tree; move to RAC Tree with lazy children when
+                // ClassificationCodesPanel ports (PR 6) and this is its last copy.
                 <details
                   open={opened.has(nodeKey(code.code))}
                   onToggle={(event) =>

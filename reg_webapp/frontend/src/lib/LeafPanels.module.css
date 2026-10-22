@@ -57,11 +57,11 @@
   overflow-wrap: anywhere;
 }
 
-/* The matched term (`**…**` → <mark>): the accent tint, not the browser's
-   yellow, with its text in accent-ink. */
+/* The matched term (`**…**` → <mark>): matched text as everywhere else
+   (DESIGN.md → Layout), an accent underline at weight 600, not a tint. */
 .snippet mark {
-  padding: 0 0.1em;
-  border-radius: var(--radius-sm);
-  background: var(--accent-bg);
-  color: var(--accent-ink);
+  background: none;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline 2px var(--accent);
 }

@@ -2,6 +2,7 @@ import { getLineage, type VariableShow } from "./api";
 import { catalogHref, formatWindow, windowTitle } from "./catalog";
 import styles from "./LeafPanels.module.css";
 import { SubjectSection } from "./SubjectView";
+import { Skeleton } from "./ui/Skeleton";
 import { useAsyncResource } from "./use_async_resource";
 
 /**
@@ -54,7 +55,7 @@ export function LineageDetails({ node }: { node: VariableShow }) {
                     <span>
                       ←{" "}
                       <a href={catalogHref(edge.source_fqid)}>
-                        {edge.source_fqid}
+                        <code>{edge.source_fqid}</code>
                       </a>
                     </span>
                   ) : (
@@ -71,12 +72,13 @@ export function LineageDetails({ node }: { node: VariableShow }) {
       {showWarnings && (
         <SubjectSection title="Lineage warnings">
           {lineage.loading ? (
-            <p className="muted" aria-busy="true">
-              Loading…
-            </p>
+            <div aria-busy="true">
+              <Skeleton width="60%" />
+            </div>
           ) : lineage.error !== null ? (
             <p className="error" role="alert">
-              Failed to load lineage: {lineage.error}
+              <span aria-hidden="true">✕</span> Failed to load lineage:{" "}
+              {lineage.error}
             </p>
           ) : (
             <ul className={styles.list}>
@@ -85,7 +87,9 @@ export function LineageDetails({ node }: { node: VariableShow }) {
                   key={`${w.consumer_state_id}:${w.warning_kind}`}
                   className={styles.item}
                 >
-                  <code className={styles.warnKind}>{w.warning_kind}</code>
+                  <code className={styles.warnKind}>
+                    <span aria-hidden="true">▲</span> {w.warning_kind}
+                  </code>
                   <span>{w.message}</span>
                 </li>
               ))}
