@@ -44,7 +44,9 @@ Measure later PRs the same way, so the numbers compare.
 - The `check(...)` lines in `driver.mjs` are unchanged. Only navigation locators may
   change, with the reason in the commit message.
 - `bun run lint:tokens` is clean.
-- Tests are rewritten or deleted per the AGENTS.md Testing policy.
+- Tests are not ported (maintainer decision, 2026-10-22). A ported component's Svelte
+  tests are deleted with it; pure-TS unit tests stay as they are. New tests are few and
+  black-box only, in the `flows` driver.
 - An independent review (a fresh agent that did not write the change).
 - UI PRs are authored with the `frontend-design:frontend-design` and
   `reg-webapp-frontend-design` skills and judged with `reg-webapp-design-reviewer`.
@@ -54,8 +56,8 @@ Measure later PRs the same way, so the numbers compare.
   | PR  | Scope                                                                                                           | Status                                  |
   | --- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
   | 0a  | Vite+ toolchain on Svelte                                                                                       | closed #1775; toolchain taken into PR 1 |
-  | 0b  | This tracker and the baseline, on `main`                                                                        | open                                    |
-  | 1   | Coexistence gate, then the toolchain and the shell (below)                                                      | in progress                             |
+  | 0b  | This tracker and the baseline, on `main`                                                                        | merged #1777                            |
+  | 1   | The toolchain and the shell (below)                                                                             | in progress                             |
   | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer                                      | not started                             |
   | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList | not started                             |
   | 4   | ConceptGroupView                                                                                                | not started                             |
@@ -67,8 +69,6 @@ Measure later PRs the same way, so the numbers compare.
   | 10  | Docs and skills; deletes this file and its sentence in `AGENTS.md`                                              | not started                             |
   | M   | `react-port` → `main` (full gate, flows, independent review); swaps the Renovate pause for the lockstep group   | not started                             |
 
-PR 1 opens with a gate commit: one React browser test beside the Svelte ones, both
-renderers in one `bun run test`, green in CI. It then adds the toolchain (React 19, RAC,
-plugin-react, locale optimization, vitest-browser-react, Oxlint, CSS Modules,
-`lint_tokens` over tsx and css) and the shell: router, stores, `App`, top bar, project
-banner and the browse tree.
+PR 1 adds the toolchain (React 19, RAC, plugin-react, locale optimization, Oxlint, CSS
+Modules, `lint_tokens` over tsx and css) and the shell: router, stores, `App`, top bar,
+project banner and the browse tree.
