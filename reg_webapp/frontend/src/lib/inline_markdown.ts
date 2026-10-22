@@ -1,7 +1,7 @@
 /**
  * Pure, dependency-free tokenizer for the SAFE inline-emphasis subset rendered in
  * the "Parsed documentation" snippets (`DocMentionsPanel`, #672). NO
- * runes, NO markdown library — unit-testable in isolation (`inline_markdown.test.ts`).
+ * markdown library — unit-testable in isolation (`inline_markdown.test.ts`).
  *
  * The input snippet mixes TWO emphasis sources, both spelled with `**`/`*`/`_`:
  *   • the FTS5 `snippet()` highlight delimiter `**…**` wrapping the matched term
@@ -11,7 +11,7 @@
  * renders `strong` as a `<mark>` "matched term", `em` as `<em>`).
  *
  * This returns DATA ONLY — never HTML. The caller renders each segment's `text`
- * through normal Svelte interpolation (auto-escaped); NEVER `{@html}`. So special
+ * as a React text child (auto-escaped); NEVER `dangerouslySetInnerHTML`. So special
  * characters (`<`, `>`, `&`) ride through verbatim in `text` and the escape boundary
  * stays intact (republication policy; see reg_webapp/DESIGN.md → Docs library
  * endpoints).

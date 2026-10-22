@@ -7,24 +7,23 @@ import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { ClassificationGroupView } from "./lib/ClassificationView";
 import { ConceptGroupView } from "./lib/ConceptGroupView";
 import { routeBreadcrumbs } from "./lib/catalog";
-import { providerQualified } from "./lib/catalog_names.svelte";
+import { providerQualified } from "./lib/catalog_names";
 import { DocView } from "./lib/DocView";
 import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { projectStore } from "./lib/project_store";
 import { onNavClick, type Route, router } from "./lib/router";
-import { useRune } from "./lib/svelte_bridge.svelte";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { StatusRow } from "./lib/ui/StatusRow";
 import { useAsyncResource } from "./lib/use_async_resource";
+import { useStudyWindow } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
+import { useCatalogRead } from "./lib/use_store_read";
 import { VariableList, type VariableListFocus } from "./lib/VariableList";
 import { VariantBrowser } from "./lib/VariantBrowser";
-import { windowStore } from "./lib/window.svelte";
+import { windowStore } from "./lib/window";
 import { type WindowBounds, windowBounds } from "./lib/window_bounds";
-
-const readWindow = () => windowStore.value;
 
 /** The register whose variables the second browse column lists, and the page
  * open under it: a register's own page, a variable, a concept group or the
@@ -68,7 +67,7 @@ export function App() {
   const context = useAsyncResource("context", getContext);
   const route = useRoute();
   const bounds = windowBounds(context.data);
-  const studyWindow = useRune(readWindow, undefined);
+  const studyWindow = useStudyWindow();
 
   useEffect(() => {
     document.addEventListener("click", onNavClick);
@@ -156,9 +155,9 @@ interface RoutedViewProps {
   bounds: WindowBounds;
 }
 
-/** The routed page in the detail pane. Pages not yet ported are Svelte islands;
- * each is keyed on what identifies its subject, so moving to another
- * subject remounts it (a Svelte `{#key}`), while a query-only move does not. */
+/** The routed page in the detail pane. Each view is keyed on what
+ * identifies its subject, so moving to another subject remounts it, while a
+ * query-only move does not. */
 function RoutedView({ route, context, bounds }: RoutedViewProps) {
   // Both fall back to the empty string until /api/context resolves (a new
   // project before the context loads is an edge case; the seed is corrected on
@@ -167,7 +166,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
   const steward = context?.steward.id ?? "";
   // A cart source card titles itself with its register; where two providers can
   // each own a register of that name, the title carries the provider too.
-  const qualified = useRune(providerQualified, undefined);
+  const qualified = useCatalogRead(providerQualified, undefined);
   const periodProps = {
     regMetaVersion,
     steward,

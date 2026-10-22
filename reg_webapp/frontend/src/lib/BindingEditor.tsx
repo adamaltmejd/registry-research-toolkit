@@ -1,15 +1,14 @@
 import styles from "./BindingEditor.module.css";
 import { catalogHref, registerPrefixOf } from "./catalog";
-import { columnNames, registerRead, UNASKED } from "./catalog_names.svelte";
+import { columnNames, registerRead, UNASKED } from "./catalog_names";
 import { periodLabel, periodWindowRelation } from "./period";
 import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import { SvelteIsland } from "./SvelteIsland";
-import { useRune } from "./svelte_bridge.svelte";
+import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
+import { useCatalogRead } from "./use_store_read";
 import { bindingAnchorId } from "./validation";
 
 // READ-ONLY column row in the #991 data-order cart: it DISPLAYS the delivery
@@ -30,7 +29,7 @@ interface Props {
   studyWindow: ProjectStudyWindow | null;
 }
 
-/** `columnNames` behind one string argument, for `useRune`. */
+/** `columnNames` behind one string argument, for `useCatalogRead`. */
 function readColumnNames(key: string) {
   const [fqid, period, variant] = JSON.parse(key) as [
     string,
@@ -71,7 +70,7 @@ export function BindingEditor({
   // The variable's descriptive name, from the register read every source card on
   // this register already shares: no request per column.
   const registerFqid = registerPrefixOf(variable);
-  const register = useRune(
+  const register = useCatalogRead(
     registerFqid ? registerRead : readUnasked,
     registerFqid,
   );
@@ -88,7 +87,7 @@ export function BindingEditor({
   // Nothing resolvable keeps the FQID it was picked from. Nothing here is written
   // back to the draft.
   const fileColumn = strField("display_name") || strField("representation");
-  const resolved = useRune(
+  const resolved = useCatalogRead(
     fileColumn ? readUnasked : readColumnNames,
     JSON.stringify([variable, period, variant]),
   );
@@ -172,9 +171,7 @@ export function BindingEditor({
           Remove column
         </Button>
       </div>
-      {variable && (
-        <SvelteIsland component={ScopedDataWarnings} props={warningProps} />
-      )}
+      {variable && <ScopedDataWarnings {...warningProps} />}
     </>
   );
 }

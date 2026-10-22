@@ -14,7 +14,7 @@ import {
 import { ClassificationEditionGraph } from "./ClassificationEditionGraph";
 import styles from "./ClassificationView.module.css";
 import { catalogHref, leafSlug, nodeLabel } from "./catalog";
-import { sharedShow } from "./catalog_names.svelte";
+import { sharedShow } from "./catalog_names";
 import { classificationGraphHasRenderableSuccession } from "./picker_graph";
 import { router } from "./router";
 import { SubjectSection, TechnicalDetails } from "./SubjectView";

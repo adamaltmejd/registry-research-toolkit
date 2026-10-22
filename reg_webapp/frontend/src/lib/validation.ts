@@ -1,5 +1,5 @@
 /**
- * Pure validation-presentation helpers (NO runes — unit-tested + corpus-pinned;
+ * Pure validation-presentation helpers (unit-tested + corpus-pinned;
  * `validation.test.ts`). The backend is the CANONICAL validator (see
  * reg_webapp/DESIGN.md → Pydantic boundary): the SPA
  * never re-implements the server's validation rules — it only PARSES the issue list the server
@@ -295,13 +295,13 @@ export function codeLabel(code: string): string {
   return KNOWN_CODES[code]?.label ?? code;
 }
 
-/** The DOM-anchor id of a source card. Mirrored by `SourceEditor.svelte`'s root
+/** The DOM-anchor id of a source card. Mirrored by `SourceEditor`'s root
  * `id` so the findings panel's click-to-locate can `scrollIntoView`. */
 export function sourceAnchorId(sourceIndex: number): string {
   return `loc-source-${sourceIndex}`;
 }
 
-/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor.svelte`. */
+/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor`. */
 export function bindingAnchorId(
   sourceIndex: number,
   bindingIndex: number,

@@ -1,6 +1,5 @@
 /**
- * Pure period/query helpers for the binding-leaf resolution state (no runes —
- * unit-testable in isolation; `period.test.ts`). The resolution state lives in
+ * Pure period/query helpers for the binding-leaf resolution state (unit-testable in isolation; `period.test.ts`). The resolution state lives in
  * the URL query (`?period`/`?variant`/`?value_set_version`; see
  * reg_webapp/DESIGN.md → Catalog router structure); these helpers shape the wire
  * period for UI/project behavior and build the query string the router navigates to.
@@ -268,7 +267,7 @@ export function queryFromParams(params: ResolutionParams): string {
  * without one), so clearing the period (`next.period` empty/null) DROPS them —
  * the result is the empty query (full history). A field left `undefined` in
  * `next` inherits from `current`; an explicit empty string clears that field.
- * Pure (no runes / no `window`) so it's unit-tested directly. */
+ * Pure (no `window`) so it's unit-tested directly. */
 export function nextResolutionQuery(
   current: ResolutionParams,
   next: {
@@ -400,10 +399,10 @@ export interface Coverage {
  * on a 2024-vintage catalog): an inverted band is no band at all, so the track
  * draws nothing and clamps nothing rather than emitting a negative-width cell.
  *
- * This span is the SELECTABLE year range of the period control: the slider
- * passes it to DualThumbTrack's `selectableMin/Max` (#671 hard clamp) and the
- * picker validates its exact year entry against it, so a typed year and a
- * dragged thumb reach exactly the same years. */
+ * This span is the SELECTABLE year range of the period control: the
+ * Timeline clamps its handles to it (#671 hard clamp) and the year entries
+ * validate against it, so a typed year and a dragged handle reach exactly the
+ * same years. */
 export function coverageBandEdges(
   coverage: Coverage | null,
   min: number,
@@ -421,7 +420,7 @@ export function coverageBandEdges(
 /** The seed window for the availability slider when there is no explicit
  * `?period` to honour (#671): the part of the data COVERAGE the project window
  * actually frames, so a variable's true coverage shows UP FRONT rather than the
- * full 1960–vintage span reading as available. Pure (no runes) — unit-tested in
+ * full 1960–vintage span reading as available. Pure — unit-tested in
  * `period.test.ts`.
  *
  * The coverage side is `coverageBandEdges` above, resolved against the supplied

@@ -39,14 +39,13 @@ import {
   windowsOverlapWindow,
   YEARLESS_VALID_FROM,
 } from "./catalog";
-import { catalogRootChildren } from "./catalog_names.svelte";
+import { catalogRootChildren } from "./catalog_names";
 import { clampYearWindow, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store";
 import viewStyles from "./RegisterView.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { StagedAddStatus } from "./StagedAddStatus";
-import { SvelteIsland } from "./SvelteIsland";
 import {
   ADD_WINDOW_REQUIRED_MESSAGE,
   applyStagedPicks,
@@ -62,7 +61,6 @@ import {
   stagedApplyRefusal,
   windowsOverlapPeriod,
 } from "./staged_picker";
-import { useRune } from "./svelte_bridge.svelte";
 import { Timeline } from "./Timeline";
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
@@ -72,6 +70,7 @@ import { FilterChip } from "./ui/FilterChip";
 import { Tag } from "./ui/Tag";
 import { VariableRow, VariableRowList, type YearSpan } from "./ui/VariableRow";
 import { useProject, useStudyWindow } from "./use_project";
+import { useCatalogRead } from "./use_store_read";
 import { VariantsSummary } from "./VariantsSummary";
 import { windowStore } from "./window";
 
@@ -609,7 +608,7 @@ export function RegisterView({
   }
 
   // The provider's display name, from the browse tree's one root read.
-  const root = useRune(catalogRootChildren, undefined);
+  const root = useCatalogRead(catalogRootChildren, undefined);
   const providerFqid = node.fqid.split("/")[0] ?? "";
   const provider = root.value?.find((child) => child.fqid === providerFqid);
   const definitions: Definition[] = [];
@@ -681,7 +680,7 @@ export function RegisterView({
         ]}
         definitions={definitions}
       />
-      <SvelteIsland component={ScopedDataWarnings} props={warningProps} />
+      <ScopedDataWarnings {...warningProps} />
       <Timeline
         axis={{ from: axis[0], to: axis[1] }}
         window={add.bounded}

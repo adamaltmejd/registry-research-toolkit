@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { registerChildren } from "./catalog_names.svelte";
+import { registerChildren } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import {
   type RawDraft,
@@ -11,7 +11,6 @@ import { projectStore } from "./project_store";
 import { router } from "./router";
 import { SourceEditor } from "./SourceEditor";
 import { StudyWindowSummary } from "./StudyWindowSummary";
-import { useRune } from "./svelte_bridge.svelte";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
@@ -19,6 +18,7 @@ import { KeyValue } from "./ui/KeyValue";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { useProject } from "./use_project";
+import { useCatalogRead } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
 import {
   PROJECT_HEADING_ID,
@@ -50,7 +50,7 @@ interface Props {
   providerQualified: boolean;
 }
 
-/** The study-window coverage hints, for `useRune`: they read the catalog's cached
+/** The study-window coverage hints, for `useCatalogRead`: they read the catalog's cached
  * register reads, so they re-run when one lands. */
 function coverageHintsOf(draft: RawDraft | null) {
   return draft == null
@@ -83,7 +83,7 @@ export function ProjectEditor({
   const canDownloadOrder = useProject((s) => s.canDownloadOrder);
   const windowBlocked = useProject((s) => s.windowBlocked);
   const orderBusy = useProject((s) => s.orderBusy);
-  const coverageHints = useRune(coverageHintsOf, draft);
+  const coverageHints = useCatalogRead(coverageHintsOf, draft);
   // Read-side safe source slots preserve array positions for degraded cards while
   // the draft itself stays verbatim for serialize/validate. The window is coerced
   // once here and threaded to every reader.

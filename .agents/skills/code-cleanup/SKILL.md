@@ -36,7 +36,7 @@ apart:
 
 ```sh
 cd reg_webapp/frontend
-git ls-files 'src/*.ts' 'src/*.svelte' | rg -v '\.test\.ts$|api-types-rust\.ts$' | xargs wc -l | tail -1
+git ls-files 'src/*.ts' 'src/*.tsx' | rg -v '\.test\.ts$|api-types-rust\.ts$' | xargs wc -l | tail -1
 git ls-files 'src/*.test.ts' | xargs wc -l | tail -1
 bun run test
 ```
@@ -101,8 +101,8 @@ One line per finding, no hedging:
 - `yagni:` a protocol with one implementation, a helper with one caller, a layer that
   only delegates. Inline it.
 - `stdlib:` a hand-rolled thing the standard library ships. Name it.
-- `dep:` a hand-rolled thing an installed dependency (Pydantic, Bits UI) already does.
-  Name the feature.
+- `dep:` a hand-rolled thing an installed dependency (Pydantic, React Aria Components)
+  already does. Name the feature.
 - `dup:` the same leaf in two modules, the failure mode AGENTS.md names. Name the home
   it belongs in (`_curation.py`, `db.py`, …).
 - `shrink:` same logic, fewer lines, including a special case that a general fix to the

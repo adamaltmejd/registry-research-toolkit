@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ShowNode } from "./api";
 import { rootShow, stubApi } from "./api-test-helpers";
-import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";
+import { resetCatalogNames, sourceNames } from "./catalog_names";
 
 // Y-80: the cart holds coordinates, so the words come from the catalog. These
 // cases pin `sourceNames`' ALL-OR-NOTHING contract — a card says the coordinate it

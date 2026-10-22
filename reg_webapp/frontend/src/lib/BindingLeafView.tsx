@@ -24,7 +24,7 @@ import {
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
-import { registerRead } from "./catalog_names.svelte";
+import { registerRead } from "./catalog_names";
 import {
   matrixAnswerSource,
   pagesLabel,
@@ -41,10 +41,9 @@ import {
 } from "./period";
 import { RepresentationPicker } from "./RepresentationPicker";
 import { router } from "./router";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { StagedAddStatus } from "./StagedAddStatus";
 import { SubjectView, TechnicalDetails } from "./SubjectView";
-import { SvelteIsland } from "./SvelteIsland";
 import {
   ADD_PERIOD_REQUIRED_MESSAGE,
   applyStagedPicks,
@@ -53,7 +52,6 @@ import {
   type StagedApplyPayload,
   stagedApplyRefusal,
 } from "./staged_picker";
-import { useRune } from "./svelte_bridge.svelte";
 import { PeriodTimeline } from "./Timeline";
 import { ColumnChip } from "./ui/ColumnChip";
 import type { Definition, MemberOf } from "./ui/Definitions";
@@ -63,6 +61,7 @@ import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
+import { useCatalogRead } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
 
 interface Props extends PeriodProps {
@@ -295,7 +294,7 @@ export function BindingLeafView({
     matrixSources.set(`${source.sha256} ${pages}`, { ...source, pages });
   }
   const registerPrefix = registerPrefixOf(node.fqid);
-  const registerNode = useRune(registerRead, registerPrefix).value;
+  const registerNode = useCatalogRead(registerRead, registerPrefix).value;
   // The register's rehosted PDFs, read only when a state cites one, to title
   // and link it by its digest; otherwise the provider URL stands.
   const cited = useAsyncResource(
@@ -532,8 +531,8 @@ export function BindingLeafView({
       )}
 
       <div className={styles.warnings}>
-        <SvelteIsland component={ScopedDataWarnings} props={variableWarnings} />
-        <SvelteIsland component={ScopedDataWarnings} props={registerWarnings} />
+        <ScopedDataWarnings {...variableWarnings} />
+        <ScopedDataWarnings {...registerWarnings} />
       </div>
       {yearIndependent ? (
         <p className="muted">

@@ -164,7 +164,7 @@ describe("pickerFilterDimensions / pickerRowPasses (#908)", () => {
     expect(facetDim?.axis).toBe("coding");
     expect(codingDim?.key).toBe("coding");
     expect(codingDim?.axis).toBeUndefined();
-    // Distinct keys → no duplicate Svelte #each key, no shared selection slot.
+    // Distinct keys → no duplicate React list key, no shared selection slot.
     expect(new Set(dims.map((d) => d.key)).size).toBe(dims.length);
   });
 

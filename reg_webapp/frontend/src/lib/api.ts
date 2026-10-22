@@ -750,8 +750,8 @@ export async function searchFacets(
 // without a docs database answers `docs_unavailable` (404): the search and
 // related helpers return `null` for it, so the panels degrade silently, and the
 // doc viewer shows the error.
-// Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
-// `{value}`) — never `{@html}` (they carry `**` highlight markers; the full
+// Snippets/excerpts are EXCERPTS, rendered as TEXT only (React escapes a
+// text child) — never `dangerouslySetInnerHTML` (they carry `**` highlight markers; the full
 // converted FTS document lives at the SCB source, not here).
 
 export type DocPage = RustSchemas["DocPage"];

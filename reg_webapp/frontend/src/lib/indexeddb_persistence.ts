@@ -7,11 +7,11 @@
  * GRACEFUL DEGRADATION is mandatory: in private mode / disabled storage / quota
  * failures `indexedDB` may be absent or `open()` may reject/block. In every such
  * case `save` resolves and `load` resolves `null` so the app keeps working
- * in-memory — autosave NEVER rejects or crashes the debounced `$effect`.
+ * in-memory — autosave NEVER rejects or crashes the store's debounced autosave.
  */
 
 import type { RawDraft } from "./project_data";
-import type { ProjectPersistence } from "./project_store.svelte";
+import type { ProjectPersistence } from "./project_store";
 
 /** A persisted draft record. Keyed externally (no `keyPath` on the store), so the
  * stamped `schemaVersion` rides alongside the draft for the load-time gate. */

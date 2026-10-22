@@ -10,10 +10,11 @@ import {
 } from "react-aria-components";
 import styles from "./ProjectBanner.module.css";
 import { safeSourceBindings, safeSourceSlots } from "./project_data";
-import { projectStore, type ValidationStatus } from "./project_store.svelte";
-import { useRune } from "./svelte_bridge.svelte";
+import { projectStore, type ValidationStatus } from "./project_store";
 import { Button } from "./ui/Button";
-import { windowStore } from "./window.svelte";
+import { useStudyWindow } from "./use_project";
+import { useProjectRead } from "./use_store_read";
+import { windowStore } from "./window";
 import type { WindowBounds } from "./window_bounds";
 
 /** The banner's verdict: the draft's validation, except that a source the study
@@ -63,8 +64,6 @@ function readProject(): ProjectSummary {
   };
 }
 
-const readWindow = () => windowStore.value;
-
 function plural(count: number, one: string, many: string): string {
   return `${count} ${count === 1 ? one : many}`;
 }
@@ -79,7 +78,7 @@ const YEAR_FORMAT: Intl.NumberFormatOptions = { useGrouping: false };
  * "Create a project" link.
  */
 export function ProjectBanner({ bounds }: { bounds: WindowBounds }) {
-  const project = useRune(readProject, undefined);
+  const project = useProjectRead(readProject, undefined);
   if (!project.open) {
     return (
       <Link href="/project" className={styles.create}>
@@ -129,7 +128,7 @@ export function ProjectBanner({ bounds }: { bounds: WindowBounds }) {
  * Unset, the thumbs rest at the full span and the readout says so.
  */
 function StudyWindow({ bounds }: { bounds: WindowBounds }) {
-  const active = useRune(readWindow, undefined);
+  const active = useStudyWindow();
   // The thumbs mid-drag; null when they rest on the stored window.
   const [dragging, setDragging] = useState<number[] | null>(null);
   const value = dragging ?? [

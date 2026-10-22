@@ -55,7 +55,7 @@ proves the first cut; IFAU delivery authoring remains outside it. See
 
 ## What the toolkit is
 
-A web application (Rust server + Svelte SPA), designed for three steward-scoped flavours
+A web application (Rust server + React SPA), designed for three steward-scoped flavours
 off one image, that lets researchers browse a catalog, author a per-project variable
 list, and export it as a data order. The HTTP API (which the SPA uses) and the MCP tools
 are equal surfaces over the same `reg-catalog` operations. The SPA validates the draft
@@ -94,7 +94,7 @@ registry-research-toolkit/
   conformance/      # contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
-    frontend/       # Svelte 5 + Vite (bun)
+    frontend/       # React 19 + React Aria Components + Vite (bun)
     edge/           # edge workers: global is MCP-only, swecov also serves the SPA
     stewards/
       global/       # steward.json only (full universe)

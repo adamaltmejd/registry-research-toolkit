@@ -1,7 +1,6 @@
 /**
  * The catalog DISPLAY-NAME cache — one module-singleton read per catalog fact the
- * app needs in order to NAME something it only holds a coordinate for
- * (`.svelte.ts` so the compiler processes the runes).
+ * app needs in order to NAME something it only holds a coordinate for.
  *
  * The #991 cart stores coordinates and nothing else: `project_data.json` carries a
  * `register_variant` and a variable FQID, and an ordinary pick writes no column
@@ -43,25 +42,34 @@ import {
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
  * null is a read that had nothing to give). Each entry is REPLACED, never mutated,
- * so a caller holding one can trust its identity: a `$derived` over an unchanged
+ * so a caller holding one can trust its identity: a memo over an unchanged
  * read stops there instead of re-running everything downstream of it. */
 export interface Read<T> {
   readonly value: T | null;
   readonly loading: boolean;
 }
 
-/** Every read this session, by key, held in ONE source.
+/** Every read this session, by key, held in ONE object.
  *
- * Not a `$state` per entry: entries are created lazily, inside the very `$derived`
- * that asks for them, and Svelte deliberately does not make a source a dependency
- * of the reaction that CREATED it — a per-entry source would never wake its first
- * reader. This one exists before any reaction runs, so every reader depends on it.
- *
- * `.raw`, so the two mutations differ: ADDING an in-flight entry writes into the
- * current object and notifies nobody, which is what makes starting a read from a
- * `$derived` safe; a read that SETTLES replaces the object, which wakes every
- * reader — cheap, they are all lookups. */
-let reads = $state.raw<Record<string, Read<unknown>>>({});
+ * The two mutations differ: ADDING an in-flight entry writes into the current
+ * object and notifies nobody, which is what makes starting a read from a render
+ * safe; a read that SETTLES replaces the object and wakes every subscriber —
+ * cheap, they are all lookups. */
+let reads: Record<string, Read<unknown>> = {};
+
+const listeners = new Set<() => void>();
+
+/** Call `listener` whenever a read settles or the cache is reset. */
+export function subscribeCatalogNames(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function notify(): void {
+  for (const listener of listeners) listener();
+}
 
 /** The shared in-flight entry: a read that has not landed says the same thing
  * whatever it is reading. */
@@ -90,6 +98,7 @@ function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
     // case before it stubbed.
     if (startedIn === generation) {
       reads = { ...reads, [key]: { value, loading: false } };
+      notify();
     }
   };
   // A failed name read is not an error surface — see the module comment.
@@ -104,6 +113,7 @@ export function resetCatalogNames(): void {
   generation += 1;
   reads = {};
   showsInFlight.clear();
+  notify();
 }
 
 /** `getShow` reads in flight, by ref. The detail page and the browse column of

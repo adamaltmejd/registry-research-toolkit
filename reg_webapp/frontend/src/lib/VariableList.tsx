@@ -11,16 +11,16 @@ import {
   matchesFilter,
   rankFilter,
 } from "./catalog";
-import { registerRead } from "./catalog_names.svelte";
+import { registerRead } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { safeSourceBindings, safeSourceSlots } from "./project_data";
-import { projectStore } from "./project_store.svelte";
-import { useRune } from "./svelte_bridge.svelte";
+import { projectStore } from "./project_store";
 import {
   type ColumnItem,
   ColumnList,
   type ColumnSection,
 } from "./ui/ColumnList";
+import { useCatalogRead, useProjectRead } from "./use_store_read";
 
 /** What the open page is under the register: a variable (by FQID) or a concept
  * group (by key). */
@@ -119,8 +119,8 @@ export function VariableList({
   className?: string;
 }) {
   // The register read the cart's names already share: one request per register.
-  const read = useRune(registerRead, registerFqid);
-  const counts = useRune(readVariableCounts, undefined);
+  const read = useCatalogRead(registerRead, registerFqid);
+  const counts = useProjectRead(readVariableCounts, undefined);
   const needle = useBrowseFilter();
   const serverMatches = useRegisterMatches(registerFqid);
   const renderName = useCallback(

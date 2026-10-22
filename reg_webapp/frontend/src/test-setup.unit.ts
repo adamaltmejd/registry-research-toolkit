@@ -1,4 +1,4 @@
-// Vitest `unit` project setup: instantiate reg-core (WASM) from its bytes before
+// Vitest setup: instantiate reg-core (WASM) from its bytes before
 // any test file runs, as main.ts does before mount. jsdom cannot fetch a file URL,
 // so the bytes come from disk. Read through `getBuiltinModule` (via globalThis, as
 // vite.config.ts reads the env) so the suite needs no @types/node.

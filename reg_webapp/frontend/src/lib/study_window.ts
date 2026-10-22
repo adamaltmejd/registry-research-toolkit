@@ -1,6 +1,5 @@
 /**
- * The "apply overlap to all" plan for the project's common study window (pure, no
- * runes). See reg_webapp/DESIGN.md → "Common study window": a window edit never
+ * The "apply overlap to all" plan for the project's common study window (pure). See reg_webapp/DESIGN.md → "Common study window": a window edit never
  * rewrites a source period, and this explicit action is the one rewrite there is —
  * every dated source takes the years its columns are delivered in inside the
  * window, the same full available intersection a catalog add defaults to

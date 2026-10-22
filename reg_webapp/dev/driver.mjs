@@ -108,7 +108,7 @@ function logPageOutput(page) {
   return pageErrors;
 }
 
-// `networkidle` is NOT enough: Svelte swaps in fetched data after the network
+// `networkidle` is NOT enough: React swaps in fetched data after the network
 // settles, so a screenshot right after navigation captures the loading
 // placeholder. Every loading placeholder carries aria-busy="true" (the
 // components' contract with this driver — don't key on UI copy, which changes
@@ -366,7 +366,7 @@ async function capture(page, name) {
   console.log(`flows: shot ${file}`);
 }
 
-// The verdict ValidationPanel.svelte renders for a clean result: "Draft valid",
+// The verdict ValidationPanel renders for a clean result: "Draft valid",
 // alone when the result carries no issues (Y-75 — with nothing to report the
 // verdict is the whole line) and followed by "with warnings" + the checked clause
 // when it carries some. Anchored on the VERDICT only, so the clause's copy can
@@ -807,9 +807,9 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   await apply.click();
   await revalidated;
   await settled(page);
-  // The source now reaches past the study window, and the card MARKS that rather
-  // than warning about it: the window is an authoring seed, and a source that
-  // deliberately covers more is an ordinary order.
+  // The source now reaches past the study window, and the card says so in a ▲
+  // StatusRow: the line is a heads-up, not a refusal, and it does not block the
+  // order (a source that deliberately covers more is an ordinary order).
   await card.getByText("Differs from study window 2018–2020").waitFor();
   await shoot("project-source-period-applied");
 

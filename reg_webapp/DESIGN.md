@@ -1,6 +1,6 @@
 # reg_webapp — design
 
-Svelte SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
+React SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
 catalog reads (context, search, docs, the catalog pages) and the project operations
 (validate / order). The SPA is the researcher's authoring client. There is no Python web
 server. This file records the package-local design rationale. Cross-cutting topology
@@ -32,7 +32,7 @@ reg_webapp/
                           # Playwright project flows (driver.mjs); dev.sh
                           # --fixture-db serves conformance/cases/fixtures/webapp-dev;
                           # how to use it: .agents/skills/run-reg-webapp/
-  frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
+  frontend/               # React 19 + React Aria Components + Vite (bun)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
     global/steward.json    # identity only; no catalog → full universe
@@ -90,9 +90,9 @@ renders the error message rather than re-validating.
   then fetches the `?period` subset (`states` narrowed by `period`, `variant` and
   `value_set_version`), its data warnings (`warnings`) and its relationship graph
   (`graph`, which carries the succession chain); `LineageDetails` fetches `lineage`
-  (edges and warnings, one failure domain). Each facet is its own `asyncResource` with
-  the loading and error affordances of its neighbours, so one failed facet never blanks
-  the page.
+  (edges and warnings, one failure domain). Each facet is its own `useAsyncResource`
+  fetch with the loading and error affordances of its neighbours, so one failed facet
+  never blanks the page.
 - **Register pages embed their variants.** A register's `show` carries `children` (each
   with `coverage` and `deliveries`), `groups`, `tags` and `variants`. The variant
   browser (`/catalog/<provider>/<register>/variants`) and the variant chips read that
@@ -190,11 +190,11 @@ URL (the `/search` page and its `?q=`/`?type=` state were removed in the React p
 `api-types-rust.ts`. Global search does **not** render documentation results;
 documentation is reached from item pages via `DocMentionsPanel` and then the
 `/doc/<filename>` route (router `Route` union arm `{name:"doc",identifier}`), which
-renders `DocView.svelte`: title, register/variable/tags, a `source_url` link to the SCB
+renders `DocView.tsx`: title, register/variable/tags, a `source_url` link to the SCB
 source PDF (resolved from the curated map at doc-DB build, #372; None when uncurated)
 with `source_title` as label, and a bounded `excerpt`; 404 distinguishes "not ingested"
-vs "not found"; `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full
-converted body is never fetched.
+vs "not found"; `snippet`/`excerpt` are rendered as TEXT, never
+`dangerouslySetInnerHTML`, and the full converted body is never fetched.
 
 ## Docs library (the Rust server's `docs` operations)
 
@@ -229,21 +229,21 @@ LISA-only today.
   both panels treat it like "no docs" and omit their section.
 - **Not in global search**: the command palette does not call `/api/docs/search`; the
   SPA reaches docs through item pages.
-- **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.svelte`
-  renders `DocMentionsPanel` in the `SubjectView` docs slot, firing a SEPARATE
-  `asyncResource` at `docs_search` with the variable's name and its register FQID — a
-  distinct failure domain (a docs error, timeout, or absent index never blanks the
-  leaf). The panel omits the entire section when there is nothing to show (no docs
+- **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.tsx` renders
+  `DocMentionsPanel` in the `SubjectView` docs section, firing a SEPARATE
+  `useAsyncResource` fetch at `docs_search` with the variable's name and its register
+  FQID — a distinct failure domain (a docs error, timeout, or absent index never blanks
+  the leaf). The panel omits the entire section when there is nothing to show (no docs
   database, `register_ingested:false`, or zero items); loading and error states render
   inline, so an in-flight or errored fetch never reads as a confirmed absence. The hits
   are fuzzy name matches, not authoritative variable→doc links, and the section caption
   says so. Each hit links to the `/doc/<filename>` viewer and renders the snippet via a
   safe inline-emphasis subset (`**…**` → `<mark>` for the matched term, `*…*`/`_…_` →
-  `<em>`) through auto-escaped Svelte interpolation — never `{@html}`.
-- **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
+  `<em>`) as React text children (auto-escaped) — never `dangerouslySetInnerHTML`.
+- **Source documents on register pages (#742/#967)**: `RegisterView.tsx` renders
   `RelatedDocumentsPanel` on register pages only, with the register FQID. These are
   rehosted register-version source PDFs with provenance, not variable-level evidence, so
-  `BindingLeafView.svelte` must not inherit them. It renders after the register's
+  `BindingLeafView.tsx` must not inherit them. It renders after the register's
   `VariantsSummary`. The panel is another independent docs failure domain: loading and
   error render inline; no docs database or no curated rows omits the section. Each row
   links the title to `/api/docs/file/{register FQID}/{filename}` and shows
@@ -382,7 +382,7 @@ variable pages to add one column each.
   list are hosts: they own their own selection and scope and nothing else. Do not copy
   the sequence into a new host — that is the leaf-helper duplication AGENTS.md names.
 - **The study window IS the period here.** The list carries no Period control (that
-  belongs to a subject page), so an add is clipped to the rail's window, and without one
+  belongs to a subject page), so an add is clipped to the study window, and without one
   an open-ended column has no finite period to commit — the batch is refused whole
   before the store is touched, exactly as on a leaf. The nudge
   (`ADD_WINDOW_REQUIRED_MESSAGE`) names the one control this page has. Every refusal the
@@ -390,12 +390,13 @@ variable pages to add one column each.
   retire the moment the window moves — one `addRefusal` slot rather than a flag per
   gate, so a verdict can never outlive the batch it refused. The refusal only: the ticks
   survive, so "add again" is one press. An Add is bound to the window it was pressed
-  under for its whole round trip — the rail is not disabled while the draft restore and
-  the per-add resolves are out, so a window moved mid-Add ABANDONS the batch
-  (`batchGuard`, asked again after every await, `applyStagedPicks`'s own included)
-  rather than committing it under years the researcher has already left, beside a list
-  redrawn for the years they chose. Abandoned, not refused: nothing is authored, nothing
-  is claimed, and the ticks survive for an Add under the window now on screen.
+  under for its whole round trip — the study-window slider is not disabled while the
+  draft restore and the per-add resolves are out, so a window moved mid-Add ABANDONS the
+  batch (the host's `lapsed` check, passed to `applyStagedPicks` as `cancelled` and
+  asked again after every await) rather than committing it under years the researcher
+  has already left, beside a list redrawn for the years they chose. Abandoned, not
+  refused: nothing is authored, nothing is claimed, and the ticks survive for an Add
+  under the window now on screen.
 - **A column the window has moved off is not tickable.** The list names every column the
   register ever delivered, so a window later than a column's last era, earlier than its
   first, or inside one of its gaps leaves it nothing to commit. The gate is that column
@@ -592,50 +593,38 @@ committed tree must agree. `scripts/gate.py regen` refreshes both.
 
 ## Frontend toolchain
 
-Svelte 5 + Vite + TypeScript, bun-managed, mid-port to React 19 + React Aria Components
-(`REACT_PORT.md`). **Biome** formats everything and lints `.svelte`, CSS and JSON;
-**Oxlint** (`.oxlintrc.json`) lints `.ts`/`.tsx`: the Oxlint ports of Biome's
+React 19 + Vite + TypeScript, bun-managed. **Biome** formats and lints TS/TSX, CSS and
+JSON; **Oxlint** (`.oxlintrc.json`) lints `.ts`/`.tsx`: the Oxlint ports of Biome's
 recommended rules plus the `react` (rules of hooks and the React Compiler-backed rules),
-`jsx-a11y` and `correctness` sets, all at error. Plain Vite, not the Vite+ (`vp`) CLI:
-adopting `vp` swaps `vite` for an alias package and moves the test imports, which buys
-nothing a lint script does not. CSS Modules (Vite built-in) style the React components,
-and `@react-aria/optimize-locales-plugin` keeps RAC's strings to `en-US` and `sv-SE`.
-Biome's experimental Svelte support formats/lints the JS/CSS/HTML parts of `.svelte` but
-does **not** yet parse Svelte control-flow (`{#if}` / `{#each}`), so:
+`jsx-a11y` and `correctness` sets, all at error. **`bun run check`** is the type gate:
+the TypeScript 7 native `tsc --noEmit`. Plain Vite, not the Vite+ (`vp`) CLI: adopting
+`vp` swaps `vite` for an alias package and moves the test imports, which buys nothing a
+lint script does not. CSS Modules (Vite built-in) style the components, and
+`@react-aria/optimize-locales-plugin` keeps React Aria Components' (RAC) strings to
+`en-US` and `sv-SE`. The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome
+and Oxlint entirely (codegen output, never hand-formatted).
 
-- `.svelte` formatting is imperfect (an accepted tradeoff).
-- `noUnusedVariables` / `noUnusedImports` are disabled for `.svelte` in `biome.json` —
-  Biome can't see template-bound usage of `<script>` declarations and false-fires.
-  **`svelte-check`** (the `check` script) is the authoritative type/template gate and
-  does see template usage. It runs with `--fail-on-warnings`, so a11y and unused-CSS
-  warnings fail the gate too.
-- The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome entirely (codegen
-  output, never hand-formatted).
+**UI behavior layer: React Aria Components** is the sanctioned library for a11y-critical
+widgets: comboboxes, menus, dialogs, sliders, trees. It provides behavior and ARIA with
+no bundled styles; the CSS Modules over the design tokens supply all visual styling. Use
+the RAC component rather than hand-rolling the widget; #632 (a hand-extracted slider
+that pre-dated this decision) is the canonical motivating example. See § UI primitives
+below.
 
-**UI behavior layer: Bits UI** (`bits-ui@2.19.1`, the Svelte-5-runes major) is the
-sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
-dialogs. It provides behavior + ARIA with no bundled styles; the app's scoped CSS and
-design-token set supply all visual styling. Stop hand-rolling widgets that Bits UI
-covers — #632 (a hand-extracted slider that pre-dated this decision) is the canonical
-motivating example. See the § UI primitives section below for the adoption rationale
-(#689).
+## UI primitives — React Aria Components + CSS Modules
 
-## UI primitives — Bits UI + scoped CSS
+RAC supplies behavior and ARIA; a CSS Module per component, reading the app's design
+tokens, supplies all styling. A bake-off (#689) against shadcn + Tailwind v4 (which also
+builds on a headless-primitives library, so accessibility was not the differentiator)
+rejected Tailwind: eight extra deps, about 1,000 lines of vendored components to own, a
+second token system disconnected from the app's, more than double the CSS, and tooling
+friction on this plain-Vite SPA (Biome rejects Tailwind v4 directives). Even the
+Tailwind arm had to style its widget with the app's own tokens. Revisit only if the app
+stops having its own design language.
 
-Bits UI supplies behavior and ARIA; Svelte scoped CSS reading the app's design tokens
-supplies all styling. A bake-off (#689) against shadcn-svelte + Tailwind v4 (also built
-on Bits UI, so accessibility was not the differentiator) rejected Tailwind: eight extra
-deps, about 1,000 lines of vendored components to own, a second token system
-disconnected from the app's, more than double the CSS, and tooling friction on this
-plain-Vite SPA (shadcn's CLI assumes SvelteKit; Biome rejects Tailwind v4 directives).
-Even the Tailwind arm had to style its widget with the app's own tokens. Revisit only if
-the app stops having its own design language.
-
-Caveat: Bits UI `Command` fits homogeneous filtered lists, but a nested expandable row
-(a folded `ConceptGroupRow`) cannot be a flat `role="option"`. Rendered as
-`role="presentation"` inside the listbox, it splits the keyboard model: arrow keys reach
-the leaf options, Tab reaches the group expanders. Expect this wherever a
-`Command`-hosted list meets grouped rows.
+A nested expandable row cannot be a flat `role="option"`, so the browse tree is a RAC
+`Tree` (`BrowseTree.tsx`), not a filtered listbox; the command palette
+(`CommandPalette.tsx`) is a RAC `Autocomplete` over a flat list.
 
 ## Visual language (design system)
 
@@ -644,10 +633,10 @@ the do's and don'ts — lives in **`frontend/DESIGN.md`**, a
 [DESIGN.md-format](https://github.com/google-labs-code/design.md) file whose YAML front
 matter is the normative token set and whose prose is the rationale.
 `frontend/src/tokens.css` implements those tokens as CSS custom properties of the same
-names, and the frontend test suite fails when they disagree. On any conflict about how
-something looks, `frontend/DESIGN.md` wins over this file; this file keeps the
-engineering decisions (the two-layer token architecture below, primitives' ARIA and API
-contracts, tests).
+names, and `lint:tokens` fails when they disagree. On any conflict about how something
+looks, `frontend/DESIGN.md` wins over this file; this file keeps the engineering
+decisions (the two-layer token architecture below, primitives' ARIA and API contracts,
+tests).
 
 Two layers, semantic roles only consumed by components: **primitive ramps**
 (`--gray-1..12` and the fixed status/categorical/data hues — never referenced by a
@@ -655,32 +644,31 @@ component) and **semantic roles** (`--bg`, `--surface*`, `--text*`, `--border*`,
 `--accent*`, the status, `--cat-*` and `--viz-*` roles, plus geometry, elevation, focus
 and motion). Dark mode and the planned per-provider themes are role remaps under
 `[data-theme]` / `[data-provider]` — no component CSS changes. The tokens live in
-`frontend/src/tokens.css`, imported once in `main.ts`.
+`frontend/src/tokens.css`, imported once in `main.tsx`.
 
 **Enforced deterministically** by `frontend/scripts/lint_tokens.ts` (`lint:tokens`, part
 of `bun run lint`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
-every `<style>` block in every `.svelte` under `src/` must be free of raw color literals
+every CSS Module and `style={{}}` object under `src/` must be free of raw color literals
 (hex, `rgb()`, `hsl()`, `oklch()`, …) and raw `font-family` stacks — a literal that
 renders identically today still escapes the `[data-theme="dark"]` remap. `mask-image`
-declarations are exempt by rule (a mask is alpha geometry, not palette). This exists
-because biome does not lint `<style>` blocks inside `.svelte`, and because a screenshot
-cannot see a token bypass. It is a source check only: it says nothing about hierarchy,
-copy, layout, or whether the right token was chosen.
+declarations are exempt by rule (a mask is alpha geometry, not palette). The script also
+checks that `frontend/DESIGN.md`'s token front matter and `src/tokens.css` agree, and
+that every `var()` reference names a custom property `tokens.css` or the same file
+declares. A screenshot cannot see a token bypass. It is a source check only: it says
+nothing about hierarchy, copy, layout, or whether the right token was chosen.
 
-`main.ts` is the SPA entrypoint, but the `*.browser.test.ts` suite renders components
-directly via `vitest-browser-svelte` and does **not** evaluate `main.ts` — so
-`tokens.css` must **also** be imported from the Vitest browser setup (the `setupFiles`
-path in `vite.config.ts`'s `browser` project). Otherwise token-dependent component
-styling runs without the design-system variables/fonts and either breaks or silently
-skips visual regressions.
+`main.tsx` imports `tokens.css`, `lib/ui/utilities.css` and `lib/ui/motion.css`. Vitest
+runs only pure-TS unit tests and renders no components, so nothing else needs the
+tokens.
 
-### Shared primitives (Bits UI behavior + scoped CSS)
+### Shared primitives (RAC behavior + CSS Modules)
 
-The recurring visual units live in `frontend/src/lib/ui/` (exported via `index.ts`):
-`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `Button`, `KeyValue`, `Skeleton`, and
-`EmptyState`, plus `AppShell` (rail + topbar command bar). Behavior comes from Bits UI
-(`Command`, `Dialog`, `Combobox`, etc.); styling is scoped CSS reading **only** semantic
-tokens. The `Command` + grouped-row keyboard-split caveat in § UI primitives applies.
+The recurring visual units live in `frontend/src/lib/ui/`: `Panel`, `DataTable`,
+`Breadcrumbs`, `Tag`, `TypeTag`, `Button`, `KeyValue`, `Definitions`, `Skeleton`,
+`EmptyState`, `StatusRow`, `FilterChip`, `ColumnList`, `ConfirmDialog` and the like.
+Behavior comes from RAC (`Button`, `Dialog`, `Modal`, `Tree`, `Slider`, …); styling is a
+sibling `*.module.css` reading **only** semantic tokens. The app shell is `App.tsx`
+(`App.module.css`) with `TopBar`, `BrowseTree`, `VariableList` and `ProjectBanner`.
 
 Load-bearing decisions not to re-litigate:
 
@@ -720,27 +708,27 @@ Load-bearing decisions not to re-litigate:
   (`error`/`warn`/`info`/`ok`). Categorical TYPE tags use the raw `--cat-*` hue as the
   fill/border and `--cat-*-ink` (the 85 % dark mix) as the label text, so every type
   label clears AA without per-component overrides. Status tones **require** a leading
-  `glyph` snippet (the accent-vs-status rule: hue alone is never sufficient); the glyph
-  is `aria-hidden`, so status meaning must also appear in the label text.
+  `glyph` prop (the accent-vs-status rule: hue alone is never sufficient); the glyph is
+  `aria-hidden`, so status meaning must also appear in the label text.
 - **`Tag` is copy-faced.** The base `.tag` rule sets `font-family: var(--font-ui)` — a
-  tag label is a word of UI text — and the `mono` prop opts a tag into the mono face for
-  the exception, an identifier shown as a tag.
+  tag label is a word of UI text, never the mono face.
 - **Focus-ring convention.** Every interactive primitive applies
-  `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
+  `box-shadow: var(--focus-ring)` on its RAC focus-visible state
+  (`[data-focus-visible]`) or `:focus-visible` in its own CSS Module — no global
   stylesheet owns this.
-- **`.ui-btn` global hook.** `Button` delegates element rendering to Bits UI, so its
-  variant/size styles are `:global(.ui-btn …)` — scoped through the `ui-btn` namespace
-  this component owns, not a generic `.btn` that stray usage could inherit.
+- **`Button` is the one button.** It wraps the RAC `Button`; the variants (`primary`,
+  `default`, `danger`, `ghost`) are CSS Module classes, so no global class names leak.
 - **`.micro-label` global utility.** The label level (font-size, font-weight, muted
   color — sentence case at normal tracking, per `frontend/DESIGN.md`) is the design
   system's first cross-component global utility class, defined in `lib/ui/utilities.css`
-  and imported in `main.ts` after `tokens.css`. It composes the `--micro-label-*` tokens
-  — tokens remain the source of truth; the class de-duplicates the composed rule that
-  was re-typed across seven components. A cross-component label can't be owned by one
-  component, so it gets a shared global stylesheet (`lib/ui/utilities.css`). The one
-  consumer that keeps an inline copy is `DataTable`'s `td:not(.first)::before`
-  stacked-card column-label: a CSS-generated pseudo-element can't take a class, and
-  plain CSS has no mixin — that copy is kept in sync by comment.
+  and imported in `main.tsx` after `tokens.css`. It composes the `--micro-label-*`
+  tokens — tokens remain the source of truth; the class de-duplicates the composed rule
+  that was re-typed across seven components. A cross-component label can't be owned by
+  one component, so it gets a shared global stylesheet (`lib/ui/utilities.css`), which
+  also holds `.link` and `.muted`. The one consumer that keeps an inline copy is
+  `DataTable`'s `td:not(.first)::before` stacked-card column-label: a CSS-generated
+  pseudo-element can't take a class, and plain CSS has no mixin — that copy is kept in
+  sync by comment.
 - **`.visually-hidden` global utility.** The canonical sr-only recipe (modern
   `clip-path: inset(50%)`, not the legacy `clip` property) is the second cross-component
   utility in `lib/ui/utilities.css`. It removes content from the visual layout while
@@ -756,13 +744,13 @@ Load-bearing decisions not to re-litigate:
   `--surface`, an `--accent` fill with an `--accent-fg` check when checked, the app's
   `--focus-ring` on `:focus-visible`, the app's dim when disabled. Without it a tick
   renders in the browser's own blue, a hue no theme can remap. It was
-  `RepresentationPicker`'s scoped CSS until the register list grew ticks of its own
-  (Y-83): a second consumer makes it cross-component, so it moved here rather than being
+  `RepresentationPicker`'s own CSS until the register list grew ticks of its own (Y-83):
+  a second consumer makes it cross-component, so it moved here rather than being
   re-typed — the same reason `.micro-label` lives here.
 
 ## Site-wide catalog vintage footer (#355 decision 2)
 
-`App.svelte` renders a `<footer class="vintage">` on every route showing the reg_meta
+`App.tsx` renders a `<footer>` (`styles.vintage`) on every route showing the reg_meta
 version, schema version, and DB build date sourced from `/api/context`
 (`context.reg_meta_version`, `context.schema_version`, `context.import_date`). The
 footer is guarded on `context` (same as the header `.build` chip) so it is absent until
@@ -771,12 +759,13 @@ footer is guarded on `context` (same as the header `.build` chip) so it is absen
 `"T"`). The intent is citation stability: a reader quoting any catalog node can see
 which reg_meta build it reflects without navigating away.
 
-`AppShell`'s rail carries a `YearWindowSlider` dual-thumb year slider (#614/#611) as the
-"Study window" control — a global control reachable on every route and inside the mobile
-drawer. It sets the active project window (1960 floor → the catalog vintage year from
-`context.import_date`; current year as the pre-context fallback), with bounds threaded
-down from `App.svelte`. It writes through `windowStore` (`src/lib/window.svelte.ts`) —
-see the store description below.
+`ProjectBanner` (under the top bar) carries a RAC two-thumb `Slider` as the "Study
+window" control (#614/#611), reachable on every route. It sets the active project window
+over the catalog's bounds (`window_bounds.ts`: `/api/context`'s `period_span`, else 1960
+→ the catalog vintage year from `import_date`; the current year is the pre-context
+fallback). The thumbs move live and the store is written once, on release or on each
+committed key press, so a drag is one draft edit and one autosave. It writes through
+`windowStore` (`src/lib/window.ts`) — see the store description below.
 
 ## SPA routing + production fallback
 
@@ -786,10 +775,12 @@ URLs mirror the API (`/catalog`, `/catalog/scb/lisa`, `/catalog/scb/lisa/kon`,
 SPA-only path, over the register's `show`: a 3-seg path with a literal `variants` tail
 parses to the `variants` route (the token is reserved in the variable slot at build
 time, so no variable FQID can shadow it), never to a catalog node. The router is
-hand-rolled — no routing-library dep — in `src/lib/router.svelte.ts` (a `.svelte.ts`
-module so its reactive `$state` route compiles): it reads `window.location.pathname`,
-navigates via `history.pushState`, handles `popstate`, and intercepts internal `<a>`
-clicks (the `link` action) so navigation doesn't full-reload.
+hand-rolled — no routing-library dep — in `src/lib/router.ts`, a plain-TS module
+singleton with `subscribe` (React reads it with `useSyncExternalStore`, via
+`use_router.ts`): it reads `window.location.pathname`, navigates via
+`history.pushState`, handles `popstate`, and intercepts internal `<a>` clicks
+(`onNavClick`, listened on the document) so navigation doesn't full-reload; RAC links
+route through RAC's `RouterProvider`.
 
 `route` is re-parsed — and so re-assigned — only when the **pathname** moves. A
 query-only navigation (Apply on a catalog leaf's period card) parses to the same route,
@@ -808,7 +799,7 @@ invariant removes the spurious refetch, not the teardown.
   `/openapi.json` and `/mcp` un-shadowed. The SPA is served by the edge worker
   (Cloudflare static assets, `not_found_handling: single-page-application`), which
   answers a cold-load deep link to any non-origin path with `index.html` (Deployment →
-  Edge workers below); see the comment atop `router.svelte.ts`.
+  Edge workers below); see the comment atop `router.ts`.
 
 The fetch wrapper (`src/lib/api.ts`) types every response off
 `components["schemas"][...]` from the codegen'd `api-types-rust.ts`, so the SPA and the
@@ -819,33 +810,37 @@ server contract can't drift. The catch-all returns the `kind`-discriminated
 ## Unified catalog subject page (`SubjectView`) (#611/#638)
 
 The catalog's three *leaf* kinds — a **variable** (`scb/lisa/kon`), a **classification**
-(`class/sun2020`), and a **concept group** (`group/scb/lisa/naringsgren`) — render
-through one shell, `SubjectView.svelte`, so they share a single article wrapper, one
-title/fqid header, and one **canonical section order**:
+(`class/sun2020`), and a **concept group** (`group/scb/lisa/naringsgren`) — share one
+head, `Definitions` (`ui/Definitions.tsx`): the title, the member-of line, the facets
+row, then the definition list. They also share one **canonical section order**:
 
-1. **description**
+1. **description** (the `Definitions` head itself)
 2. **picker** — slice axis × time axis
 3. **value set / codes**
 4. **relationships**
 5. **docs**
 6. **technical**
 
-`SubjectView` is a thin *presentational* shell: it owns no data, no headings beyond the
-title, and no restyling. Each section arrives as a Svelte `Snippet` from the leaf view
-and the shell `{@render}`s the six in the fixed order. Every slot is **optional** — a
-kind that has nothing for a section simply doesn't pass that snippet and the slot
-renders nothing (no empty wrapper, no "none found" wall). The variable leaf suppresses
-the under-header fqid line (`showFqid={false}` — its breadcrumb already ends in the
-slug, making the line redundant); the classification leaf keeps the default
-(`showFqid=true`). A concept group has no single fqid (its key lives in the
-description's Technical details), so it's omitted regardless.
+`SubjectView` (`SubjectView.tsx`) is a thin *presentational* shell, used by
+`BindingLeafView`: one `<article>` holding `<Definitions {...head}/>` and then its
+`children`. It has no slots and owns no data, no headings beyond the head's, and no
+restyling. It does not enforce the section order either: each leaf view keeps the order
+by convention, passing its sections as children in sequence. `SubjectSection` (an `h2`
+over a hairline) is the section wrapper and `TechnicalDetails` the bottom disclosure;
+`ClassificationView.tsx` and `ConceptGroupView.tsx` use the same two directly, under
+their own `Definitions` head. A kind with nothing for a section simply renders no node
+for it (no empty wrapper, no "none found" wall). The under-title fqid line shows only
+when the leaf passes `fqid` to `Definitions`. The variable leaf passes it only for a
+grouped member whose qualifier is a slug (its breadcrumb otherwise ends in the slug,
+which would make the line redundant). A concept group has no single fqid (its key lives
+in the description's Technical details), so it passes none.
 
-**Dispatch.** `CatalogNodeView.svelte` resolves a node by FQID (a no-query browse fetch,
-so the response is always a `kind`-tagged node) and switches on `kind`. The
-**list/browse** nodes — `provider`, `register`, `classification-root` — are NOT
-subjects: they render their child lists inline (with #303/#516 concept-group folding),
-not through `SubjectView`. The three **leaf** kinds each delegate to a per-kind view
-that fills the shell: `binding` → `BindingLeafView`; ungrouped `classification` →
+**Dispatch.** `CatalogNodeView.tsx` resolves a node by FQID (a no-query browse fetch, so
+the response is always a `kind`-tagged node) and switches on `kind`. The **list/browse**
+nodes — `provider`, `register`, `classification-root` — are NOT subjects: they render
+their child lists inline (with #303/#516 concept-group folding), not through
+`SubjectView`. The three **leaf** kinds each delegate to a per-kind view that renders
+the head and sections: `binding` → `BindingLeafView`; ungrouped `classification` →
 `ClassificationLeafView`; grouped or family `classification` → `ClassificationGroupView`
 with the requested edition tab active; and the `concept-group` (served by the fixed
 `/catalog/group/{provider}/{register}/{key}` route, see Catalog router structure above)
@@ -858,8 +853,8 @@ Per-kind mapping into the six sections:
   | Section       | Variable (`BindingLeafView`)                                                                                                                             | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
   | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
   | description   | definition / description / unit `<dl>`                                                                                                                   | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                                                                | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                                                         |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                                                             |
+  | picker        | `PeriodTimeline` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                                                              | `ClassificationEditionGraph` compact edition DAG (#906)          | `Timeline` (read-only coverage) + `RepresentationPicker` (list or graph/time-band)                                                            |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | —                                                                                                                                             |
   | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
   | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | —                                                                                                                                             |
   | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, single-state data type / column, and corrected delivery intervals with class/evidence) | —                                                                | —                                                                                                                                             |
@@ -925,22 +920,26 @@ kind:
     add — so the two surfaces can never drift on the distinction. The LaneGraph draws
     the eras inside the row's one span.
 
-The **time axis** is the shared `PeriodPicker` (see the Project-window store section): a
-slider-only year-window control seeded from the project window and subject coverage,
-with no range, list, or free-text authoring modes. Richer server-supported `?period`
-wires (terms, comma lists, `_default`) remain valid deep-link state; when one is active,
-the picker displays that value read-only with a Clear affordance and does not silently
-rewrite it unless the user moves the slider to a year window. The control does a
-different job per kind:
+The **time axis** is the `Timeline` (`src/lib/Timeline.tsx`; see the Project-window
+store section): one axis over the viewed catalog's years, the active window as a band,
+the subject's coverage as a bar cut by edition ticks, a gap inside coverage hatched, and
+the part of the window outside coverage in the `info` tint with a "Not covered" note in
+the header. An open-ended coverage end is projected to the catalog vintage
+(`coverageBandEdges` in `period.ts`). The control does a different job per kind:
 
-- On the **variable** it drives resolution: a local change writes `?period` (precedence
-  `?period` > project window > full history), which **refetches** the `resolve_at`
-  subset and narrows the visible states.
-- On the **concept group** it is a **client-side availability lens only** (#638 PR2a):
-  `getConceptGroup` takes no period, so `?period` drives **no refetch** — it only greys
-  members whose coverage doesn't span the active window (an open-ended member end is
-  first projected to the catalog vintage, mirroring `PeriodWindowSlider`). The member
-  links carry the active `?period` into the leaf for continuity.
+- On the **variable** it is `PeriodTimeline`, the selectable form: a RAC two-thumb
+  `Slider` laid over the drawing beside two exact-year fields and Apply/Clear. It drives
+  resolution: Apply writes `?period` (precedence `?period` > project window > full
+  history), which **refetches** the `resolve_at` subset and narrows the visible states.
+  Richer server-supported `?period` wires (terms, comma lists, `_default`) remain valid
+  deep-link state; one that is not a span of whole years is reported in a warning row,
+  the drawing shows the project window, Clear drops it, and Apply does not rewrite it
+  unless the user moves to a year window.
+- On the **concept group** it is the read-only `Timeline`: the page draws the period and
+  does not set one. `getConceptGroup` takes no period, so `?period` drives **no
+  refetch**; it sets the band (a member link carries the active `?period` into the leaf
+  for continuity). A `?period` the page was opened with that differs from the project
+  window shows a status row with Reset (or Clear when no window is set).
 - The **classification** leaf has no time axis (a classification edition is
   period-less).
 
@@ -979,7 +978,7 @@ one-sided `until <year>` form when the start is unknown (#658).
   and a classification's code list are the same shape (a code → label set, and a value
   set often *is* a classification), so they render identically: `ValueSetView` uses it
   for each distinct value set in the multi-state view (and for the single value set in
-  the detail mode), and `ClassificationCodesPanel` for the edition's codes, both through
+  the detail mode), and `ClassificationCodes` for the edition's codes, both through
   `ValueSetCodes`, which reads the codes a server page at a time and owns the
   **size-dependent filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD`
   codes — pointless for a handful). `CodeList` renders the loaded pages verbatim in a
@@ -1288,15 +1287,18 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   truthful toolkit User-Agent on the API paths under endpoint-specific rate limits and
   probes; do not document a fake browser header as the contract.
 
-## Frontend unit tests (Vitest)
+## Frontend tests (Vitest and the flows driver)
 
 `bun run test` runs **Vitest** (`vitest run`) — Vite-native, so it reuses
-`vite.config.ts` and compiles `.svelte` / `.svelte.ts`. The env is `jsdom`
-(`router.svelte.ts` reads `window` at module load; `api.ts` mocks `fetch`). Tests live
-next to source as `*.test.ts` and cover the fetch-wrapper error path, the
-`kind`-narrowing helpers, and route parsing. The `reg-webapp-frontend` CI job runs
-`bun run test` alongside `svelte-check` + the codegen drift check. (Use `bun run test`,
-not `bun test` — the latter is Bun's own runner, which doesn't compile Svelte.)
+`vite.config.ts`. Only pure-TS unit tests run, in `jsdom` (`router.ts` reads `window` at
+module load; `api.ts` mocks `fetch`; the stores are plain TS). Tests live next to source
+as `*.test.ts` and cover the fetch-wrapper error path, the `kind`-narrowing helpers,
+route parsing, the stores and the period and interval helpers. There are no component
+tests. Component and flow behavior is checked by the Playwright `flows` driver
+(`reg_webapp/dev/driver.mjs`, run through `reg_webapp/dev/dev.sh --fixture-db flows`
+against the fixture DB). The `reg-webapp-frontend` CI job runs `bun run test` alongside
+`bun run check`, the lint steps and the codegen drift check. (Use `bun run test`, not
+`bun test` — the latter is Bun's own runner.)
 
 ## Why CI uses a fixture DB, not a real asset
 
@@ -1401,7 +1403,7 @@ heads the card alone. The owning PROVIDER is not part of that title — it is an
 of the register rather than something the researcher picked, and a second unlabelled
 line under the heading could not be told from the variant — so it heads the card's
 `KeyValue` metadata rows, labelled, and only where the deployment serves more than one
-provider: a fact `App.svelte` reads ONCE and threads down like `steward`. The removal
+provider: a fact `App.tsx` reads ONCE and threads down like `steward`. The removal
 dialog and the delete button's accessible name say the same thing as SENTENCES ("Remove
 the LISA source (Individer, 16 år och äldre) and its 2 columns?") rather than reciting
 the heading block. The coordinate itself stays on the card, in small mono. A column row
@@ -1410,14 +1412,14 @@ makes it the binding's OUTPUT column name, so it wins even over a pinned
 `representation`), then the pinned `representation`, otherwise the name resolved from
 the catalog at THAT source's `(variant, period)` — where a column was renamed inside the
 period the current name leads and the superseded ones trail it in mono. Every such read
-goes through `catalog_names.svelte.ts`, a module-singleton cache keyed per read (the
-catalog root; one per provider, which names every register it owns; one per register's
-variant list; one per `(fqid, period, variant)`), so a hundred-column cart issues each
-request once and a re-render issues none; the shell's own facet rail reads the root
-through it too. A read in flight or a failed one — the root among them, since it is what
-says whether a register name needs its provider — leaves the row showing the coordinate
-it already holds: a machine coordinate is honest where an invented name is not. Nothing
-read is ever written back into the draft.
+goes through `catalog_names.ts`, a module-singleton cache keyed per read (the catalog
+root; one per provider, which names every register it owns; one per register's variant
+list; one per `(fqid, period, variant)`), so a hundred-column cart issues each request
+once and a re-render issues none; the browse tree reads the root through it too. A read
+in flight or a failed one — the root among them, since it is what says whether a
+register name needs its provider — leaves the row showing the coordinate it already
+holds: a machine coordinate is honest where an invented name is not. Nothing read is
+ever written back into the draft.
 
 Every field is **written once, at pick time**: the subject-page picker stages concrete
 `(period, variant, representation)` rows with final `type` / `representation`, then
@@ -1503,7 +1505,7 @@ the only surface that shows a source WHOLE: its full coordinate, its stored peri
 every column it carries, including columns no one catalog page lists. That is what a
 source-wide rewrite has to be looked at against, so that is where it is made. The card
 authors it in the catalog's own period vocabulary — exact-year fields and one Apply, the
-same entry `PeriodPicker` carries beside its slider, plus "Add years" and a per-row
+same entry `PeriodTimeline` carries beside its slider, plus "Add years" and a per-row
 Remove (hidden at one row) — and writes back through the same wire shaping a pick uses.
 Applying sorts and merges the rows into the disjoint ascending wire
 `periodCoverageUnion` would produce, refusing a within-row disorder or a genuine
@@ -1537,40 +1539,41 @@ earlier per-page "Project sources on this page" box went unused.
 Project files live in the **browser** during a session and as JSON in the user's git
 repo for durability. There is **no server-side storage** — git is the durable store,
 email/git-sharing handles collaboration (server-side projects are a possible v2
-feature). The authoring store (`project_store.svelte.ts`) is a module-singleton Svelte 5
-rune store holding one draft per session.
+feature). The authoring store (`project_store.ts`) is a module-singleton plain-TS store
+with `subscribe` (React reads it through `use_project.ts` and `useSyncExternalStore`)
+holding one draft per session.
 
-- **An APPLICATION-owned lifecycle.** `initDraftLifecycle()` wires the restore, the
-  autosave and the automatic validation, and is called **once**, at the app's reactive
-  root (`App.svelte`) — never by a route. The draft is authored from the catalog and
-  only read at `/project`, so a route-owned lifecycle both loses a catalog-authored
-  draft (nothing restores or autosaves until `/project` is visited) and, with a second
-  caller, saves and validates each edit twice. The restore is asynchronous, so it is
-  exposed as `projectStore.restored` and the catalog's Add path **awaits** it before it
-  creates or mutates a draft: without that gate, a cold entry at `/catalog` reads the
-  still-empty store, mints a second project, and later overwrites the saved one. Only a
-  restore onto an empty store applies, so a late restore never overwrites a deliberate
-  new/open — and, symmetrically, a pick queued behind the gate stays bound to the
-  project it was staged against: it is discarded (never applied) if a deliberate
-  new/open replaced that project, or the authoring page was left, while it waited. The
-  generation is captured at the PRESS, not when the store call starts — a page that
-  reads anything asynchronously first (the register list re-reads each ticked variable's
-  delivery eras) would otherwise leave a window in which a new/open lands unseen and the
-  pick commits into the replacement after all.
+- **An APPLICATION-owned lifecycle.** `startDraftLifecycle()` wires the restore, the
+  autosave and the automatic validation, and is called **once**, in `main.tsx` outside
+  React — never by a route. The draft is authored from the catalog and only read at
+  `/project`, so a route-owned lifecycle both loses a catalog-authored draft (nothing
+  restores or autosaves until `/project` is visited) and, with a second caller, saves
+  and validates each edit twice. The restore is asynchronous, so it is exposed as
+  `projectStore.restored` and the catalog's Add path **awaits** it before it creates or
+  mutates a draft: without that gate, a cold entry at `/catalog` reads the still-empty
+  store, mints a second project, and later overwrites the saved one. Only a restore onto
+  an empty store applies, so a late restore never overwrites a deliberate new/open —
+  and, symmetrically, a pick queued behind the gate stays bound to the project it was
+  staged against: it is discarded (never applied) if a deliberate new/open replaced that
+  project, or the authoring page was left, while it waited. The generation is captured
+  at the PRESS, not when the store call starts — a page that reads anything
+  asynchronously first (the register list re-reads each ticked variable's delivery eras)
+  would otherwise leave a window in which a new/open lands unseen and the pick commits
+  into the replacement after all.
 - **Autosave to IndexedDB** (`indexeddb_persistence.ts`) over the raw IndexedDB API (no
-  `idb` dep — keeps the frontend dep surface lean) via a debounced (\~500ms) `$effect`.
-  **Graceful degradation is mandatory**: in private mode / disabled storage / quota
-  failures, `save` resolves and `load` resolves `null` so the app keeps working
-  in-memory — autosave NEVER rejects or crashes the effect. A restore that fails anyway
-  settles the gate as "no restore" rather than rejecting it, so a broken IndexedDB
-  degrades to in-memory authoring instead of wedging the next pick.
+  `idb` dep — keeps the frontend dep surface lean) via a debounced (\~500ms) timer the
+  lifecycle owns. **Graceful degradation is mandatory**: in private mode / disabled
+  storage / quota failures, `save` resolves and `load` resolves `null` so the app keeps
+  working in-memory — autosave NEVER rejects or crashes the effect. A restore that fails
+  anyway settles the gate as "no restore" rather than rejecting it, so a broken
+  IndexedDB degrades to in-memory authoring instead of wedging the next pick.
 - **Store-schema stamping + gate.** Each persisted draft is stamped with the store's own
   `storeSchemaVersion` (distinct from the project's `schema_version`); `load` restores
   only on a match, else discards the stale-schema draft. This is the store's record
   shape, bumped only when the persisted shape changes.
 - **reg-core in the browser.** The server's structural door, `reg_core::project::check`,
   runs in the SPA as WebAssembly (`crates/reg-core-wasm`, built by `bun run gen:wasm`;
-  `lib/reg_core.ts` is its only importer). `main.ts` loads it before mounting; if it
+  `lib/reg_core.ts` is its only importer). `main.tsx` loads it before mounting; if it
   cannot load, `#app` shows a static alert instead of an app that cannot check a draft.
   Every draft replacement (each edit, New, Open, the restore) runs `check_project`
   synchronously, outside the validation debounce and the in-flight gate. A rejected
@@ -1597,11 +1600,11 @@ rune store holding one draft per session.
   does NOT run for the in-app New and Open, which replace the draft *and* the single
   IndexedDB recovery copy behind it. Both therefore go through one policy
   (`requestNewProject` / `requestOpenProject`, which hold the incoming project as DATA —
-  never a callback): over a dirty draft they raise a single confirmation (a Bits UI
-  `AlertDialog`, through the shared `ConfirmDialog` that the source and window removals
-  also use) offering cancel / download-then-replace / replace anyway, and the
-  replacement runs only on a confirm. Nothing about the draft moves while that answer is
-  pending, so a cancel leaves the draft and its autosave untouched. Open PARSES first
+  never a callback): over a dirty draft they raise a single confirmation (a RAC alert
+  dialog, through the shared `ConfirmDialog` that the source and window removals also
+  use) offering cancel / download-then-replace / replace anyway, and the replacement
+  runs only on a confirm. Nothing about the draft moves while that answer is pending, so
+  a cancel leaves the draft and its autosave untouched. Open PARSES first
   (`parseProjectText` — JSON, top-level object) and asks only once the file is one that
   could be loaded: a cancelled file picker, a parse/shape rejection, or a refused
   replacement all leave the current draft exactly as it was. A restored autosave stays
@@ -1617,41 +1620,40 @@ rune store holding one draft per session.
 Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
 list — a new or opened project replaces the current draft, deliberately (above).
 
-## Project-window store (`window.svelte.ts`) (#614/#611)
+## Project-window store (`window.ts`) (#614/#611)
 
-`windowStore` (`src/lib/window.svelte.ts`) is a module-singleton Svelte 5 rune store — a
-peer of `router.svelte.ts` and `project_store.svelte.ts` — that is the **single
-read/write path** for the active study window (`{from, to}` int years, or `null` = full
-history). The rail `YearWindowSlider` and each page's period picker go through it rather
-than touching the project store or `localStorage` directly. The per-page `PeriodPicker`
-now defaults to `PeriodWindowSlider` (#615/#671): it seeds the local dual-thumb slider
-with coverage-aware precedence — explicit year `?period` > intersection(coverage,
-window) when a window is set > the coverage span when none is > the bare window when
-there is no coverage > full bounds when neither — so a variable's true data coverage
-shows up front instead of the full 1960–vintage track reading as available (M11). The
-out-of-coverage track renders immediately as a greyed **non-selectable** band (no drag
-needed), and the thumbs are hard-clamped to coverage via `DualThumbTrack`'s opt-in
-`selectableMin/Max` (the rail `YearWindowSlider` passes neither and is unchanged). A
-local change writes `?period` only (never the global window). The user-deviation hint
-(`?period`/drag ≠ window) fires only on an explicit `?period` or a live thumb drag — not
-on the untouched coverage-clamped default seed (`userChosen`); the data narrowing the
-window is not a user deviation. The up-front band is a passive "no data here", not a
-selection warning, so it does not alarm on the default seed, while an explicit
-out-of-coverage `?period` still renders honestly with its not-delivered gap. Open-ended
-coverage additionally surfaces a **"coverage through \<vintage\>"** note (M21). The
-per-page picker shares the rail slider's vintage ceiling (#631): `App.svelte` threads
-the ceiling (`context.import_date`'s year) down through `CatalogNodeView` →
-`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
-(#638). On the concept-group subject page the picker is a **client-side availability
-lens** over the union of member coverage spans — it greys members not delivered in the
-active window but drives no refetch (`getConceptGroup` takes no period parameter). The
-vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
-delivered") projects to — the catalog only knows delivery up to its vintage — so the
-coverage band ends at the vintage and a selection past it reads as "not delivered after
-`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
-end (never extended to the vintage), and a window/selection past the vintage still
-widens the bounds (the thumb renders the real value) without extending coverage.
-Wall-clock is the pre-context fallback only.
+`windowStore` (`src/lib/window.ts`) is a module-singleton plain-TS store with
+`subscribe` — a peer of `router.ts` and `project_store.ts`; React reads it through
+`useStudyWindow` (`use_project.ts`) — that is the **single read/write path** for the
+active study window (`{from, to}` int years, or `null` = full history). The
+`ProjectBanner` study-window slider and each subject page's period control go through it
+rather than touching the project store or `localStorage` directly.
+
+The variable page's `PeriodTimeline` (#615/#671) seeds its pending selection with
+coverage-aware precedence — explicit year `?period` > intersection(coverage, window)
+when a window is set > the coverage span when none is > the bare window when there is no
+coverage > full bounds when neither — so a variable's true data coverage shows up front
+instead of the full 1960–vintage axis reading as available (M11). The part of the window
+outside coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
+hard-clamped to the coverage span (#671), which the exact-year fields validate against
+too, so a typed year and a dragged thumb reach exactly the same years; an entry that
+does not parse, crosses or falls outside is refused with the reason rather than clamped
+into another range. A local change writes `?period` only (never the global window). A
+window wider than coverage is information, not a warning: the differs-from-window
+warning fires only for a user-chosen selection, or a default seed snapped outside a
+disjoint window, not for the untouched coverage-clamped default.
+
+The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
+(`coverage.to === null`, "still delivered") projects to — the catalog only knows
+delivery up to its vintage — so the coverage band ends at the vintage and a selection
+past it reads as not covered. `windowBounds` (`window_bounds.ts`) derives it from
+`/api/context`'s `import_date`; `App.tsx` threads it down through `CatalogNodeView` to
+the leaf views. It is NOT a floor on the axis: a FINITE coverage keeps its real end
+(never extended to the vintage), and a window or selection past the vintage still widens
+the axis (the thumb renders the real value) without extending coverage. Wall-clock is
+the pre-context fallback only. The concept-group page draws the same coverage on the
+read-only `Timeline` and drives no refetch (`getConceptGroup` takes no period
+parameter).
 
 Precedence — two backing stores, one source of truth:
 
@@ -1674,13 +1676,13 @@ from that browse state rather than silently reverting to full history. `newProje
 invoked while a draft is already active (the "New" button inside a project) does NOT
 seed: the fallback is the stale no-draft value (active-draft window writes/clears don't
 update it), so the new project starts windowless (full history) unless the user sets
-one. An opened project (an open / restore) keeps its own `window` unchanged. The rail
-slider also exposes an explicit ✕ clear control that writes `null` back to the store,
-making full history reachable at any time after the first interaction. Filtered steward
-deployments seed the rail and per-page picker bounds from `/api/context`'s `period_span`
-(#1037), a best-effort year span derived from admitted physical holding-period bounds
-and capped at the catalog import year. Catalog artifacts and holdings without dated
-periods fall back to the fixed 1960 → catalog-vintage bounds.
+one. An opened project (an open / restore) keeps its own `window` unchanged. The
+banner's study-window slider also has a Clear control that writes `null` back to the
+store, making full history reachable at any time after the first interaction. Filtered
+steward deployments seed the slider and per-page Timeline bounds from `/api/context`'s
+`period_span` (#1037), a best-effort year span derived from admitted physical
+holding-period bounds and capped at the catalog import year. Catalog artifacts and
+holdings without dated periods fall back to the fixed 1960 → catalog-vintage bounds.
 
 ## Common study window (decision 2026-07-11)
 
@@ -1700,8 +1702,8 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   window a constraint on the order — a reg-core structural rule and a `schema_version`
   change — which is deliberately not taken.
 - **An add persists the full available intersection.** A catalog Add clips each picked
-  column's delivery windows to the add window (the rail's window, or a subject page's
-  own `?period`) and commits every surviving era (`windowsAddPeriod`), so an interrupted
+  column's delivery windows to the add window (the study window, or a subject page's own
+  `?period`) and commits every surviving era (`windowsAddPeriod`), so an interrupted
   delivery keeps its gap as the #307 list form. This is the Add itself, not a
   suggestion.
 - **No overlap blocks the add.** A column with no years inside the add window has no
@@ -1712,14 +1714,14 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   `?period` overrides the add window, so the study window is checked as well: an add the
   page period resolves wholly outside it would author a source that blocks the order,
   and is refused the same way (`outside-study-window`), naming the study window.
-- **A window edit never rewrites a source period.** The rail writes `window` and nothing
-  else. A source the new window leaves with no years inside it keeps its period and
-  blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder` refuses,
-  the card shows an error row, and the validation panel lists each such source
+- **A window edit never rewrites a source period.** The slider writes `window` and
+  nothing else. A source the new window leaves with no years inside it keeps its period
+  and blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder`
+  refuses, the card shows an error row, and the validation panel lists each such source
   (`windowDisjointFindings`) with the same locate and catalog links a finding gets. The
-  rail's project chip says "Order blocked" (the panel's own wording) wherever validation
-  alone would read "Draft valid" or "Warnings". The draft itself stays valid and
-  downloadable.
+  banner's project chip says "Order blocked" (the panel's own wording) wherever
+  validation alone would read "Draft valid" or "Warnings". The draft itself stays valid
+  and downloadable.
 - **Every divergence is marked.** On `/project` the card marks a differing period and,
   at error tone, a disjoint one; the head of the sources list names the window and
   counts both kinds. In the catalog, a committed column's "In project" tag says when its

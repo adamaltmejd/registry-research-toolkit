@@ -1,8 +1,7 @@
 /**
  * The project-authoring store — a MODULE-SINGLETON plain-TS store: module state,
  * getters, and `subscribe` for change listeners (React reads it with
- * `useSyncExternalStore`, the unported Svelte views through the
- * `project_store.svelte.ts` façade). Every write ends in `notify()`. One draft per
+ * `useSyncExternalStore`). Every write ends in `notify()`. One draft per
  * SPA session; the home/new screen is `draft == null`.
  *
  * Two mechanisms around the draft:
@@ -142,7 +141,7 @@ let draft: RawDraft | null = null;
 
 // ── Stable client-side ids (issue #200) ──────────────────────────────────────
 //
-// The `{#each}` blocks over `sources[]` / `bindings[]` need a STABLE key so Svelte
+// The lists over `sources[]` / `bindings[]` need a STABLE React key so React
 // remounts the correct component instance on a middle-remove (an index key rebinds a
 // surviving instance to a shifted item, landing stale per-instance UI — a card's
 // expanded/error state seeded from the wrong item — on the WRONG item; see issue
