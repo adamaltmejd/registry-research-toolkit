@@ -1,0 +1,177 @@
+/* The first browse column: a header outside the scroll box, then the tree, which
+   is its own scroll container so its group rows can stick. */
+.column {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+.header > :first-child {
+  margin-right: auto;
+}
+
+/* Ghost buttons: no box, a 2px accent underline (DESIGN.md → Buttons). */
+.ghost {
+  padding: 0 0 1px;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-micro);
+  cursor: pointer;
+}
+.ghost[data-focus-visible] {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+.note,
+.error {
+  margin: 0;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+.error {
+  color: var(--err);
+}
+
+.tree {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  outline: none;
+}
+
+/* The DOM is flat: every row is a sibling, so depth is `data-level` and RAC's
+   `--tree-item-level`, never nesting. */
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 5px var(--space-3) 5px
+    calc(var(--space-1) + (var(--tree-item-level) - 1) * var(--space-5));
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  outline: none;
+  cursor: default;
+}
+.row[data-hovered] {
+  background: var(--surface-hover);
+}
+
+/* A group row sticks to the top of the list while its registers scroll under
+   it. The flat DOM makes the next group's row cover it rather than push it. */
+.row[data-level="1"] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-weight: var(--column-weight);
+}
+
+/* The current page's row: the 2px accent bar on surface-sunken, at 600. */
+.row[data-current] {
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-weight: var(--heading-weight);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* Inset, so the scroll box and the sticky row above never clip the ring. */
+.row[data-focus-visible] {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.row[data-current][data-focus-visible] {
+  box-shadow:
+    inset 2px 0 0 var(--accent),
+    inset 0 0 0 2px var(--accent);
+}
+
+.link {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+}
+.link:hover {
+  text-decoration: none;
+}
+
+.chevron {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.chevron svg {
+  transition: transform var(--duration-quick) var(--ease-standard);
+}
+.row[data-expanded] .chevron svg {
+  transform: rotate(90deg);
+}
+.chevronSpacer {
+  flex: none;
+  width: 20px;
+}
+
+.loading {
+  padding: 5px var(--space-3) 5px calc(var(--space-1) + 20px + var(--space-5));
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-style: italic;
+}
+
+/* The in-project mark: a 6px accent dot and the count in accent-ink mono, the
+   only number in the list. */
+.inProject {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+  font-weight: var(--column-weight);
+  font-variant-numeric: tabular-nums;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron svg {
+    transition: none;
+  }
+}
