@@ -17,15 +17,16 @@
    still reads as one sheet down to the page's foot and past `content-max`. */
 .body {
   flex: 1 0 auto;
+  box-sizing: border-box;
   display: grid;
+  width: 100%;
+  max-width: var(--shell-max);
+  margin: 0 auto;
   background: var(--surface);
-  grid-template-columns: var(--col-browse) minmax(0, 1fr);
+  grid-template-columns:
+    var(--col-browse-fluid) var(--col-list-fluid)
+    minmax(0, 1fr);
   align-items: start;
-}
-
-/* Under a register, its variables take a second column. */
-.body[data-list="true"] {
-  grid-template-columns: var(--col-browse) var(--col-list) minmax(0, 1fr);
 }
 
 /* A browse column fills the viewport under the sticky top bar and scrolls its
@@ -81,8 +82,7 @@
    columns stack one at a time: the catalog root shows the list, every other page
    its detail, with the breadcrumb's first crumb as the way back to the list. */
 @media (max-width: 48rem) {
-  .body,
-  .body[data-list="true"] {
+  .body {
     grid-template-columns: minmax(0, 1fr);
   }
   /* The register page lists its variables itself, so the stacked layout has

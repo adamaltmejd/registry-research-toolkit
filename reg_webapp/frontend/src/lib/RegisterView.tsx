@@ -25,6 +25,7 @@ import {
   type GroupedRow,
   groupFilterKeys,
   groupHref,
+  keyVariablesFirst,
   leafSlug,
   matchesFilter,
   narrowGroupsToMembers,
@@ -36,6 +37,7 @@ import {
   registerPrefixOf,
   rowCoversColumn,
   variantLabel,
+  windowRunLabels,
   windowsOverlapWindow,
   YEARLESS_VALID_FROM,
 } from "./catalog";
@@ -196,13 +198,13 @@ function firstYear(windows: readonly Era[]): string {
   return (dated?.from ?? OPEN_ENDED_VALID_TO).slice(0, 4);
 }
 
-/** One label per disjoint era, in order: ["1968", "1995–1996", "1998–"] (Y-104).
+/** One label per disjoint era, in order: ["1968", "1995–1996", "1998–"] (Y-104);
+ * school terms as runs, ["VT2013–2019", "VT2022–2025"].
  * Eras that differ below the year can label the same (a monthly family missing
  * a month), and a repeat says nothing, so adjacent repeats are dropped. */
 function eraLabels(windows: readonly Era[]): string[] {
   const labels: string[] = [];
-  for (const window of windows) {
-    const label = eraYears(window);
+  for (const label of windowRunLabels(windows, eraYears)) {
     if (label && label !== labels.at(-1)) labels.push(label);
   }
   return labels;
@@ -400,9 +402,13 @@ export function RegisterView({
         : matchesFilter(filter, ...leafKeys(item))),
   );
   // A group the filter leaves with one member gives way to that member's row.
-  const narrowedRows = foldGroupedRows(
-    filteredItems,
-    filterGroups.filter((group) => distinctMemberCount(group.members) > 1),
+  const narrowedRows = keyVariablesFirst(
+    foldGroupedRows(
+      filteredItems,
+      filterGroups.filter((group) => distinctMemberCount(group.members) > 1),
+    ),
+    lensed,
+    node.variants,
   );
   // Every row here matched; ranking only orders them. A member that matched
   // through a key its own leaf row does not carry (a facet label) and stands
@@ -670,6 +676,7 @@ export function RegisterView({
   return (
     <article className={styles.page}>
       <Definitions
+        kind="register"
         title={nodeLabel(node)}
         memberOf={[
           {
@@ -748,7 +755,6 @@ export function RegisterView({
                     key={row.id}
                     name={row.label}
                     href={groupHref(node.fqid, row.group.key)}
-                    fqid={row.group.fqid}
                     inProject={row.group.members.some((m) =>
                       inProject.has(m.fqid),
                     )}
@@ -766,7 +772,6 @@ export function RegisterView({
                     key={row.id}
                     name={row.label}
                     href={catalogHref(row.fqid)}
-                    fqid={row.fqid}
                     inProject={inProject.has(row.fqid)}
                     coverage={coverageYears(
                       childrenByFqid.get(row.fqid)?.deliveries ?? [],

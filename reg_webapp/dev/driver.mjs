@@ -320,9 +320,9 @@ async function tabTo(page, locator, what, key = "Tab") {
 }
 
 /** What the document is focusing, and whether that focus is VISIBLE: the element
- * itself, its `:focus-visible` state and the ring it is actually painting. Read
- * off `document.activeElement` rather than a locator, because the question after
- * an Apply is where focus WENT — naming an element up front would assume it. */
+ * itself and its `:focus-visible` state. Read off `document.activeElement` rather
+ * than a locator, because the question after an apply is where focus WENT —
+ * naming an element up front would assume it. */
 function focusState(page) {
   return page.evaluate(() => {
     // `<body>` is reported like any other element (it is where a lost focus
@@ -331,23 +331,10 @@ function focusState(page) {
     return {
       at: `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""}`,
       name: el.getAttribute("aria-label") ?? el.labels?.[0]?.textContent ?? "",
-      value: el.value ?? "",
-      inPeriodCard: el.closest("form.period-picker") !== null,
+      inPeriodCard: el.closest(".period-picker") !== null,
       visible: el.matches(":focus-visible"),
-      ring: getComputedStyle(el).boxShadow,
     };
   });
-}
-
-/** Assert the period card holds a VISIBLE keyboard focus — the ring is the whole
- * point (a focused control nobody can see is the defect, one element over).
- * Deliberately the app's OWN `--focus-ring` box-shadow: the browser's default
- * outline is what the filled Apply button already had, invisible on its ink. */
-function checkFocusRing(state, why) {
-  check(
-    state.inPeriodCard && state.visible && state.ring !== "none",
-    `${why} — focus is ${JSON.stringify(state)}`,
-  );
 }
 
 /** One artifact: assert the layout fits the viewport, then write the PNG into
@@ -664,7 +651,7 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   //     and the checks below are what make it the right one.
   await addColumn(page, "Kon");
   await page.waitForFunction(
-    () => /Apply a period|Applied \+/.test(document.body.innerText),
+    () => /Choose a period|Applied \+/.test(document.body.innerText),
     null,
     { timeout: 10_000 },
   );
@@ -673,7 +660,7 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   // StagedAddStatus announces a refusal as `status`, not `alert`: every refusal a
   // host can show is one the researcher's own next move retires (this one: choose a
   // period), so it is a state to read, not an emergency to interrupt for.
-  await page.getByRole("status").filter({ hasText: "Apply a period" }).waitFor();
+  await page.getByRole("status").filter({ hasText: "Choose a period" }).waitFor();
   check(
     (await page.getByRole("status").filter({ hasText: "Applied" }).count()) === 0,
     "the refused Add reported a successful apply",
@@ -689,14 +676,14 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
       `${counts.validate} validation(s)`,
   );
 
-  // (3) Recover through the control the notice names: 2018, then pick and add
-  //     again. Applying a period re-resolves the leaf, which clears the picker's
-  //     staging — so this really is a fresh pick, which is why the notice says to
-  //     select again rather than just retry.
-  const periodCard = page.locator("form.period-picker");
-  await periodCard.getByRole("textbox", { name: "To" }).fill("2018");
-  await periodCard.getByRole("textbox", { name: "From" }).fill("2018");
-  await page.getByRole("button", { name: "Apply period" }).click();
+  // (3) Recover through the control the notice names: the To thumb sent to
+  //     its floor, which is the From thumb on 2018 (Kon opens there), so the
+  //     period is 2018; then pick and add again. Applying a period re-resolves
+  //     the leaf, which clears the picker's staging — so this really is a fresh
+  //     pick, which is why the notice says to select again rather than just retry.
+  const periodCard = page.locator(".period-picker");
+  await periodCard.getByRole("slider", { name: "To year" }).focus();
+  await page.keyboard.press("Home");
   await periodApplied(page, "2018");
   await settled(page);
   const green = validated(page);
@@ -861,14 +848,21 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
   await open(page, "/catalog/scb/lisa/kon");
   await settled(page);
 
-  const card = page.locator("form.period-picker");
+  const card = page.locator(".period-picker");
   const differs = card.getByText(/Differs from the project window/);
   // (2) The seed: availability narrows the window, said as information.
   await card.getByText("Not covered 2015–2017").waitFor();
   check((await differs.count()) === 0, "the unapplied seed raised the ▲ row");
 
-  // (3) Applying that seed is still no deviation.
-  await card.getByRole("button", { name: "Apply period" }).click();
+  // (3) Narrowing past the data is the researcher's choice: the ▲ row shows.
+  const fromThumb = card.getByRole("slider", { name: "From year" });
+  await fromThumb.focus();
+  await page.keyboard.press("ArrowRight");
+  await periodApplied(page, "2019..2020");
+  await differs.waitFor();
+
+  // (4) Moving back onto the seed applies it, and that is still no deviation.
+  await page.keyboard.press("ArrowLeft");
   await periodApplied(page, "2018..2020");
   await settled(page);
   check(
@@ -878,10 +872,7 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
   // The band is still the project window, so the "i" note still names the gap.
   await card.getByText("Not covered 2015–2017").waitFor();
   await shoot("catalog-period-availability");
-
-  // (4) Narrowing past the data is the researcher's choice: the ▲ row shows.
-  await card.getByRole("textbox", { name: "From" }).fill("2019");
-  await card.getByRole("button", { name: "Apply period" }).click();
+  await page.keyboard.press("ArrowRight");
   await periodApplied(page, "2019..2020");
   await differs.waitFor();
 
@@ -893,28 +884,29 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
   check((await differs.count()) === 0, "Reset left the ▲ row up");
 }
 
-/** Scenario 8 — the period card KEEPS keyboard focus across an Apply (Y-65). A
- * keyboard researcher adjusting the catalog period repeatedly through the From
- * and To fields used to lose focus to the document body on every Apply, because
- * the applied `?period` moved the router's route object and remounted the article
- * the card lives in (reg_webapp/DESIGN.md → SPA routing). All three keyboard
- * Apply paths are driven here — Enter in a year field, Enter on the Apply button
- * the next Tab reaches, and Enter on an arrowed slider thumb — and the shots are
- * the evidence that the focus ring is still on screen afterwards. The draft the
- * leaf authored first is the guard on the other side: browsing the period must
- * not rewrite it. */
+/** Scenario 8 — the period card KEEPS keyboard focus while each key press on
+ * a thumb applies (Y-65). A keyboard researcher adjusting the catalog period
+ * used to lose focus to the document body on every apply, because the applied
+ * `?period` moved the router's route object and remounted the article the card
+ * lives in (reg_webapp/DESIGN.md → SPA routing). Both thumbs are driven here, and
+ * the shots are the evidence that the focus ring is still on screen afterwards.
+ * The thumb's ring is declared on the knob pseudo-element, which no browser
+ * reports a computed style for, so the check is that the thumb still holds a
+ * visible keyboard focus and the shot is the ring's evidence. The draft the leaf
+ * authored first is the guard on the other side: browsing the period must not
+ * rewrite it. */
 async function periodFocusCase(page, counts, shoot) {
-  const from = page.getByRole("textbox", { name: "From" });
-  const to = page.getByRole("textbox", { name: "To" });
-  const apply = page.getByRole("button", { name: "Apply period" });
-  /** Retype a year field's whole content the way a keyboard user does. Select All
-   * is `ControlOrMeta`, Playwright's platform-neutral modifier: a literal
-   * `Control+A` on macOS is "move to line start", not a selection, so the typed
-   * year concatenated onto the old one (20222019) and the Apply never asked for
-   * the period the case waits on. */
-  const retype = async (year) => {
-    await page.keyboard.press("ControlOrMeta+A");
-    await page.keyboard.type(year);
+  // Scoped to the card: the desktop widths also render the project-window
+  // slider in the header.
+  const card = page.locator(".period-picker");
+  const fromThumb = card.getByRole("slider", { name: "From year" });
+  const toThumb = card.getByRole("slider", { name: "To year" });
+  const thumbHeld = async (name, why) => {
+    const state = await focusState(page);
+    check(
+      state.inPeriodCard && state.visible && state.name === name,
+      `${why} — focus is ${JSON.stringify(state)}`,
+    );
   };
 
   // (1) Arriving at the leaf focuses nothing — a period control that grabbed the
@@ -934,69 +926,25 @@ async function periodFocusCase(page, counts, shoot) {
   const authored = JSON.stringify(draft.sources);
   const validations = counts.validate;
 
-  // (2) Type a valid pair and press Enter. Tabbed to, never .focus()ed — a
-  //     programmatic focus paints no ring, and the ring is what is being fixed.
-  await tabTo(page, from, "the From year field");
-  await retype("2018");
-  await page.keyboard.press("Tab");
-  check(await focused(to), "Tab from From did not reach the To year field");
-  await retype("2021");
-  await page.keyboard.press("Enter");
-  await periodApplied(page, "2018..2021");
-  await settled(page);
-  const typed = await focusState(page);
-  checkFocusRing(typed, "Enter in the To field lost the period card's focus");
-  check(
-    typed.value === "2021",
-    `the focused field holds ${JSON.stringify(typed.value)}, not the typed 2021`,
-  );
-  await page.getByText("narrowed to 2018..2021").waitFor();
-  await shoot("catalog-period-focus-typed");
-
-  // (3) The Tab order is intact and its next stop is Apply, so KEYBOARD-activating
-  //     it is the second Apply path — and it keeps a visible focus too. Focus is
-  //     still in the To field, which the Enter above neither moved nor cleared.
-  await retype("2020");
-  await page.keyboard.press("Tab");
-  check(await focused(apply), "Tab from the To field did not reach Apply period");
-  await page.keyboard.press("Enter");
+  // (2) The From thumb, tabbed to (never .focus()ed — a programmatic focus
+  //     paints no ring) and arrowed: the key press applies, focus stays.
+  await tabTo(page, fromThumb, "the From year thumb");
+  await page.keyboard.press("ArrowLeft");
   await periodApplied(page, "2018..2020");
   await settled(page);
-  const applied = await focusState(page);
-  checkFocusRing(applied, "activating Apply from the keyboard lost its focus");
-  check(
-    applied.name === "Apply period",
-    `focus after the keyboard Apply is on ${JSON.stringify(applied.name)}`,
-  );
+  await thumbHeld("From year", "an arrowed From thumb lost the period card's focus");
   await page.getByText("narrowed to 2018..2020").waitFor();
-  await shoot("catalog-period-focus-applied");
+  await shoot("catalog-period-focus-from");
 
-  // (4) The card's THIRD keyboard Apply path: a slider thumb, arrowed and then
-  //     submitted with Enter. Its ring is declared on the knob pseudo-element
-  //     (the inputs are transparent overlays spanning the whole track, so a ring
-  //     on the input frames the rail and names neither end) — and no browser
-  //     reports a computed style for that pseudo, so the SHOT is the ring's
-  //     evidence and the check below is that the thumb still holds a visible
-  //     keyboard focus at all.
-  //     Scoped to the card: the desktop widths also render the project-window
-  //     slider in the header, which labels its own thumbs the same way.
-  const fromThumb = page
-    .locator("form.period-picker")
-    .getByRole("slider", { name: "From year" });
-  await tabTo(page, fromThumb, "the From year thumb", "Shift+Tab");
-  // Rightwards: the leaf's coverage opens at 2018, where the thumb already sits,
-  // and a step into the floor would apply the period already showing.
+  // (3) Tab reaches the To thumb, and its key press keeps focus too.
+  await page.keyboard.press("Tab");
+  check(await focused(toThumb), "Tab from the From thumb did not reach the To thumb");
   await page.keyboard.press("ArrowRight");
-  await page.keyboard.press("Enter");
-  await periodApplied(page, "2019..2020");
+  await periodApplied(page, "2018..2021");
   await settled(page);
-  const thumbed = await focusState(page);
-  check(
-    thumbed.inPeriodCard && thumbed.visible && thumbed.name === "From year",
-    `Enter on the From year thumb left focus at ${JSON.stringify(thumbed)}`,
-  );
-  await page.getByText("narrowed to 2019..2020").waitFor();
-  await shoot("catalog-period-focus-thumb");
+  await thumbHeld("To year", "an arrowed To thumb lost the period card's focus");
+  await page.getByText("narrowed to 2018..2021").waitFor();
+  await shoot("catalog-period-focus-to");
 
   // (5) A researcher who moves on DURING the request is not pulled back. The
   //     resolve is held until they have moved, so the overlap is a fact and not a
@@ -1004,10 +952,8 @@ async function periodFocusCase(page, counts, shoot) {
   //     at every width.
   const release = await holdPeriodResolve(page);
   const elsewhere = columnCheckbox(page, "Kon");
-  await tabTo(page, to, "the To year field");
-  await retype("2021");
-  const resolved = page.waitForResponse((r) => r.url().includes("period=2019..2021"));
-  await page.keyboard.press("Enter");
+  const resolved = page.waitForResponse((r) => r.url().includes("period=2018..2020"));
+  await page.keyboard.press("ArrowLeft");
   await elsewhere.focus();
   await release();
   await resolved;
@@ -1286,10 +1232,10 @@ try {
       run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
     },
     // The SAME leaf the reported focus loss was found on, entered the way a
-    // shared link reaches it — with a period already applied, so every Apply
+    // shared link reaches it — with a period already applied, so every key press
     // below is a period CHANGE.
     "catalog-period-focus": {
-      shots: 3,
+      shots: 2,
       route: "/catalog/scb/lisa/kon?period=2019..2020",
       run: periodFocusCase,
     },

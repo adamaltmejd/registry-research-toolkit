@@ -9,8 +9,13 @@ import {
   SliderTrack,
 } from "react-aria-components";
 import styles from "./ProjectBanner.module.css";
-import { safeSourceBindings, safeSourceSlots } from "./project_data";
+import {
+  regMetaReleaseTag,
+  safeSourceBindings,
+  safeSourceSlots,
+} from "./project_data";
 import { projectStore, type ValidationStatus } from "./project_store";
+import { router } from "./router";
 import { Button } from "./ui/Button";
 import { useStudyWindow } from "./use_project";
 import { useProjectRead } from "./use_store_read";
@@ -74,16 +79,40 @@ const YEAR_FORMAT: Intl.NumberFormatOptions = { useGrouping: false };
 /**
  * The project's presence in the top bar (DESIGN.md → Components → ProjectBanner):
  * name, source and column counts, the verdict, the save state and the study
- * window, which is the period picker. With no project open it is a single
- * "Create a project" link.
+ * window, which is the period picker. Until a project is started it is an
+ * empty box holding one "Create a project" button, which starts one and opens
+ * it (maintainer ruling 2026-10-22).
  */
-export function ProjectBanner({ bounds }: { bounds: WindowBounds }) {
+export function ProjectBanner({
+  bounds,
+  seed,
+}: {
+  bounds: WindowBounds;
+  /** The deployment a new project is seeded from; empty until /api/context
+   * resolves. */
+  seed: { regMetaVersion: string; steward: string };
+}) {
   const project = useProjectRead(readProject, undefined);
   if (!project.open) {
+    const ready = seed.regMetaVersion !== "" && seed.steward !== "";
     return (
-      <Link href="/project" className={styles.create}>
-        Create a project
-      </Link>
+      <div className={styles.empty}>
+        <Button
+          isInert={!ready}
+          onPress={() => {
+            if (!ready) return;
+            // No project is open, so the store replaces nothing and asks
+            // nothing: the new one is open at once.
+            projectStore.requestNewProject({
+              reg_meta_version: regMetaReleaseTag(seed.regMetaVersion),
+              steward: seed.steward,
+            });
+            router.navigate("/project");
+          }}
+        >
+          Create a project
+        </Button>
+      </div>
     );
   }
   const status = STATUS[project.status];

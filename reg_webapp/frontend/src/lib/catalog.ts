@@ -38,7 +38,8 @@ import type { BreadcrumbItem } from "./ui/types";
 
 /** The label of the breadcrumb's first crumb, the data-browser root at
  * `/catalog` (#675). Below the narrow breakpoint it is the way back to the
- * register list, so every page's trail leads with it (DESIGN.md → Layout). */
+ * register list, so every page's trail leads with it; above it the list is on
+ * screen and the crumb is hidden (DESIGN.md → Layout). */
 export const DATA_BROWSER_LABEL = "Data";
 
 /** The variable children of a register node, in order. `[]` for any other node
@@ -100,6 +101,53 @@ export function foldGroupedRows<T extends { fqid: string }>(
     }
   }
   return rows;
+}
+
+/** Swedish labels sort with å, ä and ö after z, case- and accent-blind
+ * otherwise (DESIGN.md → Swedish text). */
+export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
+
+function panelKeys(
+  variants: readonly VariantModel[],
+  field: "panel_entity_key" | "panel_time_key",
+): Set<string> {
+  return new Set(variants.flatMap((v) => v[field] ?? []));
+}
+
+/** A register's folded rows in reading order (maintainer ruling 2026-10-22):
+ * its key variables first — identifiers (`is_identifier`), then any variant's
+ * panel entity key, then its panel time key — and the rest by name. A group
+ * ranks as its best-ranked member. Ties keep the name order. */
+export function keyVariablesFirst(
+  rows: readonly GroupedRow<VariableChild>[],
+  children: readonly VariableChild[],
+  variants: readonly VariantModel[],
+): GroupedRow<VariableChild>[] {
+  const entity = panelKeys(variants, "panel_entity_key");
+  const time = panelKeys(variants, "panel_time_key");
+  const byFqid = new Map(children.map((c) => [c.fqid, c]));
+  const leafRank = (child: VariableChild | undefined, fqid: string) => {
+    const slug = leafSlug(fqid);
+    if (child?.is_identifier) return 0;
+    if (entity.has(slug)) return 1;
+    if (time.has(slug)) return 2;
+    return 3;
+  };
+  const rank = (row: GroupedRow<VariableChild>) =>
+    row.kind === "leaf"
+      ? leafRank(row.item, row.item.fqid)
+      : Math.min(
+          3,
+          ...row.group.members.map((m) => leafRank(byFqid.get(m.fqid), m.fqid)),
+        );
+  const name = (row: GroupedRow<VariableChild>) =>
+    row.kind === "leaf"
+      ? (row.item.name ?? leafSlug(row.item.fqid))
+      : row.group.label;
+  return rows
+    .map((row) => ({ row, rank: rank(row), name: name(row) }))
+    .sort((a, b) => a.rank - b.rank || svCollator.compare(a.name, b.name))
+    .map(({ row }) => row);
 }
 
 /** The DISTINCT-variable count a folded row list represents — group rows count
@@ -514,13 +562,15 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
   const browserRoot: BreadcrumbItem = {
     label: DATA_BROWSER_LABEL,
     href: catalogHref(""),
+    narrowOnly: true,
   };
   switch (route.name) {
     case "home":
-      return [browserRoot, { label: "Home", word: true }];
+      // Above the breakpoint the home page needs no trail: nothing is above it.
+      return [browserRoot, { label: "Home", word: true, narrowOnly: true }];
     case "root":
       // The data browser IS the current page — a single un-linked crumb.
-      return [{ label: DATA_BROWSER_LABEL }];
+      return [{ label: DATA_BROWSER_LABEL, narrowOnly: true }];
     case "catalog-node": {
       // Each ancestor segment is a link to its cumulative `/catalog/...` path;
       // the leaf segment is the current page (no href).
@@ -2330,6 +2380,87 @@ export function formatWindow(
     return fromYear === toYear ? fromYear : `${fromYear} – ${toYear}`;
   }
   return `${validFrom} – ${validTo}`;
+}
+
+/** A window's first and last school term (term index = year × 2, +1 for the
+ * autumn term) when it reads as terms, else null. The bounds are reg-core's
+ * period grammar: VT (spring) is January–June, HT (autumn) July–December. A
+ * window reads as terms when it is one term, or when it starts or ends mid-year
+ * on a term bound (merged consecutive terms, HT2012–VT2013); a whole-year
+ * window stays a year. */
+function termSpan(
+  from: string | null,
+  to: string | null,
+): [number, number] | null {
+  if (from === null || to === null) return null;
+  const start = from.endsWith("-01-01")
+    ? 0
+    : from.endsWith("-07-01")
+      ? 1
+      : null;
+  const end = to.endsWith("-06-30") ? 0 : to.endsWith("-12-31") ? 1 : null;
+  if (start === null || end === null) return null;
+  const first = Number(from.slice(0, 4)) * 2 + start;
+  const last = Number(to.slice(0, 4)) * 2 + end;
+  if (last < first) return null;
+  if (first !== last && start === 0 && end === 1) return null;
+  return [first, last];
+}
+
+const termLabel = (index: number) =>
+  `${index % 2 === 0 ? "VT" : "HT"}${Math.floor(index / 2)}`;
+
+/** A list of windows as display labels, school terms written compactly
+ * (maintainer ruling 2026-10-22): each term is `VT2013` / `HT2013`, a run of
+ * consecutive terms is one range (`HT2012–VT2019`), and the same term in
+ * consecutive years, the shape of a once-a-year school delivery, is the term
+ * over a year range (`VT2013–2019`). A repeated term adds nothing. Any other
+ * window reads as `label` says. Windows are taken in chronological order. */
+export function windowRunLabels<
+  W extends { from: string | null; to: string | null },
+>(windows: readonly W[], label: (window: W) => string | null): string[] {
+  // Runs of terms, each a first and last term index and its step: 1 for
+  // consecutive terms, 2 for the same term a year apart (null while one long).
+  type Run = { first: number; last: number; step: 1 | 2 | null };
+  const runText = ({ first, last, step }: Run) =>
+    first === last
+      ? termLabel(first)
+      : step === 2
+        ? `${termLabel(first)}–${Math.floor(last / 2)}`
+        : `${termLabel(first)}–${termLabel(last)}`;
+  const out: string[] = [];
+  let run: Run | null = null;
+  const ordered = [...windows].sort((a, b) =>
+    (a.from ?? "").localeCompare(b.from ?? ""),
+  );
+  for (const window of ordered) {
+    const span = termSpan(window.from, window.to);
+    if (span === null) {
+      if (run !== null) out.push(runText(run));
+      run = null;
+      const text = label(window);
+      if (text !== null) out.push(text);
+      continue;
+    }
+    const [first, last] = span;
+    if (run !== null) {
+      // A term the run already covers (a repeat) adds nothing.
+      if (last <= run.last) continue;
+      const gap: number = first - run.last;
+      // Adjacent or overlapping terms extend a consecutive run; one term a
+      // year on extends a same-term run.
+      const step: 1 | 2 | null =
+        gap <= 1 ? 1 : gap === 2 && first === last ? 2 : null;
+      if (step !== null && (run.step === null || run.step === step)) {
+        run = { first: run.first, last, step };
+        continue;
+      }
+      out.push(runText(run));
+    }
+    run = { first, last, step: first === last ? null : 1 };
+  }
+  if (run !== null) out.push(runText(run));
+  return out;
 }
 
 /** The "showing N of M" caption when the displayed slice is smaller than the full

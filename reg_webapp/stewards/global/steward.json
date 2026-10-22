@@ -1,5 +1,6 @@
 {
   "id": "global",
   "name": "Global",
-  "long_name": "Swedish Register Research Catalog (full universe)"
+  "long_name": "Swedish Register Research Catalog (full universe)",
+  "description": "Metadata for Swedish register data. Browse registers and their variables, with their definitions and the years they cover, and collect the ones you need into a project."
 }

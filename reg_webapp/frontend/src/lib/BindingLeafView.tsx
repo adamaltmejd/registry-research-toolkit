@@ -10,21 +10,18 @@ import {
 import styles from "./BindingLeafView.module.css";
 import type { PeriodProps } from "./CatalogNodeView";
 import {
-  catalogHref,
   coverageFromStates,
   deliveredYears,
   formatDataType,
   formatStateWindow,
   groupLinkFromFocus,
   narrowStatesByModifier,
-  nodeLabel,
   pickerRepresentations,
   pickerWindowYears,
   qualifierFromFocus,
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
-import { registerRead } from "./catalog_names";
 import {
   matrixAnswerSource,
   pagesLabel,
@@ -61,7 +58,6 @@ import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
-import { useCatalogRead } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
 
 interface Props extends PeriodProps {
@@ -294,7 +290,6 @@ export function BindingLeafView({
     matrixSources.set(`${source.sha256} ${pages}`, { ...source, pages });
   }
   const registerPrefix = registerPrefixOf(node.fqid);
-  const registerNode = useCatalogRead(registerRead, registerPrefix).value;
   // The register's rehosted PDFs, read only when a state cites one, to title
   // and link it by its digest; otherwise the provider URL stands.
   const cited = useAsyncResource(
@@ -322,11 +317,14 @@ export function BindingLeafView({
   const qualifier = qualifierFromFocus(focusNode, node.fqid);
   const groupLink = groupLinkFromFocus(focusNode, node.group);
 
-  function setResolution(next: {
-    period?: string | null;
-    variant?: string | null;
-    value_set_version?: string | null;
-  }): void {
+  function setResolution(
+    next: {
+      period?: string | null;
+      variant?: string | null;
+      value_set_version?: string | null;
+    },
+    replace = false,
+  ): void {
     const query = nextResolutionQuery(
       {
         period: period ?? undefined,
@@ -335,7 +333,9 @@ export function BindingLeafView({
       },
       next,
     );
-    router.navigate(window.location.pathname + (query ? `?${query}` : ""));
+    router.navigate(window.location.pathname + (query ? `?${query}` : ""), {
+      replace,
+    });
   }
 
   // ── Add to project (#678/#995) ───────────────────────────────────────────
@@ -473,16 +473,11 @@ export function BindingLeafView({
 
   const narrowedLabel = (boundedPeriod ?? "").split(",").join(" + ");
   const hasMatrixSources = matrixSources.size > 0;
-  // #670: what locates this member, and the group it belongs to. Both wait
-  // for the graph, so nothing flickers in and out.
-  const memberOf: MemberOf[] = [
-    ...(groupLink ? [{ relation: "Member of", ...groupLink }] : []),
-    {
-      relation: "Variable in",
-      label: registerNode ? nodeLabel(registerNode) : registerPrefix,
-      href: catalogHref(registerPrefix),
-    },
-  ];
+  // #670: the group this member belongs to, once the graph says so. The
+  // register is not repeated here: the breadcrumb already names it.
+  const memberOf: MemberOf[] = groupLink
+    ? [{ relation: "Member of", ...groupLink }]
+    : [];
   const facets =
     qualifier?.kind === "facets"
       ? (focusNode?.facets ?? []).map((f) => ({
@@ -507,6 +502,7 @@ export function BindingLeafView({
 
   return (
     <SubjectView
+      kind="variable"
       title={node.name ?? node.fqid}
       // A grouped member with no facets: its slug or column is the only
       // differentiator, an identifier, so the mono line under the title.
@@ -548,7 +544,9 @@ export function BindingLeafView({
           windowMinYear={windowMinYear}
           vintageYear={windowMaxYear}
           enforcePeriodBounds={enforcePeriodBounds}
-          onSubmit={(next) => setResolution({ period: next })}
+          // The slider commits on each key step: replace, so Back leaves the page
+          // rather than walking the steps back.
+          onSubmit={(next) => setResolution({ period: next }, true)}
           onClear={() => setResolution({ period: null })}
         />
       )}
@@ -563,6 +561,7 @@ export function BindingLeafView({
           graph={graph}
           neighbours
           vintageYear={vintageYear}
+          catalogYears={[windowMinYear, windowMaxYear]}
           onApply={onApply}
           onStageChange={onStageChange}
         />

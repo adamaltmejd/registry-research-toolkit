@@ -321,6 +321,15 @@ export function BrowseTree({ className }: { className?: string }) {
     if (href !== undefined && key !== currentKey) router.navigate(href);
   }
 
+  // The register row stays selected on a page under it (a variable, a group),
+  // so Tab into the tree lands there instead of selecting, and so opening, the
+  // first row. RAC fires no selection change for a row already selected, so a
+  // press on that row opens the register's own page here.
+  function openCurrentRow(): void {
+    const href = currentKey === null ? undefined : hrefs.get(currentKey);
+    if (href !== undefined) router.navigate(href);
+  }
+
   function onExpandedChange(keys: Set<Key>): void {
     keepFocusVisible(treeState.current, keys);
     if (filtering) {
@@ -426,6 +435,7 @@ export function BrowseTree({ className }: { className?: string }) {
                   counts={counts}
                   current={current}
                   needle={needle}
+                  onOpenCurrent={openCurrentRow}
                 />
               )}
             </Tree>
@@ -449,11 +459,13 @@ function BrowseItem({
   counts,
   current,
   needle,
+  onOpenCurrent,
 }: {
   node: BrowseNode;
   counts: Record<string, number>;
   current: CurrentRow | null;
   needle: string;
+  onOpenCurrent: () => void;
 }) {
   const count = inProjectCount(node, counts);
   // "page" only on the row whose own page is open; "true" on the register row
@@ -472,6 +484,7 @@ function BrowseItem({
           : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
       }
       className={styles.row}
+      onPress={ariaCurrent === "true" ? onOpenCurrent : undefined}
       render={(props) => (
         <div
           {...props}
@@ -521,6 +534,7 @@ function BrowseItem({
               counts={counts}
               current={current}
               needle={needle}
+              onOpenCurrent={onOpenCurrent}
             />
           )}
         </Collection>

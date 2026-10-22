@@ -47,8 +47,7 @@
   border-radius: var(--radius-sm);
   background: var(--surface-hover);
 }
-.name[data-focus-visible],
-.create[data-focus-visible] {
+.name[data-focus-visible] {
   outline: none;
   border-radius: var(--radius-sm);
   box-shadow: var(--focus-ring);
@@ -99,22 +98,16 @@
   color: var(--err);
 }
 
-/* No project open: a single link in the banner's box with a `border` leading
-   bar, nothing tinted. */
-.create {
+/* No project yet: the banner's box, empty and untinted with a `border`
+   leading bar, holding the one button that starts a project. */
+.empty {
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
   border-left: 3px solid var(--border);
   border-radius: var(--radius);
-  color: var(--text);
-  font-size: var(--text-sm);
-  font-weight: var(--heading-weight);
-  text-decoration: none;
-  transition: background var(--duration-quick) var(--ease-standard);
-}
-.create[data-hovered] {
-  background: var(--surface-hover);
 }
 
 /* ── The study window ─────────────────────────────────────────────────────── */

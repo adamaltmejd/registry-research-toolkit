@@ -56,6 +56,9 @@ export interface BreadcrumbItem {
   href?: string;
   /** A word, not a slug or identifier: the UI face, not mono. */
   word?: boolean;
+  /** Shown only below the narrow breakpoint: the way back to the register
+   * list where the columns stack ("Data"). Above it the list is on screen. */
+  narrowOnly?: boolean;
 }
 
 /** A `KeyValue` row. `mono` mono-faces the value (identifiers). `value` is

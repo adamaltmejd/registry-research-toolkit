@@ -20,14 +20,18 @@ import { useAsyncResource } from "./lib/use_async_resource";
 import { useStudyWindow } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
 import { useCatalogRead } from "./lib/use_store_read";
-import { VariableList, type VariableListFocus } from "./lib/VariableList";
+import {
+  NoRegisterList,
+  VariableList,
+  type VariableListFocus,
+} from "./lib/VariableList";
 import { VariantBrowser } from "./lib/VariantBrowser";
 import { windowStore } from "./lib/window";
 import { type WindowBounds, windowBounds } from "./lib/window_bounds";
 
 /** The register whose variables the second browse column lists, and the page
  * open under it: a register's own page, a variable, a concept group or the
- * variants page. Null on every other page, which shows no second column. */
+ * variants page. Null on every other page, where the column holds a prompt. */
 function listedRegister(
   route: Route,
 ): { fqid: string; focus: VariableListFocus | null } | null {
@@ -106,7 +110,11 @@ export function App() {
     <RouterProvider navigate={router.navigate} useHref={useHref}>
       <I18nProvider locale="en-US">
         <div className={styles.app}>
-          <TopBar steward={ctx?.steward ?? null} bounds={bounds} />
+          <TopBar
+            steward={ctx?.steward ?? null}
+            regMetaVersion={ctx?.reg_meta_version ?? ""}
+            bounds={bounds}
+          />
           {context.error && (
             <StatusRow
               tone="error"
@@ -120,15 +128,16 @@ export function App() {
           <div
             className={styles.body}
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
-            data-list={listed !== null}
           >
             <BrowseTree className={styles.browse} />
-            {listed && (
+            {listed ? (
               <VariableList
                 registerFqid={listed.fqid}
                 focus={listed.focus}
                 className={styles.list}
               />
+            ) : (
+              <NoRegisterList className={styles.list} />
             )}
             <main className={styles.detail}>
               <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />

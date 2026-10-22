@@ -11,12 +11,17 @@
   background: var(--bg);
 }
 
+/* Both columns' headers are one height, so their rules line up across the
+   columns: the register header holds a button, the variables header only its
+   label (maintainer ruling 2026-10-22). */
 .header {
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-1) var(--space-3);
-  padding: var(--space-3) var(--space-3) var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-1) var(--space-3);
   border-bottom: 1px solid var(--border);
 }
 .header > :first-child {

@@ -68,12 +68,12 @@
 
 /* A group row: the `label` level in text-muted, sticking to the top of the list
    while its registers scroll under it (above the selection bar). The flat DOM
-   makes the next group's row cover it rather than push it. */
+   makes the next group's row cover it rather than push it. No rule under it
+   (maintainer ruling 2026-10-22). */
 .row[data-level="1"] {
   position: sticky;
   top: 0;
   z-index: 2;
-  border-bottom: 1px solid var(--border);
   font-size: var(--text-micro);
   font-weight: var(--column-weight);
 }

@@ -457,13 +457,13 @@ export function nullBindingCommittedRowKeys(
  * add (Y-77): named both ways out — set the study window in the rail, or apply a
  * period on this page — as ONE shared string, so the two pages can't drift. */
 export const ADD_PERIOD_REQUIRED_MESSAGE =
-  "Apply a period before adding — set the study window in the rail, or press Apply under Period above. Your selection stays.";
+  "Choose a period before adding — set the project's study window, or drag the period slider above. Your selection stays.";
 
 /** The same refusal on a page that carries NO Period control of its own — the
  * register list (Y-83), where the study window is the only way out. Same gate,
  * same opening words; it just doesn't name a control this page hasn't got. */
 export const ADD_WINDOW_REQUIRED_MESSAGE =
-  "Apply a period before adding — set the study window in the rail, then add again.";
+  "Choose a period before adding — set the project's study window, then add again.";
 
 /** The wire period each staged add resolves its binding at and commits under, in
  * `adds` order — or null when ANY of them has no valid dated or explicit year-independent period. A picker row

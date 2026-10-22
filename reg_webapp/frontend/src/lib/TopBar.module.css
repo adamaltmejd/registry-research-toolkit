@@ -4,44 +4,46 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* The bar's row, as wide as the shell below it and centred with it. */
+.inner {
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3) var(--space-5);
+  max-width: var(--shell-max);
+  margin: 0 auto;
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
 }
 
-/* The brand: the deployment's name at h3, its id in mono under it. */
+/* The brand: the deployment's name at h3. At least as wide as the register
+   column, so the search bar starts over the variables column. */
 .brand {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
+  box-sizing: border-box;
+  flex: 0 1 auto;
+  min-width: min(
+    100%,
+    calc(var(--col-browse-fluid) - var(--space-4) - var(--space-5))
+  );
   color: var(--text);
-  text-decoration: none;
-}
-.brandName {
   font-size: var(--text-h3);
   font-weight: var(--heading-weight);
   line-height: 1.2;
+  text-decoration: none;
 }
 .brand:focus-visible {
   outline: none;
   border-radius: var(--radius-sm);
   box-shadow: var(--focus-ring);
 }
-.brandId {
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  color: var(--text-muted);
-}
 
-/* The project banner (its link or its section, the bar's last child) sits at
+/* The project banner (its box or its section, the row's last child) sits at
    the right edge. */
-.topBar > :last-child {
+.inner > :last-child {
   margin-left: auto;
 }
 
@@ -121,10 +123,15 @@ kbd.hint,
 @media (max-width: 48rem) {
   .topBar {
     position: static;
+  }
+  .inner {
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2) var(--space-3);
   }
-  .topBar > :last-child {
+  .brand {
+    min-width: 0;
+  }
+  .inner > :last-child {
     margin-left: 0;
   }
   /* A touch device has no shortcut or Esc key to show. */

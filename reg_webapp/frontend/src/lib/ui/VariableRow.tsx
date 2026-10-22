@@ -8,8 +8,6 @@ interface Props {
   name: string;
   /** The variable's (or group's) own page; the name links there. */
   href: string;
-  /** The machine identifier under the name, in mono. */
-  fqid: string;
   /** Something of this row is in the open project: the dot and the wash. */
   inProject: boolean;
   /** The years delivered, merged and ordered; empty draws a bare track. */
@@ -24,7 +22,8 @@ interface Props {
 
 /**
  * One variable in a register's list (DESIGN.md → Time → VariableRow): the
- * in-project dot, the name in the text face, the FQID in `mono` muted, and a
+ * in-project dot, the name in the text face (no FQID: the register's page
+ * already says where the variables live), and a
  * thin coverage bar on the pane's axis with the study window as an
  * `accent-bg` block, so a variable that does not cover the window shows before
  * it is added. Never a table row: the list has no column headers.
@@ -32,7 +31,6 @@ interface Props {
 export function VariableRow({
   name,
   href,
-  fqid,
   inProject,
   coverage,
   axis,
@@ -66,7 +64,6 @@ export function VariableRow({
           {name}
         </a>
         {inProject && <span className="visually-hidden">, in the project</span>}
-        <code className={styles.fqid}>{fqid}</code>
       </div>
       {/* Decorative: the years are read out beside it for assistive tech. */}
       <span className={styles.bar} title={`Delivered ${years}`}>

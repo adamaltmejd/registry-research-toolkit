@@ -467,6 +467,7 @@ export function ConceptGroupView({
           focusKey={focusKey}
           graph={graphResource.data}
           vintageYear={vintageYear}
+          catalogYears={[windowMinYear, windowMaxYear]}
           onApply={onApply}
           onStageChange={(hasDiff) => {
             setRefusal(null);

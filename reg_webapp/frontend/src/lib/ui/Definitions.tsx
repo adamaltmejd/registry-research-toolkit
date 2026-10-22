@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import styles from "./Definitions.module.css";
+import { TypeTag } from "./TypeTag";
 
 /** A link in the member-of line: what the subject belongs to. */
 export interface MemberOf {
@@ -18,6 +19,10 @@ export interface Definition {
 }
 
 interface Props {
+  /** What the page is, marked over the title, so a register's page and a
+   * variable's page are told apart at a glance (maintainer ruling
+   * 2026-10-22). */
+  kind?: "register" | "variable";
   title: string;
   /** The subject's machine identifier under the title, in mono; omitted where
    * the breadcrumb already ends in it. */
@@ -35,6 +40,7 @@ interface Props {
  * The breadcrumb above it is the shell's.
  */
 export function Definitions({
+  kind,
   title,
   fqid,
   memberOf = [],
@@ -43,6 +49,11 @@ export function Definitions({
 }: Props) {
   return (
     <header className={styles.head}>
+      {kind && (
+        <span className={styles.kind}>
+          <TypeTag type={kind} glyph />
+        </span>
+      )}
       <h1 className={styles.title}>{title}</h1>
       {fqid && <code className={styles.fqid}>{fqid}</code>}
       {memberOf.length > 0 && (

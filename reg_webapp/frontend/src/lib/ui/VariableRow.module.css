@@ -50,13 +50,6 @@
   overflow-wrap: anywhere;
 }
 
-.fqid {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  overflow-wrap: anywhere;
-}
-
 /* The thin coverage bar: a hairline track, the study window as a short
    accent-bg block on it, coverage as ink segments (accent in the project). */
 .bar {

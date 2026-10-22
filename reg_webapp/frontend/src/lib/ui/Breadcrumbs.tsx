@@ -22,7 +22,9 @@ export function Breadcrumbs({
   return (
     // RAC always names the list (its fallback is "Breadcrumbs"), so the name
     // lives there alone; a second one on the nav was announced twice.
-    <nav className={className}>
+    <nav
+      className={`${className ?? ""} ${items.every((item) => item.narrowOnly) ? styles.narrowOnly : ""}`}
+    >
       <AriaBreadcrumbs aria-label="Breadcrumb" className={styles.list}>
         {items.map((item, i) => (
           // A label can repeat along a path; its position cannot.
@@ -30,7 +32,7 @@ export function Breadcrumbs({
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             id={i}
-            className={`${styles.crumb} ${item.word ? styles.word : ""}`}
+            className={`${styles.crumb} ${item.word ? styles.word : ""} ${item.narrowOnly ? styles.narrowOnly : ""}`}
           >
             {item.href || i === items.length - 1 ? (
               <Link href={item.href} className={styles.link}>
