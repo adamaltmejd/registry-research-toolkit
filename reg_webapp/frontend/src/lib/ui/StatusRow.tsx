@@ -9,6 +9,20 @@ const GLYPH: Record<StatusTone, string> = {
   ok: "✓",
 };
 
+/** Whether the page has seen a pointer press or a key since it loaded: what
+ * separates a row that appears in answer to the reader from one the page
+ * loaded with (DESIGN.md → StatusRow). Captured on the window, once. */
+let userHasActed = false;
+if (typeof window !== "undefined") {
+  const acted = () => {
+    userHasActed = true;
+    window.removeEventListener("pointerdown", acted, true);
+    window.removeEventListener("keydown", acted, true);
+  };
+  window.addEventListener("pointerdown", acted, true);
+  window.addEventListener("keydown", acted, true);
+}
+
 interface Props {
   /** The verdict. `null` renders the bare live region with no fill, border or
    * height: a row that exists so its first message lands in a region the page
@@ -38,14 +52,15 @@ export function StatusRow({
   action,
   children,
 }: Props) {
-  // The rise is for a verdict that arrives or changes after mount, never for
-  // the tone the row first paints with (page load): it turns on at the first
-  // tone change and stays on, so a re-render does not replay it.
+  // The rise is for a row that appears after the reader has done something: a
+  // row mounting with a tone once the page has seen a click or a key rises in,
+  // as does a tone change after mount; a row present on page load never does.
+  // Once on it stays on, so a re-render does not replay it.
   const [seenTone, setSeenTone] = useState(tone);
-  const [rises, setRises] = useState(false);
+  const [rises, setRises] = useState(() => tone !== null && userHasActed);
   if (seenTone !== tone) {
     setSeenTone(tone);
-    setRises(tone !== null);
+    setRises(tone !== null && userHasActed);
   }
   const own =
     tone === null

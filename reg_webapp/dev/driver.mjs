@@ -123,6 +123,20 @@ async function settled(page) {
   });
 }
 
+/** Wait until the /project cart shows exactly `n` source cards (each a region
+ * named "Source N"). The cart's heading carries no count (DESIGN.md → No
+ * counters), so the cards themselves are counted. */
+async function sourceCards(page, n) {
+  await page.waitForFunction(
+    (want) =>
+      [...document.querySelectorAll("section[aria-label]")].filter((el) =>
+        /^Source \d+$/.test(el.getAttribute("aria-label")),
+      ).length === want,
+    n,
+    { timeout: 10_000 },
+  );
+}
+
 async function open(page, path) {
   const resp = await page.goto(BASE + path, { waitUntil: "networkidle" });
   console.log(`GET ${path} → ${resp.status()}`);
@@ -372,7 +386,11 @@ function projectUi(page) {
   return {
     panel,
     banner: panel.getByRole("alert"),
-    summary: panel.getByRole("status"),
+    // The verdict's sentence: the StatusRow's text after its aria-hidden glyph,
+    // which innerText would otherwise lead with.
+    summary: panel
+      .getByRole("status")
+      .locator(':scope > span:not([aria-hidden="true"])'),
     // The CTA's accessible name IS "Downloading…" while the order POST is in
     // flight, so this locator resolving is itself the cleared-busy wait.
     download: page.getByRole("button", { name: "Download order.json" }),
@@ -578,7 +596,7 @@ async function catalogDraftCase(page, counts, shoot) {
   // (4) RELOAD: a cold /project recovers the same project.
   await open(page, "/project");
   await settled(page);
-  await page.getByRole("heading", { name: "Sources (1)" }).waitFor();
+  await sourceCards(page, 1);
   // Substring, first match: the cart labels a known variant ("Individer (…)")
   // around the coordinate, and the same coordinate also names the source card.
   await page.getByText("scb/lisa/individer-15plus").first().waitFor();
@@ -608,7 +626,8 @@ async function catalogDraftCase(page, counts, shoot) {
   await settled(page);
   const fromList = validated(page);
   await columnCheckbox(page, "Forsamling").check();
-  await page.getByRole("button", { name: "Add to project" }).click();
+  // The register list's add bar names its count (DESIGN.md → VariableRow).
+  await page.getByRole("button", { name: "Add 1 column to project" }).click();
   await fromList;
   await settled(page);
   await page.getByRole("status").filter({ hasText: "Applied +1 column" }).waitFor();
@@ -625,7 +644,7 @@ async function catalogDraftCase(page, counts, shoot) {
   //     the same VALID project the researcher authored, not a salvaged fragment.
   await open(page, "/project");
   await settled(page);
-  await page.getByRole("heading", { name: "Sources (2)" }).waitFor();
+  await sourceCards(page, 2);
   await page.getByText("scb/rams/standard").first().waitFor();
   await checkValid(projectUi(page), "the recovered project must validate clean");
   check(counts.order === 0, `the draft flow POSTed /order ${counts.order} time(s)`);

@@ -1,13 +1,14 @@
 /* A browse column (DESIGN.md → ColumnList): a header outside the scroll box, then
    the list, its own scroll container. BrowseTree composes these classes, so both
-   columns read as one component. */
+   columns read as one component. The columns sit on `bg`; the detail pane beside
+   them is the `surface` where work happens. */
 .column {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   min-width: 0;
   border-right: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .header {
@@ -32,7 +33,9 @@
   margin: var(--space-3);
 }
 
+/* Positioned, so the selection bar and each row's `offsetTop` share it. */
 .list {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -45,33 +48,65 @@
   align-items: center;
   gap: var(--space-1);
   padding: 5px var(--space-3);
-  background: var(--surface);
+  background: var(--bg);
   color: var(--text-muted);
   font-size: var(--text-sm);
   outline: none;
   cursor: pointer;
+  transition: background var(--duration-quick) var(--ease-standard);
 }
 .row[data-hovered] {
   background: var(--surface-hover);
 }
 
-/* The selected row (the current page's): the 2px accent bar on surface-sunken,
-   at 600. */
+/* The selected row (the current page's): surface-sunken at 600, with the 2px
+   accent bar. The bar is drawn per row until the column's one moving bar
+   (`.selectionBar`) is in place. */
 .row[data-selected] {
   background: var(--surface-sunken);
   color: var(--text);
   font-weight: var(--heading-weight);
   box-shadow: inset 2px 0 0 var(--accent);
 }
+[data-selection-bar] .row[data-selected] {
+  box-shadow: none;
+}
 
-/* Inset, so the scroll box and a sticky row above never clip the ring. */
+/* The moving selection bar: translates between items at base/out
+   (DESIGN.md → Motion). Above the rows' fills, under a sticky group row. */
+.selectionBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 2px;
+  background: var(--accent);
+  pointer-events: none;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    height var(--duration-base) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .selectionBar {
+    transition: opacity var(--duration-quick) var(--ease-standard);
+  }
+  .row {
+    transition: none;
+  }
+}
+
+/* The focus ring, drawn inward so the scroll box and a sticky row above never
+   clip it. */
 .row[data-focus-visible] {
-  box-shadow: inset 0 0 0 2px var(--accent);
+  box-shadow: var(--focus-ring-inset);
 }
 .row[data-selected][data-focus-visible] {
   box-shadow:
     inset 2px 0 0 var(--accent),
-    inset 0 0 0 2px var(--accent);
+    var(--focus-ring-inset);
+}
+[data-selection-bar] .row[data-selected][data-focus-visible] {
+  box-shadow: var(--focus-ring-inset);
 }
 
 .name {
@@ -80,6 +115,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* A facet header over a group's members: mono, the label size, muted (the
+   artifact's text-faint fails AA for text that must be read). */
+.facet {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
 }
 
 /* The in-project mark: a 6px accent dot and the count in accent-ink mono, the

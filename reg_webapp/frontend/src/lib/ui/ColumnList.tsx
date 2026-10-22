@@ -1,8 +1,23 @@
-import { type ComponentProps, type ReactNode, useId } from "react";
-import { ListBox, ListBoxItem, type Selection } from "react-aria-components";
+import {
+  type ComponentProps,
+  type KeyboardEvent,
+  type ReactNode,
+  useId,
+  useRef,
+} from "react";
+import {
+  Collection,
+  Header,
+  ListBox,
+  ListBoxItem,
+  ListBoxSection,
+  type Selection,
+} from "react-aria-components";
 import { router } from "../router";
 import styles from "./ColumnList.module.css";
+import { focusBrowseColumn } from "./column_keys";
 import { StatusRow } from "./StatusRow";
+import { useSelectionBar } from "./selection_bar";
 
 export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
@@ -13,10 +28,18 @@ export interface ColumnItem {
   inProject: number;
 }
 
+/** A run of items under a facet header (a group's members, DESIGN.md →
+ * ColumnList). A flat list is one section with no label. */
+export interface ColumnSection {
+  id: string;
+  label: string | null;
+  items: readonly ColumnItem[];
+}
+
 interface Props {
   label: string;
   /** Null while the items load. */
-  items: readonly ColumnItem[] | null;
+  sections: readonly ColumnSection[] | null;
   /** The item whose page is open, or null. */
   selectedId: string | null;
   /** True when that page is the item's own, not one under it. */
@@ -31,14 +54,16 @@ interface Props {
 }
 
 /**
- * A browse column (DESIGN.md → ColumnList): a `label` header, then the items,
- * the current page's selected. Selection follows the arrow keys and a click,
- * and selecting an item opens its page; type-ahead moves focus only. Items are
- * not links (RAC's selectable options are not `<a>`).
+ * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
+ * items, the current page's selected, under `mono` facet headers when the list
+ * is a group's members. Selection follows the arrow keys and a click, and
+ * selecting an item opens its page; type-ahead moves focus only. Items are not
+ * links (RAC's selectable options are not `<a>`). ← moves back to the register
+ * column.
  */
 export function ColumnList({
   label,
-  items,
+  sections,
   selectedId,
   selectedExact,
   renderName,
@@ -47,20 +72,65 @@ export function ColumnList({
   className,
 }: Props) {
   const labelId = useId();
+  const columnRef = useRef<HTMLElement>(null);
+  useSelectionBar(columnRef, styles.selectionBar);
+  const items = sections?.flatMap((s) => s.items) ?? null;
 
   function onSelectionChange(keys: Selection): void {
     if (keys === "all") return;
     const [key] = keys;
     const item = items?.find((i) => i.id === key);
-    if (item !== undefined && item.id !== selectedId) {
+    const current = items?.find((i) => i.id === selectedId);
+    // Two rows can open one page (a variable that is several group members).
+    if (item !== undefined && item.href !== current?.href) {
       router.navigate(item.href);
     }
   }
 
+  // ← in the list returns to the register column; captured, so the ListBox
+  // (which ignores ← in a vertical list) never sees it.
+  function onKeyDownCapture(event: KeyboardEvent): void {
+    if (
+      event.key === "ArrowLeft" &&
+      !event.altKey &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      (event.target as Element).closest('[role="option"]') &&
+      focusBrowseColumn("registers")
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  const option = (item: ColumnItem) => (
+    <ListBoxItem
+      key={item.id}
+      id={item.id}
+      textValue={item.name}
+      className={styles.row}
+      render={(props) => (
+        <div
+          // Items carry no href, so RAC renders a div, never a link.
+          {...(props as ComponentProps<"div">)}
+          aria-current={
+            item.id !== selectedId ? undefined : selectedExact ? "page" : "true"
+          }
+        />
+      )}
+    >
+      <span className={styles.name}>{renderName(item)}</span>
+      <InProjectMark count={item.inProject} />
+    </ListBoxItem>
+  );
+
   return (
     <nav
+      ref={columnRef}
       className={`${styles.column} ${className ?? ""}`}
       aria-labelledby={labelId}
+      data-browse-column="variables"
+      onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
         <span id={labelId} className="micro-label">
@@ -71,7 +141,7 @@ export function ColumnList({
         <StatusRow tone="error" live="alert" className={styles.error}>
           {error}
         </StatusRow>
-      ) : items === null ? (
+      ) : sections === null ? (
         <p className={styles.note} aria-busy="true">
           Loading {label.toLowerCase()}…
         </p>
@@ -79,37 +149,37 @@ export function ColumnList({
         <ListBox
           aria-labelledby={labelId}
           className={styles.list}
-          items={items}
           selectionMode="single"
           selectionBehavior="replace"
           disallowEmptySelection
           selectedKeys={selectedId === null ? [] : [selectedId]}
           onSelectionChange={onSelectionChange}
-          dependencies={[renderName, selectedId, selectedExact]}
           renderEmptyState={() => <p className={styles.note}>{empty}</p>}
         >
-          {(item) => (
-            <ListBoxItem
-              id={item.id}
-              textValue={item.name}
-              className={styles.row}
-              render={(props) => (
-                <div
-                  // Items carry no href, so RAC renders a div, never a link.
-                  {...(props as ComponentProps<"div">)}
-                  aria-current={
-                    item.id !== selectedId
-                      ? undefined
-                      : selectedExact
-                        ? "page"
-                        : "true"
-                  }
-                />
-              )}
-            >
-              <span className={styles.name}>{renderName(item)}</span>
-              <InProjectMark count={item.inProject} />
-            </ListBoxItem>
+          {/* A flat list is plain options; only labelled runs get a section
+              (an unnamed group would be noise to a screen reader). */}
+          {sections.map((section) =>
+            section.label === null ? (
+              <Collection
+                key={section.id}
+                items={section.items}
+                dependencies={[renderName, selectedId, selectedExact]}
+              >
+                {option}
+              </Collection>
+            ) : (
+              section.items.length > 0 && (
+                <ListBoxSection key={section.id} id={section.id}>
+                  <Header className={styles.facet}>{section.label}</Header>
+                  <Collection
+                    items={section.items}
+                    dependencies={[renderName, selectedId, selectedExact]}
+                  >
+                    {option}
+                  </Collection>
+                </ListBoxSection>
+              )
+            ),
           )}
         </ListBox>
       )}

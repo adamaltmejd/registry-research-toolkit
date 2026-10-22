@@ -11,6 +11,7 @@
   min-width: 0;
   max-width: 100%;
   padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
   border-radius: var(--radius);
   background: var(--accent-soft);
@@ -37,12 +38,14 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--text);
+  font-size: var(--text-h3);
   font-weight: var(--heading-weight);
+  line-height: 1.3;
   text-decoration: none;
 }
 .name[data-hovered] {
-  color: var(--accent-ink);
-  text-decoration: underline;
+  text-decoration: underline 1.5px var(--accent);
+  text-underline-offset: 3px;
 }
 .name[data-focus-visible],
 .create[data-focus-visible] {
@@ -51,28 +54,39 @@
   box-shadow: var(--focus-ring);
 }
 
+/* Save state is quiet: mono text-muted, never a status hue (it is not a
+   verdict). */
 .unsaved {
   flex: none;
-  color: var(--warn);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: var(--text-micro);
-  font-weight: var(--heading-weight);
 }
 
 .meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: 0 var(--space-3);
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-size: var(--text-micro);
+}
+
+/* Counts are identifiers of size, set in mono. */
+.counts {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 /* The verdict: a status foreground plus its glyph and words, never hue alone. */
 .status {
+  font-size: var(--text-sm);
   font-weight: var(--heading-weight);
 }
 .status[data-status="unchecked"],
 .status[data-status="checking"] {
   color: var(--text-muted);
+  font-weight: var(--body-weight);
 }
 .status[data-status="ok"] {
   color: var(--ok);
@@ -85,15 +99,22 @@
   color: var(--err);
 }
 
-/* No project open: a single link, nothing tinted. */
+/* No project open: a single link in the banner's box with a `border` leading
+   bar, nothing tinted. */
 .create {
-  color: var(--accent-ink);
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
   font-size: var(--text-sm);
   font-weight: var(--heading-weight);
   text-decoration: none;
+  transition: background var(--duration-quick) var(--ease-standard);
 }
 .create[data-hovered] {
-  text-decoration: underline;
+  background: var(--surface-hover);
 }
 
 /* ── The study window ─────────────────────────────────────────────────────── */

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import {
   Button as AriaButton,
   Collection,
@@ -32,8 +32,10 @@ import { useRune } from "./svelte_bridge.svelte";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
 import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
+import columnStyles from "./ui/ColumnList.module.css";
+import { focusBrowseColumn } from "./ui/column_keys";
 import { StatusRow } from "./ui/StatusRow";
-import { TreeChevron } from "./ui/TreeChevron";
+import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
 
@@ -197,6 +199,8 @@ function browseNodes(
  */
 export function BrowseTree({ className }: { className?: string }) {
   const labelId = useId();
+  const columnRef = useRef<HTMLElement>(null);
+  useSelectionBar(columnRef, columnStyles.selectionBar);
   const route = useRoute();
   const root = useRune(catalogRootChildren, undefined);
   const counts = useRune(readInProject, undefined);
@@ -327,12 +331,43 @@ export function BrowseTree({ className }: { className?: string }) {
     writeCollapsed(next);
   }
 
+  // → on a register row (a leaf) moves to the variables column (DESIGN.md →
+  // Layout); RAC's Tree uses → only on a group row. Captured, so the Tree
+  // never sees a key it would ignore.
+  function onKeyDownCapture(event: KeyboardEvent): void {
+    const row = (event.target as Element).closest('[role="row"]');
+    if (
+      event.key === "ArrowRight" &&
+      !event.altKey &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      row !== null &&
+      !row.hasAttribute("aria-expanded") &&
+      focusBrowseColumn("variables")
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
   return (
-    <nav className={`${styles.column} ${className ?? ""}`} aria-label="Catalog">
+    <nav
+      ref={columnRef}
+      className={`${styles.column} ${className ?? ""}`}
+      aria-label="Catalog"
+      data-browse-column="registers"
+      onKeyDownCapture={onKeyDownCapture}
+    >
       <div className={styles.header}>
         <span id={labelId} className="micro-label">
           Registers
         </span>
+        {/* How many registers the filter leaves: an actionable count. */}
+        {matchCount !== null && (
+          <span className={styles.matchCount}>
+            {matchCount === 1 ? "1 match" : `${matchCount} matches`}
+          </span>
+        )}
         {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
             group is open, and expands once all are closed. */}
         <Button
@@ -398,6 +433,8 @@ export function BrowseTree({ className }: { className?: string }) {
   );
 }
 
+const matchedCount = (n: number) => (n === 1 ? "1 variable" : `${n} variables`);
+
 function BrowseItem({
   node,
   counts,
@@ -420,7 +457,7 @@ function BrowseItem({
       textValue={
         node.variableMatches === undefined
           ? node.name
-          : `${node.name}, ${node.variableMatches} matching ${node.variableMatches === 1 ? "variable" : "variables"}`
+          : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
       }
       className={styles.row}
       render={(props) => <div {...props} aria-current={ariaCurrent} />}
@@ -430,22 +467,23 @@ function BrowseItem({
           <>
             {hasChildItems ? (
               <AriaButton slot="chevron" className={styles.chevron}>
-                <TreeChevron />
+                <span className={styles.triangle} aria-hidden="true" />
               </AriaButton>
             ) : (
               <span className={styles.chevronSpacer} />
             )}
-            <span className={styles.name}>
-              <Highlight text={node.name} needle={needle} />
-            </span>
-            {node.variableMatches !== undefined && (
-              <span className={styles.variableMatches}>
-                {node.variableMatches}{" "}
-                {node.variableMatches === 1
-                  ? "matching variable"
-                  : "matching variables"}
+            <span className={styles.label}>
+              <span className={styles.name}>
+                <Highlight text={node.name} needle={needle} />
               </span>
-            )}
+              {/* A register kept only through its variables says so on its
+                  own line (DESIGN.md → ColumnList → Filter state). */}
+              {node.variableMatches !== undefined && (
+                <span className={styles.variableMatches}>
+                  matched on <b>{matchedCount(node.variableMatches)}</b>
+                </span>
+              )}
+            </span>
             <InProjectMark count={count} />
           </>
         )}
