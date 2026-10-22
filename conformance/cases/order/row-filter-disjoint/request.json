@@ -1,0 +1,36 @@
+{
+  "fixture": "period-column",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Early",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/value",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      },
+      {
+        "name": "Late",
+        "register_variant": "scb/example/annual",
+        "period": 2020,
+        "bindings": [
+          {
+            "variable": "scb/example/value",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  }
+}
