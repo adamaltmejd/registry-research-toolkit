@@ -1,7 +1,6 @@
 import {
   type ClassificationRootShow,
   type ConceptGroup,
-  getShow,
   getStates,
   type ProviderShow,
 } from "./api";
@@ -20,6 +19,7 @@ import {
   nodeLabel,
   rankFilter,
 } from "./catalog";
+import { sharedShow } from "./catalog_names.svelte";
 import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
 import { SvelteIsland } from "./SvelteIsland";
@@ -57,8 +57,9 @@ interface Props extends PeriodProps {
  * App keys this view on `fqidPath`, so a new node is a fresh mount.
  */
 export function CatalogNodeView({ fqidPath, ...period }: Props) {
-  const resource = useAsyncResource(fqidPath, async (signal) => {
-    const node = await getShow(fqidPath, { signal });
+  // Shared with the variables column, which reads the same register now.
+  const resource = useAsyncResource(fqidPath, async () => {
+    const node = await sharedShow(fqidPath);
     // By the CANONICAL fqid: a retired ref resolves to its successor.
     const states = node.kind === "variable" ? await getStates(node.fqid) : [];
     return { node, states };
@@ -154,7 +155,7 @@ function ProviderView({ node }: { node: ProviderShow }) {
   ]);
   return (
     <article className={styles.page}>
-      <h2 className={styles.title}>{nodeLabel(node)}</h2>
+      <h1 className={styles.title}>{nodeLabel(node)}</h1>
       {node.children.length === 0 ? (
         <Panel title="Registers">
           <EmptyState title="This provider has no registers in the catalog." />
@@ -280,7 +281,7 @@ function ClassificationRootView({ node }: { node: ClassificationRootShow }) {
   ];
   return (
     <article className={styles.page}>
-      <h2 className={styles.title}>{nodeLabel(node)}</h2>
+      <h1 className={styles.title}>{nodeLabel(node)}</h1>
       {rows.length === 0 ? (
         <EmptyState title="The catalog has no classifications." />
       ) : (
