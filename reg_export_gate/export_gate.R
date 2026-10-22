@@ -328,9 +328,9 @@ export_gate <- local({
     if (length(findings)) refuse("structure", findings)
   }
 
-  is_null <- function(column) {
-    as.vector(arrow::call_function("is_null", column))
-  }
+  # Base is.na() on the converted column, not an Arrow compute call, so the
+  # check runs on older arrow releases too. A NaN statistic counts as null.
+  is_null <- function(column) is.na(as.vector(column))
 
   # Every count is at least the policy's minimum or null (suppressed), and a
   # statistic is null wherever the count it rests on is suppressed.
@@ -342,8 +342,7 @@ export_gate <- local({
       for (col in cand$spec$columns) {
         if (col$role %in% COUNT_ROLES) {
           values <- as.vector(table[[col$name]]$cast(arrow::float64()))
-          kept <- !is_null(table[[col$name]])
-          if (any(values[kept] < policy$min_cell_count)) {
+          if (any(values[!is.na(values)] < policy$min_cell_count)) {
             findings <- c(
               findings,
               list(finding("min_cell_count", file, col$name))

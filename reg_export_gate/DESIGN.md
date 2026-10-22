@@ -149,9 +149,9 @@ output. In order:
 2. **Structure.** Each file is readable Parquet, and its columns are the schema's
    columns in the schema's order, each of an accepted type.
 3. **Disclosure.** Each file passes the policy's rules: every non-null `count` and
-   `person_count` is at least `min_cell_count`, and a `statistic` is null wherever its
-   `support` is null. Null is the suppression marker, so a zero count is refused like
-   any other count below the minimum.
+   `person_count` is at least `min_cell_count`, and a `statistic` is null (or NaN)
+   wherever its `support` is null. Null is the suppression marker, so a zero count is
+   refused like any other count below the minimum.
 4. **Backstop scan.** String values, and each file's key-value metadata, are scanned for
    personnummer and samordningsnummer shapes (10 or 12 digits, optional `-` or `+`, a
    valid month and day or day + 60, not inside a longer digit run). This is a backstop
