@@ -138,7 +138,8 @@ const TSX_SELF_CHECK = [
   "<div style={{ fontFamily: 'ui-monospace, monospace' }} />",
   '<div style={{ "--tree-indent": "var(--space-5)", color: "var(--text)" }} />',
 ].join("\n");
-const CSS_SELF_CHECK = ".a { color: var(--text); }\n.b { color: hsl(0 0% 0%); }";
+const CSS_SELF_CHECK =
+  ".a { color: var(--text); }\n.b { color: hsl(0 0% 0%); }";
 const flaggedLines = (source: string, file: string): string =>
   tokenViolations(source, file)
     .map((v) => v.split(":")[1])
@@ -318,6 +319,8 @@ const CROSS_FILE: Record<string, string> = {
     "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
   "--thumb-size":
     "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
+  "--tree-item-level":
+    "set inline by React Aria's Tree on each row, read by BrowseTree",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;

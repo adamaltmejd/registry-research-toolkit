@@ -370,8 +370,15 @@ export function getContext(): Promise<Context> {
 }
 
 /** `show` for `ref` (a FQID or group ref); no ref is the catalog root. */
-export function getShow(ref?: string): Promise<ShowNode> {
-  return rustGet<ShowNode>(ref ? `/catalog/${encodeFqid(ref)}` : "/catalog");
+export function getShow(
+  ref?: string,
+  options?: { signal?: AbortSignal },
+): Promise<ShowNode> {
+  return rustGet<ShowNode>(
+    ref ? `/catalog/${encodeFqid(ref)}` : "/catalog",
+    undefined,
+    options,
+  );
 }
 
 /** The page size the SPA walks `states` with: the operation's maximum.

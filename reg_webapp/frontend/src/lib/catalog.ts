@@ -33,7 +33,7 @@ import {
   sourcePeriodFromWire,
   studyWindowInterval,
 } from "./reg_core";
-import type { Route } from "./router.svelte";
+import type { Route } from "./router";
 import type { BreadcrumbItem } from "./ui/types";
 
 /** The user-facing label for the data-browser root (the `/catalog` URL is

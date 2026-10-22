@@ -8,7 +8,7 @@ import {
   routeBreadcrumbs,
 } from "./catalog";
 import { ax, state } from "./catalog-test-helpers";
-import type { Route } from "./router.svelte";
+import type { Route } from "./router";
 
 // Split from catalog.test.ts by contract surface: browse helpers.
 // Siblings: catalog.{browse,picker,picker-filters,value-sets}.test.ts.

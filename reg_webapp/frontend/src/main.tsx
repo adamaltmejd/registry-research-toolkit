@@ -1,8 +1,9 @@
 import "./tokens.css";
 import "./lib/ui/utilities.css";
 import "./lib/ui/motion.css";
-import { mount } from "svelte";
-import App from "./App.svelte";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { App } from "./App";
 import { IndexedDBPersistence } from "./lib/indexeddb_persistence";
 import {
   AUTOSAVE_KEY,
@@ -10,9 +11,10 @@ import {
   storeSchemaVersion,
 } from "./lib/project_store.svelte";
 import { initRegCore } from "./lib/reg_core";
+import { startDraftLifecycle } from "./lib/svelte_bridge.svelte";
 
 // A5.4 production persistence wiring (the store default stays InMemoryPersistence
-// for tests; this swaps in the IndexedDB drop-in before mount).
+// for tests; this swaps in the IndexedDB drop-in before the lifecycle starts).
 setPersistence(new IndexedDBPersistence(AUTOSAVE_KEY, storeSchemaVersion));
 
 const target = document.getElementById("app");
@@ -21,10 +23,17 @@ if (!target) {
 }
 
 // reg-core (WASM) checks every draft synchronously, so it loads before the app
-// mounts. Without it the app cannot author a project: say so in place of the app
-// rather than mount one that throws on the first edit.
+// renders. Without it the app cannot author a project: say so in place of the app
+// rather than render one that throws on the first edit.
 initRegCore().then(
-  () => mount(App, { target }),
+  () => {
+    startDraftLifecycle();
+    createRoot(target).render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    );
+  },
   (error: unknown) => {
     const alert = document.createElement("p");
     alert.setAttribute("role", "alert");

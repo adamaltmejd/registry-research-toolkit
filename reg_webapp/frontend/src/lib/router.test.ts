@@ -5,7 +5,7 @@ import {
   groupHref,
   variantsHref,
 } from "./catalog";
-import { onNavClick, parseRoute, type Route, router } from "./router.svelte";
+import { onNavClick, parseRoute, type Route, router } from "./router";
 
 describe("parseRoute", () => {
   it("decodes percent-encoded segments", () => {

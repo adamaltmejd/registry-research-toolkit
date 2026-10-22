@@ -1,6 +1,6 @@
 // The production build's bootstrap, before merge (`scripts/gate.py frontend`, after
 // `bun run build`): Vite's preview server serves dist/, and Chromium checks that
-//   1. the app mounts (its "Sections" navigation renders),
+//   1. the app mounts (its "Catalog" navigation, the browse tree, renders),
 //   2. the reg-core .wasm answers 200 with `application/wasm`,
 //   3. with the .wasm request aborted, the bootstrap alert renders in #app,
 // after checking that dist/_headers stamps /assets/* immutable and that every file
@@ -68,7 +68,7 @@ try {
     `the .wasm answers 200 application/wasm (${response.status()} ${response.headers()["content-type"]})`,
   );
   await page
-    .getByRole("navigation", { name: "Sections" })
+    .getByRole("navigation", { name: "Catalog" })
     .waitFor({ timeout: 10_000 });
   const mountedMs = await page.evaluate(() => performance.now());
   check(
@@ -85,7 +85,7 @@ try {
     .filter({ hasText: BOOTSTRAP_ALERT })
     .waitFor({ timeout: 10_000 });
   check(
-    (await broken.getByRole("navigation", { name: "Sections" }).count()) === 0,
+    (await broken.getByRole("navigation", { name: "Catalog" }).count()) === 0,
     "with the .wasm aborted, the bootstrap alert renders and the app does not mount",
   );
 } finally {
