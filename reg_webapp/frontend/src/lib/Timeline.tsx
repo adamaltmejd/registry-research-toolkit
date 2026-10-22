@@ -668,31 +668,41 @@ export function PeriodTimeline({
           {period !== null && <Button onPress={onClear}>Clear</Button>}
         </div>
       </div>
-      {subAnnualPeriod !== null ? (
-        <StatusRow tone="warn" live="status">
-          The active period <code>{subAnnualPeriod}</code> is not a span of
-          whole years, so the Timeline shows the project window.
-        </StatusRow>
-      ) : (
-        differs &&
-        boundedWindow && (
-          <StatusRow
-            tone="warn"
-            live="status"
-            action={
-              <Button
-                variant="ghost"
-                onPress={() => onSubmit(yearWindowToWire(boundedWindow))}
-              >
-                Reset
-              </Button>
-            }
-          >
-            Differs from the project window ({boundedWindow.from}–
-            {boundedWindow.to}).
-          </StatusRow>
-        )
-      )}
+      {/* One standing live region for the period's warning, so a row that
+          appears after an Apply is announced. */}
+      <StatusRow
+        live="status"
+        tone={
+          subAnnualPeriod !== null || (differs && boundedWindow) ? "warn" : null
+        }
+        action={
+          subAnnualPeriod === null &&
+          differs &&
+          boundedWindow && (
+            <Button
+              variant="ghost"
+              onPress={() => onSubmit(yearWindowToWire(boundedWindow))}
+            >
+              Reset
+            </Button>
+          )
+        }
+      >
+        {subAnnualPeriod !== null ? (
+          <>
+            The active period <code>{subAnnualPeriod}</code> is not a span of
+            whole years, so the Timeline shows the project window.
+          </>
+        ) : (
+          differs &&
+          boundedWindow && (
+            <>
+              Differs from the project window ({boundedWindow.from}–
+              {boundedWindow.to}).
+            </>
+          )
+        )}
+      </StatusRow>
       {/* Always rendered, so a refusal lands in a live region that already
           existed. Empty, it holds no line box. */}
       <StatusRow id={problemId} live="status" tone={refusal ? "error" : null}>

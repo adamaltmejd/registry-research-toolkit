@@ -12,6 +12,9 @@
 .error {
   composes: error from "./ui/ColumnList.module.css";
 }
+.scroller {
+  composes: scroller from "./ui/ColumnList.module.css";
+}
 .tree {
   composes: list from "./ui/ColumnList.module.css";
 }

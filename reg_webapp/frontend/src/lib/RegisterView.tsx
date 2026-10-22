@@ -933,7 +933,8 @@ function DeliveryColumnTick({
       />
       <ColumnChip name={column.name} state={offered ? "default" : "out"} />
       {years}
-      {reason && <span className="visually-hidden">{reason}</span>}
+      {/* Visible, so the disabled tick explains itself without a hover. */}
+      {reason && <span className={viewStyles.reason}>{reason}</span>}
     </label>
   );
 }

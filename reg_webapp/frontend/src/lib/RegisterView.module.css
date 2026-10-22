@@ -80,6 +80,11 @@
 .era {
   white-space: nowrap;
 }
+/* Why an out-of-window column has no tick to offer. */
+.reason {
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}
 /* Taller than the sticky add bar, so a focused tick is scrolled clear of
    it (WCAG 2.4.11). */
 .tick {

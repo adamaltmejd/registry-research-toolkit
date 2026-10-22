@@ -5,42 +5,33 @@ import { type RefObject, useEffect } from "react";
  * bar that translates between items at `duration-base`/`ease-out` when the
  * selection moves, instead of a static bar per row.
  *
- * RAC renders the list and its rows (in its own render passes, after the
- * column's), so the bar is one `aria-hidden` node appended to the list and
- * placed on the selected row (`[data-selected]`) whenever the column's DOM
- * changes. It moves without a transition when the selected row stays the same
- * (a group above it collapsed), on the first placement (nothing animates on
- * page load) and when the selection reappears after none. The rows' CSS drops
- * their own static bar while the column carries `data-selection-bar`.
+ * The column renders the bar as an `aria-hidden` sibling of its RAC list inside
+ * a positioned scroll box; this places it on the selected row
+ * (`[data-selected]`) whenever the box's DOM changes, since RAC renders its rows
+ * in its own passes, after the column's. It moves without a transition when the
+ * selected row stays the same (a group above it collapsed), on the first
+ * placement (nothing animates on page load) and when the selection reappears
+ * after none. The rows' CSS drops their own static bar while the box carries
+ * `data-selection-bar`.
  */
 export function useSelectionBar(
-  columnRef: RefObject<HTMLElement | null>,
-  barClass: string,
+  boxRef: RefObject<HTMLElement | null>,
+  barRef: RefObject<HTMLElement | null>,
 ): void {
   useEffect(() => {
-    const column = columnRef.current;
-    if (!column) return;
+    const box = boxRef.current;
+    if (!box) return;
     let last: Element | null = null;
     let frame = 0;
 
     const place = () => {
       frame = 0;
-      const list = column.querySelector<HTMLElement>(
-        '[role="listbox"], [role="treegrid"]',
+      const bar = barRef.current;
+      if (!bar) return;
+      box.dataset.selectionBar = "";
+      const row = box.querySelector<HTMLElement>(
+        '[role="option"][data-selected], [role="row"][data-selected]',
       );
-      if (!list) {
-        last = null;
-        return;
-      }
-      let bar = list.querySelector<HTMLElement>(`:scope > .${barClass}`);
-      if (!bar) {
-        bar = document.createElement("span");
-        bar.className = barClass;
-        bar.setAttribute("aria-hidden", "true");
-        list.append(bar);
-      }
-      column.dataset.selectionBar = "";
-      const row = list.querySelector<HTMLElement>("[data-selected]");
       if (!row) {
         bar.hidden = true;
         last = null;
@@ -57,19 +48,19 @@ export function useSelectionBar(
     };
 
     const mutations = new MutationObserver(schedule);
-    mutations.observe(column, {
+    mutations.observe(box, {
       subtree: true,
       childList: true,
       attributes: true,
       attributeFilter: ["data-selected", "data-expanded"],
     });
     const sizes = new ResizeObserver(schedule);
-    sizes.observe(column);
+    sizes.observe(box);
     schedule();
     return () => {
       cancelAnimationFrame(frame);
       mutations.disconnect();
       sizes.disconnect();
     };
-  }, [columnRef, barClass]);
+  }, [boxRef, barRef]);
 }

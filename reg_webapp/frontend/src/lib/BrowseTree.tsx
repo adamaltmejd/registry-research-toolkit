@@ -199,8 +199,9 @@ function browseNodes(
  */
 export function BrowseTree({ className }: { className?: string }) {
   const labelId = useId();
-  const columnRef = useRef<HTMLElement>(null);
-  useSelectionBar(columnRef, columnStyles.selectionBar);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLSpanElement>(null);
+  useSelectionBar(boxRef, barRef);
   const route = useRoute();
   const root = useRune(catalogRootChildren, undefined);
   const counts = useRune(readInProject, undefined);
@@ -352,7 +353,6 @@ export function BrowseTree({ className }: { className?: string }) {
 
   return (
     <nav
-      ref={columnRef}
       className={`${styles.column} ${className ?? ""}`}
       aria-label="Catalog"
       data-browse-column="registers"
@@ -381,54 +381,63 @@ export function BrowseTree({ className }: { className?: string }) {
           {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
         </Button>
       </div>
-      {root.loading ? (
-        <p className={styles.note} aria-busy="true">
-          Loading the catalog…
-        </p>
-      ) : root.value === null ? (
-        <StatusRow tone="error" live="alert" className={styles.error}>
-          The register list did not load. Reload the page to try again.
-        </StatusRow>
-      ) : (
-        <>
-          {registers.error && (
-            <StatusRow tone="error" live="alert" className={styles.error}>
-              Some registers did not load ({registers.error}). Reload the page
-              to try again.
-            </StatusRow>
-          )}
-          <Tree
-            aria-labelledby={labelId}
-            className={({ state }) => {
-              treeState.current = state;
-              return styles.tree;
-            }}
-            items={nodes}
-            selectionMode="single"
-            selectionBehavior="replace"
-            selectedKeys={currentKey === null ? [] : [currentKey]}
-            onSelectionChange={onSelectionChange}
-            expandedKeys={expandedKeys}
-            onExpandedChange={onExpandedChange}
-            dependencies={[
-              counts,
-              currentKey,
-              current?.exact,
-              needle,
-              facetResource.data,
-            ]}
-          >
-            {(node) => (
-              <BrowseItem
-                node={node}
-                counts={counts}
-                current={current}
-                needle={needle}
-              />
+      {/* The scroll box: the tree and the column's one selection bar. */}
+      <div ref={boxRef} className={styles.scroller}>
+        {root.loading ? (
+          <p className={styles.note} aria-busy="true">
+            Loading the catalog…
+          </p>
+        ) : root.value === null ? (
+          <StatusRow tone="error" live="alert" className={styles.error}>
+            The register list did not load. Reload the page to try again.
+          </StatusRow>
+        ) : (
+          <>
+            {registers.error && (
+              <StatusRow tone="error" live="alert" className={styles.error}>
+                Some registers did not load ({registers.error}). Reload the page
+                to try again.
+              </StatusRow>
             )}
-          </Tree>
-        </>
-      )}
+            <Tree
+              aria-labelledby={labelId}
+              className={({ state }) => {
+                treeState.current = state;
+                return styles.tree;
+              }}
+              items={nodes}
+              selectionMode="single"
+              selectionBehavior="replace"
+              selectedKeys={currentKey === null ? [] : [currentKey]}
+              onSelectionChange={onSelectionChange}
+              expandedKeys={expandedKeys}
+              onExpandedChange={onExpandedChange}
+              dependencies={[
+                counts,
+                currentKey,
+                current?.exact,
+                needle,
+                facetResource.data,
+              ]}
+            >
+              {(node) => (
+                <BrowseItem
+                  node={node}
+                  counts={counts}
+                  current={current}
+                  needle={needle}
+                />
+              )}
+            </Tree>
+          </>
+        )}
+        <span
+          ref={barRef}
+          className={columnStyles.selectionBar}
+          aria-hidden="true"
+          hidden
+        />
+      </div>
     </nav>
   );
 }

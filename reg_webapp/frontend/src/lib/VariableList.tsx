@@ -183,8 +183,6 @@ export function VariableList({
     ? memberSections(group, needle, serverMatches, counts)
     : [{ id: "variables", label: null, items }];
 
-  // A member selects itself; the group's own page selects nothing in its
-  // member list.
   // A variable's page selects its row (its first, where it is several
   // members); the group's own page selects nothing in its member list.
   const variableHref =

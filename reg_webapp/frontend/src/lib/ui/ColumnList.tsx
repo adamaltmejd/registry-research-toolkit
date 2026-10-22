@@ -72,8 +72,9 @@ export function ColumnList({
   className,
 }: Props) {
   const labelId = useId();
-  const columnRef = useRef<HTMLElement>(null);
-  useSelectionBar(columnRef, styles.selectionBar);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLSpanElement>(null);
+  useSelectionBar(boxRef, barRef);
   const items = sections?.flatMap((s) => s.items) ?? null;
 
   function onSelectionChange(keys: Selection): void {
@@ -126,7 +127,6 @@ export function ColumnList({
 
   return (
     <nav
-      ref={columnRef}
       className={`${styles.column} ${className ?? ""}`}
       aria-labelledby={labelId}
       data-browse-column="variables"
@@ -137,52 +137,61 @@ export function ColumnList({
           {label}
         </span>
       </div>
-      {error !== null ? (
-        <StatusRow tone="error" live="alert" className={styles.error}>
-          {error}
-        </StatusRow>
-      ) : sections === null ? (
-        <p className={styles.note} aria-busy="true">
-          Loading {label.toLowerCase()}…
-        </p>
-      ) : (
-        <ListBox
-          aria-labelledby={labelId}
-          className={styles.list}
-          selectionMode="single"
-          selectionBehavior="replace"
-          disallowEmptySelection
-          selectedKeys={selectedId === null ? [] : [selectedId]}
-          onSelectionChange={onSelectionChange}
-          renderEmptyState={() => <p className={styles.note}>{empty}</p>}
-        >
-          {/* A flat list is plain options; only labelled runs get a section
+      {/* The scroll box: the list and the column's one selection bar. */}
+      <div ref={boxRef} className={styles.scroller}>
+        {error !== null ? (
+          <StatusRow tone="error" live="alert" className={styles.error}>
+            {error}
+          </StatusRow>
+        ) : sections === null ? (
+          <p className={styles.note} aria-busy="true">
+            Loading {label.toLowerCase()}…
+          </p>
+        ) : (
+          <ListBox
+            aria-labelledby={labelId}
+            className={styles.list}
+            selectionMode="single"
+            selectionBehavior="replace"
+            disallowEmptySelection
+            selectedKeys={selectedId === null ? [] : [selectedId]}
+            onSelectionChange={onSelectionChange}
+            renderEmptyState={() => <p className={styles.note}>{empty}</p>}
+          >
+            {/* A flat list is plain options; only labelled runs get a section
               (an unnamed group would be noise to a screen reader). */}
-          {sections.map((section) =>
-            section.label === null ? (
-              <Collection
-                key={section.id}
-                items={section.items}
-                dependencies={[renderName, selectedId, selectedExact]}
-              >
-                {option}
-              </Collection>
-            ) : (
-              section.items.length > 0 && (
-                <ListBoxSection key={section.id} id={section.id}>
-                  <Header className={styles.facet}>{section.label}</Header>
-                  <Collection
-                    items={section.items}
-                    dependencies={[renderName, selectedId, selectedExact]}
-                  >
-                    {option}
-                  </Collection>
-                </ListBoxSection>
-              )
-            ),
-          )}
-        </ListBox>
-      )}
+            {sections.map((section) =>
+              section.label === null ? (
+                <Collection
+                  key={section.id}
+                  items={section.items}
+                  dependencies={[renderName, selectedId, selectedExact]}
+                >
+                  {option}
+                </Collection>
+              ) : (
+                section.items.length > 0 && (
+                  <ListBoxSection key={section.id} id={section.id}>
+                    <Header className={styles.facet}>{section.label}</Header>
+                    <Collection
+                      items={section.items}
+                      dependencies={[renderName, selectedId, selectedExact]}
+                    >
+                      {option}
+                    </Collection>
+                  </ListBoxSection>
+                )
+              ),
+            )}
+          </ListBox>
+        )}
+        <span
+          ref={barRef}
+          className={styles.selectionBar}
+          aria-hidden="true"
+          hidden
+        />
+      </div>
     </nav>
   );
 }

@@ -154,6 +154,12 @@
   cursor: ew-resize;
   transition: box-shadow var(--duration-quick) var(--ease-standard);
 }
+/* A 24px target around the slim face (WCAG 2.5.8), for touch. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  inset: -4px -8px;
+}
 .thumb[data-dragging] {
   background: var(--accent-hover);
 }

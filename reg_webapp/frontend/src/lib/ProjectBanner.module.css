@@ -44,8 +44,8 @@
   text-decoration: none;
 }
 .name[data-hovered] {
-  text-decoration: underline 1.5px var(--accent);
-  text-underline-offset: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-hover);
 }
 .name[data-focus-visible],
 .create[data-focus-visible] {

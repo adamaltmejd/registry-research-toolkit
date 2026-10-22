@@ -33,12 +33,15 @@
   margin: var(--space-3);
 }
 
-/* Positioned, so the selection bar and each row's `offsetTop` share it. */
-.list {
+/* The column's scroll box, positioned, so the selection bar and each row's
+   `offsetTop` share it. The RAC list inside it is not positioned. */
+.scroller {
   position: relative;
   flex: 1;
   min-height: 0;
   overflow: auto;
+}
+.list {
   outline: none;
 }
 
