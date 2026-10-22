@@ -93,10 +93,10 @@ test_that("orders extract their files from SQL Server", {
     export_dir(base, "broken-view"),
     "error_log.csv"
   ))
-  # Only the SQLSTATE survives (22012, division by zero), from the message prefix.
+  # odbc reports only the success state 00000 for this division by zero, which
+  # the runner drops, so nothing of the driver's message survives.
   expect_match(
     broken$message,
-    "(SQLSTATE 22012; driver message withheld",
-    fixed = TRUE
+    " failed \\(driver message withheld: it may quote row values\\)$"
   )
 })
