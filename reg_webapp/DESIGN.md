@@ -618,7 +618,8 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
 - `noUnusedVariables` / `noUnusedImports` are disabled for `.svelte` in `biome.json` —
   Biome can't see template-bound usage of `<script>` declarations and false-fires.
   **`svelte-check`** (the `check` script) is the authoritative type/template gate and
-  does see template usage.
+  does see template usage. It runs with `--fail-on-warnings`, so a11y and unused-CSS
+  warnings fail the gate too.
 - The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome entirely (codegen
   output, never hand-formatted).
 
