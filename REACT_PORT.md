@@ -57,7 +57,7 @@ Measure later PRs the same way, so the numbers compare.
   | --- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
   | 0a  | Vite+ toolchain on Svelte                                                                                       | closed #1775; toolchain taken into PR 1 |
   | 0b  | This tracker and the baseline, on `main`                                                                        | merged #1777                            |
-  | 1   | The toolchain and the shell (below)                                                                             | in progress                             |
+  | 1   | The toolchain and the shell (below)                                                                             | draft #1782                             |
   | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer                                      | not started                             |
   | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList | not started                             |
   | 4   | ConceptGroupView                                                                                                | not started                             |
