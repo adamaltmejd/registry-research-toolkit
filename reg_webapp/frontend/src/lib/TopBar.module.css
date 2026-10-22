@@ -1,0 +1,63 @@
+/* Sticky above the narrow breakpoint (maintainer ruling 2026-10-22); below it
+   the bar wraps to three rows, too tall to pin, and scrolls away. */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* The brand: the deployment's name at h3, its id in mono under it. */
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  color: var(--text);
+  text-decoration: none;
+}
+.brandName {
+  font-size: var(--text-h3);
+  font-weight: var(--heading-weight);
+  line-height: 1.2;
+}
+.brand:hover {
+  text-decoration: none;
+}
+.brand:hover .brandName {
+  color: var(--accent-ink);
+  text-decoration: underline;
+}
+.brand:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+.brandId {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-muted);
+}
+
+/* The search bar takes the room the brand and the banner leave. */
+.search {
+  display: flex;
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+/* Below the narrow breakpoint the banner drops to its own full-width row. */
+@media (max-width: 48rem) {
+  .topBar {
+    position: static;
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2) var(--space-3);
+  }
+}

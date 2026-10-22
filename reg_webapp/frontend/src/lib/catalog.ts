@@ -33,15 +33,13 @@ import {
   sourcePeriodFromWire,
   studyWindowInterval,
 } from "./reg_core";
-import type { Route } from "./router.svelte";
+import type { Route } from "./router";
 import type { BreadcrumbItem } from "./ui/types";
 
-/** The user-facing label for the data-browser root (the `/catalog` URL is
- * unchanged — this is the LABEL only, #675). Shared by the App nav link and the
- * root breadcrumb crumb in `CatalogNodeView` / `ConceptGroupView` so the three
- * stay in sync. (The route path stays `/catalog`; only the displayed text reads
- * "Data browser".) */
-export const DATA_BROWSER_LABEL = "Data browser";
+/** The label of the breadcrumb's first crumb, the data-browser root at
+ * `/catalog` (#675). Below the narrow breakpoint it is the way back to the
+ * register list, so every page's trail leads with it (DESIGN.md → Layout). */
+export const DATA_BROWSER_LABEL = "Data";
 
 /** The variable children of a register node, in order. `[]` for any other node
  * kind. */
@@ -555,12 +553,11 @@ function registerTrail(
   ];
 }
 
-/** The topbar breadcrumb trail for a route (#803), as `Breadcrumbs` items (the
- * last item is the current page — no `href`). STRUCTURAL only: labels are the
- * raw slug segments (the routed page owns its rich, display-name header) and the
- * data-browser root leads every catalog trail. `home` is a single un-linked
- * "Home"; the non-catalog routes get a one- or two-crumb trail rooted where they
- * sit. A `catalog-node` splits its FQID path into cumulative `/catalog/...`
+/** The detail pane's breadcrumb trail for a route (#803), as `Breadcrumbs`
+ * items (the last item is the current page — no `href`). STRUCTURAL only: labels
+ * are the raw slug segments (the routed page owns its rich, display-name header)
+ * and the data-browser root leads every trail, catalog or not, because below the
+ * narrow breakpoint it is the way back to the register list. A `catalog-node` splits its FQID path into cumulative `/catalog/...`
  * crumbs; the group routes prepend the browser root + a "Groups" hop so the trail
  * still descends from the data browser. */
 export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
@@ -570,7 +567,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
   };
   switch (route.name) {
     case "home":
-      return [{ label: "Home" }];
+      return [browserRoot, { label: "Home" }];
     case "root":
       // The data browser IS the current page — a single un-linked crumb.
       return [{ label: DATA_BROWSER_LABEL }];
@@ -605,11 +602,11 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
         label: "variants",
       });
     case "search":
-      return [{ label: "Search" }];
+      return [browserRoot, { label: "Search" }];
     case "project":
-      return [{ label: "Project" }];
+      return [browserRoot, { label: "Project" }];
     case "doc":
-      return [{ label: "Docs" }, { label: route.identifier }];
+      return [browserRoot, { label: "Docs" }, { label: route.identifier }];
     default:
       // not-found
       return [browserRoot];

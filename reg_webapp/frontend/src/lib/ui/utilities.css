@@ -212,3 +212,48 @@ input.cbox:indeterminate::after {
   background: var(--accent);
   transform: translate(-50%, -50%);
 }
+
+/* App-wide link and text roles, read by the Svelte views still mounted as islands
+   during the React port (they lived in App.svelte's `:global()` block). */
+a {
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.muted {
+  color: var(--text-muted);
+}
+.error {
+  color: var(--err);
+}
+
+/* banner-error (DESIGN.md → Components): a failed load, glyph first. */
+.banner-error {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--err-border);
+  border-radius: var(--radius-sm);
+  background: var(--err-bg);
+  color: var(--err);
+  font-size: var(--text-sm);
+}
+
+/* button-ghost on a React Aria Button: no box, a 2px accent underline under the
+   label (DESIGN.md → Buttons). */
+.ghost-button {
+  padding: 0 0 1px;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.ghost-button[data-focus-visible] {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}

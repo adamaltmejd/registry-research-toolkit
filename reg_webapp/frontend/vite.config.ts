@@ -1,3 +1,4 @@
+import optimizeLocales from "@react-aria/optimize-locales-plugin";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
@@ -57,9 +58,19 @@ const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
 };
 
 export default defineConfig({
-  // React beside Svelte during the port: plugin-react takes only .tsx, so it
-  // never touches .svelte, .svelte.ts or plain .ts modules.
-  plugins: [svelte(), react({ include: /\.tsx$/ })],
+  plugins: [
+    // React beside Svelte during the port: plugin-react takes only .tsx, so it
+    // never touches .svelte, .svelte.ts or plain .ts modules.
+    svelte(),
+    react({ include: /\.tsx$/ }),
+    // React Aria ships its strings for ~35 locales; keep the UI language and the
+    // data's. `enforce: "pre"` runs it before Vite's own transforms (a CJS plugin,
+    // so the Vite flavour is `.vite`).
+    {
+      ...optimizeLocales.vite({ locales: ["en-US", "sv-SE"] }),
+      enforce: "pre",
+    },
+  ],
   server: {
     // Dev proxy: the Rust server answers every /api route.
     proxy: {

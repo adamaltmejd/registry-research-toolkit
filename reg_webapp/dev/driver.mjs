@@ -694,6 +694,33 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
     source.period === 2018 && source.bindings[0]?.type === "categorical",
     `the recovered source authored ${JSON.stringify(source)}`,
   );
+
+  // (5) The browse tree stays reachable by keyboard after its rows fold away.
+  await browseTreeStaysTabbable(page);
+}
+
+/** After a row is clicked and "Collapse all" hides it, Tab still reaches a tree
+ * row. React Aria keeps only the focused row in the Tab order, so a focused key
+ * left on a hidden row drops the whole tree out of it (#1782 review, twice).
+ * Only where the browse column shows beside the detail pane (above 48rem). */
+async function browseTreeStaysTabbable(page) {
+  const collapseAll = page.getByRole("button", { name: "Collapse all" });
+  if (!(await collapseAll.isVisible())) return;
+  await page.getByRole("row", { name: "RAMS" }).click();
+  await settled(page);
+  await collapseAll.click();
+  await page.getByRole("button", { name: "Expand all" }).focus();
+  await page.keyboard.press("Tab");
+  const landed = await page.evaluate(() => {
+    const el = document.activeElement;
+    return el?.getAttribute("role") === "row" && el.closest('[role="treegrid"]') !== null
+      ? el.textContent.trim()
+      : `${el?.tagName.toLowerCase()} ${el?.getAttribute("role") ?? ""}`;
+  });
+  check(
+    landed.startsWith("Statistiska"),
+    `Tab after "Collapse all" must reach the collapsed group's row, landed on ${landed}`,
+  );
 }
 
 /** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81), one

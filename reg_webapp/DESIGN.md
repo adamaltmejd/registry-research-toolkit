@@ -610,10 +610,16 @@ committed tree must agree. `scripts/gate.py regen` refreshes both.
 
 ## Frontend toolchain
 
-Svelte 5 + Vite + TypeScript, bun-managed. **Biome** (`>=2.3.0`) is the single
-formatter/linter — no prettier/eslint. Biome's experimental Svelte support formats/lints
-the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flow
-(`{#if}` / `{#each}`), so:
+Svelte 5 + Vite + TypeScript, bun-managed, mid-port to React 19 + React Aria Components
+(`REACT_PORT.md`). **Biome** formats everything and lints `.svelte`, CSS and JSON;
+**Oxlint** (`.oxlintrc.json`) lints `.ts`/`.tsx`: the Oxlint ports of Biome's
+recommended rules plus the `react` (rules of hooks and the React Compiler-backed rules),
+`jsx-a11y` and `correctness` sets, all at error. Plain Vite, not the Vite+ (`vp`) CLI:
+adopting `vp` swaps `vite` for an alias package and moves the test imports, which buys
+nothing a lint script does not. CSS Modules (Vite built-in) style the React components,
+and `@react-aria/optimize-locales-plugin` keeps RAC's strings to `en-US` and `sv-SE`.
+Biome's experimental Svelte support formats/lints the JS/CSS/HTML parts of `.svelte` but
+does **not** yet parse Svelte control-flow (`{#if}` / `{#each}`), so:
 
 - `.svelte` formatting is imperfect (an accepted tradeoff).
 - `noUnusedVariables` / `noUnusedImports` are disabled for `.svelte` in `biome.json` —
