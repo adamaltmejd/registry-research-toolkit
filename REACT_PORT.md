@@ -29,8 +29,8 @@ deleted in PR 8.
 
 Recorded at `origin/main` `10123f165` before branching.
 
-- `dev.sh --fixture-db flows` (all scenarios): OK, 32 cases, 64 screenshots. The
-  screenshots and log are kept locally by the Operator.
+- `dev.sh --fixture-db flows` (all scenarios): OK, 32 cases, 64 screenshots, 102 s wall.
+  The screenshots and log are kept locally by the Operator.
 - SPA JavaScript: 126,151 bytes, the sum of `gzip -9` over `dist/assets/*.js` after
   `bun run build`.
 - `reg_core_wasm_bg.wasm`: 144,629 bytes at `gzip -9`.
@@ -63,9 +63,9 @@ Measure later PRs the same way, so the numbers compare.
   | 6   | Classification\*, VariantBrowser, DocView, Home                                                                 | not started                             |
   | 7   | ProjectEditor, SourceEditor, BindingEditor, StudyWindowSummary, ValidationPanel, ConfirmDialog                  | not started                             |
   | 8   | CommandPalette (RAC Autocomplete); delete SearchView, SearchOmnibox and the `/search` route                     | not started                             |
-  | 9   | Last Svelte removed: Svelte deps, svelte-check, Bits UI, the temporary island; the Renovate group rule          | not started                             |
-  | 10  | Docs and skills; deletes this file                                                                              | not started                             |
-  | M   | `react-port` → `main` (full gate, flows, independent review)                                                    | not started                             |
+  | 9   | Last Svelte removed: Svelte deps, svelte-check, Bits UI, the temporary island, the `PortGate` gate component    | not started                             |
+  | 10  | Docs and skills; deletes this file and its sentence in `AGENTS.md`                                              | not started                             |
+  | M   | `react-port` → `main` (full gate, flows, independent review); swaps the Renovate pause for the lockstep group   | not started                             |
 
 PR 1 opens with a gate commit: one React browser test beside the Svelte ones, both
 renderers in one `bun run test`, green in CI. It then adds the toolchain (React 19, RAC,
