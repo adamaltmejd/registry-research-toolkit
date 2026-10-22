@@ -736,7 +736,7 @@ csv_field <- function(x) {
 csv_bytes <- function(df) {
   fields <- lapply(df, csv_field)
   charToRaw(enc2utf8(paste0(
-    do.call(paste, c(fields, sep = ",")),
+    do.call(paste, c(unname(fields), sep = ",")),
     "\n",
     collapse = ""
   )))
