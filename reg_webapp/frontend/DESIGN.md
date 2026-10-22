@@ -492,9 +492,10 @@ not grow new visual language meanwhile.
   border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph
   comes first and is `aria-hidden` (✕ error, ▲ warn, i info, ✓ ok), then plain sentence
   copy that says what went wrong and how to fix it. It rises in with `motion-rise-in`
-  when it appears and never on page load. Every failed load, refusal and verdict in a
-  pane is one; there is no other ad hoc error row. With no tone it is a bare live region
-  that holds no height, so a first message lands in a region the page already had.
+  when it appears and never on page load. New failed loads, refusals and verdicts use
+  it; the remaining hand-rolled rows are being migrated onto it. With no tone it is a
+  bare live region that holds no height, so a first message lands in a region the page
+  already had.
 - **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
   `--elevation-float`, over the scrim, on `--z-dialog-scrim` and `--z-dialog`. The title
   is an `h2` (`h2` size, weight 600, −0.01em tracking) and the body is `body-sm` in

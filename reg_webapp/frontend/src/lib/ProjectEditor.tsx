@@ -189,11 +189,20 @@ export function ProjectEditor({
       </ConfirmDialog>
 
       {openError && (
-        <StatusRow tone="error" live="alert" className={styles.openError}>
-          <span className={styles.bannerText}>{openError}</span>
-          <Button variant="ghost" onPress={() => projectStore.clearOpenError()}>
-            Dismiss
-          </Button>
+        <StatusRow
+          tone="error"
+          live="alert"
+          className={styles.openError}
+          action={
+            <Button
+              variant="ghost"
+              onPress={() => projectStore.clearOpenError()}
+            >
+              Dismiss
+            </Button>
+          }
+        >
+          {openError}
         </StatusRow>
       )}
 

@@ -13,6 +13,7 @@ import {
   getShow,
   type RegisterChild,
   type RootChild,
+  SEARCH_MIN_QUERY_LENGTH,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
@@ -238,9 +239,15 @@ export function BrowseTree({ className }: { className?: string }) {
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
   // The search field's "N matches": the registers the filter keeps (a group
-  // that did not match keeps its list but matches nothing).
+  // that did not match keeps its list but matches nothing). No count until the
+  // variable matches for this needle have arrived: the debounce has not
+  // elapsed (a long enough needle has no facet key yet) or the request is in
+  // flight, and a count from names alone would read low and announce "0".
+  const facetsPending =
+    facetResource.loading ||
+    (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
   const matchCount =
-    filtering && !registers.loading
+    filtering && !registers.loading && root.value !== null && !facetsPending
       ? nodes
           .filter((node) => matched.has(node.id))
           .reduce((sum, node) => sum + (node.children?.length ?? 0), 0)

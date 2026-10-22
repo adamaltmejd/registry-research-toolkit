@@ -9,6 +9,10 @@
   line-height: 1.45;
 }
 
+.text {
+  flex: 1;
+}
+
 .error {
   border-color: var(--err-border);
   background: var(--err-bg);

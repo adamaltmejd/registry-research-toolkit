@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import styles from "./StatusRow.module.css";
 import type { StatusTone } from "./types";
 
@@ -21,6 +21,8 @@ interface Props {
   id?: string;
   /** The caller's own placement (margin); never colour or type. */
   className?: string;
+  /** A control after the text (Dismiss, a link), pushed to the row's end. */
+  action?: ReactNode;
   children?: ReactNode;
 }
 
@@ -28,9 +30,27 @@ interface Props {
  * as fill, its foreground as text and border (`err-border` for an error), the
  * glyph first and `aria-hidden`, then a sentence that says what is wrong and
  * what to do. It rises in when it appears, never on page load. */
-export function StatusRow({ tone, live, id, className, children }: Props) {
+export function StatusRow({
+  tone,
+  live,
+  id,
+  className,
+  action,
+  children,
+}: Props) {
+  // The rise is for a verdict that arrives or changes after mount, never for
+  // the tone the row first paints with (page load): it turns on at the first
+  // tone change and stays on, so a re-render does not replay it.
+  const [seenTone, setSeenTone] = useState(tone);
+  const [rises, setRises] = useState(false);
+  if (seenTone !== tone) {
+    setSeenTone(tone);
+    setRises(tone !== null);
+  }
   const own =
-    tone === null ? "" : `${styles.row} ${styles[tone]} motion-rise-in`;
+    tone === null
+      ? ""
+      : `${styles.row} ${styles[tone]}${rises ? " motion-rise-in" : ""}`;
   const Root = live === "status" ? "output" : "div";
   return (
     <Root
@@ -41,7 +61,8 @@ export function StatusRow({ tone, live, id, className, children }: Props) {
       {tone !== null && (
         <>
           <span aria-hidden="true">{GLYPH[tone]}</span>
-          <span>{children}</span>
+          <span className={styles.text}>{children}</span>
+          {action}
         </>
       )}
     </Root>
