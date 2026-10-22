@@ -126,8 +126,8 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
       // Bounds too close to stand apart read as one "2018–2020" label, so
       // the two years never run together ("20182020"). It is anchored at the
       // band edge nearer the drawing's middle and runs toward the middle, so
-      // it never runs off either end; axis years keep clear of its whole run,
-      // taken as two labels' gap wide.
+      // it never runs off either end; axis years keep a label gap clear of its
+      // whole run, taken as one gap wide (about the label's width at 375 px).
       const late = from + to > 100;
       const at = late ? to : from;
       labels.push({
@@ -136,7 +136,7 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
         window: true,
         text: span(band),
         edge: late ? "end" : "start",
-        reach: late ? [at - 2 * MIN_GAP_PCT, at] : [at, at + 2 * MIN_GAP_PCT],
+        reach: late ? [at - MIN_GAP_PCT, at] : [at, at + MIN_GAP_PCT],
       });
     } else {
       add(band.from, from, true);

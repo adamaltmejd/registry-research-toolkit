@@ -1516,10 +1516,14 @@ cross-row overlap in the same status line rather than silently collapsing one; a
 period (`HT2018`) is a different vocabulary the rows do not author, and is shown as it
 stands. Where the years the period covers differ from the project's `window` (narrower,
 wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs from study window
-2005–2020"): the window is an authoring seed, not an inheritance (reg-core puts `period`
-on `Source` and, narrowed, on `Binding`; never on `window`), so divergence is shown
-rather than warned about. The one divergence that is more than shown is a period with no
-years inside the window at all, which blocks the order (see "Common study window").
+2005–2020"). Like the variable page's period card, it judges the two inside the years
+the source's columns are delivered in (the register read the card already makes for its
+name; period ruling 2026-10-22), so a period of window ∩ availability, what an add
+writes, is no divergence, and while that read is out the card marks nothing. The window
+is an authoring seed, not an inheritance (reg-core puts `period` on `Source` and,
+narrowed, on `Binding`; never on `window`), so divergence is shown rather than warned
+about. The one divergence that is more than shown is a period with no years inside the
+window at all, which blocks the order (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
