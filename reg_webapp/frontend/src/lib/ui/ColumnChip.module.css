@@ -1,0 +1,43 @@
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  padding: 1px 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--viz-span);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+  font-weight: var(--column-weight);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.years {
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.in {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.in .years {
+  color: var(--accent-bg);
+}
+
+.out {
+  border-color: var(--viz-span-out);
+  background: transparent;
+  color: var(--text-faint);
+}
+
+.out .years {
+  color: var(--text-faint);
+}

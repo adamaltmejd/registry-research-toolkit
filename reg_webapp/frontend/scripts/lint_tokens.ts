@@ -161,10 +161,12 @@ const disciplinedFiles = [
 ]
   .filter((file) => file !== "src/tokens.css")
   .sort();
-const svelteFiles = disciplinedFiles.filter((f) => f.endsWith(".svelte"));
-if (svelteFiles.length <= 30) {
+// A glob that silently stopped matching would pass every file it no longer
+// sees. Counted over every styled file, not one framework's: the React port
+// removes the .svelte files one bundle at a time.
+if (disciplinedFiles.length <= 30) {
   failures.push(
-    `token discipline saw only ${svelteFiles.length} .svelte files under src/`,
+    `token discipline saw only ${disciplinedFiles.length} styled files under src/`,
   );
 }
 for (const file of disciplinedFiles) {
