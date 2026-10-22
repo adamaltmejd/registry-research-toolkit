@@ -594,11 +594,11 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    union's ascending, disjoint intervals, joined with OR. A range's `from` and `to` are
    inclusive ISO dates, not the period grammar, so the extract runner compares without
    parsing it; a bound at the table's first or last held day cuts nothing and is
-   omitted, so a range may be open-ended on either side. The runner reads the column
-   per `encoding` (`date`, `year`, `yyyymm`, `yyyymmdd`) and keeps a row whose year,
-   month or day lies in a range: a bound finer than the encoding widens to its whole
-   year or month, never narrowing the request. No filter when the table declares no
-   period column (it is extracted whole), when the request covers every held day, for a
+   omitted, so a range may be open-ended on either side. The runner reads the column per
+   `encoding` (`date`, `year`, `yyyymm`, `yyyymmdd`) and keeps a row whose year, month
+   or day lies in a range: a bound finer than the encoding widens to its whole year or
+   month, never narrowing the request. No filter when the table declares no period
+   column (it is extracted whole), when the request covers every held day, for a
    year-independent file, or in the global fallback.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
@@ -614,22 +614,22 @@ artifact kind, project name, schema version, declared reg_meta version and SHA-2
 the project's canonical JSON, catalog schema version and `generation_id`), the entries
 (logical coordinate with the canonical representation, the clipped `requested_period`,
 the physical edition, table, column, optional partition, optional projection token and
-optional `member` index, `key: true` on a held key no binding ordered, and the
-file's optional row `filter`) and the clips. It is written here and read offline by the steward-side extract system, so it is
-self-contained. That system is the planned MONA extract runner (#707): a data manager
-runs it inside MONA, it writes the files there, and nothing row-level leaves. Its bytes
-are sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across
-runs; periods render through the shared grammar, except a row filter's ISO day
-bounds. No timestamps: the only time-shaped
-values come from the artifact and the project. Version 1 stays in definition until the
-first external reader: shape changes stay in version 1, and from that reader on an
+optional `member` index, `key: true` on a held key no binding ordered, and the file's
+optional row `filter`) and the clips. It is written here and read offline by the
+steward-side extract system, so it is self-contained. That system is the planned MONA
+extract runner (#707): a data manager runs it inside MONA, it writes the files there,
+and nothing row-level leaves. Its bytes are sorted keys, two-space indent, UTF-8 and a
+trailing newline, byte-identical across runs; periods render through the shared grammar,
+except a row filter's ISO day bounds. No timestamps: the only time-shaped values come
+from the artifact and the project. Version 1 stays in definition until the first
+external reader: shape changes stay in version 1, and from that reader on an
 incompatible change bumps it. `partition`, `projection` (the table's token), `member`
 (`{"position": N}`, `{"year": YYYY}` or `{"month": "YYYY-MM"}`), `key`, `filter` and a
 filter range's `from` and `to` are the only optional fields; absent means none (an
 ordered entry for `key`, an unfiltered file for `filter`, an open end for a bound), so
 an inventory without partitions, projections, pivot members or period columns, and an
-order that binds every held key, produces the bytes it did before any existed. The parent (`projection_of`) is not in the
-manifest: the token is the placement.
+order that binds every held key, produces the bytes it did before any existed. The
+parent (`projection_of`) is not in the manifest: the token is the placement.
 
 **Extraction keeps delivery topology.** One output file per ordered variant, physical
 table and table edition (`physical.edition`, #1661). `physical.table` is the unique
@@ -643,14 +643,15 @@ or two periods) are one extracted column. Since v1 extracts each table whole, a 
 clipped period would only repeat the same rows and separate columns from their keys; the
 file's row filter (step 6) narrows its rows to the union of its entries' requested
 periods instead. In the global fallback the edition is the entry's merged requested
-period, so nothing changes there. The placement is the partition, the projection or neither, named in slug spelling
-(`lisa_individer-15plus_2019.csv`, `agi_individuppgifter-agi_arb_2021-03.csv` for a
-partition, `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in
-as two tables comes out as two files: shard identity (reporter stream, municipality) may
-exist in no column, so a union would destroy information, and a projection may have a
-finer grain than its parent. Each file carries its own keys, ordered or added as held
-keys (step 5), so a researcher who orders one non-key column still gets a joinable file;
-the user joins a projection file to its parent's on the shared key. The extract runner
+period, so nothing changes there. The placement is the partition, the projection or
+neither, named in slug spelling (`lisa_individer-15plus_2019.csv`,
+`agi_individuppgifter-agi_arb_2021-03.csv` for a partition,
+`<register>_<variant>_<token>_<period>.csv` for a projection). What goes in as two
+tables comes out as two files: shard identity (reporter stream, municipality) may exist
+in no column, so a union would destroy information, and a projection may have a finer
+grain than its parent. Each file carries its own keys, ordered or added as held keys
+(step 5), so a researcher who orders one non-key column still gets a joinable file; the
+user joins a projection file to its parent's on the shared key. The extract runner
 writes a key entry's column like any other and may tell it apart by `key`. A
 multi-period range is one file, filtered to the requested ranges when its table declares
 a period column.
@@ -662,9 +663,9 @@ deliveries carry) are two claims on one cell, which the inventory refuses as
 so a sibling cannot serve another sibling's key. Revisit when a steward delivers such a
 pair: it needs either a declared shared-key set or a projection chain.
 
-`simplify:` a table without a declared period column is extracted whole, whatever
-part of its edition the order requests. Declare one (the steward spec's
-`period_column`) when a large multi-period table's whole extract is the cost.
+`simplify:` a table without a declared period column is extracted whole, whatever part
+of its edition the order requests. Declare one (the steward spec's `period_column`) when
+a large multi-period table's whole extract is the cost.
 
 **Deferred: companion tables.** Steward deliveries include lookup and crosswalk tables
 that are not register data (VaraText beside IVP, skolkod↔skolenhetskod, the FEK
