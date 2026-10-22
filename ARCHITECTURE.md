@@ -333,24 +333,28 @@ output. In order:
    personnummer. This is a backstop only: a pattern scan cannot establish safety (#20),
    and a misclassified column can pass a count threshold (#17).
 
-Only when every file passes do the files move, atomically, to the output folder. On any
-refusal the output folder stays empty. The output folder is data-side: its files are
-checked but not yet approved, and only the human's Export pushes them to the agent VM.
-Refusals have stable codes by category: setup (schema or policy missing, unreadable or
-of the wrong version; a schema without its policy refuses), inventory, structure,
-disclosure, backstop, and delivery integrity (a hash mismatch). A report names the file,
-column and rule, never a value, as in the MONA extract runner
+Only when every file passes does the gate write `receipt.json` into the staging
+directory (step 1 ran before it existed), and the files and the receipt then move
+together, atomically, to the output folder. On any refusal the output folder stays
+empty. The output folder is data-side: its files are checked but not yet approved, and
+only the human's Export pushes them to the agent VM. Refusals have stable codes by
+category: setup (schema or policy missing, unreadable or of the wrong version; a schema
+without its policy, or one that declares the reserved name `receipt.json`, refuses),
+inventory, structure, disclosure, backstop, and delivery integrity (a hash mismatch). A
+report names the file, column and rule, never a value, as in the MONA extract runner
 ([`reg_mona_runner/DESIGN.md`](reg_mona_runner/DESIGN.md), "No row values in logs").
 Reports, logs and diagnostics stay on the data side and never enter the output folder.
 
 A failed check tells the agent only the refusal category code. Each export is checked
 alone in v1; differencing against earlier approved exports comes later.
 
-On a full pass the gate also writes `receipt.json` into the output folder, and it is
-exported with the data. It holds only the gate version, the schema's and policy's name,
-version and hash, and each output file's SHA-256: no values, counts or messages. Anyone
-downstream (the agent, a co-author, a replication) can then verify that these exact
-bytes passed this exact check. Its format is fixed by the toolkit, not by the schema.
+The receipt is exported with the data. It holds only the gate version, the schema's and
+policy's name, version and hash, and each output file's SHA-256: no values, counts or
+messages. Anyone downstream (the agent, a co-author, a replication) can check the files
+against it with any SHA-256 tool. That is integrity, not authenticity: the receipt is
+unsigned, so it shows the files match what the gate recorded, not that the gate ran. The
+gate's delivery record covers `receipt.json` too, so a changed receipt fails delivery
+like a changed data file. Its format is fixed by the toolkit, not by the schema.
 Reports, logs and diagnostics go in a `.diagnostics/` folder beside the output folder
 and are never exported.
 
@@ -386,6 +390,7 @@ R file version is pinned to a binary release.
 - Changes to the MONA extract runner.
 - Carrying code into the data VM (the first stop of the education-returns flow).
 - Differencing against earlier approved exports.
+- Signing the receipt.
 
 ### Future direction
 
