@@ -1,0 +1,153 @@
+.validation {
+  margin-top: var(--space-4);
+}
+
+/* The request-error banner wraps: it can carry the order materializer's full
+   fail-closed message, and an unwrapped retry button would squeeze the text into a
+   gutter at 375px. */
+.requestError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--err-border);
+  border-radius: var(--radius-sm);
+  background: var(--err-bg);
+}
+/* A basis, not `flex: 1`: the message must push the retry button onto its own row
+   before it is squeezed. */
+.bannerText {
+  flex: 1 1 16rem;
+}
+
+/* Status fills use the status roles, never the accent (DESIGN.md → Colors). */
+.summary {
+  display: block;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+.ok {
+  border: 1px solid var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.checking {
+  border: 1px solid var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+}
+.warning {
+  border: 1px solid var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.fail {
+  border: 1px solid var(--err-border);
+  background: var(--err-bg);
+  color: var(--err);
+}
+
+.group {
+  min-width: 0;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  border: 0;
+}
+/* The h4 carries `.micro-label` (a label, not a heading level): no weight here. */
+.group h4 {
+  margin: 0 0 var(--space-2);
+}
+.group ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.group li {
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--surface-sunken);
+}
+.group.error li {
+  border-left-color: var(--err);
+}
+.group.warning li {
+  border-left-color: var(--warn);
+}
+.group.info li {
+  border-left-color: var(--info);
+}
+
+.issueHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.label {
+  font-weight: 600;
+}
+.code {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.message {
+  margin: var(--space-1) 0;
+}
+/* A raw machine string (a JSON pointer, a hint's coordinate): it breaks in place
+   rather than overflow the card at 375px (#1112). */
+.path {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+code.path {
+  font-family: var(--font-mono);
+}
+
+/* The locate trigger and the catalog link on one row, wrapping when narrow: the
+   "where" reads before the "fix it". */
+.locators {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}
+/* Interactive chrome: accent as text takes `accent-ink`. */
+.locate,
+.catalogLink {
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.locate:hover,
+.catalogLink:hover {
+  text-decoration: underline;
+}
+.locate:focus-visible,
+.catalogLink:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+.catalogLink code {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}

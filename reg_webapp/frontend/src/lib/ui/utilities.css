@@ -257,3 +257,18 @@ a:hover {
   border-radius: var(--radius-sm);
   box-shadow: var(--focus-ring);
 }
+
+/* `.locate-flash` — briefly rings a /project source or column card when the
+   validation panel locates it; the panel toggles the class on the element. */
+.locate-flash {
+  animation: locate-flash 1.6s ease-out;
+}
+@keyframes locate-flash {
+  0%,
+  25% {
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 0 2px transparent;
+  }
+}

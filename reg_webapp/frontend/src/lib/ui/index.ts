@@ -6,7 +6,6 @@
 
 export { default as Breadcrumbs } from "./Breadcrumbs.svelte";
 export { default as Button } from "./Button.svelte";
-export { default as ConfirmDialog } from "./ConfirmDialog.svelte";
 export { default as DataTable } from "./DataTable.svelte";
 export { default as EmptyState } from "./EmptyState.svelte";
 export { default as FilterChip } from "./FilterChip.svelte";

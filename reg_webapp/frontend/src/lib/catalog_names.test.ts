@@ -7,7 +7,6 @@ import { resetCatalogNames, sourceNames } from "./catalog_names.svelte";
 // cases pin `sourceNames`' ALL-OR-NOTHING contract — a card says the coordinate it
 // already holds until EVERY read behind its name has landed with an answer, so it
 // can never settle in two steps or say half a name that reads like another source.
-// The rendered side of the same contract is SourceEditor.browser.test.ts.
 
 const COORDINATE = "scb/lisa/individer-16plus";
 

@@ -1,5 +1,4 @@
-// Register-child delivery fixtures shared by the study-window and ProjectEditor
-// browser tests.
+// Register-child delivery fixtures shared by the catalog-view browser tests.
 import type { VariableChild, VariableDeliveryModel } from "./api";
 
 /** One `(variant, column)` delivery on a register child (Y-82), over one era per

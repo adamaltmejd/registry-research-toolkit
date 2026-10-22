@@ -1,0 +1,23 @@
+.keyValue {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) 1fr;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+/* A value is text this primitive doesn't control (an FQID, a long label): it
+   breaks in place rather than widen the track past 375px (#1110). */
+.row dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--text);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.row dd.mono {
+  font-family: var(--font-mono);
+}

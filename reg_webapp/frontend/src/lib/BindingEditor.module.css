@@ -1,0 +1,57 @@
+.binding {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  scroll-margin-top: var(--space-4);
+}
+.body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+/* The delivery column NAME is the row's subject, read as a word. */
+.columnName {
+  min-width: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+/* The superseded columns of a rename: quiet, the columns themselves in mono. */
+.renameHint {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.superseded {
+  font-family: var(--font-mono);
+}
+/* The column's own years, when narrower than the source's. */
+.bindingPeriod {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.years {
+  font-variant-numeric: tabular-nums;
+}
+/* The variable is a machine FQID: mono, small, breaking in place at 375px. */
+.variable {
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+/* A link is ink at weight 600 beside non-interactive mono metadata. */
+a.variable {
+  font-weight: 600;
+}
+a.variable:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
