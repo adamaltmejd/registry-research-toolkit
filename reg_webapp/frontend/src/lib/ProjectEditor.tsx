@@ -231,7 +231,7 @@ export function ProjectEditor({
                   className={styles.dirty}
                   title="Unsaved changes since last download"
                 >
-                  <span aria-hidden="true">●</span> unsaved
+                  unsaved
                 </span>
               )}
             </h1>
@@ -287,7 +287,8 @@ export function ProjectEditor({
               (issue #200), never the index. Adding data happens in the catalog,
               so there is no "Add source" here. */}
           <section aria-label="Sources">
-            <Panel title={`Sources (${sources.length})`}>
+            {/* No counter (DESIGN.md → No counters): the cards are the count. */}
+            <Panel title="Sources">
               {sources.length === 0 ? (
                 <EmptyState
                   title="No sources yet"

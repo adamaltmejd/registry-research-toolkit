@@ -3,6 +3,7 @@ import type { OrderBlocking, ValidationResultModel } from "./api";
 import type { SafeSource } from "./project_data";
 import type { RequestErrorSource, ValidationStatus } from "./project_store";
 import { Button } from "./ui/Button";
+import { StatusRow } from "./ui/StatusRow";
 import styles from "./ValidationPanel.module.css";
 import {
   codeLabel,
@@ -22,7 +23,7 @@ import {
 // Each finding LEADS with the human title (`codeLabel`), DEMOTES the raw `code` to
 // a small muted chip (still the stable identifier people cite), and — instead of
 // leaking the raw JSON pointer — renders a click-to-LOCATE label ("Source
-// 'lisa_main' → column scb/lisa/adeldag", via `findingLocation`) that scrolls to
+// 'lisa_main', column scb/lisa/adeldag", via `findingLocation`) that scrolls to
 // and briefly flashes the relevant source/binding card. `sources` is the draft's
 // (possibly malformed) source list, used only to resolve those labels.
 
@@ -172,30 +173,33 @@ export function ValidationPanel({
         // A malformed REQUEST, distinct from the 200 ok:false list. When it came
         // back with FINDINGS (a blocked order), they ARE the message: the banner
         // states the verdict once and the group below carries each reason.
-        <div className={styles.requestError} role="alert">
-          <span className={styles.bannerText}>
-            <span aria-hidden="true">✕</span>{" "}
-            {orderFindings.length > 0 ? (
-              <>
-                <strong>Order blocked:</strong> the materializer produced no
-                order for this project.
-              </>
-            ) : (
-              <>
-                <strong>Request failed:</strong> {requestError}
-              </>
-            )}
-          </span>
-          {/* The retry belongs to the request that FAILED, which is what the
-              SOURCE says. Neither is offered for a blocked order: the findings
-              are the materializer's verdict on this draft, and re-running either
-              request changes nothing about it. The draft has to change. */}
-          {requestErrorSource === "validate" ? (
-            <Button onPress={onRetry}>Retry validation</Button>
-          ) : requestErrorSource === "order" && orderFindings.length === 0 ? (
-            <Button onPress={onRetryOrder}>Retry download</Button>
-          ) : null}
-        </div>
+        <StatusRow
+          tone="error"
+          live="alert"
+          className={styles.requestError}
+          action={
+            // The retry belongs to the request that FAILED, which is what the
+            // SOURCE says. Neither is offered for a blocked order: the findings
+            // are the materializer's verdict on this draft, and re-running
+            // either request changes nothing about it. The draft has to change.
+            requestErrorSource === "validate" ? (
+              <Button onPress={onRetry}>Retry validation</Button>
+            ) : requestErrorSource === "order" && orderFindings.length === 0 ? (
+              <Button onPress={onRetryOrder}>Retry download</Button>
+            ) : null
+          }
+        >
+          {orderFindings.length > 0 ? (
+            <>
+              <strong>Order blocked:</strong> the materializer produced no order
+              for this project.
+            </>
+          ) : (
+            <>
+              <strong>Request failed:</strong> {requestError}
+            </>
+          )}
+        </StatusRow>
       )}
 
       {orderFindings.length > 0 && (
@@ -264,33 +268,26 @@ export function ValidationPanel({
           fail-close a project that VALIDATES clean, and "Draft valid" under
           "Order blocked" says two contradictory things at once. */}
       {requestError ? null : status === "checking" ? (
-        <output
-          className={`${styles.summary} ${styles.checking}`}
-          aria-busy="true"
-        >
+        // In flight is not a verdict: plain muted text, no glyph or tint.
+        <output className={styles.checking} aria-busy="true">
           Checking the current project…
         </output>
       ) : result == null ? (
         <p className="muted">Validation has not run for this draft yet.</p>
       ) : (
         <>
-          <output
-            className={`${styles.summary} ${
-              status === "warnings"
-                ? styles.warning
-                : result.ok
-                  ? styles.ok
-                  : styles.fail
-            }`}
+          <StatusRow
+            live="status"
+            tone={status === "warnings" ? "warn" : result.ok ? "ok" : "error"}
           >
             {/* Names the check that COMPLETED. With nothing to report the verdict
                 is the whole line. */}
             {result.ok
               ? status === "warnings"
-                ? `Draft valid with warnings — project rules and catalog metadata checked. (${result.issues.length} non-blocking ${result.issues.length === 1 ? "note" : "notes"}.)`
+                ? `Draft valid with warnings: project rules and catalog metadata checked (${result.issues.length} non-blocking ${result.issues.length === 1 ? "note" : "notes"}).`
                 : "Draft valid"
-              : `Draft not valid — ${grouped.error.length} ${grouped.error.length === 1 ? "error" : "errors"}.`}
-          </output>
+              : `Draft not valid: ${grouped.error.length} ${grouped.error.length === 1 ? "error" : "errors"}.`}
+          </StatusRow>
           {LEVELS.map(
             (level) =>
               grouped[level].length > 0 && (

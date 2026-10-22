@@ -85,9 +85,9 @@
   white-space: nowrap;
 }
 /* An Apply in flight: the fields are read-only (still in the tab order), dimmed
-   the way the inert Apply button is. */
+   the way a disabled control is. */
 .yearRow :global(.year):read-only {
-  opacity: 0.6;
+  opacity: var(--opacity-disabled);
 }
 .actions {
   display: flex;

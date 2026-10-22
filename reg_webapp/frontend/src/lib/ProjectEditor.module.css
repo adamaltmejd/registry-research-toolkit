@@ -14,14 +14,19 @@
   align-items: baseline;
   gap: var(--space-3);
   font-size: var(--text-h1);
-  font-weight: var(--heading-weight);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+  line-height: 1.1;
   overflow-wrap: anywhere;
 }
-/* The "unsaved" cue: warning tone (advisory), never the accent. */
+/* The "unsaved" cue: quiet mono text-muted, as in the project banner; never a
+   status hue (it is not a verdict) and never the accent. */
 .dirty {
-  color: var(--warn);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .toolbar {

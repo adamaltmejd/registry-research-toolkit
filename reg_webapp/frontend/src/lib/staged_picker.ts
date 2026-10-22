@@ -581,7 +581,7 @@ export interface StagedApplyOutcome {
   removed: number;
 }
 
-/** A staged diff in words — "+2 columns · -1 column", only the parts that are
+/** A staged diff in words — "+2 columns, -1 column", only the parts that are
  * non-zero, "" for an empty diff. ONE formatter so the picker footer (what an
  * Apply WILL do) and a page's confirmation (what it DID) can never phrase the
  * same two counts differently. */
@@ -595,7 +595,7 @@ export function stagedDiffSummary(counts: StagedApplyOutcome): string {
       `-${counts.removed} ${counts.removed === 1 ? "column" : "columns"}`,
     );
   }
-  return parts.join(" · ");
+  return parts.join(", ");
 }
 
 /** The ways an Apply can end:

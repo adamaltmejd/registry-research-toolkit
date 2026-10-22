@@ -310,7 +310,7 @@ export function bindingAnchorId(
 }
 
 /** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
- * draft's sources — the summary list speaks "Source 'lisa_main' → column
+ * draft's sources — the summary list speaks "Source 'lisa_main', column
  * scb/lisa/adeldag" instead of leaking the raw pointer, carries the DOM-anchor id so
  * a click scrolls to the relevant card, AND — since the cart is read-only and fixes
  * happen in the catalog browser (#991) — an outbound `catalogHref` to the subject
@@ -547,7 +547,7 @@ export function findingLocation(
           ? { catalogHref: catalogHref(variable), catalogLabel: variable }
           : {};
       return {
-        label: `${sourceLabel} → ${columnLabel}`,
+        label: `${sourceLabel}, ${columnLabel}`,
         anchorId: bindingAnchorId(sIdx, bIdx),
         ...catalog,
       };

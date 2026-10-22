@@ -1,14 +1,15 @@
 import styles from "./BindingEditor.module.css";
-import { catalogHref } from "./catalog";
-import { columnNames, UNASKED } from "./catalog_names.svelte";
-import { periodLabel } from "./period";
-import type { DraftBinding } from "./project_data";
+import { catalogHref, registerPrefixOf } from "./catalog";
+import { columnNames, registerRead, UNASKED } from "./catalog_names.svelte";
+import { periodLabel, periodWindowRelation } from "./period";
+import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
-import { sourcePeriodToWire } from "./reg_core";
+import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import { SvelteIsland } from "./SvelteIsland";
 import { useRune } from "./svelte_bridge.svelte";
 import { Button } from "./ui/Button";
+import { ColumnChip } from "./ui/ColumnChip";
 import { bindingAnchorId } from "./validation";
 
 // READ-ONLY column row in the #991 data-order cart: it DISPLAYS the delivery
@@ -24,6 +25,9 @@ interface Props {
    * null when it has none) — where this column's default name is resolved. */
   variant: string;
   period: string | null;
+  /** The project's study window, null when none is set: a column with no year
+   * inside it is drawn out of the window. */
+  studyWindow: ProjectStudyWindow | null;
 }
 
 /** `columnNames` behind one string argument, for `useRune`. */
@@ -43,6 +47,7 @@ export function BindingEditor({
   binding,
   variant,
   period: sourcePeriod,
+  studyWindow,
 }: Props) {
   // A binding field coerced to a display string (non-string → "").
   const strField = (field: keyof DraftBinding): string => {
@@ -56,6 +61,24 @@ export function BindingEditor({
   const ownPeriod =
     binding.period == null ? null : sourcePeriodToWire(binding.period);
   const period = ownPeriod ?? sourcePeriod;
+  // The column's own years, else the source's: none inside the window draws the
+  // chips out of it.
+  const outOfWindow =
+    period !== null &&
+    periodWindowRelation(sourcePeriodFromWire(period), studyWindow) ===
+      "disjoint";
+  const chipState = outOfWindow ? "out" : "default";
+  // The variable's descriptive name, from the register read every source card on
+  // this register already shares: no request per column.
+  const registerFqid = registerPrefixOf(variable);
+  const register = useRune(
+    registerFqid ? registerRead : readUnasked,
+    registerFqid,
+  );
+  const variableName =
+    register.value?.children
+      .find((child) => child.fqid === variable)
+      ?.name?.trim() || null;
 
   // The row LEADS with the delivery column. Where the FILE names it, the file
   // wins: an explicit `display_name` first, then the `representation` a pick pins.
@@ -100,33 +123,42 @@ export function BindingEditor({
           className={styles.body}
           aria-busy={resolved.loading ? "true" : undefined}
         >
-          {columnName && (
-            <span className={styles.columnName}>{columnName}</span>
-          )}
-          {supersededColumns.length > 0 && (
-            <span className={styles.renameHint}>
-              was{" "}
-              <span className={styles.superseded}>
-                {supersededColumns.join(", ")}
+          <div className={styles.columns}>
+            {columnName && <ColumnChip name={columnName} state={chipState} />}
+            {supersededColumns.length > 0 && (
+              <span className={styles.renameHint}>
+                was{" "}
+                {supersededColumns.map((name) => (
+                  <ColumnChip key={name} name={name} state={chipState} />
+                ))}
               </span>
-            </span>
-          )}
-          {ownPeriod !== null && (
-            <span className={styles.bindingPeriod}>
-              only{" "}
-              <span className={styles.years}>
-                {periodLabel(binding.period)}
+            )}
+            {ownPeriod !== null && (
+              <span className={styles.bindingPeriod}>
+                only{" "}
+                <span className={styles.years}>
+                  {periodLabel(binding.period)}
+                </span>
               </span>
-            </span>
-          )}
-          {/* The variable is a machine FQID, linked to its catalog page: the cart
-              is read-only, so re-picking happens there (#991). */}
+            )}
+            {outOfWindow && (
+              <span className={styles.bindingPeriod}>
+                outside the study window
+              </span>
+            )}
+          </div>
+          {/* The variable it came from: its name in the text face, linked to its
+              catalog page (the cart is read-only, so re-picking happens there,
+              #991), and the FQID in mono under it. */}
           {variable ? (
-            <a className={styles.variable} href={catalogHref(variable)}>
-              {variable}
-            </a>
+            <span className={styles.variableLine}>
+              <a className={styles.variable} href={catalogHref(variable)}>
+                {variableName ?? variable}
+              </a>
+              {variableName && <code className={styles.fqid}>{variable}</code>}
+            </span>
           ) : (
-            <span className={styles.variable}>(no variable)</span>
+            <span className={styles.bindingPeriod}>(no variable)</span>
           )}
         </div>
         <Button
