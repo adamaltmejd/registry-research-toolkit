@@ -82,9 +82,9 @@ the split below misses joins its nearest module. Today's split: `reg_meta_build/
 `sources/`, `ir/` and the top-level modules by size, with
 `reg_webapp/stewards/swecov/build_catalog.py`; `reg_webapp/frontend` (the app root,
 `lib/`, config and `scripts/`); `reg_webapp/edge` with the Dockerfile and deploy
-scripts; the dev tooling in `reg_webapp/dev/` (`dev.sh` and its Playwright driver);
-`scripts/`; and `crates/` (Rust). The test trees are the `test-audit` skill's: run its
-sweep in the same waves and merge its list into step 3.
+scripts; the dev tooling in `reg_webapp/dev/` (`dev.sh` and its Playwright `flows`
+driver); `scripts/`; and `crates/` (Rust). The test trees are the `test-audit` skill's:
+run its sweep in the same waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step

@@ -1,33 +1,21 @@
-// Playwright driver for the reg_webapp SPA dev setup. Reuses the frontend's
-// own playwright devDep (vitest-browser already requires it + its Chromium),
-// so there is nothing extra to install when frontend deps are present.
+// The reg_webapp project flows, in Playwright: eight scenarios (three /project
+// error+retry, four catalog, one deliberate replacement) × four viewports, each
+// in a fresh context against the real servers. Playwright, not agent-browser
+// (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
+// requests open and count them per case, and that routing surface is
+// Playwright's. Reuses the frontend's own playwright devDep (vitest-browser
+// already requires it + its Chromium).
 //
-// Run from reg_webapp/frontend/ (so the playwright import resolves):
+// Run from reg_webapp/frontend/ (so the playwright import resolves), with the
+// servers already up and REG_WEBAPP_DEV_URL pointing at them — `dev.sh flows`
+// does both:
 //
-//   bun ../dev/driver.mjs [command ...]
+//   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
-// Commands (default: `smoke`):
-//   smoke               root loads, catalog tree renders, drill into the first
-//                       provider → register → variable, narrow the period
-//                       slider, screenshot each step
-//   shot <url-path>     open a path (e.g. /catalog/scb/lisa) and screenshot it
-//   eval <url-path> <js> open a path, evaluate JS in the page, print the result
-//   flows <out-dir> [scenario...]
-//                       the project flows: eight scenarios (three /project
-//                       error+retry, four catalog, one deliberate replacement)
-//                       × four viewports, each in a fresh context, PNGs →
-//                       <out-dir>. Named scenarios run just those; no names
-//                       runs all eight.
-//
-// smoke/shot screenshots land in $REG_WEBAPP_SHOTS — dev.sh sets it to the one
-// directory that invocation owns, and a direct run gets a fresh one under /tmp;
-// `flows` writes only into its explicit <out-dir>. The servers must already
-// be running on whichever free
-// ports dev.sh picked, with REG_WEBAPP_DEV_URL pointing here — see
-// .agents/skills/run-reg-webapp/SKILL.md.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync } from "node:fs";
+// The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
+// eight.
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 // Where playwright looks for its browsers. An explicit PLAYWRIGHT_BROWSERS_PATH
@@ -46,47 +34,21 @@ const { chromium } = require("playwright");
 
 const BASE = process.env.REG_WEBAPP_DEV_URL ?? "http://localhost:5173";
 
-// Screenshot viewport. Default `desktop` (the historical 1280x900). Override via
-// REG_WEBAPP_VIEWPORT: a named preset (mobile/tablet/desktop/wide) or raw "WxH"
-// (e.g. "414x896"). dev.sh's `shot --mobile/--wide/--all/--viewport` sets this per
-// run so the free-port path can capture responsive breakpoints without the
-// fixed-port preview server. The label is suffixed onto non-desktop screenshot
-// names so a multi-viewport run doesn't clobber the desktop shot.
+// The four widths frontend/DESIGN.md designs for; dev.sh's `shot` presets spell
+// the same four.
 const VIEWPORTS = {
   mobile: { width: 375, height: 812 },
   tablet: { width: 768, height: 1024 },
   desktop: { width: 1280, height: 900 },
   wide: { width: 1920, height: 1080 },
 };
-function resolveViewport(spec) {
-  if (!spec) return { ...VIEWPORTS.desktop, label: "desktop" };
-  if (spec in VIEWPORTS) return { ...VIEWPORTS[spec], label: spec };
-  const m = /^(\d+)x(\d+)$/.exec(spec);
-  if (!m) {
-    throw new Error(
-      `bad REG_WEBAPP_VIEWPORT "${spec}" — use mobile|tablet|desktop|wide or WxH`,
-    );
-  }
-  return { width: Number(m[1]), height: Number(m[2]), label: spec };
-}
-const viewport = resolveViewport(process.env.REG_WEBAPP_VIEWPORT);
 
-const [cmd = "smoke", ...rest] = process.argv.slice(2);
-
-// `flows` requires an explicit output directory so screenshots have a known home.
-const outDir = cmd === "flows" ? rest[0] : null;
-if (cmd === "flows" && !outDir) {
-  throw new Error("flows: needs an output directory, e.g. flows /tmp/project-flows");
+// An explicit output directory, so screenshots have a known home; scenario names
+// after it, empty for "all of them" (see the dispatch).
+const [outDir, ...selection] = process.argv.slice(2);
+if (!outDir) {
+  throw new Error("driver: needs an output directory, e.g. /tmp/project-flows");
 }
-// Scenario names after the out-dir, empty for "all of them" (see the dispatch).
-const selection = cmd === "flows" ? rest.slice(1) : [];
-// Only the shooting commands mint a directory (see the header): `flows` has its
-// <out-dir> and `eval` captures nothing, so neither leaves an empty one behind.
-const SHOTS =
-  cmd === "smoke" || cmd === "shot"
-    ? (process.env.REG_WEBAPP_SHOTS ?? mkdtempSync(join(tmpdir(), "reg-webapp-shots.")))
-    : null;
-if (SHOTS) mkdirSync(SHOTS, { recursive: true });
 
 // A LADDER, not a retry: each rung gives up something the one above it keeps, so
 // every rung is tried once and the first that starts wins. `chromiumSandbox` is
@@ -133,8 +95,7 @@ async function launchBrowser() {
 const browser = await launchBrowser();
 
 // Print the page's console errors and uncaught exceptions. The returned array
-// is the ledger of exception messages, which `flows` asserts is empty per case;
-// smoke/shot/eval only want the printing and ignore it.
+// is the ledger of exception messages, which each case asserts is empty.
 function logPageOutput(page) {
   const pageErrors = [];
   page.on("console", (m) => {
@@ -145,27 +106,6 @@ function logPageOutput(page) {
     pageErrors.push(e.message);
   });
   return pageErrors;
-}
-
-// The single page smoke/shot/eval drive. `flows` opens a FRESH context per case
-// instead (isolated storage + its own page-error ledger), so it never uses this
-// one — and doesn't pay for it either.
-const page =
-  cmd === "flows"
-    ? null
-    : await browser.newPage({
-        viewport: { width: viewport.width, height: viewport.height },
-      });
-if (page) logPageOutput(page);
-
-async function shot(name) {
-  // Desktop keeps the historical bare filename (SKILL.md references `01-root` …
-  // `05-deep-link-reload`); other viewports get a `-<label>` suffix so a
-  // multi-viewport run captures each breakpoint instead of overwriting.
-  const suffix = viewport.label === "desktop" ? "" : `-${viewport.label}`;
-  const file = `${SHOTS}/${name}${suffix}.png`;
-  await page.screenshot({ path: file });
-  console.log(`shot: ${file}`);
 }
 
 // `networkidle` is NOT enough: Svelte swaps in fetched data after the network
@@ -201,10 +141,10 @@ function check(condition, message) {
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 64 PNGs. A bare `flows <out-dir>` runs all eight scenarios;
+// These write 64 PNGs. A bare `<out-dir>` runs all eight scenarios;
 // scenario arguments select a subset for focused verification.
 //
-// The filenames carry the size — so the sizes are the `shot` presets above,
+// The filenames carry the size — so the sizes are the VIEWPORTS above,
 // spelled once (frontend/DESIGN.md designs for exactly these four widths). Named
 // one by one, not Object.values: a fifth preset must not silently turn 16 cases
 // into 20 and invalidate the declared artifact lists.
@@ -397,7 +337,7 @@ function checkFocusRing(state, why) {
 }
 
 /** One artifact: assert the layout fits the viewport, then write the PNG into
- * `outDir` (module scope, as `shot()` reads `SHOTS`). */
+ * `outDir` (module scope). */
 async function capture(page, name) {
   const width = await page.evaluate(() => ({
     scroll: document.documentElement.scrollWidth,
@@ -1103,235 +1043,169 @@ async function runCase(viewport, name, body, route = "/project") {
   }
 }
 
-// One try/finally around the whole dispatch: every command closes the browser
-// on the way out, including the failure path a thrown assertion takes.
+// One try/finally around the whole run: the browser closes on the way out,
+// including the failure path a thrown assertion takes.
 try {
-  if (cmd === "flows") {
-    mkdirSync(outDir, { recursive: true });
-    // The project the two recovery scenarios open, and the manifest it must
-    // produce, are DERIVED from the deployment the flows run against — never
-    // pinned to a stale capture. Shapes: conformance/cases/api/order-* (a valid
-    // global-fallback project + its entry).
-    // Playwright's APIRequestContext, not bun's global fetch. This is still an
-    // out-of-page HTTP client (it does not run in the renderer), but it resolves
-    // `localhost` the way the browser does; bun picks ::1 with no fallback while
-    // the dev server binds 127.0.0.1, so global fetch dies on ConnectionRefused.
-    const probe = await browser.newContext();
-    const contextResp = await probe.request.get(`${BASE}/api/context`);
-    const contextBody = await contextResp.text();
-    await probe.close();
+  mkdirSync(outDir, { recursive: true });
+  // The project the two recovery scenarios open, and the manifest it must
+  // produce, are DERIVED from the deployment the flows run against — never
+  // pinned to a stale capture. Shapes: conformance/cases/api/order-* (a valid
+  // global-fallback project + its entry).
+  // Playwright's APIRequestContext, not bun's global fetch. This is still an
+  // out-of-page HTTP client (it does not run in the renderer), but it resolves
+  // `localhost` the way the browser does; bun picks ::1 with no fallback while
+  // the dev server binds 127.0.0.1, so global fetch dies on ConnectionRefused.
+  const probe = await browser.newContext();
+  const contextResp = await probe.request.get(`${BASE}/api/context`);
+  const contextBody = await contextResp.text();
+  await probe.close();
+  check(
+    contextResp.ok(),
+    `GET /api/context answered ${contextResp.status()}: ${contextBody.slice(0, 300)}`,
+  );
+  // The Rust server's `context`: `{data, meta}`, the generation in `meta`.
+  const { data: deployment, meta } = JSON.parse(contextBody);
+  const project = {
+    schema_version: "3.0.0",
+    steward: deployment.steward.id,
+    reg_meta_version: `reg_meta/v${deployment.reg_meta_version}`,
+    name: "Synthetic order flow",
+    sources: [
+      {
+        name: "lisa-2018",
+        register_variant: "scb/lisa/individer-15plus",
+        period: 2018,
+        bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+      },
+    ],
+  };
+  // The source-period edit's project (Y-81): TWO differently named sources on
+  // ONE register variant — a shape the catalog's add path cannot author, and the
+  // reason the edit is keyed by source name. `lisa-core` carries Kon plus
+  // Forsamling, which no single catalog page lists beside it. The study window is
+  // what the edited period then deviates from.
+  const twoSourceProject = {
+    ...project,
+    name: "Synthetic source period",
+    window: { from: 2018, to: 2020 },
+    sources: [
+      {
+        name: "lisa-core",
+        register_variant: "scb/lisa/individer-15plus",
+        period: { from: 2018, to: 2020 },
+        bindings: [
+          { variable: "scb/lisa/kon", type: "categorical", representation: "Kon" },
+          {
+            variable: "scb/lisa/forsamling",
+            type: "categorical",
+            representation: "Forsamling",
+          },
+        ],
+      },
+      {
+        name: "lisa-lonfink",
+        register_variant: "scb/lisa/individer-15plus",
+        // A #307 two-segment list (Y-101) — untouched by this scenario, present
+        // so the shots show a multi-row card alongside the one being edited.
+        period: [
+          { from: 2015, to: 2017 },
+          { from: 2019, to: 2020 },
+        ],
+        bindings: [
+          {
+            variable: "scb/lisa/lonfink",
+            type: "numeric",
+            representation: "LonFinkJan",
+          },
+        ],
+      },
+    ],
+  };
+  // The manifest names the catalog it was materialized against by the SAME
+  // identity `/api/context` reports for the served artifact (reg_meta
+  // `OrderProvenance`): its steward, generation and schema — not its import
+  // date. The steward also fixes the artifact kind (`global` is the catalog
+  // artifact, an admission invariant), so the kind needs no check of its own.
+  const expected = {
+    mode: "global_fallback",
+    steward: deployment.steward.id,
+    generationId: meta.generation,
+    schemaVersion: deployment.schema_version,
+  };
+  console.log(
+    `flows: ${BASE} steward=${deployment.steward.id} ` +
+      `reg_meta=${deployment.reg_meta_version} ` +
+      `catalog=${deployment.schema_version}@${deployment.import_date}`,
+  );
+  // The scenarios by name, with the `route` each starts on (default /project)
+  // and the number of PNGs it writes per viewport. `blockedOrderCase` already
+  // has runCase's `body` signature; the two recovery cases bind the shared
+  // project (and its expected manifest) into theirs.
+  const scenarios = {
+    "blocked-order": { shots: 1, run: blockedOrderCase },
+    "order-retry": {
+      shots: 2,
+      run: (p, c, shoot) => orderRetryCase(p, c, shoot, project, expected),
+    },
+    "validation-retry": {
+      shots: 1,
+      run: (p, c, shoot) => validationRetryCase(p, c, shoot, project),
+    },
+    // The one case that does NOT start at /project: the draft is authored from
+    // a catalog leaf, which is exactly the lifecycle the /project cases cannot
+    // reach.
+    "catalog-draft": {
+      shots: 2,
+      route: "/catalog/scb/lisa/kon?period=2018",
+      run: catalogDraftCase,
+    },
+    // The same leaf as ordinary browsing reaches it — NO query string, so no
+    // period is chosen and the pick has none to author under.
+    "catalog-period-required": {
+      shots: 2,
+      route: "/catalog/scb/lisa/kon",
+      run: catalogPeriodRequiredCase,
+    },
+    // Opens the SAME synthetic project as the recovery cases — the file whose
+    // arrival has to wait for the researcher's answer.
+    "replace-confirm": {
+      shots: 2,
+      run: (p, _c, shoot) => replaceConfirmCase(p, shoot, project),
+    },
+    // Opens the TWO-SOURCE project and edits one named source's period on its
+    // own /project card — the only surface that shows a source whole.
+    "project-source-period": {
+      shots: 3,
+      run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
+    },
+    // The SAME leaf the reported focus loss was found on, entered the way a
+    // shared link reaches it — with a period already applied, so every Apply
+    // below is a period CHANGE.
+    "catalog-period-focus": {
+      shots: 3,
+      route: "/catalog/scb/lisa/kon?period=2019..2020",
+      run: periodFocusCase,
+    },
+  };
+  for (const name of selection) {
     check(
-      contextResp.ok(),
-      `GET /api/context answered ${contextResp.status()}: ${contextBody.slice(0, 300)}`,
+      name in scenarios,
+      `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
     );
-    // The Rust server's `context`: `{data, meta}`, the generation in `meta`.
-    const { data: deployment, meta } = JSON.parse(contextBody);
-    const project = {
-      schema_version: "3.0.0",
-      steward: deployment.steward.id,
-      reg_meta_version: `reg_meta/v${deployment.reg_meta_version}`,
-      name: "Synthetic order flow",
-      sources: [
-        {
-          name: "lisa-2018",
-          register_variant: "scb/lisa/individer-15plus",
-          period: 2018,
-          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-        },
-      ],
-    };
-    // The source-period edit's project (Y-81): TWO differently named sources on
-    // ONE register variant — a shape the catalog's add path cannot author, and the
-    // reason the edit is keyed by source name. `lisa-core` carries Kon plus
-    // Forsamling, which no single catalog page lists beside it. The study window is
-    // what the edited period then deviates from.
-    const twoSourceProject = {
-      ...project,
-      name: "Synthetic source period",
-      window: { from: 2018, to: 2020 },
-      sources: [
-        {
-          name: "lisa-core",
-          register_variant: "scb/lisa/individer-15plus",
-          period: { from: 2018, to: 2020 },
-          bindings: [
-            { variable: "scb/lisa/kon", type: "categorical", representation: "Kon" },
-            {
-              variable: "scb/lisa/forsamling",
-              type: "categorical",
-              representation: "Forsamling",
-            },
-          ],
-        },
-        {
-          name: "lisa-lonfink",
-          register_variant: "scb/lisa/individer-15plus",
-          // A #307 two-segment list (Y-101) — untouched by this scenario, present
-          // so the shots show a multi-row card alongside the one being edited.
-          period: [
-            { from: 2015, to: 2017 },
-            { from: 2019, to: 2020 },
-          ],
-          bindings: [
-            {
-              variable: "scb/lisa/lonfink",
-              type: "numeric",
-              representation: "LonFinkJan",
-            },
-          ],
-        },
-      ],
-    };
-    // The manifest names the catalog it was materialized against by the SAME
-    // identity `/api/context` reports for the served artifact (reg_meta
-    // `OrderProvenance`): its steward, generation and schema — not its import
-    // date. The steward also fixes the artifact kind (`global` is the catalog
-    // artifact, an admission invariant), so the kind needs no check of its own.
-    const expected = {
-      mode: "global_fallback",
-      steward: deployment.steward.id,
-      generationId: meta.generation,
-      schemaVersion: deployment.schema_version,
-    };
-    console.log(
-      `flows: ${BASE} steward=${deployment.steward.id} ` +
-        `reg_meta=${deployment.reg_meta_version} ` +
-        `catalog=${deployment.schema_version}@${deployment.import_date}`,
-    );
-    // The scenarios by name, with the `route` each starts on (default /project)
-    // and the number of PNGs it writes per viewport. `blockedOrderCase` already
-    // has runCase's `body` signature; the two recovery cases bind the shared
-    // project (and its expected manifest) into theirs.
-    const scenarios = {
-      "blocked-order": { shots: 1, run: blockedOrderCase },
-      "order-retry": {
-        shots: 2,
-        run: (p, c, shoot) => orderRetryCase(p, c, shoot, project, expected),
-      },
-      "validation-retry": {
-        shots: 1,
-        run: (p, c, shoot) => validationRetryCase(p, c, shoot, project),
-      },
-      // The one case that does NOT start at /project: the draft is authored from
-      // a catalog leaf, which is exactly the lifecycle the /project cases cannot
-      // reach.
-      "catalog-draft": {
-        shots: 2,
-        route: "/catalog/scb/lisa/kon?period=2018",
-        run: catalogDraftCase,
-      },
-      // The same leaf as ordinary browsing reaches it — NO query string, so no
-      // period is chosen and the pick has none to author under.
-      "catalog-period-required": {
-        shots: 2,
-        route: "/catalog/scb/lisa/kon",
-        run: catalogPeriodRequiredCase,
-      },
-      // Opens the SAME synthetic project as the recovery cases — the file whose
-      // arrival has to wait for the researcher's answer.
-      "replace-confirm": {
-        shots: 2,
-        run: (p, _c, shoot) => replaceConfirmCase(p, shoot, project),
-      },
-      // Opens the TWO-SOURCE project and edits one named source's period on its
-      // own /project card — the only surface that shows a source whole.
-      "project-source-period": {
-        shots: 3,
-        run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
-      },
-      // The SAME leaf the reported focus loss was found on, entered the way a
-      // shared link reaches it — with a period already applied, so every Apply
-      // below is a period CHANGE.
-      "catalog-period-focus": {
-        shots: 3,
-        route: "/catalog/scb/lisa/kon?period=2019..2020",
-        run: periodFocusCase,
-      },
-    };
-    for (const name of selection) {
-      check(
-        name in scenarios,
-        `flows: unknown scenario "${name}" — pick from ${Object.keys(scenarios).join(", ")}`,
-      );
-    }
-    // No names = every scenario; explicit names select a focused subset.
-    const names = selection.length > 0 ? selection : Object.keys(scenarios);
-    for (const viewport of FLOW_VIEWPORTS) {
-      for (const name of names) {
-        const { run, route } = scenarios[name];
-        await runCase(viewport, name, run, route);
-      }
-    }
-    const shots = names.reduce((n, name) => n + scenarios[name].shots, 0);
-    console.log(
-      `flows: OK — ${names.length * FLOW_VIEWPORTS.length} cases, ` +
-        `${shots * FLOW_VIEWPORTS.length} shots`,
-    );
-  } else if (cmd === "shot") {
-    await open(page, rest[0] ?? "/");
-    await settled(page);
-    await shot((rest[0] ?? "root").replaceAll("/", "_") || "root");
-  } else if (cmd === "eval") {
-    await open(page, rest[0] ?? "/");
-    console.log(JSON.stringify(await page.evaluate(rest[1] ?? "null"), null, 2));
-  } else if (cmd === "smoke") {
-    await open(page, "/catalog");
-    await settled(page); // the FIRST capture is a settled view too, not a placeholder
-    await shot("01-root");
-    // Drill three levels (provider → register → variable) by clicking the first
-    // link STRICTLY DEEPER than the current path each round — `a[href^="/catalog"]`
-    // alone matches the header nav link first and goes nowhere. The SPA's `link`
-    // action intercepts these anchors (pushState, no full reload).
-    for (const name of ["02-provider", "03-register", "04-variable"]) {
-      const here = new URL(page.url()).pathname.replace(/\/$/, "");
-      const link = page.locator(`a[href^="${here}/"]`).first();
-      const href = await link.getAttribute("href");
-      await link.click();
-      await settled(page);
-      console.log(`clicked → ${href} (now at ${new URL(page.url()).pathname})`);
-      await shot(name);
-    }
-    // Real form interaction: the leaf's Period control — a labelled dual-thumb
-    // year slider. Drive it the way a keyboard researcher does (one ArrowRight
-    // tick on "From year", which the thumbs hard-clamp to the subject's own
-    // coverage, so the result is always a range the catalog actually delivers),
-    // then Apply and assert BOTH what the app wrote to the URL and what it shows.
-    // Scoped to the leaf's slider group: the header's project-window slider
-    // carries the same two thumb labels.
-    const periodSlider = page.getByRole("group", { name: "Period window (years)" });
-    const fromYear = periodSlider.getByLabel("From year");
-    const seededFrom = Number(await fromYear.inputValue());
-    const to = Number(await periodSlider.getByLabel("To year").inputValue());
-    check(
-      seededFrom < to,
-      `period slider seeded a single year (${seededFrom}) — no range to narrow`,
-    );
-    await fromYear.press("ArrowRight");
-    const from = Number(await fromYear.inputValue());
-    check(from === seededFrom + 1, `From year did not step: ${seededFrom} → ${from}`);
-    const period = `${from}..${to}`;
-    await page.getByRole("button", { name: "Apply period" }).click();
-    await periodApplied(page, period);
-    await settled(page);
-    await page.waitForFunction(
-      (wire) => document.body.innerText.includes(`narrowed to ${wire}`),
-      period,
-      { timeout: 10_000 },
-    );
-    console.log(`period ${seededFrom}..${to} → ${period} at ${page.url()}`);
-    await shot("04b-period-resolved");
-    // Deep-link reload: a cold load of the current nested path must render the
-    // same view (vite's SPA fallback in dev; the edge worker in production).
-    const deep = new URL(page.url()).pathname;
-    await open(page, deep);
-    await settled(page);
-    const body = await page.locator("body").innerText();
-    if (body.trim().length < 40) throw new Error(`deep link ${deep} rendered ~empty body`);
-    await shot("05-deep-link-reload");
-    console.log("smoke: OK");
-  } else {
-    throw new Error(`unknown command: ${cmd}`);
   }
+  // No names = every scenario; explicit names select a focused subset.
+  const names = selection.length > 0 ? selection : Object.keys(scenarios);
+  for (const viewport of FLOW_VIEWPORTS) {
+    for (const name of names) {
+      const { run, route } = scenarios[name];
+      await runCase(viewport, name, run, route);
+    }
+  }
+  const shots = names.reduce((n, name) => n + scenarios[name].shots, 0);
+  console.log(
+    `flows: OK — ${names.length * FLOW_VIEWPORTS.length} cases, ` +
+      `${shots * FLOW_VIEWPORTS.length} shots`,
+  );
 } finally {
   await browser.close();
 }
