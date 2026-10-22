@@ -1362,13 +1362,21 @@
     },
     "/api/search/facets": {
       "get": {
-        "description": "Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent.",
+        "description": "Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with its matched variables' FQIDs.",
         "operationId": "search_facets",
         "parameters": [
           {
             "name": "q",
             "in": "query",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -4498,6 +4506,16 @@
           "variable_matches": {
             "type": "integer",
             "format": "int64"
+          },
+          "variables": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "With `register`, the matched variables' FQIDs in FQID order, so the register\npage narrows by the same admission it counts; absent without it."
           }
         }
       },

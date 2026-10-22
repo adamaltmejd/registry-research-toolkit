@@ -279,20 +279,29 @@ pub struct RegisterFacets {
 pub struct RegisterFacet {
     fqid: Option<String>,
     variable_matches: i64,
+    /// With `register`, the matched variables' FQIDs in FQID order, so the register
+    /// page narrows by the same admission it counts; absent without it.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    variables: Option<Vec<String>>,
 }
 
 pub fn facets(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let q = super::q(params)?;
     let conn = server.catalog.connect()?;
+    let register = params
+        .get("register")
+        .map(|r| refs::register(&conn, scope, r).map(|register| register.id))
+        .transpose()?;
     let request = Request {
         q,
         ty: Some("variable"),
         limit: 0,
         years: None,
-        register: None,
+        register,
         after: None,
     };
     let registers = match fts_match_query(&fold_search(q)) {
+        Some(fts) if register.is_some() => register_matches(&conn, scope, &request, &fts)?,
         Some(fts) => register_facets(&conn, scope, &request, &fts)?,
         None => Vec::new(),
     };
@@ -322,10 +331,45 @@ fn register_facets(
             Ok(RegisterFacet {
                 fqid: fqid(&[row.get(0)?, row.get(1)?]),
                 variable_matches: row.get(2)?,
+                variables: None,
             })
         })?
         .collect::<rusqlite::Result<_>>()?;
     Ok(rows)
+}
+
+/// The facet of the one register `request` names, with its matched variables' FQIDs:
+/// the same admission ([`matched`]) listed instead of grouped, bounded by the
+/// register's size. Absent when nothing matches, as in [`register_facets`].
+fn register_matches(
+    conn: &Connection,
+    scope: Scope,
+    request: &Request,
+    fts: &str,
+) -> Result<Vec<RegisterFacet>, Error> {
+    let admission = admission(request.q, fts, scope, request.years);
+    let (matched, args) = matched(scope, request, &admission);
+    let sql = format!(
+        "SELECT p.slug, r.slug, v.slug FROM variable_fts vf \
+         JOIN variable v ON v.variable_id = vf.rowid \
+         JOIN register r ON r.register_id = vf.register_id \
+         JOIN provider p ON p.provider_id = r.provider_id \
+         WHERE {matched} ORDER BY v.slug"
+    );
+    let mut stmt = conn.prepare(&sql)?;
+    let rows: Vec<[Option<String>; 3]> = stmt
+        .query_map(params_from_iter(&args), |row| {
+            Ok([row.get(0)?, row.get(1)?, row.get(2)?])
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    let Some([provider, register, _]) = rows.first() else {
+        return Ok(Vec::new());
+    };
+    Ok(vec![RegisterFacet {
+        fqid: fqid(&[provider.clone(), register.clone()]),
+        variable_matches: i64::try_from(rows.len()).expect("a register's variables fit i64"),
+        variables: Some(rows.iter().filter_map(|slugs| fqid(slugs)).collect()),
+    }])
 }
 
 /// The page the request names: the typed list or the untyped ranking, cut at the
