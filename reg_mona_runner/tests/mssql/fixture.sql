@@ -29,8 +29,13 @@ INSERT INTO dbo.Later VALUES (3, 30);
 GO
 -- Runner cases (tests/cases/*/order.json): one period column per encoding and
 -- delivery type, a schema-P1105 table with non-ASCII names, and the refusals.
-CREATE TABLE dbo.Monthly (Payment int, Period int);
-INSERT INTO dbo.Monthly VALUES (1, 201901), (2, 201902), (3, 201903), (4, 201904);
+-- Monthly also carries code-page text (varchar) and an 18-digit decimal id.
+CREATE TABLE dbo.Monthly (Payment int, Period int, Place varchar(20), Ref decimal(18, 0));
+INSERT INTO dbo.Monthly VALUES
+  (1, 201901, 'Lund', 100000000000000001),
+  (2, 201902, N'Västerås', 123456789012345678),
+  (3, 201903, NULL, 999999999999999999),
+  (4, 201904, 'Kiruna', 100000000000000004);
 CREATE TABLE dbo.Yearly (Value int, Ar varchar(10));
 INSERT INTO dbo.Yearly VALUES (1, '2018'), (2, '2019'), (3, 'okänt'), (4, NULL), (5, '2020');
 CREATE TABLE dbo.Stamped (Value int, Seen datetime2);

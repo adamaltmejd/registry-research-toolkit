@@ -598,10 +598,10 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    `encoding` (`date`, `year`, `yyyymm`, `yyyymmdd`) and keeps a row whose year, month
    or day lies in a range (a `datetime2` value compares by its day): a bound finer than
    the encoding widens to its whole year or month, never narrowing the request. A row
-   whose period value is missing or unreadable is the runner's call, settled when
-   manifest v1 freezes. No filter when the table declares no period column (it is
-   extracted whole), when the request covers every held day, for a year-independent
-   file, or in the global fallback.
+   whose period value is missing or unreadable matches no range, so a filtered file
+   leaves it out and an unfiltered file keeps it (settled at the v1 freeze). No filter
+   when the table declares no period column (it is extracted whole), when the request
+   covers every held day, for a year-independent file, or in the global fallback.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,

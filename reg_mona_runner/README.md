@@ -29,8 +29,9 @@ All under the export root, set at the top of the script:
 
 A successful order writes `export_data\<nr>_<date>\`:
 
-- one CSV per output file, named `<register>_<variant>_<period>.csv` (UTF-8, header row,
-  empty field for a missing value);
+- one CSV per output file, named `<register>_<variant>_<period>.csv`, or
+  `<register>_<variant>_<part>_<period>.csv` for a partition or projection table (UTF-8,
+  header row, empty field for a missing value);
 - `run_log.csv`: each file's row count, column count and the period filter applied.
 
 The order then moves to `orders\archive\`.
@@ -39,12 +40,13 @@ A failed order stays in `orders\`, and its export folder holds only `error_log.c
 the exit code and the reason. Fix the cause and run the script again: a rerun overwrites
 that day's export folder.
 
-  | Code | What to do                                                                   |
-  | ---- | ---------------------------------------------------------------------------- |
-  | 2    | Check the export root, the R packages (DBI, odbc, jsonlite) and the database |
-  | 3-6  | The file is not a usable order: download it again from the catalog           |
-  | 7    | A table or column is not in the database: report it to the catalog team      |
-  | 8    | The query or the write failed: check disk space, then report it              |
+  | Code    | What to do                                                                   |
+  | ------- | ---------------------------------------------------------------------------- |
+  | 2       | Check the export root, the R packages (DBI, odbc, jsonlite) and the database |
+  | 3, 4, 6 | The file is not a usable order: download it again from the catalog           |
+  | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view  |
+  | 7       | A table or column is not in the database: report it to the catalog team      |
+  | 8       | The query or the write failed: check disk space, then report it              |
 
 ## Safety
 

@@ -136,11 +136,13 @@ check_string <- function(x, where) {
   x
 }
 
-# A SQL Server identifier: QUOTENAME takes at most 128 characters.
+# A SQL Server identifier: at most 128 UTF-16 code units (sysname), so
+# sql_text's nvarchar(128) never truncates it into another name.
 check_name <- function(x, where) {
   check_string(x, where)
-  if (nchar(x, type = "chars") > 128L) {
-    refuse("manifest", where, " is longer than 128 characters")
+  points <- utf8ToInt(enc2utf8(x))
+  if (anyNA(points) || length(points) + sum(points > 0xFFFF) > 128L) {
+    refuse("manifest", where, " is not a name of at most 128 UTF-16 units")
   }
   x
 }
@@ -328,27 +330,31 @@ plan_files <- function(entries) {
     lg <- e$logical
     ph <- e$physical
     placement <- c(ph$partition, ph$projection)
+    if (length(placement) > 1L) {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical has both a partition and a projection"
+      )
+    }
     name <- paste0(
       paste(c(lg$register, lg$variant, placement, ph$edition), collapse = "_"),
       ".csv"
     )
+    # The placement is part of the file's identity, so two entries of one table
+    # with different placements never merge silently (the name clash check below
+    # refuses them instead).
     id <- paste(
       lg$provider,
       lg$register,
       lg$variant,
       ph$table,
       ph$edition,
+      paste(placement, collapse = ""),
       sep = "\r"
     )
     f <- files[[id]]
     if (is.null(f)) {
-      if (length(placement) > 1L) {
-        refuse(
-          "manifest",
-          sprintf("entries[%d]", i - 1L),
-          ".physical has both a partition and a projection"
-        )
-      }
       # Slug spelling only: no path separator, drive or parent reference.
       if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", name)) {
         refuse("manifest", "output file name ", name, " is not slug spelling")
@@ -373,7 +379,9 @@ plan_files <- function(entries) {
     files[[id]] <- f
   }
   names(files) <- NULL
-  file_names <- vapply(files, `[[`, "", "name")
+  # Case-insensitive: MONA's Windows file system would let one file overwrite
+  # another that differs only in case.
+  file_names <- tolower(vapply(files, `[[`, "", "name"))
   clash <- unique(file_names[duplicated(file_names)])
   if (length(clash)) {
     refuse(
@@ -440,29 +448,30 @@ sql_text <- function(s) {
 
 # Run a query; a driver error is reported by SQLSTATE only, because its message
 # can quote a row value (a conversion error names the value it failed on).
-query <- function(con, sql, what, params = NULL) {
+query <- function(con, sql, what) {
   tryCatch(
-    if (length(params)) {
-      DBI::dbGetQuery(con, sql, params = params)
-    } else {
-      DBI::dbGetQuery(con, sql)
-    },
+    DBI::dbGetQuery(con, sql),
     error = function(e) refuse("extract", what, " failed", sqlstate(e))
   )
 }
 
+# The SQLSTATE from the leading prefix of an odbc error ("nanodbc/nanodbc.cpp:N:
+# XXXXX: ..." or "ODBC failed with error XXXXX from ..."), never from the rest,
+# which can quote a row value.
 sqlstate <- function(e) {
-  states <- regmatches(
-    conditionMessage(e),
-    gregexpr("\\b[0-9A-Z]{5}(?=: )", conditionMessage(e), perl = TRUE)
+  msg <- conditionMessage(e)
+  state <- regmatches(
+    msg,
+    regexec(
+      "^(?:nanodbc/nanodbc\\.cpp:[0-9]+: |ODBC failed with error )([0-9A-Z]{5})\\b",
+      msg,
+      perl = TRUE
+    )
   )[[1]]
-  if (!length(states)) {
-    return(" (driver message withheld: it may quote row values)")
-  }
   paste0(
-    " (SQLSTATE ",
-    paste(unique(states), collapse = ", "),
-    "; driver message withheld: it may quote row values)"
+    " (",
+    if (length(state)) paste0("SQLSTATE ", state[2], "; "),
+    "driver message withheld: it may quote row values)"
   )
 }
 
@@ -497,7 +506,8 @@ resolve_schema <- function(con, table) {
   hits$schema_id[[1]]
 }
 
-# Each of `columns` on the resolved table, by DATA_TYPE; NA where it is missing.
+# Each of `columns` on the resolved table: its DATA_TYPE and
+# CHARACTER_MAXIMUM_LENGTH (-1 for max). A missing column is refused.
 resolve_columns <- function(con, schema_id, table, columns) {
   values <- paste0(
     "(",
@@ -510,7 +520,8 @@ resolve_columns <- function(con, schema_id, table, columns) {
   found <- query(
     con,
     paste0(
-      "SELECT v.i AS i, c.DATA_TYPE AS data_type FROM (VALUES ",
+      "SELECT v.i AS i, c.DATA_TYPE AS data_type, ",
+      "CAST(c.CHARACTER_MAXIMUM_LENGTH AS int) AS max_length FROM (VALUES ",
       values,
       ") AS v(i, n) LEFT JOIN INFORMATION_SCHEMA.COLUMNS AS c ON c.TABLE_SCHEMA = SCHEMA_NAME(",
       as.integer(schema_id),
@@ -521,8 +532,8 @@ resolve_columns <- function(con, schema_id, table, columns) {
     ),
     paste0("looking up the columns of ", table)
   )
-  types <- found$data_type[order(found$i)]
-  missing <- columns[is.na(types)]
+  found <- found[order(found$i), ]
+  missing <- columns[is.na(found$data_type)]
   if (length(missing)) {
     refuse(
       "resolve",
@@ -532,7 +543,26 @@ resolve_columns <- function(con, schema_id, table, columns) {
       paste(missing, collapse = ", ")
     )
   }
-  tolower(types)
+  list(type = tolower(found$data_type), max_length = found$max_length)
+}
+
+# A selected column as T-SQL text around `@col`. Text the client would fetch in
+# its code page (char, varchar, text) is fetched as nvarchar, so it arrives as
+# UTF-8 whatever MONA's code page; decimal and numeric are fetched as text, so
+# an 18-digit id never passes through a double.
+select_expr <- function(type, max_length) {
+  if (type %in% c("char", "varchar", "text")) {
+    size <- if (is.na(max_length) || max_length < 0L || max_length > 4000L) {
+      "max"
+    } else {
+      max(max_length, 1L)
+    }
+    return(paste0("CAST(@col AS nvarchar(", size, ")) AS @col"))
+  }
+  if (type %in% c("decimal", "numeric")) {
+    return("CAST(@col AS nvarchar(64)) AS @col")
+  }
+  "@col"
 }
 
 # The period value a filter compares, as T-SQL text around `@col` (the quoted
@@ -575,11 +605,29 @@ bound <- function(day, encoding) {
 # One batch per file: the SELECT is assembled server-side from QUOTENAME()d
 # identifiers and run by sp_executesql with the filter bounds as parameters,
 # bound from R.
-select_batch <- function(file, schema_id, filter_type) {
+select_batch <- function(file, schema_id, types) {
   quoted <- function(name) paste0("QUOTENAME(", sql_text(name), ")")
+  # A template's fixed text as N'...' literals around the quoted column at each
+  # @col; the templates are this script's constants, never manifest text.
+  splice <- function(template, col) {
+    parts <- strsplit(paste0(template, " "), "@col", fixed = TRUE)[[1]]
+    parts[length(parts)] <- sub(" $", "", parts[length(parts)])
+    paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
+  }
+  selected <- vapply(
+    seq_along(file$columns),
+    function(j) {
+      splice(
+        select_expr(types$type[j], types$max_length[j]),
+        quoted(file$columns[j])
+      )
+    },
+    ""
+  )
+  filter_type <- types$type[length(types$type)]
   select <- paste0(
     "N'SELECT ' + ",
-    paste(vapply(file$columns, quoted, ""), collapse = " + N', ' + "),
+    paste(selected, collapse = " + N', ' + "),
     " + N' FROM ' + QUOTENAME(SCHEMA_NAME(",
     as.integer(schema_id),
     ")) + N'.' + ",
@@ -590,9 +638,7 @@ select_batch <- function(file, schema_id, filter_type) {
   f <- file$filter
   if (!is.null(f)) {
     key <- period_key(f$encoding, filter_type, file$table, f$column)
-    col <- quoted(f$column)
-    expr <- strsplit(key$expr, "@col", fixed = TRUE)[[1]]
-    key_sql <- paste0("N'", expr[1], "' + ", col, " + N'", expr[2], "'")
+    key_sql <- splice(key$expr, quoted(f$column))
     terms <- character()
     for (r in f$ranges) {
       parts <- character()
@@ -675,6 +721,9 @@ csv_field <- function(x) {
     formatC(x, digits = 15L, format = "fg", width = 1L)
   } else if (is.character(x) || is.factor(x)) {
     csv_text(x)
+  } else if (is.logical(x)) {
+    # bit, as the 0/1 the catalog's value codes use
+    as.character(as.integer(x))
   } else {
     as.character(x)
   }
@@ -703,8 +752,8 @@ write_csv <- function(df, path) {
   if (nrow(df)) writeBin(csv_bytes(df), sink)
 }
 
-extract_file <- function(con, file, schema_id, filter_type, out) {
-  batch <- select_batch(file, schema_id, filter_type)
+extract_file <- function(con, file, schema_id, types, out) {
+  batch <- select_batch(file, schema_id, types)
   path <- file.path(out, file$name)
   sink <- file(path, open = "wb")
   on.exit(close(sink), add = TRUE)
@@ -729,6 +778,18 @@ extract_file <- function(con, file, schema_id, filter_type, out) {
       refuse("extract", what, " returned an unexpected column count")
     }
     if (nrow(chunk)) {
+      for (j in seq_along(chunk)) {
+        x <- chunk[[j]]
+        if (is.character(x) && !all(validUTF8(x[!is.na(x)]))) {
+          refuse(
+            "extract",
+            what,
+            ": column ",
+            file$columns[j],
+            " holds text that is not UTF-8"
+          )
+        }
+      }
       writeBin(csv_bytes(chunk), sink)
       rows <- rows + nrow(chunk)
     }
@@ -777,14 +838,22 @@ extract_order <- function(path, out, db) {
   # Resolve every file before writing any, so a missing table fails fast.
   resolved <- lapply(files, function(f) {
     schema_id <- resolve_schema(con, f$table)
-    columns <- union(f$columns, f$filter$column)
-    types <- resolve_columns(con, schema_id, f$table, columns)
-    filter_type <- NULL
+    # The filter column last, so select_batch finds its type there.
+    types <- resolve_columns(
+      con,
+      schema_id,
+      f$table,
+      c(f$columns, f$filter$column)
+    )
     if (!is.null(f$filter)) {
-      filter_type <- types[[match(f$filter$column, columns)]]
-      period_key(f$filter$encoding, filter_type, f$table, f$filter$column)
+      period_key(
+        f$filter$encoding,
+        types$type[length(types$type)],
+        f$table,
+        f$filter$column
+      )
     }
-    list(schema_id = schema_id, filter_type = filter_type)
+    list(schema_id = schema_id, types = types)
   })
   log <- data.frame(
     file = character(),
@@ -798,7 +867,7 @@ extract_order <- function(path, out, db) {
       con,
       f,
       resolved[[i]]$schema_id,
-      resolved[[i]]$filter_type,
+      resolved[[i]]$types,
       out
     )
     say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
@@ -818,23 +887,44 @@ run_order <- function(path, base, db) {
   stamp <- format(Sys.Date(), "%Y-%m-%d")
   out <- file.path(base, "export_data", paste0(nr, "_", stamp))
   say("order ", nr, ":")
+  # An empty export folder, or FALSE when a file survives (on Windows, one open
+  # in another program).
   reset <- function() {
     unlink(out, recursive = TRUE)
     dir.create(out, recursive = TRUE, showWarnings = FALSE)
+    dir.exists(out) && !length(list.files(out, all.files = TRUE, no.. = TRUE))
   }
-  reset()
   failure <- tryCatch(
     {
-      n <- extract_order(path, out, db)
+      if (!reset()) {
+        refuse("setup", "cannot clear the export folder ", out)
+      }
+      # An R warning can quote a value (a string R cannot translate): it fails
+      # the order instead of reaching the console.
+      n <- withCallingHandlers(
+        extract_order(path, out, db),
+        warning = function(w) {
+          refuse(
+            "extract",
+            "an R warning was raised (withheld: it may quote row values)"
+          )
+        }
+      )
       say("  done: ", n, " file(s) in ", out)
       NULL
     },
     runner_refusal = function(e) e,
+    # Withheld like a driver message: an R error, and its call (do.call inlines
+    # its arguments), can quote a value it failed on.
     error = function(e) {
       structure(
         class = c("runner_refusal", "error", "condition"),
         list(
-          message = conditionMessage(e),
+          message = paste0(
+            "unexpected R error (",
+            class(e)[1],
+            "; message withheld: it may quote row values)"
+          ),
           call = NULL,
           code = EXIT[["extract"]]
         )
@@ -846,8 +936,12 @@ run_order <- function(path, base, db) {
     dir.create(archive, showWarnings = FALSE)
     target <- file.path(archive, paste0(nr, "_", stamp, ".json"))
     # file.rename refuses an existing target on Windows: copy, then remove.
-    if (file.copy(path, target, overwrite = TRUE) && file.remove(path)) {
-      return(EXIT[["ok"]])
+    if (file.copy(path, target, overwrite = TRUE)) {
+      if (file.remove(path)) {
+        return(EXIT[["ok"]])
+      }
+      # The order stays in orders/; no stale copy beside it in archive/.
+      unlink(target)
     }
     failure <- structure(
       class = c("runner_refusal", "error", "condition"),
@@ -859,7 +953,9 @@ run_order <- function(path, base, db) {
     )
   }
   # A failed order leaves no partial CSVs, only its error log.
-  reset()
+  if (!reset()) {
+    say("  WARNING: files remain in ", out, ": delete them before using it")
+  }
   write_csv(
     data.frame(code = failure$code, message = conditionMessage(failure)),
     file.path(out, "error_log.csv")

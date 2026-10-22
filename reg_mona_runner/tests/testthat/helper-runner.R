@@ -38,9 +38,10 @@ run_runner <- function(base, connection = "") {
   status <- system2(
     file.path(R.home("bin"), "Rscript"),
     shQuote(file.path(runner_dir, "swecov_extract.R")),
+    # system2 pastes env into a shell command: quote the values.
     env = c(
-      paste0("SWECOV_EXTRACT_BASE=", base),
-      paste0("SWECOV_EXTRACT_CONNECTION=", connection)
+      paste0("SWECOV_EXTRACT_BASE=", shQuote(base)),
+      paste0("SWECOV_EXTRACT_CONNECTION=", shQuote(connection))
     ),
     stdout = output,
     stderr = output

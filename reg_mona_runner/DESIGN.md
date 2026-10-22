@@ -35,8 +35,9 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    `<register>_<variant>[_<partition>|_<projection>]_<edition>.csv`. A file's columns
    are its entries' distinct physical columns in manifest order (ordered entries first,
    then held keys). Every entry of a file must carry the same filter. A name outside
-   slug spelling is refused, so a manifest cannot name a path, and so are two files with
-   one name.
+   slug spelling is refused, so a manifest cannot name a path, and so are two files
+   whose names differ only in case (MONA's file system would let one overwrite the
+   other). A table or column name is at most 128 UTF-16 units, SQL Server's `sysname`.
 3. Resolve every file before writing any: its table's schema from
    `INFORMATION_SCHEMA.TABLES` (exactly one hit; the holdings put 17 views in schema
    `P1105` and the rest in `dbo`, with no name in both), then each column and the period
@@ -76,18 +77,28 @@ than guessed.
 ## CSV
 
 Header row of the manifest's column names. Numbers in fixed notation to 15 significant
-digits (a float id never prints as `1e+15`), `bigint` read as text so a person key never
-passes through a double, days as `YYYY-MM-DD`, date-times as `YYYY-MM-DD HH:MM:SS`
-(sub-second precision dropped), NULL as an empty field. A text field is quoted only when
-it must be: when empty (so it differs from NULL), or holding a quote, comma, line break
-or edge whitespace. Lines end in LF. Rows come in the server's order: there is no
-`ORDER BY`, which would sort whole registers for nothing.
+digits (a float id never prints as `1e+15`); `bigint` is read as text and `decimal` and
+`numeric` are fetched as text, so an 18-digit key never passes through a double. `char`,
+`varchar` and `text` are fetched as `nvarchar`, so they arrive as UTF-8 whatever the
+client code page; text that is still not UTF-8 fails the order. `bit` is 0/1, days
+`YYYY-MM-DD`, date-times `YYYY-MM-DD HH:MM:SS` (sub-second precision dropped), NULL an
+empty field. A text field is quoted only when it must be: when empty (so it differs from
+NULL), or holding a quote, comma, line break or edge whitespace. Lines end in LF. Rows
+come in the server's order: there is no `ORDER BY`, which would sort whole registers for
+nothing.
 
 ## No row values in logs
 
 Console output, `run_log.csv` and `error_log.csv` hold file names, counts and manifest
-fields only. A driver error is reported by its SQLSTATE: its message is withheld, since
-SQL Server's conversion errors quote the offending value.
+fields only. A driver error is reported by the SQLSTATE in its message prefix: the rest
+is withheld, since SQL Server's conversion errors quote the offending value. For the
+same reason an unexpected R error is reported by its class alone, and an R warning
+during an order (R quotes a string it cannot translate) fails the order instead of
+printing.
+
+The manifest decides which tables and columns are read: nothing checks it against an
+allowlist or the project hash. The data manager's review of the order, and the catalog
+that wrote it, are the control on what is extracted.
 
 ## Exit codes
 

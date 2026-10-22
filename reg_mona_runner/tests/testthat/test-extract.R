@@ -67,7 +67,8 @@ test_that("orders extract their files from SQL Server", {
     "partitions",
     "projections",
     "column-windows",
-    # Compact JSON; yyyymm on int, yyyymmdd on float in schema P1105 with
+    # Compact JSON; non-ASCII varchar text and an 18-digit decimal id that a
+    # double would round; yyyymm on int, yyyymmdd on float in schema P1105 with
     # non-ASCII names, year on varchar with an unparseable value, date on
     # datetime2 keeping the bound day's last second; bounds finer than the
     # encoding widen.
@@ -92,5 +93,10 @@ test_that("orders extract their files from SQL Server", {
     export_dir(base, "broken-view"),
     "error_log.csv"
   ))
-  expect_match(broken$message, "driver message withheld", fixed = TRUE)
+  # Only the SQLSTATE survives (22012, division by zero), from the message prefix.
+  expect_match(
+    broken$message,
+    "(SQLSTATE 22012; driver message withheld",
+    fixed = TRUE
+  )
 })
