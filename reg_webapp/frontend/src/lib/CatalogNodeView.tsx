@@ -3,6 +3,8 @@ import {
   type ConceptGroup,
   getStates,
   type ProviderShow,
+  type ShowNode,
+  type VariableStateModel,
 } from "./api";
 import { BindingLeafView } from "./BindingLeafView";
 import { browseFilter, useBrowseFilter } from "./browse_filter";
@@ -71,8 +73,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
 
   if (resource.loading) {
     return (
-      <section className={styles.loading} aria-busy="true" aria-live="polite">
-        <p className={styles.loadingStatus}>Loading…</p>
+      <section className={styles.loading} aria-busy="true">
         <div className={styles.loadingGeometry}>
           <Skeleton width="min(24rem, 70%)" count={2} />
           <Skeleton variant="block" count={classification ? 3 : 1} />
@@ -98,7 +99,30 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
     );
   }
 
-  const { node, states } = resource.data;
+  // The loaded page crossfades in over the skeleton it replaces.
+  return (
+    <div className={`${styles.loaded} motion-swap`}>
+      <NodeView
+        fqidPath={fqidPath}
+        node={resource.data.node}
+        states={resource.data.states}
+        period={period}
+      />
+    </div>
+  );
+}
+
+function NodeView({
+  fqidPath,
+  node,
+  states,
+  period,
+}: {
+  fqidPath: string;
+  node: ShowNode;
+  states: VariableStateModel[];
+  period: PeriodProps;
+}) {
   switch (node.kind) {
     case "provider":
       return <ProviderView node={node} />;
