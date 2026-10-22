@@ -609,3 +609,7 @@ export function orderFindingPointer(
     ? jsonPointer(["sources", sIdx])
     : jsonPointer(["sources", sIdx, "bindings", bIdx]);
 }
+
+/** The loaded project's `h1`: where focus goes when the last source card it
+ * could land on is removed. */
+export const PROJECT_HEADING_ID = "project-heading";

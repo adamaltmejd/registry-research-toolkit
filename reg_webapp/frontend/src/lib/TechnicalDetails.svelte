@@ -7,8 +7,8 @@ import type { Snippet } from "svelte";
 // internal source tag — behind this collapsed <details> so they stay AVAILABLE
 // without crowding the user-facing fields above. One component keeps the summary
 // label + the disclosure styling consistent across all three call sites. Matches
-// the app's plain-<details> disclosure idiom (ClassificationLineagePanels /
-// SearchView's concept-group fold): no chrome, a muted summary, default collapsed.
+// the app's plain-<details> disclosure idiom (ClassificationLineagePanels): no
+// chrome, a muted summary, default collapsed.
 //
 // The caller passes the demoted rows as `children` (typically a `<dl class="meta">`);
 // callers omit this component entirely when there is nothing to demote.

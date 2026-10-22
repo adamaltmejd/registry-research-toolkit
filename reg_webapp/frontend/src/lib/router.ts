@@ -17,8 +17,7 @@
 
 /** The parsed current route. `home` is `/` (the landing page, #675); `root` is
  * `/catalog` (the data browser); `catalog-node` carries the FQID path after
- * `/catalog/`; `project` is the authoring surface (A5.3c); `search` is the
- * results page (the query lives in `?q=`, not the path, #379); `not-found` is
+ * `/catalog/`; `project` is the authoring surface (A5.3c); `not-found` is
  * anything else. */
 export type Route =
   | { name: "home" }
@@ -41,15 +40,10 @@ export type Route =
   // literal `variants` tail the API declares above its catch-all.
   | { name: "variants"; provider: string; register: string }
   | { name: "project" }
-  | { name: "search" }
   // `doc` is the minimal documentation viewer (#394); `identifier` is the doc
   // filename after `/doc/` (a single path segment, decoded here like catalog).
   | { name: "doc"; identifier: string }
   | { name: "not-found"; path: string };
-
-type AppHistoryState = {
-  searchReturnUrl?: unknown;
-};
 
 /** `decodeURIComponent` that returns `null` on a malformed percent-sequence
  * instead of throwing a `URIError`. Load-bearing: `parseRoute` runs at module
@@ -78,12 +72,6 @@ export function parseRoute(pathname: string): Route {
   }
   if (path === "/project") {
     return { name: "project" };
-  }
-  if (path === "/search") {
-    // The query lives in `?q=` (read via getQueryParam), NOT the path — `route`
-    // stays keyed on the pathname only (like `?period`), so a refined `?q=` while
-    // already on `/search` doesn't remount the results view (#379).
-    return { name: "search" };
   }
   if (path.startsWith("/doc/")) {
     // Decode the single filename segment (the router stores the human identifier;
@@ -159,20 +147,10 @@ class Router {
    * back-forward-correct), and it is what a same-path/new-`?period` navigation
    * moves. */
   #search = window.location.search;
-  /** Where the search view's close control returns. Updated only when entering
-   * `/search` from a non-search route, so query refinements on `/search` do not
-   * overwrite it. A cold deep-link falls back to the catalog root. */
-  #searchReturnUrl = "/catalog";
   #listeners = new Set<() => void>();
 
   constructor() {
-    window.addEventListener("popstate", () => {
-      const returnUrl =
-        parseRoute(window.location.pathname).name === "search"
-          ? this.searchReturnUrlFromState()
-          : this.#searchReturnUrl;
-      this.syncLocation(returnUrl);
-    });
+    window.addEventListener("popstate", () => this.syncLocation());
   }
 
   get route(): Route {
@@ -181,15 +159,6 @@ class Router {
 
   get search(): string {
     return this.#search;
-  }
-
-  get searchReturnUrl(): string {
-    return this.#searchReturnUrl;
-  }
-
-  set searchReturnUrl(url: string) {
-    this.#searchReturnUrl = url;
-    this.emit();
   }
 
   /** Register a change listener; returns its removal. An arrow property, so it
@@ -205,16 +174,12 @@ class Router {
 
   /** Re-sync both halves off `window.location` — the one place that reads the
    * browser's location, called from the popstate handler AND from `go` after its
-   * push/replace — and notify once if anything moved. An unchanged pathname keeps
+   * push — and notify once if anything moved. An unchanged pathname keeps
    * the route object, so everything keyed on it survives an Apply on the catalog
    * leaf's period control untouched. */
-  private syncLocation(searchReturnUrl: string): void {
+  private syncLocation(): void {
     const { pathname, search } = window.location;
-    if (
-      pathname === this.#pathname &&
-      search === this.#search &&
-      searchReturnUrl === this.#searchReturnUrl
-    ) {
+    if (pathname === this.#pathname && search === this.#search) {
       return;
     }
     if (pathname !== this.#pathname) {
@@ -222,7 +187,6 @@ class Router {
       this.#route = parseRoute(pathname);
     }
     this.#search = search;
-    this.#searchReturnUrl = searchReturnUrl;
     this.emit();
   }
 
@@ -231,49 +195,14 @@ class Router {
    * same-path/new-query navigation is correctly NOT a no-op. An arrow property,
    * so it can be handed to RAC's `RouterProvider` unbound. */
   navigate = (url: string): void => {
-    this.go(url, false);
-  };
-
-  /** Like `navigate`, but REPLACES the current history entry
-   * (`history.replaceState`) instead of pushing a new one — so refining a search
-   * query in place (the omnibox's per-keystroke `?q=` updates, #379) doesn't spam
-   * the back-stack. Same no-op-when-equal guard as `navigate`. */
-  replace(url: string): void {
-    this.go(url, true);
-  }
-
-  private go(url: string, replace: boolean): void {
     const current =
       window.location.pathname + window.location.search + window.location.hash;
     if (url === current) {
       return;
     }
-    const next = new URL(url, window.location.origin);
-    const toSearch = parseRoute(next.pathname).name === "search";
-    // Entering /search remembers where it was entered from; refining it keeps
-    // the target its history entry already carries.
-    const returnUrl = !toSearch
-      ? this.#searchReturnUrl
-      : this.#route.name === "search"
-        ? this.searchReturnUrlFromState()
-        : current;
-    const nextState: AppHistoryState = toSearch
-      ? { searchReturnUrl: returnUrl }
-      : {};
-    if (replace) {
-      window.history.replaceState(nextState, "", url);
-    } else {
-      window.history.pushState(nextState, "", url);
-    }
-    this.syncLocation(returnUrl);
-  }
-
-  private searchReturnUrlFromState(): string {
-    const state = window.history.state as AppHistoryState | null;
-    return typeof state?.searchReturnUrl === "string"
-      ? state.searchReturnUrl
-      : "/catalog";
-  }
+    window.history.pushState({}, "", url);
+    this.syncLocation();
+  };
 
   /** Read a query parameter off `search`. Returns the decoded value, or `null`
    * when absent OR present-but-empty (`?period=`) — an empty modifier is "no

@@ -47,6 +47,14 @@
   background: var(--surface-hover);
 }
 
+.danger {
+  background: var(--err);
+  color: var(--danger-fg);
+}
+.danger[data-hovered]:not([aria-disabled="true"]) {
+  background: color-mix(in srgb, var(--err) 85%, var(--text));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .button {
     transition: none;

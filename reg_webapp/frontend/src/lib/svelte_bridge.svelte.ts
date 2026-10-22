@@ -3,7 +3,7 @@
 // store or last view is ported; the file is deleted in port PR 9.
 import { useMemo, useSyncExternalStore } from "react";
 import { untrack } from "svelte";
-import { initDraftLifecycle, projectStore } from "./project_store.svelte";
+import { projectStore } from "./project_store.svelte";
 
 /** Same value for React's purposes: identical, or a plain object or array whose
  * entries are identical. Lets a reader build a fresh snapshot object each run
@@ -59,11 +59,10 @@ export function useRune<A, T>(read: (arg: A) => T, arg: A): T {
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }
 
-/** The project draft as a plain object, for `useRune`: the store's draft is a deep
- * proxy edited in place, so its identity never moves; a snapshot is a new object
- * on every edit, which is what wakes React. */
+/** The project draft, for `useRune`: replaced (never mutated) on every edit, so
+ * its identity is what wakes React. */
 export function draftSnapshot() {
-  return $state.snapshot(projectStore.draft);
+  return projectStore.draft;
 }
 
 /** A props object a Svelte island can be mounted with and later updated through
@@ -71,11 +70,4 @@ export function draftSnapshot() {
 export function islandProps<P extends Record<string, unknown>>(initial: P): P {
   const props = $state(initial);
   return props;
-}
-
-/** Restore, debounced autosave and automatic validation of the project draft,
- * started once for the app's lifetime, outside React (StrictMode never runs it
- * twice). The draft outlives every route, so no component owns it. */
-export function startDraftLifecycle(): void {
-  $effect.root(initDraftLifecycle);
 }

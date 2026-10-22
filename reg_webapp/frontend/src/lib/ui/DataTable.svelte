@@ -286,7 +286,7 @@ function onrownavigationclick(event: MouseEvent): void {
   }
 
   /* Stacked cards on narrow canvases (#832). The same 48rem breakpoint the rest
-     of the SPA uses (AppShell/SearchView). Native table layout collapses into a
+     of the SPA uses. Native table layout collapses into a
      vertical stack: each <tr> is a bordered card, each <td> stacks with its
      column micro-label as a decorative `::before` prefix. The explicit ARIA roles
      in the markup keep table semantics intact across this `display` change (which

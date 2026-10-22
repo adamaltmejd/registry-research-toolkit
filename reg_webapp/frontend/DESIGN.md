@@ -51,6 +51,7 @@ colors:
   # text color from a `-bg` tint; never hue alone (a glyph and text always
   # carry the meaning).
   err: "#b3261e"
+  danger-fg: "{colors.white}"
   err-bg: "#fbe9e7"
   err-border: "#f0a8a8"
   warn: "#7a5c00"
@@ -184,7 +185,7 @@ components:
     typography: "{typography.body-sm}"
   button-danger:
     backgroundColor: "{colors.err}"
-    textColor: "{colors.white}"
+    textColor: "{colors.danger-fg}"
     rounded: "{rounded.sm}"
     typography: "{typography.body-sm}"
   project-banner:
@@ -355,8 +356,9 @@ The current `AppShell` rail is a stepping stone (see Components) until it is rep
   text is underlined in `accent` at weight 600, a register that matched only through its
   variables says so with the count, and the detail pane stays put. Escape clears the
   filter and restores the collapse state. The command palette (RAC `Autocomplete`) opens
-  only from `⌘K` on an empty field, for codes, classifications and actions; its results
-  are a mixed list and carry a `TypeTag`.
+  from Enter in the field or `⌘K`, seeded with the field's text (maintainer-decided
+  2026-10-22), for codes, classifications and actions; its results are a mixed list and
+  carry a `TypeTag`.
 - **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
   row, the actions row, then definitions, then the `Timeline`, then the list of
   variables or columns. Padding `spacing.5`.

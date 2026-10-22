@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { bindingFieldsFromResolution } from "./catalog";
 import { type ProjectData, sourceSnapshot } from "./project_data";
-import { projectStore, type StagedAdd } from "./project_store.svelte";
+import { projectStore, type StagedAdd } from "./project_store";
 import {
   add,
   openFile,
@@ -9,8 +9,8 @@ import {
   storedProject,
 } from "./project-store-test-helpers";
 
-// Split from project_store.svelte.test.ts by contract surface: the cart's commit
-// paths (applyStagedDiff, applySourcePeriodEdit). Sibling: project_store.svelte.test.ts.
+// Split from project_store.test.ts by contract surface: the cart's commit
+// paths (applyStagedDiff, applySourcePeriodEdit). Sibling: project_store.test.ts.
 
 // The store is a MODULE SINGLETON — each test must establish the state it needs
 // (via newProject / openFile) rather than assume a fresh store.
@@ -471,7 +471,7 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
       sourceName,
       registerVariant: "scb/lisa/individer",
       period,
-      snapshot: sourceSnapshot($state.snapshot(source)),
+      snapshot: sourceSnapshot(source),
       replacementGeneration: projectStore.replacementGeneration,
     };
   }

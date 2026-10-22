@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  initDraftLifecycle,
   type ProjectPersistence,
   projectStore,
   type StagedAdd,
   setPersistence,
+  startDraftLifecycle,
   storeSchemaVersion,
-} from "./project_store.svelte";
+} from "./project_store";
 import {
   add,
   openFile,
@@ -175,18 +175,15 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     projectStore.newProject(SEED);
     projectStore.updateField("name", "persisted-name-check");
 
-    const stop = $effect.root(() => {
-      initDraftLifecycle();
-    });
+    const stop = startDraftLifecycle();
     // The autosave is debounced — nothing yet.
     expect(saves).toHaveLength(0);
     await vi.advanceTimersByTimeAsync(600);
     // After the debounce window, the draft is persisted with the stamped version.
     expect(saves.length).toBeGreaterThanOrEqual(1);
     expect(saves[0].schemaVersion).toBe(storeSchemaVersion);
-    // Regression: the persisted draft must be a plain $state.snapshot, not the live
-    // rune proxy. IndexedDB structured-clones the stored value, and a proxy throws
-    // DataCloneError — structuredClone here reproduces that exact failure mode.
+    // The persisted draft must be structured-cloneable: IndexedDB clones the
+    // stored value and throws DataCloneError otherwise.
     expect(() => structuredClone(saves[0].draft)).not.toThrow();
     // …and the snapshot carries the real edited content (not an empty/dropped
     // object that would also clone fine).

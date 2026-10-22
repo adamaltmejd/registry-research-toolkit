@@ -259,6 +259,7 @@
   /* Status roles — AA-cleared FOREGROUND values, each paired with a glyph (✕ ▲ i ✓)
      and text. The *-bg roles are SEPARATE fill tints, never text. */
   --err: #b3261e;
+  --danger-fg: #ffffff; /* text/icon on a danger (err) fill */
   --err-bg: #fbe9e7;
   --err-border: #f0a8a8; /* the error hairline on status rows */
   --warn: #7a5c00; /* also the "definition changed" mark on a timeline */

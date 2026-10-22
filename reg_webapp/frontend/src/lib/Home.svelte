@@ -14,20 +14,14 @@ let {
   sizes = null,
 }: { steward?: Steward | null; sizes?: CatalogSizes | null } = $props();
 
-// The entry points into the app. `/catalog` is the data browser, `/search` the
-// results page (a no-`?q=` `/search` renders a "start typing" prompt), `/project`
-// the authoring surface. Plain internal `<a>`s — the shell's `use:link` action
+// The entry points into the app. `/catalog` is the data browser, `/project` the
+// authoring surface; search is the top bar's palette, not a page. Plain internal `<a>`s — the shell's `use:link` action
 // intercepts the clicks for pushState navigation.
 const entries = [
   {
     href: "/catalog",
     title: "Browse the data",
     blurb: "Explore providers, registers, and variables in the catalog.",
-  },
-  {
-    href: "/search",
-    title: "Search",
-    blurb: "Find registers, variables, codes, and classifications by keyword.",
   },
   {
     href: "/project",

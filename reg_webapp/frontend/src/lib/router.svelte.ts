@@ -15,16 +15,9 @@ export const router = {
     track();
     return store.search;
   },
-  get searchReturnUrl() {
-    track();
-    return store.searchReturnUrl;
-  },
   getQueryParam(name: string): string | null {
     track();
     return store.getQueryParam(name);
   },
   navigate: store.navigate,
-  replace(url: string): void {
-    store.replace(url);
-  },
 };

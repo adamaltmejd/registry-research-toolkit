@@ -10,10 +10,9 @@ import { routeBreadcrumbs } from "./lib/catalog";
 import { providerQualified } from "./lib/catalog_names.svelte";
 import DocView from "./lib/DocView.svelte";
 import Home from "./lib/Home.svelte";
-import ProjectEditor from "./lib/ProjectEditor.svelte";
-import { projectStore } from "./lib/project_store.svelte";
+import { ProjectEditor } from "./lib/ProjectEditor";
+import { projectStore } from "./lib/project_store";
 import { onNavClick, type Route, router } from "./lib/router";
-import SearchView from "./lib/SearchView.svelte";
 import { SvelteIsland } from "./lib/SvelteIsland";
 import { useRune } from "./lib/svelte_bridge.svelte";
 import { TopBar } from "./lib/TopBar";
@@ -240,18 +239,13 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
       );
     case "project":
       return (
-        <SvelteIsland
-          component={ProjectEditor}
-          props={{
-            regMetaVersion,
-            steward,
-            orderInstructions: context?.steward.order_instructions ?? null,
-            providerQualified: qualified,
-          }}
+        <ProjectEditor
+          regMetaVersion={regMetaVersion}
+          steward={steward}
+          orderInstructions={context?.steward.order_instructions ?? null}
+          providerQualified={qualified}
         />
       );
-    case "search":
-      return <SvelteIsland component={SearchView} props={{}} />;
     case "doc":
       return (
         <SvelteIsland

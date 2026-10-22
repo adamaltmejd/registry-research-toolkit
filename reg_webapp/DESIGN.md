@@ -176,43 +176,25 @@ Rust server. Maintainers measure relevance with the repository's
 `scripts/run_search_eval.py` (`scripts/search_eval.toml`, #393 item 10) against a
 running `reg-meta serve`.
 
-The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
-`/search?q=` results page (`SearchView.svelte`) with navigation to catalog nodes. The
-router has `search` and `doc` routes (query lives in `?q=`, keyed on pathname so the
-page re-runs on every query change) and a `router.replace()` method (mirrors the
-`?period` URL-as-single-source-of-truth pattern: the omnibox syncs back to the URL, and
-the URL drives the view). `api.ts` has `search(q, {limit?, type?, cursor?})` typed off
-the generated `api-types-rust.ts`. Off `/search`, typing in the omnibox stays local
-until Enter/form submit and shows an Enter hint while focused; on `/search`, typing
-live-refines with replaceState; leaving `/search` clears the box, so a past query does
-not read as a filter on the next page. `SearchView` renders an "All · Registers ·
-Variables · Classifications · Codes" scope toggle backed by `?type=` (URL state, like
-`?q=`/`?period`; `all` is omitted from the canonical URL; `value` is the SPA's name for
-both code arms), a Close control that `replace()`s back to the route that entered search
-(or `/catalog` for a cold deep-link), and variable rows whose heading carries
-delivery-column pills while register, definition, and `operational_definition` live in
-the muted detail line. The omnibox preserves an active scope when re-querying. Global
-search does **not** render documentation results; documentation is reached from item
-pages via `DocMentionsPanel` and then the `/doc/<filename>` route (router `Route` union
-arm `{name:"doc",identifier}`), which renders `DocView.svelte`: title,
-register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
-curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
-and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
-`snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
-is never fetched.
-
-Under `All`, `SearchView` makes one untyped call (5 hits) for a `Top results` strip,
-shown only when it ranks more than one hit, and one call per arm (3 hits each) for the
-sections below it, in the fixed order registers → variables → classifications →
-classification codes → register-local value sets. A scoped `?type=` asks only its arm
-(`value` asks both code arms). Any failed call fails the search as a whole. Each section
-has a `Load more` control that requests that section's cursor at the same page size and
-appends the next page; query or scope changes discard the continuation state. A
-section's heading uses `N+ results` while it has a `next_cursor`, rather than claiming
-an exact total. The control is keyboard-native, announces its busy state, and keeps
-continuation errors local to the section. Classification codes render in per-code-system
-subsections, register-local value sets in their own section; a code's owning variables
-and classifications are its navigable targets.
+The SPA surface is the command palette (`CommandPalette.tsx`), opened from the top-bar
+field with Enter or `Meta/Ctrl+K` and seeded with the field's text. It is a RAC
+`Autocomplete` over a `Menu` in a popover under the field, for codes, classifications
+and the app's places; registers and variables are the in-place filter's. It asks three
+arms (classifications, classification codes, register-local value sets; 5 hits each,
+debounced, from 2 characters) and lists the hits as a mixed list with type tags, after
+the places ranked by `rankFilter`; RAC's own filter is never used. A hit goes to its
+catalog page; a code, which has no page, goes to its defining classification or else to
+the first variable that uses it. There is no search route: a query is not a shareable
+URL (the `/search` page and its `?q=`/`?type=` state were removed in the React port).
+`api.ts` has `search(q, {limit?, type?, cursor?})` typed off the generated
+`api-types-rust.ts`. Global search does **not** render documentation results;
+documentation is reached from item pages via `DocMentionsPanel` and then the
+`/doc/<filename>` route (router `Route` union arm `{name:"doc",identifier}`), which
+renders `DocView.svelte`: title, register/variable/tags, a `source_url` link to the SCB
+source PDF (resolved from the curated map at doc-DB build, #372; None when uncurated)
+with `source_title` as label, and a bounded `excerpt`; 404 distinguishes "not ingested"
+vs "not found"; `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full
+converted body is never fetched.
 
 ## Docs library (the Rust server's `docs` operations)
 
@@ -245,7 +227,7 @@ LISA-only today.
   on every docs operation; an incompatible one refuses server startup. The SPA's
   `getDocsForVariable` and `getRelatedDocuments` map `docs_unavailable` to `null`, so
   both panels treat it like "no docs" and omit their section.
-- **Not in global search**: `SearchView.svelte` does not call `/api/docs/search`; the
+- **Not in global search**: the command palette does not call `/api/docs/search`; the
   SPA reaches docs through item pages.
 - **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.svelte`
   renders `DocMentionsPanel` in the `SubjectView` docs slot, firing a SEPARATE

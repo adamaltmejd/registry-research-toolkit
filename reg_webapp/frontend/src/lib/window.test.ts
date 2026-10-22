@@ -5,8 +5,8 @@ import {
   type RawDraft,
   serializeProjectData,
 } from "./project_data";
-import { projectStore } from "./project_store.svelte";
-import { windowStore } from "./window.svelte";
+import { projectStore } from "./project_store";
+import { windowStore } from "./window";
 
 // The window runtime layer is a MODULE SINGLETON over two backing stores (the
 // active project draft + a localStorage fallback). Each test establishes the
@@ -149,8 +149,8 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
     // unit setup that loads it.
     await import("../test-setup.unit");
     return {
-      projectStore: (await import("./project_store.svelte")).projectStore,
-      windowStore: (await import("./window.svelte")).windowStore,
+      projectStore: (await import("./project_store")).projectStore,
+      windowStore: (await import("./window")).windowStore,
     };
   }
 

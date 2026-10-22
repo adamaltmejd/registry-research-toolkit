@@ -1,0 +1,103 @@
+/* A floating layer under the search bar (DESIGN.md → Elevation): the one shadow,
+   no scrim, at the popover layer. */
+.popover {
+  box-sizing: border-box;
+  width: min(36rem, calc(100vw - 2 * var(--space-4)));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  box-shadow: var(--elevation-float);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: min(
+    32rem,
+    calc(100vh - var(--top-bar-height, 4rem) - var(--space-5))
+  );
+  outline: none;
+}
+
+.field {
+  display: flex;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.input[data-focused] {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* One line of state above the list; gone when there is nothing to say. */
+.status {
+  display: block;
+  padding: var(--space-2) var(--space-3) 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.status:empty {
+  display: none;
+}
+
+.menu {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-1) 0 var(--space-2);
+  outline: none;
+}
+
+.section + .section {
+  margin-top: var(--space-1);
+  border-top: 1px solid var(--border);
+}
+.header {
+  padding: var(--space-2) var(--space-3) var(--space-1);
+}
+
+/* A row: label, then its context, the type mark at the trailing edge. The
+   highlighted row takes the column list's look: surface-sunken and the 3px
+   accent bar. */
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  padding: 5px var(--space-3);
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+}
+.item[data-hovered],
+.item[data-focused] {
+  background: var(--surface-sunken);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.detail {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.type {
+  margin-left: auto;
+}

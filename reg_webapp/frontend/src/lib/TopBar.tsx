@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input, SearchField } from "react-aria-components";
 import type { Steward } from "./api";
 import { browseFilter, useBrowseFilter } from "./browse_filter";
+import { CommandPalette } from "./CommandPalette";
 import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
-import { router } from "./router";
 import styles from "./TopBar.module.css";
 import type { WindowBounds } from "./window_bounds";
 
@@ -24,7 +24,11 @@ const mac = isMacPlatform();
 export function TopBar({ steward, bounds }: Props) {
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const field = useRef<HTMLDivElement>(null);
   const filter = useBrowseFilter();
+  // The palette opens with the field's text at that moment; it never writes
+  // back to the filter.
+  const [palette, setPalette] = useState<{ seed: string } | null>(null);
 
   useEffect(() => {
     const header = ref.current;
@@ -43,8 +47,9 @@ export function TopBar({ steward, bounds }: Props) {
     };
   }, []);
 
-  // ⌘K on macOS, Ctrl+K elsewhere, focuses the bar from anywhere; Shift+⌘K is
-  // a different chord. The palette it opens (DESIGN.md) arrives in port PR 8.
+  // ⌘K on macOS, Ctrl+K elsewhere, opens the palette from anywhere, seeded with
+  // the bar's text; Shift+⌘K is a different chord. Focus moves to the bar first,
+  // so closing the palette returns it there.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() !== "k" || event.altKey || event.shiftKey) {
@@ -53,7 +58,7 @@ export function TopBar({ steward, bounds }: Props) {
       if ((event.metaKey && mac) || (event.ctrlKey && !mac)) {
         event.preventDefault();
         input.current?.focus();
-        input.current?.select();
+        setPalette({ seed: input.current?.value ?? "" });
       }
     };
     window.addEventListener("keydown", onKey);
@@ -69,18 +74,15 @@ export function TopBar({ steward, bounds }: Props) {
         {steward && <span className={styles.brandId}>{steward.id}</span>}
       </a>
       {/* Text here filters both browse columns in place; Escape clears it and
-          gives back the collapse state. Enter opens the catalog-wide results
-          page, the way to codes and classifications until the palette replaces
-          that page (port PR 8). */}
+          gives back the collapse state. Enter opens the palette with the text,
+          the way to codes, classifications and the rest of the catalog. */}
       <SearchField
+        ref={field}
         aria-label="Filter registers and variables"
         className={styles.search}
         value={filter}
         onChange={browseFilter.set}
-        onSubmit={(text) => {
-          const q = text.trim();
-          if (q) router.navigate(`/search?q=${encodeURIComponent(q)}`);
-        }}
+        onSubmit={(text) => setPalette({ seed: text })}
       >
         <Input
           ref={input}
@@ -94,6 +96,14 @@ export function TopBar({ steward, bounds }: Props) {
           </kbd>
         )}
       </SearchField>
+      <CommandPalette
+        isOpen={palette !== null}
+        onOpenChange={(open) => {
+          if (!open) setPalette(null);
+        }}
+        triggerRef={field}
+        seed={palette?.seed ?? ""}
+      />
       <ProjectBanner bounds={bounds} />
     </header>
   );
