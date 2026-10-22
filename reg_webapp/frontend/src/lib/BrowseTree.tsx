@@ -1,14 +1,14 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   Button,
   Collection,
   type Key,
-  Link,
-  NavigationTree,
-  NavigationTreeItem,
-  NavigationTreeItemContent,
-  type NavigationTreeRenderProps,
+  type Selection,
+  Tree,
+  TreeItem,
+  TreeItemContent,
   TreeLoadMoreItem,
+  type TreeRenderProps,
 } from "react-aria-components";
 import { getShow, type RegisterChild, type RootChild } from "./api";
 import styles from "./BrowseTree.module.css";
@@ -16,7 +16,7 @@ import { catalogHref, registerPrefixOf } from "./catalog";
 import { catalogRootChildren } from "./catalog_names.svelte";
 import { safeSourceBindings, safeSourceSlots } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import type { Route } from "./router";
+import { type Route, router } from "./router";
 import { useRune } from "./svelte_bridge.svelte";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
@@ -30,7 +30,7 @@ interface BrowseNode {
   children: BrowseNode[] | null;
 }
 
-type TreeState = NavigationTreeRenderProps["state"];
+type TreeState = TreeRenderProps["state"];
 
 const COLLAPSED_KEY = "reg_webapp:browse_collapsed";
 
@@ -87,24 +87,30 @@ function inProjectCount(
   );
 }
 
-/** The row the current page belongs to, as that row's href: a variable, group or
- * variants page lives under its register, a classification page under the
- * classification root. */
-function browseHref(route: Route): string | null {
+interface CurrentRow {
+  key: string;
+  /** The page open is the row's own page, not one under it. */
+  exact: boolean;
+}
+
+/** The row the current page belongs to, by key (the row's FQID): a variable,
+ * group or variants page lives under its register, a classification page under
+ * the classification root. */
+function currentRow(route: Route): CurrentRow | null {
   switch (route.name) {
     case "catalog-node": {
       const [first, second] = route.fqidPath.split("/");
-      return catalogHref(
+      const key =
         first === "class" || second === undefined
           ? first
-          : `${first}/${second}`,
-      );
+          : `${first}/${second}`;
+      return { key, exact: key === route.fqidPath };
     }
     case "group":
     case "variants":
-      return catalogHref(`${route.provider}/${route.register}`);
+      return { key: `${route.provider}/${route.register}`, exact: false };
     case "class-group":
-      return catalogHref("class");
+      return { key: "class", exact: false };
     default:
       return null;
   }
@@ -170,6 +176,15 @@ export function BrowseTree({ className }: { className?: string }) {
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
 
+  const current = currentRow(route);
+  const currentKey = current?.key ?? null;
+  const hrefs = new Map(
+    nodes.flatMap((node) => [
+      [node.id, node.href] as const,
+      ...(node.children ?? []).map((c) => [c.id, c.href] as const),
+    ]),
+  );
+
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const expandedKeys = new Set(expandable.filter((id) => !collapsed.has(id)));
 
@@ -178,6 +193,25 @@ export function BrowseTree({ className }: { className?: string }) {
   // out of the page's Tab sequence; so move focus to the row's visible group
   // first. The state comes from the className render prop.
   const treeState = useRef<TreeState | null>(null);
+
+  // A page opened from elsewhere (a link, the search bar, history) moves the
+  // tree's focus to its row, so Tab into the list lands there and the arrows
+  // continue from it.
+  useEffect(() => {
+    if (currentKey !== null) {
+      treeState.current?.selectionManager.setFocusedKey(currentKey);
+    }
+  }, [currentKey]);
+
+  // Selection follows the arrow keys (DESIGN.md → BrowseTree) and a click, and
+  // selecting a row opens its page. Type-ahead moves focus only: React Aria's
+  // type-select never selects.
+  function onSelectionChange(keys: Selection): void {
+    if (keys === "all") return;
+    const [key] = keys;
+    const href = key === undefined ? undefined : hrefs.get(String(key));
+    if (href !== undefined && key !== currentKey) router.navigate(href);
+  }
 
   function onExpandedChange(keys: Set<Key>): void {
     const manager = treeState.current?.selectionManager;
@@ -229,20 +263,25 @@ export function BrowseTree({ className }: { className?: string }) {
               {registers.error}). Reload the page to try again.
             </p>
           )}
-          <NavigationTree
+          <Tree
             aria-labelledby={labelId}
             className={({ state }) => {
               treeState.current = state;
               return styles.tree;
             }}
             items={nodes}
-            selectedRoute={browseHref(route)}
+            selectionMode="single"
+            selectionBehavior="replace"
+            selectedKeys={currentKey === null ? [] : [currentKey]}
+            onSelectionChange={onSelectionChange}
             expandedKeys={expandedKeys}
             onExpandedChange={onExpandedChange}
-            dependencies={[counts]}
+            dependencies={[counts, current?.exact]}
           >
-            {(node) => <BrowseItem node={node} counts={counts} />}
-          </NavigationTree>
+            {(node) => (
+              <BrowseItem node={node} counts={counts} current={current} />
+            )}
+          </Tree>
         </>
       )}
     </nav>
@@ -252,19 +291,25 @@ export function BrowseTree({ className }: { className?: string }) {
 function BrowseItem({
   node,
   counts,
+  current,
 }: {
   node: BrowseNode;
   counts: Record<string, number>;
+  current: CurrentRow | null;
 }) {
   const count = inProjectCount(node, counts);
+  // "page" only on the row whose own page is open; "true" on the register row
+  // while a page under it (a variable, a group, its variants) is open.
+  const ariaCurrent =
+    current?.key !== node.id ? undefined : current.exact ? "page" : "true";
   return (
-    <NavigationTreeItem
+    <TreeItem
       id={node.id}
-      href={node.href}
       textValue={node.name}
       className={styles.row}
+      render={(props) => <div {...props} aria-current={ariaCurrent} />}
     >
-      <NavigationTreeItemContent>
+      <TreeItemContent>
         {({ hasChildItems }) => (
           <>
             {hasChildItems ? (
@@ -274,7 +319,7 @@ function BrowseItem({
             ) : (
               <span className={styles.chevronSpacer} />
             )}
-            <Link className={styles.link}>{node.name}</Link>
+            <span className={styles.name}>{node.name}</span>
             {count > 0 && (
               <span className={styles.inProject}>
                 <span className={styles.dot} aria-hidden="true" />
@@ -284,7 +329,7 @@ function BrowseItem({
             )}
           </>
         )}
-      </NavigationTreeItemContent>
+      </TreeItemContent>
       {/* RAC 1.22.1 ignores `hasChildItems` on a parent with no child rows (no
           aria-expanded, → does nothing), so a provider whose registers are
           still loading keeps a loader row as its child. */}
@@ -294,10 +339,12 @@ function BrowseItem({
         </TreeLoadMoreItem>
       ) : (
         <Collection items={node.children}>
-          {(child) => <BrowseItem node={child} counts={counts} />}
+          {(child) => (
+            <BrowseItem node={child} counts={counts} current={current} />
+          )}
         </Collection>
       )}
-    </NavigationTreeItem>
+    </TreeItem>
   );
 }
 

@@ -19,10 +19,12 @@
   align-items: start;
 }
 
+/* The browse column fills the viewport under the sticky top bar and scrolls its
+   own list (maintainer ruling 2026-10-22). */
 .browse {
   position: sticky;
-  top: 0;
-  height: 100dvh;
+  top: var(--top-bar-height, 0px);
+  height: calc(100dvh - var(--top-bar-height, 0px));
 }
 
 /* The detail pane, capped at the content measure. `min-width: 0` lets a wide

@@ -145,6 +145,10 @@ describe("routeBreadcrumbs", () => {
     for (const route of variants) {
       const trail = routeBreadcrumbs(route);
       expect(trail.at(-1)?.href).toBeUndefined();
+      // Every trail but the list's own leads with the linked "Data" crumb: below
+      // 48rem it is the only way back to the register list (maintainer ruling
+      // 2026-10-22). Fails if a route's trail drops it.
+      if (route.name !== "root") expect(trail[0]).toEqual(browserRoot);
     }
   });
 });

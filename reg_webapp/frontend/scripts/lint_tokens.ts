@@ -321,6 +321,8 @@ const CROSS_FILE: Record<string, string> = {
     "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
   "--tree-item-level":
     "set inline by React Aria's Tree on each row, read by BrowseTree",
+  "--top-bar-height":
+    "measured by TopBar onto :root, read by the shell's browse column",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;

@@ -333,15 +333,21 @@ The current `AppShell` rail is a stepping stone (see Components) until it is rep
 - **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it), one
   search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the
   palette), and the `ProjectBanner` at the right. There are no "Search" or "Project" nav
-  items; the bar and the banner are those.
+  items; the bar and the banner are those. It sticks to the top of the page above
+  `breakpoint-narrow`; below it the bar wraps and scrolls away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers at
   `col-browse`, then the selected register's or group's variables at `col-list`, then
   the detail pane capped at `content-max`. Every group is open by default; a header
   triangle collapses it, the column header offers "Collapse all" / "Expand all", and
-  collapse state is remembered per user. Selection moves with arrow keys across columns;
-  left on a group header collapses it. Every item and group carries its in-project mark
-  on the right when it has one. Below the single narrow breakpoint (`breakpoint-narrow`)
-  the columns stack, one at a time, with a back affordance. Do not mint new breakpoints.
+  collapse state is remembered per user. Selection moves with arrow keys across columns,
+  and selecting a row opens its page; type-ahead moves focus only. Left on a group
+  header collapses it. Collapsing a group never changes the selection: the detail pane
+  keeps its page, and keyboard focus moves to the group row. A browse column fills the
+  viewport below the top bar and scrolls its own list. Every item and group carries its
+  in-project mark on the right when it has one. Below the single narrow breakpoint
+  (`breakpoint-narrow`) the columns stack, one at a time; the back affordance is the
+  breadcrumb's first crumb, "Data", which every page's trail leads with and which opens
+  the register list. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page: groups with no matches collapse (still openable), matched
   text is underlined in `accent` at weight 600, a register that matched only through its

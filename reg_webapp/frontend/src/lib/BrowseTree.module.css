@@ -51,7 +51,7 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
   outline: none;
-  cursor: default;
+  cursor: pointer;
 }
 .row[data-hovered] {
   background: var(--surface-hover);
@@ -68,8 +68,8 @@
   font-weight: var(--column-weight);
 }
 
-/* The current page's row: the 2px accent bar on surface-sunken, at 600. */
-.row[data-current] {
+/* The selected row (the current page's): the 2px accent bar on surface-sunken, at 600. */
+.row[data-selected] {
   background: var(--surface-sunken);
   color: var(--text);
   font-weight: var(--heading-weight);
@@ -80,25 +80,18 @@
 .row[data-focus-visible] {
   box-shadow: inset 0 0 0 2px var(--accent);
 }
-.row[data-current][data-focus-visible] {
+.row[data-selected][data-focus-visible] {
   box-shadow:
     inset 2px 0 0 var(--accent),
     inset 0 0 0 2px var(--accent);
 }
 
-.link {
+.name {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: inherit;
-  text-decoration: none;
-  outline: none;
-  cursor: pointer;
-}
-.link:hover {
-  text-decoration: none;
 }
 
 .chevron {
