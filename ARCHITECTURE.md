@@ -256,9 +256,9 @@ load-bearing guard.
 ### Components
 
 - **Gate binary.** One static Rust binary, a new crate in `crates/`, built and released
-  next to `reg-meta`. It runs the whole disclosure check, stages the checked bytes,
-  serves the human review UI and delivers approved bytes to the agent. An agent calls
-  it; it never reimplements it.
+  next to `reg-meta`. It runs the whole disclosure check, stages the checked bytes for
+  human review and delivers approved bytes to the agent. An agent calls it; it never
+  reimplements it.
 - **Schemas.** Fixed, versioned files supplied by the toolkit. Choosing or adding a
   schema is a deliberate user configuration step, kept outside the project repository.
   An agent never writes or edits a schema.
@@ -287,11 +287,11 @@ checksums. The gate takes over the second stop.
 
 ### Schemas
 
-A schema declares exactly the files an export may hold. Per file: its name, its columns,
-each column's type, and the disclosure rules that apply, such as which columns count
-persons and the smallest count allowed. Thresholds are schema fields, not toolkit
-constants: the toolkit does not assert one universal threshold. The schema in force is
-identified by name, version and content hash, and every check records them.
+A schema declares exactly the files an export may hold. Per file: its name, its columns
+and each column's type. Disclosure rules, such as which columns count persons and the
+smallest count allowed, live in the schema or in a separate policy (open question 10).
+The toolkit asserts no universal threshold. The schema in force is identified by name,
+version and content hash, and every check records them.
 
 Schemas live outside the project because the code under check must not also define what
 the check accepts. In education-returns each script brought its own schema
@@ -366,6 +366,9 @@ To be resolved before this design merges:
 8. Whether disclosure rules span releases (differencing against earlier approved
    exports), or each export is checked alone.
 9. Whether the review UI is part of the gate crate or a separate surface.
+10. Whether disclosure thresholds live in the schema or in a separate policy file. The
+    scaffold names a configured project policy beside the schema; with fixed schemas,
+    thresholds in the schema mean a new schema for each threshold.
 
 ## Repo-wide invariants
 
