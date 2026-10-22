@@ -18,6 +18,7 @@ import {
   stagedDiffSummary,
 } from "./staged_picker";
 import { Button } from "./ui/Button";
+import { ColumnChip } from "./ui/ColumnChip";
 import { FilterChip } from "./ui/FilterChip";
 
 export type { PickerBand } from "./picker_lanes";
@@ -260,7 +261,8 @@ export function RepresentationPicker({
               {span.note?.tone === "error" && (
                 <span aria-hidden="true">✕ </span>
               )}
-              <code>{span.name}</code> {span.note?.text}
+              <ColumnChip name={span.name} state={span.state} />{" "}
+              {span.note?.text}
             </li>
           ))}
         </ul>

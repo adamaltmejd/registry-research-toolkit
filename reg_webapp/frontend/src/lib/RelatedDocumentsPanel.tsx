@@ -56,7 +56,7 @@ export function RelatedDocumentsPanel({ register }: { register: string }) {
           {documents.map((doc) => (
             <li key={doc.filename}>
               <a
-                className={styles.documentTitle}
+                className={`link ${styles.documentTitle}`}
                 href={relatedDocumentFileHref(register, doc.filename)}
               >
                 {doc.title}

@@ -307,14 +307,6 @@ for (const [token, specValue] of SPEC) {
 
 /** Custom properties written in one file and read in another, each with its writer. */
 const CROSS_FILE: Record<string, string> = {
-  "--track-width":
-    "DualThumbTrack sizing hook with a fallback; consumers may override it",
-  "--track-height":
-    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
-  "--rail-height":
-    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
-  "--thumb-size":
-    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
   "--tree-item-level":
     "set inline by React Aria's Tree on each row, read by BrowseTree",
   "--top-bar-height":
@@ -323,8 +315,6 @@ const CROSS_FILE: Record<string, string> = {
     "set inline by DataTable.tsx on its table, read by DataTable.module.css",
   "--code-depth":
     "set inline by CodeList.tsx on each levelled row, read by CodeList.module.css",
-  "--cue-left":
-    "set inline by PeriodPicker.tsx on the coverage cue, read by PeriodPicker.module.css",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;
@@ -360,7 +350,7 @@ const REFERENCE_SELF_CHECK = [
   "  .a { color: var(--text); width: var(--local-a); height: var(--local-b); }",
   "  .b { color: var(--txet); }",
   "  .c { --local-c: 1px; margin: var(--local-c); }",
-  "  .d { padding: var(--thumb-size, 1rem) var(--nope, 0); }",
+  "  .d { padding: var(--code-depth, 1rem) var(--nope, 0); }",
   "  /* var(--in-a-comment) */",
   "</style>",
 ].join("\n");

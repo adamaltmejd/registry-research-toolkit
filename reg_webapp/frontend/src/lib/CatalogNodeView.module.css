@@ -6,9 +6,9 @@
   min-width: 0;
 }
 
-/* At the `h1` level, on an h2 element as every Svelte subject page still has it
-   (SubjectView), so the outline stays one shape until those pages move over. */
+/* The one `h1` treatment (DESIGN.md → typography.h1; the Definitions head). */
 .title {
+  max-width: 30ch;
   margin: 0;
   font-size: var(--text-h1);
   font-weight: var(--display-weight);
@@ -33,15 +33,14 @@
   min-width: 0;
 }
 
-/* A row's name is the row's link, and what leads it. */
+/* A row's name is the row's link, and what leads it: a plain link (`link`) at
+   600. A group row's whole anchor is the link, so its name carries the border. */
 .rowLink {
+  color: var(--text);
   font-weight: var(--heading-weight);
 }
-a.rowLink:focus-visible,
-.groupLink:focus-visible {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
+.groupLink:hover .rowLink {
+  background: var(--surface-hover);
 }
 
 /* A register's description, two lines at most; the whole text is on its page. */

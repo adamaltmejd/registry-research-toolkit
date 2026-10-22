@@ -1,13 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  distinctValueSets,
-  parseCodesParam,
-  pickerRepresentations,
-  valueSetKeyForColumn,
-} from "./catalog";
+import { distinctValueSets } from "./catalog";
 import { state } from "./catalog-test-helpers";
 
-// Split from catalog.test.ts by contract surface: value-set fold + deep links.
+// Split from catalog.test.ts by contract surface: the value-set fold.
 // Siblings: catalog.{browse,picker,picker-filters,value-sets}.test.ts.
 
 describe("distinctValueSets (#668 — value-set-centric fold)", () => {
@@ -338,65 +333,5 @@ describe("distinctValueSets (#668 — value-set-centric fold)", () => {
     expect(vs[0].usages[0].spans).toEqual([
       { from: "2016-01-01", to: "9999-12-31", pooled: false },
     ]);
-  });
-});
-
-describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () => {
-  it("breaks a valid_to tie by the higher state_id", () => {
-    // Two states for the SAME column share an identical latest valid_to — the
-    // shared tie-break (max state_id) selects the higher-id state's value set, so
-    // the picker row and deep-link resolver stay aligned.
-    const states = [
-      state({
-        state_id: "5",
-        value_set_id: "303",
-        value_set_version_label: "SNI 2003",
-        delivery_column_name: "COL",
-        valid_from: "2018-01-01",
-        valid_to: "2022-12-31",
-      }),
-      state({
-        state_id: "9",
-        value_set_id: "249",
-        value_set_version_label: "SNI 2022",
-        delivery_column_name: "COL",
-        valid_from: "2019-01-01",
-        valid_to: "2022-12-31",
-      }),
-    ];
-    const [row] = pickerRepresentations(states);
-    expect(row.valueSetLabel).toBe("SNI 2022");
-    expect(valueSetKeyForColumn(states, "COL")).toBe("id/249");
-  });
-});
-
-describe("parseCodesParam (#905 — (variant, column) deep-link payload)", () => {
-  it("percent-decodes each segment so reserved/non-ASCII chars survive", () => {
-    // A variant slug or column with a space / reserved char must not break the URL
-    // or the `::` separator parse.
-    expect(parseCodesParam("a%20b::K%C3%B6n%2F2")).toEqual({
-      variant: "a b",
-      column: "Kön/2",
-    });
-  });
-
-  it("parses a bare column (no `::`) as variant=null (back-compat / no-variant leaf)", () => {
-    expect(parseCodesParam("Yrke")).toEqual({ variant: null, column: "Yrke" });
-  });
-
-  it("degrades to null (no throw) on a malformed percent-escape (P2: a bad ?codes deep link must not crash the page)", () => {
-    // `?codes=` is purely client-side FOCUS state, so a stale/bad deep link must
-    // degrade to the default union view, never crash BindingLeafView's render.
-    // `decodeURIComponent` THROWS on these — `parseCodesParam` must be total.
-    expect(() => parseCodesParam("%")).not.toThrow();
-    expect(parseCodesParam("%")).toBeNull();
-    // A truncated escape in the COLUMN segment (after a valid variant + `::`).
-    expect(() => parseCodesParam("a::%E0%A4%A")).not.toThrow();
-    expect(parseCodesParam("a::%E0%A4%A")).toBeNull();
-    // A lone malformed bare column (no `::`).
-    expect(() => parseCodesParam("%E0%A4%A")).not.toThrow();
-    expect(parseCodesParam("%E0%A4%A")).toBeNull();
-    // A malformed VARIANT segment also degrades.
-    expect(parseCodesParam("%::Yrke")).toBeNull();
   });
 });

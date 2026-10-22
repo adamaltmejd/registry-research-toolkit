@@ -2,70 +2,16 @@
   margin-top: var(--space-4);
 }
 
-/* The request-error banner wraps: it can carry the order materializer's full
-   fail-closed message, and an unwrapped retry button would squeeze the text into a
-   gutter at 375px. */
+/* The request-error StatusRow: placement only. */
 .requestError {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
   margin-bottom: var(--space-4);
-  border: 1px solid var(--err-border);
-  border-radius: var(--radius-sm);
-  background: var(--err-bg);
-}
-/* A basis, not `flex: 1`: the message must push the retry button onto its own row
-   before it is squeezed. */
-.bannerText {
-  flex: 1 1 16rem;
 }
 
-/* Status fills use the status roles, never the accent (DESIGN.md → Colors). */
-.summary {
-  display: block;
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-}
-/* The verdict's glyph comes first (DESIGN.md → StatusRow). Drawn by CSS with
-   empty alt text, so the line's text and accessible name stay the verdict. */
-.ok::before,
-.warning::before,
-.fail::before {
-  margin-right: var(--space-1);
-}
-.ok::before {
-  content: "✓" / "";
-}
-.warning::before {
-  content: "▲" / "";
-}
-.fail::before {
-  content: "✕" / "";
-}
-.ok {
-  border: 1px solid var(--ok);
-  background: var(--ok-bg);
-  color: var(--ok);
-}
+/* A check in flight is not a verdict: muted text, no tint. */
 .checking {
-  border: 1px solid var(--border);
-  background: var(--surface-sunken);
+  display: block;
   color: var(--text-muted);
-}
-.warning {
-  border: 1px solid var(--warn);
-  background: var(--warn-bg);
-  color: var(--warn);
-}
-.fail {
-  border: 1px solid var(--err-border);
-  background: var(--err-bg);
-  color: var(--err);
+  font-size: var(--text-sm);
 }
 
 .group {
@@ -139,14 +85,16 @@ code.path {
   align-items: baseline;
   gap: var(--space-1) var(--space-3);
 }
-/* Interactive chrome: accent as text takes `accent-ink`. */
+/* The locate trigger and the catalog link read as plain links: `text`, a 1.5px
+   accent bottom border, surface-hover on hover; never pine. */
 .locate,
 .catalogLink {
   min-width: 0;
   padding: 0;
   border: none;
+  border-bottom: 1.5px solid var(--accent);
   background: none;
-  color: var(--accent-ink);
+  color: var(--text);
   font: inherit;
   font-size: var(--text-sm);
   text-align: left;
@@ -155,7 +103,7 @@ code.path {
 }
 .locate:hover,
 .catalogLink:hover {
-  text-decoration: underline;
+  background: var(--surface-hover);
 }
 .locate:focus-visible,
 .catalogLink:focus-visible {

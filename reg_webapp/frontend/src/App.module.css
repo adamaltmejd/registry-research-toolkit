@@ -12,9 +12,13 @@
   margin: var(--space-3) var(--space-4) 0;
 }
 
+/* The detail pane is the `surface` where work happens (DESIGN.md → Colors); the
+   browse columns paint their own `bg`. Painted on the grid, so a short pane
+   still reads as one sheet down to the page's foot and past `content-max`. */
 .body {
   flex: 1 0 auto;
   display: grid;
+  background: var(--surface);
   grid-template-columns: var(--col-browse) minmax(0, 1fr);
   align-items: start;
 }
@@ -45,6 +49,7 @@
   min-width: 0;
   min-height: 100%;
   padding: var(--space-5);
+  background: var(--surface);
 }
 
 .crumbs {

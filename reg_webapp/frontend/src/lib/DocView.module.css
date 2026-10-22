@@ -6,16 +6,7 @@
 .source {
   color: var(--text);
   text-decoration: none;
-  border-bottom: 1.5px solid var(--accent);
   overflow-wrap: anywhere;
-}
-.source:hover {
-  background: var(--surface-hover);
-}
-.source:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 /* The excerpt keeps the source's line breaks, inset on a well. */
@@ -54,18 +45,7 @@
   color: var(--text);
   font-weight: var(--heading-weight);
   text-decoration: none;
-  border-bottom: 1.5px solid var(--accent);
   overflow-wrap: anywhere;
-}
-.documentTitle:hover,
-.attribution a:hover {
-  background: var(--surface-hover);
-}
-.documentTitle:focus-visible,
-.attribution a:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .attribution,

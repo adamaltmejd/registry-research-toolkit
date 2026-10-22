@@ -7,7 +7,14 @@
   padding: 0;
   list-style: none;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-column);
+}
+
+/* The first crumb, "Data", and any `word` crumb ("Project") are words, not
+   slugs: the UI face. */
+.crumb:first-child,
+.word {
+  font-family: var(--font-ui);
 }
 
 .crumb {
@@ -30,9 +37,8 @@
   outline: none;
 }
 .link[href][data-hovered] {
+  background: var(--surface-hover);
   color: var(--text);
-  text-decoration: underline 1.5px var(--accent);
-  text-underline-offset: 3px;
 }
 .link[data-focus-visible] {
   box-shadow: var(--focus-ring);

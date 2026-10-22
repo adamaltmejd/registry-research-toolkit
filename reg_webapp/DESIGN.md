@@ -652,10 +652,10 @@ contracts, tests).
 Two layers, semantic roles only consumed by components: **primitive ramps**
 (`--gray-1..12` and the fixed status/categorical/data hues — never referenced by a
 component) and **semantic roles** (`--bg`, `--surface*`, `--text*`, `--border*`,
-`--accent*`, the status, `--cat-*`, `--facet-axis-*` and `--viz-edge-*` roles, plus
-geometry, elevation, focus and motion). Dark mode and the planned per-provider themes
-are role remaps under `[data-theme]` / `[data-provider]` — no component CSS changes. The
-tokens live in `frontend/src/tokens.css`, imported once in `main.ts`.
+`--accent*`, the status, `--cat-*` and `--viz-*` roles, plus geometry, elevation, focus
+and motion). Dark mode and the planned per-provider themes are role remaps under
+`[data-theme]` / `[data-provider]` — no component CSS changes. The tokens live in
+`frontend/src/tokens.css`, imported once in `main.ts`.
 
 **Enforced deterministically** by `frontend/scripts/lint_tokens.ts` (`lint:tokens`, part
 of `bun run lint`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
@@ -970,14 +970,6 @@ one-sided `until <year>` form when the start is unknown (#658).
     logic (#744).
   - **Empty** (`states.length === 0`): a clean "no state delivered for this period"
     message (a valid resolved period outside every validity window — not an error).
-
-  **`?codes=<variant>::<column>` deep-link** (#905/#1058): the picker's "codings vary"
-  nudge became a deep link to `?codes=<variant>::<column>#states-heading`.
-  `BindingLeafView` reads `?codes` into value-set focus state (pure view state — no
-  refetch) and passes it to `ValueSetView`, which seeds the local isolation onto the
-  distinct value set `valueSetKeyForColumn` resolves for that row identity. A folded
-  graph cell passes the cell's era column, not the row's latest column. A stale or
-  unknown column degrades silently to the default union view.
 
   The component is kept standalone (not folded back into the leaf) so the graph/picker
   surface can place the same coding display next to the selected representations without

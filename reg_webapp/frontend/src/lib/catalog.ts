@@ -257,11 +257,11 @@ export function memberKey(m: {
  * (`facets` → a human label `<span>`, `slug` → a mono `<code>`). */
 export type MemberQualifier = { text: string; kind: "facets" | "slug" };
 
-/** Join a faceted member's facet labels into one display string (" · "-
+/** Join a faceted member's facet labels into one display string (comma-
  * separated) — the single home for the separator/ordering, shared by the header
  * qualifier (`qualifierFromFocus`) and the picker graph member-lane label. */
 export function facetLabelJoin(facets: { label: string }[]): string {
-  return facets.map((f) => f.label).join(" · ");
+  return facets.map((f) => f.label).join(", ");
 }
 
 function singleDeliveryColumnName(focus: VariableGraphNode): string | null {
@@ -274,7 +274,7 @@ function singleDeliveryColumnName(focus: VariableGraphNode): string | null {
 }
 
 /** The member-distinguishing qualifier from the graph FOCUS node (#678): the
- * focus's facet labels joined with " · " (e.g. "AGI · 2007 SNI edition") when it
+ * focus's facet labels joined with ", " (e.g. "AGI, 2007 SNI edition") when it
  * carries facets; else, for a GROUPED member with no facets (an edge group's
  * split siblings — `group_label` set, `facets: []`), a single authoritative
  * delivery column when the graph focus has one (#798), falling back to the leaf
@@ -517,7 +517,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
   };
   switch (route.name) {
     case "home":
-      return [browserRoot, { label: "Home" }];
+      return [browserRoot, { label: "Home", word: true }];
     case "root":
       // The data browser IS the current page — a single un-linked crumb.
       return [{ label: DATA_BROWSER_LABEL }];
@@ -552,9 +552,13 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
         label: "variants",
       });
     case "project":
-      return [browserRoot, { label: "Project" }];
+      return [browserRoot, { label: "Project", word: true }];
     case "doc":
-      return [browserRoot, { label: "Docs" }, { label: route.identifier }];
+      return [
+        browserRoot,
+        { label: "Docs", word: true },
+        { label: route.identifier },
+      ];
     default:
       // not-found
       return [browserRoot];
@@ -2230,76 +2234,6 @@ export function distinctValueSets(
   });
 }
 
-/** Parse a `?codes=` deep-link param (#905) into its `(variant, column)` pair. The
- * param carries a row's `(variant, column)` IDENTITY — not just the column — as
- * `<variant>::<column>`, each segment percent-encoded, so the value-set viewer
- * isolates that row's coding, not another variant's latest-era one. It is distinct
- * from the `?variant` RESOLUTION modifier, so a deep-link focus never perturbs the
- * resolution. A bare `<column>` with no `::` (back-compat / a leaf
- * link that carries no variant) parses to `{ variant: null, column }`. Each segment
- * is percent-DEcoded. Returns null for an empty / missing param.
- *
- * TOTAL by design: `?codes=` is purely client-side FOCUS state (it never re-fetches),
- * so a malformed value — a stray `%` or a truncated escape (`%E0%A4%A`) that makes
- * `decodeURIComponent` THROW — must DEGRADE to the default union view, not crash the
- * leaf render. Any decode failure returns null (no focus). This is fail-SOFT on
- * URL-supplied cosmetic state, distinct from fail-fast on real data contracts. */
-export function parseCodesParam(
-  codes: string | null | undefined,
-): { variant: string | null; column: string } | null {
-  if (!codes) {
-    return null;
-  }
-  try {
-    const sep = codes.indexOf("::");
-    if (sep === -1) {
-      return { variant: null, column: decodeURIComponent(codes) };
-    }
-    return {
-      variant: decodeURIComponent(codes.slice(0, sep)),
-      column: decodeURIComponent(codes.slice(sep + 2)),
-    };
-  } catch {
-    return null;
-  }
-}
-
-/** The DISTINCT value-set `key` (the `distinctValueSets` dedup identity) a given
- * delivery COLUMN resolves to — the deep-link target for the picker's "codings
- * vary" nudge (#905). A column with a STABLE coding maps to one value set; a column
- * whose coding VARIED over time (`codingsVary`) touches SEVERAL distinct value
- * sets, so we pick the same representative state as `pickerRepresentations` (max
- * `valid_to`, ties broken by `state_id`) to isolate the row's representative coding,
- * with the rest one "← All value sets" click away. When `variant` is given, only
- * states of THAT variant are considered before the latest-era pick — two rows sharing
- * a column across different variants/populations each isolate their OWN coding (the
- * row key is `(variant, column)`, #905). When `variant` is null/omitted (a column
- * unambiguous across variants, or a leaf link with no variant), all states for the
- * column are considered (unchanged behavior). Returns null when no matching state
- * delivers the column (a stale / unknown `?codes=`), so the viewer degrades to its
- * default union view. Pure. */
-export function valueSetKeyForColumn(
-  states: VariableStateModel[],
-  column: string,
-  variant?: string | null,
-): string | null {
-  const candidates: VariableStateModel[] = [];
-  for (const s of states) {
-    if (s.delivery_column_name !== column) {
-      continue;
-    }
-    if (variant != null && s.variant !== variant) {
-      continue;
-    }
-    candidates.push(s);
-  }
-  const best =
-    candidates.length === 0
-      ? null
-      : latestRepresentativeState(candidates, (s) => s.valid_to ?? "");
-  return best === null ? null : valueSetDedupKey(best);
-}
-
 /** Humanize a classification slug for the value-set label (#668): the clean
  * vintage form `<letters><4-digit-year>` (e.g. `lkf2007`) becomes
  * `"<LETTERS-UPPER> <year>"` (`"LKF 2007"`); anything else (suffixed/hyphenated
@@ -2484,6 +2418,25 @@ export function coverageFromStates(
     return null;
   }
   return { from, to };
+}
+
+/** The calendar years a set of ISO spans delivers: the Timeline's edition
+ * ticks and the gaps inside coverage. An open end (`9999-12-31`) runs to
+ * `ceiling`, the catalog vintage; a yearless start (`0001-01-01`) and a
+ * year-independent span (no bounds) count nothing. */
+export function deliveredYears(
+  spans: Iterable<{ from: string | null; to: string | null }>,
+  ceiling: number,
+): number[] {
+  const years = new Set<number>();
+  for (const span of spans) {
+    if (span.from === null || span.from === YEARLESS_VALID_FROM) continue;
+    const lo = yearOf(span.from);
+    const hi = span.to === OPEN_ENDED_VALID_TO ? ceiling : yearOf(span.to);
+    if (lo === null || hi === null) continue;
+    for (let y = lo; y <= Math.min(hi, ceiling); y += 1) years.add(y);
+  }
+  return [...years].sort((a, b) => a - b);
 }
 
 /** The 4-digit year of an ISO `YYYY-MM-DD` bound as an int, or null when it

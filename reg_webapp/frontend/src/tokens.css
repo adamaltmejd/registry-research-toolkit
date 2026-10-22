@@ -185,15 +185,6 @@
   --cat-class: #7a3f8c; /* plum — classifications */
   --cat-group: #2f6b3f; /* moss — variable groups */
 
-  /* Facet-axis data palette — lane grouping and facet chips inside a LaneGraph.
-     Data, not chrome, not status. */
-  --facet-axis-0: #4f6f8f; /* steel */
-  --facet-axis-1: #6f7c3f; /* olive */
-  --facet-axis-2: #8a5f88; /* mauve */
-  --facet-axis-3: #9a6a42; /* clay */
-  --facet-axis-4: #4f8074; /* sea */
-  --facet-axis-5: #6b6794; /* slate-indigo */
-
   /* ════════════════════════════════════════════════════════════════════════
      LAYER 2 — SEMANTIC ROLES (the layer components consume)
      ════════════════════════════════════════════════════════════════════════ */
@@ -237,14 +228,6 @@
   --cat-code-ink: #835b16;
   --cat-class-ink: #683677;
   --cat-group-ink: #285b36;
-
-  /* Facet-axis TEXT stops — 78% toward black. */
-  --facet-axis-0-ink: #3e5770;
-  --facet-axis-1-ink: #576131;
-  --facet-axis-2-ink: #6c4a6a;
-  --facet-axis-3-ink: #785333;
-  --facet-axis-4-ink: #3e645a;
-  --facet-axis-5-ink: #535073;
 
   /* Data-viz — the time components (Timeline, VariableRow, LaneGraph). Time is
      the only axis relations are drawn on; these are its marks, never chrome. */
@@ -342,6 +325,11 @@
 
   /* ── Interaction states ──────────────────────────────────────────────── */
   --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
+  /* The same ring drawn inward, for a row inside a scroll box or under a sticky
+     row, which would clip the outer one: the accent line at the edge, the halo
+     inside it. (`inset var(--focus-ring)` insets only the first shadow.) */
+  --focus-ring-inset:
+    inset 0 0 0 1px var(--accent), inset 0 0 0 3px var(--accent-bg);
 
   /* ── Motion ──────────────────────────────────────────────────────────── */
   /* Three steps and two curves (DESIGN.md → Motion). Hover and colour are quick;
@@ -382,16 +370,4 @@ body {
      history graph's edges stay legible the moment the dark seam fills in). The
      succession steel lifts toward a brighter sky tone. */
   --viz-edge-succession: #7ba3c4;
-  --facet-axis-0: #8fb2d1;
-  --facet-axis-1: #aebd72;
-  --facet-axis-2: #d0a4cc;
-  --facet-axis-3: #d0a072;
-  --facet-axis-4: #8fc5b9;
-  --facet-axis-5: #aaa7d0;
-  --facet-axis-0-ink: #d7e9f5;
-  --facet-axis-1-ink: #edf3c6;
-  --facet-axis-2-ink: #f4dcf1;
-  --facet-axis-3-ink: #f3dfc8;
-  --facet-axis-4-ink: #d7f0eb;
-  --facet-axis-5-ink: #e5e3f5;
 }

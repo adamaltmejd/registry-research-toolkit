@@ -72,19 +72,6 @@ colors:
   cat-code-ink: "#835b16"
   cat-class-ink: "#683677"
   cat-group-ink: "#285b36"
-  # Facet-axis data palette — lane grouping and facet chips inside a LaneGraph.
-  facet-axis-0: "#4f6f8f"
-  facet-axis-1: "#6f7c3f"
-  facet-axis-2: "#8a5f88"
-  facet-axis-3: "#9a6a42"
-  facet-axis-4: "#4f8074"
-  facet-axis-5: "#6b6794"
-  facet-axis-0-ink: "#3e5770"
-  facet-axis-1-ink: "#576131"
-  facet-axis-2-ink: "#6c4a6a"
-  facet-axis-3-ink: "#785333"
-  facet-axis-4-ink: "#3e645a"
-  facet-axis-5-ink: "#535073"
   # Data-viz — marks of the time components (Timeline, VariableRow, LaneGraph).
   viz-span: "{colors.white}"
   viz-span-out: "{colors.border}"
@@ -245,8 +232,8 @@ column covers the study window you set.
 The look is ink on neutral paper, with one colour for what is yours. The base is
 monochrome: near-black text and rules on a near-white sheet. Colour appears only where
 it carries meaning — pine for everything that belongs to the open project, the status
-set for verdicts, the node-type hues where types actually vary, the facet and edge
-colours inside graphs. It never decorates.
+set for verdicts, the node-type hues where types actually vary, the edge colours inside
+graphs. It never decorates.
 
 Personality: quiet, exact, archival. The nearest relatives are Linear and Observable,
 not a marketing site and not a broadsheet. The app-level identity is spent on the
@@ -264,12 +251,12 @@ ramp stop or a fixed hue; components read roles only, never ramp stops and never
 literals. That discipline is what makes the dark theme (deferred) and provider themes
 pure role remaps.
 
-- **Sheet and surfaces:** `bg` is the canvas, `surface` where work happens (the detail
-  pane, inputs, chips, dialogs), `surface-sunken` the selected item in a browse column
-  and inset wells, `surface-hover` every hover.
+- **Sheet and surfaces:** `bg` is the canvas and the browse columns, `surface` where
+  work happens (the detail pane, inputs, chips, dialogs), `surface-sunken` the selected
+  item in a browse column and inset wells, `surface-hover` every hover.
 - **Ink (`text`, `text-muted`, `text-faint`):** `text` for everything read; `text-muted`
   for labels, descriptions, the brand subtitle and unselected list items (6.4:1 on
-  white); `text-faint` only for things that may recede — hints, out-of-window chips —
+  white) and out-of-window chips; `text-faint` only for things that may recede (hints),
   never for text that must be read (3.2:1, below WCAG AA for text).
 - **Rules:** `border` is the hairline between rows and columns. `border-strong` is an
   ink hairline and means structure: the rule above a section, a default button's border,
@@ -292,12 +279,10 @@ pure role remaps.
   10 % tint; label text takes the `-ink` stop so every type label clears AA. In a list
   where every item is the same type (registers under Registers, variables within a
   group) there is no type mark at all.
-- **Facet axes (`facet-axis-0..5`):** group lanes and facet chips by dimension inside a
-  `LaneGraph`. Data, not chrome, not status.
 - **Graph marks:** `viz-edge-succession` (ink, solid) is a definition change;
   `viz-edge-rename` (muted, dashed) is a rename. Spans are `viz-span` with a
   `border-strong` stroke; outside the study window they take `viz-span-out` and
-  `text-faint`. `viz-edition` cuts edition ticks into a coverage bar.
+  `text-muted`. `viz-edition` cuts edition ticks into a coverage bar.
 
 ## Typography
 
@@ -349,29 +334,37 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   triangle collapses it, the column header offers one toggle that reads "Collapse all"
   while any group is open and "Expand all" once all are closed, and collapse state is
   remembered per user. A group's items are indented `spacing.3` from the group's label,
-  not a full column (toggle and indent maintainer-decided 2026-10-22). Selection moves
-  with arrow keys across columns, and selecting a row opens its page; type-ahead moves
-  focus only. Left on a group header collapses it. Collapsing a group never changes the
-  selection: the detail pane keeps its page, and keyboard focus moves to the group row.
-  A browse column fills the viewport below the top bar and scrolls its own list. Every
-  item and group carries its in-project mark on the right when it has one. Below the
-  single narrow breakpoint (`breakpoint-narrow`) the columns stack, one at a time; the
-  back affordance is the breadcrumb's first crumb, "Data", which every page's trail
-  leads with and which opens the register list. Do not mint new breakpoints.
+  not a full column (toggle and indent maintainer-decided 2026-10-22). A group header is
+  the `label` level at weight 500 in `text-muted` on `bg`, its disclosure a small
+  `text-faint` triangle turned −90° when closed. Rows are selectable options, not links.
+  Selection moves with arrow keys across columns, and selecting a row opens its page;
+  type-ahead moves focus only. Left on a group header collapses it, Right expands it;
+  Right on a register row moves to the variables column, and Left there moves back.
+  Collapsing a group never changes the selection: the detail pane keeps its page, and
+  keyboard focus moves to the group row. For a register the second column is flat, a
+  concept group folded to one item (#303); inside a group (its page or a member's) it
+  lists the group's members under `mono` facet headers, one per value of the group's
+  first axis. A browse column fills the viewport below the top bar and scrolls its own
+  list. Every item and group carries its in-project mark on the right when it has one.
+  Below the single narrow breakpoint (`breakpoint-narrow`) the columns stack, one at a
+  time; the back affordance is the breadcrumb's first crumb, "Data", which every page's
+  trail leads with and which opens the register list. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page: groups with no matches collapse (still openable), matched
   text is underlined in `accent` at weight 600, a register that matched only through its
-  variables says so with the count, and the detail pane stays put. Escape clears the
-  filter and restores the collapse state. The command palette (RAC `Autocomplete`) opens
-  from Enter in the field or `⌘K`, seeded with the field's text (maintainer-decided
-  2026-10-22), for codes, classifications and actions; its results are a mixed list and
-  carry a `TypeTag`.
+  variables says so on its own line under it ("matched on 9 variables", the count in
+  `accent-ink`), the column header states how many registers match, and the detail pane
+  stays put. Escape clears the filter and restores the collapse state. The command
+  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, seeded with the
+  field's text (maintainer-decided 2026-10-22), for codes, classifications and actions;
+  its results are a mixed list and carry a `TypeTag`.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, one line of tagline in `text-muted`, and plain links
   into the browse list and the project as list items.
-- **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
-  row, the actions row, then definitions, then the `Timeline`, then the list of
-  variables or columns. Padding `spacing.5`.
+- **Detail pane:** breadcrumb path ("Data" in the UI face, then `mono` slugs in
+  `text-muted`), `h1`, member-of line, facets as a labelled row, the actions row, then
+  definitions, then the `Timeline`, then the list of variables or columns. Padding
+  `spacing.5`.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -387,17 +380,43 @@ variables") are left out.
 
 Time is the axis every relation is drawn on.
 
-- The **study window** comes from the project banner (which is the period picker) and
-  shades every `Timeline` and `LaneGraph` as an `accent-bg` band with `accent` bounds
-  and `accent-ink` years on the axis. With no project open there is no band.
-- A **`Timeline`** draws coverage as an ink bar with `viz-edition` ticks per delivered
-  edition, a `warn-hatch` hatch for a gap, and labelled spans for columns. A definition
-  change under the same column name is two spans and a `warn` mark, never prose.
+- The **study window** is the project's period, set in the project banner (which is the
+  period picker). Most researchers pick one, from a start year to the latest data, and
+  it is bounded by the viewed catalog's first and last year (`/api/context`
+  `period_span`). It shades every `Timeline` and `LaneGraph` as an `accent-bg` band with
+  `accent` bounds and `accent-ink` years on the axis. With no project open there is no
+  band.
+- A **source period** narrows the window for one variable. It stays allowed but is the
+  exception: on a variable page the `Timeline`'s band is a selection, two thumbs bounded
+  by the variable's availability, beside exact From/To year fields and Apply. The band
+  always shows the active window: the source period when one is set, else the project
+  window. A source period that differs from the project window says so in a `warn`
+  `StatusRow`, "▲ Differs from the project window", with a "Reset" ghost action. A
+  register or group pane draws the `Timeline` read-only.
+- A variable whose **availability is narrower** than the window is information, not a
+  warning: an `info` "i" note in the `Timeline` header names the uncovered years, and
+  the uncovered part of the window is an `info-bg` band. `warn-hatch` stays for a
+  delivery gap inside coverage.
+- A **`Timeline`** is one axis from the catalog's first year to its last, under a
+  `label` header that says what the band is and states the covered years (years only: no
+  edition count). Coverage is an ink bar with `viz-edition` ticks per delivered year, a
+  `warn-hatch` hatch for a gap, and a `label` legend of the marks it shows. Labelled
+  spans for columns, with a definition change under the same column name as two spans
+  and a `warn` mark, belong to it too (not drawn yet).
 - A **`VariableRow`** repeats the same axis as a thin bar, so a variable that does not
-  cover the window is visible before it is added.
+  cover the window is visible before it is added. It is one row of a register's variable
+  list, never a table with column headers: the in-project dot, the name in the text
+  face, the FQID in `mono` `text-muted`, the bar, and under them each delivery column as
+  a `ColumnChip` with its tick (a real checkbox; a column already in the project shows
+  its `in` chip and no tick). While anything is ticked, a sticky add bar reads "Add N
+  columns to project" as the pane's one `primary` button; with nothing ticked there is
+  no bar.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
-  rename. Don't draw free-form node graphs; the time axis is the information.
+  rename. A lane's title joins its facet values with a comma, and its name opens the
+  variable; a span is a checkbox for the add bar, and hovering it highlights its edges.
+  The band is the active window: the source period when one is set, else the study
+  window. Don't draw free-form node graphs; the time axis is the information.
 
 ## Elevation & Depth
 
@@ -468,17 +487,30 @@ not grow new visual language meanwhile.
   `--opacity-disabled`. There is no success variant. A button says what happens: "Add
   column to project", never "Submit".
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
-  and column counts, warnings, save state — on `accent-soft` with a 3 px `accent`
-  leading bar. The study window is the period picker. With no project open it is a
-  single "Create a project" link and nothing in the catalog is tinted.
-- **ColumnList:** a `label` header, then items, one selected (2 px `accent` bar on
-  `surface-sunken` at weight 600); in the first column, items grouped under sticky
-  collapsible group headers. An item or group with something in the project carries a 6
-  px `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
-  While the search bar holds text, the list shows its filter state (see Layout).
+  and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
+  hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
+  verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
+  "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
+  "Checking" with no glyph. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
+  never a status hue. The study window is the period picker: an inline two-thumb RAC
+  `Slider` (no popover) bounded by the viewed catalog's first and last year, its years
+  an `accent-ink` `mono` readout, with a "Clear" ghost action. With no project open it
+  is a single "Create a project" link in the same box with a `border` leading bar, and
+  nothing in the catalog is tinted.
+- **ColumnList:** a `label` header, then items on `bg`, one selected (2 px `accent` bar
+  on `surface-sunken` at weight 600; the column's one bar translates between items); in
+  the first column, items grouped under sticky collapsible group headers. A row's focus
+  ring is drawn inward (`--focus-ring-inset`, the same accent line and halo) so the
+  scroll box and a sticky row never clip it. An item or group with something in the
+  project carries a 6 px `accent` dot and the count in `accent-ink` `mono` — the only
+  numbers in the list. While the search bar holds text, the list shows its filter state
+  (see Layout).
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
-  `text-faint`). The same shape as a lane span, so the two read as one object.
+  `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
+  signal). The same shape as a lane span, so the two read as one object. The project's
+  column list chips every column, its superseded names too, beside the variable's name
+  in the text face and its FQID in `mono` `text-muted`.
 - **TypeTag:** the five `cat-*` hues, in mixed lists only. The label is fixed per type
   (Register, Variable, Code list, Classification, Group) and a caller passes only the
   type. 0.75 rem, line-height 1.4, padding 1 px 7 px, `sm` radius. A palette row sets
@@ -492,10 +524,9 @@ not grow new visual language meanwhile.
   border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph
   comes first and is `aria-hidden` (✕ error, ▲ warn, i info, ✓ ok), then plain sentence
   copy that says what went wrong and how to fix it. It rises in with `motion-rise-in`
-  when it appears and never on page load. New failed loads, refusals and verdicts use
-  it; the remaining hand-rolled rows are being migrated onto it. With no tone it is a
-  bare live region that holds no height, so a first message lands in a region the page
-  already had.
+  when it appears after the reader has acted, and never on page load. Every failed load,
+  refusal and verdict row is a StatusRow. With no tone it is a bare live region that
+  holds no height, so a first message lands in a region the page already had.
 - **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
   `--elevation-float`, over the scrim, on `--z-dialog-scrim` and `--z-dialog`. The title
   is an `h2` (`h2` size, weight 600, −0.01em tracking) and the body is `body-sm` in

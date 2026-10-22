@@ -19,7 +19,7 @@ function docFacts(doc: DocDetail): Definition[] {
       term: "Source",
       value: (
         <a
-          className={styles.source}
+          className={`link ${styles.source}`}
           href={doc.source_url}
           target="_blank"
           rel="noopener noreferrer"

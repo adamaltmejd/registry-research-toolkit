@@ -6,7 +6,6 @@ import type {
   VariableGraphNode,
 } from "./api";
 import {
-  cellsOf,
   classificationDagLayout,
   clustersOf,
   graphEdgeVisibleInGraph,
@@ -68,75 +67,7 @@ function classificationNode(
   };
 }
 
-describe("cellsOf — representation-run grouping", () => {
-  it("fuses consecutive states sharing a run into ONE cell, spanning their window", () => {
-    const node = variableNode({
-      states: [
-        state({
-          state_id: "1",
-          representation_run_id: 1,
-          value_set_version_label: "1-siffrig",
-          valid_from: "2010-01-01",
-          valid_to: "2010-12-31",
-        }),
-        state({
-          state_id: "2",
-          representation_run_id: 1,
-          value_set_version_label: "1-siffrig",
-          valid_from: "2011-01-01",
-          valid_to: "2011-12-31",
-        }),
-      ],
-    });
-    const cells = cellsOf(node);
-    expect(cells).toHaveLength(1);
-    expect(cells[0].label).toBe("1-siffrig");
-    expect(cells[0].window).toBe("2010 – 2011");
-    expect(cells[0].columns).toEqual(["Col"]);
-  });
-
-  it("labels by classification slug, then delivery column, when no version label", () => {
-    const slug = cellsOf(
-      variableNode({
-        states: [
-          state({
-            value_set_version_label: "",
-            classification_slugs: ["sun2020"],
-          }),
-        ],
-      }),
-    );
-    expect(slug[0].label).toBe("sun2020");
-
-    const col = cellsOf(
-      variableNode({
-        states: [
-          state({
-            value_set_version_label: "",
-            classification_slugs: [],
-            delivery_column_name: "Kon",
-          }),
-        ],
-      }),
-    );
-    expect(col[0].label).toBe("Kon");
-  });
-});
-
 describe("clustersOf — group_key clustering (Fork B)", () => {
-  it("clusters nodes sharing a group_key under one cluster with the group_label", () => {
-    const a = variableNode({
-      id: "a",
-      group_key: "g",
-      group_label: "Group G",
-    });
-    const b = variableNode({ id: "b", group_key: "g", group_label: "Group G" });
-    const clusters = clustersOf({ nodes: [a, b], edges: [], focus_id: null });
-    expect(clusters).toHaveLength(1);
-    expect(clusters[0].label).toBe("Group G");
-    expect(clusters[0].nodes.map((n) => n.node.id)).toEqual(["a", "b"]);
-  });
-
   it("titles a classification umbrella cluster by its group_label heading (#794 P3)", () => {
     // Classification umbrella members now carry `group_label` (the curated group's
     // display label) — the cluster heading must use it (not stay null), so a
@@ -172,8 +103,8 @@ describe("clustersOf — group_key clustering (Fork B)", () => {
   });
 
   it("gives each null-group_key node its OWN singleton cluster (no heading)", () => {
-    const a = variableNode({ id: "a", group_key: null });
-    const b = variableNode({ id: "b", group_key: null });
+    const a = classificationNode({ id: "a", group_key: null });
+    const b = classificationNode({ id: "b", group_key: null });
     const clusters = clustersOf({ nodes: [a, b], edges: [], focus_id: null });
     expect(clusters).toHaveLength(2);
     expect(clusters.every((c) => c.label === null)).toBe(true);

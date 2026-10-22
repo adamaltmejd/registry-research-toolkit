@@ -12,7 +12,6 @@ export { default as Tag } from "./Tag.svelte";
 
 export type {
   BreadcrumbItem,
-  ButtonSize,
   ButtonVariant,
   Column,
   KeyValueRow,

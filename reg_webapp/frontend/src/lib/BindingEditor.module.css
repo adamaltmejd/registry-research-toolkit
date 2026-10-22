@@ -10,28 +10,31 @@
 }
 .body {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+/* The delivery column leads the row as a ColumnChip, with what qualifies it
+   (a rename, its own years, the window) beside it. */
+.columns {
+  display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: var(--space-1) var(--space-2);
   min-width: 0;
 }
-/* The delivery column NAME is the row's subject, read as a word. */
-.columnName {
-  min-width: 0;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-/* The superseded columns of a rename: quiet, the columns themselves in mono. */
+/* The superseded columns of a rename: quiet words around their chips. */
 .renameHint {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1);
   min-width: 0;
   color: var(--text-muted);
   font-size: var(--text-sm);
-  overflow-wrap: anywhere;
 }
-.superseded {
-  font-family: var(--font-mono);
-}
-/* The column's own years, when narrower than the source's. */
+/* The column's own years, when narrower than the source's, and the window note:
+   text-muted, never faint. */
 .bindingPeriod {
   color: var(--text-muted);
   font-size: var(--text-sm);
@@ -39,19 +42,25 @@
 .years {
   font-variant-numeric: tabular-nums;
 }
-/* The variable is a machine FQID: mono, small, breaking in place at 375px. */
+/* The variable: its name in the text face, the FQID in mono under it, breaking
+   in place at 375px. */
+.variableLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  min-width: 0;
+  font-size: var(--text-sm);
+}
+/* A plain link (`link`). */
 .variable {
   min-width: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  color: var(--text);
   overflow-wrap: anywhere;
 }
-/* A link is ink at weight 600 beside non-interactive mono metadata. */
-a.variable {
-  font-weight: 600;
-}
-a.variable:focus-visible {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
+.fqid {
+  min-width: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
 }

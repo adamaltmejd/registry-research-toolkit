@@ -428,10 +428,10 @@ export function SourceEditor({
       {sourceMalformed ? (
         // A null/non-object slot: a degraded card that still occupies its index
         // so validation addressing lines up.
-        <p className="error" role="alert">
-          <span aria-hidden="true">✕</span> This source entry is malformed — fix
-          via re-download or hand-edit.
-        </p>
+        <StatusRow tone="error" live="alert">
+          This source entry is malformed. Download the project again, or fix it
+          in <code>project_data.json</code>.
+        </StatusRow>
       ) : (
         <>
           <KeyValue rows={metaRows} />
@@ -584,11 +584,9 @@ export function SourceEditor({
             )}
 
             {studyWindow && windowRelation === "differs" ? (
-              // The window is an authoring SEED, so this MARKS the divergence
-              // rather than warning about it.
-              <p className={styles.deviation}>
+              <StatusRow tone="warn">
                 Differs from study window {yearWindowLabel(studyWindow)}
-              </p>
+              </StatusRow>
             ) : studyWindow && windowRelation === "disjoint" ? (
               // The one divergence that blocks the order (reg_webapp/DESIGN.md →
               // "Common study window").
@@ -603,13 +601,12 @@ export function SourceEditor({
           {/* The cart says COLUMNS: a binding is one delivery column of the
               order. */}
           <div className={styles.bindings}>
-            <h4>Columns ({bindings.length})</h4>
+            <h4>Columns</h4>
             {bindingsMalformed ? (
-              <p className="error" role="alert">
-                <span aria-hidden="true">✕</span> This source's{" "}
-                <code>bindings</code> are malformed — fix via re-download or
-                hand-edit.
-              </p>
+              <StatusRow tone="error" live="alert">
+                This source's <code>bindings</code> are malformed. Download the
+                project again, or fix them in <code>project_data.json</code>.
+              </StatusRow>
             ) : bindings.length === 0 ? (
               <EmptyState
                 title="No columns yet"
@@ -637,6 +634,7 @@ export function SourceEditor({
                         binding={binding}
                         variant={variantSlug}
                         period={periodWire}
+                        studyWindow={studyWindow}
                       />
                     </li>
                   ))}

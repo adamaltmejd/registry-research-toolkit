@@ -49,10 +49,18 @@
   font-weight: var(--heading-weight);
 }
 
-.snippet,
-.sourceLink {
+.snippet {
   flex-basis: 100%;
   min-width: 0;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* The source document's link (`link`). */
+.sourceLink {
+  min-width: 0;
+  max-width: 100%;
+  color: var(--text);
   font-size: var(--text-sm);
   overflow-wrap: anywhere;
 }

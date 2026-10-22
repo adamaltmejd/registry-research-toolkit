@@ -59,8 +59,8 @@ export function DocMentionsPanel({ node }: { node: VariableShow }) {
             </p>
           )}
           <p className={`muted ${styles.note}`}>
-            Heuristic name matches — not authoritative variable→documentation
-            links.
+            Heuristic name matches, not authoritative links between the variable
+            and its documentation.
           </p>
           <ul className={styles.list}>
             {results.map((r, i) => (
@@ -98,7 +98,7 @@ export function DocMentionsPanel({ node }: { node: VariableShow }) {
                 )}
                 {r.source_url && (
                   <a
-                    className={styles.sourceLink}
+                    className={`link ${styles.sourceLink}`}
                     href={r.source_url}
                     target="_blank"
                     rel="noreferrer"

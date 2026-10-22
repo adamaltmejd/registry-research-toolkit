@@ -2,27 +2,6 @@
   min-width: 0;
 }
 
-.header {
-  margin-bottom: var(--space-4);
-}
-
-.title {
-  margin: 0;
-  font-size: var(--text-h1);
-  font-weight: var(--heading-weight);
-  line-height: 1.2;
-}
-
-/* The FQID line: a muted machine identifier. */
-.fqid {
-  margin: var(--space-1) 0 0;
-  color: var(--text-muted);
-}
-.fqid code {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-}
-
 .section {
   margin-top: var(--space-5);
 }

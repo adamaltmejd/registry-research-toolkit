@@ -27,10 +27,6 @@ export type PlainTone =
  *  - status: `error`/`warn`/`info`/`ok` — paired with a glyph, never hue alone. */
 export type TagTone = PlainTone | StatusTone;
 
-/** A `Button.svelte` size; the React `Button` has one size. Deleted with the Svelte
- *  island that still passes `sm`. */
-export type ButtonSize = "sm" | "md";
-
 /** A `Button` visual variant. `primary` is the single accent-filled CTA per
  *  view; `default`/`ghost` are the quiet chrome; `danger` is destructive. */
 export type ButtonVariant = "primary" | "default" | "ghost" | "danger";
@@ -58,6 +54,8 @@ export interface Column<Row = object> {
 export interface BreadcrumbItem {
   label: string;
   href?: string;
+  /** A word, not a slug or identifier: the UI face, not mono. */
+  word?: boolean;
 }
 
 /** A `KeyValue` row. `mono` mono-faces the value (identifiers). `value` is

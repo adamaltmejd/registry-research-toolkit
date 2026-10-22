@@ -1,10 +1,4 @@
-import {
-  Fragment,
-  type ReactNode,
-  type SyntheticEvent,
-  useCallback,
-  useState,
-} from "react";
+import { Fragment, type ReactNode, type SyntheticEvent, useState } from "react";
 import type { DenseIntegerRangeModel, VariableStateModel } from "./api";
 import {
   catalogHref,
@@ -17,11 +11,12 @@ import {
   matchesFilter,
   type StateConformance,
   type ValueSetTechnicalChange,
-  valueSetKeyForColumn,
   windowTitle,
 } from "./catalog";
 import { FilterInput } from "./FilterInput";
 import { Button } from "./ui/Button";
+import { ColumnChip } from "./ui/ColumnChip";
+import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
 import { ValueSetCodes } from "./ValueSetCodes";
 import styles from "./ValueSetView.module.css";
@@ -36,10 +31,6 @@ interface Props {
   narrowed: boolean;
   /** The period-resolved subset when `states` carries the full history. */
   scopeStates: VariableStateModel[] | null;
-  /** A `?codes=<variant>::<column>` deep link (#905): seeds the isolation onto
-   * the value set that (variant, column) resolves to and scrolls it into view. */
-  focusColumn: string | null;
-  focusVariant: string | null;
   /** Facts the containing variable page already shows, so a state repeats only
    * what differs. */
   common: {
@@ -145,7 +136,18 @@ function StateDefinitions({
           className={styles.definition}
         >
           <dt>
-            {s.delivery_column_name ? <code>{label(s)}</code> : label(s)}
+            {s.delivery_column_name ? (
+              <ColumnChip
+                name={s.delivery_column_name}
+                years={
+                  label(s) === s.delivery_column_name
+                    ? undefined
+                    : (formatStateWindow(s) ?? undefined)
+                }
+              />
+            ) : (
+              label(s)
+            )}
             {s.pooled && <PooledTag />}
           </dt>
           <dd>
@@ -207,27 +209,15 @@ export function ValueSetView({
   states,
   narrowed,
   scopeStates,
-  focusColumn,
-  focusVariant,
   common,
 }: Props) {
-  // Isolation is keyed by the value set's stable key; null is the union. A
-  // deep link seeds it. Reset with the rest of this state by the parent's key.
-  const [isolatedKey, setIsolatedKey] = useState<string | null>(() =>
-    focusColumn != null
-      ? valueSetKeyForColumn(states, focusColumn, focusVariant)
-      : null,
-  );
+  // Isolation is keyed by the value set's stable key; null is the union. Reset
+  // with the rest of this state by the parent's key.
+  const [isolatedKey, setIsolatedKey] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
   // Which code disclosures the reader opened (Y-46): a shut one holds no
   // ValueSetCodes, since mounting one is what issues the request.
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
-  const scrollToFocus = useCallback(
-    (el: HTMLDivElement | null) => {
-      if (el && focusColumn != null) el.scrollIntoView({ block: "nearest" });
-    },
-    [focusColumn],
-  );
 
   // One state drives the detail — unless a narrowed view's period delivered
   // nothing, when that lone state is out of era (#905).
@@ -335,11 +325,8 @@ export function ValueSetView({
     ];
     return (
       <div className={styles.notice}>
-        <Tag tone="warn" glyph="▲">
-          Source extensions
-        </Tag>
-        <p>
-          The source declares{" "}
+        <StatusRow tone="warn">
+          Source extensions. The source declares{" "}
           <a href={catalogHref(`class/${slug}`)}>
             {humanizeClassificationSlug(slug)}
           </a>
@@ -350,7 +337,7 @@ export function ValueSetView({
             ? "is a source extension"
             : "are source extensions"}
           . Source extensions are not official classification codes.
-        </p>
+        </StatusRow>
         {scope && (scope.coding || period || variants.length > 0) && (
           // The years the verdict was RECORDED over, often narrower than the
           // coding's own usage window above: said in words so the two windows
@@ -680,7 +667,7 @@ export function ValueSetView({
           : `${valueSets.length} ${valueSets.length === 1 ? "value set" : "value sets"} across ${states.length} states over time.`}
       </p>
       {isolated ? (
-        <div ref={scrollToFocus}>
+        <div>
           <Button onPress={() => setIsolatedKey(null)}>All value sets</Button>
           <h3 className={styles.heading}>
             {isolated.classificationSlugs.length > 0 ? (

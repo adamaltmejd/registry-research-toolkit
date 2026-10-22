@@ -128,13 +128,4 @@
   color: var(--text);
   font-weight: var(--heading-weight);
   text-decoration: none;
-  border-bottom: 1.5px solid var(--accent);
-}
-.summaryLink a:hover {
-  background: var(--surface-hover);
-}
-.summaryLink a:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }

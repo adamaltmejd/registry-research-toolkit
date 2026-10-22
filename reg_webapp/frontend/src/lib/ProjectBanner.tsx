@@ -23,15 +23,15 @@ import type { WindowBounds } from "./window_bounds";
  * wins: it is the more specific thing to fix first. */
 type BannerStatus = ValidationStatus | "blocked";
 
-// The ValidationPanel's vocabulary: the banner rides along on every route, so a
-// bare "Valid" beside a blocked order would claim more than the check that
-// actually completed (it validated the DRAFT, not the order). Each verdict leads
-// with its own glyph, so none is told apart by hue alone.
-const STATUS: Record<BannerStatus, { label: string; glyph: string }> = {
-  unchecked: { label: "Unchecked", glyph: "○" },
-  checking: { label: "Checking", glyph: "…" },
-  ok: { label: "Draft valid", glyph: "✓" },
-  warnings: { label: "Warnings", glyph: "!" },
+// The verdict, glyph first (DESIGN.md → ProjectBanner): each verdict leads with
+// its glyph from the status set, so none is told apart by hue alone. Unchecked
+// and in-flight are not verdicts: plain muted "Checking", no glyph. "Valid"
+// speaks for the draft; a window-blocked order still reads "Order blocked".
+const STATUS: Record<BannerStatus, { label: string; glyph: string | null }> = {
+  unchecked: { label: "Checking", glyph: null },
+  checking: { label: "Checking", glyph: null },
+  ok: { label: "Valid", glyph: "✓" },
+  warnings: { label: "Warnings", glyph: "▲" },
   errors: { label: "Errors", glyph: "✕" },
   blocked: { label: "Order blocked", glyph: "✕" },
 };
@@ -100,17 +100,20 @@ export function ProjectBanner({ bounds }: { bounds: WindowBounds }) {
               className={styles.unsaved}
               title="Unsaved changes since the last download"
             >
-              <span aria-hidden="true">●</span> Unsaved
+              unsaved
             </span>
           )}
         </div>
         <div className={styles.meta}>
-          <span>
+          <span className={styles.counts}>
             {plural(project.sources, "source", "sources")},{" "}
             {plural(project.columns, "column", "columns")}
           </span>
           <span className={styles.status} data-status={project.status}>
-            <span aria-hidden="true">{status.glyph}</span> {status.label}
+            {status.glyph !== null && (
+              <span aria-hidden="true">{status.glyph} </span>
+            )}
+            {status.label}
           </span>
         </div>
       </div>
@@ -120,7 +123,7 @@ export function ProjectBanner({ bounds }: { bounds: WindowBounds }) {
 }
 
 /**
- * The study window: a two-thumb year slider over the deployment's bounds. The
+ * The study window: a two-thumb year slider over the catalog's bounds. The
  * thumbs move live while dragged; the window store is written once, on release
  * or on each committed key press, so a drag is one draft edit and one autosave.
  * Unset, the thumbs rest at the full span and the readout says so.
@@ -137,8 +140,11 @@ function StudyWindow({ bounds }: { bounds: WindowBounds }) {
     <Slider
       className={styles.window}
       value={value}
-      minValue={Math.min(bounds.min, value[0])}
-      maxValue={Math.max(bounds.max, value[1])}
+      // The viewed catalog's first and last year (DESIGN.md → Time): a stored
+      // window outside them is clamped into them by the shell, never widens
+      // the track.
+      minValue={bounds.min}
+      maxValue={bounds.max}
       formatOptions={YEAR_FORMAT}
       onChange={setDragging}
       onChangeEnd={([from, to]) => {

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import {
   Button as AriaButton,
   Collection,
@@ -32,8 +32,10 @@ import { useRune } from "./svelte_bridge.svelte";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
 import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
+import columnStyles from "./ui/ColumnList.module.css";
+import { focusBrowseColumn } from "./ui/column_keys";
 import { StatusRow } from "./ui/StatusRow";
-import { TreeChevron } from "./ui/TreeChevron";
+import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
 
@@ -197,6 +199,9 @@ function browseNodes(
  */
 export function BrowseTree({ className }: { className?: string }) {
   const labelId = useId();
+  const boxRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLSpanElement>(null);
+  useSelectionBar(boxRef, barRef);
   const route = useRoute();
   const root = useRune(catalogRootChildren, undefined);
   const counts = useRune(readInProject, undefined);
@@ -327,12 +332,42 @@ export function BrowseTree({ className }: { className?: string }) {
     writeCollapsed(next);
   }
 
+  // → on a register row (a leaf) moves to the variables column (DESIGN.md →
+  // Layout); RAC's Tree uses → only on a group row. Captured, so the Tree
+  // never sees a key it would ignore.
+  function onKeyDownCapture(event: KeyboardEvent): void {
+    const row = (event.target as Element).closest('[role="row"]');
+    if (
+      event.key === "ArrowRight" &&
+      !event.altKey &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      row !== null &&
+      !row.hasAttribute("aria-expanded") &&
+      focusBrowseColumn("variables")
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
   return (
-    <nav className={`${styles.column} ${className ?? ""}`} aria-label="Catalog">
+    <nav
+      className={`${styles.column} ${className ?? ""}`}
+      aria-label="Catalog"
+      data-browse-column="registers"
+      onKeyDownCapture={onKeyDownCapture}
+    >
       <div className={styles.header}>
         <span id={labelId} className="micro-label">
           Registers
         </span>
+        {/* How many registers the filter leaves: an actionable count. */}
+        {matchCount !== null && (
+          <span className={styles.matchCount}>
+            {matchCount === 1 ? "1 match" : `${matchCount} matches`}
+          </span>
+        )}
         {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
             group is open, and expands once all are closed. */}
         <Button
@@ -346,57 +381,68 @@ export function BrowseTree({ className }: { className?: string }) {
           {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
         </Button>
       </div>
-      {root.loading ? (
-        <p className={styles.note} aria-busy="true">
-          Loading the catalog…
-        </p>
-      ) : root.value === null ? (
-        <StatusRow tone="error" live="alert" className={styles.error}>
-          The register list did not load. Reload the page to try again.
-        </StatusRow>
-      ) : (
-        <>
-          {registers.error && (
-            <StatusRow tone="error" live="alert" className={styles.error}>
-              Some registers did not load ({registers.error}). Reload the page
-              to try again.
-            </StatusRow>
-          )}
-          <Tree
-            aria-labelledby={labelId}
-            className={({ state }) => {
-              treeState.current = state;
-              return styles.tree;
-            }}
-            items={nodes}
-            selectionMode="single"
-            selectionBehavior="replace"
-            selectedKeys={currentKey === null ? [] : [currentKey]}
-            onSelectionChange={onSelectionChange}
-            expandedKeys={expandedKeys}
-            onExpandedChange={onExpandedChange}
-            dependencies={[
-              counts,
-              currentKey,
-              current?.exact,
-              needle,
-              facetResource.data,
-            ]}
-          >
-            {(node) => (
-              <BrowseItem
-                node={node}
-                counts={counts}
-                current={current}
-                needle={needle}
-              />
+      {/* The scroll box: the tree and the column's one selection bar. */}
+      <div ref={boxRef} className={styles.scroller}>
+        {root.loading ? (
+          <p className={styles.note} aria-busy="true">
+            Loading the catalog…
+          </p>
+        ) : root.value === null ? (
+          <StatusRow tone="error" live="alert" className={styles.error}>
+            The register list did not load. Reload the page to try again.
+          </StatusRow>
+        ) : (
+          <>
+            {registers.error && (
+              <StatusRow tone="error" live="alert" className={styles.error}>
+                Some registers did not load ({registers.error}). Reload the page
+                to try again.
+              </StatusRow>
             )}
-          </Tree>
-        </>
-      )}
+            <Tree
+              aria-labelledby={labelId}
+              className={({ state }) => {
+                treeState.current = state;
+                return styles.tree;
+              }}
+              items={nodes}
+              selectionMode="single"
+              selectionBehavior="replace"
+              selectedKeys={currentKey === null ? [] : [currentKey]}
+              onSelectionChange={onSelectionChange}
+              expandedKeys={expandedKeys}
+              onExpandedChange={onExpandedChange}
+              dependencies={[
+                counts,
+                currentKey,
+                current?.exact,
+                needle,
+                facetResource.data,
+              ]}
+            >
+              {(node) => (
+                <BrowseItem
+                  node={node}
+                  counts={counts}
+                  current={current}
+                  needle={needle}
+                />
+              )}
+            </Tree>
+          </>
+        )}
+        <span
+          ref={barRef}
+          className={columnStyles.selectionBar}
+          aria-hidden="true"
+          hidden
+        />
+      </div>
     </nav>
   );
 }
+
+const matchedCount = (n: number) => (n === 1 ? "1 variable" : `${n} variables`);
 
 function BrowseItem({
   node,
@@ -414,38 +460,48 @@ function BrowseItem({
   // while a page under it (a variable, a group, its variants) is open.
   const ariaCurrent =
     current?.key !== node.id ? undefined : current.exact ? "page" : "true";
+  // A group whose register is the open page: ← from the variables column
+  // lands here when a collapse hides that register's row.
+  const holdsCurrent = current?.key.startsWith(`${node.id}/`) ?? false;
   return (
     <TreeItem
       id={node.id}
       textValue={
         node.variableMatches === undefined
           ? node.name
-          : `${node.name}, ${node.variableMatches} matching ${node.variableMatches === 1 ? "variable" : "variables"}`
+          : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
       }
       className={styles.row}
-      render={(props) => <div {...props} aria-current={ariaCurrent} />}
+      render={(props) => (
+        <div
+          {...props}
+          aria-current={ariaCurrent}
+          data-holds-current={holdsCurrent || undefined}
+        />
+      )}
     >
       <TreeItemContent>
         {({ hasChildItems }) => (
           <>
             {hasChildItems ? (
               <AriaButton slot="chevron" className={styles.chevron}>
-                <TreeChevron />
+                <span className={styles.triangle} aria-hidden="true" />
               </AriaButton>
             ) : (
               <span className={styles.chevronSpacer} />
             )}
-            <span className={styles.name}>
-              <Highlight text={node.name} needle={needle} />
-            </span>
-            {node.variableMatches !== undefined && (
-              <span className={styles.variableMatches}>
-                {node.variableMatches}{" "}
-                {node.variableMatches === 1
-                  ? "matching variable"
-                  : "matching variables"}
+            <span className={styles.label}>
+              <span className={styles.name}>
+                <Highlight text={node.name} needle={needle} />
               </span>
-            )}
+              {/* A register kept only through its variables says so on its
+                  own line (DESIGN.md → ColumnList → Filter state). */}
+              {node.variableMatches !== undefined && (
+                <span className={styles.variableMatches}>
+                  matched on <b>{matchedCount(node.variableMatches)}</b>
+                </span>
+              )}
+            </span>
             <InProjectMark count={count} />
           </>
         )}

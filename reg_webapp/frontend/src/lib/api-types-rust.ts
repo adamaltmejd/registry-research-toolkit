@@ -1050,7 +1050,10 @@ export interface components {
         };
         /** @description A panel key: a variable slug (or `period`), or several (a composite key). */
         PanelKey: string | string[];
-        /** @description The first and last year of the steward's held periods. */
+        /**
+         * @description The catalog's first and last year: a steward's held periods, else the reference
+         *     catalog's delivered windows. It bounds the SPA's study window.
+         */
         PeriodSpan: {
             /** Format: int64 */
             from: number;
