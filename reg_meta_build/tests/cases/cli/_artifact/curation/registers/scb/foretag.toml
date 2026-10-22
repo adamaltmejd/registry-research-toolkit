@@ -82,3 +82,6 @@ slug = "arbetsstallen"
 "6.9112" = "agi2lonfink"
 "6.9121" = "diag1"
 "6.9122" = "diag2"
+# One source name, named apart by the collision ladder.
+"6.9131" = "bidiag1"
+"6.9132" = "bidiag2"

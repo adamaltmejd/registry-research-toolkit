@@ -3,7 +3,7 @@
   "files": {
     "partial.toml": {
       "contains": [
-        "# foldable families: 10",
+        "# foldable families: 11",
         "# excluded batteries (weak label agreement): 1",
         "# skipped (key collides with an existing group): 3",
         "# skipped (trailing-hyphen trim collapsed two distinct stems): 0",
