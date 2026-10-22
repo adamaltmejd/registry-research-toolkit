@@ -1,4 +1,5 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 // defineConfig from vitest/config (not vite): it natively types the `test` block.
 // Vitest 4 dropped the module augmentation that let a `/// <reference types="vitest/config" />`
@@ -56,7 +57,9 @@ const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
 };
 
 export default defineConfig({
-  plugins: [svelte()],
+  // React beside Svelte during the port: plugin-react takes only .tsx, so it
+  // never touches .svelte, .svelte.ts or plain .ts modules.
+  plugins: [svelte(), react({ include: /\.tsx$/ })],
   server: {
     // Dev proxy: the Rust server answers every /api route.
     proxy: {
