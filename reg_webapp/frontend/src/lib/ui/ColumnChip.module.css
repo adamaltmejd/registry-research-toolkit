@@ -32,12 +32,10 @@
   color: var(--accent-bg);
 }
 
+/* The preview sets out text in text-faint, which fails AA on the page; the
+   faint stroke carries the out signal and the text stays readable. */
 .out {
   border-color: var(--viz-span-out);
   background: transparent;
-  color: var(--text-faint);
-}
-
-.out .years {
-  color: var(--text-faint);
+  color: var(--text-muted);
 }

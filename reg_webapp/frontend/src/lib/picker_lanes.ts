@@ -306,12 +306,14 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
         : null;
       const label = yearsLabel(row, years);
       const changes = codingChanges(nodes.get(band.key), row);
+      // A folded rename reads as drawn: each name over its own years.
+      const eraWords = row.renameEras?.map((era) => {
+        const eraYears = rowYears({ ...row, from: era.from, to: era.to });
+        return `${era.column} ${eraYears ? yearsLabel(row, eraYears) : ""}`.trim();
+      });
       const words = [
-        `${row.column} ${label}`,
+        eraWords ? eraWords.join(", then ") : `${row.column} ${label}`,
         lane.name,
-        row.renamedColumns.length > 0
-          ? `renamed from ${row.renamedColumns.join(", ")}`
-          : null,
         changes.length > 0 ? `coding changed in ${changes.join(", ")}` : null,
         staged === "add"
           ? "will be added"

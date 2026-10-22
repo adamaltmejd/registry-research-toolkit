@@ -160,6 +160,7 @@ export function LaneGraph({
                               left: at.x,
                               top: at.y - placed.y,
                               width: at.width,
+                              height: SPAN_HEIGHT,
                             }}
                           >
                             <Span
@@ -183,6 +184,7 @@ export function LaneGraph({
       <Legend
         succession={kinds.has("succession")}
         rename={kinds.has("rename")}
+        inProject={spans.some((s) => s.state === "in")}
         window={window !== null}
       />
     </div>
@@ -456,10 +458,12 @@ function Span({
 function Legend({
   succession,
   rename,
+  inProject,
   window,
 }: {
   succession: boolean;
   rename: boolean;
+  inProject: boolean;
   window: boolean;
 }) {
   return (
@@ -467,18 +471,20 @@ function Legend({
       {succession && (
         <li>
           <i className={styles.keySuccession} />
-          succeeded by
+          succeeded by (definition change)
         </li>
       )}
       {rename && (
         <li>
           <i className={styles.keyRename} />
-          renamed
+          renamed, same definition
         </li>
       )}
-      <li>
-        <ColumnChip name="COL" state="in" /> in project
-      </li>
+      {inProject && (
+        <li>
+          <ColumnChip name="COL" state="in" /> in project
+        </li>
+      )}
       {window && (
         <li>
           <ColumnChip name="COL" state="out" /> outside the window

@@ -8,6 +8,8 @@ import {
   getShow,
   type VariableGraphNode,
 } from "./api";
+// The definitions read as on the variable page: one treatment for both heads.
+import leafStyles from "./BindingLeafView.module.css";
 import type { PeriodProps } from "./CatalogNodeView";
 import styles from "./ConceptGroupView.module.css";
 import {
@@ -41,6 +43,7 @@ import {
   stagedApplyRefusal,
 } from "./staged_picker";
 import { useRune } from "./svelte_bridge.svelte";
+import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
 import { Tag } from "./ui/Tag";
 import { useAsyncResource } from "./use_async_resource";
@@ -366,7 +369,7 @@ export function ConceptGroupView({
         <dl className={styles.facets}>
           {facetValues.map(({ axis, values }) => (
             <div key={axis.name} className={styles.facet}>
-              <dt>{axis.label}</dt>
+              <dt className="micro-label">{axis.label}</dt>
               <dd>{values.join(", ")}</dd>
             </div>
           ))}
@@ -385,7 +388,7 @@ export function ConceptGroupView({
         </ul>
       )}
       {(definition || description) && (
-        <dl className={styles.definitions}>
+        <dl className={`${leafStyles.meta} ${leafStyles.definitions}`}>
           {definition && (
             <>
               <dt>Definition</dt>
@@ -401,14 +404,12 @@ export function ConceptGroupView({
         </dl>
       )}
       <TechnicalDetails>
-        <dl className={styles.definitions}>
-          <dt>Group</dt>
-          <dd>
-            <code>{group.key}</code>
-          </dd>
-          <dt>Source</dt>
-          <dd>{group.source}</dd>
-        </dl>
+        <KeyValue
+          rows={[
+            { label: "Group", value: group.key, mono: true },
+            { label: "Source", value: group.source },
+          ]}
+        />
       </TechnicalDetails>
 
       <PeriodPicker
