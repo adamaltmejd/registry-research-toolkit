@@ -338,16 +338,18 @@ The current `AppShell` rail is a stepping stone (see Components) until it is rep
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers at
   `col-browse`, then the selected register's or group's variables at `col-list`, then
   the detail pane capped at `content-max`. Every group is open by default; a header
-  triangle collapses it, the column header offers "Collapse all" / "Expand all", and
-  collapse state is remembered per user. Selection moves with arrow keys across columns,
-  and selecting a row opens its page; type-ahead moves focus only. Left on a group
-  header collapses it. Collapsing a group never changes the selection: the detail pane
-  keeps its page, and keyboard focus moves to the group row. A browse column fills the
-  viewport below the top bar and scrolls its own list. Every item and group carries its
-  in-project mark on the right when it has one. Below the single narrow breakpoint
-  (`breakpoint-narrow`) the columns stack, one at a time; the back affordance is the
-  breadcrumb's first crumb, "Data", which every page's trail leads with and which opens
-  the register list. Do not mint new breakpoints.
+  triangle collapses it, the column header offers one toggle that reads "Collapse all"
+  while any group is open and "Expand all" once all are closed, and collapse state is
+  remembered per user. A group's items are indented `spacing.3` from the group's label,
+  not a full column (toggle and indent maintainer-decided 2026-10-22). Selection moves
+  with arrow keys across columns, and selecting a row opens its page; type-ahead moves
+  focus only. Left on a group header collapses it. Collapsing a group never changes the
+  selection: the detail pane keeps its page, and keyboard focus moves to the group row.
+  A browse column fills the viewport below the top bar and scrolls its own list. Every
+  item and group carries its in-project mark on the right when it has one. Below the
+  single narrow breakpoint (`breakpoint-narrow`) the columns stack, one at a time; the
+  back affordance is the breadcrumb's first crumb, "Data", which every page's trail
+  leads with and which opens the register list. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page: groups with no matches collapse (still openable), matched
   text is underlined in `accent` at weight 600, a register that matched only through its

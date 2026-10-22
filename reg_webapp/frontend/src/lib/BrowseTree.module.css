@@ -46,7 +46,7 @@
   align-items: center;
   gap: var(--space-1);
   padding: 5px var(--space-3) 5px
-    calc(var(--space-1) + (var(--tree-item-level) - 1) * var(--space-5));
+    calc(var(--space-1) + (var(--tree-item-level) - 1) * var(--space-3));
   background: var(--surface);
   color: var(--text-muted);
   font-size: var(--text-sm);
@@ -119,7 +119,7 @@
 }
 
 .loading {
-  padding: 5px var(--space-3) 5px calc(var(--space-1) + 20px + var(--space-5));
+  padding: 5px var(--space-3) 5px calc(var(--space-1) + 20px + var(--space-3));
   color: var(--text-muted);
   font-size: var(--text-sm);
   font-style: italic;

@@ -157,7 +157,7 @@ function browseNodes(
  * selecting a row opens its page; the current page's row carries the selection
  * bar. Rows are not links (RAC's selectable rows are not `<a>`). Every group
  * starts open; a group's chevron, ← / →, and the
- * header's "Collapse all" / "Expand all" fold them, remembered per user.
+ * header's one "Collapse all" / "Expand all" toggle fold them, remembered per user.
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
@@ -251,17 +251,17 @@ export function BrowseTree({ className }: { className?: string }) {
         <span id={labelId} className="micro-label">
           Registers
         </span>
+        {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
+            group is open, and expands once all are closed. */}
         <Button
           className="ghost-button"
-          onPress={() => onExpandedChange(new Set())}
+          onPress={() =>
+            onExpandedChange(
+              expandedKeys.size > 0 ? new Set() : new Set(expandable),
+            )
+          }
         >
-          Collapse all
-        </Button>
-        <Button
-          className="ghost-button"
-          onPress={() => onExpandedChange(new Set(expandable))}
-        >
-          Expand all
+          {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
         </Button>
       </div>
       {root.loading ? (
