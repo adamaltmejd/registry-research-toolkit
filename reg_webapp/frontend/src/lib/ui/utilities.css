@@ -133,13 +133,27 @@ input.cbox:indeterminate::after {
 }
 
 /* App-wide link and text roles, read by the Svelte views still mounted as islands
-   during the React port (they lived in App.svelte's `:global()` block). */
+   during the React port (they lived in App.svelte's `:global()` block).
+
+   A link is ink, never pine: pine is ownership (DESIGN.md → Colors). A PLAIN link
+   (no class of its own: prose, a member-of line) takes the design system's 1.5px
+   `accent` bottom border and a `surface-hover` wash. An anchor with a class owns its
+   look, because most of them wrap a block or a row and a bottom border would draw
+   across all of it. */
 a {
-  color: var(--accent-ink);
+  color: var(--text);
   text-decoration: none;
 }
-a:hover {
-  text-decoration: underline;
+a:not([class]) {
+  border-bottom: 1.5px solid var(--accent);
+}
+a:not([class]):hover {
+  background: var(--surface-hover);
+}
+a:not([class]):focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 .muted {
   color: var(--text-muted);

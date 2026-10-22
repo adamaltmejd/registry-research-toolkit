@@ -34,19 +34,9 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
+/* The link itself is the global plain link; the member-of line sets it at 600. */
 .memberOf a {
-  color: var(--text);
   font-weight: var(--heading-weight);
-  text-decoration: none;
-  border-bottom: 1.5px solid var(--accent);
-}
-.memberOf a:hover {
-  background: var(--surface-hover);
-}
-.memberOf a:focus-visible {
-  border-radius: var(--radius-sm);
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .facets {

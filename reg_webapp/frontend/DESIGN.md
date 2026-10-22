@@ -321,7 +321,10 @@ mono or in a chip.
 
 Hierarchy is size and weight. Labels and headings are **sentence case with normal
 tracking**; nothing is underlined except a ghost button's label, which takes a 2 px
-`accent` underline, and text a search filter matched (see Layout). Line length stays
+`accent` underline, and text a search filter matched (see Layout). **Links** are `text`,
+never pine, with a 1.5 px `accent` bottom border (a bottom border, not an underline) and
+`surface-hover` on hover; the member-of line sets them at weight 600. Pine text
+(`accent-ink`) is for what is in the open project, not for links. Line length stays
 under 60 characters for prose in a pane; tables, lanes and identifiers are exempt.
 Swedish text with å/ä/ö is the norm, so both families ship the latin and latin-ext
 subsets.
