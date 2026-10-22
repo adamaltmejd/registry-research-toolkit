@@ -588,13 +588,15 @@ fn register(
         ))
     })?
     .into_iter()
-    .map(|(variable_id, variable, name, is_identifier)| VariableChild {
-        fqid: format!("{provider}/{slug}/{variable}"),
-        name,
-        is_identifier,
-        coverage: coverage.get(&variable_id).cloned(),
-        deliveries: deliveries.remove(&variable_id).unwrap_or_default(),
-    })
+    .map(
+        |(variable_id, variable, name, is_identifier)| VariableChild {
+            fqid: format!("{provider}/{slug}/{variable}"),
+            name,
+            is_identifier,
+            coverage: coverage.get(&variable_id).cloned(),
+            deliveries: deliveries.remove(&variable_id).unwrap_or_default(),
+        },
+    )
     .collect();
     Ok(Register {
         fqid: format!("{provider}/{slug}"),
