@@ -110,6 +110,13 @@
         "python"
       ],
       "enabled": false
+    },
+    {
+      "description": "Paused during the React port (REACT_PORT.md): reg_webapp/frontend/** is frozen on main and rewritten on react-port. The merge PR removes this rule and adds one lockstep group for vite-plus, vitest, @vitest/browser-playwright, react, react-dom, react-aria-components and vitest-browser-react.",
+      "matchFileNames": [
+        "reg_webapp/frontend/**"
+      ],
+      "enabled": false
     }
   ]
 }

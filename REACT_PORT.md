@@ -15,8 +15,8 @@ merges. PR 10 deletes this file.
 - Design and spec edits to `reg_webapp/frontend/DESIGN.md` still land on `main`; `main`
   is merged into `react-port` the same day.
 - Urgent fixes land on `main` and are merged forward into `react-port`.
-- Renovate's nightly group still opens frontend bumps on `main`; they are not paused
-  yet. Hold them, or add a `matchFileNames: ["reg_webapp/frontend/**"]` disable rule.
+- Renovate is paused for `reg_webapp/frontend/**` (a disable rule in `renovate.json`);
+  the merge PR removes it and adds one lockstep group for the new toolchain.
 
 ## Scope
 
