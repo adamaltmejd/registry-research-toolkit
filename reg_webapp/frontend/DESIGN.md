@@ -333,9 +333,14 @@ subsets.
 
 The shell is a top bar and two browse columns beside a detail pane, not a rail.
 
-- **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it), one
-  search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the
-  palette), and the `ProjectBanner` at the right. There are no "Search" or "Project" nav
+- **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it; the
+  name is unadorned on hover, and without a deployment its name is "Registry Research
+  Toolkit"), one search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on
+  macOS, opens the palette), and the `ProjectBanner` at the right. The field reads
+  "Search registers, variables, codes…". While it holds text, focused or not, it takes
+  an `accent` border with an `accent-bg` halo, and its hint becomes the match count in
+  `accent-ink` with an `Esc` key hint; the key hints are `text-faint` on
+  `surface-sunken`. There are no "Search" or "Project" nav
   items; the bar and the banner are those. It sticks to the top of the page above
   `breakpoint-narrow`; below it the bar wraps and scrolls away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers at
@@ -361,6 +366,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   from Enter in the field or `⌘K`, seeded with the field's text (maintainer-decided
   2026-10-22), for codes, classifications and actions; its results are a mixed list and
   carry a `TypeTag`.
+- **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
+  product name in `display` type, one line of tagline in `text-muted`, and plain links
+  into the browse list and the project as list items.
 - **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
   row, the actions row, then definitions, then the `Timeline`, then the list of
   variables or columns. Padding `spacing.5`.

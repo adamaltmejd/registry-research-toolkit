@@ -25,6 +25,25 @@ export const browseFilter = {
 
 const read = () => value;
 
+/** How many registers the browse tree keeps for the filter, published by the
+ * tree (the one place that ranks them) so the search field can say so. Null
+ * while there is no filter or the tree has not answered. */
+let matches: number | null = null;
+
+export const browseMatches = {
+  set(next: number | null): void {
+    if (next === matches) return;
+    matches = next;
+    for (const notify of listeners) notify();
+  },
+};
+
+const readMatches = () => matches;
+
+export function useBrowseMatches(): number | null {
+  return useSyncExternalStore(browseFilter.subscribe, readMatches);
+}
+
 /** The browse filter's text, as typed (callers fold it through `rankFilter`). */
 export function useBrowseFilter(): string {
   return useSyncExternalStore(browseFilter.subscribe, read);

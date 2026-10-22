@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Input, SearchField } from "react-aria-components";
 import type { Steward } from "./api";
-import { browseFilter, useBrowseFilter } from "./browse_filter";
+import {
+  browseFilter,
+  useBrowseFilter,
+  useBrowseMatches,
+} from "./browse_filter";
 import { CommandPalette } from "./CommandPalette";
 import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
@@ -26,6 +30,7 @@ export function TopBar({ steward, bounds }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
   const filter = useBrowseFilter();
+  const matches = useBrowseMatches();
   // The palette opens with the field's text at that moment; it never writes
   // back to the filter.
   const [palette, setPalette] = useState<{ seed: string } | null>(null);
@@ -69,7 +74,7 @@ export function TopBar({ steward, bounds }: Props) {
     <header ref={ref} className={styles.topBar}>
       <a href="/" className={styles.brand}>
         <span className={styles.brandName}>
-          {steward?.long_name ?? "Register Research Catalog"}
+          {steward?.long_name ?? "Registry Research Toolkit"}
         </span>
         {steward && <span className={styles.brandId}>{steward.id}</span>}
       </a>
@@ -78,7 +83,7 @@ export function TopBar({ steward, bounds }: Props) {
           the way to codes, classifications and the rest of the catalog. */}
       <SearchField
         ref={field}
-        aria-label="Filter registers and variables"
+        aria-label="Search registers, variables, codes"
         className={styles.search}
         value={filter}
         onChange={browseFilter.set}
@@ -87,13 +92,28 @@ export function TopBar({ steward, bounds }: Props) {
         <Input
           ref={input}
           className={styles.searchInput}
-          placeholder="Filter registers and variables…"
+          placeholder="Search registers, variables, codes…"
           autoComplete="off"
         />
-        {filter === "" && (
-          <kbd className={styles.shortcut} aria-hidden="true">
+        {filter === "" ? (
+          <kbd className={styles.hint} aria-hidden="true">
             {commandShortcutHint(mac)}
           </kbd>
+        ) : (
+          <span className={styles.hint}>
+            {/* The count is a live region that exists with the text, so a
+                change in it is announced. */}
+            <span className={styles.count} aria-live="polite">
+              {matches === null
+                ? ""
+                : matches === 1
+                  ? "1 match"
+                  : `${matches} matches`}
+            </span>
+            <kbd className={styles.key} aria-hidden="true">
+              Esc
+            </kbd>
+          </span>
         )}
       </SearchField>
       <CommandPalette

@@ -16,7 +16,11 @@ import {
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
-import { useBrowseFilter, useSettledFilter } from "./browse_filter";
+import {
+  browseMatches,
+  useBrowseFilter,
+  useSettledFilter,
+} from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
 import { catalogRootChildren } from "./catalog_names.svelte";
 import { Highlight } from "./Highlight";
@@ -233,6 +237,18 @@ export function BrowseTree({ className }: { className?: string }) {
   const expandable = nodes
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
+  // The search field's "N matches": the registers the filter keeps (a group
+  // that did not match keeps its list but matches nothing).
+  const matchCount =
+    filtering && !registers.loading
+      ? nodes
+          .filter((node) => matched.has(node.id))
+          .reduce((sum, node) => sum + (node.children?.length ?? 0), 0)
+      : null;
+  useEffect(() => {
+    browseMatches.set(matchCount);
+    return () => browseMatches.set(null);
+  }, [matchCount]);
 
   const current = currentRow(route);
   const currentKey = current?.key ?? null;
