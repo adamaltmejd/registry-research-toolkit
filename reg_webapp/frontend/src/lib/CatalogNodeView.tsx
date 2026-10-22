@@ -5,7 +5,7 @@ import {
   type ProviderShow,
 } from "./api";
 import { BindingLeafView } from "./BindingLeafView";
-import { useBrowseFilter } from "./browse_filter";
+import { browseFilter, useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import {
   ClassificationGroupView,
@@ -24,6 +24,7 @@ import {
 import { sharedShow } from "./catalog_names.svelte";
 import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
+import { Button } from "./ui/Button";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
@@ -192,7 +193,12 @@ function ProviderView({ node }: { node: ProviderShow }) {
             <Panel title="Registers">
               <EmptyState
                 title={`No registers match “${filter}”`}
-                description="Clear the search bar to see every register."
+                description="Nothing in this provider contains that text."
+                action={
+                  <Button onPress={() => browseFilter.set("")}>
+                    Clear filter
+                  </Button>
+                }
               />
             </Panel>
           )}

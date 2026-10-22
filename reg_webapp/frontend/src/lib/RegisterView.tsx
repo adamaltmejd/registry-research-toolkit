@@ -5,7 +5,11 @@ import type {
   VariableChild,
   VariableDeliveryModel,
 } from "./api";
-import { useBrowseFilter, useRegisterMatches } from "./browse_filter";
+import {
+  browseFilter,
+  useBrowseFilter,
+  useRegisterMatches,
+} from "./browse_filter";
 import type { PeriodProps } from "./CatalogNodeView";
 import { ConceptGroupLink } from "./CatalogNodeView";
 import styles from "./CatalogNodeView.module.css";
@@ -713,7 +717,12 @@ export function RegisterView({
                 description={
                   selectedVariants.size > 0
                     ? "The variant filter above is also narrowing this list."
-                    : "Clear the search bar to see every variable."
+                    : "Nothing in this register contains that text."
+                }
+                action={
+                  <Button onPress={() => browseFilter.set("")}>
+                    Clear filter
+                  </Button>
                 }
               />
             </Panel>

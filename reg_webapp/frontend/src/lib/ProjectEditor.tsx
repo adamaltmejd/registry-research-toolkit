@@ -8,6 +8,7 @@ import {
   safeStudyWindow,
 } from "./project_data";
 import { projectStore } from "./project_store";
+import { router } from "./router";
 import { SourceEditor } from "./SourceEditor";
 import { StudyWindowSummary } from "./StudyWindowSummary";
 import { useRune } from "./svelte_bridge.svelte";
@@ -279,7 +280,15 @@ export function ProjectEditor({
           <section aria-label="Sources">
             <Panel title={`Sources (${sources.length})`}>
               {sources.length === 0 ? (
-                <EmptyState title="No sources yet. Browse the catalog to add data to your project." />
+                <EmptyState
+                  title="No sources yet"
+                  description="Browse the catalog to add data to your project."
+                  action={
+                    <Button onPress={() => router.navigate("/catalog")}>
+                      Browse registers
+                    </Button>
+                  }
+                />
               ) : (
                 <>
                   <StudyWindowSummary

@@ -22,6 +22,7 @@ import {
 } from "./project_data";
 import { projectStore, type SourcePeriodEditTarget } from "./project_store";
 import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
+import { router } from "./router";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import styles from "./SourceEditor.module.css";
 import { SvelteIsland } from "./SvelteIsland";
@@ -610,7 +611,15 @@ export function SourceEditor({
                 hand-edit.
               </p>
             ) : bindings.length === 0 ? (
-              <EmptyState title="No columns yet. Browse the catalog to add columns from this register." />
+              <EmptyState
+                title="No columns yet"
+                description="Browse the catalog to add columns from this register."
+                action={
+                  <Button onPress={() => router.navigate("/catalog")}>
+                    Browse registers
+                  </Button>
+                }
+              />
             ) : (
               <>
                 <SvelteIsland

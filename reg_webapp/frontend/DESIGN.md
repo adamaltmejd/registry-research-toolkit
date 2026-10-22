@@ -481,8 +481,13 @@ not grow new visual language meanwhile.
   that holds no height, so a first message lands in a region the page already had.
 - **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
   `--elevation-float`, over the scrim. A click on the scrim does not answer it.
-- **Empty and loading states:** `EmptyState` names the next action; `Skeleton` exposes
-  `aria-busy="true"` and respects reduced motion.
+- **Empty and loading states:** `EmptyState` is a centred, muted message: a title at the
+  `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
+  Button that names the next action ("Browse registers"). The title states what is
+  empty; the next step is the description and the button, never packed into the title.
+  `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it with a
+  crossfade (`motion-swap`) at `--duration-base`. It exposes `aria-busy="true"`, and
+  respects reduced motion. A loading region carries no "Loading…" line beside it.
 
 ## Do's and Don'ts
 
