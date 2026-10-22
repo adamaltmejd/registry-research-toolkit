@@ -1,9 +1,10 @@
-/* Neutral at rest: the strip's legend names the dimension in text, never hue. */
+/* Neutral at rest: the label before the chips names the dimension in text, never
+   hue. Padding and gap are the design system's 4px 9px / 6px. */
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+  gap: 6px;
+  padding: var(--space-1) 9px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -11,7 +12,9 @@
   font-size: var(--text-sm);
   cursor: pointer;
   user-select: none;
-  transition: background var(--duration-quick) var(--ease-standard);
+  transition:
+    background var(--duration-quick) var(--ease-standard),
+    border-color var(--duration-quick) var(--ease-standard);
 }
 .chip[data-hovered] {
   background: var(--surface-hover);

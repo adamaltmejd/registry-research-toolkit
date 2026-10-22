@@ -22,7 +22,8 @@
   min-width: 0;
 }
 
-/* The variant chips (Y-82): one fieldset whose legend names the axis in text. */
+/* The variant chips (Y-82): one fieldset whose legend names the axis in text. No
+   box: the legend floats so it reads as an inline label before the chips. */
 .variantFilters {
   display: flex;
   flex-wrap: wrap;
@@ -30,16 +31,19 @@
   gap: var(--space-3);
 }
 .variantFilter {
-  /* Hug the chips: a bare fieldset spans the pane. */
+  /* Hug the label and chips: a bare fieldset spans the pane. */
   inline-size: fit-content;
   min-inline-size: 0;
   margin: 0;
-  padding: var(--space-2) var(--space-3) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  padding: 0;
+  border: 0;
 }
 .variantFilter legend {
-  padding: 0 var(--space-1);
+  float: left;
+  margin-inline-end: var(--space-2);
+  padding: 0;
+  /* One chip tall, so the label sits on the chips' centre line. */
+  line-height: 1.85rem;
 }
 .chips {
   display: flex;
