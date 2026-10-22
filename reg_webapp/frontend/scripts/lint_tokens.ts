@@ -161,10 +161,11 @@ const disciplinedFiles = [
 ]
   .filter((file) => file !== "src/tokens.css")
   .sort();
-const svelteFiles = disciplinedFiles.filter((f) => f.endsWith(".svelte"));
-if (svelteFiles.length <= 30) {
+// A broken glob would pass vacuously. Counted over every styled file, not the
+// .svelte ones, which the React port is deleting.
+if (disciplinedFiles.length <= 30) {
   failures.push(
-    `token discipline saw only ${svelteFiles.length} .svelte files under src/`,
+    `token discipline saw only ${disciplinedFiles.length} styled files under src/`,
   );
 }
 for (const file of disciplinedFiles) {
