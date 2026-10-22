@@ -293,7 +293,15 @@
   --radius-sm: 3px; /* controls, chips, column chips, lane spans, inputs */
   --radius: 4px; /* banner, dialogs, status rows */
   --col-browse: 260px; /* first browse column: registers grouped by provider */
+  --col-browse-max: 340px; /* the first column's width on a wide screen */
   --col-list: 230px; /* second browse column */
+  --col-list-max: 300px; /* the second column's width on a wide screen */
+  --shell-max: 120rem; /* the shell's width; wider screens centre it */
+  /* The browse columns grow with the viewport between their two widths, so
+     a wide screen gives the lists room instead of an empty right margin
+     (maintainer ruling 2026-10-22). Not tokens of their own: derived. */
+  --col-browse-fluid: clamp(var(--col-browse), 18vw, var(--col-browse-max));
+  --col-list-fluid: clamp(var(--col-list), 16vw, var(--col-list-max));
   --lane-height: 58px; /* one lane in a LaneGraph */
   --content-max: 80rem; /* the AppShell canvas max-width */
 

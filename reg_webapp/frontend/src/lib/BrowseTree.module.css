@@ -66,14 +66,29 @@
   );
 }
 
+/* The register a page under it belongs to (a variable, a group): it reads as
+   selected, with the bar drawn on the row, but is not RAC-selected, so a click
+   opens the register's own page. */
+.row[aria-current="true"] {
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-weight: var(--heading-weight);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.row[aria-current="true"][data-focus-visible] {
+  box-shadow:
+    inset 2px 0 0 var(--accent),
+    var(--focus-ring-inset);
+}
+
 /* A group row: the `label` level in text-muted, sticking to the top of the list
    while its registers scroll under it (above the selection bar). The flat DOM
-   makes the next group's row cover it rather than push it. */
+   makes the next group's row cover it rather than push it. No rule under it
+   (maintainer ruling 2026-10-22). */
 .row[data-level="1"] {
   position: sticky;
   top: 0;
   z-index: 2;
-  border-bottom: 1px solid var(--border);
   font-size: var(--text-micro);
   font-weight: var(--column-weight);
 }

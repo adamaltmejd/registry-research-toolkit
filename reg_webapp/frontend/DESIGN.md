@@ -150,7 +150,10 @@ spacing:
   content-max: 80rem
   breakpoint-narrow: 48rem
   col-browse: 260px
+  col-browse-max: 340px
   col-list: 230px
+  col-list-max: 300px
+  shell-max: 120rem
   lane-height: 58px
 
 components:

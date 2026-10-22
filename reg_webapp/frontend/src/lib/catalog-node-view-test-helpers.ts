@@ -36,5 +36,5 @@ export function variableChild(
   name: string,
   deliveries: VariableDeliveryModel[] = [],
 ): VariableChild {
-  return { fqid, name, coverage: null, deliveries };
+  return { fqid, name, is_identifier: false, coverage: null, deliveries };
 }

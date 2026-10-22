@@ -74,6 +74,9 @@ export interface PickerLaneInput {
   window: [number, number] | null;
   studyWindow: ProjectStudyWindow | null;
   vintageYear: number;
+  /** The catalog's first and last year: the axis every lane is drawn on, as
+   * on the Timeline above it (maintainer ruling 2026-10-22). */
+  catalogYears: readonly [number, number];
   committed: ReadonlyMap<string, PickerCommittedRow>;
   stagedAdds: ReadonlySet<string>;
   stagedRemoves: ReadonlySet<string>;
@@ -366,11 +369,14 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
     if (undelivered.length > 0) lane.undelivered = undelivered;
   }
 
-  // The axis: every dated year, the window, and the vintage where a column is
-  // still delivered.
-  const dated = placedYears.flatMap((y) =>
-    [y.from, y.to].filter((v): v is number => v !== null),
-  );
+  // The axis: the catalog's years, widened only to a dated year, the window,
+  // or the vintage where a column is still delivered that falls outside them.
+  const dated = [
+    ...input.catalogYears,
+    ...placedYears.flatMap((y) =>
+      [y.from, y.to].filter((v): v is number => v !== null),
+    ),
+  ];
   if (input.window) dated.push(...input.window);
   if (placedYears.some((y) => y.openEnd) || dated.length === 0) {
     dated.push(input.vintageYear);

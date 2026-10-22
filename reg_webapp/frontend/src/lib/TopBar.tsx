@@ -15,17 +15,20 @@ import type { WindowBounds } from "./window_bounds";
 interface Props {
   /** The deployment's branding, or null until /api/context resolves. */
   steward: Steward | null;
+  /** The server's version, the seed of a new project; empty until
+   * /api/context resolves. */
+  regMetaVersion: string;
   bounds: WindowBounds;
 }
 
 const mac = isMacPlatform();
 
-/** The top bar (DESIGN.md → Layout): the brand, the one search bar and the
- * project banner. There are no "Search" or "Project" nav items; the bar and the
+/** The top bar (DESIGN.md → Layout): the brand (the deployment's name), the
+ * one search bar and the project banner. There are no "Search" or "Project" nav items; the bar and the
  * banner are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
-export function TopBar({ steward, bounds }: Props) {
+export function TopBar({ steward, regMetaVersion, bounds }: Props) {
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
@@ -72,11 +75,11 @@ export function TopBar({ steward, bounds }: Props) {
 
   return (
     <header ref={ref} className={styles.topBar}>
+      {/* The row is the shell's width, so on a wide screen the banner stays
+          over the detail pane's edge instead of the screen's. */}
+      <div className={styles.inner}>
       <a href="/" className={styles.brand}>
-        <span className={styles.brandName}>
-          {steward?.long_name ?? "Registry Research Toolkit"}
-        </span>
-        {steward && <span className={styles.brandId}>{steward.id}</span>}
+        {steward?.long_name ?? "Registry Research Toolkit"}
       </a>
       {/* Text here filters both browse columns in place; Escape clears it and
           gives back the collapse state. Enter opens the palette with the text,
@@ -124,7 +127,11 @@ export function TopBar({ steward, bounds }: Props) {
         triggerRef={field}
         seed={palette?.seed ?? ""}
       />
-      <ProjectBanner bounds={bounds} />
+      <ProjectBanner
+        bounds={bounds}
+        seed={{ regMetaVersion, steward: steward?.id ?? "" }}
+      />
+      </div>
     </header>
   );
 }

@@ -12,6 +12,18 @@
   white-space: nowrap;
 }
 
+/* The kind glyph: strokes in the tag's ink. */
+.glyph {
+  flex: none;
+  margin-right: var(--space-1);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+.glyphFill {
+  fill: currentColor;
+}
+
 .reg {
   --tone-hue: var(--cat-reg);
   --tone-ink: var(--cat-reg-ink);

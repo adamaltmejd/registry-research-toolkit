@@ -7,6 +7,7 @@ import {
   foldGroupedRows,
   groupFilterKeys,
   groupHref,
+  keyVariablesFirst,
   leafSlug,
   matchesFilter,
   rankFilter,
@@ -137,7 +138,11 @@ export function VariableList({
     ]),
   );
   const columnNames = (fqid: string) => columnsByFqid.get(fqid) ?? [];
-  const folded = foldGroupedRows(children, node?.groups);
+  const folded = keyVariablesFirst(
+    foldGroupedRows(children, node?.groups),
+    children,
+    node?.variants ?? [],
+  );
   const keys = (row: (typeof folded)[number]) =>
     row.kind === "group"
       ? groupFilterKeys(row.group, columnNames)
@@ -216,6 +221,26 @@ export function VariableList({
           ? "The variables did not load. Reload the page to try again."
           : null
       }
+    />
+  );
+}
+
+const plainName = (item: ColumnItem) => item.name;
+
+/** The second browse column before a register is chosen: present, so the
+ * layout does not shift when one is, with its header aligned to the register
+ * column's and a prompt in place of the list (maintainer ruling 2026-10-22). */
+export function NoRegisterList({ className }: { className?: string }) {
+  return (
+    <ColumnList
+      label="Variables"
+      className={className}
+      sections={[]}
+      selectedId={null}
+      selectedExact={false}
+      renderName={plainName}
+      empty="Choose a register to list its variables."
+      error={null}
     />
   );
 }

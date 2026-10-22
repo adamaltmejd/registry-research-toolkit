@@ -318,7 +318,9 @@ export function BrowseTree({ className }: { className?: string }) {
     if (keys === "all") return;
     const [key] = keys;
     const href = key === undefined ? undefined : hrefs.get(String(key));
-    if (href !== undefined && key !== currentKey) router.navigate(href);
+    if (href !== undefined && (key !== currentKey || !current?.exact)) {
+      router.navigate(href);
+    }
   }
 
   function onExpandedChange(keys: Set<Key>): void {
@@ -408,7 +410,14 @@ export function BrowseTree({ className }: { className?: string }) {
               items={nodes}
               selectionMode="single"
               selectionBehavior="replace"
-              selectedKeys={currentKey === null ? [] : [currentKey]}
+              // Only the row whose own page is open is selected: on a page
+              // under a register (a variable, a group) the register row is
+              // marked current but stays selectable, so a click on it opens
+              // the register's page (RAC fires no change for a row already
+              // selected).
+              selectedKeys={
+                currentKey === null || !current?.exact ? [] : [currentKey]
+              }
               onSelectionChange={onSelectionChange}
               expandedKeys={expandedKeys}
               onExpandedChange={onExpandedChange}

@@ -11,6 +11,7 @@ import {
   matchesFilter,
   type StateConformance,
   type ValueSetTechnicalChange,
+  windowRunLabels,
   windowTitle,
 } from "./catalog";
 import { FilterInput } from "./FilterInput";
@@ -52,13 +53,23 @@ function PooledTag() {
   );
 }
 
+/** The spans' windows as labels: annual ones as `formatWindow` says, school
+ * terms collapsed into runs (`VT2013–2019`). A pooled span keeps its own
+ * label, so its badge stays on exactly its window. */
 function usageWindowLabels(
   spans: Usage["spans"],
 ): { label: string; pooled: boolean }[] {
-  return spans.flatMap((sp) => {
-    const label = formatWindow(sp.from, sp.to);
-    return label === null ? [] : [{ label, pooled: sp.pooled }];
-  });
+  const label = (sp: Usage["spans"][number]) => formatWindow(sp.from, sp.to);
+  return [
+    ...windowRunLabels(
+      spans.filter((sp) => !sp.pooled),
+      label,
+    ).map((text) => ({ label: text, pooled: false })),
+    ...spans.flatMap((sp) => {
+      const text = sp.pooled ? label(sp) : null;
+      return text === null ? [] : [{ label: text, pooled: true }];
+    }),
+  ];
 }
 
 /** The title of a distinct value set, from trustworthy data only: a declared
@@ -102,9 +113,10 @@ function stateTextFacts(state: VariableStateModel, common: Common) {
   );
 }
 
-/** The states of one usage whose facts differ from the variable's, each under
- * its delivery column (or window), with the window added where a label
- * repeats. */
+/** The states of one usage whose facts differ from the variable's, one row per
+ * distinct definition under its delivery column (or window): states that say
+ * the same thing are one row, their windows written as runs (`VT2013–2019`),
+ * and the years show only where a column has more than one row. */
 function StateDefinitions({
   states,
   common,
@@ -114,54 +126,64 @@ function StateDefinitions({
 }) {
   const base = (s: VariableStateModel) =>
     s.delivery_column_name ?? formatStateWindow(s) ?? "Operational definition";
-  const counts = new Map<string, number>();
-  for (const s of states) counts.set(base(s), (counts.get(base(s)) ?? 0) + 1);
-  const label = (s: VariableStateModel) => {
-    const window = formatStateWindow(s);
-    return (counts.get(base(s)) ?? 0) > 1 && window
-      ? `${base(s)} (${window})`
-      : base(s);
-  };
+  const rows = new Map<
+    string,
+    { first: VariableStateModel; states: VariableStateModel[] }
+  >();
+  for (const s of states) {
+    const key = JSON.stringify([
+      base(s),
+      s.pooled,
+      stateTextFacts(s, common),
+      s.operational_definition ?? "",
+    ]);
+    const row = rows.get(key);
+    if (row) row.states.push(s);
+    else rows.set(key, { first: s, states: [s] });
+  }
+  const perBase = new Map<string, number>();
+  for (const { first } of rows.values()) {
+    perBase.set(base(first), (perBase.get(base(first)) ?? 0) + 1);
+  }
+  const windows = (group: VariableStateModel[]) =>
+    windowRunLabels(
+      group.map((s) => ({ from: s.valid_from, to: s.valid_to, state: s })),
+      (w) => formatStateWindow(w.state),
+    ).join(", ");
   return (
     <dl className={styles.definitions}>
-      {states.map((s) => (
-        <div
-          key={[
-            s.state_id,
-            s.delivery_column_name ?? "",
-            s.valid_from,
-            s.valid_to,
-            s.value_set_version_label ?? "",
-          ].join("|")}
-          className={styles.definition}
-        >
-          <dt>
-            {s.delivery_column_name ? (
-              <ColumnChip
-                name={s.delivery_column_name}
-                years={
-                  label(s) === s.delivery_column_name
-                    ? undefined
-                    : (formatStateWindow(s) ?? undefined)
-                }
-              />
-            ) : (
-              label(s)
-            )}
-            {s.pooled && <PooledTag />}
-          </dt>
-          <dd>
-            {stateTextFacts(s, common).map((fact) => (
-              <span key={fact.label} className={styles.fact}>
-                <span className="micro-label">{fact.label}:</span> {fact.value}
-              </span>
-            ))}
-            {s.operational_definition && (
-              <span className={styles.fact}>{s.operational_definition}</span>
-            )}
-          </dd>
-        </div>
-      ))}
+      {[...rows].map(([key, { first: s, states: group }]) => {
+        const years =
+          (perBase.get(base(s)) ?? 0) > 1 ? windows(group) : undefined;
+        return (
+          <div key={key} className={styles.definition}>
+            <dt>
+              {s.delivery_column_name ? (
+                <ColumnChip
+                  name={s.delivery_column_name}
+                  years={years || undefined}
+                />
+              ) : years ? (
+                `${base(s)} (${years})`
+              ) : (
+                base(s)
+              )}
+              {s.pooled && <PooledTag />}
+            </dt>
+            <dd>
+              {stateTextFacts(s, common).map((fact) => (
+                <span key={fact.label} className={styles.fact}>
+                  <span className="micro-label">{fact.label}:</span>{" "}
+                  {fact.value}
+                </span>
+              ))}
+              {s.operational_definition && (
+                <span className={styles.fact}>{s.operational_definition}</span>
+              )}
+            </dd>
+          </div>
+        );
+      })}
     </dl>
   );
 }
