@@ -383,10 +383,16 @@ smoke() {
 	local slider='[role="group"][aria-label="Period window (years)"]'
 	ab set viewport 1280 900 >/dev/null &&
 		ab open "$dev_url/catalog" >/dev/null && settled && capture 01-root || return 1
-	# Drill by clicking the first link STRICTLY DEEPER than the current path —
-	# `a[href^="/catalog"]` alone matches the header nav link first and goes
-	# nowhere. The SPA's `link` action intercepts these (pushState, no reload).
-	for step in 02-provider 03-register 04-variable; do
+	# The home page links into nothing (the register list is beside it), so the
+	# provider is opened from the list: its first provider row.
+	ab click '[role="treegrid"] [role="row"][aria-level="1"]' >/dev/null && settled || return 1
+	echo "opened provider → $(ab get url)"
+	capture 02-provider || return 1
+	# Then drill by clicking the first link STRICTLY DEEPER than the current
+	# path — `a[href^="/catalog"]` alone matches the header nav link first and
+	# goes nowhere. The SPA's `link` action intercepts these (pushState, no
+	# reload).
+	for step in 03-register 04-variable; do
 		here=$(ab eval 'location.pathname.replace(/\/$/, "")' | tr -d '"')
 		ab click "a[href^=\"$here/\"]" >/dev/null && settled || return 1
 		echo "clicked from $here → $(ab get url)"

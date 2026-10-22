@@ -47,11 +47,10 @@ reg_webapp/
 `steward.json` holds `id`, `name`, `long_name`, an optional `description` (one or two
 plain sentences on what the deployment is for, the landing page's line under the name)
 and an optional `order_instructions`: plain text on how a researcher hands a project to
-the steward. `/api/context` serves it
-under `steward`, and /project shows it under the two downloads. A deployment that takes
-no orders (global) omits it and the page shows nothing. SWECOV's text asks for
-`project_data.json` only, sent to the researcher's SWECOV coordinator, who reviews it
-and generates `order.json` themselves.
+the steward. `/api/context` serves it under `steward`, and /project shows it under the
+two downloads. A deployment that takes no orders (global) omits it and the page shows
+nothing. SWECOV's text asks for `project_data.json` only, sent to the researcher's
+SWECOV coordinator, who reviews it and generates `order.json` themselves.
 
 ## Boot seam (artifact admission)
 
@@ -785,14 +784,13 @@ singleton with `subscribe` (React reads it with `useSyncExternalStore`, via
 route through RAC's `RouterProvider`.
 
 `route` is re-parsed — and so re-assigned — only when the **pathname** moves. A
-query-only navigation (a thumb coming to rest on a catalog leaf's period card) parses
-to the same route, and handing consumers a fresh object would invalidate every
+query-only navigation (a thumb coming to rest on a catalog leaf's period card) parses to
+the same route, and handing consumers a fresh object would invalidate every
 route-derived prop: the query-independent catalog node refetches and the article
 remounts around the card the researcher is working in, dropping keyboard focus to the
-document body mid-apply (Y-65).
-What such a navigation does move is `search`, which the resolution fetches read. A
-*genuine* refetch still swaps in the loading branch and takes its subtree with it — the
-invariant removes the spurious refetch, not the teardown.
+document body mid-apply (Y-65). What such a navigation does move is `search`, which the
+resolution fetches read. A *genuine* refetch still swaps in the loading branch and takes
+its subtree with it — the invariant removes the spurious refetch, not the teardown.
 
 - **Dev** serving Just Works: the Vite dev server's default `appType: 'spa'` rewrites
   unknown paths to `index.html`, and `vite.config.ts` proxies `/api` to the backend on
@@ -935,8 +933,8 @@ the header. An open-ended coverage end is projected to the catalog vintage
   rest (on release, or on each key press) writes `?period` (precedence `?period` >
   project window > full history), which **refetches** the `resolve_at` subset and
   narrows the visible states. There are no exact-year fields and no Apply (maintainer
-  ruling 2026-10-22): a drag is one URL change, not one per year crossed.
-  Richer server-supported `?period` wires (terms, comma lists, `_default`) remain valid
+  ruling 2026-10-22): a drag is one URL change, not one per year crossed. Richer
+  server-supported `?period` wires (terms, comma lists, `_default`) remain valid
   deep-link state; one that is not a span of whole years is reported in a warning row,
   the drawing shows the project window, Clear drops it, and it is not rewritten unless
   the user moves a thumb.
@@ -1640,13 +1638,13 @@ when a window is set > the coverage span when none is > the bare window when the
 coverage > full bounds when neither — so a variable's true data coverage shows up front
 instead of the full 1960–vintage axis reading as available (M11). The part of the window
 outside coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
-hard-clamped to the coverage span (#671). A local change writes `?period` only (never the global window). A
-window wider than coverage is information, not a warning: the differs-from-window
-warning compares the selection and the window inside coverage, so neither the
-coverage-clamped default nor that default applied raises it (maintainer ruling
-2026-10-22). It fires for a selection that differs within coverage, or, against a window
-wholly outside coverage, for any selection but the window itself; Reset writes the
-window clipped to coverage's finite edges.
+hard-clamped to the coverage span (#671). A local change writes `?period` only (never
+the global window). A window wider than coverage is information, not a warning: the
+differs-from-window warning compares the selection and the window inside coverage, so
+neither the coverage-clamped default nor that default applied raises it (maintainer
+ruling 2026-10-22). It fires for a selection that differs within coverage, or, against a
+window wholly outside coverage, for any selection but the window itself; Reset writes
+the window clipped to coverage's finite edges.
 
 The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
 (`coverage.to === null`, "still delivered") projects to — the catalog only knows

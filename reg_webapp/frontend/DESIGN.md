@@ -258,9 +258,9 @@ pure role remaps.
   work happens (the detail pane, inputs, chips, dialogs), `surface-sunken` the selected
   item in a browse column and inset wells, `surface-hover` every hover.
 - **Ink (`text`, `text-muted`, `text-faint`):** `text` for everything read; `text-muted`
-  for labels, descriptions and unselected list items (6.4:1 on
-  white) and out-of-window chips; `text-faint` only for things that may recede (hints),
-  never for text that must be read (3.2:1, below WCAG AA for text).
+  for labels, descriptions and unselected list items (6.4:1 on white) and out-of-window
+  chips; `text-faint` only for things that may recede (hints), never for text that must
+  be read (3.2:1, below WCAG AA for text).
 - **Rules:** `border` is the hairline between rows and columns. `border-strong` is an
   ink hairline and means structure: the rule above a section, a default button's border,
   a column chip's stroke, the axis of a graph.
@@ -322,15 +322,16 @@ subsets.
 The shell is a top bar and two browse columns beside a detail pane, not a rail.
 
 - **Top bar:** brand (the deployment's long name in `h3`, one link home, unadorned on
-  hover; without a deployment it is "Registry Research Toolkit"), one search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on
-  macOS, opens the palette), and the `ProjectBanner` at the right. The field reads
-  "Search registers, variables, codes…". While it holds text, focused or not, it takes
-  an `accent` border with an `accent-bg` halo, and its hint becomes the match count in
-  `accent-ink` with an `Esc` key hint; the key hints are `text-muted` on
-  `surface-sunken`. There are no "Search" or "Project" nav items; the bar and the banner
-  are those. Its content shares the shell's `shell-max` and centring, so the banner sits
-  over the detail pane rather than at the screen's edge. It sticks to the top of the page
-  above `breakpoint-narrow`; below it the bar wraps and scrolls away with the page.
+  hover; without a deployment it is "Registry Research Toolkit"), one search bar (a
+  filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the palette), and
+  the `ProjectBanner` at the right. The field reads "Search registers, variables,
+  codes…". While it holds text, focused or not, it takes an `accent` border with an
+  `accent-bg` halo, and its hint becomes the match count in `accent-ink` with an `Esc`
+  key hint; the key hints are `text-muted` on `surface-sunken`. There are no "Search" or
+  "Project" nav items; the bar and the banner are those. Its content shares the shell's
+  `shell-max` and centring, so the banner sits over the detail pane rather than at the
+  screen's edge. It sticks to the top of the page above `breakpoint-narrow`; below it
+  the bar wraps and scrolls away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
   then the selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
@@ -338,30 +339,29 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   and centred, so a wide screen gets wider lists, not a stranded pane. The variables
   column is always there: before a register is chosen it holds an empty state ("Choose a
   register to list its variables."). The two column headers share one height, so their
-  rules line up. Every group is open by default; a header
-  triangle collapses it, the column header offers one toggle that reads "Collapse all"
-  while any group is open and "Expand all" once all are closed, and collapse state is
-  remembered per user. A group's items are indented `spacing.3` from the group's label,
-  not a full column (toggle and indent maintainer-decided 2026-10-22). A group header is
-  the `label` level at weight 500 in `text-muted` on `bg`, its disclosure a small
-  `text-faint` triangle turned −90° when closed, with no rule under it. Rows are
-  selectable options, not links. Only the row of the page shown is selected; on a
-  variable page its register's row carries the current mark without the selection, so
-  clicking it opens the register.
-  Selection moves with arrow keys across columns, and selecting a row opens its page;
-  type-ahead moves focus only. Left on a group header collapses it, Right expands it;
-  Right on a register row moves to the variables column, and Left there moves back.
-  Collapsing a group never changes the selection: the detail pane keeps its page, and
-  keyboard focus moves to the group row. For a register the second column is flat, a
-  concept group folded to one item (#303), its identifier and panel-key variables first
-  and the rest in Swedish collation; inside a group (its page or a member's) it
-  lists the group's members under `mono` facet headers, one per value of the group's
-  first axis. A browse column fills the viewport below the top bar and scrolls its own
-  list. Every item and group carries its in-project mark on the right when it has one.
-  Below the single narrow breakpoint (`breakpoint-narrow`) the columns stack, one at a
-  time; the back affordance is the breadcrumb's first crumb, "Data", which every page's
-  trail leads with below the breakpoint (and only there: beside the columns it would
-  repeat them) and which opens the register list. Do not mint new breakpoints.
+  rules line up. Every group is open by default; a header triangle collapses it, the
+  column header offers one toggle that reads "Collapse all" while any group is open and
+  "Expand all" once all are closed, and collapse state is remembered per user. A group's
+  items are indented `spacing.3` from the group's label, not a full column (toggle and
+  indent maintainer-decided 2026-10-22). A group header is the `label` level at weight
+  500 in `text-muted` on `bg`, its disclosure a small `text-faint` triangle turned −90°
+  when closed, with no rule under it. Rows are selectable options, not links. On a
+  variable or group page its register.s row stays selected, and pressing it opens the
+  register. Selection moves with arrow keys across columns, and selecting a row opens
+  its page; type-ahead moves focus only. Left on a group header collapses it, Right
+  expands it; Right on a register row moves to the variables column, and Left there
+  moves back. Collapsing a group never changes the selection: the detail pane keeps its
+  page, and keyboard focus moves to the group row. For a register the second column is
+  flat, a concept group folded to one item (#303), its identifier and panel-key
+  variables first and the rest in Swedish collation; inside a group (its page or a
+  member's) it lists the group's members under `mono` facet headers, one per value of
+  the group's first axis. A browse column fills the viewport below the top bar and
+  scrolls its own list. Every item and group carries its in-project mark on the right
+  when it has one. Below the single narrow breakpoint (`breakpoint-narrow`) the columns
+  stack, one at a time; the back affordance is the breadcrumb's first crumb, "Data",
+  which every page's trail leads with below the breakpoint (and only there: beside the
+  columns it would repeat them) and which opens the register list. Do not mint new
+  breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page: groups with no matches collapse (still openable), matched
   text is underlined in `accent` at weight 600, a register that matched only through its
@@ -374,13 +374,13 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
-  data) in `text-muted`, and one plain "Create a project" link. The browse columns are
-  beside it, so there is no link into them.
+  data) in `text-muted`. The browse columns are beside it and the project box is in the
+  top bar, so there is no link into either.
 - **Detail pane:** breadcrumb path ("Data" in the UI face below the breakpoint, then
   `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark (its
-  `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the actions row, then
-  definitions, then the `Timeline`, then the list of variables or columns. Padding
-  `spacing.5`.
+  `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the actions
+  row, then definitions, then the `Timeline`, then the list of variables or columns.
+  Padding `spacing.5`.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -407,12 +407,11 @@ Time is the axis every relation is drawn on.
   by the variable's availability. The thumbs move live while dragged and the period is
   applied when they come to rest (on release, or on each key press); there are no year
   fields and no Apply, and a "Clear period" ghost action drops it (maintainer ruling
-  2026-10-22). The band
-  always shows the active window: the source period when it differs, else the project
-  window. A source period that differs from the project window within the variable's
-  availability says so in a `warn` `StatusRow`, "▲ Differs from the project window",
-  with a "Reset" ghost action; a period narrowed only by availability does not. A
-  register or group pane draws the `Timeline` read-only.
+  2026-10-22). The band always shows the active window: the source period when it
+  differs, else the project window. A source period that differs from the project window
+  within the variable's availability says so in a `warn` `StatusRow`, "▲ Differs from
+  the project window", with a "Reset" ghost action; a period narrowed only by
+  availability does not. A register or group pane draws the `Timeline` read-only.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: an `info` "i" note in the `Timeline` header names the uncovered years, and
   the uncovered part of the window is an `info-bg` band. `warn-hatch` stays for a
@@ -426,11 +425,10 @@ Time is the axis every relation is drawn on.
 - A **`VariableRow`** repeats the same axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
-  face, the bar, and under them each delivery column as
-  a `ColumnChip` with its tick (a real checkbox; a column already in the project shows
-  its `in` chip and no tick). While anything is ticked, a sticky add bar reads "Add N
-  columns to project" as the pane's one `primary` button; with nothing ticked there is
-  no bar.
+  face, the bar, and under them each delivery column as a `ColumnChip` with its tick (a
+  real checkbox; a column already in the project shows its `in` chip and no tick). While
+  anything is ticked, a sticky add bar reads "Add N columns to project" as the pane's
+  one `primary` button; with nothing ticked there is no bar.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A lane's title joins its facet values with a comma, and its name opens the
@@ -518,8 +516,9 @@ not grow new visual language meanwhile.
   never a status hue. The study window is the period picker: an inline two-thumb RAC
   `Slider` (no popover) bounded by the viewed catalog's first and last year, its years
   an `accent-ink` `mono` readout, with a "Clear" ghost action. With no project open it
-  is the same box, empty and untinted with a `border` leading bar, holding a `default` "Create a project" Button, which
-  starts a project and opens it, and nothing in the catalog is tinted.
+  is the same box, empty and untinted with a `border` leading bar, holding a `default`
+  "Create a project" Button, which starts a project and opens it, and nothing in the
+  catalog is tinted.
 - **ColumnList:** a `label` header, then items on `bg`, one selected (2 px `accent` bar
   on `surface-sunken` at weight 600; the column's one bar translates between items); in
   the first column, items grouped under sticky collapsible group headers. A row's focus

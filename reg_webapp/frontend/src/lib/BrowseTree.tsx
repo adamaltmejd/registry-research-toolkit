@@ -318,9 +318,16 @@ export function BrowseTree({ className }: { className?: string }) {
     if (keys === "all") return;
     const [key] = keys;
     const href = key === undefined ? undefined : hrefs.get(String(key));
-    if (href !== undefined && (key !== currentKey || !current?.exact)) {
-      router.navigate(href);
-    }
+    if (href !== undefined && key !== currentKey) router.navigate(href);
+  }
+
+  // The register row stays selected on a page under it (a variable, a group),
+  // so Tab into the tree lands there instead of selecting, and so opening, the
+  // first row. RAC fires no selection change for a row already selected, so a
+  // press on that row opens the register's own page here.
+  function openCurrentRow(): void {
+    const href = currentKey === null ? undefined : hrefs.get(currentKey);
+    if (href !== undefined) router.navigate(href);
   }
 
   function onExpandedChange(keys: Set<Key>): void {
@@ -410,14 +417,7 @@ export function BrowseTree({ className }: { className?: string }) {
               items={nodes}
               selectionMode="single"
               selectionBehavior="replace"
-              // Only the row whose own page is open is selected: on a page
-              // under a register (a variable, a group) the register row is
-              // marked current but stays selectable, so a click on it opens
-              // the register's page (RAC fires no change for a row already
-              // selected).
-              selectedKeys={
-                currentKey === null || !current?.exact ? [] : [currentKey]
-              }
+              selectedKeys={currentKey === null ? [] : [currentKey]}
               onSelectionChange={onSelectionChange}
               expandedKeys={expandedKeys}
               onExpandedChange={onExpandedChange}
@@ -435,6 +435,7 @@ export function BrowseTree({ className }: { className?: string }) {
                   counts={counts}
                   current={current}
                   needle={needle}
+                  onOpenCurrent={openCurrentRow}
                 />
               )}
             </Tree>
@@ -458,11 +459,13 @@ function BrowseItem({
   counts,
   current,
   needle,
+  onOpenCurrent,
 }: {
   node: BrowseNode;
   counts: Record<string, number>;
   current: CurrentRow | null;
   needle: string;
+  onOpenCurrent: () => void;
 }) {
   const count = inProjectCount(node, counts);
   // "page" only on the row whose own page is open; "true" on the register row
@@ -481,6 +484,7 @@ function BrowseItem({
           : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
       }
       className={styles.row}
+      onPress={ariaCurrent === "true" ? onOpenCurrent : undefined}
       render={(props) => (
         <div
           {...props}
@@ -530,6 +534,7 @@ function BrowseItem({
               counts={counts}
               current={current}
               needle={needle}
+              onOpenCurrent={onOpenCurrent}
             />
           )}
         </Collection>
