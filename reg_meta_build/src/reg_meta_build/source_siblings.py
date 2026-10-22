@@ -277,31 +277,37 @@ def resolve_sibling_pairs(
             families[key].append(occurrence)
     pairs, decisions, diagnostics = set(), [], []
     for family, members in sorted(families.items(), key=lambda item: repr(item[0])):
-        by_column: dict[str, list[EffectiveOccurrence]] = defaultdict(list)
+        # Evidence is keyed by (owner, column): another owner's delivery of the same
+        # spelling is not this owner's co-delivery or shape (#1760). An unowned
+        # column (owner None) still counts toward whether the family co-delivers.
+        by_column: dict[tuple[str | None, str], list[EffectiveOccurrence]] = (
+            defaultdict(list)
+        )
         owner_columns: dict[str, set[str]] = defaultdict(set)
-        editions: dict[NativeKey, set[str]] = defaultdict(set)
+        editions: dict[NativeKey, set[tuple[str | None, str]]] = defaultdict(set)
         for occurrence in members:
             column = _column(occurrence)
-            if column is None:
-                continue
-            by_column[column].append(occurrence)
-            if occurrence.edition_key is not None:
-                editions[occurrence.edition_key].add(column)
             fqid = (
                 identities.get(occurrence.variable_key)
                 if occurrence.variable_key
                 else None
             )
+            if column is None:
+                continue
+            by_column[fqid, column].append(occurrence)
+            if occurrence.edition_key is not None:
+                editions[occurrence.edition_key].add((fqid, column))
             if fqid is not None:
                 owner_columns[fqid].add(column)
         codelivered = {
-            frozenset(pair)
-            for columns in editions.values()
-            for pair in combinations(columns, 2)
+            frozenset((left, right))
+            for owned in editions.values()
+            for left, right in combinations(owned, 2)
+            if left[1] != right[1]
         }
         if not codelivered or len(owner_columns) < 2:
             continue
-        shapes = {column: _latest_shapes(rows) for column, rows in by_column.items()}
+        shapes = {owned: _latest_shapes(rows) for owned, rows in by_column.items()}
         for a, b in combinations(sorted(owner_columns), 2):
             if a.rsplit("/", 1)[0] != b.rsplit("/", 1)[0]:
                 raise ValueError(
@@ -314,7 +320,7 @@ def resolve_sibling_pairs(
                 for col_a, col_b in product(
                     sorted(owner_columns[a]), sorted(owner_columns[b])
                 )
-                if frozenset((col_a, col_b)) in codelivered
+                if frozenset(((a, col_a), (b, col_b))) in codelivered
             ]
             columns = (
                 together[0]
@@ -322,16 +328,18 @@ def resolve_sibling_pairs(
                 else (min(owner_columns[a]), min(owner_columns[b]))
             )
             evidence_columns = (
-                {column for pair in together for column in pair}
+                {(a, col_a) for col_a, _ in together}
+                | {(b, col_b) for _, col_b in together}
                 if together
-                else owner_columns[a] | owner_columns[b]
+                else {(a, column) for column in owner_columns[a]}
+                | {(b, column) for column in owner_columns[b]}
             )
             refs = tuple(
                 sorted(
                     {
                         record_ref(record)
-                        for column in evidence_columns
-                        for occurrence in by_column[column]
+                        for owned in evidence_columns
+                        for occurrence in by_column[owned]
                         for record in occurrence.evidence
                     },
                     key=repr,
@@ -345,12 +353,12 @@ def resolve_sibling_pairs(
                     outcomes = {
                         sibling_shape_conflict(left, right)
                         for col_a, col_b in together
-                        for left, right in product(shapes[col_a], shapes[col_b])
+                        for left, right in product(shapes[a, col_a], shapes[b, col_b])
                     }
                     withheld_shape = any(
                         {"data_type", "data_length"} & set(row.withheld_fields)
-                        for column in evidence_columns
-                        for row in by_column[column]
+                        for owned in evidence_columns
+                        for row in by_column[owned]
                     )
                     if outcomes == {True} and not withheld_shape:
                         kind = "shape_conflict"

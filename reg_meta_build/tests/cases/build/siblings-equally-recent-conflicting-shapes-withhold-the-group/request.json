@@ -1,9 +1,9 @@
 {
   "replaces": ["test_source_siblings.py::test_equal_recency_conflicting_shapes_withhold_the_group"],
-  "note": "FORNAMN/EFTERNAMN are the same-shape pair that groups in siblings-only-same-shape-non-code-label-siblings-form-a-group. Here the efternamn variable holds two spellings: EFTERNAMN alone in 2019, and Efternamn twice in the same 2020 edition as FORNAMN, once as int and once as text, so its latest shape is disputed: one reading groups the pair, the other does not. Only Efternamn, the spelling that sorts after EFTERNAMN, is co-delivered with FORNAMN (#1760, the DatOvl_2/DATOVL_2 case). Values from the replaced test: A int (member 1), B int (member 2), B text (member 3) -> no pairs and an unresolved_shape decision. The decision is reported as the ambiguous_sibling_shape issue; that code is the one the replaced file's withheld-shape test asserts for the same emission. The conflicting_occurrence_facts and unknown_data_type errors on Efternamn are the delivery's own and are not claimed.",
-  "fails_if": "`resolve_sibling_pairs` (reg_meta_build/src/reg_meta_build/source_siblings.py) only marks a pair unresolved when a shape field is withheld, not when equally recent shapes disagree, or checks co-delivery and shape on one representative column per owner (the lexically first, EFTERNAMN, never co-delivered with FORNAMN), so FORNAMN/efternamn group",
+  "note": "FORNAMN/EFTERNAMN are the same-shape pair that groups in siblings-only-same-shape-non-code-label-siblings-form-a-group. Here the efternamn variable holds two spellings: EFTERNAMN alone in 2019, and Efternamn twice in the same 2020 edition as FORNAMN, once as int and once as text, so its latest shape is disputed: one reading groups the pair, the other does not. Only Efternamn, the spelling that sorts after EFTERNAMN, is co-delivered with FORNAMN (#1760, the DatOvl_2/DATOVL_2 case). In 2021 FORNAMN is delivered again beside an Efternamn (text) that a column_owner gives a third owner, efternamn-2021: that owner shape-conflicts with fornamn and folds with efternamn (the same spelling, never co-delivered), so the one concept group is efternamn/efternamn-2021. The 2021 Efternamn is not efternamn's delivery, so efternamn's latest Efternamn shape is still the disputed 2020 one (#1760, the iku kommun/kommun-kommkod-2012 case). Values from the replaced test: A int (member 1), B int (member 2), B text (member 3) -> no pairs and an unresolved_shape decision. The decision is reported as the ambiguous_sibling_shape issue; that code is the one the replaced file's withheld-shape test asserts for the same emission. The conflicting_occurrence_facts and unknown_data_type errors on Efternamn are the delivery's own and are not claimed.",
+  "fails_if": "`resolve_sibling_pairs` (reg_meta_build/src/reg_meta_build/source_siblings.py) only marks a pair unresolved when a shape field is withheld, not when equally recent shapes disagree, or checks co-delivery and shape on one representative column per owner (the lexically first, EFTERNAMN, never co-delivered with FORNAMN), so FORNAMN/efternamn group; or keys co-delivery and shape evidence by column spelling rather than (owner, spelling), so efternamn's Efternamn takes efternamn-2021's 2021 text shape, the pair is a plain shape_conflict and no ambiguous_sibling_shape is raised",
   "sources": {
-    "description": "Register 1, variable 300: EFTERNAMN (CVID 1007, int) in 2019; FORNAMN (CVID 1004, int), Efternamn (CVID 1005, int) and Efternamn again (CVID 1006, Sträng (text)) in 2020.",
+    "description": "Register 1, variable 300: EFTERNAMN (CVID 1007, int) in 2019; FORNAMN (CVID 1004, int), Efternamn (CVID 1005, int) and Efternamn again (CVID 1006, Sträng (text)) in 2020; FORNAMN (CVID 1008, int) and Efternamn (CVID 1009, Sträng (text)) in 2021.",
     "scb": {
       "registerinformation": [
         {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300"},
@@ -22,6 +22,23 @@
           "varname": "Var300",
           "year": "2019",
           "regver_id": 2019
+        },
+        {
+          "cvid": 1008,
+          "var_id": 300,
+          "colname": "FORNAMN",
+          "varname": "Var300",
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "cvid": 1009,
+          "var_id": 300,
+          "colname": "Efternamn",
+          "varname": "Var300",
+          "data_type": "Sträng (text)",
+          "year": "2021",
+          "regver_id": 2021
         }
       ]
     }

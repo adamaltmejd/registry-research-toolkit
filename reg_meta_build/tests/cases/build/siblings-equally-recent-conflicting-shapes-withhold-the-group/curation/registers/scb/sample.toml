@@ -9,3 +9,18 @@ slug = "people"
 [variable]
 "1.300.fornamn" = "fornamn"
 "1.300.efternamn" = "efternamn"
+"1.300.efternamn2021" = "efternamn-2021"
+
+[[identity.partition]]
+variable = "1.300"
+columns = { FORNAMN = "1.300.fornamn", EFTERNAMN = "1.300.efternamn", Efternamn = "1.300.efternamn" }
+columns_ref = "fixture"
+
+[[identity.column_owner]]
+variable = "1.300"
+variant = "1.10"
+column = "Efternamn"
+owner = "1.300.efternamn2021"
+ref = "fixture: the 2021 Efternamn is a different owner's delivery"
+source_editions = ["2021"]
+expected_fields = [{ name = "column_name", status = "value", value = "Efternamn" }]
