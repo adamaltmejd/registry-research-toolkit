@@ -163,7 +163,7 @@ spacing:
   rail: 16rem
   content-max: 80rem
   breakpoint-narrow: 48rem
-  col-providers: 190px
+  col-browse: 260px
   col-list: 230px
   lane-height: 58px
 
@@ -326,19 +326,28 @@ ship the latin and latin-ext subsets.
 
 ## Layout
 
-The target shell is a top bar and three browse columns, not a rail. The current
-`AppShell` rail is a stepping stone (see Components) until it is replaced.
+The target shell is a top bar and two browse columns beside a detail pane, not a rail.
+The current `AppShell` rail is a stepping stone (see Components) until it is replaced.
 
 - **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it), one
-  search bar (the command bar, `Meta/Ctrl+K`, shown as `⌘K` on macOS), and the
-  `ProjectBanner` at the right. There are no "Search" or "Project" nav items; the bar
-  and the banner are those.
-- **Browse columns (`ColumnList`):** providers at `col-providers`, then registers or a
-  group's variables at `col-list`, then the detail pane capped at `content-max`.
-  Selection moves with arrow keys across columns. Every column item carries its
-  in-project mark on the right when it has one. Below the single narrow breakpoint
-  (`breakpoint-narrow`) the columns stack, one at a time, with a back affordance. Do not
-  mint new breakpoints.
+  search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the
+  palette), and the `ProjectBanner` at the right. There are no "Search" or "Project" nav
+  items; the bar and the banner are those.
+- **Browse columns (`ColumnList`):** registers grouped under sticky provider headers at
+  `col-browse`, then the selected register's or group's variables at `col-list`, then
+  the detail pane capped at `content-max`. Every group is open by default; a header
+  triangle collapses it, the column header offers "Collapse all" / "Expand all", and
+  collapse state is remembered per user. Selection moves with arrow keys across columns;
+  left on a group header collapses it. Every item and group carries its in-project mark
+  on the right when it has one. Below the single narrow breakpoint (`breakpoint-narrow`)
+  the columns stack, one at a time, with a back affordance. Do not mint new breakpoints.
+- **Search filters in place.** Text in the search bar filters both browse columns rather
+  than opening a results page: groups with no matches collapse (still openable), matched
+  text is underlined in `accent` at weight 600, a register that matched only through its
+  variables says so with the count, and the detail pane stays put. Escape clears the
+  filter and restores the collapse state. The command palette (Bits UI `Command`) opens
+  only from `⌘K` on an empty field, for codes, classifications and actions; its results
+  are a mixed list and carry a `TypeTag`.
 - **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
   row, the actions row, then definitions, then the `Timeline`, then the list of
   variables or columns. Padding `spacing.5`.
@@ -432,8 +441,10 @@ replaced, and must not grow new visual language meanwhile.
   leading bar. The study window is the period picker. With no project open it is a
   single "Create a project" link and nothing in the catalog is tinted.
 - **ColumnList:** a `label` header, then items, one selected (2 px `accent` bar on
-  `surface-sunken` at weight 600). An item with something in the project carries a 6 px
-  `accent` dot and the count in `accent-ink` `mono` — the only number in the list.
+  `surface-sunken` at weight 600); in the first column, items grouped under sticky
+  collapsible group headers. An item or group with something in the project carries a 6
+  px `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
+  While the search bar holds text, the list shows its filter state (see Layout).
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-faint`). The same shape as a lane span, so the two read as one object.

@@ -310,7 +310,7 @@
   --space-6: 2rem; /* between major sections in a pane */
   --radius-sm: 3px; /* controls, chips, column chips, lane spans, inputs */
   --radius: 4px; /* banner, dialogs, status rows */
-  --col-providers: 190px; /* first browse column */
+  --col-browse: 260px; /* first browse column: registers grouped by provider */
   --col-list: 230px; /* second browse column */
   --lane-height: 58px; /* one lane in a LaneGraph */
 

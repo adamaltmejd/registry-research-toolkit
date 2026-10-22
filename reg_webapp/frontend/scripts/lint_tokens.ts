@@ -193,7 +193,7 @@ const PROPERTY_OF: Record<string, string> = {
   "typography.axis.fontSize": "--text-axis",
   "spacing.5": "--space-5",
   "spacing.6": "--space-6",
-  "spacing.col-providers": "--col-providers",
+  "spacing.col-browse": "--col-browse",
   "spacing.col-list": "--col-list",
   "spacing.lane-height": "--lane-height",
   "typography.display.fontWeight": "--display-weight",
