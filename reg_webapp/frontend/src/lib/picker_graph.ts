@@ -1,16 +1,11 @@
 /**
  * Pure projection of the relationship-graph contract (#761/#792) into the shapes
- * the classification edition graph (`ClassificationEditionGraph.svelte`) draws —
+ * the classification edition graph (`ClassificationEditionGraph.tsx`) draws —
  * unit-tested in `picker_graph.test.ts`. The renderer stays presentational over
- * these.
- *
- * Two node kinds, two substrates:
- *  - a VARIABLE node → a sequence of CELLS, one per `representation_run_id`
- *    (consecutive states sharing it = one cell; the wire is pre-ordered by
- *    `(variant, valid_from)`). A cell spans its states' `[min valid_from,
- *    max valid_to]` and is labelled by its representation identity.
- *  - a CLASSIFICATION node → a POINT at `version_year` (an edition is not "dead"
- *    after its successor), ordered into an edition sequence.
+ * these. A CLASSIFICATION node is a POINT at `version_year` (an edition is not
+ * "dead" after its successor), ordered into an edition sequence. Variable nodes
+ * are drawn by the LaneGraph (`picker_lanes.ts`); here they only join clusters
+ * and gate representation-grain edges.
  *
  * Clusters group nodes sharing `group_key` under a `group_label` heading (Fork B);
  * both node kinds carry a `group_label` (a variable's concept-group label, a
@@ -20,43 +15,9 @@ import type {
   ClassificationGraphNode,
   GraphEdge,
   GraphNode,
-  GraphState,
   RelationshipGraph,
   VariableGraphNode,
 } from "./api";
-import {
-  formatWindow,
-  OPEN_ENDED_VALID_TO,
-  YEARLESS_VALID_FROM,
-  yearOf,
-} from "./catalog";
-
-/** One rendered cell of a variable node — a representation run collapsed across
- * its consecutive same-`representation_run_id` states. `window` is the
- * display window over `[min valid_from, max valid_to]` (open start/end already
- * normalized by `formatWindow`), or null for wholly unknown windows; `label` is
- * the representation identity
- * (value-set version label / classification slug / delivery column); `variant`
- * is the run's variant (shown when the node spans >1 variant). */
-export interface RunCell {
-  runId: number;
-  label: string;
-  variant: string;
-  /** Delivery columns covered by this cell's run. A sequential rename cell can cover
-   * an older column besides the folded latest-era one. */
-  columns: string[];
-  window: string | null;
-}
-
-/** A variable node projected for rendering: its cells (one per representation
- * run, earliest→latest as the wire orders) plus whether it spans >1 variant
- * (so the renderer shows the per-cell variant). */
-export interface VariableLane {
-  kind: "variable";
-  node: VariableGraphNode;
-  cells: RunCell[];
-  multiVariant: boolean;
-}
 
 /** A classification node projected for rendering — a single point edition. The
  * cluster orders these by `version_year`. */
@@ -65,8 +26,6 @@ export interface ClassificationPoint {
   node: ClassificationGraphNode;
 }
 
-export type RenderNode = VariableLane | ClassificationPoint;
-
 /** A cluster of nodes sharing one `group_key` (Fork B) — `null` group_key nodes
  * each get their own singleton cluster. `label` is the `group_label` (when any
  * member carries one — a variable's concept-group label OR a classification
@@ -74,119 +33,13 @@ export type RenderNode = VariableLane | ClassificationPoint;
 export interface NodeCluster {
   groupKey: string | null;
   label: string | null;
-  nodes: RenderNode[];
+  nodes: ClassificationPoint[];
 }
 
-/** The representation identity of a run cell — the value-set version label when
- * non-empty, else the classification slug, else the delivery column name, else a
- * generic fallback. The first state of the run is the representative (the run is
- * homogeneous in representation by construction). */
-function cellLabel(rep: GraphState): string {
-  if (rep.value_set_version_label !== "") {
-    return rep.value_set_version_label;
-  }
-  if (rep.classification_slugs.length > 0) {
-    return rep.classification_slugs.join(", ");
-  }
-  if (rep.delivery_column_name) {
-    return rep.delivery_column_name;
-  }
-  return "(unlabelled)";
-}
-
-/** Group a variable node's pre-ordered `states` into cells by
- * `representation_run_id`: consecutive states sharing the id form ONE cell. The
- * cell's window spans `[min valid_from, max valid_to]` over its states (a null
- * `valid_from` is the yearless-floor sentinel for `formatWindow`; a null
- * `valid_to` is the open-ended sentinel). */
-export function cellsOf(node: VariableGraphNode): RunCell[] {
-  const cells: RunCell[] = [];
-  let open: {
-    rep: GraphState;
-    from: string;
-    to: string;
-    columns: Set<string>;
-  } | null = null;
-  const flush = () => {
-    if (open) {
-      cells.push({
-        runId: open.rep.representation_run_id,
-        label: cellLabel(open.rep),
-        variant: open.rep.variant,
-        columns: [...open.columns],
-        window: formatWindow(open.from, open.to),
-      });
-    }
-  };
-  for (const s of node.states) {
-    // A null wire bound maps to the display sentinel: null start = yearless
-    // floor ("until …"), null end = open-ended ("since …").
-    const from = s.valid_from ?? YEARLESS_VALID_FROM;
-    const to = s.valid_to ?? OPEN_ENDED_VALID_TO;
-    if (open && open.rep.representation_run_id === s.representation_run_id) {
-      // Extend the open run's window: min start, max end (ISO strings compare
-      // chronologically; the open-ended sentinel sorts last).
-      if (from < open.from) {
-        open.from = from;
-      }
-      if (to > open.to) {
-        open.to = to;
-      }
-      if (s.delivery_column_name) {
-        open.columns.add(s.delivery_column_name);
-      }
-    } else {
-      flush();
-      open = {
-        rep: s,
-        from,
-        to,
-        columns: new Set(
-          s.delivery_column_name ? [s.delivery_column_name] : [],
-        ),
-      };
-    }
-  }
-  flush();
-  return cells;
-}
-
-/** Whether a variable node spans more than one variant across its states. */
-function spansMultipleVariants(node: VariableGraphNode): boolean {
-  const first = node.states[0]?.variant;
-  return node.states.some((s) => s.variant !== first);
-}
-
-/** Project one graph node into its render shape (variable → lane with cells,
- * classification → point). */
-function renderNodeOf(node: GraphNode): RenderNode {
-  if (node.kind === "variable") {
-    return {
-      kind: "variable",
-      node,
-      cells: cellsOf(node),
-      multiVariant: spansMultipleVariants(node),
-    };
-  }
-  return { kind: "classification", node };
-}
-
-/** The sort key for ordering nodes within a cluster: classifications by
- * `version_year` (a null year sorts last); variables by their earliest finite
- * cell window — both reduce to "earliest first". A classification's point year
- * and a variable's first cell don't share a scale, but a cluster is homogeneous
- * in kind in practice (group members are one grain), so the cross-kind tiebreak
- * never bites; the fallback keeps the order stable. */
-function orderKey(rn: RenderNode): number {
-  if (rn.kind === "classification") {
-    return rn.node.version_year ?? Number.POSITIVE_INFINITY;
-  }
-  const first = rn.node.states[0]?.valid_from;
-  if (first == null) {
-    return Number.NEGATIVE_INFINITY; // unknown start = earliest
-  }
-  // A non-leading-4-digit bound (blank/edge) sorts last, as before.
-  return yearOf(first) ?? Number.POSITIVE_INFINITY;
+/** The sort key for ordering a cluster's editions: `version_year`, earliest
+ * first; a null year sorts last. */
+function orderKey(point: ClassificationPoint): number {
+  return point.node.version_year ?? Number.POSITIVE_INFINITY;
 }
 
 /** Resolve a union-find root for `id`, path-compressing on the way. */
@@ -214,7 +67,7 @@ function variableNodeById(
   );
 }
 
-export function graphColumnMatches(left: string, right: string): boolean {
+function graphColumnMatches(left: string, right: string): boolean {
   return left.toLocaleLowerCase("sv-SE") === right.toLocaleLowerCase("sv-SE");
 }
 
@@ -321,9 +174,14 @@ export function clustersOf(graph: RelationshipGraph): NodeCluster[] {
     if (cluster.label == null && node.group_label != null) {
       cluster.label = node.group_label;
     }
-    cluster.nodes.push(renderNodeOf(node));
+    if (node.kind === "classification") {
+      cluster.nodes.push({ kind: "classification", node });
+    }
   }
-  const clusters = order.map((r) => byRoot.get(r) as NodeCluster);
+  // A cluster of variables alone has no edition to draw.
+  const clusters = order
+    .map((r) => byRoot.get(r) as NodeCluster)
+    .filter((cluster) => cluster.nodes.length > 0);
   for (const cluster of clusters) {
     cluster.nodes.sort((a, b) => orderKey(a) - orderKey(b));
   }

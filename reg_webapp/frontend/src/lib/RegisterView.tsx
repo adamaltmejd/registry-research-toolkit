@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type {
   ConceptGroup,
   RegisterShow,
@@ -11,13 +11,13 @@ import {
   useRegisterMatches,
 } from "./browse_filter";
 import type { PeriodProps } from "./CatalogNodeView";
-import { ConceptGroupLink } from "./CatalogNodeView";
 import styles from "./CatalogNodeView.module.css";
 import {
   addWindowBounds,
   bindingChildren,
   catalogHref,
   countFoldedMembers,
+  deliveredYears,
   deliveryColumnRows,
   deliveryWindows,
   distinctMemberCount,
@@ -39,7 +39,7 @@ import {
   windowsOverlapWindow,
   YEARLESS_VALID_FROM,
 } from "./catalog";
-import { FilterCount } from "./FilterCount";
+import { catalogRootChildren } from "./catalog_names.svelte";
 import { clampYearWindow, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store";
 import viewStyles from "./RegisterView.module.css";
@@ -62,14 +62,15 @@ import {
   stagedApplyRefusal,
   windowsOverlapPeriod,
 } from "./staged_picker";
+import { useRune } from "./svelte_bridge.svelte";
+import { Timeline } from "./Timeline";
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
-import { DataTable } from "./ui/DataTable";
+import { type Definition, Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { FilterChip } from "./ui/FilterChip";
-import { Panel } from "./ui/Panel";
 import { Tag } from "./ui/Tag";
-import type { Column } from "./ui/types";
+import { VariableRow, VariableRowList, type YearSpan } from "./ui/VariableRow";
 import { useProject, useStudyWindow } from "./use_project";
 import { VariantsSummary } from "./VariantsSummary";
 import { windowStore } from "./window";
@@ -95,7 +96,7 @@ interface DeliveryColumn {
 
 /** A list row: a concept group folded to one row (#303), or a variable. A group
  * names no column of its own: its members carry theirs, on its page. */
-type VariableRow =
+type ListRow =
   | {
       id: string;
       kind: "group";
@@ -111,10 +112,35 @@ type VariableRow =
       columns: DeliveryColumn[];
     };
 
-const variableColumns: Column<VariableRow>[] = [
-  { key: "label", label: "Variable" },
-  { key: "columns", label: "Delivery column", mono: true },
-];
+/** The years a variable's deliveries cover, merged and ordered, for its
+ * coverage bar. An era still delivered runs to the catalog vintage; an era
+ * whose start the record does not know is left out, since it has no year to
+ * draw from. */
+function coverageYears(
+  deliveries: readonly VariableDeliveryModel[],
+  vintageYear: number,
+): YearSpan[] {
+  const dated = deliveryWindows(
+    deliveries.flatMap((d) =>
+      d.windows
+        .filter((w) => w.valid_from !== YEARLESS_VALID_FROM)
+        .map((w) => ({ from: w.valid_from, to: w.valid_to })),
+    ),
+  );
+  const spans: [number, number][] = [];
+  for (const era of dated) {
+    const from = Number(era.from.slice(0, 4));
+    const to =
+      era.to === OPEN_ENDED_VALID_TO
+        ? Math.max(from, vintageYear)
+        : Number(era.to.slice(0, 4));
+    const last = spans.at(-1);
+    // Eras a year apart or less draw as one segment: the bar is year-grain.
+    if (last && from <= last[1] + 1) last[1] = Math.max(last[1], to);
+    else spans.push([from, to]);
+  }
+  return spans;
+}
 
 /** A child's delivery columns, one per NAME across the variants that deliver
  * it, sorted by the year the name was first delivered. A state with no named
@@ -268,8 +294,10 @@ export function RegisterView({
     () => new Set(),
   );
   // Set by Clear so the live region announces the return to the whole register.
-  const [variantsLifted, setVariantsLifted] = useState(false);
   const chipsRef = useRef<HTMLFieldSetElement>(null);
+  const listLabelId = useId();
+  const listHeadRef = useRef<HTMLHeadingElement>(null);
+  const addBarRef = useRef<HTMLDivElement>(null);
 
   // Everything derived from the node and the lens, computed once per change of
   // either rather than on every keystroke of the filter (740 variables on LISA).
@@ -506,14 +534,12 @@ export function RegisterView({
       if (!next.delete(variant)) next.add(variant);
       return next;
     });
-    setVariantsLifted(false);
   }
 
   /** Lift the variant lens. Focus moves to the first chip first: the button
    * this runs from unmounts once the selection is empty (Y-94). */
   function clearVariants(): void {
     chipsRef.current?.querySelector("input")?.focus();
-    setVariantsLifted(true);
     setSelectedVariants(new Set());
   }
 
@@ -567,6 +593,11 @@ export function RegisterView({
       }
       setRefusal(null);
       setOutcome(result.outcome && { added: addedKeys.size, removed: 0 });
+      // The bar unmounts with the consumed ticks: focus it held goes to the
+      // list's heading rather than to the document body.
+      if (addBarRef.current?.contains(document.activeElement)) {
+        listHeadRef.current?.focus();
+      }
       // The committed ticks are consumed: they now read as in the project.
       setSelectedColumns(
         (current) =>
@@ -577,6 +608,19 @@ export function RegisterView({
     }
   }
 
+  // The provider's display name, from the browse tree's one root read.
+  const root = useRune(catalogRootChildren, undefined);
+  const providerFqid = node.fqid.split("/")[0] ?? "";
+  const provider = root.value?.find((child) => child.fqid === providerFqid);
+  const definitions: Definition[] = [];
+  if (node.purpose) definitions.push({ term: "Purpose", value: node.purpose });
+  if (node.tags && node.tags.length > 0) {
+    definitions.push({
+      term: "Themes",
+      value: node.tags.map((tag) => tag.label).join(", "),
+    });
+  }
+
   const warningProps = useMemo(
     () => ({ fqid: node.fqid, registerOnly: true, collapsed: true }),
     [node.fqid],
@@ -585,7 +629,27 @@ export function RegisterView({
   const total = countFoldedMembers(allRows);
   const shown = countFoldedMembers(filteredRows);
   const filtering = filter.trim() !== "";
-  const variableRows: VariableRow[] = filteredRows.map(
+  const narrowed = filtering || selectedVariants.size > 0;
+  const childrenByFqid = new Map(lensed.map((child) => [child.fqid, child]));
+  const axis: YearSpan = [period.windowMinYear, period.windowMaxYear];
+  // The register's delivered years, every variable's windows together: the
+  // Timeline's coverage and edition ticks.
+  const registerYears = deliveredYears(
+    bindingChildren(node).flatMap((child) =>
+      child.deliveries.flatMap((d) =>
+        d.windows.map((w) => ({ from: w.valid_from, to: w.valid_to })),
+      ),
+    ),
+    period.vintageYear,
+  );
+  const windowSpan: YearSpan | null = add.bounded
+    ? [add.bounded.from, add.bounded.to]
+    : null;
+  // A variable is in the project when one of its listed columns is.
+  const inProject = new Set(
+    [...committed.keys()].map((key) => key.slice(0, key.indexOf("::"))),
+  );
+  const listRows: ListRow[] = filteredRows.map(
     (row: GroupedRow<VariableChild>) =>
       row.kind === "group"
         ? {
@@ -606,24 +670,54 @@ export function RegisterView({
 
   return (
     <article className={styles.page}>
-      <h1 className={styles.title}>{nodeLabel(node)}</h1>
-      {node.purpose && <p className={viewStyles.purpose}>{node.purpose}</p>}
+      <Definitions
+        title={nodeLabel(node)}
+        memberOf={[
+          {
+            relation: "Published by",
+            label: provider?.name ?? providerFqid,
+            href: catalogHref(providerFqid),
+          },
+        ]}
+        definitions={definitions}
+      />
       <SvelteIsland component={ScopedDataWarnings} props={warningProps} />
-      {node.tags && node.tags.length > 0 && (
-        <ul className={viewStyles.tags} aria-label="Thematic tags">
-          {node.tags.map((tag) => (
-            <li key={tag.slug}>
-              <Tag>{tag.label}</Tag>
-            </li>
-          ))}
-        </ul>
-      )}
+      <Timeline
+        axis={{ from: axis[0], to: axis[1] }}
+        window={add.bounded}
+        coverage={
+          registerYears.length === 0
+            ? null
+            : { from: registerYears[0], to: registerYears.at(-1) ?? null }
+        }
+        years={registerYears}
+        vintageYear={period.vintageYear}
+      />
       {allRows.length === 0 ? (
-        <Panel title="Variables">
+        <section className={viewStyles.variables} aria-labelledby={listLabelId}>
+          <h2 id={listLabelId} className="micro-label">
+            Variables
+          </h2>
           <EmptyState title="This register lists no variables." />
-        </Panel>
+        </section>
       ) : (
-        <div className={viewStyles.variables}>
+        <section className={viewStyles.variables} aria-labelledby={listLabelId}>
+          <div className={viewStyles.listHead}>
+            <h2
+              id={listLabelId}
+              ref={listHeadRef}
+              tabIndex={-1}
+              className={`micro-label ${viewStyles.listLabel}`}
+            >
+              Variables
+            </h2>
+            {/* Mounted empty: a live region inserted with its first text is
+                not announced. Counts stay in variable units after folding: a
+                group row counts its members. */}
+            <span className={viewStyles.shown} aria-live="polite">
+              {narrowed ? `${shown} of ${total} shown` : ""}
+            </span>
+          </div>
           {variants.length > 1 && (
             <div className={viewStyles.variantFilters}>
               <fieldset ref={chipsRef} className={viewStyles.variantFilter}>
@@ -640,114 +734,101 @@ export function RegisterView({
                   ))}
                 </div>
               </fieldset>
-              {/* Mounted with the strip and empty until a chip is on: a region
-                  inserted with its first text is not announced. While typing,
-                  the filter's own count says the same pair, so this steps
-                  aside. */}
-              <div className={viewStyles.variantStatus}>
-                <span aria-live="polite">
-                  {!filtering &&
-                    (selectedVariants.size > 0
-                      ? `Showing ${shown} of ${total} variables`
-                      : variantsLifted
-                        ? `Showing all ${total} variables`
-                        : "")}
-                </span>
-                {selectedVariants.size > 0 && (
-                  <Button onPress={clearVariants}>Clear variant filter</Button>
-                )}
-              </div>
+              {selectedVariants.size > 0 && (
+                <Button variant="ghost" onPress={clearVariants}>
+                  Clear variant filter
+                </Button>
+              )}
             </div>
           )}
-          {/* Counts stay in variable units after folding: a group row counts
-              its members. */}
-          <FilterCount
-            filter={filter}
-            shown={shown}
-            total={total}
-            noun="variables"
-          />
-          {variableRows.length > 0 ? (
-            <DataTable
-              framed
-              rowNavigation
-              columns={variableColumns}
-              rows={variableRows}
-              getRowId={(row) => row.id}
-              renderCell={(row, column) =>
-                column.key === "label" ? (
-                  row.kind === "group" ? (
-                    <ConceptGroupLink
-                      group={row.group}
-                      noun="variables"
-                      href={groupHref(node.fqid, row.group.key)}
-                    />
-                  ) : (
-                    <a
-                      className={styles.rowLink}
-                      href={catalogHref(row.fqid)}
-                      title={row.fqid}
-                    >
-                      {row.label}
-                    </a>
-                  )
+          {listRows.length > 0 ? (
+            <VariableRowList label="Variables">
+              {listRows.map((row) =>
+                row.kind === "group" ? (
+                  <VariableRow
+                    key={row.id}
+                    name={row.label}
+                    href={groupHref(node.fqid, row.group.key)}
+                    fqid={row.group.fqid}
+                    inProject={row.group.members.some((m) =>
+                      inProject.has(m.fqid),
+                    )}
+                    coverage={coverageYears(
+                      row.group.members.flatMap(
+                        (m) => childrenByFqid.get(m.fqid)?.deliveries ?? [],
+                      ),
+                      period.vintageYear,
+                    )}
+                    axis={axis}
+                    window={windowSpan}
+                  />
                 ) : (
-                  row.kind === "leaf" &&
-                  row.columns.map((column) => (
-                    <DeliveryColumnTick
-                      key={column.name}
-                      column={column}
-                      offered={columnOffered(column)}
-                      ticked={stagedKeys.has(columnKey(row.fqid, column.name))}
-                      marker={committed.get(columnKey(row.fqid, column.name))}
-                      isDisabled={applying}
-                      windowYears={add.years}
-                      onToggle={() => toggleColumn(row.fqid, column)}
-                    />
-                  ))
-                )
+                  <VariableRow
+                    key={row.id}
+                    name={row.label}
+                    href={catalogHref(row.fqid)}
+                    fqid={row.fqid}
+                    inProject={inProject.has(row.fqid)}
+                    coverage={coverageYears(
+                      childrenByFqid.get(row.fqid)?.deliveries ?? [],
+                      period.vintageYear,
+                    )}
+                    axis={axis}
+                    window={windowSpan}
+                  >
+                    {row.columns.map((column) => (
+                      <DeliveryColumnTick
+                        key={column.name}
+                        column={column}
+                        offered={columnOffered(column)}
+                        ticked={stagedKeys.has(
+                          columnKey(row.fqid, column.name),
+                        )}
+                        marker={committed.get(columnKey(row.fqid, column.name))}
+                        isDisabled={applying}
+                        windowYears={add.years}
+                        onToggle={() => toggleColumn(row.fqid, column)}
+                      />
+                    ))}
+                  </VariableRow>
+                ),
+              )}
+            </VariableRowList>
+          ) : (
+            // Only the text filter can empty the list: every chip is a
+            // variant that delivers something.
+            <EmptyState
+              title={`No variables match “${filter}”`}
+              description={
+                selectedVariants.size > 0
+                  ? "The variant filter above is also narrowing this list."
+                  : "Nothing in this register contains that text."
+              }
+              action={
+                <Button onPress={() => browseFilter.set("")}>
+                  Clear filter
+                </Button>
               }
             />
-          ) : (
-            <Panel title="Variables">
-              {/* Only the text filter can empty the list: every chip is a
-                  variant that delivers something. */}
-              <EmptyState
-                title={`No variables match “${filter}”`}
-                description={
-                  selectedVariants.size > 0
-                    ? "The variant filter above is also narrowing this list."
-                    : "Nothing in this register contains that text."
-                }
-                action={
-                  <Button onPress={() => browseFilter.set("")}>
-                    Clear filter
-                  </Button>
-                }
-              />
-            </Panel>
           )}
-          {/* The add bar stays mounted through a filter that empties the list,
-              so ticks made across several searches are still addable. Sticky
-              against the viewport (Y-97). */}
-          <div className={viewStyles.addBar}>
-            <output className={viewStyles.addCount}>
-              {/* The picker's words: one action name on every add surface. */}
-              {stagedKeys.size === 0
-                ? "Tick a column to add it to the project."
-                : `+${columnCount}`}
-            </output>
-            <Button
-              variant="primary"
-              isInert={stagedKeys.size === 0 || !seedReady}
-              isBusy={applying}
-              onPress={addSelected}
-            >
-              Add to project
-            </Button>
-          </div>
+          {/* Only while something is ticked (DESIGN.md → VariableRow); it
+              stays through a filter that empties the list, so ticks made
+              across several searches are still addable. Sticky against the
+              viewport (Y-97). */}
+          {(stagedKeys.size > 0 || applying) && (
+            <div ref={addBarRef} className={viewStyles.addBar}>
+              <Button
+                variant="primary"
+                isInert={!seedReady}
+                isBusy={applying}
+                onPress={addSelected}
+              >
+                Add {columnCount} to project
+              </Button>
+            </div>
+          )}
           <StagedAddStatus outcome={outcome} blocked={shownRefusal} />
-        </div>
+        </section>
       )}
       <VariantsSummary registerFqid={node.fqid} variants={node.variants} />
       <RelatedDocumentsPanel register={node.fqid} />
@@ -765,9 +846,12 @@ interface TickProps {
   onToggle: () => void;
 }
 
-/** One delivery column and its tick, one target (Y-83): the label carries the
- * checkbox, so the name being read is what is clicked, and its era, "In
- * project" marker and any reason it cannot be added join the accessible name. */
+/** One delivery column (Y-83): its `ColumnChip` and eras, with a tick when it
+ * can be added. The label carries the checkbox, so the name being read is what
+ * is clicked, and its eras and any reason it cannot be added join the
+ * accessible name. A column already in the project shows its `in` chip and no
+ * tick; one the study window has moved off shows its `out` chip, the tick
+ * disabled. */
 function DeliveryColumnTick({
   column,
   offered,
@@ -779,9 +863,66 @@ function DeliveryColumnTick({
 }: TickProps) {
   const eras = visibleEras(column.years);
   const separator = eras.hidden.length > 0 ? " … " : ", ";
+  const years = column.years.length > 0 && (
+    <span className={viewStyles.years}>
+      {/* One span per era, so a line breaks between eras, never inside a
+          range, where "1995–" would read as still delivered (Y-104). */}
+      {eras.shown.map((era, i) => (
+        <span key={era}>
+          {i > 0 && separator}
+          <span className={viewStyles.era}>{era}</span>
+        </span>
+      ))}
+      {eras.hidden.length > 0 && (
+        <>
+          {" "}
+          {/* A generic span takes no accessible name, so the hidden eras are
+              text a screen reader reads after the count. */}
+          <span className={viewStyles.era} title={column.years.join(", ")}>
+            +{eras.hidden.length}
+            <span className="visually-hidden">
+              {` more era${eras.hidden.length === 1 ? "" : "s"}: ${eras.hidden.join(", ")}`}
+            </span>
+          </span>
+        </>
+      )}
+    </span>
+  );
+
+  if (marker) {
+    // In the project: the chip says so. A marker that says more (the source's
+    // years differ from the window, or lie outside it) keeps its words, in
+    // its status colour.
+    const plain = marker.tone === "info" && marker.detail === null;
+    return (
+      <span className={viewStyles.column}>
+        <ColumnChip name={column.name} state="in" />
+        {years}
+        {plain ? (
+          <span className="visually-hidden">in the project</span>
+        ) : (
+          <Tag tone={marker.tone} glyph={marker.glyph}>
+            {marker.label}
+            {marker.detail && (
+              <span className="visually-hidden">{marker.detail}</span>
+            )}
+          </Tag>
+        )}
+      </span>
+    );
+  }
+
+  // The study window is this page's period, so a column delivered wholly
+  // outside it has nothing to commit; the reason names the window.
+  const reason = offered
+    ? null
+    : column.windows.length === 0
+      ? "not delivered"
+      : `not delivered in ${windowYears}`;
   return (
     <label
-      className={`${viewStyles.column} ${offered ? "" : viewStyles.outOfWindow}`}
+      className={`${viewStyles.column} ${offered ? viewStyles.pick : ""}`}
+      title={reason ? `${column.name}, ${reason}` : undefined}
     >
       <input
         className={`cbox ${viewStyles.tick}`}
@@ -790,68 +931,9 @@ function DeliveryColumnTick({
         disabled={isDisabled || !offered}
         onChange={onToggle}
       />
-      {/* Name, eras and markers wrap as one line beside the tick, so a marker
-          that will not fit drops under the name it qualifies. */}
-      <span className={viewStyles.columnLine}>
-        <ColumnChip
-          name={column.name}
-          state={marker ? "in" : offered ? "default" : "out"}
-        />
-        {column.years.length > 0 && (
-          <span className={viewStyles.years}>
-            {/* One span per era, so a line breaks between eras, never inside a
-                range, where "1995–" would read as still delivered (Y-104).
-                Keyed by position: the list is rebuilt whole from the windows. */}
-            {eras.shown.map((era, i) => (
-              <span key={era}>
-                {i > 0 && separator}
-                <span className={viewStyles.era}>{era}</span>
-              </span>
-            ))}
-            {eras.hidden.length > 0 && (
-              <>
-                {" "}
-                {/* A generic span takes no accessible name, so the hidden
-                    eras are text a screen reader reads after the count. */}
-                <span
-                  className={viewStyles.era}
-                  title={column.years.join(", ")}
-                >
-                  +{eras.hidden.length}
-                  <span className="visually-hidden">
-                    {` more era${eras.hidden.length === 1 ? "" : "s"}: ${eras.hidden.join(", ")}`}
-                  </span>
-                </span>
-              </>
-            )}
-          </span>
-        )}
-        {marker && (
-          // Already in the draft, and still tickable: adding it again folds
-          // into the same source and changes nothing.
-          <Tag tone={marker.tone} glyph={marker.glyph}>
-            {marker.label}
-            {marker.detail && (
-              <span className="visually-hidden">{marker.detail}</span>
-            )}
-          </Tag>
-        )}
-        {!offered && (
-          // The study window is this page's period, so a column delivered
-          // wholly outside it has nothing to commit; the reason names the one
-          // control that lifts it.
-          <Tag>
-            {column.windows.length === 0 ? (
-              "Not delivered"
-            ) : (
-              <>
-                Not delivered in{" "}
-                <span className={viewStyles.windowYears}>{windowYears}</span>
-              </>
-            )}
-          </Tag>
-        )}
-      </span>
+      <ColumnChip name={column.name} state={offered ? "default" : "out"} />
+      {years}
+      {reason && <span className="visually-hidden">{reason}</span>}
     </label>
   );
 }

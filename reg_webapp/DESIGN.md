@@ -652,7 +652,7 @@ contracts, tests).
 Two layers, semantic roles only consumed by components: **primitive ramps**
 (`--gray-1..12` and the fixed status/categorical/data hues — never referenced by a
 component) and **semantic roles** (`--bg`, `--surface*`, `--text*`, `--border*`,
-`--accent*`, the status, `--cat-*`, `--facet-axis-*` and `--viz-edge-*` roles, plus
+`--accent*`, the status, `--cat-*` and `--viz-*` roles, plus
 geometry, elevation, focus and motion). Dark mode and the planned per-provider themes
 are role remaps under `[data-theme]` / `[data-provider]` — no component CSS changes. The
 tokens live in `frontend/src/tokens.css`, imported once in `main.ts`.

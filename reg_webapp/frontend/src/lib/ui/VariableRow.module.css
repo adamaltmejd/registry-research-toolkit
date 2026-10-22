@@ -1,0 +1,129 @@
+/* A pane's variable list (DESIGN.md → Time → VariableRow): rows separated by
+   hairlines, no box and no column headers. */
+.list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+/* Dot | name and FQID | coverage bar; the delivery columns under the name. */
+.row {
+  display: grid;
+  grid-template-columns: 6px minmax(0, 1fr) minmax(6rem, 10rem);
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--duration-quick) var(--ease-standard);
+}
+.row:hover {
+  background: var(--surface-hover);
+}
+.row[data-in-project] {
+  background: var(--accent-bg);
+}
+
+/* The in-project mark: a 6px accent dot, absent (not hidden) otherwise. */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.row[data-in-project] .dot {
+  background: var(--accent);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+/* A plain link (DESIGN.md → Typography): ink, the accent bottom border. */
+.name {
+  align-self: flex-start;
+  max-width: 100%;
+  border-bottom: 1.5px solid var(--accent);
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.name:hover {
+  background: var(--surface-hover);
+}
+.name:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.fqid {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  overflow-wrap: anywhere;
+}
+
+/* The thin coverage bar: a hairline track, the study window as a short
+   accent-bg block on it, coverage as ink segments (accent in the project). */
+.bar {
+  display: block;
+}
+.track {
+  position: relative;
+  display: block;
+  height: 10px;
+}
+.track::before {
+  content: "";
+  position: absolute;
+  inset: 4px 0;
+  background: var(--border);
+}
+.window {
+  position: absolute;
+  inset-block: 0;
+  background: var(--accent-bg);
+  box-shadow:
+    inset 1px 0 0 var(--accent),
+    inset -1px 0 0 var(--accent);
+}
+.row[data-in-project] .window {
+  background: var(--surface);
+}
+.segment {
+  position: absolute;
+  inset-block: 3px;
+  min-width: 2px;
+  border-radius: 1px;
+  background: var(--text);
+}
+.row[data-in-project] .segment {
+  background: var(--accent);
+}
+
+.columns {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+
+@media (max-width: 48rem) {
+  .row {
+    grid-template-columns: 6px minmax(0, 1fr);
+  }
+  .bar,
+  .columns {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

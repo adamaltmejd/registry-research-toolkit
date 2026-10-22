@@ -38,7 +38,7 @@ import {
  * `key` is the variable's FQID, unique across the picker. */
 export interface PickerBand extends StagedPickerBand {
   name: string;
-  /** The member's facets in its group, joined ("Familj · Inkl."). */
+  /** The member's facets in its group, joined ("Familj, Inkl."). */
   facetLabel?: string | null;
   /** Per delivery column, the facets of the group member that column is. */
   facetsByColumn?: Record<string, GroupFacetModel[]>;
