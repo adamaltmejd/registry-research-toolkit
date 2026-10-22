@@ -108,8 +108,8 @@ this part entirely if you have neither.
 
 ### Render
 
-From the repo root. `dev.sh` picks free ports, runs the Playwright driver against them,
-and tears both servers down on exit:
+From the repo root. `dev.sh` picks free ports, drives agent-browser against them, and
+tears the servers and the browser session down on exit:
 
 ```sh
 bash reg_webapp/dev/dev.sh --fixture-db shot --all <route>
@@ -118,13 +118,18 @@ bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
 `--all` captures the four DESIGN.md widths and it applies to every rendered change;
-there is no desktop-only exception. `--fixture-db` builds a deterministic synthetic
-catalog, so no released catalog DB is needed — `dev.sh` installs the venv and the
-frontend dependencies itself; the remaining prerequisites (the wasm toolchain,
-Playwright's Chromium) are in the [run-reg-webapp skill](../run-reg-webapp/SKILL.md).
-Pass `REG_META_DB=<db_dir>` instead when the rendered behavior depends on specific
-catalog content. `smoke` is a catalog-browsing flow at the default desktop viewport only
-— it does not stand in for the four widths.
+there is no desktop-only exception. Each route × width is three files under one name:
+`<name>.png`, `<name>.snapshot.txt` (the accessibility tree) and `<name>.a11y.txt` (an
+axe-core audit); the run prints each capture's axe summary and the page's console errors
+and uncaught exceptions. `--fixture-db` builds a deterministic synthetic catalog, so no
+released catalog DB is needed — `dev.sh` installs the venv and the frontend dependencies
+(agent-browser among them) itself; the remaining prerequisites (the wasm toolchain, a
+Chrome for agent-browser) are in the [run-reg-webapp skill](../run-reg-webapp/SKILL.md).
+A state no route reaches (an open dialog, a filled form) is driven by hand with
+agent-browser in a named session, as that skill shows; capture it with `screenshot`,
+`snapshot` and `a11y` at the four widths too. Pass `REG_META_DB=<db_dir>` instead when
+the rendered behavior depends on specific catalog content. `smoke` is a catalog-browsing
+flow at the default desktop viewport only — it does not stand in for the four widths.
 
 `dev.sh` prints the checkout it resolved, the full HEAD, and the unique output directory
 of that invocation as its first line:
@@ -145,8 +150,8 @@ tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
 ### Inspect
 
 **Open the images.** Claim inspection only of images you actually opened, at the
-viewport each was captured at. Read the DOM/accessibility snapshot and console output
-alongside them where the tooling offers those.
+viewport each was captured at. Read each capture's `.snapshot.txt`, `.a11y.txt` and the
+printed console output alongside it.
 
 - Render health: no blank screens, no stuck `aria-busy="true"`, no JS errors, no missing
   assets, no capture taken before content settled.
@@ -156,6 +161,12 @@ alongside them where the tooling offers those.
   gradients or orbs, oversized cards, cards inside cards, or stock imagery.
 - Accessibility visuals: visible focus rings, contrast, status meaning carried by glyph
   and text rather than hue.
+- Accessibility tree and audit: controls named and roled in `.snapshot.txt` (no
+  unlabeled button, slider or input; landmarks and heading order intact); every axe
+  violation in `.a11y.txt` on an element the candidate touches is a finding, and one
+  present on the untouched sibling route as well is pre-existing (dismiss it as existing
+  behavior outside this candidate). Treat `incomplete` entries as prompts to check by
+  eye, not findings.
 - Cross-route coherence: render at least one untouched sibling route beside the changed
   one and compare type scale, spacing rhythm and table/card/tag treatment. Flag
   divergence from the surrounding app.
@@ -166,12 +177,13 @@ route and state coverage, and they are not visual inspection.
 
 ### When rendering is unavailable
 
-If the app will not boot, the driver fails, or the environment has no browser, the
-outcome is **blocked** — not a product finding. Report the exact command, the observed
-cause (quote the failing line; the driver names the Chromium launch rung it reached,
-e.g. `driver: chromium launched (no-sandbox)`), and what stayed unverified. A blocked
-rendered review also cannot support a clean visual approval. Raise a product `P1` only
-where the evidence in hand establishes a candidate defect with that user impact.
+If the app will not boot, agent-browser cannot launch Chrome, or the environment has no
+browser, the outcome is **blocked** — not a product finding. Report the exact command,
+the observed cause (quote the failing line, and `$ab doctor`'s Chrome line (`$ab` as
+run-reg-webapp defines it) where the launch failed), and what stayed unverified. A
+blocked rendered review also cannot support a clean visual approval. Raise a product
+`P1` only where the evidence in hand establishes a candidate defect with that user
+impact.
 
 ### Author iteration vs. gate evidence
 

@@ -10,12 +10,13 @@
 #
 # Modes:
 #   dev.sh                 interactive — start the servers and block (Ctrl-C stops).
-#   dev.sh smoke           ONE-SHOT — start, run the Playwright driver `smoke`, tear
-#                          down, exit with the driver's status. For agent visual
-#                          verification: random ports + guaranteed cleanup, so it
-#                          never collides and never leaks a server.
+#   dev.sh smoke           ONE-SHOT — start, drive the catalog smoke flow with
+#                          agent-browser (smoke() below), tear down, exit with its
+#                          status. For agent visual verification: random ports +
+#                          guaranteed cleanup, so it never collides and never leaks
+#                          a server.
 #   dev.sh flows <out-dir> [scenario...]
-#                          ONE-SHOT — start, run the Playwright driver `flows`
+#                          ONE-SHOT — start, run the Playwright driver (driver.mjs)
 #                          (the /project error+retry cases, the catalog-authored
 #                          draft cases, the deliberate-replacement case, the
 #                          /project card's source-period edit and the period
@@ -29,8 +30,10 @@
 #                          breakpoints (default desktop): --mobile (375x812),
 #                          --tablet (768x1024), --desktop (1280x900), --wide
 #                          (1920x1080), --all (the four), or --viewport WxH
-#                          (repeatable). Each viewport × route is shot; non-desktop
-#                          shots get a `-<label>` suffix.
+#                          (repeatable). Each viewport × route is captured with
+#                          agent-browser: a PNG, the accessibility snapshot
+#                          (.snapshot.txt) and an axe audit (.a11y.txt);
+#                          non-desktop captures get a `-<label>` suffix.
 #   dev.sh preview         preview_start entry point (.claude/launch.json) — like
 #                          interactive serve, but the frontend binds the MCP-assigned
 #                          $PORT so preview_start attaches to OUR vite and parallel
@@ -46,6 +49,12 @@
 #                          the synthetic steward artifact (`reader steward`) instead.
 #                          For a container / checkout where no released DB is
 #                          reachable.
+#
+# smoke/shot run agent-browser, pinned in reg_webapp/frontend/package.json, in a
+# browser session private to this invocation (closed on exit). It drives an
+# installed Google Chrome; with none, run `agent-browser install` once. `flows`
+# stays on the Playwright driver (driver.mjs): it injects request failures and
+# counts requests per case, which is Playwright's routing surface.
 #
 # Ports are automatic (two of these never collide); pin with RUST_PORT /
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
@@ -108,9 +117,24 @@ preview)
 	;;
 esac
 
+# The capture viewports: a named preset or a raw WxH, printed as "W H". The four
+# presets are the widths frontend/DESIGN.md designs for; the Playwright `flows`
+# driver spells the same four in its VIEWPORTS.
+viewport_size() {
+	case "$1" in
+	mobile) echo "375 812" ;;
+	tablet) echo "768 1024" ;;
+	desktop) echo "1280 900" ;;
+	wide) echo "1920 1080" ;;
+	*)
+		[[ "$1" =~ ^([0-9]+)x([0-9]+)$ ]] || return 1
+		echo "${BASH_REMATCH[1]} ${BASH_REMATCH[2]}"
+		;;
+	esac
+}
+
 # Viewport flags precede the routes in `shot` mode; consume them here so what's
-# left in "$@" is the route list. Each viewport is passed to the driver via
-# REG_WEBAPP_VIEWPORT (a preset name or raw WxH).
+# left in "$@" is the route list.
 viewports=()
 if [ "$mode" = shot ]; then
 	while [ "$#" -gt 0 ]; do
@@ -149,6 +173,12 @@ if [ "$mode" = shot ]; then
 		esac
 	done
 	[ ${#viewports[@]} -gt 0 ] || viewports=(desktop)
+	for vp in "${viewports[@]}"; do
+		viewport_size "$vp" >/dev/null || {
+			echo "dev: bad viewport '$vp' — use --mobile|--tablet|--desktop|--wide or --viewport WxH" >&2
+			exit 2 # validate before booting servers
+		}
+	done
 fi
 
 if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
@@ -164,7 +194,7 @@ cd "$root" || exit 1
 
 # This checkout's OWN environment, never main's, installed on demand (near-instant
 # when already in sync). The venv runs freeport, the --fixture-db builder and the
-# default DB resolution; node_modules runs Vite and the driver. `env -u`: an
+# default DB resolution; node_modules runs Vite, agent-browser and the driver. `env -u`: an
 # inherited UV_PROJECT_ENVIRONMENT would sync another checkout's venv (#1337).
 if ! env -u UV_PROJECT_ENVIRONMENT uv sync --frozen --quiet; then
 	echo "dev: 'uv sync --frozen' failed — see output above." >&2
@@ -194,13 +224,11 @@ shots_dir=""
 if [ "$mode" = smoke ] || [ "$mode" = shot ]; then
 	shots_dir=${REG_WEBAPP_SHOTS:-$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-shots.XXXXXX")} || exit 1
 	mkdir -p "$shots_dir" || exit 1
-	# ABSOLUTE from here on, because the two ends disagree otherwise: a relative
-	# REG_WEBAPP_SHOTS resolves against the repo root here (our cwd) but against
-	# reg_webapp/frontend in the driver, so the run would report one directory and
-	# write the PNGs into another. Resolve once, after the mkdir that guarantees it
-	# exists, and both the report and the driver get the same path.
+	# ABSOLUTE from here on: a relative REG_WEBAPP_SHOTS resolves against the repo
+	# root here (our cwd) but against the agent-browser daemon's own cwd when it
+	# writes a capture, so the run would report one directory and write the PNGs
+	# into another. Resolve once, after the mkdir that guarantees it exists.
 	shots_dir=$(cd "$shots_dir" && pwd) || exit 1
-	export REG_WEBAPP_SHOTS="$shots_dir"
 fi
 
 # Provenance, first thing in the transcript: WHICH checkout is being served, at
@@ -222,8 +250,20 @@ else
 	frontend_port=${FRONTEND_PORT:-$(freeport)}
 fi
 
+# agent-browser in a session named for THIS process: its default session is one
+# browser shared machine-wide, so concurrent runs would drive each other's page.
+# The idle timeout reaps the daemon even if this script is SIGKILLed.
+ab_session=""
+if [ "$mode" = smoke ] || [ "$mode" = shot ]; then ab_session="reg-webapp-dev-$$"; fi
+ab() {
+	bun "$root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
+		--session "$ab_session" --idle-timeout 2m "$@"
+}
+
 pids=()
 cleanup() {
+	# The browser first, while the page it holds still has a server to talk to.
+	if [ -n "$ab_session" ]; then ab close >/dev/null 2>&1; fi
 	# Guard the expansion: `"${pids[@]}"` on an empty array under `set -u` errors
 	# on bash 3.2 (macOS system bash) if a signal lands before the servers start.
 	# `kill -- -PID` signals the job's whole PROCESS GROUP (set -m above), so the
@@ -234,8 +274,12 @@ cleanup() {
 	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
 }
 # Tear every server down on ANY exit — including the one-shot smoke/shot paths, so
-# they never leak a dev server (the failure mode that motivated this mode).
-trap cleanup INT TERM EXIT
+# they never leak a dev server (the failure mode that motivated this mode). INT/TERM
+# exit so the run stops (a bare cleanup trap would return and carry on driving the
+# browser against dead servers); the EXIT trap then cleans up.
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 # --fixture-db: point EVERY server at a deterministic synthetic catalog via
 # REG_META_DB, so it wins over whatever the environment resolves. The artifact comes
@@ -302,13 +346,95 @@ fi
 
 dev_url="http://localhost:$frontend_port"
 
+# `networkidle` is NOT "rendered": Svelte swaps fetched data in after the network
+# settles, so a capture right after navigation shows the loading placeholder.
+# Every loading placeholder carries aria-busy="true" (the components' contract
+# with this script — don't key on UI copy); wait for the last one to clear.
+settled() {
+	ab wait --load networkidle >/dev/null &&
+		ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")' >/dev/null
+}
+
+# One capture is the evidence the design reviewer reads, side by side under one
+# name: the picture, the accessibility tree and an axe audit (which exits 0 with
+# violations — judging them is the reviewer's job). The page's JS errors print
+# with the console's error lines so a broken render can't pass unnoticed.
+capture() {
+	local base="$shots_dir/$1"
+	ab screenshot "$base.png" >/dev/null &&
+		ab snapshot -c >"$base.snapshot.txt" &&
+		ab a11y >"$base.a11y.txt" || return 1
+	echo "shot: $base.png ($(grep -m 1 '^axe-core' "$base.a11y.txt"))"
+	ab console | grep '^\[error\]' || true
+	# --json: agent-browser 0.39.1's text output for `errors` prints a bare "✗"
+	# whatever it holds; revisit on a bump.
+	ab errors --json | .venv/bin/python -c 'import json, sys
+for e in (json.load(sys.stdin).get("data") or {}).get("errors", []):
+    print("[pageerror]", e["text"].splitlines()[0])'
+	ab console --clear >/dev/null && ab errors --clear >/dev/null
+}
+
+# The catalog smoke: /catalog → provider → register → variable, then narrow the
+# leaf's Period slider from the keyboard, apply it, assert what the app wrote to
+# the URL and what it shows, and cold-reload the deep link. Desktop only.
+smoke() {
+	local here period seeded from to deep
+	local slider='[role="group"][aria-label="Period window (years)"]'
+	ab set viewport 1280 900 >/dev/null &&
+		ab open "$dev_url/catalog" >/dev/null && settled && capture 01-root || return 1
+	# Drill by clicking the first link STRICTLY DEEPER than the current path —
+	# `a[href^="/catalog"]` alone matches the header nav link first and goes
+	# nowhere. The SPA's `link` action intercepts these (pushState, no reload).
+	for step in 02-provider 03-register 04-variable; do
+		here=$(ab eval 'location.pathname.replace(/\/$/, "")' | tr -d '"')
+		ab click "a[href^=\"$here/\"]" >/dev/null && settled || return 1
+		echo "clicked from $here → $(ab get url)"
+		capture "$step" || return 1
+	done
+	# Real form interaction, the way a keyboard researcher does it: one ArrowRight
+	# on "From year" (the thumbs clamp to the subject's own coverage, so the result
+	# is a range the catalog delivers). Scoped to the leaf's slider group: the
+	# header's project-window slider has the same thumb labels.
+	seeded=$(ab get value "$slider input[aria-label=\"From year\"]")
+	to=$(ab get value "$slider input[aria-label=\"To year\"]")
+	[ "$seeded" -lt "$to" ] || {
+		echo "smoke: period slider seeded a single year ($seeded) — no range to narrow" >&2
+		return 1
+	}
+	ab focus "$slider input[aria-label=\"From year\"]" >/dev/null &&
+		ab press ArrowRight >/dev/null || return 1
+	from=$(ab get value "$slider input[aria-label=\"From year\"]")
+	[ "$from" -eq $((seeded + 1)) ] || {
+		echo "smoke: From year did not step: $seeded → $from" >&2
+		return 1
+	}
+	period="$from..$to"
+	if ! { ab click 'button[aria-label="Apply period"]' >/dev/null &&
+		ab wait --fn "new URLSearchParams(location.search).get('period') === '$period'" >/dev/null &&
+		settled && ab wait --text "narrowed to $period" >/dev/null; }; then
+		echo "smoke: applying period $period did not land in the URL and the page" >&2
+		return 1
+	fi
+	echo "period $seeded..$to → $period at $(ab get url)"
+	capture 04b-period-resolved || return 1
+	# Deep-link reload: a cold load of the nested path renders the same view
+	# (vite's SPA fallback in dev; the edge worker in production).
+	deep=$(ab eval 'location.pathname' | tr -d '"')
+	ab open "$dev_url$deep" >/dev/null && settled || return 1
+	[ "$(ab get text body | wc -c)" -ge 40 ] || {
+		echo "smoke: deep link $deep rendered ~empty body" >&2
+		return 1
+	}
+	capture 05-deep-link-reload || return 1
+	echo "smoke: OK"
+}
+
 case "$mode" in
 smoke)
 	# One-shot: drive the smoke flow against OUR frontend, then the EXIT trap tears
-	# every server down (no leak). Exit status is the driver's.
+	# every server down (no leak).
 	echo "dev: smoke on $dev_url (auto-teardown on exit)" >&2
-	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../dev/driver.mjs smoke)
+	smoke
 	exit $?
 	;;
 flows)
@@ -316,16 +442,23 @@ flows)
 	# EXIT trap tears every server (and their process groups) down either way.
 	echo "dev: flows ${*:-(all scenarios)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../dev/driver.mjs flows "$out_dir" "$@")
+		bun ../dev/driver.mjs "$out_dir" "$@")
 	exit $?
 	;;
 shot)
 	echo "dev: shot $* on $dev_url viewports=${viewports[*]} (auto-teardown on exit)" >&2
 	rc=0
 	for vp in "${viewports[@]}"; do
+		# shellcheck disable=SC2046 # "W H" splits into the two arguments
+		ab set viewport $(viewport_size "$vp") >/dev/null || exit 1
+		# Desktop keeps the bare name; other viewports get a `-<label>` suffix so a
+		# multi-viewport run captures each breakpoint instead of overwriting.
+		suffix=""
+		[ "$vp" = desktop ] || suffix="-$vp"
 		for route in "$@"; do
-			(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" REG_WEBAPP_VIEWPORT="$vp" \
-				bun ../dev/driver.mjs shot "$route") || rc=$?
+			name=${route//\//_}
+			{ ab open "$dev_url$route" >/dev/null && settled &&
+				capture "${name:-root}$suffix"; } || rc=1
 		done
 	done
 	exit "$rc"
@@ -333,7 +466,7 @@ shot)
 serve | preview)
 	# `serve` is interactive (Ctrl-C stops); `preview` is the preview_start entry
 	# (the MCP stops it via preview_stop). Both just block on the running servers.
-	printf 'reg_webapp dev (%s):\n  rust    : http://127.0.0.1:%s\n  frontend: %s\n  driver  : REG_WEBAPP_DEV_URL=%s\n' \
+	printf 'reg_webapp dev (%s):\n  rust    : http://127.0.0.1:%s\n  frontend: %s\n  flows   : REG_WEBAPP_DEV_URL=%s\n' \
 		"$([ "$mode" = preview ] && echo 'preview_start' || echo 'Ctrl-C to stop')" \
 		"$rust_port" "$dev_url" "$dev_url"
 	# Steady state: block until Ctrl-C (INT trap -> nonzero) or a server exits. A

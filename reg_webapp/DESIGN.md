@@ -28,7 +28,8 @@ private data.
 
 ```text
 reg_webapp/
-  dev/                    # dev.sh and the browser flows (driver.mjs); dev.sh
+  dev/                    # dev.sh (smoke/shot via agent-browser) and the
+                          # Playwright project flows (driver.mjs); dev.sh
                           # --fixture-db serves conformance/cases/fixtures/webapp-dev;
                           # how to use it: .agents/skills/run-reg-webapp/
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)

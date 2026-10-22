@@ -179,8 +179,9 @@ below are what an agent must follow when writing, changing or deleting a test. T
 # Run (dev servers)
 
 - `reg_webapp` local dev (Rust server + Vite with an `/api` proxy):
-  `reg_webapp/dev/dev.sh` and its Playwright driver; the `/run-reg-webapp` skill
-  (`.agents/skills/run-reg-webapp/`) explains the modes.
+  `reg_webapp/dev/dev.sh` (agent-browser for `smoke`/`shot`, the Playwright driver for
+  `flows`); the `/run-reg-webapp` skill (`.agents/skills/run-reg-webapp/`) explains the
+  modes.
   `.claude/launch.json` registers a single `reg-webapp` config for `preview_start` (its
   entry point is `dev.sh preview`, so `autoPort` makes parallel sessions collision-free
   and the proxy is auto-wired); for one-shot screenshots use `dev.sh smoke` /

@@ -327,8 +327,9 @@ through source-built request/expected corpora in `conformance/cases/`.
    artifact), with room for a cold rust-cache and its save. The `lint` job runs
    `gate.py lint` (ruff, panache, ty). The `reg-webapp-frontend` job has a 6-minute
    timeout and includes the codegen drift check; the OpenAPI snapshot is a
-   `crates/reg-meta` test. A job that exceeds its budget fails. The Playwright drivers
-   (`dev.sh smoke`, the gate's `flows` step) are local checks, not CI jobs.
+   `crates/reg-meta` test. A job that exceeds its budget fails. The browser drivers
+   (`dev.sh smoke` on agent-browser, the gate's `flows` step on Playwright) are local
+   checks, not CI jobs.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
