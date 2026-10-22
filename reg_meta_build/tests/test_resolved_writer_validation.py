@@ -6,9 +6,7 @@ refused before the catalog path is touched, and a staged catalog that fails
 these refusals. Curation loading refuses the curated shapes first (the
 `curation_toml` cases named per row), formation forms lineage only between two
 registers and only over the endpoint states' intersection (`resolve_catalog_lineage`),
-the build compiles no classification same_as edge and no historical predecessor
-declaration (`ResolvedMetadata.historical_predecessors` has no producer; the Rust
-reader's retired-FQID redirect reads the edges it allows), and the pipeline refuses an
+the build compiles no classification same_as edge, and the pipeline refuses an
 unknown panel key before it writes. The metadata refusals a build does reach are build
 cases: `relations-same-as-cycle-fails-the-build`,
 `relations-derived-from-cycle-fails-the-build`,
@@ -23,7 +21,6 @@ from __future__ import annotations
 
 import os
 import re
-from contextlib import closing
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -34,17 +31,12 @@ from _resolved_metadata_support import (
     write_metadata_catalog,
 )
 from catalog_manifest import synthetic_manifest
-from reg_meta_build.db import open_built_db
 from reg_meta_build.errors import RegMetaError
 from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_metadata import (
     ResolvedClassificationDerivation,
-    ResolvedHistoricalPredecessor,
     ResolvedMetadata,
-    ResolvedRepresentationRef,
-    ResolvedRepresentationSuccession,
     ResolvedSuccession,
-    ResolvedTag,
     ResolvedTagMember,
     ResolvedVariableSameAs,
 )
@@ -81,25 +73,7 @@ def _first_member(**update: object) -> object:
     return full_metadata().variable_groups[0].members[0].model_copy(update=update)
 
 
-_RETIRED = "scb/example/retired"
 _ABSENT = "scb/example/absent"
-
-
-def _historical(
-    target: str = _RETIRED, predecessor: str = _RETIRED, **update: object
-) -> ResolvedMetadata:
-    """A reviewed historical predecessor and its succession into scb/example/one."""
-    declaration = ResolvedHistoricalPredecessor(
-        target=target,
-        kind="variable",
-        reason="Reviewed absent source identity",
-        decision_reference="review:7",
-    )
-    edge = ResolvedSuccession(predecessor=predecessor, successor="scb/example/one")
-    metadata = ResolvedMetadata(
-        historical_predecessors=(declaration,), successions=(edge,)
-    )
-    return metadata.model_copy(update=update)
 
 
 # One row per stated rule at its hardest case: the metadata written beside the support
@@ -194,66 +168,6 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         "state lineage forms a cycle",
         "lineage_cycle",
     ),
-    # A declaration must name the succession predecessor exactly.
-    "historical-declaration-naming-no-predecessor": (
-        lambda: _historical(target="scb/example/retiired"),
-        r"unused historical predecessor declarations: \['scb/example/retiired'\]",
-        None,
-    ),
-    "historical-declaration-naming-a-live-variable": (
-        lambda: _historical(
-            target="scb/example/two",
-            predecessor="scb/example/two",
-        ),
-        "obsolete historical predecessor declaration now names a live entity: "
-        "scb/example/two",
-        None,
-    ),
-    # Without the declaration an absent predecessor is an unknown reference.
-    "succession-from-an-undeclared-absent-predecessor": (
-        lambda: _historical(historical_predecessors=()),
-        f"unknown resolved succession predecessor: '{_RETIRED}'",
-        None,
-    ),
-    # A declaration admits its target only as a succession predecessor.
-    "historical-predecessor-in-a-same-as-edge": (
-        lambda: _historical(
-            variable_same_as=(ResolvedVariableSameAs(a=_RETIRED, b="scb/example/one"),)
-        ),
-        f"unknown resolved same_as variable: '{_RETIRED}'",
-        None,
-    ),
-    "historical-predecessor-as-a-tag-member": (
-        lambda: _historical(
-            tags=(
-                ResolvedTag(
-                    slug="topic",
-                    label="Topic",
-                    members=(
-                        ResolvedTagMember(target=_RETIRED, rank=0, starred=False),
-                    ),
-                ),
-            )
-        ),
-        f"unknown resolved tag variable: '{_RETIRED}'",
-        None,
-    ),
-    "historical-predecessor-in-a-representation-succession": (
-        lambda: _historical(
-            representation_successions=(
-                ResolvedRepresentationSuccession(
-                    predecessor=ResolvedRepresentationRef(
-                        variable=_RETIRED, delivery_column_name="OldColumn"
-                    ),
-                    successor=ResolvedRepresentationRef(
-                        variable="scb/example/one", delivery_column_name="oneColumn"
-                    ),
-                ),
-            )
-        ),
-        f"unknown resolved variable: '{_RETIRED}'",
-        None,
-    ),
     # Metadata that names what the catalog does not write. A build never hands the
     # writer such an edge: `resolve_metadata_dependencies` withholds or refuses each
     # dangling reference first (`catalog_dependency_missing`, pinned by the steps of
@@ -347,7 +261,7 @@ def test_invalid_metadata_is_refused_before_the_previous_catalog_is_touched(
     tmp_path: Path, row: str
 ) -> None:
     # Fails if the writer drops the structure rule the row names (a group, tag,
-    # export-fact, classification, lineage or historical-declaration check, or a
+    # export-fact, classification or lineage check, or a
     # reference to something it does not write), refuses a located row under another
     # code, or runs the check only after it has replaced the previous catalog or left
     # staging behind.
@@ -359,24 +273,6 @@ def test_invalid_metadata_is_refused_before_the_previous_catalog_is_touched(
     assert getattr(error.value, "code", None) == code
     assert output.read_bytes() == b"previous catalog"
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
-
-
-def test_a_historical_predecessor_is_written_only_as_its_succession_edge(
-    tmp_path: Path,
-) -> None:
-    # Fails if the writer drops the succession from a declared absent predecessor, or
-    # writes a variable row for the declared target. The register grain is the build
-    # case `cases/derive/succession-chains` (scb/old -> scb/reg); the reader's
-    # redirect of a retired variable is the conformance case `states-deliveries`.
-    output = tmp_path / "catalog.db"
-    write_metadata_catalog(output, _historical())
-    with closing(open_built_db(output)) as conn:
-        variables = {row[0] for row in conn.execute("SELECT slug FROM variable")}
-        edges = conn.execute(
-            "SELECT predecessor_variable, successor_variable FROM variable_replaced_by"
-        ).fetchall()
-    assert variables == {"one", "two", "consumer"}
-    assert [tuple(edge) for edge in edges] == [("retired", "one")]
 
 
 def _with_unknown_panel_key() -> ResolvedVariable:

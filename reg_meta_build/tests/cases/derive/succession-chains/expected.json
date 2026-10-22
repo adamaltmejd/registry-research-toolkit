@@ -1,12 +1,10 @@
 {
-  "note": "Rows of each chain table in key order, read from the fixture and the succession rules of reg_meta_build/DESIGN.md at the policy year 2026: v2 -> v3 and a2020 -> a2030 (2030) are not yet active; the split scb/reg/split and root1996 are their own terminals, so neither has a row; pre1990 walks to the split root1996 and stops there.",
+  "note": "Rows of each chain table in key order, read from the fixture and the succession rules of reg_meta_build/DESIGN.md at the policy year 2026: v2 -> v3 and a2020 -> a2030 (2030) are not yet active; root1996 is a split and its own terminal, so it has no row; pre1990 walks to the split root1996 and stops there.",
   "succession_terminal": [
     ["class/a2000", "class/a2020"],
     ["class/a2010", "class/a2020"],
     ["class/pre1990", "class/root1996"],
     ["class/sni2002", "class/sni2007"],
-    ["scb/old", "scb/reg"],
-    ["scb/reg/v0", "scb/reg/v2"],
     ["scb/reg/v1", "scb/reg/v2"]
   ],
   "classification_chain": [
