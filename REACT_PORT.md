@@ -5,7 +5,7 @@ React Aria Components (maintainer decision, 2026-10-22). This is the one root-le
 tracker AGENTS.md allows for a multi-PR refactor.
 
 **Completion gate:** deleted when the last Svelte file is removed and the docs PR
-merges. PR 10 deletes this file.
+merges. Bundle C deletes this file.
 
 ## Branching and freeze
 
@@ -53,20 +53,18 @@ Measure later PRs the same way, so the numbers compare.
 
 ## PRs
 
-  | PR  | Scope                                                                                                                                                                                                    | Status                                                      |
-  | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-  | 0a  | Vite+ toolchain on Svelte                                                                                                                                                                                | closed #1775; toolchain taken into PR 1                     |
-  | 0b  | This tracker and the baseline, on `main`                                                                                                                                                                 | merged #1777                                                |
-  | 1   | The toolchain and the shell (below)                                                                                                                                                                      | merged #1782; JS 241 kB gzip (+115 kB), accepted until PR 9 |
-  | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer; follow-up: arrow keys between the browse columns                                                                             | merged #1784; JS 250 kB gzip (+9 kB)                        |
-  | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList                                                                                          | merged #1787; JS 253 kB gzip (+3 kB)                        |
-  | 4   | ConceptGroupView                                                                                                                                                                                         | not started                                                 |
-  | 5   | RepresentationPicker (split into modules)                                                                                                                                                                | not started                                                 |
-  | 6   | Classification\*, VariantBrowser, DocView, Home                                                                                                                                                          | not started                                                 |
-  | B   | Bundle of the old 7 and 8: ProjectEditor, SourceEditor, BindingEditor, StudyWindowSummary, ValidationPanel, ConfirmDialog; CommandPalette (RAC Autocomplete); SearchView and the `/search` route deleted | in review #1789; JS 254 kB gzip (+1 kB)                     |
-  | 9   | Last Svelte removed: Svelte deps, svelte-check, Bits UI, the temporary island, the `PortGate` gate component                                                                                             | not started                                                 |
-  | 10  | Docs and skills; deletes this file and its sentence in `AGENTS.md`                                                                                                                                       | not started                                                 |
-  | M   | `react-port` → `main` (full gate, flows, independent review); swaps the Renovate pause for the lockstep group                                                                                            | not started                                                 |
+  | PR  | Scope                                                                                                                                                                                                         | Status                                                   |
+  | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+  | 0a  | Vite+ toolchain on Svelte                                                                                                                                                                                     | closed #1775; toolchain taken into PR 1                  |
+  | 0b  | This tracker and the baseline, on `main`                                                                                                                                                                      | merged #1777                                             |
+  | 1   | The toolchain and the shell (below)                                                                                                                                                                           | merged #1782; JS 241 kB gzip (+115 kB), accepted until C |
+  | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer; follow-up: arrow keys between the browse columns                                                                                  | merged #1784; JS 250 kB gzip (+9 kB)                     |
+  | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList                                                                                               | merged #1787; JS 253 kB gzip (+3 kB)                     |
+  | B   | Bundle of the old 7 and 8: ProjectEditor, SourceEditor, BindingEditor, StudyWindowSummary, ValidationPanel, ConfirmDialog; CommandPalette (RAC Autocomplete); SearchView and the `/search` route deleted      | merged #1789; JS 254 kB gzip (+1 kB)                     |
+  | A1  | Bundle of the old 4 and 5: ConceptGroupView; the LaneGraph rebuilt from scratch with its representation picker (maintainer, 2026-10-22)                                                                       | in progress                                              |
+  | A2  | The old 6: Classification\*, VariantBrowser, DocView, Home, the breadcrumb; the code tree as a RAC `Tree`                                                                                                     | in review; JS 241 kB gzip (−13 kB)                       |
+  | C   | Bundle of the old 9 and 10: last Svelte removed (Svelte deps, svelte-check, Bits UI, the temporary island, the `PortGate` gate component); docs and skills; deletes this file and its sentence in `AGENTS.md` | not started                                              |
+  | M   | `react-port` → `main` (full gate, flows, independent review); swaps the Renovate pause for the lockstep group                                                                                                 | not started                                              |
 
 PR 1 adds the toolchain (React 19, RAC, plugin-react, locale optimization, Oxlint, CSS
 Modules, `lint_tokens` over tsx and css) and the shell: router, stores, `App`, top bar,
