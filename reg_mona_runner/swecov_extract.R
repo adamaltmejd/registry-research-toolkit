@@ -455,15 +455,16 @@ query <- function(con, sql, what) {
   )
 }
 
-# The SQLSTATE from the leading prefix of an odbc error ("nanodbc/nanodbc.cpp:N:
-# XXXXX: ..." or "ODBC failed with error XXXXX from ..."), never from the rest,
-# which can quote a row value.
+# The SQLSTATE from odbc's own state marker ("nanodbc/nanodbc.cpp:N: XXXXX: " or
+# "ODBC failed with error XXXXX from "), first match only; the rest of the
+# message can quote a row value and is never kept. A value would have to spell
+# that marker to be mistaken for it, and would still yield five characters.
 sqlstate <- function(e) {
   msg <- conditionMessage(e)
   state <- regmatches(
     msg,
     regexec(
-      "^(?:nanodbc/nanodbc\\.cpp:[0-9]+: |ODBC failed with error )([0-9A-Z]{5})\\b",
+      "(?:nanodbc/nanodbc\\.cpp:[0-9]+: |ODBC failed with error )([0-9A-Z]{5})(?:: | from )",
       msg,
       perl = TRUE
     )
