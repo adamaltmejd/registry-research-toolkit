@@ -16,6 +16,7 @@ import {
 } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
+import { StatusRow } from "./ui/StatusRow";
 
 // The project's common study window, at the head of the /project sources list
 // (reg_webapp/DESIGN.md → "Common study window"): which window the sources are
@@ -231,7 +232,6 @@ export function StudyWindowSummary({ sources, studyWindow }: Props) {
               // the dialog returns focus HERE): inert while it checks, and once
               // the last plan left nothing to change.
               <Button
-                size="sm"
                 isInert={checking || nothingToApply}
                 onPress={() => void prepare()}
               >
@@ -241,40 +241,28 @@ export function StudyWindowSummary({ sources, studyWindow }: Props) {
           </div>
           {/* Always rendered, so the verdict lands in a live region that already
               exists. */}
-          <output
-            className={`problem ${styles.outcome} ${
+          <StatusRow
+            live="status"
+            tone={
               shown?.kind === "applied"
-                ? "applied"
+                ? "ok"
                 : shown?.kind === "unchanged"
                   ? "info"
                   : shown
                     ? "warn"
-                    : ""
-            }`}
+                    : null
+            }
           >
-            {shown?.kind === "applied" ? (
-              <>
-                <span aria-hidden="true">✓</span> Applied the window overlap to{" "}
-                {sourcesCount(shown.count)}. {missNote(shown.plan, studyWindow)}
-              </>
-            ) : shown?.kind === "unchanged" ? (
-              <>
-                <span aria-hidden="true">i</span> No period changed: every
-                source already holds its overlap with the window.{" "}
-                {missNote(shown.plan, studyWindow)}
-              </>
-            ) : shown?.kind === "unreadable" ? (
-              <>
-                <span aria-hidden="true">▲</span> Couldn't read which years the
-                registers deliver, so no period changed. Try again.
-              </>
-            ) : shown?.kind === "stale" ? (
-              <>
-                <span aria-hidden="true">▲</span> The project changed while
-                availability was loading, so no period changed. Apply again.
-              </>
-            ) : null}
-          </output>
+            {shown?.kind === "applied"
+              ? `Applied the window overlap to ${sourcesCount(shown.count)}. ${missNote(shown.plan, studyWindow)}`
+              : shown?.kind === "unchanged"
+                ? `No period changed: every source already holds its overlap with the window. ${missNote(shown.plan, studyWindow)}`
+                : shown?.kind === "unreadable"
+                  ? "Couldn't read which years the registers deliver, so no period changed. Try again."
+                  : shown?.kind === "stale"
+                    ? "The project changed while availability was loading, so no period changed. Apply again."
+                    : null}
+          </StatusRow>
         </>
       )}
 

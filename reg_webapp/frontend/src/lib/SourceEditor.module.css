@@ -115,25 +115,10 @@
   font-size: var(--text-sm);
 }
 
-/* The grid's row gap spaces the shared status row here. */
-.status {
-  margin: 0;
-}
 /* A standing fact about the source: small, but not muted. */
 .deviation {
   margin: 0;
   color: var(--text);
-  font-size: var(--text-sm);
-}
-.stale {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  margin: 0;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  background: var(--warn-bg);
-  color: var(--warn);
   font-size: var(--text-sm);
 }
 

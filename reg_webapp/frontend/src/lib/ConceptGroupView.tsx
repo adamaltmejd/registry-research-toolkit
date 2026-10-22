@@ -44,6 +44,7 @@ import { useRune } from "./svelte_bridge.svelte";
 import { Definitions } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
@@ -299,8 +300,7 @@ export function ConceptGroupView({
   }
   if (resource.error || !resource.data) {
     return (
-      <p className="banner-error" role="alert">
-        <span aria-hidden="true">✕</span>{" "}
+      <StatusRow tone="error" live="alert">
         {resource.status === 404 ? (
           <>
             No variable group <code>{groupKey}</code> in{" "}
@@ -312,7 +312,7 @@ export function ConceptGroupView({
             again.
           </>
         )}
-      </p>
+      </StatusRow>
     );
   }
 
@@ -412,11 +412,10 @@ export function ConceptGroupView({
       {graphResource.loading ? (
         <Skeleton variant="block" />
       ) : graphResource.error ? (
-        <p className="banner-error" role="alert">
-          <span aria-hidden="true">✕</span> The members' columns did not load (
-          {graphResource.error}). Reload the page to try again, or open a member
-          from the list.
-        </p>
+        <StatusRow tone="error" live="alert">
+          The members' columns did not load ({graphResource.error}). Reload the
+          page to try again, or open a member from the list.
+        </StatusRow>
       ) : (
         <RepresentationPicker
           bands={bands}

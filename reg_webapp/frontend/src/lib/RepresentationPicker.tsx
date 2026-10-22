@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button as AriaButton } from "react-aria-components";
 import type { GroupAxisModel, RelationshipGraph } from "./api";
 import {
   type PickerDimension,
@@ -227,9 +226,9 @@ export function RepresentationPicker({
             </fieldset>
           ))}
           {filtering && (
-            <AriaButton className="ghost-button" onPress={() => setFilters({})}>
+            <Button variant="ghost" onPress={() => setFilters({})}>
               Show every column
-            </AriaButton>
+            </Button>
           )}
         </div>
       )}
@@ -249,9 +248,9 @@ export function RepresentationPicker({
       ) : (
         <p className="muted">
           No column matches these filters.{" "}
-          <AriaButton className="ghost-button" onPress={() => setFilters({})}>
+          <Button variant="ghost" onPress={() => setFilters({})}>
             Show every column
-          </AriaButton>
+          </Button>
         </p>
       )}
       {notes.length > 0 && (
@@ -276,7 +275,6 @@ export function RepresentationPicker({
           {/* Always mounted, inert with nothing staged: a press that empties
               the selection keeps focus here instead of dropping to body. */}
           <Button
-            size="sm"
             isInert={applying || summary === ""}
             onPress={() => stage(EMPTY)}
           >
@@ -284,7 +282,6 @@ export function RepresentationPicker({
           </Button>
           <Button
             variant="primary"
-            size="sm"
             isInert={!canApply || applying}
             isBusy={applying}
             onPress={() => void apply()}

@@ -229,7 +229,6 @@ const EXEMPT: Record<string, string> = {
     "spec-required palette name for the ramp stop --gray-12 aliases",
   "colors.white":
     "the white surfaces spell #ffffff out; there is no --white role",
-  "spacing.rail": "the 16rem rail is an AppShell grid track, not a token",
   "spacing.breakpoint-narrow": "a media query cannot read a custom property",
 };
 

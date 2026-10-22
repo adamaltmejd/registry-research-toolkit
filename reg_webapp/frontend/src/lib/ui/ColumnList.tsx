@@ -2,6 +2,7 @@ import { type ComponentProps, type ReactNode, useId } from "react";
 import { ListBox, ListBoxItem, type Selection } from "react-aria-components";
 import { router } from "../router";
 import styles from "./ColumnList.module.css";
+import { StatusRow } from "./StatusRow";
 
 export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
@@ -67,9 +68,9 @@ export function ColumnList({
         </span>
       </div>
       {error !== null ? (
-        <p className={`banner-error ${styles.error}`} role="alert">
-          <span aria-hidden="true">✕</span> {error}
-        </p>
+        <StatusRow tone="error" live="alert" className={styles.error}>
+          {error}
+        </StatusRow>
       ) : items === null ? (
         <p className={styles.note} aria-busy="true">
           Loading {label.toLowerCase()}…

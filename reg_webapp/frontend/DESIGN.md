@@ -31,7 +31,6 @@ colors:
   # src/tokens.css (`colors.bg` → `--bg`).
   bg: "{colors.gray-12}"
   surface: "{colors.white}"
-  surface-raised: "{colors.white}"
   surface-sunken: "{colors.gray-11}"
   surface-hover: "{colors.gray-11}"
   text: "{colors.gray-1}"
@@ -69,7 +68,7 @@ colors:
   cat-class: "#7a3f8c"
   cat-group: "#2f6b3f"
   cat-reg-ink: "#1a6868"
-  cat-var-ink: "#404087"
+  cat-var-ink: "#404086"
   cat-code-ink: "#835b16"
   cat-class-ink: "#683677"
   cat-group-ink: "#285b36"
@@ -83,9 +82,9 @@ colors:
   facet-axis-0-ink: "#3e5770"
   facet-axis-1-ink: "#576131"
   facet-axis-2-ink: "#6c4a6a"
-  facet-axis-3-ink: "#785334"
+  facet-axis-3-ink: "#785333"
   facet-axis-4-ink: "#3e645a"
-  facet-axis-5-ink: "#535074"
+  facet-axis-5-ink: "#535073"
   # Data-viz — marks of the time components (Timeline, VariableRow, LaneGraph).
   viz-span: "{colors.white}"
   viz-span-out: "{colors.border}"
@@ -161,7 +160,6 @@ spacing:
   4: 1rem
   5: 1.5rem
   6: 2rem
-  rail: 16rem
   content-max: 80rem
   breakpoint-narrow: 48rem
   col-browse: 260px
@@ -213,10 +211,12 @@ components:
   tag:
     rounded: "{rounded.sm}"
     typography: "{typography.body-sm}"
-  banner-error:
+  status-row-error:
     backgroundColor: "{colors.err-bg}"
     textColor: "{colors.err}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.md}"
+    typography: "{typography.body-sm}"
+    padding: 6px 10px
 ---
 
 # Registry Research Toolkit design language
@@ -321,21 +321,28 @@ mono or in a chip.
 
 Hierarchy is size and weight. Labels and headings are **sentence case with normal
 tracking**; nothing is underlined except a ghost button's label, which takes a 2 px
-`accent` underline, and text a search filter matched (see Layout). Line length stays
+`accent` underline, and text a search filter matched (see Layout). **Links** are `text`,
+never pine, with a 1.5 px `accent` bottom border (a bottom border, not an underline) and
+`surface-hover` on hover; the member-of line sets them at weight 600. Pine text
+(`accent-ink`) is for what is in the open project, not for links. Line length stays
 under 60 characters for prose in a pane; tables, lanes and identifiers are exempt.
 Swedish text with å/ä/ö is the norm, so both families ship the latin and latin-ext
 subsets.
 
 ## Layout
 
-The target shell is a top bar and two browse columns beside a detail pane, not a rail.
-The current `AppShell` rail is a stepping stone (see Components) until it is replaced.
+The shell is a top bar and two browse columns beside a detail pane, not a rail.
 
-- **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it), one
-  search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the
-  palette), and the `ProjectBanner` at the right. There are no "Search" or "Project" nav
-  items; the bar and the banner are those. It sticks to the top of the page above
-  `breakpoint-narrow`; below it the bar wraps and scrolls away with the page.
+- **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it; the
+  name is unadorned on hover, and without a deployment its name is "Registry Research
+  Toolkit"), one search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on
+  macOS, opens the palette), and the `ProjectBanner` at the right. The field reads
+  "Search registers, variables, codes…". While it holds text, focused or not, it takes
+  an `accent` border with an `accent-bg` halo, and its hint becomes the match count in
+  `accent-ink` with an `Esc` key hint; the key hints are `text-muted` on
+  `surface-sunken`. There are no "Search" or "Project" nav items; the bar and the banner
+  are those. It sticks to the top of the page above `breakpoint-narrow`; below it the
+  bar wraps and scrolls away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers at
   `col-browse`, then the selected register's or group's variables at `col-list`, then
   the detail pane capped at `content-max`. Every group is open by default; a header
@@ -359,6 +366,9 @@ The current `AppShell` rail is a stepping stone (see Components) until it is rep
   from Enter in the field or `⌘K`, seeded with the field's text (maintainer-decided
   2026-10-22), for codes, classifications and actions; its results are a mixed list and
   carry a `TypeTag`.
+- **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
+  product name in `display` type, one line of tagline in `text-muted`, and plain links
+  into the browse list and the project as list items.
 - **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
   row, the actions row, then definitions, then the `Timeline`, then the list of
   variables or columns. Padding `spacing.5`.
@@ -394,13 +404,21 @@ Time is the axis every relation is drawn on.
 Depth is tonal, not cast. Paper under white surfaces, sunken wells one stop darker,
 hairline borders. Only floating layers — dialogs, popovers, the command palette, the
 drawer — cast the one shadow (`--elevation-float`); panes and banners cast nothing and
-are separated by hairlines. A 40 % ink scrim sits behind dialogs and the drawer. No
-glows, gradients, blobs, textures or glass.
+are separated by hairlines. An ink scrim sits behind dialogs and the drawer at
+`--scrim-opacity` (0.4). The scrim is the one pre-composited colour (`--scrim` already
+carries the opacity), because its overlay contains the dialog and an `opacity` on it
+would dim the dialog too. No glows, gradients, blobs, textures or glass.
 
-Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim (55)
-and the drawer itself (60), popovers and the palette (65), then a modal dialog's scrim (70)
-and the dialog (71). A dialog is portalled to `<body>` and must name a layer above the
-shell — a modal the app can paint through is not a modal.
+Two opacities, both named in `tokens.css` and not part of the front matter: a disabled
+control is `--opacity-disabled` (0.5), and a segment outside the study window is
+`--opacity-out-of-window` (0.45). Every other opacity literal is a defect.
+
+Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim
+(`--z-drawer-scrim`, 55) and the drawer itself (`--z-drawer`, 60), popovers and the
+palette (`--z-popover`, 65), then a modal dialog's scrim (`--z-dialog-scrim`, 70) and
+the dialog (`--z-dialog`, 71). A dialog is portalled to `<body>` and must name a layer
+above the shell — a modal the app can paint through is not a modal. The sticky top bar (10)
+is the one in-page layer above 1-4 that has no named token.
 
 ## Shapes
 
@@ -438,15 +456,17 @@ dependency); visuals come from each component's CSS Module reading semantic role
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
 `ColumnList`, `ColumnChip`, `TypeTag`, `FilterChip`, `VariableRow`, `Timeline`,
 `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`. The current
-`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`,
-`ConfirmDialog`, …) and `AppShell` are the stepping stones: they keep reading the same
-roles until each is replaced, and must not grow new visual language meanwhile.
+`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`, …) are
+the stepping stones: they keep reading the same roles until each is replaced, and must
+not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
-  per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box
-  and a 2 px `accent` underline; `danger` is the `err` fill for destructive actions
-  only. There is no success variant. A button says what happens: "Add column to
-  project", never "Submit".
+  per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box,
+  a 2 px `accent` underline, and `surface-hover` on hover; `danger` is the `err` fill
+  with `danger-fg` text for destructive actions only, with no hover change. One size
+  (`body-sm`, weight 500, `spacing.2` / `spacing.3` padding). A disabled button takes
+  `--opacity-disabled`. There is no success variant. A button says what happens: "Add
+  column to project", never "Submit".
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, warnings, save state — on `accent-soft` with a 3 px `accent`
   leading bar. The study window is the period picker. With no project open it is a
@@ -459,17 +479,35 @@ roles until each is replaced, and must not grow new visual language meanwhile.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-faint`). The same shape as a lane span, so the two read as one object.
-- **TypeTag:** the five `cat-*` hues, in mixed lists only.
-- **FilterChip:** a real checkbox behind an `sm`-radius face, `accent-bg` with an
-  `accent` border when on. A LENS: toggling narrows what is shown, never the project.
+- **TypeTag:** the five `cat-*` hues, in mixed lists only. The label is fixed per type
+  (Register, Variable, Code list, Classification, Group) and a caller passes only the
+  type. 0.75 rem, line-height 1.4, padding 1 px 7 px, `sm` radius. A palette row sets
+  the node's FQID in `mono` `text-muted` beside its name.
+- **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
+  `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
+  LENS: toggling narrows what is shown, never the project. A strip is the facet's
+  `label` inline, then its chips, in one row with no box around it.
 - **Timeline, VariableRow, LaneGraph:** see Time.
-- **StatusRow:** the status tint as fill, the status foreground as text and border
-  (`err-border` for error), a glyph first, plain sentence copy that says what went wrong
-  and how to fix it.
+- **StatusRow:** the status tint as fill, the status foreground as text and a 1 px
+  border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph
+  comes first and is `aria-hidden` (✕ error, ▲ warn, i info, ✓ ok), then plain sentence
+  copy that says what went wrong and how to fix it. It rises in with `motion-rise-in`
+  when it appears and never on page load. New failed loads, refusals and verdicts use
+  it; the remaining hand-rolled rows are being migrated onto it. With no tone it is a
+  bare live region that holds no height, so a first message lands in a region the page
+  already had.
 - **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
-  `--elevation-float`, over the scrim. A click on the scrim does not answer it.
-- **Empty and loading states:** `EmptyState` names the next action; `Skeleton` exposes
-  `aria-busy="true"` and respects reduced motion.
+  `--elevation-float`, over the scrim, on `--z-dialog-scrim` and `--z-dialog`. The title
+  is an `h2` (`h2` size, weight 600, −0.01em tracking) and the body is `body-sm` in
+  `text-muted`. Actions are right-aligned, Cancel first and the destructive one last as
+  a `danger` Button. A click on the scrim does not answer it.
+- **Empty and loading states:** `EmptyState` is a centred, muted message: a title at the
+  `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
+  Button that names the next action ("Browse registers"). The title states what is
+  empty; the next step is the description and the button, never packed into the title.
+  `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it with a
+  crossfade (`motion-swap`) at `--duration-base`. It exposes `aria-busy="true"`, and
+  respects reduced motion. A loading region carries no "Loading…" line beside it.
 
 ## Do's and Don'ts
 

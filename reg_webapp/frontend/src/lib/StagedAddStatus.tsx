@@ -1,5 +1,6 @@
 import styles from "./StagedAddStatus.module.css";
 import { type StagedApplyOutcome, stagedDiffSummary } from "./staged_picker";
+import { StatusRow } from "./ui/StatusRow";
 
 /** The one line a catalog page says after an Apply: the refusal when the batch
  * was declined whole and nothing was authored, else the confirmation of what
@@ -17,24 +18,20 @@ export function StagedAddStatus({
 }) {
   if (blocked) {
     return (
-      <p className={styles.line}>
-        <output className={`${styles.row} ${styles.warn}`}>
-          <span aria-hidden="true">▲</span>
-          {blocked}
-        </output>
-      </p>
+      <StatusRow tone="warn" live="status" className={styles.line}>
+        {blocked}
+      </StatusRow>
     );
   }
   if (!outcome) return null;
   return (
-    <p className={styles.line}>
-      <output className={`${styles.row} ${styles.ok}`}>
-        <span aria-hidden="true">✓</span>
-        <span>
-          Applied {stagedDiffSummary(outcome)}.{" "}
-          <a href="/project">View the project</a>
-        </span>
-      </output>
-    </p>
+    <StatusRow
+      tone="ok"
+      live="status"
+      className={styles.line}
+      action={<a href="/project">View the project</a>}
+    >
+      Applied {stagedDiffSummary(outcome)}.
+    </StatusRow>
   );
 }

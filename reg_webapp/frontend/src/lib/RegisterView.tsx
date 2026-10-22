@@ -5,7 +5,11 @@ import type {
   VariableChild,
   VariableDeliveryModel,
 } from "./api";
-import { useBrowseFilter, useRegisterMatches } from "./browse_filter";
+import {
+  browseFilter,
+  useBrowseFilter,
+  useRegisterMatches,
+} from "./browse_filter";
 import type { PeriodProps } from "./CatalogNodeView";
 import { ConceptGroupLink } from "./CatalogNodeView";
 import styles from "./CatalogNodeView.module.css";
@@ -650,9 +654,7 @@ export function RegisterView({
                         : "")}
                 </span>
                 {selectedVariants.size > 0 && (
-                  <Button size="sm" onPress={clearVariants}>
-                    Clear variant filter
-                  </Button>
+                  <Button onPress={clearVariants}>Clear variant filter</Button>
                 )}
               </div>
             </div>
@@ -715,7 +717,12 @@ export function RegisterView({
                 description={
                   selectedVariants.size > 0
                     ? "The variant filter above is also narrowing this list."
-                    : "Clear the search bar to see every variable."
+                    : "Nothing in this register contains that text."
+                }
+                action={
+                  <Button onPress={() => browseFilter.set("")}>
+                    Clear filter
+                  </Button>
                 }
               />
             </Panel>
@@ -732,7 +739,6 @@ export function RegisterView({
             </output>
             <Button
               variant="primary"
-              size="sm"
               isInert={stagedKeys.size === 0 || !seedReady}
               isBusy={applying}
               onPress={addSelected}

@@ -191,13 +191,9 @@ export function ValidationPanel({
               are the materializer's verdict on this draft, and re-running either
               request changes nothing about it. The draft has to change. */}
           {requestErrorSource === "validate" ? (
-            <Button size="sm" onPress={onRetry}>
-              Retry validation
-            </Button>
+            <Button onPress={onRetry}>Retry validation</Button>
           ) : requestErrorSource === "order" && orderFindings.length === 0 ? (
-            <Button size="sm" onPress={onRetryOrder}>
-              Retry download
-            </Button>
+            <Button onPress={onRetryOrder}>Retry download</Button>
           ) : null}
         </div>
       )}

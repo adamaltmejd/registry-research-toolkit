@@ -97,7 +97,7 @@ const classes = $derived(
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: background var(--motion-fast), border-color var(--motion-fast);
+    transition: background var(--duration-quick), border-color var(--duration-quick);
   }
   :global(.ui-btn:focus-visible) {
     outline: none;

@@ -2,6 +2,7 @@ import { type DocDetail, getDoc } from "./api";
 import styles from "./DocView.module.css";
 import { type Definition, Definitions } from "./ui/Definitions";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
 function docFacts(doc: DocDetail): Definition[] {
@@ -57,9 +58,9 @@ export function DocView({ identifier }: { identifier: string }) {
       <div className={styles.page}>
         {/* The page keeps its heading: the identifier asked for. */}
         <Definitions title={identifier} />
-        <p className="banner-error" role="alert">
-          <span aria-hidden="true">✕</span> {resource.error}
-        </p>
+        <StatusRow tone="error" live="alert">
+          {resource.error}
+        </StatusRow>
         {resource.status === 404 && (
           <p className={styles.note}>
             Only LISA's documentation is in the catalog so far.

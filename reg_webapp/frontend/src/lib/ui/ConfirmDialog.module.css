@@ -1,10 +1,10 @@
 /* The scrim and the dialog sit above every layer the shell stacks (DESIGN.md →
-   Elevation & Depth: popovers and the palette 65, a dialog's scrim 70, the dialog
-   71); RAC portals both to <body>. */
+   Elevation & Depth: popovers and the palette --z-popover, then these two); RAC
+   portals both to <body>. */
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 70;
+  z-index: var(--z-dialog-scrim);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +16,7 @@
    one line from 768 up. A long project name scrolls rather than pushing the
    actions past the viewport. */
 .modal {
-  z-index: 71;
+  z-index: var(--z-dialog);
   box-sizing: border-box;
   width: min(35rem, calc(100vw - var(--space-4) * 2));
   max-height: calc(100vh - var(--space-4) * 2);
@@ -40,12 +40,16 @@
 
 .title {
   margin: 0;
-  font-size: var(--text-h3);
+  font-size: var(--text-h2);
   font-weight: var(--heading-weight);
+  letter-spacing: var(--h2-tracking);
+  line-height: 1.25;
 }
 
 .body {
   color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.45;
 }
 
 .actions {

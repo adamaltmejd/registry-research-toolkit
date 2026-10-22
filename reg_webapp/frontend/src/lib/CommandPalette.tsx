@@ -27,18 +27,19 @@ import {
   rankFilter,
 } from "./catalog";
 import { router } from "./router";
-import { Tag } from "./ui/Tag";
+import { type NodeType, TypeTag } from "./ui/TypeTag";
 import { useAsyncResource } from "./use_async_resource";
-
-type TypeTone = "reg" | "var" | "group" | "class" | "code";
 
 /** One palette row: where it goes and how it reads. */
 interface Row {
   id: string;
   label: string;
+  /** An action's context, in the text face. */
   detail: string | null;
+  /** A catalog hit's identifier, in mono beside its name. */
+  fqid: string | null;
   href: string;
-  type: { tone: TypeTone; label: string } | null;
+  type: NodeType | null;
 }
 
 /** What the palette offers besides the catalog: places in the app. Ranked with
@@ -48,6 +49,7 @@ const ACTIONS: readonly Row[] = [
     id: "action:project",
     label: "Go to the project",
     detail: "Sources, columns and the order",
+    fqid: null,
     href: "/project",
     type: null,
   },
@@ -55,6 +57,7 @@ const ACTIONS: readonly Row[] = [
     id: "action:browse",
     label: "Browse the data",
     detail: "Registers and their variables",
+    fqid: null,
     href: "/catalog",
     type: null,
   },
@@ -62,6 +65,7 @@ const ACTIONS: readonly Row[] = [
     id: "action:home",
     label: "Go to the start page",
     detail: null,
+    fqid: null,
     href: "/",
     type: null,
   },
@@ -97,14 +101,14 @@ function conceptGroupHref(hit: ConceptGroupHit): string | null {
 }
 
 /** A code has no page of its own: it goes to the classification that defines
- * it, else to the first variable that uses it. */
-function codeHref(hit: CodeHit): string | null {
+ * it, else to the first variable that uses it; `fqid` names that target. */
+function codeTarget(hit: CodeHit): string | null {
   const owner =
     hit.classifications.find(
       (c) => c.fqid != null && (c.short_name ?? c.name) === hit.code_system,
     ) ?? hit.classifications.find((c) => c.fqid != null);
   const fqid = owner?.fqid ?? hit.variables.find((v) => v.fqid)?.fqid;
-  return fqid ? catalogHref(fqid) : null;
+  return fqid ?? null;
 }
 
 /** A search hit as a palette row, or null for a hit with nowhere to go. */
@@ -115,9 +119,10 @@ function hitRow(hit: SearchHit): Omit<Row, "id"> | null {
       return href
         ? {
             label: hit.label,
-            detail: hit.register_name ?? null,
+            detail: null,
+            fqid: hit.key,
             href,
-            type: { tone: "group", label: "Group" },
+            type: "group",
           }
         : null;
     }
@@ -126,19 +131,21 @@ function hitRow(hit: SearchHit): Omit<Row, "id"> | null {
       return hit.fqid
         ? {
             label: hit.name ?? hit.short_name ?? hit.fqid,
-            detail: hit.name && hit.short_name ? hit.short_name : null,
+            detail: null,
+            fqid: hit.fqid,
             href: catalogHref(hit.fqid),
-            type: { tone: "class", label: "Classification" },
+            type: "classification",
           }
         : null;
     case "code": {
-      const href = codeHref(hit);
-      return href
+      const fqid = codeTarget(hit);
+      return fqid
         ? {
             label: `${hit.code} ${hit.label}`,
-            detail: hit.code_system ?? "Register-local value set",
-            href,
-            type: { tone: "code", label: "Code" },
+            detail: null,
+            fqid,
+            href: catalogHref(fqid),
+            type: "codeList",
           }
         : null;
     }
@@ -203,7 +210,7 @@ export function CommandPalette({
       offset={4}
       // RAC writes its own z-index inline; the palette sits at the popover
       // layer (DESIGN.md → Elevation), under a dialog's scrim.
-      style={{ zIndex: 65 }}
+      style={{ zIndex: "var(--z-popover)" }}
       className={({ isEntering, isExiting }) =>
         `${styles.popover} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
       }
@@ -320,9 +327,10 @@ function PaletteItem({ row }: { row: Row }) {
     <MenuItem id={row.id} textValue={row.label} className={styles.item}>
       <span className={styles.label}>{row.label}</span>
       {row.detail && <span className={styles.detail}>{row.detail}</span>}
+      {row.fqid && <span className={styles.fqid}>{row.fqid}</span>}
       {row.type && (
         <span className={styles.type}>
-          <Tag tone={row.type.tone}>{row.type.label}</Tag>
+          <TypeTag type={row.type} />
         </span>
       )}
     </MenuItem>

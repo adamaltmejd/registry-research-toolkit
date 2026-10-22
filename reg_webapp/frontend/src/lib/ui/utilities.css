@@ -61,86 +61,6 @@
   border-color: var(--err);
 }
 
-/* Status ROW for the entry's refusal/confirmation: the status tint as fill, the
-   status foreground as text, the glyph first (DESIGN.md → Banners and status
-   rows). `.problem` alone (no `.refused`) keeps no fill and no height while it
-   says nothing. */
-.problem {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  color: var(--err);
-  font-size: var(--text-sm);
-}
-.problem.refused {
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--err-border);
-  border-radius: var(--radius-sm);
-  background: var(--err-bg);
-}
-/* The same row REPORTING rather than refusing: a write that landed (`.applied`, the
-   cool OK roles ValidationPanel's clean verdict wears), nothing to do or still
-   waiting (`.info`), and a press that changed nothing because something outside it
-   moved or failed (`.warn`). Hoisted from SourceEditor so the /project study-window
-   row (StudyWindowSummary) speaks in the same rows. */
-.problem.applied,
-.problem.info,
-.problem.warn {
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid;
-  border-radius: var(--radius-sm);
-}
-.problem.applied {
-  border-color: var(--ok);
-  background: var(--ok-bg);
-  color: var(--ok);
-}
-.problem.info {
-  border-color: var(--info);
-  background: var(--info-bg);
-  color: var(--info);
-}
-.problem.warn {
-  border-color: var(--warn);
-  background: var(--warn-bg);
-  color: var(--warn);
-}
-
-/* Shared integrated-list surface.
-
-   Used for compact catalog picker/search lists that sit directly inside a rounded
-   panel: rows own the full clickable/hover surface, row separators run edge to
-   edge, and hover uses the same accent tint as the item-view picker. */
-.integrated-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.integrated-list-row {
-  box-sizing: border-box;
-  background: transparent;
-  border-left: 3px solid transparent;
-}
-
-.integrated-list-row:hover,
-.integrated-list-row.band-hover,
-.integrated-list-row.selected {
-  background: var(--accent-bg);
-}
-
-.integrated-list-row.selected {
-  border-left-color: var(--accent);
-}
-
-.integrated-list-row.dimmed {
-  opacity: 0.45;
-}
-
-.integrated-list-row.dimmed:hover {
-  opacity: 0.7;
-}
-
 /* `.cbox` — the app's checkbox face. Every tick in the app is a real native
    <input type="checkbox"> (so it keeps the role, the keyboard control and the
    :checked/:indeterminate states); this strips the OS chrome and repaints the box
@@ -171,7 +91,7 @@
    and drop the pointer affordance, so one that cannot be toggled does not look
    like one that can. */
 .cbox:disabled {
-  opacity: 0.5;
+  opacity: var(--opacity-disabled);
   cursor: not-allowed;
 }
 
@@ -213,48 +133,33 @@ input.cbox:indeterminate::after {
 }
 
 /* App-wide link and text roles, read by the Svelte views still mounted as islands
-   during the React port (they lived in App.svelte's `:global()` block). */
+   during the React port (they lived in App.svelte's `:global()` block).
+
+   A link is ink, never pine: pine is ownership (DESIGN.md → Colors). A PLAIN link
+   (no class of its own: prose, a member-of line) takes the design system's 1.5px
+   `accent` bottom border and a `surface-hover` wash. An anchor with a class owns its
+   look, because most of them wrap a block or a row and a bottom border would draw
+   across all of it. */
 a {
-  color: var(--accent-ink);
+  color: var(--text);
   text-decoration: none;
 }
-a:hover {
-  text-decoration: underline;
+a:not([class]) {
+  border-bottom: 1.5px solid var(--accent);
+}
+a:not([class]):hover {
+  background: var(--surface-hover);
+}
+a:not([class]):focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 .muted {
   color: var(--text-muted);
 }
 .error {
   color: var(--err);
-}
-
-/* banner-error (DESIGN.md → Components): a failed load, glyph first. */
-.banner-error {
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--err-border);
-  border-radius: var(--radius-sm);
-  background: var(--err-bg);
-  color: var(--err);
-  font-size: var(--text-sm);
-}
-
-/* button-ghost on a React Aria Button: no box, a 2px accent underline under the
-   label (DESIGN.md → Buttons). */
-.ghost-button {
-  padding: 0 0 1px;
-  border: none;
-  border-bottom: 2px solid var(--accent);
-  background: none;
-  color: var(--text);
-  font: inherit;
-  font-size: var(--text-sm);
-  cursor: pointer;
-}
-.ghost-button[data-focus-visible] {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
 }
 
 /* `.locate-flash` — briefly rings a /project source or column card when the

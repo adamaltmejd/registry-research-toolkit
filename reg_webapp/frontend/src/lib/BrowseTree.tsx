@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import {
-  Button,
+  Button as AriaButton,
   Collection,
   type Key,
   type Selection,
@@ -13,10 +13,15 @@ import {
   getShow,
   type RegisterChild,
   type RootChild,
+  SEARCH_MIN_QUERY_LENGTH,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
-import { useBrowseFilter, useSettledFilter } from "./browse_filter";
+import {
+  browseMatches,
+  useBrowseFilter,
+  useSettledFilter,
+} from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
 import { catalogRootChildren } from "./catalog_names.svelte";
 import { Highlight } from "./Highlight";
@@ -25,7 +30,9 @@ import { projectStore } from "./project_store.svelte";
 import { type Route, router } from "./router";
 import { useRune } from "./svelte_bridge.svelte";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
+import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
+import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
@@ -231,6 +238,24 @@ export function BrowseTree({ className }: { className?: string }) {
   const expandable = nodes
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
+  // The search field's "N matches": the registers the filter keeps (a group
+  // that did not match keeps its list but matches nothing). No count until the
+  // variable matches for this needle have arrived: the debounce has not
+  // elapsed (a long enough needle has no facet key yet) or the request is in
+  // flight, and a count from names alone would read low and announce "0".
+  const facetsPending =
+    facetResource.loading ||
+    (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
+  const matchCount =
+    filtering && !registers.loading && root.value !== null && !facetsPending
+      ? nodes
+          .filter((node) => matched.has(node.id))
+          .reduce((sum, node) => sum + (node.children?.length ?? 0), 0)
+      : null;
+  useEffect(() => {
+    browseMatches.set(matchCount);
+    return () => browseMatches.set(null);
+  }, [matchCount]);
 
   const current = currentRow(route);
   const currentKey = current?.key ?? null;
@@ -311,7 +336,7 @@ export function BrowseTree({ className }: { className?: string }) {
         {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
             group is open, and expands once all are closed. */}
         <Button
-          className="ghost-button"
+          variant="ghost"
           onPress={() =>
             onExpandedChange(
               expandedKeys.size > 0 ? new Set() : new Set(expandable),
@@ -326,17 +351,16 @@ export function BrowseTree({ className }: { className?: string }) {
           Loading the catalog…
         </p>
       ) : root.value === null ? (
-        <p className={`banner-error ${styles.error}`} role="alert">
-          <span aria-hidden="true">✕</span> The register list did not load.
-          Reload the page to try again.
-        </p>
+        <StatusRow tone="error" live="alert" className={styles.error}>
+          The register list did not load. Reload the page to try again.
+        </StatusRow>
       ) : (
         <>
           {registers.error && (
-            <p className={`banner-error ${styles.error}`} role="alert">
-              <span aria-hidden="true">✕</span> Some registers did not load (
-              {registers.error}). Reload the page to try again.
-            </p>
+            <StatusRow tone="error" live="alert" className={styles.error}>
+              Some registers did not load ({registers.error}). Reload the page
+              to try again.
+            </StatusRow>
           )}
           <Tree
             aria-labelledby={labelId}
@@ -405,9 +429,9 @@ function BrowseItem({
         {({ hasChildItems }) => (
           <>
             {hasChildItems ? (
-              <Button slot="chevron" className={styles.chevron}>
+              <AriaButton slot="chevron" className={styles.chevron}>
                 <TreeChevron />
-              </Button>
+              </AriaButton>
             ) : (
               <span className={styles.chevronSpacer} />
             )}

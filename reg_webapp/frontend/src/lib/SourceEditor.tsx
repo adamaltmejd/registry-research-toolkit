@@ -22,6 +22,7 @@ import {
 } from "./project_data";
 import { projectStore, type SourcePeriodEditTarget } from "./project_store";
 import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
+import { router } from "./router";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import styles from "./SourceEditor.module.css";
 import { SvelteIsland } from "./SvelteIsland";
@@ -30,6 +31,7 @@ import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
+import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
 import {
@@ -349,15 +351,15 @@ export function SourceEditor({
     framed: false,
   };
 
-  const statusClass = applying
+  const statusTone = applying
     ? "info"
     : entryRefusal !== null
-      ? "refused"
+      ? "error"
       : appliedLabel !== null
-        ? "applied"
+        ? "ok"
         : unchangedNotice
           ? "info"
-          : "";
+          : null;
 
   return (
     // `id` is the click-to-locate anchor the ValidationPanel scrolls to.
@@ -390,7 +392,6 @@ export function SourceEditor({
         </div>
         <Button
           variant="default"
-          size="sm"
           aria-label={
             identified ? `Remove source ${identifiedName}` : undefined
           }
@@ -515,7 +516,6 @@ export function SourceEditor({
                       />
                       {displayRows.length > 1 && (
                         <Button
-                          size="sm"
                           isInert={applying}
                           onPress={() =>
                             editRows((base) => base.filter((_, j) => j !== i))
@@ -529,7 +529,6 @@ export function SourceEditor({
                 </fieldset>
                 <div className={styles.actions}>
                   <Button
-                    size="sm"
                     isInert={applying}
                     onPress={() => editRows((base) => [...base, BLANK_ROW])}
                   >
@@ -540,7 +539,6 @@ export function SourceEditor({
                       (the handler's own guard) without leaving the tab order. */}
                   <Button
                     type="submit"
-                    size="sm"
                     isInert={applying}
                     aria-label={
                       identified
@@ -565,36 +563,24 @@ export function SourceEditor({
 
             {/* Rendered ALWAYS, so a refusal lands in a live region that already
                 existed. It carries the CONFIRMATION too. */}
-            <output
-              className={`problem ${styles.status} ${statusClass}`}
-              id={problemId}
-            >
-              {applying ? (
-                <>
-                  <span aria-hidden="true">i</span> Waiting for the project to
-                  load…
-                </>
-              ) : entryRefusal !== null ? (
-                <>
-                  <span aria-hidden="true">✕</span> {entryRefusal.problem}
-                </>
-              ) : appliedLabel !== null ? (
-                <>
-                  <span aria-hidden="true">✓</span> {appliedLabel}
-                </>
-              ) : unchangedNotice ? (
-                <>
-                  <span aria-hidden="true">i</span> Period unchanged.
-                </>
-              ) : null}
-            </output>
+            <StatusRow id={problemId} live="status" tone={statusTone}>
+              {applying
+                ? "Waiting for the project to load…"
+                : entryRefusal !== null
+                  ? entryRefusal.problem
+                  : appliedLabel !== null
+                    ? appliedLabel
+                    : unchangedNotice
+                      ? "Period unchanged."
+                      : null}
+            </StatusRow>
 
             {writeRefused && (
-              <p className={styles.stale} role="alert">
-                <span aria-hidden="true">▲</span> This source changed while you
-                were editing, so its period was not changed. The years now show
-                what the source holds — enter them again and apply.
-              </p>
+              <StatusRow tone="warn" live="alert">
+                This source changed while you were editing, so its period was
+                not changed. The years now show what the source holds — enter
+                them again and apply.
+              </StatusRow>
             )}
 
             {studyWindow && windowRelation === "differs" ? (
@@ -606,11 +592,11 @@ export function SourceEditor({
             ) : studyWindow && windowRelation === "disjoint" ? (
               // The one divergence that blocks the order (reg_webapp/DESIGN.md →
               // "Common study window").
-              <p className={`problem refused ${styles.status}`}>
-                <span aria-hidden="true">✕</span> No years inside the study
-                window {yearWindowLabel(studyWindow)}, so the order is blocked.
-                Change the period to overlap the window, or remove the source.
-              </p>
+              <StatusRow tone="error">
+                No years inside the study window {yearWindowLabel(studyWindow)},
+                so the order is blocked. Change the period to overlap the
+                window, or remove the source.
+              </StatusRow>
             ) : null}
           </div>
 
@@ -625,7 +611,15 @@ export function SourceEditor({
                 hand-edit.
               </p>
             ) : bindings.length === 0 ? (
-              <EmptyState title="No columns yet. Browse the catalog to add columns from this register." />
+              <EmptyState
+                title="No columns yet"
+                description="Browse the catalog to add columns from this register."
+                action={
+                  <Button onPress={() => router.navigate("/catalog")}>
+                    Browse registers
+                  </Button>
+                }
+              />
             ) : (
               <>
                 <SvelteIsland

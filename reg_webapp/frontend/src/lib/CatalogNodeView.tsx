@@ -3,9 +3,11 @@ import {
   type ConceptGroup,
   getStates,
   type ProviderShow,
+  type ShowNode,
+  type VariableStateModel,
 } from "./api";
 import { BindingLeafView } from "./BindingLeafView";
-import { useBrowseFilter } from "./browse_filter";
+import { browseFilter, useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import {
   ClassificationGroupView,
@@ -24,10 +26,12 @@ import {
 import { sharedShow } from "./catalog_names.svelte";
 import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
+import { Button } from "./ui/Button";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
 import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
 import type { Column } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
@@ -69,8 +73,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
 
   if (resource.loading) {
     return (
-      <section className={styles.loading} aria-busy="true" aria-live="polite">
-        <p className={styles.loadingStatus}>Loading…</p>
+      <section className={styles.loading} aria-busy="true">
         <div className={styles.loadingGeometry}>
           <Skeleton width="min(24rem, 70%)" count={2} />
           <Skeleton variant="block" count={classification ? 3 : 1} />
@@ -80,8 +83,7 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
   }
   if (resource.error || !resource.data) {
     return (
-      <p className="banner-error" role="alert">
-        <span aria-hidden="true">✕</span>{" "}
+      <StatusRow tone="error" live="alert">
         {resource.status === 404 ? (
           <>
             Nothing in the catalog at <code>{fqidPath}</code>. Check the link,
@@ -93,11 +95,34 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
             again.
           </>
         )}
-      </p>
+      </StatusRow>
     );
   }
 
-  const { node, states } = resource.data;
+  // The loaded page crossfades in over the skeleton it replaces.
+  return (
+    <div className={`${styles.loaded} motion-swap`}>
+      <NodeView
+        fqidPath={fqidPath}
+        node={resource.data.node}
+        states={resource.data.states}
+        period={period}
+      />
+    </div>
+  );
+}
+
+function NodeView({
+  fqidPath,
+  node,
+  states,
+  period,
+}: {
+  fqidPath: string;
+  node: ShowNode;
+  states: VariableStateModel[];
+  period: PeriodProps;
+}) {
   switch (node.kind) {
     case "provider":
       return <ProviderView node={node} />;
@@ -125,10 +150,10 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
       // The router sends the root and group refs to their own views, so a kind
       // landing here is a routing mistake: say so rather than render nothing.
       return (
-        <p className="banner-error" role="alert">
-          <span aria-hidden="true">✕</span> This page cannot show a{" "}
-          <code>{node.kind}</code> node: <code>{fqidPath}</code>
-        </p>
+        <StatusRow tone="error" live="alert">
+          This page cannot show a <code>{node.kind}</code> node:{" "}
+          <code>{fqidPath}</code>
+        </StatusRow>
       );
   }
 }
@@ -192,7 +217,12 @@ function ProviderView({ node }: { node: ProviderShow }) {
             <Panel title="Registers">
               <EmptyState
                 title={`No registers match “${filter}”`}
-                description="Clear the search bar to see every register."
+                description="Nothing in this provider contains that text."
+                action={
+                  <Button onPress={() => browseFilter.set("")}>
+                    Clear filter
+                  </Button>
+                }
               />
             </Panel>
           )}

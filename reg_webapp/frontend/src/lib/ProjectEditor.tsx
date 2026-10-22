@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { Button as AriaButton } from "react-aria-components";
 import { registerChildren } from "./catalog_names.svelte";
 import styles from "./ProjectEditor.module.css";
 import {
@@ -9,6 +8,7 @@ import {
   safeStudyWindow,
 } from "./project_data";
 import { projectStore } from "./project_store";
+import { router } from "./router";
 import { SourceEditor } from "./SourceEditor";
 import { StudyWindowSummary } from "./StudyWindowSummary";
 import { useRune } from "./svelte_bridge.svelte";
@@ -17,6 +17,7 @@ import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
 import { Panel } from "./ui/Panel";
+import { StatusRow } from "./ui/StatusRow";
 import { useProject } from "./use_project";
 import { ValidationPanel } from "./ValidationPanel";
 import {
@@ -188,17 +189,21 @@ export function ProjectEditor({
       </ConfirmDialog>
 
       {openError && (
-        <p className={`banner-error ${styles.openError}`} role="alert">
-          <span className={styles.bannerText}>
-            <span aria-hidden="true">✕</span> {openError}
-          </span>
-          <AriaButton
-            className="ghost-button"
-            onPress={() => projectStore.clearOpenError()}
-          >
-            Dismiss
-          </AriaButton>
-        </p>
+        <StatusRow
+          tone="error"
+          live="alert"
+          className={styles.openError}
+          action={
+            <Button
+              variant="ghost"
+              onPress={() => projectStore.clearOpenError()}
+            >
+              Dismiss
+            </Button>
+          }
+        >
+          {openError}
+        </StatusRow>
       )}
 
       {draft == null ? (
@@ -284,7 +289,15 @@ export function ProjectEditor({
           <section aria-label="Sources">
             <Panel title={`Sources (${sources.length})`}>
               {sources.length === 0 ? (
-                <EmptyState title="No sources yet. Browse the catalog to add data to your project." />
+                <EmptyState
+                  title="No sources yet"
+                  description="Browse the catalog to add data to your project."
+                  action={
+                    <Button onPress={() => router.navigate("/catalog")}>
+                      Browse registers
+                    </Button>
+                  }
+                />
               ) : (
                 <>
                   <StudyWindowSummary

@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import styles from "./Button.module.css";
-import type { ButtonSize } from "./types";
+import type { ButtonVariant } from "./types";
 
 type Props = {
-  variant?: "primary" | "default" | "danger";
-  size?: ButtonSize;
+  variant?: ButtonVariant;
   /** Refuses the press while keeping the button focusable (`aria-disabled`,
    * never `disabled`): a natively disabled button drops keyboard focus to
    * `<body>` when it disables under the user, mid-action or after one. The
@@ -31,10 +30,10 @@ type Props = {
 /** A button that says what happens (DESIGN.md → Buttons): `primary` is the
  * pine fill, at most one per pane; `default` is `surface` with a
  * `border-strong` hairline; `danger` is the `err` fill, for destructive actions
- * only. A ghost button is the `ghost-button` utility on a RAC `Button`. */
+ * only; `ghost` has no box and a 2px `accent` underline. One size: a caller that
+ * wants a smaller button wants a different layout. */
 export function Button({
   variant = "default",
-  size = "md",
   type = "button",
   onPress,
   isInert = false,
@@ -47,7 +46,7 @@ export function Button({
     <AriaButton
       type={type}
       aria-label={ariaLabel}
-      className={`${styles.button} ${styles[variant]} ${styles[size]}`}
+      className={`${styles.button} ${styles[variant]}`}
       onPress={isInert ? undefined : onPress}
       render={(props) => (
         <button
