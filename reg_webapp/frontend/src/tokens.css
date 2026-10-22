@@ -313,6 +313,7 @@
   --col-browse: 260px; /* first browse column: registers grouped by provider */
   --col-list: 230px; /* second browse column */
   --lane-height: 58px; /* one lane in a LaneGraph */
+  --content-max: 80rem; /* the AppShell canvas max-width */
 
   /* ── Elevation ───────────────────────────────────────────────────────── */
   /* Depth is tonal. Only a FLOATING layer (dialog, popover, drawer, the command

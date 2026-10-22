@@ -647,7 +647,7 @@ function plural(count: number, singular: string, pluralLabel: string): string {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 80rem;
+    max-width: var(--content-max);
     min-width: 0;
     margin: 0 auto;
     padding: var(--space-4);

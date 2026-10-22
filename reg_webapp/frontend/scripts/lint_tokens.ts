@@ -22,6 +22,13 @@
 //    front matter already resolved — `{a.b}` references followed, colors normalized
 //    to hex — so this file only resolves the OTHER side, the `var(--x)` chains in the
 //    `:root` block.
+//
+// 3. Reference resolution. A `var(--name)` whose name no stylesheet defines renders
+//    the fallback (or the property's initial value) without a warning, so a typo like
+//    `var(--txet)` ships silently. Every reference in a .svelte or .css file under src/
+//    must name a custom property tokens.css declares or the same file declares (in a
+//    <style> block, an inline `style="--x: …"`, or a `style:--x` directive). A property
+//    set in one file and read in another is named in CROSS_FILE with its reason.
 import { lint, type ResolvedDimension } from "@google/design.md/linter";
 
 const ROOT = `${import.meta.dir}/..`;
@@ -162,7 +169,6 @@ const EXEMPT: Record<string, string> = {
   "colors.white":
     "the white surfaces spell #ffffff out; there is no --white role",
   "spacing.rail": "the 16rem rail is an AppShell grid track, not a token",
-  "spacing.content-max": "the 80rem cap is an AppShell max-width, not a token",
   "spacing.breakpoint-narrow": "a media query cannot read a custom property",
 };
 
@@ -196,6 +202,7 @@ const PROPERTY_OF: Record<string, string> = {
   "spacing.col-browse": "--col-browse",
   "spacing.col-list": "--col-list",
   "spacing.lane-height": "--lane-height",
+  "spacing.content-max": "--content-max",
   "typography.display.fontWeight": "--display-weight",
   "typography.h1.fontWeight": "--display-weight",
   "typography.h2.fontWeight": "--heading-weight",
@@ -236,11 +243,85 @@ for (const [token, specValue] of SPEC) {
   }
 }
 
+// ── 3. Reference resolution ──────────────────────────────────────────────────
+
+/** Custom properties written in one file and read in another, each with its writer. */
+const CROSS_FILE: Record<string, string> = {
+  "--facet-axis-hue":
+    "set inline by catalog.ts facetAxisStyle(), read by RepresentationPicker",
+  "--facet-axis-ink":
+    "set inline by catalog.ts facetAxisStyle(), read by RepresentationPicker",
+  "--track-width":
+    "DualThumbTrack sizing hook with a fallback; consumers may override it",
+  "--track-height":
+    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
+  "--rail-height":
+    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
+  "--thumb-size":
+    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
+};
+
+const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;
+// `--x:` in CSS or an inline style attribute, or a Svelte `style:--x` directive.
+const DECLARED = /(--[\w-]+)\s*[:=]/g;
+const HTML_COMMENT = /<!--[\s\S]*?-->/g;
+
+const declaredIn = (text: string): Set<string> =>
+  new Set([...text.matchAll(DECLARED)].map((m) => m[1]));
+const TOKEN_PROPERTIES = declaredIn(stripComments(tokensCss));
+
+function unresolvedReferences(source: string, file: string): string[] {
+  const text = stripComments(source).replace(HTML_COMMENT, (m) =>
+    m.replace(/[^\n]/g, " "),
+  );
+  const local = declaredIn(text);
+  const out: string[] = [];
+  for (const ref of text.matchAll(VAR_REFERENCE)) {
+    const name = ref[1];
+    if (TOKEN_PROPERTIES.has(name) || local.has(name) || name in CROSS_FILE)
+      continue;
+    out.push(
+      `${file}:${lineOf(text, ref.index ?? 0)}: var(${name}) names no custom property in tokens.css or this file`,
+    );
+  }
+  return out;
+}
+
+const REFERENCE_SELF_CHECK = [
+  "<div style:--local-a={1} style='--local-b: 2'></div>",
+  "<style>",
+  "  .a { color: var(--text); width: var(--local-a); height: var(--local-b); }",
+  "  .b { color: var(--txet); }",
+  "  .c { --local-c: 1px; margin: var(--local-c); }",
+  "  .d { padding: var(--thumb-size, 1rem) var(--nope, 0); }",
+  "  /* var(--in-a-comment) */",
+  "</style>",
+].join("\n");
+const referenceSelfCheck = unresolvedReferences(
+  REFERENCE_SELF_CHECK,
+  "X.svelte",
+)
+  .map((v) => v.split(":")[1])
+  .join(",");
+if (referenceSelfCheck !== "4,6") {
+  failures.push(
+    `reference-resolution self-check flagged lines [${referenceSelfCheck}], expected [4,6]`,
+  );
+}
+
+const styledFiles = [
+  ...new Bun.Glob("src/**/*.{svelte,css}").scanSync({ cwd: ROOT }),
+].sort();
+for (const file of styledFiles) {
+  const source = await Bun.file(`${ROOT}/${file}`).text();
+  failures.push(...unresolvedReferences(source, file));
+}
+
 if (failures.length > 0) {
   for (const failure of failures) console.error(failure);
   console.error(`lint:tokens: ${failures.length} problem(s)`);
   process.exit(1);
 }
 console.log(
-  `lint:tokens: ${svelteFiles.length} .svelte files and ${SPEC.size} DESIGN.md tokens clean`,
+  `lint:tokens: ${svelteFiles.length} .svelte files, ${SPEC.size} DESIGN.md tokens and var() references in ${styledFiles.length} files clean`,
 );
