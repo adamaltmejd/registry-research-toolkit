@@ -194,7 +194,7 @@ function ProviderView({ node }: { node: ProviderShow }) {
             <Panel title="Registers">
               <EmptyState
                 title={`No registers match “${filter}”`}
-                description="Press Escape in the search bar to see every register."
+                description="Clear the search bar to see every register."
               />
             </Panel>
           )}

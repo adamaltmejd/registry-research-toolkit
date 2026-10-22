@@ -668,7 +668,7 @@ export function RegisterView({
                 description={
                   selectedVariants.size > 0
                     ? "The variant filter above is also narrowing this list."
-                    : "Press Escape in the search bar to see every variable."
+                    : "Clear the search bar to see every variable."
                 }
               />
             </Panel>
