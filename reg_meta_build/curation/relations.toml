@@ -570,7 +570,7 @@ effective_year = 2000
 #    valid_from. `note` is provenance-only (build stamps `curated:slug_toml`).
 #    The icd-10-se → icd-11-se edge is future-dated because Socialstyrelsen's first
 #    stated register transition is death causes from 2027. Read-side currentness and
-#    terminal redirects use the DB manifest's classification succession as-of year,
+#    the terminal that classification search follows use the DB manifest's succession as-of year,
 #    so a 2026 DB keeps ICD-10-SE current while still exposing the upcoming edge.
 #    ks87-p (the contemporaneous primary-care variant of KS87) is modeled below as
 #    `derived_from`, not `replaced_by`: it is a setting variant, not a temporal

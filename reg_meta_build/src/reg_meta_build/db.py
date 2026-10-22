@@ -501,14 +501,15 @@ CREATE TABLE IF NOT EXISTS resolver_column (
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
 ) WITHOUT ROWID;
 
--- Derived (derive/chains.py): the active terminal successor of a register, variable
--- or classification at the manifest's classification_succession_as_of_year. The walk
--- follows the sole active successor; a split (several active successors) is its own
--- terminal. A node whose terminal is itself has no row.
+-- Derived (derive/chains.py): the active terminal successor of a classification
+-- edition at the manifest's classification_succession_as_of_year; classification
+-- search reads it to fold editions. Register and variable succession has no row here.
+-- The walk follows the sole active successor; a split (several active successors) is
+-- its own terminal. A node whose terminal is itself has no row.
 CREATE TABLE IF NOT EXISTS succession_terminal (
-    -- Register, binding or class/ FQID of a node with an active outbound edge.
+    -- class/ FQID of an edition with an active outbound edge.
     fqid TEXT PRIMARY KEY,
-    -- FQID of the same kind where the walk stops; never equal to fqid.
+    -- class/ FQID of the edition where the walk stops; never equal to fqid.
     terminal_fqid TEXT NOT NULL CHECK (terminal_fqid <> fqid)
 ) WITHOUT ROWID;
 

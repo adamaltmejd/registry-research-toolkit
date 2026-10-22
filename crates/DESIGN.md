@@ -856,17 +856,17 @@ local extensions never become official members. Unknown or ambiguous references 
 unresolved.
 
 Succession is `classification_replaced_by`. A future-dated edge becomes active only when
-the manifest's succession as-of year reaches it; currentness and terminal redirects use
-the same policy. `supersedes` and `superseded_by` are projections of the active edges,
-and a predecessor can fan out (`sun1996` → the 2000 nivå, inriktning and grupp
-editions). A code's `level` is the length of an all-digit code; codes without prefix
-hierarchy (ICD-10, ATC) keep `level` NULL. The code tree is a separate fact: a code may
-name its parent in the same book (`parent_code_id`, #1297), only where the source
-delivers one, so the reader never infers a tree from levels or prefixes. `values` with
-`parent` pages one level of that tree (`parent=` the roots, `parent=<code>` its
-children) and gives every code a `child_count`, null in a book without a tree, so a
-client fetches a subtree only when a reader opens it. A filter (`q`) reads the book
-flat, because a match's ancestors are not matches.
+the manifest's succession as-of year reaches it; currentness and the terminal that
+classification search follows use the same policy. `supersedes` and `superseded_by` are
+projections of the active edges, and a predecessor can fan out (`sun1996` → the 2000
+nivå, inriktning and grupp editions). A code's `level` is the length of an all-digit
+code; codes without prefix hierarchy (ICD-10, ATC) keep `level` NULL. The code tree is a
+separate fact: a code may name its parent in the same book (`parent_code_id`, #1297),
+only where the source delivers one, so the reader never infers a tree from levels or
+prefixes. `values` with `parent` pages one level of that tree (`parent=` the roots,
+`parent=<code>` its children) and gives every code a `child_count`, null in a book
+without a tree, so a client fetches a subtree only when a reader opens it. A filter
+(`q`) reads the book flat, because a match's ancestors are not matches.
 
 ## Concept groups and tags
 
