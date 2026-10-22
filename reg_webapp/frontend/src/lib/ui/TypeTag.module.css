@@ -1,0 +1,34 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border: 1px solid color-mix(in srgb, var(--tone-hue) 35%, transparent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
+  color: var(--tone-ink);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.reg {
+  --tone-hue: var(--cat-reg);
+  --tone-ink: var(--cat-reg-ink);
+}
+.var {
+  --tone-hue: var(--cat-var);
+  --tone-ink: var(--cat-var-ink);
+}
+.code {
+  --tone-hue: var(--cat-code);
+  --tone-ink: var(--cat-code-ink);
+}
+.class {
+  --tone-hue: var(--cat-class);
+  --tone-ink: var(--cat-class-ink);
+}
+.group {
+  --tone-hue: var(--cat-group);
+  --tone-ink: var(--cat-group-ink);
+}

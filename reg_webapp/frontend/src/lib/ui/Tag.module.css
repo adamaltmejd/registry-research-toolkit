@@ -27,34 +27,6 @@
   color: var(--accent-ink);
 }
 
-/* A node type: the hue at a 10% tint as fill and 35% as border, the label in
-   the AA-cleared `-ink` stop. */
-.reg {
-  --tone-hue: var(--cat-reg);
-  --tone-ink: var(--cat-reg-ink);
-}
-.var {
-  --tone-hue: var(--cat-var);
-  --tone-ink: var(--cat-var-ink);
-}
-.code {
-  --tone-hue: var(--cat-code);
-  --tone-ink: var(--cat-code-ink);
-}
-.class {
-  --tone-hue: var(--cat-class);
-  --tone-ink: var(--cat-class-ink);
-}
-.group {
-  --tone-hue: var(--cat-group);
-  --tone-ink: var(--cat-group-ink);
-}
-.category {
-  border-color: color-mix(in srgb, var(--tone-hue) 35%, transparent);
-  background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
-  color: var(--tone-ink);
-}
-
 .error {
   background: var(--err-bg);
   color: var(--err);

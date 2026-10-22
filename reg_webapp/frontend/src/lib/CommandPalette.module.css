@@ -98,6 +98,15 @@
   font-size: var(--text-sm);
   overflow-wrap: anywhere;
 }
+/* A hit's identifier: mono, muted, beside its name (the design system's search
+   result row). */
+.fqid {
+  min-width: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+  overflow-wrap: anywhere;
+}
 .type {
   margin-left: auto;
 }

@@ -468,9 +468,14 @@ not grow new visual language meanwhile.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-faint`). The same shape as a lane span, so the two read as one object.
-- **TypeTag:** the five `cat-*` hues, in mixed lists only.
-- **FilterChip:** a real checkbox behind an `sm`-radius face, `accent-bg` with an
-  `accent` border when on. A LENS: toggling narrows what is shown, never the project.
+- **TypeTag:** the five `cat-*` hues, in mixed lists only. The label is fixed per type
+  (Register, Variable, Code list, Classification, Group) and a caller passes only the
+  type. 0.75 rem, line-height 1.4, padding 1 px 7 px, `sm` radius. A palette row sets
+  the node's FQID in `mono` `text-muted` beside its name.
+- **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
+  `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
+  LENS: toggling narrows what is shown, never the project. A strip is the facet's
+  `label` inline, then its chips, in one row with no box around it.
 - **Timeline, VariableRow, LaneGraph:** see Time.
 - **StatusRow:** the status tint as fill, the status foreground as text and a 1 px
   border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph
