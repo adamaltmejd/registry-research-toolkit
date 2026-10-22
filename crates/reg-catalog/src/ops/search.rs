@@ -268,6 +268,66 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     Ok(serde_json::to_value(page).expect("SearchPage serializes"))
 }
 
+/// `shape.RegisterFacets`: per register, how many of its variables the variable arm
+/// admits for the query, unbounded by paging and before concept groups fold.
+#[derive(Serialize, ToSchema)]
+pub struct RegisterFacets {
+    registers: Vec<RegisterFacet>,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct RegisterFacet {
+    fqid: Option<String>,
+    variable_matches: i64,
+}
+
+pub fn facets(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
+    let q = super::q(params)?;
+    let conn = server.catalog.connect()?;
+    let request = Request {
+        q,
+        ty: Some("variable"),
+        limit: 0,
+        years: None,
+        register: None,
+        after: None,
+    };
+    let registers = match fts_match_query(&fold_search(q)) {
+        Some(fts) => register_facets(&conn, scope, &request, &fts)?,
+        None => Vec::new(),
+    };
+    Ok(serde_json::to_value(RegisterFacets { registers }).expect("RegisterFacets serializes"))
+}
+
+/// One grouped pass over the variable arm's admitted rows ([`matched`]), in FQID
+/// order.
+fn register_facets(
+    conn: &Connection,
+    scope: Scope,
+    request: &Request,
+    fts: &str,
+) -> Result<Vec<RegisterFacet>, Error> {
+    let admission = admission(request.q, fts, scope, request.years);
+    let (matched, args) = matched(scope, request, &admission);
+    let sql = format!(
+        "SELECT p.slug, r.slug, COUNT(*) FROM variable_fts vf \
+         JOIN variable v ON v.variable_id = vf.rowid \
+         JOIN register r ON r.register_id = vf.register_id \
+         JOIN provider p ON p.provider_id = r.provider_id \
+         WHERE {matched} GROUP BY vf.register_id ORDER BY p.slug, r.slug"
+    );
+    let mut stmt = conn.prepare(&sql)?;
+    let rows = stmt
+        .query_map(params_from_iter(&args), |row| {
+            Ok(RegisterFacet {
+                fqid: fqid(&[row.get(0)?, row.get(1)?]),
+                variable_matches: row.get(2)?,
+            })
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok(rows)
+}
+
 /// The page the request names: the typed list or the untyped ranking, cut at the
 /// cursor and `limit`, with code owners on the shown codes.
 fn page(
@@ -533,39 +593,12 @@ fn variable_arm(
 ) -> Result<Vec<Hit>, Error> {
     let folded = fold_search(request.q);
     let years = request.years;
-    let alias_held = |alias: &str| {
-        let (variant, column) = (
-            format!("{alias}.register_variant_id"),
-            format!("{alias}.delivery_column_name"),
-        );
-        held::variable(
-            scope,
-            &format!("{alias}.variable_id"),
-            Narrow {
-                years,
-                variant: Some(&variant),
-                column: Some(&column),
-            },
-        )
-    };
-    let held_alias = (scope == Scope::Holdings).then(|| alias_held("ea"));
-    let admission = admission(request.q, fts, held_alias.as_deref());
+    let admission = admission(request.q, fts, scope, years);
     let (own_cte, context_rank) = (&admission.cte, &admission.rank);
     let mut args: Vec<Sql> = vec![fts.to_owned().into(), folded.into()];
-    args.extend(admission.cte_args);
-    args.push(admission.candidates.into());
-    let mut filters = String::new();
-    if let Some(register) = request.register {
-        filters += " AND vf.register_id = ?";
-        args.push(register.into());
-    }
-    if let Some((lo, hi)) = years {
-        // Some state of the variable overlaps.
-        filters += &year_filter("variable_state vs", "vs.variable_id = vf.rowid");
-        args.extend([i64::from(hi).into(), i64::from(lo).into()]);
-    }
-    filters += &admission.filters;
-    args.extend(admission.filter_args);
+    args.extend(admission.cte_args.iter().cloned());
+    let (matched, matched_args) = matched(scope, request, &admission);
+    args.extend(matched_args);
     // Exact-name admission (#1180): variables whose name or held delivery column
     // folds to the query are ordered ahead of the bound; ties break on the FQID.
     let sql = format!(
@@ -582,18 +615,10 @@ fn variable_arm(
          JOIN provider p ON p.provider_id = r.provider_id \
          JOIN variable v ON v.variable_id = vf.rowid \
          JOIN variable_search_text vt ON vt.variable_id = vf.rowid \
-         WHERE variable_fts MATCH ? AND {held}{filters} \
+         WHERE {matched} \
          ORDER BY vf.rowid NOT IN (SELECT variable_id FROM exact), 7, p.slug, r.slug, v.slug \
          LIMIT {HORIZON}",
-        exact_held = alias_held("va"),
-        held = held::variable(
-            scope,
-            "v.variable_id",
-            Narrow {
-                years,
-                ..Narrow::default()
-            }
-        ),
+        exact_held = alias_held(scope, years, "va"),
     );
     let mut stmt = conn.prepare(&sql)?;
     let mut variables: Vec<VariableHit> = stmt
@@ -623,6 +648,54 @@ fn variable_arm(
     })
 }
 
+/// The holdings test that variable alias `alias` is held under `years`.
+fn alias_held(scope: Scope, years: Option<(u16, u16)>, alias: &str) -> String {
+    let (variant, column) = (
+        format!("{alias}.register_variant_id"),
+        format!("{alias}.delivery_column_name"),
+    );
+    held::variable(
+        scope,
+        &format!("{alias}.variable_id"),
+        Narrow {
+            years,
+            variant: Some(&variant),
+            column: Some(&column),
+        },
+    )
+}
+
+/// The variable arm's admission test over `variable_fts vf` joined to `variable v`,
+/// before any order or bound, with its arguments (positional `?`, after those the
+/// statement binds first). The arm and [`register_facets`] share it, so a facet
+/// counts exactly the variables the arm admits.
+fn matched(scope: Scope, request: &Request, admission: &Admission) -> (String, Vec<Sql>) {
+    let mut sql = format!(
+        "variable_fts MATCH ? AND {}",
+        held::variable(
+            scope,
+            "v.variable_id",
+            Narrow {
+                years: request.years,
+                ..Narrow::default()
+            }
+        )
+    );
+    let mut args: Vec<Sql> = vec![admission.candidates.clone().into()];
+    if let Some(register) = request.register {
+        sql += " AND vf.register_id = ?";
+        args.push(register.into());
+    }
+    if let Some((lo, hi)) = request.years {
+        // Some state of the variable overlaps.
+        sql += &year_filter("variable_state vs", "vs.variable_id = vf.rowid");
+        args.extend([i64::from(hi).into(), i64::from(lo).into()]);
+    }
+    sql += &admission.filters;
+    args.extend(admission.filter_args.iter().cloned());
+    (sql, args)
+}
+
 /// How the variable arm admits and orders rows by the query's terms: `cte` (a leading
 /// comma, binding `cte_args`) and `rank` (added to bm25) in the statement, the
 /// `candidates` full-text query, and `filters` binding `filter_args`.
@@ -639,9 +712,11 @@ struct Admission {
 /// purpose supplies some tokens and its own text the rest (`covid provtagning` finds
 /// `Provtagningsdatum` in a register whose purpose names covid). Those context rows
 /// rank after every row whose own text matches all tokens, which keep their order and
-/// bm25; a single token admits exactly as before. `held_alias` is the holdings test
-/// that alias `ea` is held (`None` in reference).
-fn admission(q: &str, fts: &str, held_alias: Option<&str>) -> Admission {
+/// bm25; a single token admits exactly as before. In holdings, a term's own-text test
+/// also takes a held alias `ea` (in reference, the full-text match already is it).
+fn admission(q: &str, fts: &str, scope: Scope, years: Option<(u16, u16)>) -> Admission {
+    let held_alias = (scope == Scope::Holdings).then(|| alias_held(scope, years, "ea"));
+    let held_alias = held_alias.as_deref();
     // Each term's own-text test in holdings: the variable's public text or a held
     // alias (in reference, the full-text match already is the own-text test).
     let own: Vec<(String, [Sql; 2])> = held_alias.map_or_else(Vec::new, |held| {

@@ -381,6 +381,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/search/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. */
+        get: operations["search_facets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/states/{ref}": {
         parameters: {
             query?: never;
@@ -1233,6 +1250,18 @@ export interface components {
             variant_count: number;
             /** @description The register variants with a year in scope, in build order. */
             variants: components["schemas"]["VariantYears"][];
+        };
+        RegisterFacet: {
+            fqid?: string | null;
+            /** Format: int64 */
+            variable_matches: number;
+        };
+        /**
+         * @description `shape.RegisterFacets`: per register, how many of its variables the variable arm
+         *     admits for the query, unbounded by paging and before concept groups fold.
+         */
+        RegisterFacets: {
+            registers: components["schemas"]["RegisterFacet"][];
         };
         RegisterYears: components["schemas"]["Span"] & {
             /** @description Per year, the columns delivered in it, sorted. */
@@ -2327,6 +2356,44 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["SearchPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    search_facets: {
+        parameters: {
+            query: {
+                q: string;
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RegisterFacets"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
