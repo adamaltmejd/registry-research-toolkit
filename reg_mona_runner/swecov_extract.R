@@ -461,17 +461,23 @@ query <- function(con, sql, what) {
 # that marker to be mistaken for it, and would still yield five characters.
 sqlstate <- function(e) {
   msg <- conditionMessage(e)
-  state <- regmatches(
+  markers <- regmatches(
     msg,
-    regexec(
-      "(?:nanodbc/nanodbc\\.cpp:[0-9]+: |ODBC failed with error )([0-9A-Z]{5})(?:: | from )",
+    gregexpr(
+      "(?:nanodbc/nanodbc\\.cpp:[0-9]+: |ODBC failed with error )[0-9A-Z]{5}(?:: | from )",
       msg,
       perl = TRUE
     )
   )[[1]]
+  states <- regmatches(
+    markers,
+    regexpr("[0-9A-Z]{5}(?=(?:: | from )$)", markers, perl = TRUE)
+  )
+  # The driver can report a success (00xxx) or warning (01xxx) state before the error.
+  state <- states[!startsWith(states, "00") & !startsWith(states, "01")][1]
   paste0(
     " (",
-    if (length(state)) paste0("SQLSTATE ", state[2], "; "),
+    if (!is.na(state)) paste0("SQLSTATE ", state, "; "),
     "driver message withheld: it may quote row values)"
   )
 }
