@@ -375,8 +375,9 @@ for e in (json.load(sys.stdin).get("data") or {}).get("errors", []):
 }
 
 # The catalog smoke: /catalog → provider → register → variable, then narrow the
-# leaf's Period slider from the keyboard, apply it, assert what the app wrote to
-# the URL and what it shows, and cold-reload the deep link. Desktop only.
+# leaf's Period slider from the keyboard (the key press applies it), assert what
+# the app wrote to the URL and what it shows, and cold-reload the deep link.
+# Desktop only.
 smoke() {
 	local here period seeded from to deep
 	local slider='[role="group"][aria-label="Period window (years)"]'
@@ -409,8 +410,7 @@ smoke() {
 		return 1
 	}
 	period="$from..$to"
-	if ! { ab click 'button[aria-label="Apply period"]' >/dev/null &&
-		ab wait --fn "new URLSearchParams(location.search).get('period') === '$period'" >/dev/null &&
+	if ! { ab wait --fn "new URLSearchParams(location.search).get('period') === '$period'" >/dev/null &&
 		settled && ab wait --text "narrowed to $period" >/dev/null; }; then
 		echo "smoke: applying period $period did not land in the URL and the page" >&2
 		return 1

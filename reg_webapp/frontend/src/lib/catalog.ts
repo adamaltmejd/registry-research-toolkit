@@ -2406,10 +2406,7 @@ const termLabel = (index: number) =>
  * Windows are taken in chronological order. */
 export function windowRunLabels<
   W extends { from: string | null; to: string | null },
->(
-  windows: readonly W[],
-  label: (window: W) => string | null,
-): string[] {
+>(windows: readonly W[], label: (window: W) => string | null): string[] {
   // Runs of terms, each a first and last term index and its step: 1 for
   // consecutive terms, 2 for the same term a year apart (null while one long).
   type Run = { first: number; last: number; step: 1 | 2 | null };

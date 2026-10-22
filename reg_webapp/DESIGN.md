@@ -785,10 +785,11 @@ singleton with `subscribe` (React reads it with `useSyncExternalStore`, via
 route through RAC's `RouterProvider`.
 
 `route` is re-parsed — and so re-assigned — only when the **pathname** moves. A
-query-only navigation (Apply on a catalog leaf's period card) parses to the same route,
-and handing consumers a fresh object would invalidate every route-derived prop: the
-query-independent catalog node refetches and the article remounts around the card the
-researcher is typing in, dropping keyboard focus to the document body mid-Apply (Y-65).
+query-only navigation (a thumb coming to rest on a catalog leaf's period card) parses
+to the same route, and handing consumers a fresh object would invalidate every
+route-derived prop: the query-independent catalog node refetches and the article
+remounts around the card the researcher is working in, dropping keyboard focus to the
+document body mid-apply (Y-65).
 What such a navigation does move is `search`, which the resolution fetches read. A
 *genuine* refetch still swaps in the loading branch and takes its subtree with it — the
 invariant removes the spurious refetch, not the teardown.
@@ -930,13 +931,15 @@ the header. An open-ended coverage end is projected to the catalog vintage
 (`coverageBandEdges` in `period.ts`). The control does a different job per kind:
 
 - On the **variable** it is `PeriodTimeline`, the selectable form: a RAC two-thumb
-  `Slider` laid over the drawing beside two exact-year fields and Apply/Clear. It drives
-  resolution: Apply writes `?period` (precedence `?period` > project window > full
-  history), which **refetches** the `resolve_at` subset and narrows the visible states.
+  `Slider` laid over the drawing, with Clear. It drives resolution: a thumb coming to
+  rest (on release, or on each key press) writes `?period` (precedence `?period` >
+  project window > full history), which **refetches** the `resolve_at` subset and
+  narrows the visible states. There are no exact-year fields and no Apply (maintainer
+  ruling 2026-10-22): a drag is one URL change, not one per year crossed.
   Richer server-supported `?period` wires (terms, comma lists, `_default`) remain valid
   deep-link state; one that is not a span of whole years is reported in a warning row,
-  the drawing shows the project window, Clear drops it, and Apply does not rewrite it
-  unless the user moves to a year window.
+  the drawing shows the project window, Clear drops it, and it is not rewritten unless
+  the user moves a thumb.
 - On the **concept group** it is the read-only `Timeline`: the page draws the period and
   does not set one. `getConceptGroup` takes no period, so `?period` drives **no
   refetch**; it sets the band (a member link carries the active `?period` into the leaf
@@ -1637,10 +1640,7 @@ when a window is set > the coverage span when none is > the bare window when the
 coverage > full bounds when neither — so a variable's true data coverage shows up front
 instead of the full 1960–vintage axis reading as available (M11). The part of the window
 outside coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
-hard-clamped to the coverage span (#671), which the exact-year fields validate against
-too, so a typed year and a dragged thumb reach exactly the same years; an entry that
-does not parse, crosses or falls outside is refused with the reason rather than clamped
-into another range. A local change writes `?period` only (never the global window). A
+hard-clamped to the coverage span (#671). A local change writes `?period` only (never the global window). A
 window wider than coverage is information, not a warning: the differs-from-window
 warning compares the selection and the window inside coverage, so neither the
 coverage-clamped default nor that default applied raises it (maintainer ruling

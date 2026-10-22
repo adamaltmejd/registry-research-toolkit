@@ -1,9 +1,4 @@
-import {
-  type CSSProperties,
-  type ReactNode,
-  useId,
-  useState,
-} from "react";
+import { type CSSProperties, type ReactNode, useId, useState } from "react";
 import { Slider, SliderThumb, SliderTrack } from "react-aria-components";
 import {
   type Coverage,

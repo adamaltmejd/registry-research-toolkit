@@ -23,13 +23,7 @@ const GLYPHS: Partial<Record<NodeType, ReactNode>> = {
   variable: (
     <>
       <rect x="1.5" y="2.5" width="11" height="9" rx="1" />
-      <rect
-        x="5.5"
-        y="2.5"
-        width="3"
-        height="9"
-        className={styles.glyphFill}
-      />
+      <rect x="5.5" y="2.5" width="3" height="9" className={styles.glyphFill} />
     </>
   ),
 };
