@@ -5,6 +5,7 @@ variants = ["fk/assistansersattning/pagaende-beslut-2002-201809", "fk/assistanse
 [[table]]
 table = "FK_ASE_lev4"
 edition = { from = 2015, to = 2024 }
+period_column = { name = "ERS_MANAD", encoding = "yyyymm" }
 
 [[column]]
 column = "ERS_MANAD"

@@ -6,6 +6,7 @@ variants = ["sos/ekb/ekb-manad"]
 [[table]]
 table = "SWECOV_SOS_EKB_HUSH"
 edition = { from = 2015, to = 2023 }
+period_column = { name = "AR", encoding = "year" }
 projection = { of = "SWECOV_SOS_EKB_PERS", token = "hushall" }
 
 [[column]]

@@ -5,6 +5,7 @@ variants = ["ndr/nationella-diabetesregistret/_default"]
 [[table]]
 table = "NDR_incidence"
 edition = { from = 1982, to = 2024 }
+period_column = { name = "I_DiagnosisDate", encoding = "date" }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"

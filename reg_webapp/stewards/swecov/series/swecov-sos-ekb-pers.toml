@@ -5,6 +5,7 @@ variants = ["sos/ekb/ekb-manad"]
 [[table]]
 table = "SWECOV_SOS_EKB_PERS"
 edition = { from = 2015, to = 2023 }
+period_column = { name = "AR", encoding = "year" }
 
 [[column]]
 column = "P1105_LopNr_EKB"

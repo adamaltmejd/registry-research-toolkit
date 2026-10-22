@@ -5,3 +5,4 @@ variants = ["lakemedelsverket/biverkningar-mla/_default"]
 [[table]]
 table = "LV_mla_2020010"
 edition = { from = 2020, to = 2024 }
+period_column = { name = "RcvDate", encoding = "date" }

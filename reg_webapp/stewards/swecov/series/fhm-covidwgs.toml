@@ -5,6 +5,7 @@ variants = ["fohm/covidwgs/fhm-covidwgs"]
 [[table]]
 table = "FHM_CovidWGS"
 edition = { from = 2020, to = 2021 }
+period_column = { name = "Provdatum", encoding = "date" }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"

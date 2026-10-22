@@ -5,3 +5,4 @@ variants = ["region-jonkoping/pandemrix-vaccinationer/_default"]
 [[table]]
 table = "RJL_Vaccinering_Pandemrix"
 edition = { from = 2009, to = 2010 }
+period_column = { name = "Vaccinationsdatum", encoding = "date" }
