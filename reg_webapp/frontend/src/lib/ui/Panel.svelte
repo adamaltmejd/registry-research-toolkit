@@ -33,10 +33,10 @@ let { title, meta, flush = false, children }: Props = $props();
 
 <style>
   .panel {
-    background: var(--surface-raised);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--elevation-raised);
+    box-shadow: var(--elevation-float);
     overflow: hidden;
   }
   .panel-header {

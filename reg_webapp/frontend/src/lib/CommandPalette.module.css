@@ -5,7 +5,7 @@
   width: min(36rem, calc(100vw - 2 * var(--space-4)));
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--surface-raised);
+  background: var(--surface);
   box-shadow: var(--elevation-float);
 }
 

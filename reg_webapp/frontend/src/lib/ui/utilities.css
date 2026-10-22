@@ -106,41 +106,6 @@
   color: var(--warn);
 }
 
-/* Shared integrated-list surface.
-
-   Used for compact catalog picker/search lists that sit directly inside a rounded
-   panel: rows own the full clickable/hover surface, row separators run edge to
-   edge, and hover uses the same accent tint as the item-view picker. */
-.integrated-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.integrated-list-row {
-  box-sizing: border-box;
-  background: transparent;
-  border-left: 3px solid transparent;
-}
-
-.integrated-list-row:hover,
-.integrated-list-row.band-hover,
-.integrated-list-row.selected {
-  background: var(--accent-bg);
-}
-
-.integrated-list-row.selected {
-  border-left-color: var(--accent);
-}
-
-.integrated-list-row.dimmed {
-  opacity: 0.45;
-}
-
-.integrated-list-row.dimmed:hover {
-  opacity: 0.7;
-}
-
 /* `.cbox` — the app's checkbox face. Every tick in the app is a real native
    <input type="checkbox"> (so it keeps the role, the keyboard control and the
    :checked/:indeterminate states); this strips the OS chrome and repaints the box
@@ -171,7 +136,7 @@
    and drop the pointer affordance, so one that cannot be toggled does not look
    like one that can. */
 .cbox:disabled {
-  opacity: 0.5;
+  opacity: var(--opacity-disabled);
   cursor: not-allowed;
 }
 

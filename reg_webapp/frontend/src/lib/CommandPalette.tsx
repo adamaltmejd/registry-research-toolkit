@@ -203,7 +203,7 @@ export function CommandPalette({
       offset={4}
       // RAC writes its own z-index inline; the palette sits at the popover
       // layer (DESIGN.md → Elevation), under a dialog's scrim.
-      style={{ zIndex: 65 }}
+      style={{ zIndex: "var(--z-popover)" }}
       className={({ isEntering, isExiting }) =>
         `${styles.popover} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
       }

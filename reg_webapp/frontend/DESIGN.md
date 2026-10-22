@@ -31,7 +31,6 @@ colors:
   # src/tokens.css (`colors.bg` → `--bg`).
   bg: "{colors.gray-12}"
   surface: "{colors.white}"
-  surface-raised: "{colors.white}"
   surface-sunken: "{colors.gray-11}"
   surface-hover: "{colors.gray-11}"
   text: "{colors.gray-1}"
@@ -69,7 +68,7 @@ colors:
   cat-class: "#7a3f8c"
   cat-group: "#2f6b3f"
   cat-reg-ink: "#1a6868"
-  cat-var-ink: "#404087"
+  cat-var-ink: "#404086"
   cat-code-ink: "#835b16"
   cat-class-ink: "#683677"
   cat-group-ink: "#285b36"
@@ -83,9 +82,9 @@ colors:
   facet-axis-0-ink: "#3e5770"
   facet-axis-1-ink: "#576131"
   facet-axis-2-ink: "#6c4a6a"
-  facet-axis-3-ink: "#785334"
+  facet-axis-3-ink: "#785333"
   facet-axis-4-ink: "#3e645a"
-  facet-axis-5-ink: "#535074"
+  facet-axis-5-ink: "#535073"
   # Data-viz — marks of the time components (Timeline, VariableRow, LaneGraph).
   viz-span: "{colors.white}"
   viz-span-out: "{colors.border}"
@@ -161,7 +160,6 @@ spacing:
   4: 1rem
   5: 1.5rem
   6: 2rem
-  rail: 16rem
   content-max: 80rem
   breakpoint-narrow: 48rem
   col-browse: 260px
@@ -328,8 +326,7 @@ subsets.
 
 ## Layout
 
-The target shell is a top bar and two browse columns beside a detail pane, not a rail.
-The current `AppShell` rail is a stepping stone (see Components) until it is replaced.
+The shell is a top bar and two browse columns beside a detail pane, not a rail.
 
 - **Top bar:** brand (name in `h3`, product line in `mono` `text-muted` under it), one
   search bar (a filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the
@@ -394,13 +391,21 @@ Time is the axis every relation is drawn on.
 Depth is tonal, not cast. Paper under white surfaces, sunken wells one stop darker,
 hairline borders. Only floating layers — dialogs, popovers, the command palette, the
 drawer — cast the one shadow (`--elevation-float`); panes and banners cast nothing and
-are separated by hairlines. A 40 % ink scrim sits behind dialogs and the drawer. No
-glows, gradients, blobs, textures or glass.
+are separated by hairlines. An ink scrim sits behind dialogs and the drawer at
+`--scrim-opacity` (0.4). The scrim is the one pre-composited colour (`--scrim` already
+carries the opacity), because its overlay contains the dialog and an `opacity` on it
+would dim the dialog too. No glows, gradients, blobs, textures or glass.
 
-Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim (55)
-and the drawer itself (60), popovers and the palette (65), then a modal dialog's scrim (70)
-and the dialog (71). A dialog is portalled to `<body>` and must name a layer above the
-shell — a modal the app can paint through is not a modal.
+Two opacities, both named in `tokens.css` and not part of the front matter: a disabled
+control is `--opacity-disabled` (0.5), and a segment outside the study window is
+`--opacity-out-of-window` (0.45). Every other opacity literal is a defect.
+
+Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim
+(`--z-drawer-scrim`, 55) and the drawer itself (`--z-drawer`, 60), popovers and the
+palette (`--z-popover`, 65), then a modal dialog's scrim (`--z-dialog-scrim`, 70) and the
+dialog (`--z-dialog`, 71). A dialog is portalled to `<body>` and must name a layer above
+the shell — a modal the app can paint through is not a modal. The sticky top bar (10) is
+the one in-page layer above 1-4 that has no named token.
 
 ## Shapes
 
@@ -438,9 +443,9 @@ dependency); visuals come from each component's CSS Module reading semantic role
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
 `ColumnList`, `ColumnChip`, `TypeTag`, `FilterChip`, `VariableRow`, `Timeline`,
 `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`. The current
-`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`,
-`ConfirmDialog`, …) and `AppShell` are the stepping stones: they keep reading the same
-roles until each is replaced, and must not grow new visual language meanwhile.
+`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`, …) are
+the stepping stones: they keep reading the same roles until each is replaced, and must
+not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
   per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box

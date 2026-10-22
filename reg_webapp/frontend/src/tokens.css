@@ -201,7 +201,6 @@
   /* Sheet & surfaces. */
   --bg: var(--gray-12); /* the canvas, a hair off white */
   --surface: #ffffff; /* where work happens: panes, inputs, chips, dialogs */
-  --surface-raised: #ffffff; /* same sheet; depth is tonal, panes cast no shadow */
   /* the selected item in a browse column, wells */
   --surface-sunken: var(--gray-11);
   --surface-hover: var(--gray-11);
@@ -234,7 +233,7 @@
   /* Categorical TEXT stops — each hue 85% toward black, so a type label clears AA
      on its own 10% tint. Literal (not color-mix) so DESIGN.md can pin them. */
   --cat-reg-ink: #1a6868;
-  --cat-var-ink: #404087;
+  --cat-var-ink: #404086;
   --cat-code-ink: #835b16;
   --cat-class-ink: #683677;
   --cat-group-ink: #285b36;
@@ -243,9 +242,9 @@
   --facet-axis-0-ink: #3e5770;
   --facet-axis-1-ink: #576131;
   --facet-axis-2-ink: #6c4a6a;
-  --facet-axis-3-ink: #785334;
+  --facet-axis-3-ink: #785333;
   --facet-axis-4-ink: #3e645a;
-  --facet-axis-5-ink: #535074;
+  --facet-axis-5-ink: #535073;
 
   /* Data-viz — the time components (Timeline, VariableRow, LaneGraph). Time is
      the only axis relations are drawn on; these are its marks, never chrome. */
@@ -272,10 +271,9 @@
 
   /* ── Typography ──────────────────────────────────────────────────────── */
   --font-ui:
-    "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto,
-    sans-serif;
+    "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono:
-    "IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Type scale (roles components read). Denser than before: body is 14px. */
   --text-display: 2.75rem;
@@ -293,6 +291,7 @@
      tracking); h2/h3 at 600; body 400; the label level and column names at 500. */
   --display-weight: 700;
   --display-tracking: -0.035em;
+  --h2-tracking: -0.01em;
   --h1-tracking: -0.03em;
   --heading-weight: 600;
   --body-weight: 400;
@@ -318,13 +317,29 @@
 
   /* ── Elevation ───────────────────────────────────────────────────────── */
   /* Depth is tonal. Only a FLOATING layer (dialog, popover, drawer, the command
-     palette) casts this; panes and banners are separated by hairlines. Kept under
-     its old name so existing consumers resolve; Panel/DataTable should drop it
-     when the column layout lands. */
-  --elevation-raised:
+     palette) casts this; panes and banners are separated by hairlines. */
+  --elevation-float:
     0 1px 2px rgba(18, 20, 18, 0.06), 0 4px 14px rgba(18, 20, 18, 0.1);
-  --elevation-float: var(--elevation-raised);
-  --scrim: color-mix(in srgb, var(--gray-1) 40%, transparent);
+  /* The scrim is the one pre-composited colour: its only consumer is the
+     overlay that CONTAINS the dialog, so `opacity` on it would dim the dialog
+     too (DESIGN.md → Elevation & Depth). */
+  --scrim-opacity: 0.4;
+  --scrim: color-mix(
+    in srgb,
+    var(--gray-1) calc(var(--scrim-opacity) * 100%),
+    transparent
+  );
+
+  /* ── Opacity ─────────────────────────────────────────────────────────── */
+  --opacity-disabled: 0.5; /* a disabled control */
+  --opacity-out-of-window: 0.45; /* a segment outside the study window */
+
+  /* ── Stacking (bottom-up; in-page positioned bits use 1-4) ───────────── */
+  --z-drawer-scrim: 55;
+  --z-drawer: 60;
+  --z-popover: 65; /* popovers and the command palette */
+  --z-dialog-scrim: 70;
+  --z-dialog: 71;
 
   /* ── Interaction states ──────────────────────────────────────────────── */
   --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
@@ -333,11 +348,10 @@
   /* Three steps and two curves (DESIGN.md → Motion). Hover and colour are quick;
      things that move take base; layers that arrive take slow. No springs. Under
      prefers-reduced-motion every transition collapses to an opacity fade at
-     --duration-quick. --motion-fast is the old name for --duration-quick. */
+     --duration-quick. */
   --duration-quick: 120ms;
   --duration-base: 200ms;
   --duration-slow: 320ms;
-  --motion-fast: var(--duration-quick);
   --ease-out: cubic-bezier(0.2, 0, 0, 1); /* arriving, growing */
   --ease-in: cubic-bezier(0.4, 0, 1, 1); /* leaving, shrinking */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* colour and hover */
