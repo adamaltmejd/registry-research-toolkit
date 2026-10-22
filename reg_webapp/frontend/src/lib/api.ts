@@ -645,11 +645,11 @@ export type SearchType = NonNullable<
   RustOperations["search"]["parameters"]["query"]["type"]
 >;
 
-/** The omnibox's client-side timeout. The codes/value sub-query can be slow
- * server-side (a separate backend index fix is in flight); past this the SPA
- * aborts the request and shows a friendly "timed out" message rather than an
- * infinite spinner. A timeout-abort throws a `TimeoutError` (distinct `name` from
- * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
+/** The search client-side timeout. The codes/value sub-query can be slow
+ * server-side; past this the SPA aborts the request and the command palette
+ * reports a failed search rather than an endless "Searching…". A timeout-abort
+ * throws a `TimeoutError` (distinct `name` from the supersede-abort's
+ * `AbortError`). */
 const SEARCH_TIMEOUT_MS = 12_000;
 
 /** GET a search endpoint (`path` relative to `/api`) with the shared query +
@@ -694,8 +694,8 @@ function searchGet<T>(
 
 /** The minimum query length that's worth a GET /api/search round-trip: a single
  * char is the most expensive query server-side (the codes/value sub-query) and
- * the least useful. The single source of truth for this threshold — SearchView
- * (the results page) gates its fetch on it. */
+ * the least useful. The single source of truth for this threshold — the
+ * command palette gates its fetch on it. */
 export const SEARCH_MIN_QUERY_LENGTH = 2;
 
 /** Search the catalog: one page of the ranked list. `q` is the raw user query

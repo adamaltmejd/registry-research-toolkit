@@ -202,52 +202,6 @@ describe("onNavClick", () => {
   });
 });
 
-describe("router.replace (#379)", () => {
-  beforeEach(() => {
-    window.history.pushState({}, "", "/");
-    router.navigate("/search?q=a");
-  });
-  afterEach(() => {
-    window.history.pushState({}, "", "/");
-  });
-
-  it("updates the reactive route + query without growing the history length", () => {
-    const lenBefore = window.history.length;
-    router.replace("/search?q=ab");
-    expect(router.route).toEqual({ name: "search" });
-    expect(router.getQueryParam("q")).toBe("ab");
-    // replaceState swaps the current entry in place — the stack doesn't grow.
-    expect(window.history.length).toBe(lenBefore);
-  });
-});
-
-describe("router search return target", () => {
-  beforeEach(() => {
-    window.history.pushState({}, "", "/");
-    router.navigate("/catalog/scb/lisa");
-  });
-  afterEach(() => {
-    window.history.pushState({}, "", "/");
-    router.searchReturnUrl = "/catalog";
-  });
-
-  it("restores the close target from each search history entry on popstate", () => {
-    router.navigate("/search?q=a");
-    expect(router.searchReturnUrl).toBe("/catalog/scb/lisa");
-    const firstState = window.history.state;
-
-    router.navigate("/catalog/scb/rams");
-    router.navigate("/search?q=b");
-    expect(router.searchReturnUrl).toBe("/catalog/scb/rams");
-
-    window.history.pushState(firstState, "", "/search?q=a");
-    window.dispatchEvent(new PopStateEvent("popstate"));
-
-    expect(router.getQueryParam("q")).toBe("a");
-    expect(router.searchReturnUrl).toBe("/catalog/scb/lisa");
-  });
-});
-
 describe("router reactive query (A5.3b)", () => {
   // The `router` singleton reads `window.location`; reset to a known URL before
   // each case (jsdom's pushState updates `window.location`). Re-sync the signal

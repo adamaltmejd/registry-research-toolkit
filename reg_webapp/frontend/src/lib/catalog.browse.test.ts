@@ -138,7 +138,6 @@ describe("routeBreadcrumbs", () => {
       { name: "catalog-node", fqidPath: "scb" },
       { name: "group", provider: "scb", register: "lisa", key: "ink" },
       { name: "class-group", key: "sun" },
-      { name: "search" },
       { name: "project" },
       { name: "doc", identifier: "x" },
     ];

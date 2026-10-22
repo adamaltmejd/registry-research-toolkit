@@ -601,8 +601,6 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       return registerTrail(browserRoot, route.provider, route.register, {
         label: "variants",
       });
-    case "search":
-      return [browserRoot, { label: "Search" }];
     case "project":
       return [browserRoot, { label: "Project" }];
     case "doc":

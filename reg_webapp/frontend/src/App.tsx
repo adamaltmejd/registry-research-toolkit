@@ -13,7 +13,6 @@ import Home from "./lib/Home.svelte";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { projectStore } from "./lib/project_store";
 import { onNavClick, type Route, router } from "./lib/router";
-import SearchView from "./lib/SearchView.svelte";
 import { SvelteIsland } from "./lib/SvelteIsland";
 import { useRune } from "./lib/svelte_bridge.svelte";
 import { TopBar } from "./lib/TopBar";
@@ -247,8 +246,6 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
           providerQualified={qualified}
         />
       );
-    case "search":
-      return <SvelteIsland component={SearchView} props={{}} />;
     case "doc":
       return (
         <SvelteIsland
