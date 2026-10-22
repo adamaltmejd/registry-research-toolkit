@@ -7,10 +7,8 @@
         --input-commit SHA --input-manifest-sha256 SHA256 [--diagnostic] [--registers SPEC]
 
 Each command looks its key up and prints one JSON object on stdout. A hit returns the
-stored output without running anything. A miss takes the machine-wide real-seed lock
-(`gate.real_seed_lock`), looks again (a queued session may have stored it meanwhile),
-runs the real `reg-meta-build` command, and stores the output before releasing the
-lock, only if the run completed:
+stored output without running anything. A miss runs the real `reg-meta-build` command
+and stores the output, only if the run completed:
 
 - a prepare that exited 0 with the manifest digest it reported;
 - a diagnostic build with exit 10 and `status = diagnostic_complete`;
@@ -134,7 +132,6 @@ import tomllib
 import zlib
 from pathlib import Path
 
-from gate import real_seed_lock
 from keyed_cache import (
     BUILDER_SOURCES,
     NATIVE_SOURCES,
@@ -416,7 +413,8 @@ def cache_dir(kind: str) -> Path:
 
 
 def write_json(path: Path, payload: dict) -> None:
-    tmp = path.with_name(path.name + ".tmp")
+    # Per-process, so two sessions storing the same key never share a temp file.
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
     tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
     tmp.replace(path)
 
@@ -572,7 +570,7 @@ def lookup_prepare(home: Path, key: str) -> dict | None:
     sys.stderr.write(
         f"real-seed-cache: dropping {path}: {facts.get('accepted_error')}\n"
     )
-    path.unlink()
+    path.unlink(missing_ok=True)
     return None
 
 
@@ -673,32 +671,25 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     if args.output_dir is None:
         sys.exit("real-seed-cache: a miss needs a new --output-dir")
     output = Path(args.output_dir)
-    with real_seed_lock():
-        # The inputs or checkout may have changed while this session waited.
-        fields = prepare_fields(args)
-        key = digest(fields)
-        if hit := lookup_prepare(home, key):
-            emit(hit)
-            return 0
-        result = run_prepare(args, output)
-        if result is None or prepare_fields(args)["code"] != fields["code"]:
-            reason = (
-                "prepare-sources failed"
-                if result is None
-                else "the prepare code changed during the run"
-            )
-            sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
-            emit({"hit": False, "stored": False, "reason": reason})
-            return 1
-        write_json(
-            home / f"{key}.json",
-            {
-                "key": key,
-                "fields": fields,
-                "prepared_path": str(output),
-                "manifest_sha256": result["prepared_manifest_sha256"],
-            },
+    result = run_prepare(args, output)
+    if result is None or prepare_fields(args)["code"] != fields["code"]:
+        reason = (
+            "prepare-sources failed"
+            if result is None
+            else "the prepare code changed during the run"
         )
+        sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
+        emit({"hit": False, "stored": False, "reason": reason})
+        return 1
+    write_json(
+        home / f"{key}.json",
+        {
+            "key": key,
+            "fields": fields,
+            "prepared_path": str(output),
+            "manifest_sha256": result["prepared_manifest_sha256"],
+        },
+    )
     emit(
         {
             "hit": False,
@@ -996,90 +987,85 @@ def cmd_build(args: argparse.Namespace) -> int:
         return 0
     home = cache_dir("build")
     if args.verify:
-        # Held throughout, so concurrent verifications cannot quarantine the same
-        # entry twice.
-        with real_seed_lock():
-            return verify_build(args, home, key, fields, digest(resolve_fields))
+        return verify_build(args, home, key, fields, digest(resolve_fields))
     if record := lookup_build(home, key):
         emit(build_result(home, record, hit=True))
         return 0
-    with real_seed_lock():
-        # The inputs or checkout may have changed while this session waited;
-        # `build_fields` also reruns admission.
-        fields, resolve_fields = build_fields(args)
-        key, resolve_key = digest(fields), digest(resolve_fields)
-        if record := lookup_build(home, key):
-            emit(build_result(home, record, hit=True))
-            return 0
-        resolve_home = cache_dir("resolve")
-        phased = False
-        if bundle := lookup_resolve(resolve_home, resolve_key):
-            run_dir, code = run_build(args, home, resolved=bundle)
-            phased = True
-            if refusal := refused_bundle(run_dir):
-                # Never an error, never placed. A stale or damaged entry goes; a
-                # diagnostic bundle a strict build may not place stays.
-                kept = refusal in STRICT_ONLY_REFUSALS
-                sys.stderr.write(
-                    f"real-seed-cache: materialize-db refused {bundle} ({refusal}); "
-                    f"{'keeping' if kept else 'dropping'} it and building in full\n"
-                )
-                if not kept:
-                    shutil.rmtree(bundle.parent, ignore_errors=True)
-                shutil.rmtree(run_dir, ignore_errors=True)
-                phased = False
-        if not phased:
-            run_dir, code = run_build(args, home, resolved_out=True)
-        if reason := incomplete(args, run_dir, code, fields):
-            sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
-            # A bundle of a run that did not complete is never stored, nor needed
-            # to diagnose it (the report holds its events); it is 0.3-0.4 GB.
-            shutil.rmtree(run_dir / "resolved", ignore_errors=True)
-            # Reaps failed runs past their retention, so repeated failures cannot
-            # fill the disk. This one's retention starts now (its mtime is from
-            # creation, and a build can outlast the grace period), so it stays.
-            os.utime(run_dir)
-            evict(
-                home,
-                run_dir,
-                KEEP,
-                "real-seed-cache",
-                min_idle=STAGING_RETENTION_SECONDS,
+    resolve_key = digest(resolve_fields)
+    resolve_home = cache_dir("resolve")
+    phased = False
+    if bundle := lookup_resolve(resolve_home, resolve_key):
+        run_dir, code = run_build(args, home, resolved=bundle)
+        phased = True
+        if refusal := refused_bundle(run_dir):
+            # Never an error, never placed. A stale or damaged entry goes; a
+            # diagnostic bundle a strict build may not place stays.
+            kept = refusal in STRICT_ONLY_REFUSALS
+            sys.stderr.write(
+                f"real-seed-cache: materialize-db refused {bundle} ({refusal}); "
+                f"{'keeping' if kept else 'dropping'} it and building in full\n"
             )
-            emit(
-                {
-                    "hit": False,
-                    "stored": False,
-                    "reason": reason,
-                    "run_dir": str(run_dir),
-                }
-            )
-            return code or 1
-        if not phased:
-            store_resolve(
-                resolve_home, resolve_key, resolve_fields, run_dir / "resolved"
-            )
-        summary = json.loads((run_dir / "report/summary.json").read_text())
-        database = run_dir / database_name(args)
-        database.chmod(0o444)
-        stat = database.stat()
-        entry = home / key
-        relocate(run_dir, entry)
-        record = {
-            "key": key,
-            "fields": fields,
-            "database": database_name(args),
-            "database_size": stat.st_size,
-            "database_mtime_ns": stat.st_mtime_ns,
-            "events_size": (run_dir / "report/events.jsonl.gz").stat().st_size,
-            "status": summary["status"],
-            "publication_ready": summary.get("publication_ready"),
-            # The resolve entry a phased run materialized; None for a full build.
-            "phased_from": resolve_key if phased else None,
-        }
-        write_json(run_dir / "entry.json", record)
+            if not kept:
+                shutil.rmtree(bundle.parent, ignore_errors=True)
+            shutil.rmtree(run_dir, ignore_errors=True)
+            phased = False
+    if not phased:
+        run_dir, code = run_build(args, home, resolved_out=True)
+    if reason := incomplete(args, run_dir, code, fields):
+        sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
+        # A bundle of a run that did not complete is never stored, nor needed
+        # to diagnose it (the report holds its events); it is 0.3-0.4 GB.
+        shutil.rmtree(run_dir / "resolved", ignore_errors=True)
+        # Reaps failed runs past their retention, so repeated failures cannot
+        # fill the disk. This one's retention starts now (its mtime is from
+        # creation, and a build can outlast the grace period), so it stays.
+        os.utime(run_dir)
+        evict(
+            home,
+            run_dir,
+            KEEP,
+            "real-seed-cache",
+            min_idle=STAGING_RETENTION_SECONDS,
+        )
+        emit(
+            {
+                "hit": False,
+                "stored": False,
+                "reason": reason,
+                "run_dir": str(run_dir),
+            }
+        )
+        return code or 1
+    if not phased:
+        store_resolve(resolve_home, resolve_key, resolve_fields, run_dir / "resolved")
+    summary = json.loads((run_dir / "report/summary.json").read_text())
+    database = run_dir / database_name(args)
+    database.chmod(0o444)
+    stat = database.stat()
+    entry = home / key
+    relocate(run_dir, entry)
+    record = {
+        "key": key,
+        "fields": fields,
+        "database": database_name(args),
+        "database_size": stat.st_size,
+        "database_mtime_ns": stat.st_mtime_ns,
+        "events_size": (run_dir / "report/events.jsonl.gz").stat().st_size,
+        "status": summary["status"],
+        "publication_ready": summary.get("publication_ready"),
+        # The resolve entry a phased run materialized; None for a full build.
+        "phased_from": resolve_key if phased else None,
+    }
+    write_json(run_dir / "entry.json", record)
+    try:
         run_dir.rename(entry)
-        evict(home, entry, KEEP, "real-seed-cache", min_idle=STAGING_RETENTION_SECONDS)
+    except OSError:
+        # A concurrent miss on the same key stored first: keep its entry, drop this
+        # identical copy.
+        if (record := lookup_build(home, key)) is None:
+            raise
+        shutil.rmtree(run_dir, ignore_errors=True)
+    evict(home, entry, KEEP, "real-seed-cache", min_idle=STAGING_RETENTION_SECONDS)
     emit({**build_result(home, record, hit=False), "phased": phased})
     return 0
 

@@ -160,8 +160,7 @@ db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_db.XXXXXX")"
 prepared="/absolute/path/to/accepted-prepared"
 prepared_commit="EXACT_PREPARED_ACCEPTANCE_SHA"
 prepared_manifest_sha256="EXACT_TOP_LEVEL_PREPARED_SHA256"
-uv run --no-project scripts/gate.py real-seed -- \
-  uv run reg-meta-build --db "$db_dir/catalog" build-db \
+uv run reg-meta-build --db "$db_dir/catalog" build-db \
   --prepared "$prepared" \
   --input-commit "$prepared_commit" \
   --input-manifest-sha256 "$prepared_manifest_sha256" \
@@ -253,13 +252,12 @@ base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
 gh release download "$main_src" --pattern reg_meta.db.zst --dir "$base_dir"
 zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
 flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
-uv run --no-project scripts/gate.py real-seed -- \
-  uv run reg-meta-build --db "$flav_dir" extend-db \
-    --base-db "$base_dir/reg_meta.db" \
-    --steward swecov \
-    --holdings-input "$accepted_holdings" \
-    --input-commit "$holdings_commit" \
-    --input-manifest-sha256 "$holdings_manifest_sha256"
+uv run reg-meta-build --db "$flav_dir" extend-db \
+  --base-db "$base_dir/reg_meta.db" \
+  --steward swecov \
+  --holdings-input "$accepted_holdings" \
+  --input-commit "$holdings_commit" \
+  --input-manifest-sha256 "$holdings_manifest_sha256"
 db="$flav_dir/reg_meta.db"
 # extend-db writes WAL; ship a self-contained single file.
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"

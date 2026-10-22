@@ -203,9 +203,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
   files; after a rebase, commit the diff separately.
 - `uv run --no-project scripts/gate.py g1` — G1.
-- `uv run --no-project scripts/gate.py heavy -- <cmd>` / `real-seed -- <cmd>` — run
-  another heavy command, or a real-seed `reg-meta-build` run, under the machine-wide
-  lock the gate steps hold (never wrap a gate step).
+- Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
+  Operator schedules them with the maintainer.
 - Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
 - Real-artifact conformance: the `release` step in `scripts/gate.py` shows the flags
   (`--run-release --artifact-dir=… --server-cmd=…`).
