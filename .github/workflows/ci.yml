@@ -92,6 +92,7 @@ jobs:
     outputs:
       webapp: ${{ steps.filter.outputs.webapp }}
       runner: ${{ steps.filter.outputs.runner }}
+      export_gate: ${{ steps.filter.outputs.export_gate }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: dorny/paths-filter@v4.0.3
@@ -120,6 +121,10 @@ jobs:
               - 'reg_mona_runner/**'
               # The order goldens the runner's extract cases read.
               - 'conformance/cases/order/**'
+              - '.github/workflows/ci.yml'
+              - 'scripts/gate.py'
+            export_gate:
+              - 'reg_export_gate/**'
               - '.github/workflows/ci.yml'
               - 'scripts/gate.py'
 
@@ -170,7 +175,7 @@ jobs:
             sudo apt-get update
             sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
           fi
-      # air and jarl at scripts/gate.py's AIR and JARL pins (bump both).
+      # air and jarl at scripts/gate.py's AIR and JARL pins (bump all three).
       - run: |
           mkdir -p "$HOME/.local/bin"
           curl -fsSL https://github.com/posit-dev/air/releases/download/0.12.0/air-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
@@ -180,6 +185,37 @@ jobs:
         with:
           version: "0.13.4"
       - run: uv run --no-project scripts/gate.py runner
+
+  # The export gate's MONA check (reg_export_gate/): `gate.py export_gate` (air, jarl,
+  # the case corpus). arrow is a binary from Posit's package manager, as on MONA,
+  # where arrow is preinstalled.
+  export-gate:
+    runs-on: ubuntu-latest
+    # The export gate CI budget (ARCHITECTURE.md "Tiers").
+    timeout-minutes: 6
+    needs: changes
+    if: needs.changes.outputs.export_gate == 'true'
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: r-lib/actions/setup-r@v2.14.0
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2.14.0
+        with:
+          packages: |
+            any::arrow
+            any::jsonlite
+            any::testthat
+      # air and jarl at scripts/gate.py's AIR and JARL pins (bump all three).
+      - run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL https://github.com/posit-dev/air/releases/download/0.12.0/air-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
+          curl -fsSL https://github.com/etiennebacher/jarl/releases/download/0.7.1/jarl-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - uses: astral-sh/setup-uv@v10.3.0
+        with:
+          version: "0.13.4"
+      - run: uv run --no-project scripts/gate.py export_gate
 
   reg-webapp-frontend:
     runs-on: ubuntu-latest

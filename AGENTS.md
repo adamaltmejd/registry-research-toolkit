@@ -20,6 +20,11 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one CSV per manifest file out (R: DBI, odbc,
   jsonlite).
+- `reg_export_gate` — the export gate: `export_gate.R`, the version-pinned check a MONA
+  pipeline runs as its last step (inventory, structure, disclosure, identifier backstop;
+  Parquet plus `receipt.json` out only on a pass), the toolkit's fixed schemas and
+  policies, and the case corpus the future `reg-export-gate` Rust binary shares (R:
+  jsonlite, arrow).
 
 The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
 (local mock-data generation) packages have been archived to branch
@@ -197,10 +202,12 @@ below are what an agent must follow when writing, changing or deleting a test. T
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `release`, `flows`, `frontend`, `runner`).
+  `release`, `flows`, `frontend`, `runner`, `export_gate`).
 - `uv run --no-project scripts/gate.py runner` — `reg_mona_runner`: air, jarl and its
   testthat suite (needs R with testthat and jsonlite; the SQL Server cases run only in
   CI).
+- `uv run --no-project scripts/gate.py export_gate` — `reg_export_gate`: air, jarl and
+  its case corpus (needs R with testthat, jsonlite and arrow).
 - `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown) and ty only.
 - `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — lint, crates and
   the touched packages' tests, plus the conformance run against the Rust server.

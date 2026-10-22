@@ -1,0 +1,30 @@
+{
+  "format": "reg-export-gate/schema",
+  "format_version": 1,
+  "name": "trial",
+  "version": 1,
+  "description": "MONA trial export: persons by year and one grouping, and a per-year mean.",
+  "files": [
+    {
+      "name": "persons_by_year_group.parquet",
+      "columns": [
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "group", "type": "string", "role": "dimension" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" }
+      ]
+    },
+    {
+      "name": "summary_by_year.parquet",
+      "columns": [
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" },
+        {
+          "name": "mean_value",
+          "type": "double",
+          "role": "statistic",
+          "support": "n_persons"
+        }
+      ]
+    }
+  ]
+}

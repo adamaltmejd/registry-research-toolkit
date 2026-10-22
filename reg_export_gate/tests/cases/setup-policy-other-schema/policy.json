@@ -1,0 +1,12 @@
+{
+  "format": "reg-export-gate/policy",
+  "format_version": 1,
+  "name": "trial-min5",
+  "version": 1,
+  "description": "Trial policy: every count and person count is at least 5, or null (suppressed).",
+  "schema": {
+    "name": "trial",
+    "version": 2
+  },
+  "min_cell_count": 5
+}

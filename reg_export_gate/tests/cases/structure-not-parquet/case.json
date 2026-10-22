@@ -1,0 +1,55 @@
+{
+  "description": "A CSV saved under a .parquet name refuses.",
+  "schema": "../../../schemas/trial.schema.json",
+  "policy": "../../../schemas/trial.policy.json",
+  "candidate": {
+    "persons_by_year_group.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2019,
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "2019-2020 cohort",
+            "Stockholm",
+            "2019-2020 cohort"
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            5,
+            120,
+            null,
+            37
+          ]
+        }
+      ]
+    },
+    "summary_by_year.parquet": {
+      "text": "year,n_persons,mean_value\n2019,125,312.5\n"
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "structure",
+    "findings": [
+      {
+        "file": "summary_by_year.parquet",
+        "column": null,
+        "rule": "unreadable"
+      }
+    ]
+  }
+}
