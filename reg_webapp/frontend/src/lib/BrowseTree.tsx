@@ -13,11 +13,10 @@ import {
   getShow,
   type RegisterChild,
   type RootChild,
-  SEARCH_MIN_QUERY_LENGTH,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
-import { useBrowseFilter } from "./browse_filter";
+import { useBrowseFilter, useSettledFilter } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
 import { catalogRootChildren } from "./catalog_names.svelte";
 import { Highlight } from "./Highlight";
@@ -157,9 +156,6 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
-/** How long the filter text rests before the facet request goes out. */
-const FACET_DEBOUNCE_MS = 200;
-
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
@@ -215,25 +211,10 @@ export function BrowseTree({ className }: { className?: string }) {
   );
   const needle = useBrowseFilter();
   const filtering = needle.trim() !== "";
-  // The variable matches per register, asked once the text rests. Keyed on the
-  // settled text, so a newer query aborts the older request and its answer
-  // never lands on other text.
-  const [facetQuery, setFacetQuery] = useState("");
-  useEffect(() => {
-    const timer = setTimeout(
-      () => setFacetQuery(needle.trim()),
-      FACET_DEBOUNCE_MS,
-    );
-    return () => clearTimeout(timer);
-  }, [needle]);
-  const facetKey =
-    filtering &&
-    facetQuery === needle.trim() &&
-    facetQuery.length >= SEARCH_MIN_QUERY_LENGTH
-      ? facetQuery
-      : null;
+  // The variable matches per register, asked once the text rests.
+  const facetKey = useSettledFilter();
   const facetResource = useAsyncResource(facetKey, (signal) =>
-    searchFacets(facetQuery, { signal }),
+    searchFacets(facetKey ?? "", { signal }),
   );
   const facets = new Map(
     (facetKey === null ? [] : (facetResource.data ?? [])).flatMap((f) =>

@@ -308,10 +308,6 @@ for (const [token, specValue] of SPEC) {
 
 /** Custom properties written in one file and read in another, each with its writer. */
 const CROSS_FILE: Record<string, string> = {
-  "--facet-axis-hue":
-    "set inline by catalog.ts facetAxisStyle(), read by RepresentationPicker",
-  "--facet-axis-ink":
-    "set inline by catalog.ts facetAxisStyle(), read by RepresentationPicker",
   "--track-width":
     "DualThumbTrack sizing hook with a fallback; consumers may override it",
   "--track-height":

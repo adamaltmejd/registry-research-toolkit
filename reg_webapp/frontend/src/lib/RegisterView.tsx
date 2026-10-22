@@ -5,7 +5,7 @@ import type {
   VariableChild,
   VariableDeliveryModel,
 } from "./api";
-import { useBrowseFilter } from "./browse_filter";
+import { useBrowseFilter, useRegisterMatches } from "./browse_filter";
 import type { PeriodProps } from "./CatalogNodeView";
 import { ConceptGroupLink } from "./CatalogNodeView";
 import styles from "./CatalogNodeView.module.css";
@@ -37,12 +37,11 @@ import {
 } from "./catalog";
 import { FilterCount } from "./FilterCount";
 import { clampYearWindow, yearWindowLabel } from "./period";
-import type { RawDraft } from "./project_data";
-import { projectStore } from "./project_store.svelte";
+import { projectStore } from "./project_store";
 import viewStyles from "./RegisterView.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import StagedAddStatus from "./StagedAddStatus.svelte";
+import { StagedAddStatus } from "./StagedAddStatus";
 import { SvelteIsland } from "./SvelteIsland";
 import {
   ADD_WINDOW_REQUIRED_MESSAGE,
@@ -59,16 +58,17 @@ import {
   stagedApplyRefusal,
   windowsOverlapPeriod,
 } from "./staged_picker";
-import { draftSnapshot, useRune } from "./svelte_bridge.svelte";
 import { Button } from "./ui/Button";
+import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { FilterChip } from "./ui/FilterChip";
 import { Panel } from "./ui/Panel";
 import { Tag } from "./ui/Tag";
 import type { Column } from "./ui/types";
+import { useProject, useStudyWindow } from "./use_project";
 import { VariantsSummary } from "./VariantsSummary";
-import { windowStore } from "./window.svelte";
+import { windowStore } from "./window";
 
 type Era = { from: string; to: string };
 
@@ -246,8 +246,6 @@ function addScopeOf(
   };
 }
 
-const readWindow = () => windowStore.value;
-
 /**
  * A register's page: its purpose, warnings and tags, the variant chips, and the
  * variable list, which is an authoring surface (Y-83): every delivery column
@@ -329,29 +327,46 @@ export function RegisterView({
     item.name,
     ...columnNames(item.fqid),
   ];
+  // While the filter holds a settled query, the server's match decides which
+  // variables show (#1788): it reads definitions the page never loads, and it
+  // is what the browse tree counts, so the tree's "N matching variables" is
+  // what this list shows. A group narrows to its matched members. Until the
+  // answer lands, the names on the page filter.
+  const serverMatches = useRegisterMatches(node.fqid);
   // The filter narrows a group to its matching members, as the variant lens
-  // does, so a group row counts only the variables that matched and the shown
-  // count agrees with the browse tree's per-register count (#1785). A group
-  // whose own label or key matches keeps every member.
+  // does, so a group row counts only the variables that matched. A group
+  // whose own label or key matches keeps every member: the server counts
+  // variables only, so a group-label hit is admitted here, deliberately.
   const filterGroups = lensGroups.map((group) =>
     matchesFilter(filter, group.label, group.key)
       ? group
-      : {
-          ...group,
-          members: group.members.filter((member) =>
-            matchesFilter(
-              filter,
-              ...groupFilterKeys({ ...group, members: [member] }, columnNames),
+      : serverMatches
+        ? {
+            ...group,
+            members: group.members.filter((m) => serverMatches.has(m.fqid)),
+          }
+        : {
+            ...group,
+            members: group.members.filter((member) =>
+              matchesFilter(
+                filter,
+                ...groupFilterKeys(
+                  { ...group, members: [member] },
+                  columnNames,
+                ),
+              ),
             ),
-          ),
-        },
+          },
   );
   const memberFqids = new Set(
     filterGroups.flatMap((group) => group.members.map((m) => m.fqid)),
   );
   const filteredItems = lensed.filter(
     (item) =>
-      memberFqids.has(item.fqid) || matchesFilter(filter, ...leafKeys(item)),
+      memberFqids.has(item.fqid) ||
+      (serverMatches
+        ? serverMatches.has(item.fqid)
+        : matchesFilter(filter, ...leafKeys(item))),
   );
   // A group the filter leaves with one member gives way to that member's row.
   const narrowedRows = foldGroupedRows(
@@ -373,9 +388,9 @@ export function RegisterView({
   ];
 
   // ── Y-83: add delivery columns straight from the list ────────────────────
-  const studyWindow = useRune(readWindow, undefined);
+  const studyWindow = useStudyWindow();
   const add = addScopeOf(studyWindow, period);
-  const draft = useRune(draftSnapshot, undefined) as RawDraft | null;
+  const draft = useProject((store) => store.draft);
   const seedReady = regMetaVersion !== "" && steward !== "";
 
   /** The ticked columns, each with the variants the list showed it under when
@@ -558,10 +573,6 @@ export function RegisterView({
     }
   }
 
-  const statusProps = useMemo(
-    () => ({ outcome, blocked: shownRefusal }),
-    [outcome, shownRefusal],
-  );
   const warningProps = useMemo(
     () => ({ fqid: node.fqid, registerOnly: true, collapsed: true }),
     [node.fqid],
@@ -714,24 +725,22 @@ export function RegisterView({
               against the viewport (Y-97). */}
           <div className={viewStyles.addBar}>
             <output className={viewStyles.addCount}>
+              {/* The picker's words: one action name on every add surface. */}
               {stagedKeys.size === 0
-                ? "Tick a delivery column to add it to the project."
-                : `${columnCount} selected`}
+                ? "Tick a column to add it to the project."
+                : `+${columnCount}`}
             </output>
             <Button
               variant="primary"
               size="sm"
-              isInert={stagedKeys.size === 0 || !seedReady || applying}
+              isInert={stagedKeys.size === 0 || !seedReady}
+              isBusy={applying}
               onPress={addSelected}
             >
-              {applying
-                ? "Adding…"
-                : stagedKeys.size === 0
-                  ? "Add columns to project"
-                  : `Add ${columnCount} to project`}
+              Add to project
             </Button>
           </div>
-          <SvelteIsland component={StagedAddStatus} props={statusProps} />
+          <StagedAddStatus outcome={outcome} blocked={shownRefusal} />
         </div>
       )}
       <VariantsSummary registerFqid={node.fqid} variants={node.variants} />
@@ -778,7 +787,10 @@ function DeliveryColumnTick({
       {/* Name, eras and markers wrap as one line beside the tick, so a marker
           that will not fit drops under the name it qualifies. */}
       <span className={viewStyles.columnLine}>
-        {column.name}
+        <ColumnChip
+          name={column.name}
+          state={marker ? "in" : offered ? "default" : "out"}
+        />
         {column.years.length > 0 && (
           <span className={viewStyles.years}>
             {/* One span per era, so a line breaks between eras, never inside a

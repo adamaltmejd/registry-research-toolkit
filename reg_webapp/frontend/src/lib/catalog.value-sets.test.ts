@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   distinctValueSets,
-  encodeCodesParam,
   parseCodesParam,
   pickerRepresentations,
   valueSetKeyForColumn,
@@ -371,21 +370,11 @@ describe("valueSetKeyForColumn (#905 — deep-link column → value set)", () =>
   });
 });
 
-describe("encode/parseCodesParam (#905 — (variant, column) deep-link payload)", () => {
-  it("round-trips a (variant, column) pair through the row-key grammar", () => {
-    expect(encodeCodesParam("individer", "Yrke")).toBe("individer::Yrke");
-    expect(parseCodesParam("individer::Yrke")).toEqual({
-      variant: "individer",
-      column: "Yrke",
-    });
-  });
-
-  it("percent-encodes each segment so reserved/non-ASCII chars survive", () => {
+describe("parseCodesParam (#905 — (variant, column) deep-link payload)", () => {
+  it("percent-decodes each segment so reserved/non-ASCII chars survive", () => {
     // A variant slug or column with a space / reserved char must not break the URL
     // or the `::` separator parse.
-    const encoded = encodeCodesParam("a b", "Kön/2");
-    expect(encoded).toBe("a%20b::K%C3%B6n%2F2");
-    expect(parseCodesParam(encoded)).toEqual({
+    expect(parseCodesParam("a%20b::K%C3%B6n%2F2")).toEqual({
       variant: "a b",
       column: "Kön/2",
     });

@@ -5,7 +5,7 @@ import { type Context, getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { ClassificationGroupView } from "./lib/ClassificationView";
-import ConceptGroupView from "./lib/ConceptGroupView.svelte";
+import { ConceptGroupView } from "./lib/ConceptGroupView";
 import { routeBreadcrumbs } from "./lib/catalog";
 import { providerQualified } from "./lib/catalog_names.svelte";
 import { DocView } from "./lib/DocView";
@@ -13,7 +13,6 @@ import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { projectStore } from "./lib/project_store";
 import { onNavClick, type Route, router } from "./lib/router";
-import { SvelteIsland } from "./lib/SvelteIsland";
 import { useRune } from "./lib/svelte_bridge.svelte";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
@@ -195,15 +194,12 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
       );
     case "group":
       return (
-        <SvelteIsland
+        <ConceptGroupView
           key={`${route.provider}/${route.register}/${route.key}`}
-          component={ConceptGroupView}
-          props={{
-            provider: route.provider,
-            register: route.register,
-            key: route.key,
-            ...periodProps,
-          }}
+          provider={route.provider}
+          register={route.register}
+          groupKey={route.key}
+          {...periodProps}
         />
       );
     case "class-group":

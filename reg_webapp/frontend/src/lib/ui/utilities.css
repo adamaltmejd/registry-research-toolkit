@@ -148,12 +148,11 @@
    checked, the app's dim when disabled. The FOCUS ring is deliberately NOT here:
    frontend/DESIGN.md's per-component focus rule keeps `:focus-visible { box-shadow:
    var(--focus-ring) }` in each consumer's own scoped CSS, never a global sheet —
-   RepresentationPicker.svelte and RegisterView.module.css each carry their own
-   `.cbox:focus-visible` rule. This sheet owns only the face. Without it a tick
-   renders in the browser's own blue, a hue no theme can remap. CROSS-component (the
-   representation picker's rows and select-all, the register list's column ticks),
-   so like `.micro-label` above it lives here rather than in any one component's
-   <style>. */
+   RegisterView.module.css carries its own `:focus-visible` rule for its ticks.
+   This sheet owns only the face. Without it a tick renders in the browser's own
+   blue, a hue no theme can remap. A shared primitive (today the register list's
+   column ticks), so like `.micro-label` above it lives here rather than in any one
+   component's <style>. */
 .cbox {
   position: relative;
   flex: 0 0 auto;

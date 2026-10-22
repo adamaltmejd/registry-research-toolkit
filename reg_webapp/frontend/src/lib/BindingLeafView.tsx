@@ -37,11 +37,10 @@ import {
   periodWireValid,
   VALUE_SET_VERSION_NONE,
 } from "./period";
-import type { RawDraft } from "./project_data";
-import RepresentationPicker from "./RepresentationPicker.svelte";
+import { RepresentationPicker } from "./RepresentationPicker";
 import { router } from "./router";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import StagedAddStatus from "./StagedAddStatus.svelte";
+import { StagedAddStatus } from "./StagedAddStatus";
 import { SubjectView, TechnicalDetails } from "./SubjectView";
 import { SvelteIsland } from "./SvelteIsland";
 import {
@@ -52,22 +51,19 @@ import {
   type StagedApplyPayload,
   stagedApplyRefusal,
 } from "./staged_picker";
-import { draftSnapshot, useRune } from "./svelte_bridge.svelte";
 import { KeyValue } from "./ui/KeyValue";
 import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
+import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
 import { ValueSetView } from "./ValueSetView";
-import { windowStore } from "./window.svelte";
 
 interface Props extends PeriodProps {
   node: VariableShow;
   /** The variable's whole state history (the `states` read, no modifiers). */
   states: VariableStateModel[];
 }
-
-const readWindow = () => windowStore.value;
 
 interface Correction {
   state: VariableStateModel;
@@ -310,7 +306,9 @@ export function BindingLeafView({
   // One `/graph` read (#761/#792) feeds the picker's graph mode and the #670
   // header identity. Its own failure domain: an error leaves the picker on
   // its list and the header on `node.name`.
-  const graphResource = useAsyncResource(node.fqid, () => getGraph(node.fqid));
+  const graphResource = useAsyncResource(node.fqid, (signal) =>
+    getGraph(node.fqid, { signal }),
+  );
   const graph = graphResource.data;
   const graphHasDrawableContext =
     graph !== null &&
@@ -360,14 +358,12 @@ export function BindingLeafView({
         key: node.fqid,
         name: node.name ?? node.fqid,
         registerPrefix: registerPrefixOf(node.fqid),
-        isSensitive: node.is_sensitive,
-        isIdentifier: node.is_identifier,
         rows: pickerRepresentations(pickerStates),
       },
     ],
     [node, pickerStates],
   );
-  const studyWindow = useRune(readWindow, undefined);
+  const studyWindow = useStudyWindow();
   const projectWindow = useMemo(
     () =>
       studyWindow === null || !enforcePeriodBounds
@@ -384,7 +380,7 @@ export function BindingLeafView({
     () => pickerWindowYears(activePeriod, projectWindow),
     [activePeriod, projectWindow],
   );
-  const draft = useRune(draftSnapshot, undefined) as RawDraft | null;
+  const draft = useProject((store) => store.draft);
   const committedRows = useMemo(
     () =>
       committedPickerRows(draft, pickerBands, {
@@ -458,38 +454,6 @@ export function BindingLeafView({
     if (hasDiff) setOutcome(null);
   }, []);
 
-  // The islands get one props object per change of what they show, so a
-  // re-render here does not re-render them.
-  const pickerProps = useMemo(
-    () => ({
-      bands: pickerBands,
-      window: pickerWindow,
-      canAdd: seedReady,
-      studyWindow: projectWindow,
-      committedRows,
-      activePeriod,
-      graph: graphResource.data,
-      vintageYear,
-      onapply: onApply,
-      onstagechange: onStageChange,
-    }),
-    [
-      pickerBands,
-      pickerWindow,
-      seedReady,
-      projectWindow,
-      committedRows,
-      activePeriod,
-      graphResource.data,
-      vintageYear,
-      onApply,
-      onStageChange,
-    ],
-  );
-  const statusProps = useMemo(
-    () => ({ outcome: shownOutcome, blocked: shownRefusal }),
-    [shownOutcome, shownRefusal],
-  );
   const variableWarnings = useMemo(() => ({ fqid: node.fqid }), [node.fqid]);
   const registerWarnings = useMemo(
     () => ({
@@ -593,11 +557,23 @@ export function BindingLeafView({
         />
       )}
       {(pickerBands[0].rows.length > 0 || graphHasDrawableContext) && (
-        <SvelteIsland component={RepresentationPicker} props={pickerProps} />
+        <RepresentationPicker
+          bands={pickerBands}
+          window={pickerWindow}
+          canAdd={seedReady}
+          committedRows={committedRows}
+          studyWindow={projectWindow}
+          focusKey={node.fqid}
+          graph={graph}
+          neighbours
+          vintageYear={vintageYear}
+          onApply={onApply}
+          onStageChange={onStageChange}
+        />
       )}
-      {/* Applying a period re-resolves this view and clears the picker's
-          staging, hence the refusal's "select and add again". */}
-      <SvelteIsland component={StagedAddStatus} props={statusProps} />
+      {/* Applying a period re-resolves this view; the picker's staging
+          survives it, so the refusal only asks for a period. */}
+      <StagedAddStatus outcome={shownOutcome} blocked={shownRefusal} />
       {period && (variant || valueSetVersion) && (
         // Each modifier is clearable, so narrowing to one state is not a
         // one-way trap. Gated on a period: the server only applies them to a

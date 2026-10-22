@@ -60,7 +60,7 @@
 .columnLine {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
 }
 .column {
@@ -87,6 +87,11 @@
 /* Years are identifiers, inside the UI-faced sentence of the tag. */
 .windowYears {
   font-family: var(--font-mono);
+}
+/* Taller than the sticky add bar, so a focused tick is scrolled clear of
+   it (WCAG 2.4.11). */
+.tick {
+  scroll-margin-bottom: 7rem;
 }
 .tick:focus-visible {
   outline: none;

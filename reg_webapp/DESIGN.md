@@ -377,8 +377,8 @@ variable pages to add one column each.
   researcher made two.
 - **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
-  committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is
-  the one confirmation/refusal row. The binding leaf, the concept group and the register
+  committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.tsx` is the
+  one confirmation/refusal row. The binding leaf, the concept group and the register
   list are hosts: they own their own selection and scope and nothing else. Do not copy
   the sequence into a new host — that is the leaf-helper duplication AGENTS.md names.
 - **The study window IS the period here.** The list carries no Period control (that
@@ -894,36 +894,25 @@ kind:
   catalog leaves. It is read-only for now, not an add-to-project control.
 
 - **Concept group** — the **column / representation picker** (`RepresentationPicker`,
-  #678): one compact band per member variable, each listing that variable's delivery
-  columns as selectable rows. A single-column variable collapses to one row; a
-  multi-column variable gets a thin subheading (its distinguishing identity + a
-  per-variable "select all") over its column rows. Each band identity links to the
-  member's leaf page. When the group spans more than one distinct concept name,
-  `clusterBands` (#901) groups the bands under `<h3>` name-cluster headings — each name
-  renders once and each band leads with its within-cluster distinguisher (facet,
-  delivery column, or member slug) rather than the repeated name. One shared staged diff
-  footer spans all bands; it is always rendered from first paint (so its presence never
-  shifts the layout), with its Apply/Reset controls disabled — or hidden where nothing
-  is actionable — until something is staged, and it labels the action by diff shape
-  ("Add to project", "Remove from project", or "Apply changes"). Each picker row is
-  marked with the **kind** of dimension that distinguishes it from its siblings — a
-  `facet` (a #819 `GroupAxis` value, per member), `variant` (variant/population), or
-  `coding` (value-set version label) — and a **per-dimension filter strip** lets the
-  user narrow a large multi-axis group to one axis value (#908, `pickerFilterDimensions`
-  / `pickerRowPasses` / `PickerDimension` in `catalog.ts`). A dimension surfaces as a
-  filter only when it discriminates (≥2 distinct values across all visible rows);
-  single-value dimensions are invisible. Filtering is a client-side presentation lens: a
-  hidden-but-selected row still commits, and the footer signals this. The filter logic
-  is OR within a dimension, AND across. When the group's graph is edge-bearing, small
-  enough to draw cleanly, and maps every selectable graph cell one-to-one to the visible
-  picker rows, the same picker may switch to graph / time-band mode instead of the list.
-  The #908 dimension filter strip stays above either render mode; active filters narrow
-  graph cells through the same filtered row model as the compact list. Leaf graph
-  context with no selectable delivery-column row still renders in graph mode as
-  unavailable context cells, so no-column bindings keep their succession/group context.
+  #678) drawn as the frontend DESIGN.md `LaneGraph`: one lane per member (a group's
+  members are told apart by their facets, so two columns of one variable are two lanes),
+  ordered by facet, each delivery column a span on one shared year axis. Spans are
+  native checkboxes named column-first; succession edges between drawn lanes are solid
+  arrows, a #902 rename fold a dashed hop inside one span, and the active window an
+  `accent-bg` band. The modules split by concern: `lane_graph.ts` (pure layout),
+  `picker_lanes.ts` (catalog rows → lanes, spans, edges), `LaneGraph.tsx` (rendering),
+  `RepresentationPicker.tsx` (filters, staging, the sticky footer). One shared staged
+  diff footer labels the action by diff shape ("Add to project", "Remove from project",
+  or "Apply changes"); the register list's add bar uses the same words. A committed
+  column whose source and the study window disagree is listed in words under the graph.
+  A **per-dimension filter strip** narrows a large multi-axis group to one axis value
+  (#908, `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in
+  `catalog.ts`); a dimension surfaces only when it discriminates (≥2 distinct values).
+  Filtering is a presentation lens: a hidden-but-selected row still commits, and the
+  footer signals this. OR within a dimension, AND across. The binding leaf uses the same
+  picker, with read-only neighbour lanes for variables a succession edge reaches.
 
-  Two **succession-collapse** folds ship in #902, both client-side and purely
-  presentational:
+  The **sequential-rename collapse** (#902) is client-side and purely presentational:
 
   - **Intra-variable sequential-rename collapse** (`pickerRepresentations` /
     `coexistingColumns` in `catalog.ts`): one variable+variant whose delivery columns
@@ -933,33 +922,8 @@ kind:
     via `renamedColumns` on `PickerRepresentation`. Genuinely parallel
     (overlapping-window) columns stay separate rows. The coexist-vs-rename test is the
     shared `coexistingColumns` leaf — also `resolveBindingAt`'s gate for an ambiguous
-    add — so the two surfaces can never drift on the distinction. The #904
-    graph/time-band mode renders those eras as selectable cells when the graph gate
-    chooses the graph renderer.
-
-  - **Inter-variable succession fold** (`successionFold` derived in
-    `ConceptGroupView.svelte`): the group graph's `succession` edges (#761 contract) are
-    read to detect predecessor→successor chains where BOTH endpoints are group members.
-    The superseded predecessor is dropped as a co-equal selectable band; the chain head
-    (latest edition) leads and carries its predecessors as a "supersedes N edition(s)"
-    disclosure (a closed `<details>` — oldest-first leaf links with the `effective_year`
-    qualifier). When a predecessor has era-specific rows, those rows remain selectable
-    inside the disclosure so old study windows can add the covering variable without
-    making it a top-level peer. Partial chains — an edge endpoint outside the group —
-    stay normal bands. The fold is purely client-side (`bands` derived reads
-    `successionFold`) and requires no API change.
-
-  The **graph/time-band render mode** (#904) consumes the same `RelationshipGraph`
-  payload and the same picker rows. It is strictly additive: it is enabled only when the
-  drawable graph projection stays under conservative node/edge/cell limits, every
-  visible picker band has graph coverage, every visible picker row is represented, and
-  every selectable graph cell maps to exactly one member column. The #908 filter strip
-  remains above both list and graph modes; active filters narrow the graph to the
-  visible member projection rather than hiding the filters or leaking filtered-out
-  lanes. Otherwise the compact list is the authoritative picker. A variable leaf still
-  passes its graph so the picker graph renders no-column, same_as-only, and
-  sibling/predecessor context as unavailable cells when there is no safe selectable
-  picker row.
+    add — so the two surfaces can never drift on the distinction. The LaneGraph draws
+    the eras inside the row's one span.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section): a
 slider-only year-window control seeded from the project window and subject coverage,

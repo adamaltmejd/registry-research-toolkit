@@ -1,11 +1,12 @@
 import { useCallback } from "react";
-import { useBrowseFilter } from "./browse_filter";
+import { useBrowseFilter, useRegisterMatches } from "./browse_filter";
 import {
   catalogHref,
   foldGroupedRows,
   groupFilterKeys,
   groupHref,
   leafSlug,
+  matchesFilter,
   rankFilter,
 } from "./catalog";
 import { registerRead } from "./catalog_names.svelte";
@@ -37,8 +38,8 @@ function readVariableCounts(): Record<string, number> {
 /**
  * The second browse column (DESIGN.md → Layout): the selected register's
  * variables, a concept group folded to one item that opens the group's page
- * (#303). The search bar's text filters it in place, by the same keys as the
- * register page's own filter (names, slugs and delivery column names).
+ * (#303). The search bar's text filters it in place: by the server's match
+ * set once the query settles, as on the register page, by names until then.
  */
 export function VariableList({
   registerFqid,
@@ -53,6 +54,7 @@ export function VariableList({
   const read = useRune(registerRead, registerFqid);
   const counts = useRune(readVariableCounts, undefined);
   const needle = useBrowseFilter();
+  const serverMatches = useRegisterMatches(registerFqid);
   const renderName = useCallback(
     (item: ColumnItem) => <Highlight text={item.name} needle={needle} />,
     [needle],
@@ -67,18 +69,25 @@ export function VariableList({
     ]),
   );
   const columnNames = (fqid: string) => columnsByFqid.get(fqid) ?? [];
-  const rows = rankFilter(
-    foldGroupedRows(children, node?.groups),
-    needle,
-    (row) =>
+  const folded = foldGroupedRows(children, node?.groups);
+  const keys = (row: (typeof folded)[number]) =>
+    row.kind === "group"
+      ? groupFilterKeys(row.group, columnNames)
+      : [row.item.name, leafSlug(row.item.fqid), ...columnNames(row.item.fqid)];
+  // With a settled query the server's match admits rows, as on the register
+  // page beside this column, so the two panes agree. A group is admitted by
+  // its own label or key, or by any matched member. Name hits rank first.
+  let rows = rankFilter(folded, needle, keys);
+  if (serverMatches) {
+    const admitted = folded.filter((row) =>
       row.kind === "group"
-        ? groupFilterKeys(row.group, columnNames)
-        : [
-            row.item.name,
-            leafSlug(row.item.fqid),
-            ...columnNames(row.item.fqid),
-          ],
-  );
+        ? matchesFilter(needle, row.group.label, row.group.key) ||
+          row.group.members.some((m) => serverMatches.has(m.fqid))
+        : serverMatches.has(row.item.fqid),
+    );
+    const ranked = rankFilter(admitted, needle, keys);
+    rows = [...ranked, ...admitted.filter((row) => !ranked.includes(row))];
+  }
   const items: ColumnItem[] = rows.map((row) =>
     row.kind === "group"
       ? {

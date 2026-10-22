@@ -1,0 +1,343 @@
+.frame {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.graph {
+  position: relative;
+  min-width: 0;
+}
+
+/* ── Marks (one decorative SVG under the lanes) ─────────────────────────── */
+
+.marks {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.current {
+  fill: var(--accent-soft);
+}
+
+.band {
+  fill: var(--accent-bg);
+  opacity: 0.55;
+}
+
+.bound {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.rule {
+  stroke: var(--border);
+}
+
+.axis {
+  stroke: var(--border-strong);
+}
+
+.tick,
+.tickWindow {
+  font-family: var(--font-mono);
+  font-size: var(--text-axis);
+  font-variant-numeric: tabular-nums;
+  fill: var(--text-muted);
+}
+
+.tickWindow {
+  font-weight: 500;
+  fill: var(--accent-ink);
+}
+
+.axisCaption {
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  font-weight: 500;
+}
+
+.edge {
+  fill: none;
+  stroke-width: 1.2;
+  transition: stroke-width var(--duration-quick) var(--ease-standard);
+}
+
+.succession {
+  stroke: var(--viz-edge-succession);
+}
+
+.rename {
+  stroke: var(--viz-edge-rename);
+  stroke-dasharray: 3 3;
+}
+
+.edgeActive {
+  stroke-width: 2.4;
+}
+
+.arrowhead {
+  fill: var(--text);
+}
+
+/* ── Lanes and spans (HTML over the marks) ──────────────────────────────── */
+
+.lanes,
+.spans {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lane {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--lane-height);
+  padding: var(--space-1) 0;
+  overflow: hidden;
+}
+
+.graph[data-stacked] .name {
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+.nameText {
+  overflow: hidden;
+  color: var(--text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.nameText {
+  text-decoration: none;
+}
+
+a.nameText:hover {
+  text-decoration: underline;
+}
+
+a.nameText:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+.sub {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.undelivered {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.slot {
+  position: absolute;
+}
+
+.span {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pick {
+  cursor: pointer;
+}
+
+/* The native checkbox, transparent over the whole span: the span is the
+   control a pointer hits, and focus and Space land on a real input. */
+.hit {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: inherit;
+  opacity: 0;
+  /* Taller than the picker's sticky Apply footer, wrapped at 375 px, so a
+     focused span is scrolled clear of it (WCAG 2.4.11). */
+  scroll-margin-bottom: 7rem;
+}
+
+.span[data-disabled] {
+  cursor: not-allowed;
+}
+
+.segment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+/* A ColumnChip stretched over its years: the span and the chip are one
+   object. */
+.face {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background var(--duration-quick) var(--ease-standard),
+    border-color var(--duration-quick) var(--ease-standard);
+}
+
+.pick:hover .face {
+  border-color: var(--text);
+}
+
+/* Will be added: the selection wash, pine as text. */
+.span[data-staged="add"] .face {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+}
+
+/* Will be removed: no longer filled, struck through. */
+.span[data-staged="remove"] .face {
+  border-style: dashed;
+  border-color: var(--accent);
+  background: var(--viz-span);
+  color: var(--accent-ink);
+  text-decoration: line-through;
+}
+
+/* In the project, but its source no longer meets the study window: the
+   blocking divergence, at error tone and full contrast. */
+.span[data-blocked] .face {
+  border-color: var(--err);
+  box-shadow: inset 0 0 0 1px var(--err);
+}
+
+.pick:hover:where([data-state="default"]:not([data-staged])) .face {
+  background: var(--surface-hover);
+}
+
+.span:has(.hit:focus-visible) .face {
+  box-shadow: var(--focus-ring);
+}
+
+.glyph {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 3px);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+  font-weight: 600;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.span[data-blocked] .glyph {
+  color: var(--err);
+}
+
+.outside {
+  position: absolute;
+  top: 50%;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+  font-weight: var(--column-weight);
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+.outside[data-side="right"] {
+  left: calc(100% + 4px);
+}
+
+.outside[data-side="left"] {
+  right: calc(100% + 4px);
+}
+
+.span[data-state="out"] .outside {
+  color: var(--text-faint);
+}
+
+.change {
+  position: absolute;
+  bottom: calc(100% + 1px);
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: var(--text-axis);
+  white-space: nowrap;
+}
+
+/* ── Legend ──────────────────────────────────────────────────────────────── */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  list-style: none;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.keySuccession,
+.keyRename {
+  display: inline-block;
+  width: 22px;
+  border-top: 1.2px solid var(--viz-edge-succession);
+}
+
+.keyBlocked {
+  color: var(--err);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.keyRename {
+  border-top-style: dashed;
+  border-color: var(--viz-edge-rename);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge,
+  .face {
+    transition: none;
+  }
+}
