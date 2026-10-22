@@ -88,6 +88,11 @@
 .windowYears {
   font-family: var(--font-mono);
 }
+/* Taller than the sticky add bar, so a focused tick is scrolled clear of
+   it (WCAG 2.4.11). */
+.tick {
+  scroll-margin-bottom: 7rem;
+}
 .tick:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);

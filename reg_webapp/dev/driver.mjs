@@ -608,7 +608,7 @@ async function catalogDraftCase(page, counts, shoot) {
   await settled(page);
   const fromList = validated(page);
   await columnCheckbox(page, "Forsamling").check();
-  await page.getByRole("button", { name: "Add 1 column to project" }).click();
+  await page.getByRole("button", { name: "Add to project" }).click();
   await fromList;
   await settled(page);
   await page.getByRole("status").filter({ hasText: "Applied +1 column" }).waitFor();

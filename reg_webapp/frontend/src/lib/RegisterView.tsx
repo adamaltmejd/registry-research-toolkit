@@ -335,15 +335,16 @@ export function RegisterView({
   const serverMatches = useRegisterMatches(node.fqid);
   // The filter narrows a group to its matching members, as the variant lens
   // does, so a group row counts only the variables that matched. A group
-  // whose own label or key matches keeps every member.
+  // whose own label or key matches keeps every member: the server counts
+  // variables only, so a group-label hit is admitted here, deliberately.
   const filterGroups = lensGroups.map((group) =>
-    serverMatches
-      ? {
-          ...group,
-          members: group.members.filter((m) => serverMatches.has(m.fqid)),
-        }
-      : matchesFilter(filter, group.label, group.key)
-        ? group
+    matchesFilter(filter, group.label, group.key)
+      ? group
+      : serverMatches
+        ? {
+            ...group,
+            members: group.members.filter((m) => serverMatches.has(m.fqid)),
+          }
         : {
             ...group,
             members: group.members.filter((member) =>
@@ -360,10 +361,12 @@ export function RegisterView({
   const memberFqids = new Set(
     filterGroups.flatMap((group) => group.members.map((m) => m.fqid)),
   );
-  const filteredItems = lensed.filter((item) =>
-    serverMatches
-      ? serverMatches.has(item.fqid)
-      : memberFqids.has(item.fqid) || matchesFilter(filter, ...leafKeys(item)),
+  const filteredItems = lensed.filter(
+    (item) =>
+      memberFqids.has(item.fqid) ||
+      (serverMatches
+        ? serverMatches.has(item.fqid)
+        : matchesFilter(filter, ...leafKeys(item))),
   );
   // A group the filter leaves with one member gives way to that member's row.
   const narrowedRows = foldGroupedRows(
@@ -727,21 +730,19 @@ export function RegisterView({
               against the viewport (Y-97). */}
           <div className={viewStyles.addBar}>
             <output className={viewStyles.addCount}>
+              {/* The picker's words: one action name on every add surface. */}
               {stagedKeys.size === 0
-                ? "Tick a delivery column to add it to the project."
-                : `${columnCount} selected`}
+                ? "Tick a column to add it to the project."
+                : `+${columnCount}`}
             </output>
             <Button
               variant="primary"
               size="sm"
-              isInert={stagedKeys.size === 0 || !seedReady || applying}
+              isInert={stagedKeys.size === 0 || !seedReady}
+              isBusy={applying}
               onPress={addSelected}
             >
-              {applying
-                ? "Adding…"
-                : stagedKeys.size === 0
-                  ? "Add columns to project"
-                  : `Add ${columnCount} to project`}
+              Add to project
             </Button>
           </div>
           <StagedAddStatus outcome={outcome} blocked={shownRefusal} />
