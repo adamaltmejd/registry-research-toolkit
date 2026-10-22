@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   type ClassificationRootShow,
   type ConceptGroup,
@@ -7,6 +6,7 @@ import {
   type ProviderShow,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
+import { useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
@@ -20,7 +20,7 @@ import {
   nodeLabel,
   rankFilter,
 } from "./catalog";
-import { FilterInput } from "./FilterInput";
+import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
 import { SvelteIsland } from "./SvelteIsland";
 import { DataTable } from "./ui/DataTable";
@@ -142,9 +142,10 @@ const registerColumns: Column<RegisterRow>[] = [
   { key: "purpose", label: "Description" },
 ];
 
-/** A provider's registers, filterable, each linking to its page. */
+/** A provider's registers, narrowed by the top-bar filter, each linking to
+ * its page. */
 function ProviderView({ node }: { node: ProviderShow }) {
-  const [filter, setFilter] = useState("");
+  const filter = useBrowseFilter();
   const registers = rankFilter(node.children, filter, (r) => [
     leafSlug(r.fqid),
     r.name,
@@ -160,13 +161,11 @@ function ProviderView({ node }: { node: ProviderShow }) {
         </Panel>
       ) : (
         <>
-          <FilterInput
-            value={filter}
-            onChange={setFilter}
-            total={node.children.length}
+          <FilterCount
+            filter={filter}
             shown={registers.length}
-            label="Filter registers"
-            placeholder="Filter registers…"
+            total={node.children.length}
+            noun="registers"
           />
           {registers.length > 0 ? (
             <DataTable
@@ -195,7 +194,7 @@ function ProviderView({ node }: { node: ProviderShow }) {
             <Panel title="Registers">
               <EmptyState
                 title={`No registers match “${filter}”`}
-                description="Clear the filter to see every register."
+                description="Press Escape in the search bar to see every register."
               />
             </Panel>
           )}
@@ -206,7 +205,8 @@ function ProviderView({ node }: { node: ProviderShow }) {
 }
 
 /** One concept-group row (#303): it links to the group's own page, where its
- * members and their facets live. The count is distinct member FQIDs (#819). */
+ * members and their facets live. The count is distinct member FQIDs (#819);
+ * `noun` is the plural, and every noun here pluralizes with "s" (`axisNoun`). */
 export function ConceptGroupLink({
   group,
   noun,
@@ -216,11 +216,12 @@ export function ConceptGroupLink({
   noun: string;
   href: string;
 }) {
+  const count = distinctMemberCount(group.members);
   return (
     <a className={styles.groupLink} href={href}>
       <span className={styles.rowLink}>{group.label}</span>
       <Tag>
-        {distinctMemberCount(group.members)} {noun}
+        {count} {count === 1 ? noun.slice(0, -1) : noun}
       </Tag>
     </a>
   );
@@ -283,56 +284,55 @@ function ClassificationRootView({ node }: { node: ClassificationRootShow }) {
       {rows.length === 0 ? (
         <EmptyState title="The catalog has no classifications." />
       ) : (
-        <div className={styles.classificationTable}>
-          <Panel title="Classification systems" flush>
-            <DataTable
-              rowNavigation
-              columns={classificationColumns}
-              rows={rows}
-              getRowId={(row) => row.id}
-              renderCell={(row, column) => {
-                if (column.key === "edition") {
-                  return row.kind === "leaf" ? (
-                    <code className={styles.edition}>{row.edition}</code>
-                  ) : (
-                    <span className={styles.edition}>{row.edition}</span>
+        <Panel title="Classification systems" flush>
+          {/* The panel title already names the columns' contents. */}
+          <DataTable
+            rowNavigation
+            hideHeaders
+            columns={classificationColumns}
+            rows={rows}
+            getRowId={(row) => row.id}
+            renderCell={(row, column) => {
+              if (column.key === "edition") {
+                return row.kind === "leaf" ? (
+                  <code className={styles.edition}>{row.edition}</code>
+                ) : (
+                  <span className={styles.edition}>{row.edition}</span>
+                );
+              }
+              switch (row.kind) {
+                case "family":
+                  return (
+                    <a
+                      className={styles.rowLink}
+                      href={classGroupHref(row.family.key)}
+                      title={`${row.family.editions.length} editions`}
+                    >
+                      {row.family.label} ({row.family.editions.length} editions)
+                    </a>
                   );
-                }
-                switch (row.kind) {
-                  case "family":
-                    return (
-                      <a
-                        className={styles.rowLink}
-                        href={classGroupHref(row.family.key)}
-                        title={`${row.family.editions.length} editions`}
-                      >
-                        {row.family.label} ({row.family.editions.length}{" "}
-                        editions)
-                      </a>
-                    );
-                  case "group":
-                    return (
-                      <ConceptGroupLink
-                        group={row.group}
-                        noun={axisNoun(row.group.axes)}
-                        href={classGroupHref(row.group.key)}
-                      />
-                    );
-                  case "leaf":
-                    return (
-                      <a
-                        className={styles.rowLink}
-                        href={catalogHref(row.item.fqid)}
-                        title={row.edition}
-                      >
-                        {row.item.name ?? row.item.fqid}
-                      </a>
-                    );
-                }
-              }}
-            />
-          </Panel>
-        </div>
+                case "group":
+                  return (
+                    <ConceptGroupLink
+                      group={row.group}
+                      noun={axisNoun(row.group.axes)}
+                      href={classGroupHref(row.group.key)}
+                    />
+                  );
+                case "leaf":
+                  return (
+                    <a
+                      className={styles.rowLink}
+                      href={catalogHref(row.item.fqid)}
+                      title={row.edition}
+                    >
+                      {row.item.name ?? row.item.fqid}
+                    </a>
+                  );
+              }
+            }}
+          />
+        </Panel>
       )}
     </article>
   );

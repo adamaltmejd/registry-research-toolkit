@@ -122,7 +122,7 @@ export function VariableList({
       empty={
         needle.trim() === ""
           ? "This register lists no variables."
-          : `No variables match “${needle.trim()}”.`
+          : `No variables match “${needle.trim()}”. Press Escape in the search bar to clear it.`
       }
       error={
         !read.loading && node === null

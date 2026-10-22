@@ -5,6 +5,7 @@ import type {
   VariableChild,
   VariableDeliveryModel,
 } from "./api";
+import { useBrowseFilter } from "./browse_filter";
 import type { PeriodProps } from "./CatalogNodeView";
 import { ConceptGroupLink } from "./CatalogNodeView";
 import styles from "./CatalogNodeView.module.css";
@@ -32,7 +33,7 @@ import {
   windowsOverlapWindow,
   YEARLESS_VALID_FROM,
 } from "./catalog";
-import { FilterInput } from "./FilterInput";
+import { FilterCount } from "./FilterCount";
 import { clampYearWindow, yearWindowLabel } from "./period";
 import type { RawDraft } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -257,7 +258,7 @@ export function RegisterView({
   ...period
 }: PeriodProps & { node: RegisterShow }) {
   const { regMetaVersion, steward } = period;
-  const [filter, setFilter] = useState("");
+  const filter = useBrowseFilter();
   // The variant chips (Y-82): OR within the selection, a lens on the list only.
   const [selectedVariants, setSelectedVariants] = useState<Set<string>>(
     () => new Set(),
@@ -611,13 +612,11 @@ export function RegisterView({
           )}
           {/* Counts stay in variable units after folding: a group row counts
               its members. */}
-          <FilterInput
-            value={filter}
-            onChange={setFilter}
-            total={total}
+          <FilterCount
+            filter={filter}
             shown={shown}
-            label="Filter variables"
-            placeholder="Filter variables…"
+            total={total}
+            noun="variables"
           />
           {variableRows.length > 0 ? (
             <DataTable
@@ -669,7 +668,7 @@ export function RegisterView({
                 description={
                   selectedVariants.size > 0
                     ? "The variant filter above is also narrowing this list."
-                    : "Clear the filter to see every variable."
+                    : "Press Escape in the search bar to see every variable."
                 }
               />
             </Panel>

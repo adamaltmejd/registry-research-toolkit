@@ -36,6 +36,12 @@
 .rowLink {
   font-weight: var(--heading-weight);
 }
+a.rowLink:focus-visible,
+.groupLink:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
 
 /* A register's description, two lines at most; the whole text is on its page. */
 .clamp {
@@ -63,22 +69,4 @@
 .edition {
   color: var(--text-muted);
   font-size: var(--text-sm);
-}
-
-/* The page's own heading already says "Classifications": the column headers
-   stay for assistive technology but leave the screen, and so do the stacked
-   form's cell labels. */
-.classificationTable thead {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-.classificationTable td:not(:first-child)::before {
-  content: none;
 }

@@ -2,7 +2,6 @@
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--elevation-raised);
   overflow: hidden;
 }
 

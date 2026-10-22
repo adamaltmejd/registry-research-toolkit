@@ -22,6 +22,9 @@ interface Props<Row extends object> {
   rowNavigation?: boolean;
   /** The raised panel surface, with the column headers as its title row. */
   framed?: boolean;
+  /** The page already names what the columns hold: the headers stay for
+   * assistive technology only, and the stacked form drops its cell labels. */
+  hideHeaders?: boolean;
 }
 
 // A click that lands on a control inside a cell is that control's own.
@@ -47,6 +50,7 @@ export function DataTable<Row extends object>({
   renderCell,
   rowNavigation = false,
   framed = false,
+  hideHeaders = false,
 }: Props<Row>) {
   const pressStart = useRef<{ row: Element; x: number; y: number } | null>(
     null,
@@ -95,6 +99,7 @@ export function DataTable<Row extends object>({
     styles.table,
     framed && styles.framed,
     framed && columns.length === 2 && styles.narrowStack,
+    hideHeaders && styles.headless,
   ]
     .filter(Boolean)
     .join(" ");
@@ -106,7 +111,10 @@ export function DataTable<Row extends object>({
         role="table"
         style={{ "--data-table-columns": columns.length } as CSSProperties}
       >
-        <thead role="rowgroup">
+        <thead
+          role="rowgroup"
+          className={hideHeaders ? "visually-hidden" : undefined}
+        >
           <tr role="row">
             {columns.map((column, i) => (
               <th
