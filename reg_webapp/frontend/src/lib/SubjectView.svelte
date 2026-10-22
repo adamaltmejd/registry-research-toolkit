@@ -42,7 +42,7 @@ let {
 
 <article>
   <header class="subject-header">
-    <h2>{title}</h2>
+    <h1>{title}</h1>
     {#if fqid && showFqid}
       <p class="fqid"><code>{fqid}</code></p>
     {/if}
@@ -59,7 +59,7 @@ let {
   .subject-header {
     margin-bottom: var(--space-4);
   }
-  .subject-header h2 {
+  .subject-header h1 {
     margin: 0;
     font-size: var(--text-h1);
     font-weight: var(--heading-weight);

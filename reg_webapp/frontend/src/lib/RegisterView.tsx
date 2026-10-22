@@ -555,7 +555,7 @@ export function RegisterView({
 
   return (
     <article className={styles.page}>
-      <h2 className={styles.title}>{nodeLabel(node)}</h2>
+      <h1 className={styles.title}>{nodeLabel(node)}</h1>
       {node.purpose && <p className={viewStyles.purpose}>{node.purpose}</p>}
       <SvelteIsland component={ScopedDataWarnings} props={warningProps} />
       {node.tags && node.tags.length > 0 && (

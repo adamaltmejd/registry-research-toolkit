@@ -45,7 +45,7 @@ function sourceHost(doc: RelatedDocument): string {
 
 {#if show}
   <section class="related-docs" aria-labelledby="related-docs-heading">
-    <h3 id="related-docs-heading">Source documents</h3>
+    <h2 id="related-docs-heading">Source documents</h2>
 
     {#if resource.loading}
       <p class="muted" aria-busy="true">Loading…</p>
@@ -80,7 +80,7 @@ function sourceHost(doc: RelatedDocument): string {
   .related-docs {
     margin-top: 1.5rem;
   }
-  h3 {
+  h2 {
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
@@ -112,5 +112,10 @@ function sourceHost(doc: RelatedDocument): string {
     flex-wrap: wrap;
     gap: 0.25rem 0.75rem;
     color: var(--text-muted);
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  h2 {
+    font-size: var(--text-h2);
   }
 </style>

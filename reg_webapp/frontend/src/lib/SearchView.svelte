@@ -641,7 +641,7 @@ function closeSearch(): void {
 
 <article class="search-view">
   <div class="search-heading">
-    <h2>Search</h2>
+    <h1>Search</h1>
     <button type="button" class="close-search" aria-label="Close search" onclick={closeSearch}>
       Close
     </button>
@@ -754,9 +754,9 @@ function closeSearch(): void {
                  Classification-backed headings link to their classification page. -->
             {#each groupCodesBySystem(codeDisplayResults(items)) as system (system.key)}
               <div class="code-system">
-                <h4 class="code-system-heading">
+                <h3 class="code-system-heading">
                   {@render codeSystemPill(system.label, system.href)}
-                </h4>
+                </h3>
                 <div class="children table codes" role="presentation">
                   <!-- Key by `code|index`, NOT the bare index: each code is a
                        native <details> disclosure, and a bare-index key makes
@@ -1286,8 +1286,9 @@ function closeSearch(): void {
     gap: var(--space-3);
     margin-bottom: 1rem;
   }
-  .search-heading h2 {
+  .search-heading h1 {
     margin: 0;
+    font-size: var(--text-h1);
     font-weight: var(--heading-weight);
   }
   .close-search {

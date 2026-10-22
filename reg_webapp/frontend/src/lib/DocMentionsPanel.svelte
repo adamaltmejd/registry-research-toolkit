@@ -67,7 +67,7 @@ function sourceLabel(url: string, title?: string | null): string {
 
 {#if show}
   <section class="doc-mentions" aria-labelledby="doc-mentions-heading">
-    <h3 id="doc-mentions-heading">Parsed documentation</h3>
+    <h2 id="doc-mentions-heading">Parsed documentation</h2>
 
     {#if resource.loading}
       <p class="muted" aria-busy="true">Loading…</p>
@@ -141,12 +141,12 @@ function sourceLabel(url: string, title?: string | null): string {
 {/if}
 
 <style>
-  /* Match LineagePanels' section/h3 vocabulary (scoped styles don't pierce into
-     this child component, so the minimal h3 rules are copied here). */
+  /* Match LineagePanels' section/h2 vocabulary (scoped styles don't pierce into
+     this child component, so the minimal h2 rules are copied here). */
   .doc-mentions {
     margin-top: 1.5rem;
   }
-  h3 {
+  h2 {
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
@@ -199,5 +199,10 @@ function sourceLabel(url: string, title?: string | null): string {
   .count {
     margin: 0.5rem 0 0;
     font-size: 0.85em;
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  h2 {
+    font-size: var(--text-h2);
   }
 </style>

@@ -439,7 +439,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
 
     await expect
-      .element(page.getByRole("heading", { name: "Kön", level: 2 }))
+      .element(page.getByRole("heading", { name: "Kön", level: 1 }))
       .toBeVisible();
     expect(page.getByRole("checkbox").elements()).toEqual([]);
     expect(

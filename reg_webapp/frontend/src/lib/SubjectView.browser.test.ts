@@ -21,7 +21,7 @@ describe("SubjectView (#638 shell)", () => {
       .element(
         page.getByRole("heading", {
           name: "Näringsgren, största förvärvskälla",
-          level: 2,
+          level: 1,
         }),
       )
       .toBeVisible();

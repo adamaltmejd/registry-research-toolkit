@@ -36,7 +36,7 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 // labelled by the member's own curated short facet label; classification umbrellas
 // are axis-less, so there is no shared group facet axis). The loading / error arms
 // stay OUTSIDE the shell (the shell is the success body). Identity is carried by the
-// #803 topbar trail + the page <h2> (SubjectView title), not an in-page breadcrumb.
+// #803 topbar trail + the page <h1> (SubjectView title), not an in-page breadcrumb.
 interface Props {
   key: string;
   activeFqid?: string | null;
@@ -231,7 +231,7 @@ function selectEdition(value: string): void {
 {#snippet valueSet()}
   {#if tabs.length > 0 && selectedFqid != null}
     <section class="edition-tabs-section" aria-labelledby="edition-tabs-heading">
-      <h3 id="edition-tabs-heading">Value set</h3>
+      <h2 id="edition-tabs-heading">Value set</h2>
       <div class="edition-tabs">
         <Tabs.Root
           value={selectedFqid}
@@ -387,7 +387,7 @@ function selectEdition(value: string): void {
   .edition-tabs-section {
     margin: var(--space-4) 0;
   }
-  .edition-tabs-section h3 {
+  .edition-tabs-section h2 {
     margin: 0 0 var(--space-2);
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--border);

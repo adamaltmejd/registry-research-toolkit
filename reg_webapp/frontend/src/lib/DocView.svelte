@@ -25,7 +25,7 @@ const doc = $derived(resource.data);
   <p class="error" role="alert">{resource.error}</p>
 {:else if doc}
   <article class="doc-view">
-    <h2>{doc.display_name}</h2>
+    <h1>{doc.display_name}</h1>
 
     {#if doc.register || doc.variable || doc.tags.length > 0}
       <dl class="meta">
@@ -70,8 +70,9 @@ const doc = $derived(resource.data);
 {/if}
 
 <style>
-  .doc-view h2 {
+  .doc-view h1 {
     margin-bottom: 0.5rem;
+    font-size: var(--text-h1);
     font-weight: var(--heading-weight);
   }
   .meta {

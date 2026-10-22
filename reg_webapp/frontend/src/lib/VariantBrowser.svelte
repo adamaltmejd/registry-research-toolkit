@@ -113,7 +113,7 @@ function objectTypeRows(objectType: {
     <ul class="variant-list">
       {#each entries as entry (entry.key)}
         <li class="variant-entry">
-          <h3 class="entry-name">{entry.label}</h3>
+          <h2 class="entry-name">{entry.label}</h2>
           {#if entry.isFamily}
             <!-- A curated succession family reads as ONE variant with a changed
                  frame: its segments name what the family label doesn't already
@@ -139,9 +139,9 @@ function objectTypeRows(objectType: {
               <!-- The concrete coordinate a project source extracts. The years
                    live on the folded blocks below (and, for a family, in the
                    segments list above), so the slug is all this line owes. -->
-              <h4 class="segment-id">
+              <h3 class="segment-id">
                 <code class="slug">{segment.variant.slug}</code>
-              </h4>
+              </h3>
               {#if segment.variant.description}
                 <p class="desc muted">{segment.variant.description}</p>
               {/if}
@@ -150,12 +150,12 @@ function objectTypeRows(objectType: {
                 {@const populations = block.version.populations ?? []}
                 {@const objectTypes = block.version.object_types ?? []}
                 <section class="version-meta">
-                  <h5 class="version-title">
+                  <h4 class="version-title">
                     <span class="micro-label"
                       >{block.count === 1 ? "Version" : "Versions"}</span
                     >
                     <span class="version-name">{block.label}</span>
-                  </h5>
+                  </h4>
                   {#if block.count > 1 && block.version.name}
                     <!-- The block spans years but prints ONE delivery's text
                          verbatim (years inside it included), so name which. -->
@@ -168,7 +168,7 @@ function objectTypeRows(objectType: {
                   {/if}
                   {#if populations.length > 0}
                     <div class="metadata-group">
-                      <h6 class="micro-label metadata-heading">Population</h6>
+                      <h5 class="micro-label metadata-heading">Population</h5>
                       {#each populations as population}
                         <KeyValue rows={populationRows(population)} />
                       {/each}
@@ -176,7 +176,7 @@ function objectTypeRows(objectType: {
                   {/if}
                   {#if objectTypes.length > 0}
                     <div class="metadata-group">
-                      <h6 class="micro-label metadata-heading">Object type</h6>
+                      <h5 class="micro-label metadata-heading">Object type</h5>
                       {#each objectTypes as objectType}
                         <KeyValue rows={objectTypeRows(objectType)} />
                       {/each}

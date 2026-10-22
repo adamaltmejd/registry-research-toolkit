@@ -100,3 +100,10 @@
     display: none;
   }
 }
+
+.notFoundTitle {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+}

@@ -194,9 +194,12 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
       );
     case "root":
       return (
-        <p className={styles.rootPrompt}>
-          Choose a register in the list to see its variables.
-        </p>
+        <>
+          <h1 className="visually-hidden">Data browser</h1>
+          <p className={styles.rootPrompt}>
+            Choose a register in the list to see its variables.
+          </p>
+        </>
       );
     case "catalog-node":
       return (
@@ -260,7 +263,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
     case "not-found":
       return (
         <article>
-          <h2>Not found</h2>
+          <h1 className={styles.notFoundTitle}>Not found</h1>
           <p>
             No page at <code>{route.path}</code>.
           </p>

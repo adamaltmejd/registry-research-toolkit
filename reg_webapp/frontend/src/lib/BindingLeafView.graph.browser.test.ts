@@ -524,7 +524,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       .element(
         page.getByRole("heading", {
           name: "Näringsgren, största förvärvskälla",
-          level: 2,
+          level: 1,
         }),
       )
       .toBeVisible();
@@ -553,7 +553,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     });
 
     await expect
-      .element(page.getByRole("heading", { name: "Kön", level: 2 }))
+      .element(page.getByRole("heading", { name: "Kön", level: 1 }))
       .toBeVisible();
     await expect
       .element(page.getByText("kon", { exact: true }))
@@ -580,7 +580,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
       .element(
         page.getByRole("heading", {
           name: "Näringsgren, största förvärvskälla",
-          level: 2,
+          level: 1,
         }),
       )
       .toBeVisible();
