@@ -21,9 +21,10 @@ exclude patterns, or Git's file selection if advanced rules become necessary.
 2. Inspect uploaded code and run it manually with `uv run run.py`. External inputs
    select real or mock mode with separate output/cache paths; see
    [execution.md](execution.md). Mocks need not exist remotely.
-3. The runner invalidates old completion, builds requested outputs and automatically
-   checks the entire fresh export. Failure blocks download. Keep unchecked data and
-   detailed failure reports in excluded paths.
+3. The runner invalidates old completion, builds requested outputs and ends with the
+   export gate over the entire fresh staging folder ([export-gate.md](export-gate.md)).
+   A refusal leaves no export and blocks download. Keep staging and the gate's
+   `.diagnostics/` in excluded paths.
 4. Review the checked results, execution revision and all other transfer-eligible remote
    content. Approve real outputs for model access, then run `./sync.sh down`. Keep
    reviewed files unchanged until copying finishes. Transfer failure is not a completed
@@ -48,13 +49,13 @@ version after approval; no duplicate review is required after a remote review.
 for this local-review route. It accepts the reviewed ZIP's SHA-256 and execution commit,
 checks the bytes before copying them, and replaces `current.zip` and `approval.json` in
 model-readable storage. It copies one file, not siblings. Do not compute the approved
-hash inline from a potentially replaced candidate. Consumers using the receipt must
-verify the ZIP hash and execution commit before importing. The receipt records an
-operator action; it is not authentication, disclosure clearance or proof of access
-isolation.
+hash inline from a potentially replaced candidate. Consumers using `approval.json` must
+verify the ZIP hash and execution commit before importing, then the files inside against
+the gate's `receipt.json`. `approval.json` records an operator action; it is not
+authentication, disclosure clearance or proof of access isolation.
 
-Keep real execution/release/import disabled until the executable disclosure checker and
-project policy exist. Unreviewed real bytes must remain inaccessible to the agent
-throughout the chosen review route. Neither the optional helper nor a mock pass enables
-real results. Agent tests use hand-authored fixtures or separately approved invented
-mocks only.
+Keep real execution/release/import disabled until the user has chosen a toolkit
+export-gate schema and policy that declare the project's outputs. Unreviewed real bytes
+must remain inaccessible to the agent throughout the chosen review route. Neither the
+optional helper nor a mock pass enables real results. Agent tests use hand-authored
+fixtures or separately approved invented mocks only.

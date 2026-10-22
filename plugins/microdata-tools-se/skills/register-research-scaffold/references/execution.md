@@ -9,10 +9,10 @@ Local: fixture tests, full mock pipeline/assertions, exact-artifact mock check,
 packaging, verified import, interpretation, figures/tables, HTML, paper and slides.
 
 Restricted server: ingestion, persistent private intermediate caches, real assertions,
-investigations, aggregate data files and the mandatory final automatic disclosure check.
-MONA returns a checked ZIP; flexible servers return a checked file set through rsync. No
-model calls or automatic raw-data synchronization. Tables and figures are rendered
-locally.
+investigations, aggregate data files and the mandatory final export-gate check
+([export-gate.md](export-gate.md)). MONA returns the gate's output folder as a ZIP;
+flexible servers return the checked file set through rsync. No model calls or automatic
+raw-data synchronization. Tables and figures are rendered locally.
 
 Configure real and mock input directories outside the project. Select real mode when the
 real directory exists; otherwise select mock when its directory exists; fail when
@@ -31,7 +31,11 @@ readers must not alter reference-project inputs or stores.
 
 ## MONA
 
-Target one uploadable execution file and one result ZIP per batch. Python zipapp is a
+Target one uploadable execution file and one result ZIP per batch. The execution file's
+last step calls the pinned `export_gate.R`, uploaded unchanged beside it with the chosen
+schema and policy, never folded into the project's own file: the receipt's gate version
+must name those exact bytes. The result ZIP is the gate's output folder (the schema's
+Parquet files and `receipt.json`), never `.diagnostics/` or staging. Python zipapp is a
 candidate when permitted; a supported plain-source format is another. Verify accepted
 formats and runtime before claiming compatibility. Preserve modular source locally; do
 not concatenate modules blindly. Include small required nonpersonal lookup/configuration
@@ -43,7 +47,8 @@ belong in a prepared environment; never download during research execution. Zipa
 cannot load native extension binaries directly from inside the archive.
 
 Preflight runtime, dependencies, inputs and writable locations before expensive work.
-Exportable diagnostics must not print rows, arbitrary values or raw tracebacks.
+Diagnostics are not exported: the gate's report stays in `.diagnostics/` on MONA.
+Console output must not print rows, arbitrary values or raw tracebacks.
 
 Use manual MONA upload/export. A simulated local run establishes packaging only. Do not
 open the restricted desktop or use a remote model to inspect its data.
@@ -111,13 +116,12 @@ mock/real caches, rebuild affected assertions with their data, and prune obsolet
 generated caches when their active dependencies disappear. Never retain a full
 historical cache per commit.
 
-Always execute the automatic disclosure checker over the complete current candidate
-output set at the end, even when all analytical targets were reused. Reassemble only
-requested current outputs so stale files cannot leak into a new result set. Retain no
-old remote release history; use the locally tracked release record as input when the
-project policy needs prior-disclosure comparisons, without exposing unreviewed content
-to the model. Verify cache reuse and invalidation on mocks with a small targeted check
-before remote handoff.
+Always execute the export gate over the complete current candidate output set at the
+end, even when all analytical targets were reused. Reassemble only requested current
+outputs so stale files cannot leak into a new result set. Retain no old remote release
+history; use the locally tracked release record as input when the project policy needs
+prior-disclosure comparisons, without exposing unreviewed content to the model. Verify
+cache reuse and invalidation on mocks with a small targeted check before remote handoff.
 
 ## Local handoff gate
 
@@ -126,13 +130,15 @@ before remote handoff.
 3. Prepare the committed execution snapshot (one file for MONA, source files for a
    flexible server).
 4. Run that snapshot on separate mock inputs in a fresh directory using the actual
-   pipeline/assertions.
-5. Verify and import the labelled mock export, then build local reports.
+   pipeline/assertions, ending with the export gate.
+5. Verify the labelled mock export against its `receipt.json`, import it, then build
+   local reports.
 6. Record revision, artifact digest, commands, runtimes and outcomes outside the
    execution snapshot. Real run/release remain pending until completed.
 
-Exercise one minimal release-boundary rejection fixture (e.g. undeclared or altered
-file). Do not proliferate tests of command wording.
+Exercise one minimal release-boundary rejection: a mock run the export gate refuses
+(e.g. an unsuppressed small count or an undeclared file), leaving no export behind. Do
+not proliferate tests of command wording.
 
 ## Archive
 

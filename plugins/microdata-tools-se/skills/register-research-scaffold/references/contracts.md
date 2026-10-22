@@ -62,18 +62,22 @@ universal Swedish thresholds or claim a minimum count alone makes earnings stati
 safe. Provisional mock policy does not authorize real release. Record overlapping real
 releases for review; do not build a universal disclosure solver.
 
-The plugin must supply a versioned executable disclosure checker, not just agent
-instructions. Every remote batch invokes it automatically as the final computational
-stage over the complete candidate release, including exportable diagnostics and
-metadata. The checker runs entirely inside restricted compute without model access,
-applies the configured project policy, and records its version, policy identity, result
-and checked artifact hashes. Missing policy, unsupported output, checker error, a failed
-check or an incomplete analysis blocks publication; checking partial outputs must never
-turn a failed run into a releasable one. Freeze the checked bytes; any change requires
-rechecking. Keep detailed failure reports private and export only explicitly safe status
-metadata. Exercise the same checker locally on mocks, with rejection cases in the small
-fixture suite. Until this executable and a concrete policy exist, the scaffold must
-report disclosure integration as unimplemented and keep real release disabled.
+The disclosure checker is the toolkit's export gate, versioned toolkit code and not
+agent instructions; [export-gate.md](export-gate.md) has the pin and the call. Every
+remote batch invokes it automatically as the final computational stage over the complete
+candidate release: nothing the batch exports bypasses it. It runs entirely inside
+restricted compute without model access, applies the chosen toolkit schema and policy,
+and records its version, the schema's and policy's identity and the checked files'
+hashes in `receipt.json`. A missing schema or policy, an undeclared or malformed file, a
+gate error, a failed check or an incomplete analysis blocks publication; checking
+partial outputs must never turn a failed run into a releasable one. The checked bytes
+are frozen; any change requires rechecking. The gate's detailed report stays in
+`.diagnostics/` on the data side; only the files and the receipt are exported, and a
+refusal tells the agent only its category code. Exercise the same gate locally on mocks,
+with one rejection case in the small fixture suite. Schemas and policies are toolkit
+files the user chooses: never write, edit or loosen one in the project. Until the user
+has chosen a schema and policy that declare the project's outputs, report disclosure
+integration as pending and keep real release disabled.
 
 Track automatic disclosure checks, any institution-required export approval, and manual
 human approval for model access separately. A disclosure pass never authorizes model
@@ -92,14 +96,15 @@ local renders are separate from real ones; never promote mock output by relabell
 substitute it for missing real results. A blocked run can emit safe status metadata, not
 raw failure text or unchecked artifacts.
 
-Remote outputs should be simple declared aggregate data files (CSV by default), with
-stable names, units, column definitions, suppression markers and a concise
-disclosure-check report that a human can inspect easily. Generate tables and figures
-locally from these files; do not export model objects or arbitrary rendered artifacts in
-place of the data contract. Local processing may use only quantities supported by
-cleared artifacts. Preserve suppression as missing/annotated, never zero. Do not
-reconstruct hidden margins or denominators. Presentation changes should not need remote
-runs; new samples, groupings or unsupported statistical quantities do.
+Remote outputs are the aggregate Parquet files the chosen schema declares, with stable
+names and typed columns, a suppressed cell null (never zero), and the gate's
+`receipt.json`. Keep units and column definitions in the project's data dictionary, not
+in extra exported files. Generate tables and figures locally from these files; do not
+export model objects or arbitrary rendered artifacts in place of the data contract.
+Local processing may use only quantities supported by cleared artifacts. Preserve
+suppression as missing/annotated, never zero. Do not reconstruct hidden margins or
+denominators. Presentation changes should not need remote runs; new samples, groupings
+or unsupported statistical quantities do.
 
 ## Local interface
 

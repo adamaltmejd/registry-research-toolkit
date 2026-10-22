@@ -21,7 +21,9 @@ through it without an explicit request.
 Read [contracts.md](references/contracts.md) before implementation. Read
 [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
 Read [operator-review.md](references/operator-review.md) when preparing human-operated
-transfer and model-access approval.
+transfer and model-access approval. Read [export-gate.md](references/export-gate.md)
+when wiring the final release stage: the toolkit's export gate, its pinned version and
+how a MONA project calls it.
 
 ## Establish the research and execution boundary
 
@@ -69,10 +71,11 @@ Provide:
 - A short runbook stating what was checked locally and what still requires restricted
   compute or the researcher.
 
-Remote artifacts are declared aggregate data files, preferably CSV with a data
-dictionary and explicit suppression markers. Render tables and figures locally from
-those files; deterministic human-only previews may be generated before approval, but
-models must not see their contents until approval.
+Remote artifacts are exactly the aggregate files the chosen export-gate schema declares:
+one Parquet file per schema file, a suppressed cell null (never zero), plus the gate's
+`receipt.json`. Render tables and figures locally from those files; deterministic
+human-only previews may be generated before approval, but models must not see their
+contents until approval.
 
 Routine execution includes only active processing, assertions and selected analyses.
 Completed investigations remain tracked and discoverable but do not run unless selected.
@@ -101,11 +104,14 @@ Keep these jobs separate:
 - When a transfer artifact exists, execute that exact artifact against mock data in an
   isolated directory. This can also satisfy the full mock-pipeline gate; avoid two
   identical full runs.
-- Every remote batch must invoke the plugin-supplied automatic disclosure checker as its
-  final computational stage, before any result becomes downloadable. This is mandatory
-  on MONA and other servers; see the release contract. Keep real release disabled while
-  the checker or project policy is missing. Local success does not establish real
-  coverage, findings, performance or disclosure clearance.
+- Every remote batch must invoke the toolkit's export gate as its final computational
+  stage, before any result becomes downloadable: on MONA, the pinned `export_gate.R`
+  with the project's chosen schema and policy (see
+  [export-gate.md](references/export-gate.md)). This is mandatory on MONA and other
+  servers; see the release contract. The same call runs last in every local mock run.
+  Keep real release disabled while no toolkit schema and policy declare the project's
+  outputs. Local success does not establish real coverage, findings, performance or
+  disclosure clearance.
 
 Use relevant tests/targets while iterating; run the complete small suite and full mock
 gate on the final execution revision. Record commands, results and runtime. At batch

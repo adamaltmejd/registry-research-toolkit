@@ -93,7 +93,7 @@ registry-research-toolkit/
     reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
   reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
   conformance/      # contract corpus, run against the Rust server
-  plugins/          # the microdata-tools-se agent plugin (hosted MCP)
+  plugins/          # the microdata-tools-se agent plugin (hosted MCP, skills incl. the scaffold)
   reg_webapp/
     frontend/       # React 19 + React Aria Components + Vite (bun)
     edge/           # edge workers: global is MCP-only, swecov also serves the SPA
