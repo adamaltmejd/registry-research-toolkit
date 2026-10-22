@@ -91,6 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       webapp: ${{ steps.filter.outputs.webapp }}
+      runner: ${{ steps.filter.outputs.runner }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: dorny/paths-filter@v4.0.3
@@ -115,6 +116,70 @@ jobs:
               - 'crates/reg-core-wasm/**'
               - '.github/workflows/ci.yml'
               - 'scripts/gate.py'
+            runner:
+              - 'reg_mona_runner/**'
+              # The order goldens the runner's extract cases read.
+              - 'conformance/cases/order/**'
+              - '.github/workflows/ci.yml'
+              - 'scripts/gate.py'
+
+  # The MONA extract runner (reg_mona_runner/): `gate.py runner` (air, jarl, the
+  # testthat suite), its SQL Server cases against a service container. MONA runs
+  # SQL Server, and the production T-SQL runs nowhere else.
+  runner:
+    runs-on: ubuntu-latest
+    # The runner CI budget (ARCHITECTURE.md "Tiers").
+    timeout-minutes: 6
+    needs: changes
+    if: needs.changes.outputs.runner == 'true'
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          # A throwaway container's password, not a secret.
+          MSSQL_SA_PASSWORD: Runner-fixture-1
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Runner-fixture-1 -Q 'SELECT 1'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      SWECOV_TEST_CONNECTION: "Driver={ODBC Driver 18 for SQL Server};Server=localhost,1433;UID=sa;PWD=Runner-fixture-1;TrustServerCertificate=yes;"
+    steps:
+      - uses: actions/checkout@v7.0.1
+      # R with binary DBI, odbc, jsonlite and testthat from Posit's package manager
+      # (Ubuntu's archive has no r-cran-odbc), and Microsoft's ODBC driver unless the
+      # image ships it.
+      - uses: r-lib/actions/setup-r@v2.14.0
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2.14.0
+        with:
+          packages: |
+            any::DBI
+            any::odbc
+            any::jsonlite
+            any::testthat
+      - run: |
+          if ! odbcinst -q -d -n "ODBC Driver 18 for SQL Server" >/dev/null 2>&1; then
+            curl -fsSL -o /tmp/packages-microsoft-prod.deb "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+            sudo dpkg -i /tmp/packages-microsoft-prod.deb
+            sudo apt-get update
+            sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+          fi
+      # air and jarl at scripts/gate.py's AIR and JARL pins (bump both).
+      - run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL https://github.com/posit-dev/air/releases/download/0.12.0/air-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
+          curl -fsSL https://github.com/etiennebacher/jarl/releases/download/0.7.1/jarl-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - uses: astral-sh/setup-uv@v10.3.0
+        with:
+          version: "0.13.4"
+      - run: uv run --no-project scripts/gate.py runner
 
   reg-webapp-frontend:
     runs-on: ubuntu-latest

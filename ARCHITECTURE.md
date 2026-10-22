@@ -45,11 +45,11 @@ from their own warehouses instead of each project going through SCB directly:
 
 One codebase, steward-scoped views: same UX, different holdings. A steward's order is an
 extract from its own holdings: the researcher sends `order.json` through the steward's
-request channel and a data manager runs the planned MONA extract runner (#707) inside
-MONA. The compiled-holdings contract below gives each steward one self-identifying
-SQLite artifact containing full reference metadata plus its physical holdings. TOML
-inventory and policy are accepted builder inputs; readers do not load them. SWECOV
-proves the first cut; IFAU delivery authoring remains outside it. See
+request channel and a data manager runs the MONA extract runner (`reg_mona_runner/`)
+inside MONA. The compiled-holdings contract below gives each steward one
+self-identifying SQLite artifact containing full reference metadata plus its physical
+holdings. TOML inventory and policy are accepted builder inputs; readers do not load
+them. SWECOV proves the first cut; IFAU delivery authoring remains outside it. See
 [`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) § "Steward extension" and
 [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the build and runtime boundaries.
 
@@ -61,9 +61,9 @@ list, and export it as a data order. The HTTP API (which the SPA uses) and the M
 are equal surfaces over the same `reg-catalog` operations. The SPA validates the draft
 automatically on every edit.
 
-The unifying research-intent artifact is **`project_data.json`** — written by the
-webapp, consumed by the shared materializer above and the planned MONA runner rebuild.
-Its schema and structural validator are `reg-core`'s
+The unifying research-intent artifact is **`project_data.json`** — written by the webapp
+and consumed by the shared materializer above, whose manifest the MONA extract runner
+reads. Its schema and structural validator are `reg-core`'s
 ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). It deliberately does not
 encode physical filenames or SQL tables. Compiled physical holdings
 (`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
@@ -91,6 +91,7 @@ registry-research-toolkit/
     reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
     reg-core-py/    # PyO3 bindings of reg-core for the builder
     reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
+  reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
   conformance/      # contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
@@ -110,6 +111,7 @@ reg-core-wasm  → reg-core
 reg_meta_build → reg-core-py
 reg_webapp     → reg-meta (HTTP, through the codegen'd OpenAPI types)
 reg_webapp     → reg-core-wasm (built into the SPA by `bun run gen:wasm`)
+reg_mona_runner → the order manifest (a file, offline inside MONA; no code dependency)
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
@@ -295,19 +297,20 @@ in.
 
 This is the complete list of boundaries a test may assert at.
 
-  | Boundary                                 | Oracle (data, not code)                                                                                        |
-  | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                             |
-  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                             |
-  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB           |
-  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                       |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, `order` data identical to its download                                    |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                     |
-  | Curation + steward storage → findings    | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/steward_storage/` |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                   |
-  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings          |
-  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                               |
-  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                     |
+  | Boundary                                 | Oracle (data, not code)                                                                                            |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                                 |
+  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                                 |
+  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB               |
+  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                           |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, `order` data identical to its download                                        |
+  | Order manifest → MONA extract            | order goldens + fixture SQL rows → expected CSVs and `run_log.csv`; a refusal's exit code and `error_log.csv` code |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                         |
+  | Curation + steward storage → findings    | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/steward_storage/`     |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                       |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings              |
+  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                                   |
+  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                         |
 
 Compiled holdings admission, scoped browse/search and selection guards are pinned
 through source-built request/expected corpora in `conformance/cases/`.
@@ -360,6 +363,7 @@ over budget is a finding for the `test-audit` skill, not a reason to raise the n
   | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
   | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
+  | `reg_mona_runner` (`gate.py runner`) | 10 s  | 6 min  | One `Rscript` run per refusal locally; CI adds one SQL Server run of every extract case, after installing R and the ODBC driver.     |
 
 Three verification gates cut across the tiers. They are named G0–G2 so they are not
 confused with the tiers; `conformance/README.md` ("Verification gates") has the G1

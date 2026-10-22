@@ -1,0 +1,5 @@
+file,rows,columns,filter
+care_visits_2019.csv,1,2,Datum (yyyymmdd): 2019-01-02..2019-01-02
+example_monthly_2019.csv,2,3,Period (yyyymm): 2019-02-15..2019-03-01
+example_stamped_2018..2019.csv,2,2,Seen (date): ..2019-01-01
+example_yearly_2018..2020.csv,2,1,Ar (year): 2019-06-01..
