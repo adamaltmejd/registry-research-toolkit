@@ -1,33 +1,21 @@
 #!/usr/bin/env python3
-"""gate — the full verification gate, the regenerate command and the heavy-job lock.
+"""gate — the full verification gate and the regenerate command.
 
     uv run --no-project scripts/gate.py all            # before opening a PR
     uv run --no-project scripts/gate.py g0 --packages reg_meta_build
     uv run --no-project scripts/gate.py regen          # then commit the diff
-    uv run --no-project scripts/gate.py heavy -- cargo test -p reg-catalog
-    uv run --no-project scripts/gate.py real-seed -- uv run reg-meta-build build-db ...
 
 Each named step runs its commands in order from the repository root and stops at the
 first failure. `all` runs g0, rust, release, flows and frontend; `lint` and `crates`
 are g0's static checks and Rust part, for CI's `lint` and `rust` jobs; `regen` and `g1`
 run only when named. CI calls `lint`, `crates`, `rust`, `release` and `frontend`;
-`flows` runs only locally.
-
-Steps that build or run the Rust workspace hold one of three machine-wide advisory
-slots (`flock` on `$XDG_CACHE_HOME/registry-research-toolkit-heavy-<n>.lock`), so
-parallel sessions run at most three heavy jobs at a time instead of overloading the
-machine; `heavy -- CMD`
-runs any other heavy command (a parallel pytest, a cargo build, a derive or probe) under
-the same lock. `real-seed -- CMD` is for real-seed `reg-meta-build` runs (prepare,
-build, extend, check-curation): it also holds a single real-seed slot, so a second
-real-seed run queues instead of halving the first one's speed. Stdlib only:
-`--no-project` keeps the frontend CI job free of the workspace build.
+`flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
+of the workspace build.
 """
 
 from __future__ import annotations
 
 import argparse
-import fcntl
 import gzip
 import json
 import os
@@ -37,7 +25,6 @@ import subprocess
 import sys
 import tempfile
 import time
-from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,10 +42,6 @@ SERVER_CMD = (
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
 ALL = ("g0", "rust", "release", "flows", "frontend")
-# A few slots, not one: a single long job (a real-seed build) must not stall every
-# other session's gate, while the cap still keeps parallel sessions off load 30.
-SLOTS = 3
-HEAVY = {"g0", "crates", "rust", "release", "flows", "regen", "g1"}
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
 # it, the frontend step fails: raising the budget is a maintainer call. It includes the
 # search fold (about 145 KB gz measured with it).
@@ -140,10 +123,7 @@ def flows() -> None:
 def frontend() -> None:
     # On demand, so a fresh worktree needs no setup; a no-op when in sync.
     run(["bun", "install", "--frozen-lockfile"], cwd=FRONTEND)
-    # The SPA's reg-core module: a Rust build, so it takes a heavy slot (the rest of
-    # this step does not).
-    with heavy_lock():
-        run(["bun", "run", "gen:wasm"], cwd=FRONTEND)
+    run(["bun", "run", "gen:wasm"], cwd=FRONTEND)
     wasm = FRONTEND / "src/lib/reg-core-wasm/reg_core_wasm_bg.wasm"
     size = len(gzip.compress(wasm.read_bytes(), compresslevel=9))
     print(f"gate: {wasm.name} {size} bytes gzipped (budget {WASM_GZ_BUDGET})")
@@ -207,56 +187,7 @@ STEPS = {
 }
 
 
-@contextmanager
-def heavy_lock(kind="heavy", slots=SLOTS):
-    """Hold one of `slots` machine-wide `kind` slots (one flock file each)."""
-    cache = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
-    cache.mkdir(parents=True, exist_ok=True)
-    handles = [
-        (cache / f"registry-research-toolkit-{kind}-{i}.lock").open("w")
-        for i in range(slots)
-    ]
-    try:
-        waiting = False
-        while True:
-            for handle in handles:
-                try:
-                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                except BlockingIOError:
-                    continue
-                yield
-                return
-            if not waiting:
-                print(
-                    f"gate: waiting for one of {slots} {kind} slots",
-                    file=sys.stderr,
-                    flush=True,
-                )
-                waiting = True
-            time.sleep(5)
-    finally:
-        for handle in handles:
-            handle.close()
-
-
-@contextmanager
-def real_seed_lock():
-    """Hold the single real-seed slot, then a heavy slot.
-
-    The real-seed slot comes first, so a queued build does not sit on a heavy slot.
-    `scripts/real_seed_cache.py` holds this too.
-    """
-    with heavy_lock("real-seed", 1), heavy_lock():
-        yield
-
-
 def main() -> int:
-    if (kind := sys.argv[1:2]) in (["heavy"], ["real-seed"]):
-        command = sys.argv[3:] if sys.argv[2:3] == ["--"] else sys.argv[2:]
-        if not command:
-            sys.exit(f"gate: {kind[0]} needs a command: gate.py {kind[0]} -- CMD...")
-        with real_seed_lock() if kind == ["real-seed"] else heavy_lock():
-            return subprocess.call(command)
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("steps", nargs="+", choices=[*STEPS, "all"])
     parser.add_argument(
@@ -273,8 +204,7 @@ def main() -> int:
         print(f"== gate {name}", flush=True)
         started = time.monotonic()
         try:
-            with heavy_lock() if name in HEAVY else nullcontext():
-                steps[name]()
+            steps[name]()
         except subprocess.CalledProcessError as exc:
             failed = (
                 f"{name}: exit {exc.returncode} from {shlex.join(map(str, exc.cmd))}"

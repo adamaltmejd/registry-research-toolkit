@@ -19,14 +19,9 @@ omits catalog dependencies, delivery coverage, SQLite and corpus validation, eve
 selected registers. Run full verification at an agreed, coherent batch checkpoint.
 Curation-only edits do not require source preparation.
 
-Run every direct real-seed `reg-meta-build` call (`prepare-sources`, `build-db`,
-`extend-db`, `check-curation`) under
-`uv run --no-project scripts/gate.py real-seed -- CMD`. It allows one real-seed run on
-the machine at a time and holds a heavy-job slot, so a concurrent run queues instead of
-slowing both. A `waiting for one of 1 real-seed slots` line means another session's run
-holds it: let it finish rather than working around the lock. Never wrap
-`scripts/real_seed_cache.py`: it takes `gate.real_seed_lock()` itself, and wrapping it
-deadlocks on the one-slot lock.
+Nothing serializes real-seed runs (`prepare-sources`, `build-db`, `extend-db`,
+`check-curation`) or other heavy jobs: the Operator schedules them with the maintainer.
+Start one only when the Operator has cleared it.
 
 `precheck-slugs` matches the slug tree against a built catalog by slug path: every
 register and variant row must be pinned and every pin must name a row.
@@ -36,11 +31,10 @@ register and variant row must be pinned and every pin must name a row.
 
 Run real-seed preparations and builds through `scripts/real_seed_cache.py`; the sections
 below show its commands. It returns a stored output when the inputs it keys are
-unchanged. On a miss it runs the `reg-meta-build` command shown under the real-seed lock
-and stores the output if the run completed. A main-tip baseline that another session
-already built is a hit. Run `reg-meta-build` directly (under `gate.py real-seed --`)
-only for what the cache does not handle: `--dump-decisions`, `check-curation` and
-`extend-db`.
+unchanged. On a miss it runs the `reg-meta-build` command shown and stores the output if
+the run completed. A main-tip baseline that another session already built is a hit. Run
+`reg-meta-build` directly only for what the cache does not handle: `--dump-decisions`,
+`check-curation` and `extend-db`.
 
 Each command prints one JSON object on stdout; `hit` says whether anything ran. Its
 module docstring lists every field each key covers, `--key` prints a key and its fields

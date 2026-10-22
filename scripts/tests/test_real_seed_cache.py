@@ -247,7 +247,7 @@ def _copied_tree(tmp_path: Path) -> Path:
         shutil.copytree(REPO / path, tree / path, ignore=ignore)
     for path in ("uv.lock", "Cargo.toml", "Cargo.lock", ".gitignore"):
         shutil.copy2(REPO / path, tree / path)
-    for name in ("real_seed_cache.py", "keyed_cache.py", "gate.py"):
+    for name in ("real_seed_cache.py", "keyed_cache.py"):
         (tree / "scripts").mkdir(exist_ok=True)
         shutil.copy2(SCRIPTS / name, tree / "scripts" / name)
     (tree / "pyproject.toml").write_text(
