@@ -244,7 +244,8 @@ prior artifacts and accepted inputs unchanged.
 
 ## Export gate
 
-Not yet built; tracked in #1803. This section records the settled design.
+Not yet built; tracked in #1803. This section records the settled design. All ten open
+questions are decided (see "Decisions"); none remain.
 
 The export gate is the toolkit's disclosure checker and transfer. It is the only path by
 which results computed on microdata reach an agent. It fills the checker slot of the
@@ -255,13 +256,15 @@ load-bearing guard.
 
 ### Components
 
-- **Gate binary.** One static Rust binary, a new crate in `crates/`, built and released
-  next to `reg-meta`. It runs the whole disclosure check, stages the checked bytes for
-  human review and delivers approved bytes to the agent. An agent calls it; it never
-  reimplements it.
-- **Schemas.** Fixed, versioned files supplied by the toolkit. Choosing or adding a
-  schema is a deliberate user configuration step, kept outside the project repository.
-  An agent never writes or edits a schema.
+- **`reg-export-gate`.** One static Rust binary, in a crate of the same name in
+  `crates/`, built and released next to `reg-meta`. It runs the whole disclosure check,
+  stages the checked bytes for human review, serves the review UI and pushes approved
+  bytes to the agent VM. An agent calls it; it never reimplements it. The name says what
+  it does: the check is disclosure control on aggregates, not only PII detection, so
+  "pii" is avoided.
+- **Schemas and policy.** Fixed, versioned JSON files supplied by the toolkit, each with
+  a policy file beside it. Choosing or adding a schema is a deliberate user
+  configuration step. An agent never writes or edits a schema or a policy.
 - **MONA check file.** One fixed, version-pinned R file of check functions, for MONA,
   where only `.R` and `.py` uploads are accepted (see "MONA mode").
 
@@ -271,32 +274,44 @@ Three parties, which may share one host:
 
 - **Agent VM.** Code, mock data and approved aggregates only. It never sees unreviewed
   output, check reports, logs or the review UI.
-- **Data VM.** Microdata, the pipeline and the gate binary.
+- **Data VM.** Microdata, the pipeline and `reg-export-gate`.
 - **Human.** Reviews the checked output in the review UI and presses Export.
 
 The review UI is unreachable from the agent VM, by `curl` or any other client. That is
-enforced by the VM network setup, not by instructions to the agent. After Export,
-approved bytes reach the agent VM automatically. The gate records each file's SHA-256 at
-check time and verifies it on delivery. A changed byte voids the approval and needs a
-new check.
+enforced by the VM network setup, not by instructions to the agent. The review UI is
+part of the `reg-export-gate` binary and listens only on the data-side network. After
+Export, the binary pushes the approved bytes one way to the agent VM. The gate records
+each file's SHA-256 at check time and verifies it on delivery. A changed byte voids the
+approval and needs a new check.
 
 The prior art is the education-returns `server.sh` (adamaltmejd/education-returns#18).
 It stops three times: before code reaches the data server, before checked output is
 transferred, and before results are published to git. It stages output with SHA-256
-checksums. The gate takes over the second stop.
+checksums. The gate takes over the second stop. Carrying code into the data VM (the
+first stop) is out of scope for v1.
 
 ### Schemas
 
-A schema declares exactly the files an export may hold. Per file: its name, its columns
-and each column's type. Disclosure rules, such as which columns count persons and the
-smallest count allowed, live in the schema or in a separate policy (open question 10).
-The toolkit asserts no universal threshold. The schema in force is identified by name,
-version and content hash, and every check records them.
+A schema is a JSON file that declares exactly the files an export may hold. Per file:
+its name, its columns and each column's type. JSON is readable from Rust and, on MONA,
+from R through jsonlite, which the runner already uses.
 
-Schemas live outside the project because the code under check must not also define what
-the check accepts. In education-returns each script brought its own schema
-(`schemas/<script>.R`) and its checks were project R (`src/export.R`, `EXPORT_COLUMNS`).
-An agent writing the analysis could widen the gate in the same commit.
+Thresholds are not in the schema. A separate policy file beside the schema holds the
+disclosure rules, such as which columns count persons and the smallest count allowed.
+The schema stays fixed while an institution's thresholds change. The toolkit asserts no
+universal threshold. The schema in force is identified by name, version and content
+hash, and every check records them.
+
+The code under check must not also define what the check accepts. In education-returns
+each script brought its own schema (`schemas/<script>.R`) and its checks were project R
+(`src/export.R`, `EXPORT_COLUMNS`). An agent writing the analysis could widen the gate
+in the same commit. So schemas and policy are toolkit files, never project code.
+
+The choice of schema is configuration, kept in two places by mode:
+
+- **MONA.** It lives with the project, since MONA mode has no separate app.
+- **Server.** The app has its own config directory outside the project repo, for example
+  `~/.config/reg-export-gate/`.
 
 ### The check
 
@@ -320,19 +335,29 @@ rule, never a value, as in the MONA extract runner
 ([`reg_mona_runner/DESIGN.md`](reg_mona_runner/DESIGN.md), "No row values in logs").
 Reports, logs and diagnostics stay on the data side and never enter the output folder.
 
+A failed check tells the agent only the refusal category code. Each export is checked
+alone in v1; differencing against earlier approved exports comes later.
+
+The check receipt (gate version, schema id, file hashes) is not an output file. The
+receipt and the diagnostics go in a `.diagnostics/` folder beside the output folder and
+are never exported.
+
 ### Output format
 
-One Parquet file per schema file, readable from Rust, R and Python and queryable with
-DuckDB. Column types come from the schema. A suppressed cell is null, never zero.
+One Parquet file per schema file, readable from Rust, R and Python. Outputs are Parquet
+only. On MONA they are written with the `arrow` R package. The `duckdb` R package is
+also installed there, but DuckDB is a reader only: no `.duckdb` files are outputs.
+Column types come from the schema. A suppressed cell is null, never zero.
 
 ### MONA mode
 
 No standalone MONA system and no web UI. The toolkit ships one fixed, version-pinned R
 file of check functions; the scaffold copies it into the project, and the pipeline's
-last step calls it with the chosen schema. The output-folder model is the same: the
-folder holds exactly the schema's files, which appear only if the whole check passes.
-Logs, error messages and diagnostics never go in output files. The user reviews the
-folder, zips it and sends it out through MONA's export.
+last step calls it with the chosen schema and its policy. The output-folder model is the
+same: the folder holds exactly the schema's files, which appear only if the whole check
+passes. Logs, error messages, the receipt and diagnostics never go in output files; they
+go in `.diagnostics/` beside the folder. The user reviews the folder, zips it and sends
+it out through MONA's export.
 
 The Rust binary and the R file are two implementations of one check, an exception to
 "one implementation per contract". One case corpus (schema and candidate folder →
@@ -346,29 +371,36 @@ R file version is pinned to a binary release.
 - Moving the scaffold into this repo.
 - The disclosure policy values of any institution.
 - Changes to the MONA extract runner.
+- Carrying code into the data VM (the first stop of the education-returns flow).
+- Differencing against earlier approved exports.
 
-### Open questions
+### Future direction
 
-To be resolved before this design merges:
+The agent may later run code on the data and see a strictly limited subset of error
+messages, so it can iterate without a human relaying failures. Not in v1; the v1 agent
+sees only the refusal category code. Any such subset needs its own design for what it
+may reveal.
 
-1. Schema file format. It must be readable from Rust and from R on MONA without a new R
-   package (the runner already uses jsonlite).
-2. The crate and binary name.
-3. Writing Parquet on MONA: the `arrow` or `duckdb` R package, and whether either is
-   installed there. Is DuckDB only a reader, or are `.duckdb` files also outputs?
-4. How approved bytes reach the agent VM (a shared volume, or a push), and whether the
-   binary also carries code into the data VM (the first stop).
-5. A check receipt (gate version, schema id, file hashes): an output file, or a sidecar
-   outside the output folder? The scaffold wants the receipt exported; diagnostics must
-   stay out of output files.
-6. Where a project's schema choice is configured, outside the project repo.
-7. What the agent learns from a failed check: nothing, or the refusal category code.
-8. Whether disclosure rules span releases (differencing against earlier approved
-   exports), or each export is checked alone.
-9. Whether the review UI is part of the gate crate or a separate surface.
-10. Whether disclosure thresholds live in the schema or in a separate policy file. The
-    scaffold names a configured project policy beside the schema; with fixed schemas,
-    thresholds in the schema mean a new schema for each threshold.
+### Decisions
+
+Maintainer answers of 2026-10-22 (the design's open questions, #1803):
+
+1. **Schema format.** JSON, readable from Rust and from R via jsonlite.
+2. **Name.** `reg-export-gate`, for the crate and the binary.
+3. **Parquet on MONA.** MONA has `arrow` and `duckdb`. Outputs are Parquet only, written
+   with arrow. DuckDB is a reader; no `.duckdb` output files.
+4. **Delivery.** A one-way push driven by the binary. Carrying code into the data VM is
+   out of scope for v1.
+5. **Receipt.** Not an output file. Receipt and diagnostics go in `.diagnostics/` beside
+   the output folder and are never exported.
+6. **Schema choice config.** With the project on MONA; in the app's own config directory
+   outside the project repo on the server.
+7. **Failure feedback.** The agent sees only the refusal category code. A limited error
+   subset for iteration is a future direction.
+8. **Differencing.** Each export is checked alone in v1; differencing comes later.
+9. **Review UI.** Part of the `reg-export-gate` crate and binary, served only on the
+   data-side network.
+10. **Thresholds.** In a separate policy file beside the schema, not in the schema.
 
 ## Repo-wide invariants
 
