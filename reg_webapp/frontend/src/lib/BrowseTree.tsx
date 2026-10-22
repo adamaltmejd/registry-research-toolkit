@@ -242,6 +242,11 @@ export function BrowseTree({ className }: { className?: string }) {
     needle: string;
     keys: Set<Key>;
   } | null>(null);
+  // Cleared with the filter, so typing the same text again starts from its
+  // matches rather than from the toggles made under it last time.
+  if (!filtering && filterExpanded !== null) {
+    setFilterExpanded(null);
+  }
   const expandedKeys: Set<Key> = !filtering
     ? new Set(expandable.filter((id) => !collapsed.has(id)))
     : filterExpanded?.needle === needle
