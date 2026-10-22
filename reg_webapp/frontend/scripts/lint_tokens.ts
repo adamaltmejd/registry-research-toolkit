@@ -5,9 +5,9 @@
 //    components consume SEMANTIC roles only. A raw color literal or a raw font stack
 //    inside a component's <style> block renders identically today and still breaks
 //    the light-first, dark-ready contract (the [data-theme="dark"] remap cannot reach
-//    it). Screenshots cannot catch that bypass and biome does not lint <style> blocks
-//    inside .svelte, so this scans every .svelte under src/ for a literal that should
-//    be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
+//    it). Screenshots cannot catch that bypass and biome does not lint CSS values,
+//    so this scans every stylesheet under src/ but tokens.css (CSS Modules
+//    included) and every `style={{…}}` object in a .tsx for a literal that should be a var(--token). Exempt by rule, not by allowlist: mask-image declarations (a
 //    mask is alpha/luminance geometry, not palette, so `#000` there is the only
 //    correct spelling). Named colors (`transparent`, `currentColor`, the
 //    `black`/`white` in a color-mix darkening) are not flagged — they are not palette
@@ -25,9 +25,9 @@
 //
 // 3. Reference resolution. A `var(--name)` whose name no stylesheet defines renders
 //    the fallback (or the property's initial value) without a warning, so a typo like
-//    `var(--txet)` ships silently. Every reference in a .svelte or .css file under src/
-//    must name a custom property tokens.css declares or the same file declares (in a
-//    <style> block, an inline `style="--x: …"`, or a `style:--x` directive). A property
+//    `var(--txet)` ships silently. Every reference in a .css or .tsx file under
+//    src/ must name a custom property tokens.css declares or the same file declares (in
+//    a rule, or as a `"--x":` key of a React style object). A property
 //    set in one file and read in another is named in CROSS_FILE with its reason.
 import { lint, type ResolvedDimension } from "@google/design.md/linter";
 
@@ -36,7 +36,6 @@ const failures: string[] = [];
 
 // ── 1. Token discipline ──────────────────────────────────────────────────────
 
-const STYLE_BLOCK = /<style\b[^>]*>([\s\S]*?)<\/style>/g;
 const BLOCK_COMMENT = /\/\*[\s\S]*?\*\//g;
 // A declaration: property, colon, value up to the next `;` or brace. Rough on purpose —
 // it only has to find literals, not parse CSS.
@@ -53,14 +52,43 @@ function lineOf(text: string, offset: number): number {
   return text.slice(0, offset).split("\n").length;
 }
 
+// A React style object, `style={{ … }}`, and one of its entries: a bare, quoted or
+// computed key, then a quoted value or one up to the next comma or brace.
+const STYLE_OBJECT = /style=\{\{([\s\S]*?)\}\}/g;
+const OBJECT_ENTRY =
+  /([\w-]+|"[^"]*"|'[^']*')\s*:\s*("[^"]*"|'[^']*'|`[^`]*`|[^,}]+)/g;
+
+/** The style bodies of one file, each with its offset into `source`: a stylesheet
+ * whole, a .tsx's style objects. */
+function styleBodies(
+  source: string,
+  file: string,
+): { body: string; start: number; entry: RegExp }[] {
+  if (file.endsWith(".css")) {
+    return [{ body: source, start: 0, entry: DECLARATION }];
+  }
+  return [...source.matchAll(STYLE_OBJECT)].map((block) => ({
+    body: block[1],
+    start: (block.index ?? 0) + block[0].indexOf(block[1]),
+    entry: OBJECT_ENTRY,
+  }));
+}
+
 function tokenViolations(source: string, file: string): string[] {
   const out: string[] = [];
-  for (const block of source.matchAll(STYLE_BLOCK)) {
-    const bodyStart = (block.index ?? 0) + block[0].indexOf(block[1]);
-    const body = stripComments(block[1]);
-    for (const decl of body.matchAll(DECLARATION)) {
-      const [, property, value] = decl;
-      const prop = property.toLowerCase();
+  for (const { body: raw, start: bodyStart, entry } of styleBodies(
+    source,
+    file,
+  )) {
+    const body = stripComments(raw);
+    for (const decl of body.matchAll(entry)) {
+      const [, property] = decl;
+      const value = decl[2].replace(/^["'`]|["'`]$/g, "");
+      // A React key is camelCase (`fontFamily`); compare in CSS spelling.
+      const prop = property
+        .replace(/^["']|["']$/g, "")
+        .replace(/[A-Z]/g, (c) => `-${c}`)
+        .toLowerCase();
       const line = lineOf(source, bodyStart + (decl.index ?? 0));
       if (!prop.includes("mask") && COLOR_LITERAL.test(value)) {
         out.push(
@@ -80,34 +108,57 @@ function tokenViolations(source: string, file: string): string[] {
 // The rule's own fixture: it must flag literals and honour the mask exemption, or a
 // regex edit could silently pass every file.
 const SELF_CHECK = [
-  "<div></div>",
-  "<style>",
-  "  .a { color: #fff; }",
-  "  .b { background: rgb(1 2 3 / 50%); }",
-  "  .c { mask-image: linear-gradient(to right, #000, transparent); }",
-  "  .d { font-family: ui-monospace, monospace; }",
-  "  .e { color: var(--text); border: 1px solid var(--border); font-family: var(--font-mono); }",
-  "  .f { background: color-mix(in srgb, var(--err) 85%, black); }",
-  "</style>",
+  ".a { color: #fff; }",
+  ".b { background: rgb(1 2 3 / 50%); }",
+  ".c { mask-image: linear-gradient(to right, #000, transparent); }",
+  ".d { font-family: ui-monospace, monospace; }",
+  ".e { color: var(--text); border: 1px solid var(--border); font-family: var(--font-mono); }",
+  ".f { background: color-mix(in srgb, var(--err) 85%, black); }",
 ].join("\n");
-const selfCheckLines = tokenViolations(SELF_CHECK, "X.svelte")
+const selfCheckLines = tokenViolations(SELF_CHECK, "X.module.css")
   .map((v) => v.split(":")[1])
   .join(",");
-if (selfCheckLines !== "3,4,6") {
+if (selfCheckLines !== "1,2,4") {
   failures.push(
-    `token-discipline self-check flagged lines [${selfCheckLines}], expected [3,4,6]`,
+    `token-discipline self-check flagged lines [${selfCheckLines}], expected [1,2,4]`,
+  );
+}
+// The same rule over a React style object and a one-line CSS Module.
+const TSX_SELF_CHECK = [
+  "<div style={{ color: '#fff', width: 1 }} />",
+  "<div style={{ fontFamily: 'ui-monospace, monospace' }} />",
+  '<div style={{ "--tree-indent": "var(--space-5)", color: "var(--text)" }} />',
+].join("\n");
+const CSS_SELF_CHECK =
+  ".a { color: var(--text); }\n.b { color: hsl(0 0% 0%); }";
+const flaggedLines = (source: string, file: string): string =>
+  tokenViolations(source, file)
+    .map((v) => v.split(":")[1])
+    .join(",");
+if (flaggedLines(TSX_SELF_CHECK, "X.tsx") !== "1,2") {
+  failures.push(
+    `token-discipline .tsx self-check flagged lines [${flaggedLines(TSX_SELF_CHECK, "X.tsx")}], expected [1,2]`,
+  );
+}
+if (flaggedLines(CSS_SELF_CHECK, "X.module.css") !== "2") {
+  failures.push(
+    `token-discipline .css self-check flagged lines [${flaggedLines(CSS_SELF_CHECK, "X.module.css")}], expected [2]`,
   );
 }
 
-const svelteFiles = [
-  ...new Bun.Glob("src/**/*.svelte").scanSync({ cwd: ROOT }),
-].sort();
-if (svelteFiles.length <= 30) {
+// tokens.css is the one file whose job is to hold the literals.
+const disciplinedFiles = [
+  ...new Bun.Glob("src/**/*.{css,tsx}").scanSync({ cwd: ROOT }),
+]
+  .filter((file) => file !== "src/tokens.css")
+  .sort();
+// A broken glob would pass vacuously.
+if (disciplinedFiles.length <= 30) {
   failures.push(
-    `token discipline saw only ${svelteFiles.length} .svelte files under src/`,
+    `token discipline saw only ${disciplinedFiles.length} styled files under src/`,
   );
 }
-for (const file of svelteFiles) {
+for (const file of disciplinedFiles) {
   const source = await Bun.file(`${ROOT}/${file}`).text();
   failures.push(...tokenViolations(source, file));
 }
@@ -168,7 +219,6 @@ const EXEMPT: Record<string, string> = {
     "spec-required palette name for the ramp stop --gray-12 aliases",
   "colors.white":
     "the white surfaces spell #ffffff out; there is no --white role",
-  "spacing.rail": "the 16rem rail is an AppShell grid track, not a token",
   "spacing.breakpoint-narrow": "a media query cannot read a custom property",
 };
 
@@ -247,33 +297,26 @@ for (const [token, specValue] of SPEC) {
 
 /** Custom properties written in one file and read in another, each with its writer. */
 const CROSS_FILE: Record<string, string> = {
-  "--facet-axis-hue":
-    "set inline by catalog.ts facetAxisStyle(), read by RepresentationPicker",
-  "--facet-axis-ink":
-    "set inline by catalog.ts facetAxisStyle(), read by RepresentationPicker",
-  "--track-width":
-    "DualThumbTrack sizing hook with a fallback; consumers may override it",
-  "--track-height":
-    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
-  "--rail-height":
-    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
-  "--thumb-size":
-    "DualThumbTrack sizing hook, overridden by PeriodWindowSlider",
+  "--tree-item-level":
+    "set inline by React Aria's Tree on each row, read by BrowseTree",
+  "--top-bar-height":
+    "measured by TopBar onto :root, read by the shell's browse column",
+  "--data-table-columns":
+    "set inline by DataTable.tsx on its table, read by DataTable.module.css",
+  "--code-depth":
+    "set inline by CodeList.tsx on each levelled row, read by CodeList.module.css",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;
-// `--x:` in CSS or an inline style attribute, or a Svelte `style:--x` directive.
-const DECLARED = /(--[\w-]+)\s*[:=]/g;
-const HTML_COMMENT = /<!--[\s\S]*?-->/g;
+// `--x:` in CSS, or a `"--x":` key in a React style object.
+const DECLARED = /(--[\w-]+)["']?\s*[:=]/g;
 
 const declaredIn = (text: string): Set<string> =>
   new Set([...text.matchAll(DECLARED)].map((m) => m[1]));
 const TOKEN_PROPERTIES = declaredIn(stripComments(tokensCss));
 
 function unresolvedReferences(source: string, file: string): string[] {
-  const text = stripComments(source).replace(HTML_COMMENT, (m) =>
-    m.replace(/[^\n]/g, " "),
-  );
+  const text = stripComments(source);
   const local = declaredIn(text);
   const out: string[] = [];
   for (const ref of text.matchAll(VAR_REFERENCE)) {
@@ -288,29 +331,24 @@ function unresolvedReferences(source: string, file: string): string[] {
 }
 
 const REFERENCE_SELF_CHECK = [
-  "<div style:--local-a={1} style='--local-b: 2'></div>",
-  "<style>",
-  "  .a { color: var(--text); width: var(--local-a); height: var(--local-b); }",
-  "  .b { color: var(--txet); }",
-  "  .c { --local-c: 1px; margin: var(--local-c); }",
-  "  .d { padding: var(--thumb-size, 1rem) var(--nope, 0); }",
-  "  /* var(--in-a-comment) */",
-  "</style>",
+  '<div style={{ "--local-a": 1, "--local-b": 2 }} />',
+  ".a { color: var(--text); width: var(--local-a); height: var(--local-b); }",
+  ".b { color: var(--txet); }",
+  ".c { --local-c: 1px; margin: var(--local-c); }",
+  ".d { padding: var(--code-depth, 1rem) var(--nope, 0); }",
+  "/* var(--in-a-comment) */",
 ].join("\n");
-const referenceSelfCheck = unresolvedReferences(
-  REFERENCE_SELF_CHECK,
-  "X.svelte",
-)
+const referenceSelfCheck = unresolvedReferences(REFERENCE_SELF_CHECK, "X.tsx")
   .map((v) => v.split(":")[1])
   .join(",");
-if (referenceSelfCheck !== "4,6") {
+if (referenceSelfCheck !== "3,5") {
   failures.push(
-    `reference-resolution self-check flagged lines [${referenceSelfCheck}], expected [4,6]`,
+    `reference-resolution self-check flagged lines [${referenceSelfCheck}], expected [3,5]`,
   );
 }
 
 const styledFiles = [
-  ...new Bun.Glob("src/**/*.{svelte,css}").scanSync({ cwd: ROOT }),
+  ...new Bun.Glob("src/**/*.{css,tsx}").scanSync({ cwd: ROOT }),
 ].sort();
 for (const file of styledFiles) {
   const source = await Bun.file(`${ROOT}/${file}`).text();
@@ -323,5 +361,5 @@ if (failures.length > 0) {
   process.exit(1);
 }
 console.log(
-  `lint:tokens: ${svelteFiles.length} .svelte files, ${SPEC.size} DESIGN.md tokens and var() references in ${styledFiles.length} files clean`,
+  `lint:tokens: ${disciplinedFiles.length} styled files, ${SPEC.size} DESIGN.md tokens and var() references in ${styledFiles.length} files clean`,
 );

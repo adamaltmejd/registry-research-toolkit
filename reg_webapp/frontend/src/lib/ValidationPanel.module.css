@@ -1,0 +1,117 @@
+.validation {
+  margin-top: var(--space-4);
+}
+
+/* The request-error StatusRow: placement only. */
+.requestError {
+  margin-bottom: var(--space-4);
+}
+
+/* A check in flight is not a verdict: muted text, no tint. */
+.checking {
+  display: block;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.group {
+  min-width: 0;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  border: 0;
+}
+/* The h4 carries `.micro-label` (a label, not a heading level): no weight here. */
+.group h4 {
+  margin: 0 0 var(--space-2);
+}
+.group ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.group li {
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--surface-sunken);
+}
+.group.error li {
+  border-left-color: var(--err);
+}
+.group.warning li {
+  border-left-color: var(--warn);
+}
+.group.info li {
+  border-left-color: var(--info);
+}
+
+.issueHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.label {
+  font-weight: 600;
+}
+.code {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.message {
+  margin: var(--space-1) 0;
+}
+/* A raw machine string (a JSON pointer, a hint's coordinate): it breaks in place
+   rather than overflow the card at 375px (#1112). */
+.path {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+code.path {
+  font-family: var(--font-mono);
+}
+
+/* The locate trigger and the catalog link on one row, wrapping when narrow: the
+   "where" reads before the "fix it". */
+.locators {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}
+/* The locate trigger and the catalog link read as plain links: `text`, a 1.5px
+   accent bottom border, surface-hover on hover; never pine. */
+.locate,
+.catalogLink {
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-bottom: 1.5px solid var(--accent);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.locate:hover,
+.catalogLink:hover {
+  background: var(--surface-hover);
+}
+.locate:focus-visible,
+.catalogLink:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+.catalogLink code {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}

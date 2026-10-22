@@ -1,14 +1,9 @@
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { playwright } from "@vitest/browser-playwright";
+import optimizeLocales from "@react-aria/optimize-locales-plugin";
+import react from "@vitejs/plugin-react";
 // defineConfig from vitest/config (not vite): it natively types the `test` block.
 // Vitest 4 dropped the module augmentation that let a `/// <reference types="vitest/config" />`
 // add `test` to vite's own UserConfig, so import the vitest-aware defineConfig directly.
-import { configDefaults, defineConfig } from "vitest/config";
-import type { BrowserCommand } from "vitest/node";
-import {
-  chromiumLaunchArgs,
-  needsSingleProcessChromium,
-} from "./scripts/chromium";
+import { defineConfig } from "vitest/config";
 
 // vite.config.ts runs under Node; read the env via globalThis so we don't pull a
 // @types/node dep for one lookup. REG_META_SERVER_URL repoints the dev /api proxy at
@@ -23,40 +18,17 @@ const runtimeProcess = (
 const rustServerUrl =
   runtimeProcess?.env?.REG_META_SERVER_URL ?? "http://127.0.0.1:8001";
 
-// The Playwright provider implements `vi.mock` as a `context.route()` per test
-// file and removes it when the file ends, so request interception switches off
-// between files and back on at the next file's `vi.mock`. Chromium applies the
-// re-enable to the already-loaded test iframe a few ms after `route()` resolves:
-// an import issued in that window reaches Vite unintercepted and the test runs
-// against the real module (`vi.mocked(...).mockReset is not a function`, ~5% of
-// Linux CI runs). This route stays for the whole context, so interception never
-// switches off; test-setup.browser.ts arms it and waits until its iframe's
-// requests are intercepted before any test file loads.
-// simplify: every browser-test request now pauses in Playwright's routing
-// (~5% on the browser project); drop once the provider keeps interception live
-// across files, or Playwright's `route()` resolves only when it is in effect.
-const ROUTE_PROBE_PATH = "/__route_probe__";
-const ROUTE_PROBE_MARKER = "intercepted";
-const armedContexts = new WeakSet<object>();
-const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
-  if (!armedContexts.has(context)) {
-    armedContexts.add(context);
-    await context
-      .route(
-        (url) => url.pathname === ROUTE_PROBE_PATH,
-        (route) => route.fulfill({ body: ROUTE_PROBE_MARKER }),
-      )
-      .catch((error: unknown) => {
-        // Let the next file retry and surface this error, not a probe timeout.
-        armedContexts.delete(context);
-        throw error;
-      });
-  }
-  return { path: ROUTE_PROBE_PATH, marker: ROUTE_PROBE_MARKER };
-};
-
 export default defineConfig({
-  plugins: [svelte()],
+  plugins: [
+    react(),
+    // React Aria ships its strings for ~35 locales; keep the UI language and the
+    // data's. `enforce: "pre"` runs it before Vite's own transforms (a CJS plugin,
+    // so the Vite flavour is `.vite`).
+    {
+      ...optimizeLocales.vite({ locales: ["en-US", "sv-SE"] }),
+      enforce: "pre",
+    },
+  ],
   server: {
     // Dev proxy: the Rust server answers every /api route.
     proxy: {
@@ -65,78 +37,30 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    // Unit tests read cross-package oracles, which Vite refuses outside the
+    // allowed roots (default: this package): the server fold's corpus
+    // (reg_core.test.ts), reg-core's structural corpus (reg_core.test.ts,
+    // validation.test.ts), the server's unsupported-version case, the period
+    // grammar corpora and the interval algebra's golden cases
+    // (reg_core.test.ts). Allow those directories, not the whole repo. A
+    // single-file entry does not work here: Vite compares it against the id
+    // with its `?raw` query attached.
+    fs: {
+      allow: [
+        ".",
+        "../../conformance/cases/folds",
+        "../../conformance/cases/api/validate-unsupported-schema-version",
+        "../../conformance/cases/grammar",
+        "../../crates/reg-core/tests/project/corpus",
+        "../../crates/reg-core/tests/interval",
+      ],
+    },
   },
-  // Two Vitest projects share this one Vite pipeline (so `.svelte` / `.svelte.ts`
-  // resolve and compile identically via the svelte() plugin above):
-  //   • `unit`    — jsdom, for pure logic + rune-MODULE tests (`*.test.ts`).
-  //   • `browser` — real Chromium via Playwright, for `.svelte` COMPONENT tests
-  //                 (`*.browser.test.ts`). jsdom can't faithfully run Svelte 5
-  //                 runes reactivity, so component wiring is tested in a real
-  //                 browser (#201). `bun run test` (= `vitest run`) runs both.
+  // Pure-logic tests (`*.test.ts`) in jsdom. Component behavior is exercised by
+  // the `flows` driver (reg_webapp/dev/driver.mjs), not here.
   test: {
-    projects: [
-      {
-        extends: true,
-        // Unit tests read cross-package oracles, which Vite refuses outside the
-        // allowed roots (default: this package): the server fold's corpus
-        // (reg_core.test.ts), reg-core's structural corpus (reg_core.test.ts,
-        // validation.test.ts), the server's unsupported-version case, the period
-        // grammar corpora and the interval algebra's golden cases
-        // (reg_core.test.ts). Allow those directories, not the whole repo. A
-        // single-file entry does not work here: Vite compares it against the id
-        // with its `?raw` query attached.
-        server: {
-          fs: {
-            allow: [
-              ".",
-              "../../conformance/cases/folds",
-              "../../conformance/cases/api/validate-unsupported-schema-version",
-              "../../conformance/cases/grammar",
-              "../../crates/reg-core/tests/project/corpus",
-              "../../crates/reg-core/tests/interval",
-            ],
-          },
-        },
-        test: {
-          name: "unit",
-          environment: "jsdom",
-          include: ["src/**/*.test.ts"],
-          setupFiles: ["./src/test-setup.unit.ts"],
-          // Component tests belong to the `browser` project below — exclude them
-          // here (their `.browser.test.ts` suffix also matches `*.test.ts`). A
-          // custom `exclude` REPLACES Vitest's default (node_modules, .git), so
-          // spread the defaults back in or the unit run loses that guard.
-          exclude: [...configDefaults.exclude, "src/**/*.browser.test.ts"],
-        },
-      },
-      {
-        extends: true,
-        test: {
-          name: "browser",
-          fileParallelism: !needsSingleProcessChromium,
-          include: ["src/**/*.browser.test.ts"],
-          // vitest-browser-svelte injects `render`/`cleanup` (it auto-cleans
-          // BEFORE each test) and its locator types via this setup entry. The
-          // second entry loads the global design tokens + fonts into the test
-          // document (this suite never evaluates main.ts) so component styling
-          // matches the app — see src/test-setup.browser.ts.
-          setupFiles: ["vitest-browser-svelte", "./src/test-setup.browser.ts"],
-          browser: {
-            enabled: true,
-            // Vitest 4.1 takes a provider FACTORY, not the old "playwright" string.
-            provider: playwright({
-              launchOptions: { args: chromiumLaunchArgs },
-            }),
-            headless: true,
-            // Vitest 5 flipped `locators.exact` to true. This suite locates by
-            // the sentence a user reads, inside elements that also carry
-            // decoration, and passes `exact: true` per call where it means it.
-            locators: { exact: false },
-            instances: [{ browser: "chromium" }],
-            commands: { keepRequestInterception },
-          },
-        },
-      },
-    ],
+    environment: "jsdom",
+    include: ["src/**/*.test.ts"],
+    setupFiles: ["./src/test-setup.unit.ts"],
   },
 });

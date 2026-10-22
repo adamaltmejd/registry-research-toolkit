@@ -1,0 +1,141 @@
+/* Sticky above the narrow breakpoint (maintainer ruling 2026-10-22); below it
+   the bar wraps to three rows, too tall to pin, and scrolls away. */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* The brand: the deployment's name at h3, its id in mono under it. */
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  color: var(--text);
+  text-decoration: none;
+}
+.brandName {
+  font-size: var(--text-h3);
+  font-weight: var(--heading-weight);
+  line-height: 1.2;
+}
+.brand:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+.brandId {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-muted);
+}
+
+/* The project banner (its link or its section, the bar's last child) sits at
+   the right edge. */
+.topBar > :last-child {
+  margin-left: auto;
+}
+
+/* The search bar takes the room the brand and the banner leave, up to a
+   measure. */
+.search {
+  position: relative;
+  display: flex;
+  flex: 1 1 16rem;
+  min-width: 0;
+  max-width: 32rem;
+}
+.searchInput {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-2) var(--space-6) var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.searchInput[data-focused] {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+/* While the field holds text, focused or not, it says it is filtering: an
+   `accent` border with an `accent-bg` halo. Room on the right for the count and
+   the Esc hint. */
+.search:not([data-empty]) .searchInput {
+  padding-right: 9rem;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-bg);
+}
+.search:not([data-empty]) .searchInput[data-focused] {
+  box-shadow: var(--focus-ring);
+}
+/* Escape clears the field; the browser's own cancel glyph would be a second,
+   unstyled way to do it. */
+.searchInput::-webkit-search-cancel-button {
+  display: none;
+}
+/* The hint, inside the field's trailing edge; a click on it lands on the input
+   beneath. Empty: the palette shortcut. With text: the match count in `accent-ink`
+   and an Esc key. */
+.hint {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+kbd.hint,
+.key {
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  line-height: 1.3;
+}
+.count {
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Below the narrow breakpoint the banner drops to its own full-width row. */
+@media (max-width: 48rem) {
+  .topBar {
+    position: static;
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2) var(--space-3);
+  }
+  .topBar > :last-child {
+    margin-left: 0;
+  }
+  /* A touch device has no shortcut or Esc key to show. */
+  kbd.hint,
+  .key {
+    display: none;
+  }
+  .searchInput {
+    padding-right: var(--space-3);
+  }
+  .search:not([data-empty]) .searchInput {
+    padding-right: 6rem;
+  }
+}

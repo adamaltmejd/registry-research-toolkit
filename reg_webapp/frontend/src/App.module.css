@@ -1,0 +1,114 @@
+/* The shell: the top bar over the browse column and the detail pane. The page
+   (the document) is the vertical scroller, as every routed view assumes for its
+   own `position: sticky` parts; the browse column sticks beside it and scrolls
+   its own list. */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contextError {
+  margin: var(--space-3) var(--space-4) 0;
+}
+
+/* The detail pane is the `surface` where work happens (DESIGN.md → Colors); the
+   browse columns paint their own `bg`. Painted on the grid, so a short pane
+   still reads as one sheet down to the page's foot and past `content-max`. */
+.body {
+  flex: 1 0 auto;
+  display: grid;
+  background: var(--surface);
+  grid-template-columns: var(--col-browse) minmax(0, 1fr);
+  align-items: start;
+}
+
+/* Under a register, its variables take a second column. */
+.body[data-list="true"] {
+  grid-template-columns: var(--col-browse) var(--col-list) minmax(0, 1fr);
+}
+
+/* A browse column fills the viewport under the sticky top bar and scrolls its
+   own list (maintainer ruling 2026-10-22). */
+.browse,
+.list {
+  position: sticky;
+  top: var(--top-bar-height, 0px);
+  height: calc(100dvh - var(--top-bar-height, 0px));
+}
+
+/* The detail pane, capped at the content measure. `min-width: 0` lets a wide
+   table scroll inside its own wrapper instead of widening the page. */
+.detail {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--content-max);
+  min-width: 0;
+  min-height: 100%;
+  padding: var(--space-5);
+  background: var(--surface);
+}
+
+.crumbs {
+  min-width: 0;
+}
+
+/* The routed page grows through the pane, so the footer stays at its foot. It
+   stays `overflow: visible`: anything else would make it the scrollport of every
+   sticky descendant (Y-97). */
+.routed {
+  flex: 1 0 auto;
+  min-width: 0;
+}
+
+.rootPrompt {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.vintage {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  text-align: center;
+}
+
+/* Below the narrow breakpoint (48rem, DESIGN.md → spacing.breakpoint-narrow) the
+   columns stack one at a time: the catalog root shows the list, every other page
+   its detail, with the breadcrumb's first crumb as the way back to the list. */
+@media (max-width: 48rem) {
+  .body,
+  .body[data-list="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* The register page lists its variables itself, so the stacked layout has
+     no second column. */
+  .body .list {
+    display: none;
+  }
+  .browse {
+    position: static;
+    height: auto;
+  }
+  .detail {
+    padding: var(--space-4);
+  }
+  /* On the list the pane keeps only its footer, so the page keeps its `main`
+     landmark and the citation. */
+  .body[data-narrow-shows="detail"] .browse,
+  .body[data-narrow-shows="browse"] .crumbs,
+  .body[data-narrow-shows="browse"] .routed {
+    display: none;
+  }
+}
+
+.notFoundTitle {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+}

@@ -3,7 +3,7 @@
 The grammar is `reg_core_py.check_slug` (`crates/DESIGN.md`, "FQID grammar"); what this
 module adds is build policy with no Rust consumer: `_default` is the variant-less
 register_variant coordinate, two slugs are reserved in one slot each because an SPA
-route would capture them (`reg_webapp/frontend/src/lib/router.svelte.ts`).
+route would capture them (`reg_webapp/frontend/src/lib/router.ts`).
 """
 
 from __future__ import annotations

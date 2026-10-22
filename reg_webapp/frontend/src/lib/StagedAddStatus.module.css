@@ -1,0 +1,8 @@
+.line {
+  margin: var(--space-4) 0;
+}
+
+/* The link takes the row's tone colour, not the page's link colour. */
+.line a {
+  color: inherit;
+}

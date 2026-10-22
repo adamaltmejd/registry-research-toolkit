@@ -10,7 +10,8 @@
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "types": ["svelte", "vite/client"]
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.svelte", "*.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "*.config.ts"]
 }

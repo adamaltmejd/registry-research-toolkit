@@ -1,0 +1,31 @@
+.subject {
+  min-width: 0;
+}
+
+.section {
+  margin-top: var(--space-5);
+}
+
+.sectionHeading {
+  margin: 0 0 var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-h2);
+  font-weight: var(--heading-weight);
+}
+
+.technical {
+  margin: var(--space-2) 0;
+}
+
+.technicalSummary {
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.technicalSummary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

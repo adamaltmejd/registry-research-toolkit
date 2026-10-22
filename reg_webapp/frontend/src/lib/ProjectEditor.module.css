@@ -1,0 +1,83 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+/* The "unsaved" cue: quiet mono text-muted, as in the project banner; never a
+   status hue (it is not a verdict) and never the accent. */
+.dirty {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--body-weight);
+  letter-spacing: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.openError {
+  margin: 0 0 var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 28rem;
+  margin-bottom: var(--space-4);
+}
+.field span {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.field input {
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.field input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.sourceList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* A hairline separates the provenance from the working column above. */
+.provenance {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+.provenance h3 {
+  margin: 0 0 var(--space-2);
+}

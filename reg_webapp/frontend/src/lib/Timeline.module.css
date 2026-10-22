@@ -1,0 +1,240 @@
+/* The Timeline (DESIGN.md → Time): a `label` header, the drawing over one axis
+   of years, its legend, and on a variable page the exact year fields. No card:
+   it sits on the pane like the Definitions above it. */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: var(--space-5) 0;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.headFacts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-micro);
+}
+
+/* The covered years: an identifier, so mono and tabular. */
+.covered {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The window is wider than the subject's availability: information, not a
+   warning (the `i` glyph, never ▲). */
+.info {
+  color: var(--info);
+  font-weight: var(--column-weight);
+}
+
+/* ── The drawing ──────────────────────────────────────────────────────── */
+.drawing {
+  position: relative;
+  min-width: 0;
+}
+
+.plot {
+  position: relative;
+  height: 40px;
+}
+
+.plot > div {
+  position: absolute;
+}
+
+/* The active window: the accent-bg wash between two accent bounds. */
+.band {
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  border-inline: 1.5px solid var(--accent);
+  background: var(--accent-bg);
+}
+/* Where the band leaves coverage, the wash gives way to info-bg below it. */
+.bandCut {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--info-bg);
+}
+.uncovered {
+  top: 0;
+  bottom: 0;
+  background: var(--info-bg);
+}
+
+/* Coverage: an ink bar, cut by an edition tick at every year boundary. */
+.coverage {
+  top: 14px;
+  height: 12px;
+  min-width: 2px;
+  border-radius: 1px;
+  background: var(--text);
+}
+.tick {
+  top: 14px;
+  width: 1px;
+  height: 12px;
+  background: var(--viz-edition);
+}
+/* A delivery gap inside coverage. */
+.gap {
+  top: 14px;
+  height: 12px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn-hatch) 0,
+    var(--warn-hatch) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+.axis {
+  position: relative;
+  height: 16px;
+  margin-top: var(--space-1);
+  border-top: 1px solid var(--border);
+}
+.year {
+  position: absolute;
+  top: 3px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-axis);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.year[data-edge="start"] {
+  transform: none;
+}
+.year[data-edge="end"] {
+  transform: translateX(-100%);
+}
+/* The window's years: pine as text, the study window on the axis. */
+.windowYear {
+  color: var(--accent-ink);
+  font-weight: var(--column-weight);
+}
+
+/* ── The selection (variable page) ─────────────────────────────────────── */
+/* The slider lies over the plot; its inline inset puts each thumb on the
+   centre of its year cell. */
+.slider {
+  position: absolute;
+  top: 0;
+  height: 40px;
+}
+.track {
+  position: relative;
+  height: 100%;
+}
+.thumb {
+  top: 12px;
+  width: 8px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid var(--surface);
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  cursor: ew-resize;
+  transition: box-shadow var(--duration-quick) var(--ease-standard);
+}
+/* A 24px target around the slim face (WCAG 2.5.8), for touch. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  inset: -4px -8px;
+}
+.thumb[data-dragging] {
+  background: var(--accent-hover);
+}
+.thumb[data-focus-visible] {
+  box-shadow: var(--focus-ring);
+}
+
+.form .controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.exact {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.exact label {
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ── The legend ───────────────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}
+.legend li::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: var(--space-1);
+  box-sizing: border-box;
+  vertical-align: -1px;
+}
+.legendBand::before {
+  border: 1px solid var(--accent);
+  background: var(--accent-bg);
+}
+.legendCoverage::before {
+  background: var(--text);
+}
+.legendGap::before {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn-hatch) 0,
+    var(--warn-hatch) 2px,
+    var(--surface) 2px,
+    var(--surface) 4px
+  );
+}
+.legendOutside::before {
+  border: 1px solid var(--accent);
+  background: var(--info-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none;
+  }
+}

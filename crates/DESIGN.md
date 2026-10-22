@@ -102,7 +102,7 @@ reg-meta serve        reg-meta mcp
 HTTP API (SPA)        MCP over stdio (local catalog)
 + /mcp (hosted)
         │
-SPA (Svelte) + reg-core-wasm
+SPA (React) + reg-core-wasm
 ```
 
 - `reg-core`: no IO. FQID and period grammar, folds, interval algebra, project-data

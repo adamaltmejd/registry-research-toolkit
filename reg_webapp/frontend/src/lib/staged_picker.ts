@@ -35,7 +35,7 @@ import {
   projectStore,
   type StagedAdd,
   type StagedRemove,
-} from "./project_store.svelte";
+} from "./project_store";
 import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 
 export interface StagedPickerBand {
@@ -457,7 +457,7 @@ export function nullBindingCommittedRowKeys(
  * add (Y-77): named both ways out — set the study window in the rail, or apply a
  * period on this page — as ONE shared string, so the two pages can't drift. */
 export const ADD_PERIOD_REQUIRED_MESSAGE =
-  "Apply a period before adding — set the study window in the rail, or press Apply under Period above, then select and add again.";
+  "Apply a period before adding — set the study window in the rail, or press Apply under Period above. Your selection stays.";
 
 /** The same refusal on a page that carries NO Period control of its own — the
  * register list (Y-83), where the study window is the only way out. Same gate,
@@ -550,7 +550,7 @@ export function finalSourcePeriodsForStagedAdds(
 // do with a set of picked rows: fan each row out to its concrete register
 // variants, resolve every add's binding fields at the period it commits under, and
 // write the whole batch through `projectStore.applyStagedDiff`. It was three
-// copies of the same forty lines; the hosts now own only their own `$state`
+// copies of the same forty lines; the hosts now own only their own React state
 // (the confirmation / refusal lines) and their scope.
 
 /** One picked row as a host hands it over: the band it belongs to and the row. The
@@ -581,7 +581,7 @@ export interface StagedApplyOutcome {
   removed: number;
 }
 
-/** A staged diff in words — "+2 columns · -1 column", only the parts that are
+/** A staged diff in words — "+2 columns, -1 column", only the parts that are
  * non-zero, "" for an empty diff. ONE formatter so the picker footer (what an
  * Apply WILL do) and a page's confirmation (what it DID) can never phrase the
  * same two counts differently. */
@@ -595,7 +595,7 @@ export function stagedDiffSummary(counts: StagedApplyOutcome): string {
       `-${counts.removed} ${counts.removed === 1 ? "column" : "columns"}`,
     );
   }
-  return parts.join(" · ");
+  return parts.join(", ");
 }
 
 /** The ways an Apply can end:
@@ -734,7 +734,7 @@ async function stagedAdd(
 /** Commit a staged batch through ONE synchronous store mutation. `scope` is the
  * host's active (period, window) — the same one its `committedPickerRows` reads,
  * so what an add commits under is what the page showed. `cancelled` reports that the
- * batch no longer describes that page — the host is gone (its `$effect` teardown), or
+ * batch no longer describes that page — the host is gone (its unmount), or
  * a control the host left usable has moved `scope` out from under it. It is asked at
  * BOTH of the awaits below (the restore gate, then the binding resolves), because a
  * pick that waits is a pick the researcher can walk away from mid-wait, and neither

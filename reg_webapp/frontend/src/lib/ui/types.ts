@@ -31,9 +31,6 @@ export type TagTone = PlainTone | StatusTone;
  *  view; `default`/`ghost` are the quiet chrome; `danger` is destructive. */
 export type ButtonVariant = "primary" | "default" | "ghost" | "danger";
 
-/** A `Button` size. */
-export type ButtonSize = "sm" | "md";
-
 /** A `DataTable` column definition. `key` indexes into the row object;
  *  `numeric` right-aligns + mono-faces a measure; `mono` mono-faces an
  *  identifier without forcing alignment; `align` overrides; `width` is a CSS
@@ -57,6 +54,8 @@ export interface Column<Row = object> {
 export interface BreadcrumbItem {
   label: string;
   href?: string;
+  /** A word, not a slug or identifier: the UI face, not mono. */
+  word?: boolean;
 }
 
 /** A `KeyValue` row. `mono` mono-faces the value (identifiers). `value` is

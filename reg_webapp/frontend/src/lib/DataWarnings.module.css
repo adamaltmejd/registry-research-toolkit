@@ -1,0 +1,52 @@
+.inline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+}
+
+.warnings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.warnings li {
+  min-width: 0;
+}
+
+.summary {
+  display: block;
+  max-width: 80ch;
+  overflow-wrap: anywhere;
+}
+
+/* The tone's glyph is aria-hidden, so the word carries the severity. */
+.severity {
+  font-weight: var(--heading-weight);
+}
+
+.scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.scope code {
+  font-family: var(--font-mono);
+}
+
+.detail {
+  margin: 0;
+  max-width: 80ch;
+  overflow-wrap: anywhere;
+}

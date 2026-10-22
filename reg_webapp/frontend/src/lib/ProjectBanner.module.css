@@ -1,0 +1,196 @@
+/* The project banner (DESIGN.md → components.project-banner): accent-soft fill, a
+   3px accent leading bar, md radius, no shadow. Two blocks side by side — the
+   project summary and the study window — that wrap one above the other when the
+   row is narrow. */
+.banner {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  max-width: 16rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+  font-size: var(--text-h3);
+  font-weight: var(--heading-weight);
+  line-height: 1.3;
+  text-decoration: none;
+}
+.name[data-hovered] {
+  border-radius: var(--radius-sm);
+  background: var(--surface-hover);
+}
+.name[data-focus-visible],
+.create[data-focus-visible] {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+/* Save state is quiet: mono text-muted, never a status hue (it is not a
+   verdict). */
+.unsaved {
+  flex: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}
+
+/* Counts are identifiers of size, set in mono. */
+.counts {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The verdict: a status foreground plus its glyph and words, never hue alone. */
+.status {
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+}
+.status[data-status="unchecked"],
+.status[data-status="checking"] {
+  color: var(--text-muted);
+  font-weight: var(--body-weight);
+}
+.status[data-status="ok"] {
+  color: var(--ok);
+}
+.status[data-status="warnings"] {
+  color: var(--warn);
+}
+.status[data-status="errors"],
+.status[data-status="blocked"] {
+  color: var(--err);
+}
+
+/* No project open: a single link in the banner's box with a `border` leading
+   bar, nothing tinted. */
+.create {
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: var(--text-sm);
+  font-weight: var(--heading-weight);
+  text-decoration: none;
+  transition: background var(--duration-quick) var(--ease-standard);
+}
+.create[data-hovered] {
+  background: var(--surface-hover);
+}
+
+/* ── The study window ─────────────────────────────────────────────────────── */
+.window {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 13rem;
+  max-width: 100%;
+}
+
+.windowHead {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+/* The window's years in accent-ink mono: pine as text for the study window. */
+.readout {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink);
+}
+
+.clear {
+  margin-left: auto;
+}
+
+/* The track: a hairline with the window band over it and two thumbs. 20px tall
+   so the thumbs keep a usable hit area. */
+.track {
+  position: relative;
+  height: 20px;
+}
+.track::before {
+  content: "";
+  position: absolute;
+  inset: 9px 0;
+  background: var(--border-strong);
+}
+.fill {
+  position: absolute;
+  top: 6px;
+  height: 8px;
+  background: var(--accent-bg);
+  border-block: 1px solid var(--accent);
+  box-sizing: border-box;
+}
+.thumb {
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-sizing: border-box;
+  transition: background var(--duration-quick) var(--ease-standard);
+}
+.thumb[data-dragging] {
+  background: var(--accent);
+}
+.thumb[data-focus-visible] {
+  box-shadow: var(--focus-ring);
+}
+
+@media (max-width: 48rem) {
+  .banner {
+    flex: 1 1 100%;
+  }
+  .summary {
+    max-width: none;
+    flex: 1 1 12rem;
+  }
+  .window {
+    flex: 1 1 12rem;
+    width: auto;
+  }
+}

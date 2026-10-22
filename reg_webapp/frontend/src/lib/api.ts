@@ -370,8 +370,15 @@ export function getContext(): Promise<Context> {
 }
 
 /** `show` for `ref` (a FQID or group ref); no ref is the catalog root. */
-export function getShow(ref?: string): Promise<ShowNode> {
-  return rustGet<ShowNode>(ref ? `/catalog/${encodeFqid(ref)}` : "/catalog");
+export function getShow(
+  ref?: string,
+  options?: { signal?: AbortSignal },
+): Promise<ShowNode> {
+  return rustGet<ShowNode>(
+    ref ? `/catalog/${encodeFqid(ref)}` : "/catalog",
+    undefined,
+    options,
+  );
 }
 
 /** The page size the SPA walks `states` with: the operation's maximum.
@@ -522,8 +529,15 @@ export function getValues(
 
 /** The relationship graph of a variable, classification, concept group or
  * classification group ref. */
-export function getGraph(ref: string): Promise<RelationshipGraph> {
-  return rustGet<RelationshipGraph>(`/graph/${encodeFqid(ref)}`);
+export function getGraph(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<RelationshipGraph> {
+  return rustGet<RelationshipGraph>(
+    `/graph/${encodeFqid(ref)}`,
+    undefined,
+    options,
+  );
 }
 
 /** A variable's lineage: edges, lineage warnings and per-register provenance. */
@@ -638,11 +652,11 @@ export type SearchType = NonNullable<
   RustOperations["search"]["parameters"]["query"]["type"]
 >;
 
-/** The omnibox's client-side timeout. The codes/value sub-query can be slow
- * server-side (a separate backend index fix is in flight); past this the SPA
- * aborts the request and shows a friendly "timed out" message rather than an
- * infinite spinner. A timeout-abort throws a `TimeoutError` (distinct `name` from
- * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
+/** The search client-side timeout. The codes/value sub-query can be slow
+ * server-side; past this the SPA aborts the request and the command palette
+ * reports a failed search rather than an endless "Searching…". A timeout-abort
+ * throws a `TimeoutError` (distinct `name` from the supersede-abort's
+ * `AbortError`). */
 const SEARCH_TIMEOUT_MS = 12_000;
 
 /** GET a search endpoint (`path` relative to `/api`) with the shared query +
@@ -687,8 +701,8 @@ function searchGet<T>(
 
 /** The minimum query length that's worth a GET /api/search round-trip: a single
  * char is the most expensive query server-side (the codes/value sub-query) and
- * the least useful. The single source of truth for this threshold — SearchView
- * (the results page) gates its fetch on it. */
+ * the least useful. The single source of truth for this threshold — the
+ * command palette gates its fetch on it. */
 export const SEARCH_MIN_QUERY_LENGTH = 2;
 
 /** Search the catalog: one page of the ranked list. `q` is the raw user query
@@ -707,7 +721,26 @@ export async function search(
   return (await searchGet<{ data: SearchPage }>("/search", q, options)).data;
 }
 
-// ── Docs surface (#354/#394/#402/#742) ─────────────────────────────────────
+export type RegisterFacet = RustSchemas["RegisterFacet"];
+
+/** Per register, how many of its variables match `q` (#1785): every match, no
+ * paging, before concept groups fold. A register without a match is absent.
+ * With `register`, only that register, and its entry lists the matched
+ * variables' FQIDs (#1788). */
+export async function searchFacets(
+  q: string,
+  options?: { signal?: AbortSignal; register?: string },
+): Promise<RegisterFacet[]> {
+  return (
+    await searchGet<{ data: RustSchemas["RegisterFacets"] }>(
+      "/search/facets",
+      q,
+      options,
+    )
+  ).data.registers;
+}
+
+// ── Docs surface (#354/#394/#402/#742)─────────────────────────────────────
 // The Rust server's docs operations, each `{data, meta}`: `docs_search`
 // (`GET /api/docs/search?q=&register=`, the binding-leaf "mentioned in
 // documentation" hook #402), `docs_get` (`GET /api/docs/doc/{identifier}`: one
@@ -717,8 +750,8 @@ export async function search(
 // without a docs database answers `docs_unavailable` (404): the search and
 // related helpers return `null` for it, so the panels degrade silently, and the
 // doc viewer shows the error.
-// Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
-// `{value}`) — never `{@html}` (they carry `**` highlight markers; the full
+// Snippets/excerpts are EXCERPTS, rendered as TEXT only (React escapes a
+// text child) — never `dangerouslySetInnerHTML` (they carry `**` highlight markers; the full
 // converted FTS document lives at the SCB source, not here).
 
 export type DocPage = RustSchemas["DocPage"];

@@ -1,0 +1,129 @@
+.source {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  scroll-margin-top: var(--space-4);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+/* The title block: the register heading over its variant line. As a flex child it
+   defaults to `min-width: auto`, so a long register name would overflow at 375px;
+   `min-width: 0` lets it shrink (#1110). */
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.title h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  font-weight: var(--heading-weight);
+  overflow-wrap: anywhere;
+}
+/* A title fallen back to the raw `register_variant` is an identifier. */
+.title h3.mono {
+  font-family: var(--font-mono);
+}
+/* The variant names the POPULATION: a qualifier of the heading, muted, and a word,
+   so never mono. */
+.variant {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* The period control, on the SAME two columns `KeyValue` lays its rows on, so the
+   card keeps ONE term column; everything after the label stacks in the value
+   column. */
+.period {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) 1fr;
+  gap: var(--space-1) var(--space-3);
+}
+.period > :not(:global(.micro-label)) {
+  grid-column: 2;
+}
+/* Narrow: the label goes back above a full-width control, at the shell's own
+   breakpoint. */
+@media (max-width: 48rem) {
+  .period {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+}
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.yearRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.yearRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+.yearRow label {
+  white-space: nowrap;
+}
+/* An Apply in flight: the fields are read-only (still in the tab order), dimmed
+   the way a disabled control is. */
+.yearRow :global(.year):read-only {
+  opacity: var(--opacity-disabled);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+/* A period the year fields cannot author: the wire (mono) with the reason. */
+.fixed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.wire {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.fixedNote {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.bindings h4 {
+  margin: 0 0 var(--space-2);
+  font-weight: var(--heading-weight);
+}
+.bindingList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

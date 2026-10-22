@@ -108,7 +108,7 @@ function logPageOutput(page) {
   return pageErrors;
 }
 
-// `networkidle` is NOT enough: Svelte swaps in fetched data after the network
+// `networkidle` is NOT enough: React swaps in fetched data after the network
 // settles, so a screenshot right after navigation captures the loading
 // placeholder. Every loading placeholder carries aria-busy="true" (the
 // components' contract with this driver — don't key on UI copy, which changes
@@ -121,6 +121,20 @@ async function settled(page) {
   await page.waitForFunction(() => !document.querySelector('[aria-busy="true"]'), null, {
     timeout: 10_000,
   });
+}
+
+/** Wait until the /project cart shows exactly `n` source cards (each a region
+ * named "Source N"). The cart's heading carries no count (DESIGN.md → No
+ * counters), so the cards themselves are counted. */
+async function sourceCards(page, n) {
+  await page.waitForFunction(
+    (want) =>
+      [...document.querySelectorAll("section[aria-label]")].filter((el) =>
+        /^Source \d+$/.test(el.getAttribute("aria-label")),
+      ).length === want,
+    n,
+    { timeout: 10_000 },
+  );
 }
 
 async function open(page, path) {
@@ -352,7 +366,7 @@ async function capture(page, name) {
   console.log(`flows: shot ${file}`);
 }
 
-// The verdict ValidationPanel.svelte renders for a clean result: "Draft valid",
+// The verdict ValidationPanel renders for a clean result: "Draft valid",
 // alone when the result carries no issues (Y-75 — with nothing to report the
 // verdict is the whole line) and followed by "with warnings" + the checked clause
 // when it carries some. Anchored on the VERDICT only, so the clause's copy can
@@ -372,7 +386,11 @@ function projectUi(page) {
   return {
     panel,
     banner: panel.getByRole("alert"),
-    summary: panel.getByRole("status"),
+    // The verdict's sentence: the StatusRow's text after its aria-hidden glyph,
+    // which innerText would otherwise lead with.
+    summary: panel
+      .getByRole("status")
+      .locator(':scope > span:not([aria-hidden="true"])'),
     // The CTA's accessible name IS "Downloading…" while the order POST is in
     // flight, so this locator resolving is itself the cleared-busy wait.
     download: page.getByRole("button", { name: "Download order.json" }),
@@ -578,7 +596,7 @@ async function catalogDraftCase(page, counts, shoot) {
   // (4) RELOAD: a cold /project recovers the same project.
   await open(page, "/project");
   await settled(page);
-  await page.getByRole("heading", { name: "Sources (1)" }).waitFor();
+  await sourceCards(page, 1);
   // Substring, first match: the cart labels a known variant ("Individer (…)")
   // around the coordinate, and the same coordinate also names the source card.
   await page.getByText("scb/lisa/individer-15plus").first().waitFor();
@@ -608,6 +626,7 @@ async function catalogDraftCase(page, counts, shoot) {
   await settled(page);
   const fromList = validated(page);
   await columnCheckbox(page, "Forsamling").check();
+  // The register list's add bar names its count (DESIGN.md → VariableRow).
   await page.getByRole("button", { name: "Add 1 column to project" }).click();
   await fromList;
   await settled(page);
@@ -625,7 +644,7 @@ async function catalogDraftCase(page, counts, shoot) {
   //     the same VALID project the researcher authored, not a salvaged fragment.
   await open(page, "/project");
   await settled(page);
-  await page.getByRole("heading", { name: "Sources (2)" }).waitFor();
+  await sourceCards(page, 2);
   await page.getByText("scb/rams/standard").first().waitFor();
   await checkValid(projectUi(page), "the recovered project must validate clean");
   check(counts.order === 0, `the draft flow POSTed /order ${counts.order} time(s)`);
@@ -674,9 +693,9 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   //     again. Applying a period re-resolves the leaf, which clears the picker's
   //     staging — so this really is a fresh pick, which is why the notice says to
   //     select again rather than just retry.
-  const periodSlider = page.getByRole("group", { name: "Period window (years)" });
-  await periodSlider.getByLabel("To year").fill("2018");
-  await periodSlider.getByLabel("From year").fill("2018");
+  const periodCard = page.locator("form.period-picker");
+  await periodCard.getByRole("textbox", { name: "To" }).fill("2018");
+  await periodCard.getByRole("textbox", { name: "From" }).fill("2018");
   await page.getByRole("button", { name: "Apply period" }).click();
   await periodApplied(page, "2018");
   await settled(page);
@@ -693,6 +712,33 @@ async function catalogPeriodRequiredCase(page, counts, shoot) {
   check(
     source.period === 2018 && source.bindings[0]?.type === "categorical",
     `the recovered source authored ${JSON.stringify(source)}`,
+  );
+
+  // (5) The browse tree stays reachable by keyboard after its rows fold away.
+  await browseTreeStaysTabbable(page);
+}
+
+/** After a row is clicked and "Collapse all" hides it, Tab still reaches a tree
+ * row. React Aria keeps only the focused row in the Tab order, so a focused key
+ * left on a hidden row drops the whole tree out of it (#1782 review, twice).
+ * Only where the browse column shows beside the detail pane (above 48rem). */
+async function browseTreeStaysTabbable(page) {
+  const collapseAll = page.getByRole("button", { name: "Collapse all" });
+  if (!(await collapseAll.isVisible())) return;
+  await page.getByRole("row", { name: "RAMS" }).click();
+  await settled(page);
+  await collapseAll.click();
+  await page.getByRole("button", { name: "Expand all" }).focus();
+  await page.keyboard.press("Tab");
+  const landed = await page.evaluate(() => {
+    const el = document.activeElement;
+    return el?.getAttribute("role") === "row" && el.closest('[role="treegrid"]') !== null
+      ? el.textContent.trim()
+      : `${el?.tagName.toLowerCase()} ${el?.getAttribute("role") ?? ""}`;
+  });
+  check(
+    landed.startsWith("Statistiska"),
+    `Tab after "Collapse all" must reach the collapsed group's row, landed on ${landed}`,
   );
 }
 
@@ -761,9 +807,9 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   await apply.click();
   await revalidated;
   await settled(page);
-  // The source now reaches past the study window, and the card MARKS that rather
-  // than warning about it: the window is an authoring seed, and a source that
-  // deliberately covers more is an ordinary order.
+  // The source now reaches past the study window, and the card says so in a ▲
+  // StatusRow: the line is a heads-up, not a refusal, and it does not block the
+  // order (a source that deliberately covers more is an ordinary order).
   await card.getByText("Differs from study window 2018–2020").waitFor();
   await shoot("project-source-period-applied");
 
@@ -973,6 +1019,16 @@ async function replaceConfirmCase(page, shoot, project) {
   // focus ring as well as the dialog.
   await tabTo(page, cancel, "Cancel");
   await settled(page);
+  // The dialog and its scrim fade in over --duration-slow: shoot the settled
+  // dialog, not its entrance. Finite animations only (a skeleton shimmer loops).
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
+  );
   await shoot("replace-confirm");
 
   // (2) Cancelled: the edited draft is still loaded, and focus comes back.

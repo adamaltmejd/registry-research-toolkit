@@ -112,11 +112,27 @@
       "enabled": false
     },
     {
-      "description": "Paused during the React port (REACT_PORT.md): reg_webapp/frontend/** is frozen on main and rewritten on react-port. The merge PR removes this rule and adds one lockstep group for vite-plus, vitest, @vitest/browser-playwright, react, react-dom, react-aria-components and vitest-browser-react.",
+      "description": "Frontend toolchain that must move in step: React and its types, React Aria Components (it pins react-aria/react-stately internally) and the locale plugin built for it, and the Vite, plugin-react and Vitest trio (plugin-react and Vitest each peer on a Vite major).",
       "matchFileNames": [
-        "reg_webapp/frontend/**"
+        "reg_webapp/frontend/package.json"
       ],
-      "enabled": false
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom",
+        "react-aria-components",
+        "@react-aria/optimize-locales-plugin",
+        "vite",
+        "@vitejs/plugin-react",
+        "vitest"
+      ],
+      "groupName": "frontend React and Vite toolchain",
+      "schedule": [
+        "before 6am"
+      ],
+      "separateMajorMinor": false,
+      "minimumReleaseAge": null
     }
   ]
 }

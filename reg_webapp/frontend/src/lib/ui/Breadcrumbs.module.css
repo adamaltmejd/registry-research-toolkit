@@ -1,0 +1,48 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+}
+
+/* The first crumb, "Data", and any `word` crumb ("Project") are words, not
+   slugs: the UI face. */
+.crumb:first-child,
+.word {
+  font-family: var(--font-ui);
+}
+
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+/* Generated, so it stays out of the accessible name. */
+.crumb:not(:first-child)::before {
+  content: "/" / "";
+  color: var(--text-faint);
+}
+
+.link {
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  outline: none;
+}
+.link[href][data-hovered] {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.link[data-focus-visible] {
+  box-shadow: var(--focus-ring);
+}
+.link[aria-current="page"] {
+  color: var(--text);
+}

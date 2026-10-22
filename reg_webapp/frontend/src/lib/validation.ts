@@ -1,5 +1,5 @@
 /**
- * Pure validation-presentation helpers (NO runes — unit-tested + corpus-pinned;
+ * Pure validation-presentation helpers (unit-tested + corpus-pinned;
  * `validation.test.ts`). The backend is the CANONICAL validator (see
  * reg_webapp/DESIGN.md → Pydantic boundary): the SPA
  * never re-implements the server's validation rules — it only PARSES the issue list the server
@@ -295,13 +295,13 @@ export function codeLabel(code: string): string {
   return KNOWN_CODES[code]?.label ?? code;
 }
 
-/** The DOM-anchor id of a source card. Mirrored by `SourceEditor.svelte`'s root
+/** The DOM-anchor id of a source card. Mirrored by `SourceEditor`'s root
  * `id` so the findings panel's click-to-locate can `scrollIntoView`. */
 export function sourceAnchorId(sourceIndex: number): string {
   return `loc-source-${sourceIndex}`;
 }
 
-/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor.svelte`. */
+/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor`. */
 export function bindingAnchorId(
   sourceIndex: number,
   bindingIndex: number,
@@ -310,7 +310,7 @@ export function bindingAnchorId(
 }
 
 /** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
- * draft's sources — the summary list speaks "Source 'lisa_main' → column
+ * draft's sources — the summary list speaks "Source 'lisa_main', column
  * scb/lisa/adeldag" instead of leaking the raw pointer, carries the DOM-anchor id so
  * a click scrolls to the relevant card, AND — since the cart is read-only and fixes
  * happen in the catalog browser (#991) — an outbound `catalogHref` to the subject
@@ -547,7 +547,7 @@ export function findingLocation(
           ? { catalogHref: catalogHref(variable), catalogLabel: variable }
           : {};
       return {
-        label: `${sourceLabel} → ${columnLabel}`,
+        label: `${sourceLabel}, ${columnLabel}`,
         anchorId: bindingAnchorId(sIdx, bIdx),
         ...catalog,
       };
@@ -609,3 +609,7 @@ export function orderFindingPointer(
     ? jsonPointer(["sources", sIdx])
     : jsonPointer(["sources", sIdx, "bindings", bIdx]);
 }
+
+/** The loaded project's `h1`: where focus goes when the last source card it
+ * could land on is removed. */
+export const PROJECT_HEADING_ID = "project-heading";

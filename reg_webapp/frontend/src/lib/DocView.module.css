@@ -1,0 +1,69 @@
+/* A documentation page, and a register's source documents. */
+.page {
+  min-width: 0;
+}
+
+.source {
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+/* The excerpt keeps the source's line breaks, inset on a well. */
+.excerpt {
+  max-width: 60ch;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--border-strong);
+  background: var(--surface-sunken);
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.note {
+  margin: var(--space-2) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── A register's source documents (RelatedDocumentsPanel) ───────────── */
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.documents li {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.documentTitle {
+  justify-self: start;
+  color: var(--text);
+  font-weight: var(--heading-weight);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.attribution,
+.provenance {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.attribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+.attribution a {
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

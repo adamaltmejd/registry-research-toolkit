@@ -1,6 +1,6 @@
 ---
 name: run-reg-webapp
-description: Run, screenshot, and drive the reg_webapp dev setup (Rust server + Svelte
+description: Run, screenshot, and drive the reg_webapp dev setup (Rust server + React
   SPA). Use when asked to run/start the webapp, verify a webapp
   change in the running app, screenshot the SPA, or smoke-test catalog browsing locally.
 ---
@@ -91,8 +91,8 @@ from the shared fixture cache (`conformance/fixture_cache.py`, built on a miss),
 into a temp dir that is deleted on exit. It is byte-identical run to run, so a
 screenshot diff means a code change. It covers every route the design reviewer walks
 (`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`, `/catalog/scb/lisa/kon`,
-`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/search?q=kon`, `/project`,
-`/doc/Kon.md`) but has a handful of rows — use a real DB for density questions. With
+`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/project`, `/doc/Kon.md`)
+but has a handful of rows — use a real DB for density questions. With
 `REG_WEBAPP_STEWARD` set, the catalog is the conformance suite's synthetic steward
 artifact (`conformance/fixture_cache.py`) instead.
 
@@ -127,12 +127,12 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
   ```
 
 Server-only changes rarely need the SPA: the conformance `api` corpus runs the Rust
-server on synthetic fixtures (`uv run --no-project scripts/gate.py rust`). Frontend
-component tests: `(cd reg_webapp/frontend && bun run test)`.
+server on synthetic fixtures (`uv run --no-project scripts/gate.py rust`). Frontend unit
+tests (jsdom, vitest): `(cd reg_webapp/frontend && bun run test)`.
 
 ## Gotchas
 
-- **`networkidle` is not "rendered".** Svelte swaps in data after the network settles.
+- **`networkidle` is not "rendered".** React swaps in data after the network settles.
   `settled()` (in `dev.sh` and in `driver.mjs`) waits for every `[aria-busy="true"]` to
   clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
   after every navigation/click. Each loading placeholder carries `aria-busy="true"`; new
