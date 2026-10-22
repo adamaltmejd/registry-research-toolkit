@@ -82,10 +82,8 @@ fn invalid(value: &str) -> Error {
     )
 }
 
-/// Resolve `value` (`None` is the root): `class`; a group ref; a FQID, where a
-/// retired register or variable resolves to its terminal successor when that is in
-/// scope ([`successor`]), and one live outside the scope is `not_found`; otherwise
-/// a bare name. A one-segment ref is a provider first, then a bare name, so an exact
+/// Resolve `value` (`None` is the root): `class`; a group ref; a FQID, where one
+/// not live in scope is `not_found`; otherwise a bare name. A one-segment ref is a provider first, then a bare name, so an exact
 /// ref never turns ambiguous.
 pub(crate) fn resolve(
     conn: &Connection,
@@ -117,27 +115,24 @@ pub(crate) fn resolve(
             bare(conn, scope, value)
         }
         Ok(Fqid::Register { provider, register }) => {
-            let (id, slugs) =
-                live_or_terminal(conn, scope, value, &[provider, register], &REGISTER)?;
-            let [provider, slug] = <[String; 2]>::try_from(slugs).expect("a register pair");
-            Ok(Target::Register { id, provider, slug })
+            let id = register_id(conn, scope, &[provider.clone(), register.clone()])?
+                .ok_or_else(|| not_found(value))?;
+            Ok(Target::Register {
+                id,
+                provider,
+                slug: register,
+            })
         }
         Ok(Fqid::Variable {
             provider,
             register,
             variable,
         }) => {
-            let (id, _) = live_or_terminal(
-                conn,
-                scope,
-                value,
-                &[provider, register, variable],
-                &VARIABLE,
-            )?;
+            let id = variable_id(conn, scope, &[provider, register, variable])?
+                .ok_or_else(|| not_found(value))?;
             Ok(Target::Variable { id })
         }
-        // Classifications are scope-independent. The build refuses a succession or
-        // same_as edge to a slug with no row, so a missing slug has no successor.
+        // Classifications are scope-independent.
         Ok(Fqid::Classification { classification }) => conn
             .query_row(
                 "SELECT id FROM classification WHERE slug = ?",
@@ -183,131 +178,6 @@ fn group(conn: &Connection, value: &str, rest: &[&str]) -> Result<Target, Error>
         }
         _ => Err(invalid(value)),
     }
-}
-
-type Lookup = fn(&Connection, Scope, &[String]) -> Result<Option<i64>, Error>;
-
-/// How a register or a variable is looked up and succeeded.
-struct Grain {
-    kind: &'static str,
-    /// The id at the slugs, in the scope.
-    lookup: Lookup,
-    /// The successors' slugs by predecessor slugs; `{policy}` is the policy year.
-    successors: &'static str,
-    /// The name at the slugs, for an `ambiguous_ref` candidate.
-    name: &'static str,
-}
-
-const REGISTER: Grain = Grain {
-    kind: "register",
-    lookup: register_id,
-    successors: "SELECT successor_provider, successor_register FROM register_replaced_by \
-        WHERE predecessor_provider = ? AND predecessor_register = ? \
-        AND (effective_year IS NULL OR effective_year <= {policy}) ORDER BY 1, 2",
-    name: "SELECT r.name FROM register r JOIN provider p USING(provider_id) \
-        WHERE p.slug = ? AND r.slug = ?",
-};
-
-const VARIABLE: Grain = Grain {
-    kind: "variable",
-    lookup: variable_id,
-    successors: "SELECT successor_provider, successor_register, successor_variable \
-        FROM variable_replaced_by WHERE predecessor_provider = ? \
-        AND predecessor_register = ? AND predecessor_variable = ? \
-        AND (effective_year IS NULL OR effective_year <= {policy}) ORDER BY 1, 2, 3",
-    name: "SELECT v.name FROM variable v WHERE v.register_id IN (SELECT r.register_id \
-        FROM register r JOIN provider p USING(provider_id) WHERE p.slug = ? AND r.slug = ?) \
-        AND v.slug = ?",
-};
-
-/// The entity at `slugs` in scope; else, when it is live in no scope, its terminal
-/// successor ([`successor`]) when that is in scope; else `not_found`. Returns the id
-/// and the slugs it was found at.
-fn live_or_terminal(
-    conn: &Connection,
-    scope: Scope,
-    value: &str,
-    slugs: &[String],
-    grain: &Grain,
-) -> Result<(i64, Vec<String>), Error> {
-    let found = if let Some(id) = (grain.lookup)(conn, scope, slugs)? {
-        Some((id, slugs.to_vec()))
-    } else if scope == Scope::Holdings && (grain.lookup)(conn, Scope::Reference, slugs)?.is_some() {
-        None
-    } else {
-        match successor(conn, value, slugs, grain)? {
-            Some(terminal) => (grain.lookup)(conn, scope, &terminal)?.map(|id| (id, terminal)),
-            None => None,
-        }
-    };
-    found.ok_or_else(|| not_found(value))
-}
-
-/// The terminal successor of a retired register or variable at the policy year
-/// ([`policy_year`]), from the compiled `succession_terminal`: the walk follows the
-/// one active successor to the chain's end (an edge dated after the policy year is
-/// not active, so it is not followed) and stops at a split. A split (several active
-/// successors, at `start` or at its terminal) is `ambiguous_ref` with the
-/// successors as candidates. None when `start` has no active successor.
-fn successor(
-    conn: &Connection,
-    value: &str,
-    start: &[String],
-    grain: &Grain,
-) -> Result<Option<Vec<String>>, Error> {
-    let terminal: Option<String> = conn
-        .query_row(
-            "SELECT terminal_fqid FROM succession_terminal WHERE fqid = ?",
-            [start.join("/")],
-            |row| row.get(0),
-        )
-        .optional()?;
-    let end: Vec<String> = terminal.map_or_else(
-        || start.to_vec(),
-        |t| t.split('/').map(str::to_owned).collect(),
-    );
-    let sql = grain
-        .successors
-        .replace("{policy}", &policy_year(conn)?.to_string());
-    let next: Vec<Vec<String>> = conn
-        .prepare(&sql)?
-        .query_map(params_from_iter(&end), |row| {
-            (0..end.len())
-                .map(|i| row.get(i))
-                .collect::<rusqlite::Result<Vec<String>>>()
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    if next.len() > 1 {
-        let candidates = next
-            .iter()
-            .map(|slugs| {
-                let name: Option<String> = conn
-                    .query_row(grain.name, params_from_iter(slugs), |row| row.get(0))
-                    .optional()?;
-                Ok(json!({"fqid": slugs.join("/"), "kind": grain.kind, "name": name}))
-            })
-            .collect::<Result<Vec<_>, Error>>()?;
-        return Err(Error::new(
-            Code::AmbiguousRef,
-            format!("{value:?} was split into {} successors.", next.len()),
-            vec![value.into(), candidates.into()],
-        ));
-    }
-    Ok((end != start).then_some(end))
-}
-
-/// The manifest's succession policy year, `classification_succession_as_of_year`
-/// (today's reader default when the manifest has none).
-fn policy_year(conn: &Connection) -> Result<i64, Error> {
-    const DEFAULT: i64 = 2026;
-    let value: Option<String> = conn
-        .query_row(
-            "SELECT value FROM import_manifest WHERE key = 'classification_succession_as_of_year'",
-            [],
-            |row| row.get(0),
-        )
-        .optional()?;
-    Ok(value.and_then(|v| v.parse().ok()).unwrap_or(DEFAULT))
 }
 
 fn register_id(conn: &Connection, scope: Scope, slugs: &[String]) -> Result<Option<i64>, Error> {

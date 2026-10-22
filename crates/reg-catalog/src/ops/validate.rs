@@ -210,8 +210,8 @@ impl Semantic<'_> {
             return Ok(());
         };
         let slugs = [provider, register, variable];
-        // A direct hit only: a retired FQID is not followed to its successor, which
-        // `variable_replaced` names instead.
+        // A direct hit only: a replaced variable's successor is the
+        // `variable_replaced` hint, never a substitute.
         let Some(id) = refs::variable_id(self.conn, Scope::Reference, &slugs)? else {
             let message = format!(
                 "column {} resolves to no variable in reg_meta",

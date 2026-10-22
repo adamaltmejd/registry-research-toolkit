@@ -213,6 +213,16 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         f"unknown resolved succession successor: '{_ABSENT}'",
         None,
     ),
+    # The predecessor side is its own check: the writer once admitted an absent
+    # predecessor (the retired-FQID redirect's historical declarations).
+    "succession-from-a-variable-not-written": (
+        lambda: _with(
+            "successions",
+            ResolvedSuccession(predecessor=_ABSENT, successor="scb/example/one"),
+        ),
+        f"unknown resolved succession predecessor: '{_ABSENT}'",
+        None,
+    ),
     "variant-succession-to-a-variant-not-written": (
         lambda: _with(
             "variant_successions",

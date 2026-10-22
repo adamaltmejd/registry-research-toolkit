@@ -11,18 +11,6 @@
       "effective_year": 2021
     },
     {
-      "predecessor": "scb/example/retired",
-      "successor": "scb/example/second"
-    },
-    {
-      "predecessor": "scb/example/retired-unheld",
-      "successor": "fk/unheld/reference"
-    },
-    {
-      "predecessor": "scb/old-example",
-      "successor": "scb/example"
-    },
-    {
       "predecessor": "fk/unheld",
       "successor": "scb/example"
     }
@@ -50,26 +38,6 @@
           "delivery_column_name": "Secondhidden"
         }
       ]
-    }
-  ],
-  "historical_predecessors": [
-    {
-      "target": "scb/example/retired",
-      "kind": "variable",
-      "reason": "Renamed synthetic reference",
-      "decision_reference": "fixture"
-    },
-    {
-      "target": "scb/example/retired-unheld",
-      "kind": "variable",
-      "reason": "Renamed synthetic reference",
-      "decision_reference": "fixture"
-    },
-    {
-      "target": "scb/old-example",
-      "kind": "register",
-      "reason": "Renamed synthetic reference",
-      "decision_reference": "fixture"
     }
   ],
   "variable_same_as": [

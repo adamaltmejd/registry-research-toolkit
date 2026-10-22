@@ -18,8 +18,7 @@ pub const OPERATIONS: &[Operation] = &[
             (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the \
             catalog root. A register lists its variables, groups and variants; a \
             classification its owning variables. `ref` is a FQID or a name, \
-            case-insensitive (a slug only where it is also the name); a retired FQID \
-            answers for its successor, under the successor's `fqid`.",
+            case-insensitive (a slug only where it is also the name).",
         params: &[
             Param::optional("ref", Type::Ref),
             Param::optional("scope", Type::Scope),

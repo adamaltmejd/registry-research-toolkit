@@ -80,10 +80,6 @@
   },
   {
     "status": 200,
-    "json": {"/data/kind": "register", "/data/fqid": "scb/alpha"}
-  },
-  {
-    "status": 200,
     "json": {"/data/fqid": "scb/alpha"}
   }
 ]

@@ -87,8 +87,7 @@ result = "Show"
 errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
 note = """The summary for any ref; no ref is the catalog root. Group refs are \
 `group/<provider>/<register>/<key>` and `group/class/<key>`, so `group` joins `class` as \
-a reserved first segment. A retired FQID resolves to its terminal successor on every \
-transport and the result carries the canonical `fqid` (no HTTP 301: MCP has none)."""
+a reserved first segment."""
 
 [[operation]]
 name = "states"
