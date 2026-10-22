@@ -53,21 +53,21 @@ Measure later PRs the same way, so the numbers compare.
 
 ## PRs
 
-  | PR  | Scope                                                                                                           | Status                                                         |
-  | --- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-  | 0a  | Vite+ toolchain on Svelte                                                                                       | closed #1775; toolchain taken into PR 1                        |
-  | 0b  | This tracker and the baseline, on `main`                                                                        | merged #1777                                                   |
-  | 1   | The toolchain and the shell (below)                                                                             | in review #1782; JS 241 kB gzip (+115 kB), accepted until PR 9 |
-  | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer                                      | not started                                                    |
-  | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList | not started                                                    |
-  | 4   | ConceptGroupView                                                                                                | not started                                                    |
-  | 5   | RepresentationPicker (split into modules)                                                                       | not started                                                    |
-  | 6   | Classification\*, VariantBrowser, DocView, Home                                                                 | not started                                                    |
-  | 7   | ProjectEditor, SourceEditor, BindingEditor, StudyWindowSummary, ValidationPanel, ConfirmDialog                  | not started                                                    |
-  | 8   | CommandPalette (RAC Autocomplete); delete SearchView, SearchOmnibox and the `/search` route                     | not started                                                    |
-  | 9   | Last Svelte removed: Svelte deps, svelte-check, Bits UI, the temporary island, the `PortGate` gate component    | not started                                                    |
-  | 10  | Docs and skills; deletes this file and its sentence in `AGENTS.md`                                              | not started                                                    |
-  | M   | `react-port` → `main` (full gate, flows, independent review); swaps the Renovate pause for the lockstep group   | not started                                                    |
+  | PR  | Scope                                                                                                           | Status                                                      |
+  | --- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+  | 0a  | Vite+ toolchain on Svelte                                                                                       | closed #1775; toolchain taken into PR 1                     |
+  | 0b  | This tracker and the baseline, on `main`                                                                        | merged #1777                                                |
+  | 1   | The toolchain and the shell (below)                                                                             | merged #1782; JS 241 kB gzip (+115 kB), accepted until PR 9 |
+  | 2   | ColumnList, the CatalogNodeView arms, primitives with their first consumer                                      | in review #1784; JS 250 kB gzip (+9 kB)                     |
+  | 3   | BindingLeafView, PeriodPicker, PeriodWindowSlider, Lineage, DocMentions, TechnicalDetails, ValueSet\*, CodeList | not started                                                 |
+  | 4   | ConceptGroupView                                                                                                | not started                                                 |
+  | 5   | RepresentationPicker (split into modules)                                                                       | not started                                                 |
+  | 6   | Classification\*, VariantBrowser, DocView, Home                                                                 | not started                                                 |
+  | 7   | ProjectEditor, SourceEditor, BindingEditor, StudyWindowSummary, ValidationPanel, ConfirmDialog                  | not started                                                 |
+  | 8   | CommandPalette (RAC Autocomplete); delete SearchView and the `/search` route                                    | not started                                                 |
+  | 9   | Last Svelte removed: Svelte deps, svelte-check, Bits UI, the temporary island, the `PortGate` gate component    | not started                                                 |
+  | 10  | Docs and skills; deletes this file and its sentence in `AGENTS.md`                                              | not started                                                 |
+  | M   | `react-port` → `main` (full gate, flows, independent review); swaps the Renovate pause for the lockstep group   | not started                                                 |
 
 PR 1 adds the toolchain (React 19, RAC, plugin-react, locale optimization, Oxlint, CSS
 Modules, `lint_tokens` over tsx and css) and the shell: router, stores, `App`, top bar,
