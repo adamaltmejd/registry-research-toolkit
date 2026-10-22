@@ -244,8 +244,7 @@ prior artifacts and accepted inputs unchanged.
 
 ## Export gate
 
-Not yet built; tracked in #1803. This section records the settled design. All ten open
-questions are decided (see "Decisions"); none remain.
+Not yet built (#1803). When the crate lands, this section moves to its `DESIGN.md`.
 
 The export gate is the toolkit's disclosure checker and transfer. It is the only path by
 which results computed on microdata reach an agent. It fills the checker slot of the
@@ -270,10 +269,11 @@ load-bearing guard.
 
 ### Trust boundaries
 
-Three parties, which may share one host:
+Three parties, which may share one host; on a shared host the same separation holds
+between the agent's environment and the gate:
 
 - **Agent VM.** Code, mock data and approved aggregates only. It never sees unreviewed
-  output, check reports, logs or the review UI.
+  output, check reports (beyond the refusal category code), logs or the review UI.
 - **Data VM.** Microdata, the pipeline and `reg-export-gate`.
 - **Human.** Reviews the checked output in the review UI and presses Export.
 
@@ -313,10 +313,16 @@ The choice of schema is configuration, kept in two places by mode:
 - **Server.** The app has its own config directory outside the project repo, for example
   `~/.config/reg-export-gate/`.
 
+Wherever the choice lives, the schema and policy files are toolkit files: on MONA the
+scaffold copies them in with the R file, and on the server they live in the app's config
+directory, outside any repo the agent can write. A policy change loosens or tightens
+disclosure, so it is a human, reviewed step.
+
 ### The check
 
 The check runs as the pipeline's last step, over the complete candidate output in a
-staging directory. A partial run is never checked into a releasable one. In order:
+staging directory. A partial run is never checked, so it cannot become a releasable
+output. In order:
 
 1. **Inventory.** The staging directory holds exactly the schema's files: none missing,
    none extra, no links or hidden files.
@@ -328,10 +334,12 @@ staging directory. A partial run is never checked into a releasable one. In orde
    and a misclassified column can pass a count threshold (#17).
 
 Only when every file passes do the files move, atomically, to the output folder. On any
-refusal the output folder stays empty. Refusals have stable codes by category: setup
-(schema missing, unreadable or of the wrong version), inventory, structure, disclosure,
-backstop, and delivery integrity (a hash mismatch). A report names the file, column and
-rule, never a value, as in the MONA extract runner
+refusal the output folder stays empty. The output folder is data-side: its files are
+checked but not yet approved, and only the human's Export pushes them to the agent VM.
+Refusals have stable codes by category: setup (schema or policy missing, unreadable or
+of the wrong version; a schema without its policy refuses), inventory, structure,
+disclosure, backstop, and delivery integrity (a hash mismatch). A report names the file,
+column and rule, never a value, as in the MONA extract runner
 ([`reg_mona_runner/DESIGN.md`](reg_mona_runner/DESIGN.md), "No row values in logs").
 Reports, logs and diagnostics stay on the data side and never enter the output folder.
 
@@ -351,13 +359,14 @@ Column types come from the schema. A suppressed cell is null, never zero.
 
 ### MONA mode
 
-No standalone MONA system and no web UI. The toolkit ships one fixed, version-pinned R
-file of check functions; the scaffold copies it into the project, and the pipeline's
-last step calls it with the chosen schema and its policy. The output-folder model is the
-same: the folder holds exactly the schema's files, which appear only if the whole check
-passes. Logs, error messages, the receipt and diagnostics never go in output files; they
-go in `.diagnostics/` beside the folder. The user reviews the folder, zips it and sends
-it out through MONA's export.
+No standalone MONA system and no web UI. No agent runs on MONA and the Rust binary is
+not run there; the R file is the only toolkit code on MONA. The toolkit ships one fixed,
+version-pinned R file of check functions; the scaffold copies it into the project, and
+the pipeline's last step calls it with the chosen schema and its policy. The
+output-folder model is the same: the folder holds exactly the schema's files, which
+appear only if the whole check passes. Logs, error messages, the receipt and diagnostics
+never go in output files; they go in `.diagnostics/` beside the folder. The user reviews
+the folder, zips it and sends it out through MONA's export.
 
 The Rust binary and the R file are two implementations of one check, an exception to
 "one implementation per contract". One case corpus (schema and candidate folder →
@@ -380,27 +389,6 @@ The agent may later run code on the data and see a strictly limited subset of er
 messages, so it can iterate without a human relaying failures. Not in v1; the v1 agent
 sees only the refusal category code. Any such subset needs its own design for what it
 may reveal.
-
-### Decisions
-
-Maintainer answers of 2026-10-22 (the design's open questions, #1803):
-
-1. **Schema format.** JSON, readable from Rust and from R via jsonlite.
-2. **Name.** `reg-export-gate`, for the crate and the binary.
-3. **Parquet on MONA.** MONA has `arrow` and `duckdb`. Outputs are Parquet only, written
-   with arrow. DuckDB is a reader; no `.duckdb` output files.
-4. **Delivery.** A one-way push driven by the binary. Carrying code into the data VM is
-   out of scope for v1.
-5. **Receipt.** Not an output file. Receipt and diagnostics go in `.diagnostics/` beside
-   the output folder and are never exported.
-6. **Schema choice config.** With the project on MONA; in the app's own config directory
-   outside the project repo on the server.
-7. **Failure feedback.** The agent sees only the refusal category code. A limited error
-   subset for iteration is a future direction.
-8. **Differencing.** Each export is checked alone in v1; differencing comes later.
-9. **Review UI.** Part of the `reg-export-gate` crate and binary, served only on the
-   data-side network.
-10. **Thresholds.** In a separate policy file beside the schema, not in the schema.
 
 ## Repo-wide invariants
 
