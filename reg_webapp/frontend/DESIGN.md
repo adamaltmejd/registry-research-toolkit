@@ -346,7 +346,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   indent maintainer-decided 2026-10-22). A group header is the `label` level at weight
   500 in `text-muted` on `bg`, its disclosure a small `text-faint` triangle turned −90°
   when closed, with no rule under it. Rows are selectable options, not links. On a
-  variable or group page its register.s row stays selected, and pressing it opens the
+  variable or group page its register's row stays selected, and pressing it opens the
   register. Selection moves with arrow keys across columns, and selecting a row opens
   its page; type-ahead moves focus only. Left on a group header collapses it, Right
   expands it; Right on a register row moves to the variables column, and Left there

@@ -317,11 +317,14 @@ export function BindingLeafView({
   const qualifier = qualifierFromFocus(focusNode, node.fqid);
   const groupLink = groupLinkFromFocus(focusNode, node.group);
 
-  function setResolution(next: {
-    period?: string | null;
-    variant?: string | null;
-    value_set_version?: string | null;
-  }): void {
+  function setResolution(
+    next: {
+      period?: string | null;
+      variant?: string | null;
+      value_set_version?: string | null;
+    },
+    replace = false,
+  ): void {
     const query = nextResolutionQuery(
       {
         period: period ?? undefined,
@@ -330,7 +333,9 @@ export function BindingLeafView({
       },
       next,
     );
-    router.navigate(window.location.pathname + (query ? `?${query}` : ""));
+    router.navigate(window.location.pathname + (query ? `?${query}` : ""), {
+      replace,
+    });
   }
 
   // ── Add to project (#678/#995) ───────────────────────────────────────────
@@ -539,7 +544,9 @@ export function BindingLeafView({
           windowMinYear={windowMinYear}
           vintageYear={windowMaxYear}
           enforcePeriodBounds={enforcePeriodBounds}
-          onSubmit={(next) => setResolution({ period: next })}
+          // The slider commits on each key step: replace, so Back leaves the page
+          // rather than walking the steps back.
+          onSubmit={(next) => setResolution({ period: next }, true)}
           onClear={() => setResolution({ period: null })}
         />
       )}

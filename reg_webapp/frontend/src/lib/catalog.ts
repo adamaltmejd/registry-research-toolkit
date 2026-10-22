@@ -2382,17 +2382,29 @@ export function formatWindow(
   return `${validFrom} – ${validTo}`;
 }
 
-/** A window's term index (year × 2, +1 for the autumn term) when it is exactly
- * one school term, else null. The bounds are reg-core's period grammar: VT
- * (spring) is January–June, HT (autumn) July–December. */
-function termIndex(from: string | null, to: string | null): number | null {
+/** A window's first and last school term (term index = year × 2, +1 for the
+ * autumn term) when it reads as terms, else null. The bounds are reg-core's
+ * period grammar: VT (spring) is January–June, HT (autumn) July–December. A
+ * window reads as terms when it is one term, or when it starts or ends mid-year
+ * on a term bound (merged consecutive terms, HT2012–VT2013); a whole-year
+ * window stays a year. */
+function termSpan(
+  from: string | null,
+  to: string | null,
+): [number, number] | null {
   if (from === null || to === null) return null;
-  const year = from.slice(0, 4);
-  if (to.slice(0, 4) !== year) return null;
-  const y = Number(year);
-  if (from.endsWith("-01-01") && to.endsWith("-06-30")) return y * 2;
-  if (from.endsWith("-07-01") && to.endsWith("-12-31")) return y * 2 + 1;
-  return null;
+  const start = from.endsWith("-01-01")
+    ? 0
+    : from.endsWith("-07-01")
+      ? 1
+      : null;
+  const end = to.endsWith("-06-30") ? 0 : to.endsWith("-12-31") ? 1 : null;
+  if (start === null || end === null) return null;
+  const first = Number(from.slice(0, 4)) * 2 + start;
+  const last = Number(to.slice(0, 4)) * 2 + end;
+  if (last < first) return null;
+  if (first !== last && start === 0 && end === 1) return null;
+  return [first, last];
 }
 
 const termLabel = (index: number) =>
@@ -2402,8 +2414,8 @@ const termLabel = (index: number) =>
  * (maintainer ruling 2026-10-22): each term is `VT2013` / `HT2013`, a run of
  * consecutive terms is one range (`HT2012–VT2019`), and the same term in
  * consecutive years, the shape of a once-a-year school delivery, is the term
- * over a year range (`VT2013–2019`). Any other window reads as `label` says.
- * Windows are taken in chronological order. */
+ * over a year range (`VT2013–2019`). A repeated term adds nothing. Any other
+ * window reads as `label` says. Windows are taken in chronological order. */
 export function windowRunLabels<
   W extends { from: string | null; to: string | null },
 >(windows: readonly W[], label: (window: W) => string | null): string[] {
@@ -2422,25 +2434,30 @@ export function windowRunLabels<
     (a.from ?? "").localeCompare(b.from ?? ""),
   );
   for (const window of ordered) {
-    const term = termIndex(window.from, window.to);
-    if (term === null) {
+    const span = termSpan(window.from, window.to);
+    if (span === null) {
       if (run !== null) out.push(runText(run));
       run = null;
       const text = label(window);
       if (text !== null) out.push(text);
       continue;
     }
+    const [first, last] = span;
     if (run !== null) {
-      const gap: number = term - run.last;
-      if (gap === 1 || gap === 2) {
-        if (run.step === null || run.step === gap) {
-          run = { first: run.first, last: term, step: gap };
-          continue;
-        }
+      // A term the run already covers (a repeat) adds nothing.
+      if (last <= run.last) continue;
+      const gap: number = first - run.last;
+      // Adjacent or overlapping terms extend a consecutive run; one term a
+      // year on extends a same-term run.
+      const step: 1 | 2 | null =
+        gap <= 1 ? 1 : gap === 2 && first === last ? 2 : null;
+      if (step !== null && (run.step === null || run.step === step)) {
+        run = { first: run.first, last, step };
+        continue;
       }
       out.push(runText(run));
     }
-    run = { first: term, last: term, step: null };
+    run = { first, last, step: first === last ? null : 1 };
   }
   if (run !== null) out.push(runText(run));
   return out;

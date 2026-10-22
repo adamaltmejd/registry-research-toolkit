@@ -427,7 +427,9 @@ describe("windowRunLabels", () => {
   // School-term deliveries (VT = Jan–Jun, HT = Jul–Dec, reg-core's grammar)
   // read as runs, not one ISO window each (maintainer ruling 2026-10-22).
   // Fails if a run breaks on a term gap, if a once-a-year term series reads as
-  // consecutive terms, or if a non-term window is folded into a run.
+  // consecutive terms, if a non-term window is folded into a run, if a repeated
+  // term (two variants, one term) splits a run, or if terms already merged into
+  // one window (a register's merged delivery eras) lose their term form.
   it("collapses consecutive terms and yearly same-term series, nothing else", () => {
     const w = (from: string, to: string) => ({ from, to });
     const windows = [
@@ -438,13 +440,16 @@ describe("windowRunLabels", () => {
       w("2016-01-01", "2016-06-30"),
       w("2017-01-01", "2017-06-30"),
       w("2018-01-01", "2018-06-30"),
+      w("2017-01-01", "2017-06-30"),
       w("2020-01-01", "2020-06-30"),
+      w("2021-07-01", "2023-06-30"),
     ];
     expect(windowRunLabels(windows, (x) => `${x.from}..${x.to}`)).toEqual([
       "HT2012–HT2013",
       "2015-01-01..2015-12-31",
       "VT2016–2018",
       "VT2020",
+      "HT2021–VT2023",
     ]);
   });
 });

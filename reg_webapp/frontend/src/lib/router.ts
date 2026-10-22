@@ -192,14 +192,17 @@ class Router {
   /** Navigate to `url` (path + optional `?query`/`#hash`) via pushState (no
    * reload). A no-op when already at the full `url` (path + query + hash) — so a
    * same-path/new-query navigation is correctly NOT a no-op. An arrow property,
-   * so it can be handed to RAC's `RouterProvider` unbound. */
-  navigate = (url: string): void => {
+   * so it can be handed to RAC's `RouterProvider` unbound. `replace` swaps the
+   * current entry instead, for a control that commits on every step (a slider
+   * key press) and must not leave one Back entry per step. */
+  navigate = (url: string, { replace = false } = {}): void => {
     const current =
       window.location.pathname + window.location.search + window.location.hash;
     if (url === current) {
       return;
     }
-    window.history.pushState({}, "", url);
+    if (replace) window.history.replaceState({}, "", url);
+    else window.history.pushState({}, "", url);
     this.syncLocation();
   };
 
