@@ -456,12 +456,13 @@ function PeriodWindowSlider({
       onChange={(next) => {
         const [a = from, b = to] = next;
         // The moved thumb stays inside the delivered span; RAC keeps the
-        // order. Only the thumb that moved is clamped: a selection seeded
-        // outside the band must not drag its other end along.
+        // order. Only the thumb that moved is clamped, and never past the
+        // other end: a selection seeded outside the band must not drag or
+        // swap its other end.
         const clamp = (y: number) => Math.min(hi, Math.max(lo, y));
         const moved = {
-          from: a === from ? a : clamp(a),
-          to: b === to ? b : clamp(b),
+          from: a === from ? a : Math.min(clamp(a), b),
+          to: b === to ? b : Math.max(clamp(b), a),
         };
         if (!sameYearWindow(moved, selection)) onChange(moved);
       }}
