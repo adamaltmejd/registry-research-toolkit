@@ -253,10 +253,13 @@ def resolve_sibling_pairs(
     """Apply grouping guards to exact existing partitions in a complete scope.
 
     Unknown identities remain None, never invented endpoints. Within each original
-    family, each known identity contributes its lexically first literal column,
-    preserving the established cluster-representative rule. Co-delivery is exact
-    edition identity, never an overlap of year spans. An unresolved shape matters
-    only when its alternatives disagree about whether the pair can be grouped.
+    family, every literal column of one known identity is paired with every column
+    of another. The pair is co-delivered when any column pair is, and the guards
+    and evidence use exactly the co-delivered column pairs; the decision's
+    `columns` name the first of them, or each owner's lexically first column when
+    none is co-delivered. Co-delivery is exact edition identity, never an overlap
+    of year spans. An unresolved shape matters only when its alternatives disagree
+    about whether the pair can be grouped.
     """
     families: dict[NativeKey, list[EffectiveOccurrence]] = defaultdict(list)
     for occurrence in occurrences:
@@ -304,12 +307,30 @@ def resolve_sibling_pairs(
                 raise ValueError(
                     "one source sibling family maps to different registers"
                 )
-            col_a, col_b = min(owner_columns[a]), min(owner_columns[b])
+            # Every spelling an owner holds is checked: co-delivery under any of them
+            # makes the pair co-delivered (#1760).
+            together = [
+                (col_a, col_b)
+                for col_a, col_b in product(
+                    sorted(owner_columns[a]), sorted(owner_columns[b])
+                )
+                if frozenset((col_a, col_b)) in codelivered
+            ]
+            columns = (
+                together[0]
+                if together
+                else (min(owner_columns[a]), min(owner_columns[b]))
+            )
+            evidence_columns = (
+                {column for pair in together for column in pair}
+                if together
+                else owner_columns[a] | owner_columns[b]
+            )
             refs = tuple(
                 sorted(
                     {
                         record_ref(record)
-                        for column in (col_a, col_b)
+                        for column in evidence_columns
                         for occurrence in by_column[column]
                         for record in occurrence.evidence
                     },
@@ -317,17 +338,18 @@ def resolve_sibling_pairs(
                 )
             )
             kind = "foldable"
-            if frozenset((col_a, col_b)) in codelivered:
-                if _looks_like_code_label_pair(col_a, col_b):
+            if together:
+                if any(_looks_like_code_label_pair(*pair) for pair in together):
                     kind = "code_label"
                 else:
                     outcomes = {
                         sibling_shape_conflict(left, right)
+                        for col_a, col_b in together
                         for left, right in product(shapes[col_a], shapes[col_b])
                     }
                     withheld_shape = any(
                         {"data_type", "data_length"} & set(row.withheld_fields)
-                        for column in (col_a, col_b)
+                        for column in evidence_columns
                         for row in by_column[column]
                     )
                     if outcomes == {True} and not withheld_shape:
@@ -346,9 +368,7 @@ def resolve_sibling_pairs(
                                 withheld_output=(output,),
                             )
                         )
-            decisions.append(
-                SiblingPairDecision(family, a, b, (col_a, col_b), kind, refs)
-            )
+            decisions.append(SiblingPairDecision(family, a, b, columns, kind, refs))
             if kind == "foldable":
                 pairs.add((a, b))
     # The same accepted identities can be present in multiple original families.
