@@ -884,6 +884,13 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
   await card.getByRole("button", { name: "Apply period" }).click();
   await periodApplied(page, "2019..2020");
   await differs.waitFor();
+
+  // (5) Reset writes the window as Kon can hold it (2018..2020, not the raw
+  //     2015..2020), and the ▲ row goes.
+  await card.getByRole("button", { name: "Reset" }).click();
+  await periodApplied(page, "2018..2020");
+  await settled(page);
+  check((await differs.count()) === 0, "Reset left the ▲ row up");
 }
 
 /** Scenario 8 — the period card KEEPS keyboard focus across an Apply (Y-65). A
