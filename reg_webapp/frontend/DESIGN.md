@@ -346,7 +346,7 @@ The current `AppShell` rail is a stepping stone (see Components) until it is rep
   than opening a results page: groups with no matches collapse (still openable), matched
   text is underlined in `accent` at weight 600, a register that matched only through its
   variables says so with the count, and the detail pane stays put. Escape clears the
-  filter and restores the collapse state. The command palette (Bits UI `Command`) opens
+  filter and restores the collapse state. The command palette (RAC `Autocomplete`) opens
   only from `⌘K` on an empty field, for codes, classifications and actions; its results
   are a mixed list and carry a `TypeTag`.
 - **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
@@ -423,14 +423,14 @@ Motion explains where things come from; state changes are near-instant.
 
 ## Components
 
-Behavior comes from Bits UI (the sanctioned headless primitives dependency); visuals
-come from scoped CSS reading semantic roles. The target set, composed before anything
-new is styled: `Button`, `ProjectBanner`, `Search`, `ColumnList`, `ColumnChip`,
-`TypeTag`, `FilterChip`, `VariableRow`, `Timeline`, `LaneGraph`, `StatusRow`,
-`Definitions`, `Dialog`, `Skeleton`, `EmptyState`. The current `src/lib/ui/` primitives
-(`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`, `ConfirmDialog`, …) and
-`AppShell` are the stepping stones: they keep reading the same roles until each is
-replaced, and must not grow new visual language meanwhile.
+Behavior comes from React Aria Components (RAC, the sanctioned headless primitives
+dependency); visuals come from each component's CSS Module reading semantic roles. The
+target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
+`ColumnList`, `ColumnChip`, `TypeTag`, `FilterChip`, `VariableRow`, `Timeline`,
+`LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`. The current
+`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`,
+`ConfirmDialog`, …) and `AppShell` are the stepping stones: they keep reading the same
+roles until each is replaced, and must not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
   per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box
@@ -456,15 +456,15 @@ replaced, and must not grow new visual language meanwhile.
 - **StatusRow:** the status tint as fill, the status foreground as text and border
   (`err-border` for error), a glyph first, plain sentence copy that says what went wrong
   and how to fix it.
-- **Dialog:** Bits UI `AlertDialog`; `surface`, `md` radius, `--elevation-float`, over
-  the scrim. A click on the scrim does not answer it.
+- **Dialog:** RAC `Modal` + `Dialog` (`role="alertdialog"`); `surface`, `md` radius,
+  `--elevation-float`, over the scrim. A click on the scrim does not answer it.
 - **Empty and loading states:** `EmptyState` names the next action; `Skeleton` exposes
   `aria-busy="true"` and respects reduced motion.
 
 ## Do's and Don'ts
 
 - Do read roles only: `var(--text)`, never `var(--gray-1)`, never a literal. The
-  `lint:tokens` script fails on literals and raw font stacks in any `<style>` block.
+  `lint:tokens` script fails on literals and raw font stacks in component styles.
 - Do keep pine for ownership and reserve every other chromatic color for a meaning
   (status, type, data). Do not tint headings or emphasis.
 - Do pair every status with a glyph and text. Don't rely on hue.
@@ -474,16 +474,17 @@ replaced, and must not grow new visual language meanwhile.
   tracked eyebrows, numbered section markers, middle-dot meta strings, or trailing
   arrows on links and buttons.
 - Do draw relations on the time axis. Don't draw a free-form node graph.
-- Do compose `lib/ui` primitives and Bits UI behavior. Don't hand-roll a widget Bits UI
-  covers (combobox, menu, dialog, popover, tooltip, slider, tabs, accordion) or a
-  near-duplicate of a primitive.
+- Do compose `lib/ui` primitives and RAC behavior. Don't hand-roll a widget RAC covers
+  (combobox, menu, dialog, popover, tooltip, slider, tabs, accordion, tree, listbox) or
+  a near-duplicate of a primitive.
 - Do keep one `primary` button per pane. Don't add counters, hero sections, decorative
   gradients, oversized cards, cards inside cards, or stock imagery.
 - Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`. Don't
   add breakpoints or `display: contents` (it strips accessibility roles).
-- Do keep focus visible via `:focus-visible { box-shadow: var(--focus-ring) }` in each
-  component's own CSS, and respect `prefers-reduced-motion`. Motion answers a user
-  action at the three durations above; nothing animates on page load.
+- Do keep focus visible via `:focus-visible` (or `[data-focus-visible]` on RAC parts)
+  `{ box-shadow: var(--focus-ring) }` in each component's own CSS, and respect
+  `prefers-reduced-motion`. Motion answers a user action at the three durations above;
+  nothing animates on page load.
 - Do name things by what a researcher recognizes (registers, variables, columns, value
   sets, projects, study window) and keep an action's name the same through its whole
   flow. Don't apologize in errors or leave them vague.
