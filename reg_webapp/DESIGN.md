@@ -652,10 +652,10 @@ contracts, tests).
 Two layers, semantic roles only consumed by components: **primitive ramps**
 (`--gray-1..12` and the fixed status/categorical/data hues — never referenced by a
 component) and **semantic roles** (`--bg`, `--surface*`, `--text*`, `--border*`,
-`--accent*`, the status, `--cat-*` and `--viz-*` roles, plus
-geometry, elevation, focus and motion). Dark mode and the planned per-provider themes
-are role remaps under `[data-theme]` / `[data-provider]` — no component CSS changes. The
-tokens live in `frontend/src/tokens.css`, imported once in `main.ts`.
+`--accent*`, the status, `--cat-*` and `--viz-*` roles, plus geometry, elevation, focus
+and motion). Dark mode and the planned per-provider themes are role remaps under
+`[data-theme]` / `[data-provider]` — no component CSS changes. The tokens live in
+`frontend/src/tokens.css`, imported once in `main.ts`.
 
 **Enforced deterministically** by `frontend/scripts/lint_tokens.ts` (`lint:tokens`, part
 of `bun run lint`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
