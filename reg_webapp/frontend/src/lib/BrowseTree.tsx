@@ -8,7 +8,6 @@ import {
   TreeItem,
   TreeItemContent,
   TreeLoadMoreItem,
-  type TreeRenderProps,
 } from "react-aria-components";
 import {
   getShow,
@@ -25,7 +24,9 @@ import { safeSourceBindings, safeSourceSlots } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { type Route, router } from "./router";
 import { useRune } from "./svelte_bridge.svelte";
+import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
 import { InProjectMark } from "./ui/ColumnList";
+import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
 
@@ -38,21 +39,6 @@ interface BrowseNode {
   children: BrowseNode[] | null;
   /** Set on a register the filter keeps only through its variables: how many. */
   variableMatches?: number;
-}
-
-type TreeState = TreeRenderProps["state"];
-
-/** The row that shows `key` under `expanded`: the key itself, or its outermost
- * collapsed ancestor. Focusing a hidden row takes every row out of the Tab order
- * (RAC keeps the focused key's tabIndex only), so focus goes here instead. */
-function visibleKey(state: TreeState, key: Key, expanded: Set<Key>): Key {
-  let target = key;
-  let node = state.collection.getItem(key);
-  while (node?.parentKey != null) {
-    if (!expanded.has(node.parentKey)) target = node.parentKey;
-    node = state.collection.getItem(node.parentKey);
-  }
-  return target;
 }
 
 const COLLAPSED_KEY = "reg_webapp:browse_collapsed";
@@ -306,12 +292,7 @@ export function BrowseTree({ className }: { className?: string }) {
   }
 
   function onExpandedChange(keys: Set<Key>): void {
-    const state = treeState.current;
-    const focused = state?.selectionManager.focusedKey;
-    if (state && focused != null) {
-      const target = visibleKey(state, focused, keys);
-      if (target !== focused) state.selectionManager.setFocusedKey(target);
-    }
+    keepFocusVisible(treeState.current, keys);
     if (filtering) {
       setFilterExpanded({ needle, keys });
       return;
@@ -425,7 +406,7 @@ function BrowseItem({
           <>
             {hasChildItems ? (
               <Button slot="chevron" className={styles.chevron}>
-                <Chevron />
+                <TreeChevron />
               </Button>
             ) : (
               <span className={styles.chevronSpacer} />
@@ -465,18 +446,5 @@ function BrowseItem({
         </Collection>
       )}
     </TreeItem>
-  );
-}
-
-function Chevron() {
-  return (
-    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
-      <path
-        d="M6 3l5 5-5 5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-    </svg>
   );
 }

@@ -39,7 +39,7 @@ import { FilterCount } from "./FilterCount";
 import { clampYearWindow, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store";
 import viewStyles from "./RegisterView.module.css";
-import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
+import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import { StagedAddStatus } from "./StagedAddStatus";
 import { SvelteIsland } from "./SvelteIsland";
@@ -67,7 +67,7 @@ import { Panel } from "./ui/Panel";
 import { Tag } from "./ui/Tag";
 import type { Column } from "./ui/types";
 import { useProject, useStudyWindow } from "./use_project";
-import VariantsSummary from "./VariantsSummary.svelte";
+import { VariantsSummary } from "./VariantsSummary";
 import { windowStore } from "./window";
 
 type Era = { from: string; to: string };
@@ -577,11 +577,6 @@ export function RegisterView({
     () => ({ fqid: node.fqid, registerOnly: true, collapsed: true }),
     [node.fqid],
   );
-  const variantsProps = useMemo(
-    () => ({ registerFqid: node.fqid, variants: node.variants }),
-    [node],
-  );
-  const documentsProps = useMemo(() => ({ register: node.fqid }), [node.fqid]);
 
   const total = countFoldedMembers(allRows);
   const shown = countFoldedMembers(filteredRows);
@@ -748,8 +743,8 @@ export function RegisterView({
           <StagedAddStatus outcome={outcome} blocked={shownRefusal} />
         </div>
       )}
-      <SvelteIsland component={VariantsSummary} props={variantsProps} />
-      <SvelteIsland component={RelatedDocumentsPanel} props={documentsProps} />
+      <VariantsSummary registerFqid={node.fqid} variants={node.variants} />
+      <RelatedDocumentsPanel register={node.fqid} />
     </article>
   );
 }

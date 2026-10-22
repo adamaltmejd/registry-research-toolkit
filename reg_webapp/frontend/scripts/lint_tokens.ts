@@ -161,9 +161,8 @@ const disciplinedFiles = [
 ]
   .filter((file) => file !== "src/tokens.css")
   .sort();
-// A glob that silently stopped matching would pass every file it no longer
-// sees. Counted over every styled file, not one framework's: the React port
-// removes the .svelte files one bundle at a time.
+// A broken glob would pass vacuously. Counted over every styled file, not the
+// .svelte ones, which the React port is deleting.
 if (disciplinedFiles.length <= 30) {
   failures.push(
     `token discipline saw only ${disciplinedFiles.length} styled files under src/`,

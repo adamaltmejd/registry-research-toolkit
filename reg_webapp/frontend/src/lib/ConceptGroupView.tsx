@@ -8,8 +8,6 @@ import {
   getShow,
   type VariableGraphNode,
 } from "./api";
-// The definitions read as on the variable page: one treatment for both heads.
-import leafStyles from "./BindingLeafView.module.css";
 import type { PeriodProps } from "./CatalogNodeView";
 import styles from "./ConceptGroupView.module.css";
 import {
@@ -33,7 +31,7 @@ import type { PickerBand } from "./picker_lanes";
 import { RepresentationPicker } from "./RepresentationPicker";
 import { router } from "./router";
 import { StagedAddStatus } from "./StagedAddStatus";
-import { SubjectView, TechnicalDetails } from "./SubjectView";
+import { TechnicalDetails } from "./SubjectView";
 import {
   ADD_PERIOD_REQUIRED_MESSAGE,
   applyStagedPicks,
@@ -43,6 +41,7 @@ import {
   stagedApplyRefusal,
 } from "./staged_picker";
 import { useRune } from "./svelte_bridge.svelte";
+import { Definitions } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
 import { Tag } from "./ui/Tag";
@@ -360,23 +359,25 @@ export function ConceptGroupView({
   }
 
   return (
-    <SubjectView title={group.label}>
-      <p className={styles.member}>
-        Variable group in{" "}
-        <a href={catalogHref(registerFqid)}>
-          {registerNode ? nodeLabel(registerNode) : registerFqid}
-        </a>
-      </p>
-      {facetValues.length > 0 && (
-        <dl className={styles.facets}>
-          {facetValues.map(({ axis, values }) => (
-            <div key={axis.name} className={styles.facet}>
-              <dt className="micro-label">{axis.label}</dt>
-              <dd>{values.join(", ")}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
+    <article className={styles.page}>
+      <Definitions
+        title={group.label}
+        memberOf={[
+          {
+            relation: "Variable group in",
+            label: registerNode ? nodeLabel(registerNode) : registerFqid,
+            href: catalogHref(registerFqid),
+          },
+        ]}
+        facets={facetValues.map(({ axis, values }) => ({
+          label: axis.label,
+          value: values.join(", "),
+        }))}
+        definitions={[
+          ...(definition ? [{ term: "Definition", value: definition }] : []),
+          ...(description ? [{ term: "Description", value: description }] : []),
+        ]}
+      />
       {group.tags.length > 0 && (
         <ul className={styles.tags} aria-label="Thematic tags">
           {group.tags.map((tag) => (
@@ -388,22 +389,6 @@ export function ConceptGroupView({
             </li>
           ))}
         </ul>
-      )}
-      {(definition || description) && (
-        <dl className={`${leafStyles.meta} ${leafStyles.definitions}`}>
-          {definition && (
-            <>
-              <dt>Definition</dt>
-              <dd>{definition}</dd>
-            </>
-          )}
-          {description && (
-            <>
-              <dt>Description</dt>
-              <dd>{description}</dd>
-            </>
-          )}
-        </dl>
       )}
       <TechnicalDetails>
         <KeyValue
@@ -459,7 +444,7 @@ export function ConceptGroupView({
         outcome={outcome?.under === resolutionKey ? outcome.value : null}
         blocked={refusal?.under === refusalKey ? refusal.message : null}
       />
-    </SubjectView>
+    </article>
   );
 }
 

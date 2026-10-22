@@ -1,0 +1,153 @@
+.page {
+  min-width: 0;
+}
+
+/* A short name, an outside-catalog derivation: machine identifiers. */
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* The edition graph's place on the page: one compact DAG row, held while the
+   graph loads; a branched graph scrolls inside it. */
+.graphSlot {
+  box-sizing: border-box;
+  max-block-size: 13rem;
+  margin-top: var(--space-5);
+  overflow: auto;
+}
+.graphSlot > section {
+  margin-top: 0;
+}
+/* As tall as one row of editions under its heading. */
+.graphReserve {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  block-size: 9.5rem;
+}
+
+/* ── Related classifications ─────────────────────────────────────────── */
+.related {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 60ch;
+  margin: 0;
+}
+.relatedGroup {
+  display: grid;
+  gap: var(--space-2);
+}
+.relatedGroup dd {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  align-items: baseline;
+  margin: 0;
+}
+.refLink {
+  color: var(--text);
+  font-family: var(--font-mono);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--accent);
+}
+.refLink:hover {
+  background: var(--surface-hover);
+}
+.refLink:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.refName {
+  min-width: 0;
+}
+.refNote {
+  grid-column: 2;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Edition tabs ────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  flex-direction: column;
+}
+/* The list scrolls sideways rather than widen the page at 375. */
+.tabScroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+}
+.tabList {
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+}
+.tab {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 8.5rem;
+  max-width: 16rem;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-muted);
+  outline: none;
+  cursor: pointer;
+  transition: background var(--duration-quick) var(--ease-standard);
+}
+.tab[data-hovered] {
+  background: var(--surface-hover);
+}
+/* The open edition: the selection's bar, on the leading edge's equivalent for
+   a horizontal list (its bottom), plus the wash. */
+.tab[data-selected] {
+  background: var(--surface-sunken);
+  color: var(--text);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+.tab[data-focus-visible] {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.tabLabel,
+.tabMeta {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabLabel {
+  font-weight: var(--heading-weight);
+}
+.tabMeta {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+}
+.tabPanel {
+  padding-top: var(--space-3);
+  outline: none;
+}
+.tabPanel[data-focus-visible] {
+  box-shadow: var(--focus-ring);
+}
+
+@media (max-width: 48rem) {
+  .relatedGroup dd {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .refNote {
+    grid-column: auto;
+  }
+  .tab {
+    min-width: 7rem;
+    max-width: 13rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

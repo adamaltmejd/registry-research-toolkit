@@ -1,6 +1,6 @@
 // TEMPORARY (React port, REACT_PORT.md): the unported Svelte views read the vanilla
 // router (`router.ts`) through this façade, which makes every read reactive. Deleted
-// in port PR 9 with the last Svelte view.
+// in port bundle C with the last Svelte view.
 import { createSubscriber } from "svelte/reactivity";
 import { router as store } from "./router";
 

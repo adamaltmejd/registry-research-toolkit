@@ -1,6 +1,6 @@
 // TEMPORARY (React port, REACT_PORT.md): the glue between the React shell and the
 // Svelte runes stores and views it has not replaced yet. Each part goes when its
-// store or last view is ported; the file is deleted in port PR 9.
+// store or last view is ported; the file is deleted in port bundle C.
 import { useMemo, useSyncExternalStore } from "react";
 import { untrack } from "svelte";
 import { projectStore } from "./project_store.svelte";

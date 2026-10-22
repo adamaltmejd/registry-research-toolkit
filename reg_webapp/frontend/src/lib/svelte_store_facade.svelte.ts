@@ -1,6 +1,6 @@
 // TEMPORARY (React port, REACT_PORT.md): the unported Svelte views (and the
 // `useRune` readers in svelte_bridge) read the plain stores through these
-// façades, which make every read reactive. Deleted in port PR 9 with the last
+// façades, which make every read reactive. Deleted in port bundle C with the last
 // Svelte view.
 import { createSubscriber } from "svelte/reactivity";
 

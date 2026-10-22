@@ -1,0 +1,57 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 60ch;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+  line-height: 1.1;
+}
+
+.lead {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* The ways in, as a list under a structural rule: no cards. */
+.entries {
+  display: flex;
+  flex-direction: column;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border-strong);
+  list-style: none;
+}
+.entries li {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.link {
+  justify-self: start;
+  color: var(--text);
+  font-weight: var(--heading-weight);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--accent);
+}
+.link:hover {
+  background: var(--surface-hover);
+}
+.link:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.description {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

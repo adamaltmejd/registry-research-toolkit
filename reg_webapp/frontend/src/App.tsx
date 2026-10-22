@@ -1,26 +1,25 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
 import { type Context, getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
-import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
+import { ClassificationGroupView } from "./lib/ClassificationView";
 import { ConceptGroupView } from "./lib/ConceptGroupView";
 import { routeBreadcrumbs } from "./lib/catalog";
 import { providerQualified } from "./lib/catalog_names.svelte";
-import DocView from "./lib/DocView.svelte";
-import Home from "./lib/Home.svelte";
+import { DocView } from "./lib/DocView";
+import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { projectStore } from "./lib/project_store";
 import { onNavClick, type Route, router } from "./lib/router";
-import { SvelteIsland } from "./lib/SvelteIsland";
 import { useRune } from "./lib/svelte_bridge.svelte";
 import { TopBar } from "./lib/TopBar";
-import { Breadcrumbs } from "./lib/ui";
+import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useRoute } from "./lib/use_router";
 import { VariableList, type VariableListFocus } from "./lib/VariableList";
-import VariantBrowser from "./lib/VariantBrowser.svelte";
+import { VariantBrowser } from "./lib/VariantBrowser";
 import { windowStore } from "./lib/window.svelte";
 import { type WindowBounds, windowBounds } from "./lib/window_bounds";
 
@@ -101,10 +100,7 @@ export function App() {
   // reg_meta DB was built, the leading YYYY-MM-DD of `import_date`.
   const ctx = context.data;
   const listed = listedRegister(route);
-  const breadcrumbs = useMemo(
-    () => ({ items: routeBreadcrumbs(route) }),
-    [route],
-  );
+  const breadcrumbs = routeBreadcrumbs(route);
 
   return (
     <RouterProvider navigate={router.navigate} useHref={useHref}>
@@ -131,11 +127,7 @@ export function App() {
               />
             )}
             <main className={styles.detail}>
-              <SvelteIsland
-                component={Breadcrumbs}
-                props={breadcrumbs}
-                className={styles.crumbs}
-              />
+              <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />
               <div className={styles.routed}>
                 <RoutedView route={route} context={ctx} bounds={bounds} />
               </div>
@@ -182,15 +174,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
 
   switch (route.name) {
     case "home":
-      return (
-        <SvelteIsland
-          component={Home}
-          props={{
-            steward: context?.steward ?? null,
-            sizes: context?.sizes ?? null,
-          }}
-        />
-      );
+      return <Home steward={context?.steward ?? null} />;
     case "root":
       return (
         <>
@@ -219,19 +203,12 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
         />
       );
     case "class-group":
-      return (
-        <SvelteIsland
-          key={route.key}
-          component={ClassificationGroupView}
-          props={{ key: route.key }}
-        />
-      );
+      return <ClassificationGroupView key={route.key} groupKey={route.key} />;
     case "variants":
       return (
-        <SvelteIsland
+        <VariantBrowser
           key={`${route.provider}/${route.register}`}
-          component={VariantBrowser}
-          props={{ registerFqid: `${route.provider}/${route.register}` }}
+          registerFqid={`${route.provider}/${route.register}`}
         />
       );
     case "project":
@@ -244,13 +221,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
         />
       );
     case "doc":
-      return (
-        <SvelteIsland
-          key={route.identifier}
-          component={DocView}
-          props={{ identifier: route.identifier }}
-        />
-      );
+      return <DocView key={route.identifier} identifier={route.identifier} />;
     case "not-found":
       return (
         <article>
