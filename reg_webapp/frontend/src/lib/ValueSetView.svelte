@@ -683,9 +683,9 @@ function trackDisclosure(key: string, event: Event): void {
 
     {#if s.value_set_id !== null && s.value_set_summary}
       {@const summary = s.value_set_summary}
-      <h4 class="vs-heading">
+      <h3 class="vs-heading">
         Value set <span class="muted">({summary.code_count})</span>
-      </h4>
+      </h3>
       {#if summary.integer_range}
         {@render denseIntegerRange(summary.integer_range, summary.code_count)}
       {:else}
@@ -729,7 +729,7 @@ function trackDisclosure(key: string, event: Event): void {
       >
         ← All value sets
       </button>
-      <h4 class="vs-heading">
+      <h3 class="vs-heading">
         {#if vs.classificationSlugs.length > 0}
           {@render classificationLinks(vs.classificationSlugs)}
         {:else}
@@ -743,10 +743,10 @@ function trackDisclosure(key: string, event: Event): void {
             </span>
           {/if}
         {/if}
-      </h4>
+      </h3>
       {@render sourceName(vs)}
       {@render valueSetBody(vs)}
-      <h5 class="vs-usage-heading micro-label">Used by</h5>
+      <h4 class="vs-usage-heading micro-label">Used by</h4>
       {@render usage(vs)}
     </div>
   {:else}
@@ -1005,5 +1005,10 @@ function trackDisclosure(key: string, event: Event): void {
   }
   .out-of-period-list {
     margin-top: 0.4rem;
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  .vs-heading {
+    font-size: var(--text-h3);
   }
 </style>

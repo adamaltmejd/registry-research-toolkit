@@ -323,6 +323,8 @@ const CROSS_FILE: Record<string, string> = {
     "set inline by React Aria's Tree on each row, read by BrowseTree",
   "--top-bar-height":
     "measured by TopBar onto :root, read by the shell's browse column",
+  "--data-table-columns":
+    "set inline by DataTable.tsx on its table, read by DataTable.module.css",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;

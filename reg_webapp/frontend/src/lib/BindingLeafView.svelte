@@ -799,13 +799,13 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 
 {#snippet valueSet()}
   <section aria-labelledby="states-heading">
-    <h3 id="states-heading">
+    <h2 id="states-heading">
       <!-- A #307 comma list reads as segments joined with "+" (the union the
            backend resolves since #340) — `2005..2010 + 2015..2020`. -->
       States{#if isNarrowed && narrowedPeriodLabel}<span class="muted narrowed-note">
           · narrowed to {narrowedPeriodLabel}</span
         >{/if}
-    </h3>
+    </h2>
     {#if valueSetStates}
       <!-- The pure value-set / coding viewer (#905). Narrowing to one state is the
            PICKER's job now (it writes `?variant`/`?value_set_version`); this view
@@ -1135,5 +1135,10 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     .meta dt:not(:first-child) {
       margin-top: var(--space-2);
     }
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  h2 {
+    font-size: var(--text-h2);
   }
 </style>

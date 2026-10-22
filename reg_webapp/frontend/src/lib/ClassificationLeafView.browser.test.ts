@@ -63,7 +63,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
       .element(
         page.getByRole("heading", {
           name: "Svensk utbildningsnomenklatur",
-          level: 2,
+          level: 1,
         }),
       )
       .toBeVisible();

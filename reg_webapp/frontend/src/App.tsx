@@ -3,7 +3,7 @@ import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
 import { type Context, getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
-import CatalogNodeView from "./lib/CatalogNodeView.svelte";
+import { CatalogNodeView } from "./lib/CatalogNodeView";
 import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
 import ConceptGroupView from "./lib/ConceptGroupView.svelte";
 import { routeBreadcrumbs } from "./lib/catalog";
@@ -20,11 +20,40 @@ import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useRoute } from "./lib/use_router";
+import { VariableList, type VariableListFocus } from "./lib/VariableList";
 import VariantBrowser from "./lib/VariantBrowser.svelte";
 import { windowStore } from "./lib/window.svelte";
 import { type WindowBounds, windowBounds } from "./lib/window_bounds";
 
 const readWindow = () => windowStore.value;
+
+/** The register whose variables the second browse column lists, and the page
+ * open under it: a register's own page, a variable, a concept group or the
+ * variants page. Null on every other page, which shows no second column. */
+function listedRegister(
+  route: Route,
+): { fqid: string; focus: VariableListFocus | null } | null {
+  switch (route.name) {
+    case "catalog-node": {
+      const [provider, register, ...rest] = route.fqidPath.split("/");
+      if (provider === "class" || register === undefined) return null;
+      return {
+        fqid: `${provider}/${register}`,
+        focus:
+          rest.length > 0 ? { kind: "variable", fqid: route.fqidPath } : null,
+      };
+    }
+    case "group":
+      return {
+        fqid: `${route.provider}/${route.register}`,
+        focus: { kind: "group", key: route.key },
+      };
+    case "variants":
+      return { fqid: `${route.provider}/${route.register}`, focus: null };
+    default:
+      return null;
+  }
+}
 
 // The app's hrefs are root-relative paths already.
 const useHref = (href: string) => href;
@@ -72,6 +101,7 @@ export function App() {
   // The catalog vintage for the site-wide footer (#355 decision 2): the date the
   // reg_meta DB was built, the leading YYYY-MM-DD of `import_date`.
   const ctx = context.data;
+  const listed = listedRegister(route);
   const breadcrumbs = useMemo(
     () => ({ items: routeBreadcrumbs(route) }),
     [route],
@@ -91,8 +121,16 @@ export function App() {
           <div
             className={styles.body}
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
+            data-list={listed !== null}
           >
             <BrowseTree className={styles.browse} />
+            {listed && (
+              <VariableList
+                registerFqid={listed.fqid}
+                focus={listed.focus}
+                className={styles.list}
+              />
+            )}
             <main className={styles.detail}>
               <SvelteIsland
                 component={Breadcrumbs}
@@ -122,8 +160,8 @@ interface RoutedViewProps {
   bounds: WindowBounds;
 }
 
-/** The routed page in the detail pane. Every page but the catalog root is still a
- * Svelte view; each is keyed on what identifies its subject, so moving to another
+/** The routed page in the detail pane. Pages not yet ported are Svelte islands;
+ * each is keyed on what identifies its subject, so moving to another
  * subject remounts it (a Svelte `{#key}`), while a query-only move does not. */
 function RoutedView({ route, context, bounds }: RoutedViewProps) {
   // Both fall back to the empty string until /api/context resolves (a new
@@ -156,16 +194,19 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
       );
     case "root":
       return (
-        <p className={styles.rootPrompt}>
-          Choose a register in the list to see its variables.
-        </p>
+        <>
+          <h1 className="visually-hidden">Data browser</h1>
+          <p className={styles.rootPrompt}>
+            Choose a register in the list to see its variables.
+          </p>
+        </>
       );
     case "catalog-node":
       return (
-        <SvelteIsland
+        <CatalogNodeView
           key={route.fqidPath}
-          component={CatalogNodeView}
-          props={{ fqidPath: route.fqidPath, ...periodProps }}
+          fqidPath={route.fqidPath}
+          {...periodProps}
         />
       );
     case "group":
@@ -222,7 +263,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
     case "not-found":
       return (
         <article>
-          <h2>Not found</h2>
+          <h1 className={styles.notFoundTitle}>Not found</h1>
           <p>
             No page at <code>{route.path}</code>.
           </p>

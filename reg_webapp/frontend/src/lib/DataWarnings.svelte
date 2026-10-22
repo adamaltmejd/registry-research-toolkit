@@ -109,7 +109,7 @@ function compareBound(
     <Panel {title}>{@render content()}</Panel>
   {:else}
     <section class="inline-warnings" aria-labelledby={headingId}>
-      <h3 id={headingId}>{title}</h3>
+      <h2 id={headingId}>{title}</h2>
       {@render content()}
     </section>
   {/if}
@@ -117,7 +117,7 @@ function compareBound(
 
 <style>
   .inline-warnings { display: flex; flex-direction: column; gap: var(--space-3); }
-  h3 { margin: 0; font-size: var(--text-sm); font-weight: var(--heading-weight); }
+  h2 { margin: 0; font-size: var(--text-sm); font-weight: var(--heading-weight); }
   .warnings {
     display: flex;
     flex-direction: column;

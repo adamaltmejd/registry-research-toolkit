@@ -12,12 +12,15 @@ import {
 } from "react-aria-components";
 import { getShow, type RegisterChild, type RootChild } from "./api";
 import styles from "./BrowseTree.module.css";
-import { catalogHref, registerPrefixOf } from "./catalog";
+import { useBrowseFilter } from "./browse_filter";
+import { catalogHref, leafSlug, rankFilter, registerPrefixOf } from "./catalog";
 import { catalogRootChildren } from "./catalog_names.svelte";
+import { Highlight } from "./Highlight";
 import { safeSourceBindings, safeSourceSlots } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { type Route, router } from "./router";
 import { useRune } from "./svelte_bridge.svelte";
+import { InProjectMark } from "./ui/ColumnList";
 import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
 
@@ -129,6 +132,35 @@ function currentRow(route: Route): CurrentRow | null {
   }
 }
 
+/** The browse filter applied to the tree. A group keeps the registers that
+ * match by name or slug, or all of them when its own name matches; those groups
+ * are `matched`. A group with no match keeps its whole list, so it still shows
+ * and still opens, and starts closed.
+ * simplify: a register that matches only through its variables is not shown.
+ * DESIGN.md wants it shown "with the count", which needs a per-register count
+ * of variable matches for a query that the API does not serve (GET /api/search
+ * pages ranked hits, no facet). Add it when the server answers that count. */
+function filterNodes(
+  nodes: BrowseNode[],
+  needle: string,
+): { nodes: BrowseNode[]; matched: Set<Key> } {
+  const matched = new Set<Key>();
+  if (needle.trim() === "") return { nodes, matched };
+  const named = (node: BrowseNode) => [node.name, leafSlug(node.id)];
+  const filtered = nodes.map((node) => {
+    if (node.children === null || node.children.length === 0) return node;
+    if (rankFilter([node], needle, named).length > 0) {
+      matched.add(node.id);
+      return node;
+    }
+    const children = rankFilter(node.children, needle, named);
+    if (children.length === 0) return node;
+    matched.add(node.id);
+    return { ...node, children };
+  });
+  return { nodes: filtered, matched };
+}
+
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
@@ -182,10 +214,13 @@ export function BrowseTree({ className }: { className?: string }) {
       );
     },
   );
-  const nodes = browseNodes(
+  const needle = useBrowseFilter();
+  const filtering = needle.trim() !== "";
+  const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
   );
+  const { nodes, matched } = filterNodes(allNodes, needle);
   const expandable = nodes
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
@@ -193,14 +228,25 @@ export function BrowseTree({ className }: { className?: string }) {
   const current = currentRow(route);
   const currentKey = current?.key ?? null;
   const hrefs = new Map(
-    nodes.flatMap((node) => [
+    allNodes.flatMap((node) => [
       [node.id, node.href] as const,
       ...(node.children ?? []).map((c) => [c.id, c.href] as const),
     ]),
   );
 
   const [collapsed, setCollapsed] = useState(readCollapsed);
-  const expandedKeys = new Set(expandable.filter((id) => !collapsed.has(id)));
+  // While the filter holds text the tree has its own expansion: the groups with
+  // a match open, then whatever the user toggles under that text. Clearing it
+  // (Escape) gives back the remembered collapse state untouched.
+  const [filterExpanded, setFilterExpanded] = useState<{
+    needle: string;
+    keys: Set<Key>;
+  } | null>(null);
+  const expandedKeys: Set<Key> = !filtering
+    ? new Set(expandable.filter((id) => !collapsed.has(id)))
+    : filterExpanded?.needle === needle
+      ? filterExpanded.keys
+      : matched;
 
   // RAC has no controlled focused key, and a focused key on a hidden row takes
   // the whole tree out of the Tab order; so every focus move goes through
@@ -239,6 +285,10 @@ export function BrowseTree({ className }: { className?: string }) {
     if (state && focused != null) {
       const target = visibleKey(state, focused, keys);
       if (target !== focused) state.selectionManager.setFocusedKey(target);
+    }
+    if (filtering) {
+      setFilterExpanded({ needle, keys });
+      return;
     }
     const next = new Set(expandable.filter((id) => !keys.has(id)));
     setCollapsed(next);
@@ -294,10 +344,15 @@ export function BrowseTree({ className }: { className?: string }) {
             onSelectionChange={onSelectionChange}
             expandedKeys={expandedKeys}
             onExpandedChange={onExpandedChange}
-            dependencies={[counts, currentKey, current?.exact]}
+            dependencies={[counts, currentKey, current?.exact, needle]}
           >
             {(node) => (
-              <BrowseItem node={node} counts={counts} current={current} />
+              <BrowseItem
+                node={node}
+                counts={counts}
+                current={current}
+                needle={needle}
+              />
             )}
           </Tree>
         </>
@@ -310,10 +365,12 @@ function BrowseItem({
   node,
   counts,
   current,
+  needle,
 }: {
   node: BrowseNode;
   counts: Record<string, number>;
   current: CurrentRow | null;
+  needle: string;
 }) {
   const count = inProjectCount(node, counts);
   // "page" only on the row whose own page is open; "true" on the register row
@@ -337,14 +394,10 @@ function BrowseItem({
             ) : (
               <span className={styles.chevronSpacer} />
             )}
-            <span className={styles.name}>{node.name}</span>
-            {count > 0 && (
-              <span className={styles.inProject}>
-                <span className={styles.dot} aria-hidden="true" />
-                {count}
-                <span className="visually-hidden"> in the project</span>
-              </span>
-            )}
+            <span className={styles.name}>
+              <Highlight text={node.name} needle={needle} />
+            </span>
+            <InProjectMark count={count} />
           </>
         )}
       </TreeItemContent>
@@ -358,7 +411,12 @@ function BrowseItem({
       ) : (
         <Collection items={node.children}>
           {(child) => (
-            <BrowseItem node={child} counts={counts} current={current} />
+            <BrowseItem
+              node={child}
+              counts={counts}
+              current={current}
+              needle={needle}
+            />
           )}
         </Collection>
       )}

@@ -46,7 +46,7 @@ const anySection = $derived(showProvenance || showWarnings);
   <!-- PROVENANCE — source register + consumer/source lineage edges -->
   {#if showProvenance}
     <section aria-labelledby="provenance-heading">
-      <h3 id="provenance-heading">Provenance</h3>
+      <h2 id="provenance-heading">Provenance</h2>
       {#if sourceRegister}
         <p class="source-register">
           <span class="muted">Source register:</span>
@@ -79,7 +79,7 @@ const anySection = $derived(showProvenance || showWarnings);
   <!-- LINEAGE WARNINGS — and the lineage read's loading / error -->
   {#if showWarnings}
     <section aria-labelledby="lineage-warnings-heading">
-      <h3 id="lineage-warnings-heading">Lineage warnings</h3>
+      <h2 id="lineage-warnings-heading">Lineage warnings</h2>
       {#if lineage.loading}
         <p class="muted" aria-busy="true">Loading…</p>
       {:else if lineage.error}
@@ -108,7 +108,7 @@ const anySection = $derived(showProvenance || showWarnings);
     flex-direction: column;
     gap: 1.25rem;
   }
-  h3 {
+  h2 {
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
@@ -157,5 +157,10 @@ const anySection = $derived(showProvenance || showWarnings);
   }
   .muted {
     color: var(--text-muted);
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  h2 {
+    font-size: var(--text-h2);
   }
 </style>

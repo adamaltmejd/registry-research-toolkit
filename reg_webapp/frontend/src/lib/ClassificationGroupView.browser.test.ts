@@ -212,7 +212,7 @@ describe("ClassificationGroupView (#756)", () => {
       .element(
         page.getByRole("heading", {
           name: "Classification group: Svensk utbildningsnomenklatur",
-          level: 2,
+          level: 1,
         }),
       )
       .toBeVisible();
@@ -355,7 +355,7 @@ describe("ClassificationGroupView (#756)", () => {
     await render(ClassificationGroupView, { key: "ssyk" });
 
     await expect
-      .element(page.getByRole("heading", { name: "SSYK", level: 2 }))
+      .element(page.getByRole("heading", { name: "SSYK", level: 1 }))
       .toBeVisible();
     await expect
       .element(page.getByRole("tab", { name: /SSYK 1996/ }))

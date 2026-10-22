@@ -28,7 +28,7 @@ const hasDerivedRefs = $derived(
     class="derived-links"
     aria-labelledby="derived-classifications-heading"
   >
-    <h3 id="derived-classifications-heading">Related classifications</h3>
+    <h2 id="derived-classifications-heading">Related classifications</h2>
     {#if node.derived_from && node.derived_from.length > 0}
       <div class="derived-block">
         <p class="micro-label link-label">Derived from</p>
@@ -60,7 +60,7 @@ const hasDerivedRefs = $derived(
     border-radius: var(--radius);
     background: var(--surface);
   }
-  .derived-links h3 {
+  .derived-links h2 {
     margin: 0 0 var(--space-3);
     font-size: var(--text-h3);
     font-weight: var(--heading-weight);

@@ -19,9 +19,15 @@
   align-items: start;
 }
 
-/* The browse column fills the viewport under the sticky top bar and scrolls its
+/* Under a register, its variables take a second column. */
+.body[data-list="true"] {
+  grid-template-columns: var(--col-browse) var(--col-list) minmax(0, 1fr);
+}
+
+/* A browse column fills the viewport under the sticky top bar and scrolls its
    own list (maintainer ruling 2026-10-22). */
-.browse {
+.browse,
+.list {
   position: sticky;
   top: var(--top-bar-height, 0px);
   height: calc(100dvh - var(--top-bar-height, 0px));
@@ -70,8 +76,14 @@
    columns stack one at a time: the catalog root shows the list, every other page
    its detail, with the breadcrumb's first crumb as the way back to the list. */
 @media (max-width: 48rem) {
-  .body {
+  .body,
+  .body[data-list="true"] {
     grid-template-columns: minmax(0, 1fr);
+  }
+  /* The register page lists its variables itself, so the stacked layout has
+     no second column. */
+  .body .list {
+    display: none;
   }
   .browse {
     position: static;
@@ -87,4 +99,11 @@
   .body[data-narrow-shows="browse"] .routed {
     display: none;
   }
+}
+
+.notFoundTitle {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
 }

@@ -3,7 +3,7 @@
 // store or last view is ported; the file is deleted in port PR 9.
 import { useMemo, useSyncExternalStore } from "react";
 import { untrack } from "svelte";
-import { initDraftLifecycle } from "./project_store.svelte";
+import { initDraftLifecycle, projectStore } from "./project_store.svelte";
 
 /** Same value for React's purposes: identical, or a plain object or array whose
  * entries are identical. Lets a reader build a fresh snapshot object each run
@@ -57,6 +57,13 @@ function runeStore<T>(read: () => T) {
 export function useRune<A, T>(read: (arg: A) => T, arg: A): T {
   const store = useMemo(() => runeStore(() => read(arg)), [read, arg]);
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
+}
+
+/** The project draft as a plain object, for `useRune`: the store's draft is a deep
+ * proxy edited in place, so its identity never moves; a snapshot is a new object
+ * on every edit, which is what wakes React. */
+export function draftSnapshot() {
+  return $state.snapshot(projectStore.draft);
 }
 
 /** A props object a Svelte island can be mounted with and later updated through

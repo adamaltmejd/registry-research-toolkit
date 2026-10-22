@@ -30,6 +30,7 @@ import {
   getStates,
   type RegisterShow,
   type RootChild,
+  type ShowNode,
   type VariableChild,
 } from "./api";
 import {
@@ -102,6 +103,24 @@ function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
 export function resetCatalogNames(): void {
   generation += 1;
   reads = {};
+  showsInFlight.clear();
+}
+
+/** `getShow` reads in flight, by ref. The detail page and the browse column of
+ * the register it shows ask for the same node at the same moment; this makes that
+ * one request. An entry lives only until its read settles, so a failure is not
+ * remembered and nothing here outlives the request: what lasts is each reader's
+ * own result (the detail page's resource, the `register:` read below). Not
+ * abortable, since another reader may be waiting on it. */
+const showsInFlight = new Map<string, Promise<ShowNode>>();
+
+export function sharedShow(ref: string): Promise<ShowNode> {
+  let pending = showsInFlight.get(ref);
+  if (!pending) {
+    pending = getShow(ref).finally(() => showsInFlight.delete(ref));
+    showsInFlight.set(ref, pending);
+  }
+  return pending;
 }
 
 /** The catalog root's children — the deployment's providers (plus the
@@ -136,10 +155,11 @@ function providersOf(root: Read<RootChild[]>): RootChild[] {
 
 /** One register's node — its variants (for a source card's name) and its binding
  * children with their deliveries (for the cart's coverage hint) — read once per
- * register and shared by every source on it. Null when the ref is not a register. */
-function registerRead(registerFqid: string): Read<RegisterShow | null> {
+ * register and shared by every source on it and by the browse list of its
+ * variables. Null when the ref is not a register. */
+export function registerRead(registerFqid: string): Read<RegisterShow | null> {
   return read(`register:${registerFqid}`, async () => {
-    const node = await getShow(registerFqid);
+    const node = await sharedShow(registerFqid);
     return node.kind === "register" ? node : null;
   });
 }

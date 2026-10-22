@@ -173,7 +173,7 @@ onDestroy(() => {
 
   {#if projectStore.draft == null}
     <!-- ── Home / new screen ──────────────────────────────────────────────── -->
-    <h2>Author a project</h2>
+    <h1 class="page-title">Author a project</h1>
     <p class="muted">
       Start a new <code>project_data.json</code> or open an existing one. Projects
       live in your browser; download the file to keep the durable copy.
@@ -203,12 +203,12 @@ onDestroy(() => {
     )}
     {@const windowFindings = windowDisjointFindings(studyWindow, sources)}
     <header class="editor-head">
-      <h2>
+      <h1 class="page-title">
         {draft.name || "Untitled project"}
         {#if projectStore.dirty}
           <span class="dirty" title="Unsaved changes since last download">● unsaved</span>
         {/if}
-      </h2>
+      </h1>
     </header>
 
     <div class="toolbar">
@@ -343,7 +343,11 @@ onDestroy(() => {
     align-items: baseline;
     justify-content: space-between;
   }
-  .editor-head h2 {
+  .page-title {
+    font-size: var(--text-h1);
+    font-weight: var(--heading-weight);
+  }
+  .editor-head h1 {
     display: flex;
     align-items: baseline;
     gap: var(--space-3);

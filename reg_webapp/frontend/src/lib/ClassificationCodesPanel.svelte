@@ -16,7 +16,7 @@ let { node }: { node: ClassificationShow } = $props();
 </script>
 
 <section aria-labelledby="cls-codes-heading" class="cls-codes">
-  <h3 id="cls-codes-heading">Codes</h3>
+  <h2 id="cls-codes-heading">Codes</h2>
   <ValueSetCodes
     ref={node.fqid}
     codeCount={null}
@@ -30,10 +30,15 @@ let { node }: { node: ClassificationShow } = $props();
   .cls-codes {
     margin-top: 1.5rem;
   }
-  h3 {
+  h2 {
     margin: 0 0 0.5rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
     font-weight: var(--heading-weight);
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  h2 {
+    font-size: var(--text-h2);
   }
 </style>

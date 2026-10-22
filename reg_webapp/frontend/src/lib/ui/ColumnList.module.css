@@ -1,0 +1,103 @@
+/* A browse column (DESIGN.md → ColumnList): a header outside the scroll box, then
+   the list, its own scroll container. BrowseTree composes these classes, so both
+   columns read as one component. */
+.column {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+.header > :first-child {
+  margin-right: auto;
+}
+
+.note {
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.error {
+  margin: var(--space-3);
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  outline: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 5px var(--space-3);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  outline: none;
+  cursor: pointer;
+}
+.row[data-hovered] {
+  background: var(--surface-hover);
+}
+
+/* The selected row (the current page's): the 2px accent bar on surface-sunken,
+   at 600. */
+.row[data-selected] {
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-weight: var(--heading-weight);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* Inset, so the scroll box and a sticky row above never clip the ring. */
+.row[data-focus-visible] {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.row[data-selected][data-focus-visible] {
+  box-shadow:
+    inset 2px 0 0 var(--accent),
+    inset 0 0 0 2px var(--accent);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The in-project mark: a 6px accent dot and the count in accent-ink mono, the
+   only number in the list. */
+.inProject {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-column);
+  font-weight: var(--column-weight);
+  font-variant-numeric: tabular-nums;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}

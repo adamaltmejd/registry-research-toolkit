@@ -60,7 +60,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .element(
         page.getByRole("heading", {
           name: "Variable group: Inkomst",
-          level: 2,
+          level: 1,
         }),
       )
       .toBeVisible();

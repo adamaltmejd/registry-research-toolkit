@@ -197,12 +197,12 @@ function editionLabel(node: ClassificationGraphNode): string {
     class="classification-editions"
     aria-labelledby="classification-editions-heading"
   >
-    <h3 id="classification-editions-heading">Editions</h3>
+    <h2 id="classification-editions-heading">Editions</h2>
 
     {#each dagClusters as { cluster, layout, width, height }, ci (cluster.groupKey ?? `u${ci}`)}
       <div class="edition-cluster">
         {#if cluster.label}
-          <h4 class="edition-cluster-heading">{cluster.label}</h4>
+          <h3 class="edition-cluster-heading">{cluster.label}</h3>
         {/if}
 
         <div class="edition-scroll">
@@ -311,7 +311,7 @@ function editionLabel(node: ClassificationGraphNode): string {
   .classification-editions {
     margin: var(--space-4) 0;
   }
-  h3 {
+  h2 {
     margin: 0 0 var(--space-3);
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--border);

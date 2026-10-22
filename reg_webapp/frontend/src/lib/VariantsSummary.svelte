@@ -59,7 +59,7 @@ const rows = $derived(
      renders nothing at all (no section, no heading, no "No variants." text). -->
 {#if hasRealVariant}
   <section class="variants" aria-labelledby="variants-heading">
-    <h3 id="variants-heading">Variants</h3>
+    <h2 id="variants-heading">Variants</h2>
     <DataTable framed {columns} {rows}>
       {#snippet cell(row, column)}
         {#if column.key === "name"}
@@ -82,7 +82,7 @@ const rows = $derived(
   .variants {
     margin-top: var(--space-4);
   }
-  .variants h3 {
+  .variants h2 {
     margin: 0 0 var(--space-3);
   }
   .name {
@@ -107,5 +107,10 @@ const rows = $derived(
     outline: none;
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
+  }
+  /* A section heading's size is its level's token, not the browser default
+     for the tag. */
+  h2 {
+    font-size: var(--text-h2);
   }
 </style>
