@@ -150,11 +150,13 @@ def built_db_dir(
 
 
 def prepare_accepted(
-    tmp_path: Path, source: Path, curation: Path
+    tmp_path: Path, source: Path, curation: Path, *, snapshot_path: str = "snapshot"
 ) -> tuple[Path, str, str]:
     """Bundle and prepare ``source`` with the authored sources under ``curation``,
     accept it, and return (prepared dir, commit, digest)."""
-    bundle = write_input_bundle(tmp_path / "inputs", source)
+    bundle = write_input_bundle(
+        tmp_path / "inputs", source, snapshot_path=snapshot_path
+    )
     prepared = tmp_path / "prepared" / "catalog"
     manifest = prepare_catalog_sources(bundle, prepared, curation_dir=curation)
     return prepared, accept_prepared(prepared), manifest.sha256

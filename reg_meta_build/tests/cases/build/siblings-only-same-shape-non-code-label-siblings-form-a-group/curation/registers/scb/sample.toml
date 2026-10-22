@@ -10,6 +10,8 @@ slug = "people"
 "1.100.lid" = "lid"
 "1.100.lnamn" = "lnamn"
 "1.200.kommun" = "kommun"
+"1.200.kommun2020" = "kommun-2020"
+"1.200.kommuntext" = "kommuntext"
 "1.200.kommunnamn" = "kommunnamn"
 "1.300.fornamn" = "fornamn"
 "1.300.efternamn" = "efternamn"
@@ -23,3 +25,17 @@ slug = "people"
 "1.700.antaltxt" = "antaltxt"
 "1.800.x" = "x"
 "1.800.xtxt" = "xtxt"
+
+[[identity.partition]]
+variable = "1.200"
+columns = { KOMMUN = "1.200.kommun", KOMMUNNAMN = "1.200.kommunnamn", KOMMUNTEXT = "1.200.kommuntext" }
+columns_ref = "fixture"
+
+[[identity.column_owner]]
+variable = "1.200"
+variant = "1.10"
+column = "KOMMUN"
+owner = "1.200.kommun2020"
+ref = "fixture: the 2020 KOMMUN is a different owner's delivery"
+source_editions = ["2020"]
+expected_fields = [{ name = "column_name", status = "value", value = "KOMMUN" }]

@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+
+[variable]
+"1.300" = "fornamn"
+
+[[acknowledge]]
+code = "unresolved_source_event_endpoint"
+subject = "('event', 'e346c615c9350a313d796f86c52234c23be3841d39f0f90aaec15d50a5bc217a')"
+reason = "Variable 999 is not delivered by any register."
+evidence = "The event row and the FORNAMN declaration reviewed."
+refs = [
+  "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:300\", \"member:1004\"]}",
+  "{\"source\": \"scb-timeseries\", \"semantic_record_key\": [\"event\", \"e346c615c9350a313d796f86c52234c23be3841d39f0f90aaec15d50a5bc217a\"]}",
+]
+expected_evidence_sha256 = "2b7540c3ce126404999a410c7056d4f7483886109c3065bc9f867f35830239fb"
+expected_diagnostic_sha256 = "1ecb314b19134e6e6930304968e1abead2e0785ecaf19788d7a225b9db67575f"

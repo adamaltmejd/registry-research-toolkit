@@ -2,7 +2,8 @@
 
 No catalog identity or column equivalence is inferred here. A shared native
 definition supplies group membership only after checked identity resolution.
-Actual edition co-delivery controls the existing code/label and shape guards.
+A code column and its label column never fold, co-delivered or not; actual
+edition co-delivery controls the shape guards.
 """
 
 from __future__ import annotations
@@ -13,8 +14,11 @@ from dataclasses import dataclass
 from itertools import combinations, product
 from typing import TYPE_CHECKING, Literal
 
+from reg_meta_build._components import DisjointSet
 from reg_meta_build._curation import (
+    _is_code_then_label,
     _looks_like_code_label_pair,
+    fold_column,
     sibling_shape_conflict,
 )
 from reg_meta_build.source_coordinates import native_variable_key
@@ -253,10 +257,15 @@ def resolve_sibling_pairs(
     """Apply grouping guards to exact existing partitions in a complete scope.
 
     Unknown identities remain None, never invented endpoints. Within each original
-    family, each known identity contributes its lexically first literal column,
-    preserving the established cluster-representative rule. Co-delivery is exact
-    edition identity, never an overlap of year spans. An unresolved shape matters
-    only when its alternatives disagree about whether the pair can be grouped.
+    family, every literal column of one known identity is paired with every column
+    of another. Any code/label column pair keeps the two apart, co-delivered or
+    not, and no group the foldable pairs form may hold a code and its label. The
+    pair is co-delivered when any column pair is, and the shape guards and
+    evidence use exactly the co-delivered column pairs; the decision's `columns`
+    name the first of them, else the first code/label pair, else each owner's
+    lexically first column. Co-delivery is exact edition identity, never an
+    overlap of year spans. An unresolved shape matters only when its alternatives
+    disagree about whether the pair can be grouped.
     """
     families: dict[NativeKey, list[EffectiveOccurrence]] = defaultdict(list)
     for occurrence in occurrences:
@@ -273,85 +282,143 @@ def resolve_sibling_pairs(
                 raise ValueError("sibling partition lacks a checked identity decision")
             families[key].append(occurrence)
     pairs, decisions, diagnostics = set(), [], []
+    code_labels: set[tuple[str, str]] = set()
     for family, members in sorted(families.items(), key=lambda item: repr(item[0])):
-        by_column: dict[str, list[EffectiveOccurrence]] = defaultdict(list)
+        # Evidence is keyed by (owner, column): another owner's delivery of the same
+        # spelling is not this owner's co-delivery or shape (#1760). An unowned
+        # column (owner None) still counts toward whether the family co-delivers.
+        by_column: dict[tuple[str | None, str], list[EffectiveOccurrence]] = (
+            defaultdict(list)
+        )
         owner_columns: dict[str, set[str]] = defaultdict(set)
-        editions: dict[NativeKey, set[str]] = defaultdict(set)
+        editions: dict[NativeKey, set[tuple[str | None, str]]] = defaultdict(set)
         for occurrence in members:
             column = _column(occurrence)
-            if column is None:
-                continue
-            by_column[column].append(occurrence)
-            if occurrence.edition_key is not None:
-                editions[occurrence.edition_key].add(column)
             fqid = (
                 identities.get(occurrence.variable_key)
                 if occurrence.variable_key
                 else None
             )
+            if column is None:
+                continue
+            by_column[fqid, column].append(occurrence)
+            if occurrence.edition_key is not None:
+                editions[occurrence.edition_key].add((fqid, column))
             if fqid is not None:
                 owner_columns[fqid].add(column)
         codelivered = {
-            frozenset(pair)
-            for columns in editions.values()
-            for pair in combinations(columns, 2)
+            frozenset((left, right))
+            for owned in editions.values()
+            for left, right in combinations(owned, 2)
+            if left[1] != right[1]
         }
         if not codelivered or len(owner_columns) < 2:
             continue
-        shapes = {column: _latest_shapes(rows) for column, rows in by_column.items()}
+        shapes = {owned: _latest_shapes(rows) for owned, rows in by_column.items()}
         for a, b in combinations(sorted(owner_columns), 2):
             if a.rsplit("/", 1)[0] != b.rsplit("/", 1)[0]:
                 raise ValueError(
                     "one source sibling family maps to different registers"
                 )
-            col_a, col_b = min(owner_columns[a]), min(owner_columns[b])
+            # Every spelling an owner holds is checked: co-delivery under any of them
+            # makes the pair co-delivered (#1760).
+            together = [
+                (col_a, col_b)
+                for col_a, col_b in product(
+                    sorted(owner_columns[a]), sorted(owner_columns[b])
+                )
+                if frozenset(((a, col_a), (b, col_b))) in codelivered
+            ]
+            columns = (
+                together[0]
+                if together
+                else (min(owner_columns[a]), min(owner_columns[b]))
+            )
+            evidence_columns = (
+                {(a, col_a) for col_a, _ in together}
+                | {(b, col_b) for _, col_b in together}
+                if together
+                else {(a, column) for column in owner_columns[a]}
+                | {(b, column) for column in owner_columns[b]}
+            )
             refs = tuple(
                 sorted(
                     {
                         record_ref(record)
-                        for column in (col_a, col_b)
-                        for occurrence in by_column[column]
+                        for owned in evidence_columns
+                        for occurrence in by_column[owned]
                         for record in occurrence.evidence
                     },
                     key=repr,
                 )
             )
             kind = "foldable"
-            if frozenset((col_a, col_b)) in codelivered:
-                if _looks_like_code_label_pair(col_a, col_b):
-                    kind = "code_label"
-                else:
-                    outcomes = {
-                        sibling_shape_conflict(left, right)
-                        for left, right in product(shapes[col_a], shapes[col_b])
-                    }
-                    withheld_shape = any(
-                        {"data_type", "data_length"} & set(row.withheld_fields)
-                        for column in (col_a, col_b)
-                        for row in by_column[column]
-                    )
-                    if outcomes == {True} and not withheld_shape:
-                        kind = "shape_conflict"
-                    elif len(outcomes) > 1 or withheld_shape:
-                        kind = "unresolved_shape"
-                        output = f"same_definition_pair:{a}:{b}"
-                        diagnostics.append(
-                            ResolutionDiagnostic(
-                                code="ambiguous_sibling_shape",
-                                severity="error",
-                                subject=output,
-                                detail="The sibling grouping guard has disputed or withheld source shape evidence.",
-                                refs=refs,
-                                fields=("data_type", "data_length"),
-                                withheld_output=(output,),
-                            )
+            # A code and its label never fold, whether or not these two owners
+            # co-deliver them: the guard reads every spelling pair (#1760, iku).
+            code_label = [
+                pair
+                for pair in product(sorted(owner_columns[a]), sorted(owner_columns[b]))
+                if _looks_like_code_label_pair(*pair)
+            ]
+            if code_label:
+                kind = "code_label"
+                if not together:
+                    columns = code_label[0]
+                col_a, col_b = code_label[0]
+                code_labels.add(
+                    (a, b)
+                    if _is_code_then_label(fold_column(col_a), fold_column(col_b))
+                    else (b, a)
+                )
+            elif together:
+                outcomes = {
+                    sibling_shape_conflict(left, right)
+                    for col_a, col_b in together
+                    for left, right in product(shapes[a, col_a], shapes[b, col_b])
+                }
+                withheld_shape = any(
+                    {"data_type", "data_length"} & set(row.withheld_fields)
+                    for owned in evidence_columns
+                    for row in by_column[owned]
+                )
+                if outcomes == {True} and not withheld_shape:
+                    kind = "shape_conflict"
+                elif len(outcomes) > 1 or withheld_shape:
+                    kind = "unresolved_shape"
+                    output = f"same_definition_pair:{a}:{b}"
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="ambiguous_sibling_shape",
+                            severity="error",
+                            subject=output,
+                            detail="The sibling grouping guard has disputed or withheld source shape evidence.",
+                            refs=refs,
+                            fields=("data_type", "data_length"),
+                            withheld_output=(output,),
                         )
-            decisions.append(
-                SiblingPairDecision(family, a, b, (col_a, col_b), kind, refs)
-            )
+                    )
+            decisions.append(SiblingPairDecision(family, a, b, columns, kind, refs))
             if kind == "foldable":
                 pairs.add((a, b))
     # The same accepted identities can be present in multiple original families.
     # A conflicting family must not be bypassed by an independently eligible edge.
     pairs.difference_update((d.a, d.b) for d in decisions if d.kind != "foldable")
+    # Union across edges must not join a code and its label through a third owner
+    # (#1760): the label owner loses its foldable edges until no such pair shares a
+    # group, so the code keeps its own folds.
+    while True:
+        groups: DisjointSet[str] = DisjointSet()
+        for a, b in pairs:
+            groups.add(a)
+            groups.add(b)
+            groups.union(a, b)
+        linked = {owner for pair in pairs for owner in pair}
+        joined = {
+            label
+            for code, label in code_labels
+            if {code, label} <= linked and groups.find(code) == groups.find(label)
+        }
+        if not joined:
+            break
+        pairs = {pair for pair in pairs if not joined & set(pair)}
     return SiblingResolution(tuple(sorted(pairs)), tuple(decisions), tuple(diagnostics))

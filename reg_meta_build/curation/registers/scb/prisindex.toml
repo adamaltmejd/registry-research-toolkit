@@ -7,6 +7,10 @@ native_id = "296"
 code = "scb/prisindex/produktgrupp-sju-tpi"
 label = "scb/prisindex/prodnamn"
 
+[[code_label_pair]]
+code = "scb/prisindex/kn4kod"
+label = "scb/prisindex/kn4namn"
+
 [[variant]]
 native_id = "296.828"
 slug = "konsumentprisindex-kpi"

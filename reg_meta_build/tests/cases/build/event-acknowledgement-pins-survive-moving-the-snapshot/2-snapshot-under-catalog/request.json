@@ -1,0 +1,19 @@
+{
+  "note": "Step 1's delivery and curation, byte for byte, with the SCB snapshot moved under `catalog/` in the input repository, as the private inputs moved (#1763). The oracle is agreement with step 1: the pins copied there still acknowledge the event here. SCB occurrence records already locate their rows by the bare Registerinformation.csv, so the endpoint record's digest never named the layout.",
+  "fails_if": "`clean_timeseries_row` or `read_scb_events` (reg_meta_build/src/reg_meta_build/sources/scb_reference_records.py) puts the revision's artifact_path (`catalog/snapshot:source/Timeseries.csv`) in an event locator, so the event's evidence digest changes with the input layout and the acknowledgement goes stale",
+  "sources": {
+    "description": "Step 1's delivery, with the snapshot at catalog/snapshot.",
+    "snapshot_path": "catalog/snapshot",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300"}
+      ]
+    },
+    "files": {
+      "SCB/Timeseries.csv": [
+        "Namn|Handelse|Beskrivning|Entitet|ID1|ID2|FilID",
+        "TESTREG|Ersatt av|Ersatt av variabel 999|Variabel|300|999|"
+      ]
+    }
+  }
+}
