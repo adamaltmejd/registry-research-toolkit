@@ -9,6 +9,8 @@
         ["lid"],
         ["lnamn"],
         ["kommun"],
+        ["kommun-2020"],
+        ["kommuntext"],
         ["kommunnamn"],
         ["fornamn"],
         ["efternamn"],
@@ -30,6 +32,9 @@
       "rows": [
         [
           ["efternamn", "fornamn"]
+        ],
+        [
+          ["kommun", "kommun-2020", "kommuntext"]
         ]
       ]
     }

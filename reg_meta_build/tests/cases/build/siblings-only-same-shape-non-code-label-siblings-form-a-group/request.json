@@ -2,10 +2,10 @@
   "replaces": [
     "test_curation_sibling_heuristics_boundary.py::test_only_same_shape_non_code_label_siblings_form_a_group"
   ],
-  "note": "Co-delivered siblings of one source definition group unless a guard keeps them apart: a code/label pair (either column order), a numeric/text type mismatch (Swedish labels classify by ASCII fold), or differing lengths when the type is unclassifiable. Only FORNAMN/EFTERNAMN remain eligible.",
-  "fails_if": "`_looks_like_code_label_pair` stops recognizing a `<stem>namn` label beside its bare, `kod` or `id` code column in either order, so LID/LNAMN, KOMMUN/KOMMUNNAMN or SUN2000KOD/SUN2000NAMN join a concept group",
+  "note": "Co-delivered siblings of one source definition group unless a guard keeps them apart: a code/label pair (either column order), a numeric/text type mismatch (Swedish labels classify by ASCII fold), or differing lengths when the type is unclassifiable. Of the co-delivered pairs only FORNAMN/EFTERNAMN remain eligible. The code/label guard holds whether or not the two owners co-deliver (#1760, the iku kommun case): KOMMUN 2019 is kommun, KOMMUN 2020 is a column_owner's kommun-2020, co-delivered with KOMMUNNAMN. kommun and kommun-2020 are one code delivered in two years and fold; kommun never shares an edition with kommunnamn but is still its code, so it does not fold with it. KOMMUNTEXT 2018 (kommuntext) is neither a code nor a label of the others by name and is never co-delivered, so it is foldable with all three: a bridge that would put kommunnamn in the kommun group through kommuntext. The guard holds for the group, so the group is kommun/kommun-2020/kommuntext without the label.",
+  "fails_if": "`_looks_like_code_label_pair` stops recognizing a `<stem>namn` label beside its bare, `kod` or `id` code column in either order, so LID/LNAMN, KOMMUN/KOMMUNNAMN or SUN2000KOD/SUN2000NAMN join a concept group; or `resolve_sibling_pairs` applies the code/label guard only to co-delivered columns, so kommun (KOMMUN 2019), never co-delivered with kommunnamn, folds with it and the kommun group takes the label; or the guard holds only for a direct edge, so kommunnamn joins the group through kommuntext",
   "sources": {
-    "description": "SCB register 1 delivers eight source variables, each as two columns of one edition; (var_id, column, Datatyp, Datalängd) per row.",
+    "description": "SCB register 1 delivers eight source variables, each as two columns of the 2020 edition; (var_id, column, Datatyp, Datalängd) per row. Variable 200 also delivers KOMMUNTEXT alone in 2018 (CVID 1017, with its unika flags row) and KOMMUN alone in 2019 (CVID 1016).",
     "scb": {
       "registerinformation": [
         {
@@ -31,6 +31,26 @@
           "varname": "Var200",
           "data_type": "int",
           "data_length": "1"
+        },
+        {
+          "cvid": 1017,
+          "var_id": 200,
+          "colname": "KOMMUNTEXT",
+          "varname": "Var200",
+          "data_type": "int",
+          "data_length": "1",
+          "year": "2018",
+          "regver_id": 2018
+        },
+        {
+          "cvid": 1016,
+          "var_id": 200,
+          "colname": "KOMMUN",
+          "varname": "Var200",
+          "data_type": "int",
+          "data_length": "1",
+          "year": "2019",
+          "regver_id": 2019
         },
         {
           "cvid": 1003,
@@ -142,6 +162,7 @@
         "TESTREG|Testregistret|Individer|Individer|Var100 lnamn|LNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var200 kommunnamn|KOMMUNNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUNTEXT|2018|2018|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var300 fornamn|FORNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var300|EFTERNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var400|BELOPP|2020|2020|0|0|0",
