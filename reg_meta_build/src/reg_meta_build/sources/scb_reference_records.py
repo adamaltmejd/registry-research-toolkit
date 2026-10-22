@@ -85,7 +85,10 @@ def clean_timeseries_row(
                 "event",
                 canonical_sha256([cell.model_dump(mode="json") for cell in delivered]),
             ),
-            physical_file=revision.artifact_path,
+            # The bare file name, as SCB occurrence records carry it: the
+            # revision's artifact_path names the input layout, and evidence
+            # digests keep file names (#1763).
+            physical_file="Timeseries.csv",
             physical_table="Timeseries.csv",
             physical_record=f"row:{row_number}",
             physical_cells=tuple(f"row:{row_number}:{name}" for name in header),
@@ -142,7 +145,7 @@ def read_scb_events(
     )
     header_locator = RecordLocator(
         semantic_record_key=("source_header",),
-        physical_file=revision.artifact_path,
+        physical_file=filename,
         physical_table=filename,
         physical_record="row:1",
         physical_cells=tuple(f"row:1:{cell.name}" for cell in header_cells),

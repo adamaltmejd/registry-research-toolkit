@@ -157,6 +157,9 @@ case cannot fail and does not belong here.
 - `files` maps a path under the source directory to its text, for deliveries the other
   keys do not model: an authored `providers/fk.toml` or a `classifications/<slug>.csv`
   code list. The text is a string, or a list of lines joined with newlines.
+- `snapshot_path` is where the input repository holds the SCB snapshot, with the
+  bundle beside it. It defaults to `snapshot`; another value moves the input layout,
+  as `catalog/snapshot` did when the private inputs moved.
 
 The runner prepares each distinct spec once and caches it by the spec's content hash.
 The cache is the reader fixture cache (see `conformance/README.md`, "Fixture cache"):
