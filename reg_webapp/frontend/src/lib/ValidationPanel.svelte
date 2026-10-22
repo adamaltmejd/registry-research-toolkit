@@ -1,109 +1,109 @@
 <script lang="ts">
-import type { OrderBlocking, ValidationResultModel } from "./api";
-import type { SafeSource } from "./project_data";
-import type {
-  RequestErrorSource,
-  ValidationStatus,
-} from "./project_store.svelte";
-import { Button } from "./ui";
-import {
-  codeLabel,
-  type FindingLocation,
-  findingLocation,
-  orderFindingPointer,
-  type ValidationIssue,
-  type WindowCoverageHint,
-  type WindowDisjointFinding,
-} from "./validation";
+  import type { OrderBlocking, ValidationResultModel } from "./api";
+  import type { SafeSource } from "./project_data";
+  import type {
+    RequestErrorSource,
+    ValidationStatus,
+  } from "./project_store.svelte";
+  import { Button } from "./ui";
+  import {
+    codeLabel,
+    type FindingLocation,
+    findingLocation,
+    orderFindingPointer,
+    type ValidationIssue,
+    type WindowCoverageHint,
+    type WindowDisjointFinding,
+  } from "./validation";
 
-// The validation echo (see crates/reg-core/DESIGN.md → Structural rules and issue
-// codes). Renders the `/validate` result's issue list grouped
-// by level (error / warning / info), the ok/not-ok summary, and — distinct from a
-// 200 `ok:false` issue list — a malformed-REQUEST banner (a true 4xx ApiError).
-// Inline field-highlighting against the draft is c-ii; c-i groups by level.
-//
-// Each finding LEADS with the human title (`codeLabel`), DEMOTES the raw `code` to
-// a small muted chip (still the stable identifier people cite), and — instead of
-// leaking the raw JSON pointer — renders a click-to-LOCATE label
-// ("Source 'lisa_main' → column scb/lisa/adeldag", via `findingLocation`) that
-// scrolls to and briefly flashes the relevant source/binding card. `sources` is the
-// draft's (possibly malformed) source list, used only to resolve those labels.
-const {
-  result,
-  status,
-  requestError,
-  requestErrorSource,
-  orderFindings = [],
-  windowHints,
-  windowFindings = [],
-  sources,
-  onRetry,
-  onRetryOrder,
-}: {
-  result: ValidationResultModel | null;
-  status: ValidationStatus;
-  requestError: string | null;
-  /** WHICH request `requestError` came from — the discriminator the retry
-   * affordance below is gated on. */
-  requestErrorSource: RequestErrorSource | null;
-  /** A blocked order's findings (`/order`'s 422). Rendered in the SAME per-finding
-   * shape as a validation issue — they are findings, not a message. */
-  orderFindings?: readonly OrderBlocking[];
-  windowHints: readonly WindowCoverageHint[];
-  /** Sources the common study window has left with no years inside it — the SPA's
-   * own blocking authoring finding (`windowDisjointFindings`), rendered like a
-   * blocked order's findings because it blocks the order the same way. */
-  windowFindings?: readonly WindowDisjointFinding[];
-  sources: readonly SafeSource[];
-  /** Re-runs `/validate`. Offered ONLY for a failed validation REQUEST — see the
-   * banner below. */
-  onRetry?: () => void;
-  /** Re-POSTs `/order`. Offered ONLY for an order request the backend never
-   * answered — see the banner below. */
-  onRetryOrder?: () => void;
-} = $props();
+  // The validation echo (see crates/reg-core/DESIGN.md → Structural rules and issue
+  // codes). Renders the `/validate` result's issue list grouped
+  // by level (error / warning / info), the ok/not-ok summary, and — distinct from a
+  // 200 `ok:false` issue list — a malformed-REQUEST banner (a true 4xx ApiError).
+  // Inline field-highlighting against the draft is c-ii; c-i groups by level.
+  //
+  // Each finding LEADS with the human title (`codeLabel`), DEMOTES the raw `code` to
+  // a small muted chip (still the stable identifier people cite), and — instead of
+  // leaking the raw JSON pointer — renders a click-to-LOCATE label
+  // ("Source 'lisa_main' → column scb/lisa/adeldag", via `findingLocation`) that
+  // scrolls to and briefly flashes the relevant source/binding card. `sources` is the
+  // draft's (possibly malformed) source list, used only to resolve those labels.
+  const {
+    result,
+    status,
+    requestError,
+    requestErrorSource,
+    orderFindings = [],
+    windowHints,
+    windowFindings = [],
+    sources,
+    onRetry,
+    onRetryOrder,
+  }: {
+    result: ValidationResultModel | null;
+    status: ValidationStatus;
+    requestError: string | null;
+    /** WHICH request `requestError` came from — the discriminator the retry
+     * affordance below is gated on. */
+    requestErrorSource: RequestErrorSource | null;
+    /** A blocked order's findings (`/order`'s 422). Rendered in the SAME per-finding
+     * shape as a validation issue — they are findings, not a message. */
+    orderFindings?: readonly OrderBlocking[];
+    windowHints: readonly WindowCoverageHint[];
+    /** Sources the common study window has left with no years inside it — the SPA's
+     * own blocking authoring finding (`windowDisjointFindings`), rendered like a
+     * blocked order's findings because it blocks the order the same way. */
+    windowFindings?: readonly WindowDisjointFinding[];
+    sources: readonly SafeSource[];
+    /** Re-runs `/validate`. Offered ONLY for a failed validation REQUEST — see the
+     * banner below. */
+    onRetry?: () => void;
+    /** Re-POSTs `/order`. Offered ONLY for an order request the backend never
+     * answered — see the banner below. */
+    onRetryOrder?: () => void;
+  } = $props();
 
-// Scroll the located card into view and flash it. Imperative (not a binding):
-// findings live in this panel, cards live in sibling components, and the flash is a
-// one-shot visual cue — restarting the CSS animation on re-click needs a reflow
-// between class removal and re-add.
-function locate(anchorId: string): void {
-  const el = document.getElementById(anchorId);
-  if (el == null) {
-    return;
+  // Scroll the located card into view and flash it. Imperative (not a binding):
+  // findings live in this panel, cards live in sibling components, and the flash is a
+  // one-shot visual cue — restarting the CSS animation on re-click needs a reflow
+  // between class removal and re-add.
+  function locate(anchorId: string): void {
+    const el = document.getElementById(anchorId);
+    if (el == null) {
+      return;
+    }
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.remove("locate-flash");
+    void el.offsetWidth; // force reflow so the animation re-triggers on re-click
+    el.classList.add("locate-flash");
   }
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-  el.classList.remove("locate-flash");
-  void el.offsetWidth; // force reflow so the animation re-triggers on re-click
-  el.classList.add("locate-flash");
-}
 
-const LEVELS = ["error", "warning", "info"] as const;
-type Level = (typeof LEVELS)[number];
+  const LEVELS = ["error", "warning", "info"] as const;
+  type Level = (typeof LEVELS)[number];
 
-// Group the issues by level (stable order: errors first). `$derived.by` so the
-// grouping recomputes when `result` changes.
-const grouped = $derived.by<Record<Level, ValidationIssue[]>>(() => {
-  const out: Record<Level, ValidationIssue[]> = {
-    error: [],
-    warning: [],
-    info: [],
+  // Group the issues by level (stable order: errors first). `$derived.by` so the
+  // grouping recomputes when `result` changes.
+  const grouped = $derived.by<Record<Level, ValidationIssue[]>>(() => {
+    const out: Record<Level, ValidationIssue[]> = {
+      error: [],
+      warning: [],
+      info: [],
+    };
+    for (const issue of result?.issues ?? []) {
+      // An unknown level (forward-compat) buckets under `info` so it still shows.
+      const level: Level = LEVELS.includes(issue.level as Level)
+        ? (issue.level as Level)
+        : "info";
+      out[level].push(issue);
+    }
+    return out;
+  });
+
+  const LEVEL_LABEL: Record<Level, string> = {
+    error: "Errors",
+    warning: "Warnings",
+    info: "Info",
   };
-  for (const issue of result?.issues ?? []) {
-    // An unknown level (forward-compat) buckets under `info` so it still shows.
-    const level: Level = LEVELS.includes(issue.level as Level)
-      ? (issue.level as Level)
-      : "info";
-    out[level].push(issue);
-  }
-  return out;
-});
-
-const LEVEL_LABEL: Record<Level, string> = {
-  error: "Errors",
-  warning: "Warnings",
-  info: "Info",
-};
 </script>
 
 <!-- Where a finding sits in the draft, for BOTH finding lists below (a validation
@@ -178,13 +178,20 @@ const LEVEL_LABEL: Record<Level, string> = {
   {#if orderFindings.length > 0}
     <!-- Named + associated so the alert above never has to say "below": the
          heading IS this group's accessible name. -->
-    <div class="group error" role="group" aria-labelledby="order-findings-heading">
+    <div
+      class="group error"
+      role="group"
+      aria-labelledby="order-findings-heading"
+    >
       <h4 class="micro-label" id="order-findings-heading">
         Blocking findings ({orderFindings.length})
       </h4>
       <ul>
         {#each orderFindings as finding, i (`${finding.code}|${finding.variable ?? ""}|${finding.period ?? ""}|${i}`)}
-          {@const loc = findingLocation(orderFindingPointer(finding, sources), sources)}
+          {@const loc = findingLocation(
+            orderFindingPointer(finding, sources),
+            sources,
+          )}
           <li>
             <div class="issue-head">
               <span class="label">{codeLabel(finding.code)}</span>
@@ -210,7 +217,11 @@ const LEVEL_LABEL: Record<Level, string> = {
        decides — an authoring finding, not a validator's, ahead of the validator's
        verdict because it is the one that closes the download. -->
   {#if windowFindings.length > 0}
-    <div class="group error" role="group" aria-labelledby="window-findings-heading">
+    <div
+      class="group error"
+      role="group"
+      aria-labelledby="window-findings-heading"
+    >
       <h4 class="micro-label" id="window-findings-heading">
         Blocking the order: outside the study window ({windowFindings.length})
       </h4>
@@ -244,7 +255,11 @@ const LEVEL_LABEL: Record<Level, string> = {
     <p class="muted">Validation has not run for this draft yet.</p>
   {:else}
     <p
-      class="summary {status === 'warnings' ? 'warning' : result.ok ? 'ok' : 'fail'}"
+      class="summary {status === 'warnings'
+        ? 'warning'
+        : result.ok
+          ? 'ok'
+          : 'fail'}"
       role="status"
     >
       {#if result.ok}
@@ -256,8 +271,8 @@ const LEVEL_LABEL: Record<Level, string> = {
              evidence of, so it comes back only when there are notes. -->
         {status === "warnings" ? "Draft valid with warnings" : "Draft valid"}
         {#if status === "warnings"}
-          — project rules and catalog metadata checked.
-          ({result.issues.length} non-blocking {result.issues.length === 1 ? "note" : "notes"}.)
+          — project rules and catalog metadata checked. ({result.issues.length} non-blocking
+          {result.issues.length === 1 ? "note" : "notes"}.)
         {/if}
       {:else}
         Draft not valid — {grouped.error.length}
@@ -267,7 +282,9 @@ const LEVEL_LABEL: Record<Level, string> = {
     {#each LEVELS as level (level)}
       {#if grouped[level].length > 0}
         <div class="group {level}">
-          <h4 class="micro-label">{LEVEL_LABEL[level]} ({grouped[level].length})</h4>
+          <h4 class="micro-label">
+            {LEVEL_LABEL[level]} ({grouped[level].length})
+          </h4>
           <ul>
             {#each grouped[level] as issue, i (`${issue.code}|${issue.path}|${i}`)}
               {@const loc = findingLocation(issue.path, sources)}
@@ -301,7 +318,9 @@ const LEVEL_LABEL: Record<Level, string> = {
            an issue-free draft leaves the validation area at one line, and the
            researcher's next click on an ENABLED download control runs those checks
            for real. -->
-      <p class="muted">Generating <code>order.json</code> runs its own order checks.</p>
+      <p class="muted">
+        Generating <code>order.json</code> runs its own order checks.
+      </p>
     {/if}
   {/if}
 
@@ -317,15 +336,15 @@ const LEVEL_LABEL: Record<Level, string> = {
         {#each windowHints as hint, i (i)}
           <li>
             <p class="message">{hint.message}</p>
-          <div class="locators">
-            {#if hint.catalogHref}
-              <a class="catalog-link" href={hint.catalogHref}>
-                Extend in catalog: <code>{hint.catalogLabel}</code>
-              </a>
-            {:else}
-              <span class="path muted">{hint.label}</span>
-            {/if}
-          </div>
+            <div class="locators">
+              {#if hint.catalogHref}
+                <a class="catalog-link" href={hint.catalogHref}>
+                  Extend in catalog: <code>{hint.catalogLabel}</code>
+                </a>
+              {:else}
+                <span class="path muted">{hint.label}</span>
+              {/if}
+            </div>
           </li>
         {/each}
       </ul>

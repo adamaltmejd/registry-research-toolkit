@@ -4,9 +4,6 @@ import { render } from "vitest-browser-svelte";
 import type { GraphEdge, RelationshipGraph } from "./api";
 import { OPEN_ENDED_VALID_TO, pickerRepresentations } from "./catalog";
 import { CELL_MIN_W } from "./picker_graph";
-import RepresentationPicker, {
-  type PickerBand,
-} from "./RepresentationPicker.svelte";
 import {
   atEveryWidth,
   edge,
@@ -18,6 +15,9 @@ import {
   PROPS,
   row,
 } from "./representation-picker-test-helpers";
+import RepresentationPicker, {
+  type PickerBand,
+} from "./RepresentationPicker.svelte";
 
 // Split from RepresentationPicker.browser.test.ts by contract surface: coexisting-variant row identity (Y-14).
 // Siblings: RepresentationPicker.{graph,graph-fallback,graph-history,labels,filters,staging,row-identity}.browser.test.ts.

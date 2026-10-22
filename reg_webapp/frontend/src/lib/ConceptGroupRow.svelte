@@ -1,22 +1,22 @@
 <script lang="ts">
-import type { ConceptGroup } from "./api";
-import { distinctMemberCount } from "./catalog";
-import { Tag } from "./ui";
+  import type { ConceptGroup } from "./api";
+  import { distinctMemberCount } from "./catalog";
+  import { Tag } from "./ui";
 
-// One concept-group row (#303) in the register-browse and classification-umbrella
-// arms. It LINKS to the group's own subject page (#673/#756): register groups →
-// `/catalog/group/<p>/<r>/<key>`, classification umbrellas →
-// `/catalog/group/class/<key>`. The members, their facets and any picking live on
-// that page (ConceptGroupView), not inline here.
-let {
-  group,
-  noun = "variables",
-  href,
-}: {
-  group: ConceptGroup;
-  noun?: string;
-  href: string;
-} = $props();
+  // One concept-group row (#303) in the register-browse and classification-umbrella
+  // arms. It LINKS to the group's own subject page (#673/#756): register groups →
+  // `/catalog/group/<p>/<r>/<key>`, classification umbrellas →
+  // `/catalog/group/class/<key>`. The members, their facets and any picking live on
+  // that page (ConceptGroupView), not inline here.
+  let {
+    group,
+    noun = "variables",
+    href,
+  }: {
+    group: ConceptGroup;
+    noun?: string;
+    href: string;
+  } = $props();
 </script>
 
 <!-- One interactive element per row (no nested controls). -->
@@ -29,7 +29,9 @@ let {
        facet value is its own variable) and umbrellas (distinct classifications).
        The count is a neutral chrome pill (Tag tone="neutral"): a quantity, not a
        TYPE, so it must not borrow the categorical group hue. -->
-  <span class="count"><Tag tone="neutral">{distinctMemberCount(group.members)} {noun}</Tag></span>
+  <span class="count"
+    ><Tag tone="neutral">{distinctMemberCount(group.members)} {noun}</Tag></span
+  >
 </a>
 
 <style>

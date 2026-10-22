@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
-import PeriodPicker from "./PeriodPicker.svelte";
 import type { Coverage } from "./period";
+import PeriodPicker from "./PeriodPicker.svelte";
 import type { ProjectStudyWindow } from "./project_data";
 
 // The catalog PeriodPicker. The control is the #615 year-window availability

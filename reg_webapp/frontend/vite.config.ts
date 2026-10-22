@@ -1,7 +1,7 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { playwright } from "vite-plus/test/browser-playwright";
 // Vite+'s defineConfig types the `test`, `lint` and `fmt` blocks below.
 import { configDefaults, defineConfig } from "vite-plus";
+import { playwright } from "vite-plus/test/browser-playwright";
 import type { BrowserCommand } from "vite-plus/test/node";
 import {
   chromiumLaunchArgs,

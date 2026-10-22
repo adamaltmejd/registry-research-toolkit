@@ -14,8 +14,8 @@ import {
   tickColumn,
   withLisaVariants,
 } from "./catalog-node-view-test-helpers";
-import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { projectStore } from "./project_store.svelte";
 import { windowStore } from "./window.svelte";
 
 // CatalogNodeView reads one node via `getShow(fqidPath)` and switches on

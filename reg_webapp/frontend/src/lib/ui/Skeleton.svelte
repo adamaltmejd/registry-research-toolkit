@@ -1,28 +1,31 @@
 <script lang="ts">
-// Loading placeholder (#804) — replaces bare `aria-busy` text with a shimmer
-// block. The visual is `aria-hidden`: the LOADING SEMANTICS belong to the
-// container (the panel/region that swaps Skeleton for content sets its own
-// `aria-busy`/live-region), so the placeholder itself is decorative and stays
-// out of the a11y tree.
-//
-// Honors `prefers-reduced-motion`: the shimmer animation is gated behind a
-// `no-preference` query, so reduced-motion users get a static block (the
-// data-tool motion budget — DESIGN.md → motion).
+  // Loading placeholder (#804) — replaces bare `aria-busy` text with a shimmer
+  // block. The visual is `aria-hidden`: the LOADING SEMANTICS belong to the
+  // container (the panel/region that swaps Skeleton for content sets its own
+  // `aria-busy`/live-region), so the placeholder itself is decorative and stays
+  // out of the a11y tree.
+  //
+  // Honors `prefers-reduced-motion`: the shimmer animation is gated behind a
+  // `no-preference` query, so reduced-motion users get a static block (the
+  // data-tool motion budget — DESIGN.md → motion).
 
-interface Props {
-  variant?: "line" | "block";
-  /** CSS width (e.g. "12rem", "60%"). Defaults to full width. */
-  width?: string;
-  /** Repeat count — render N stacked placeholders. */
-  count?: number;
-}
+  interface Props {
+    variant?: "line" | "block";
+    /** CSS width (e.g. "12rem", "60%"). Defaults to full width. */
+    width?: string;
+    /** Repeat count — render N stacked placeholders. */
+    count?: number;
+  }
 
-let { variant = "line", width, count = 1 }: Props = $props();
+  let { variant = "line", width, count = 1 }: Props = $props();
 </script>
 
 <div class="skeleton-stack" aria-hidden="true">
   {#each { length: count } as _, i (i)}
-    <div class="skeleton {variant}" style={width ? `width: ${width}` : undefined}></div>
+    <div
+      class="skeleton {variant}"
+      style={width ? `width: ${width}` : undefined}
+    ></div>
   {/each}
 </div>
 

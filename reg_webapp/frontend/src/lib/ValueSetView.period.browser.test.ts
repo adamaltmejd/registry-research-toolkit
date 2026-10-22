@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { getValues } from "./api";
-import ValueSetView from "./ValueSetView.svelte";
 import {
   classState,
   coding,
@@ -11,6 +10,7 @@ import {
   serveValues,
   state,
 } from "./value-set-view-test-helpers";
+import ValueSetView from "./ValueSetView.svelte";
 
 // Split from ValueSetView.browser.test.ts by contract surface:
 // period scope (out-of-period collapse, empty and period-aware single-state modes).

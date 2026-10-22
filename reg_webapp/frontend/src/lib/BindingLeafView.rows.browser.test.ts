@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { getStates } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   pickerStates,
@@ -11,6 +10,7 @@ import {
   single,
   state,
 } from "./binding-leaf-view-test-helpers";
+import BindingLeafView from "./BindingLeafView.svelte";
 import { router } from "./router.svelte";
 
 // Split from BindingLeafView.browser.test.ts by contract surface: picker row rendering and ?codes deep links.

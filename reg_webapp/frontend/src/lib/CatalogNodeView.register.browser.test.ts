@@ -7,7 +7,6 @@ import { render } from "vitest-browser-svelte";
 import type { RegisterShow } from "./api";
 import { getRelatedDocuments, getShow, getStates } from "./api";
 import { registerShow } from "./api-test-helpers";
-import CatalogNodeView from "./CatalogNodeView.svelte";
 import {
   clickVariantChip,
   columnedRegisterNode,
@@ -15,6 +14,7 @@ import {
   splitColumnRegisterNode,
   withLisaVariants,
 } from "./catalog-node-view-test-helpers";
+import CatalogNodeView from "./CatalogNodeView.svelte";
 import { projectStore } from "./project_store.svelte";
 import { windowStore } from "./window.svelte";
 

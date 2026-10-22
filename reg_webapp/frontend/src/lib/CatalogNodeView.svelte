@@ -1,983 +1,986 @@
 <script lang="ts">
-import {
-  type ClassificationRootShow,
-  type ConceptGroup,
-  getShow,
-  getStates,
-  type ShowNode,
-  type VariableChild,
-  type VariableDeliveryModel,
-  type VariableStateModel,
-} from "./api";
-import { asyncResource } from "./async.svelte";
-import BindingLeafView from "./BindingLeafView.svelte";
-import ClassificationGroupView from "./ClassificationGroupView.svelte";
-import ClassificationLeafView from "./ClassificationLeafView.svelte";
-import ConceptGroupRow from "./ConceptGroupRow.svelte";
-import {
-  addWindowBounds,
-  axisNoun,
-  bindingChildren,
-  catalogHref,
-  classGroupHref,
-  countFoldedMembers,
-  deliveryColumnRows,
-  deliveryWindows,
-  foldGroupedRows,
-  type GroupedRow,
-  groupFilterKeys,
-  groupHref,
-  leafSlug,
-  narrowGroupsToMembers,
-  nodeLabel,
-  OPEN_ENDED_VALID_TO,
-  type PickerRepresentation,
-  pickerWindowYears,
-  rankFilter,
-  registerPrefixOf,
-  rowCoversColumn,
-  variantLabel,
-  windowsOverlapWindow,
-  YEARLESS_VALID_FROM,
-} from "./catalog";
-import FilterInput from "./FilterInput.svelte";
-import { clampYearWindow, yearWindowLabel } from "./period";
-import { projectStore } from "./project_store.svelte";
-import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import StagedAddStatus from "./StagedAddStatus.svelte";
-import {
-  ADD_WINDOW_REQUIRED_MESSAGE,
-  applyStagedPicks,
-  type CommittedMarker,
-  committedMarker,
-  committedPickerRows,
-  pickerRowKey,
-  rowDeliversInScope,
-  type StagedApplyOutcome,
-  type StagedPick,
-  type StagedPickerBand,
-  stagedApplyRefusal,
-  windowsOverlapPeriod,
-} from "./staged_picker";
-import {
-  Button,
-  type Column,
-  DataTable,
-  EmptyState,
-  FilterChip,
-  Panel,
-  Skeleton,
-  Tag,
-} from "./ui";
-import VariantsSummary from "./VariantsSummary.svelte";
-import { windowStore } from "./window.svelte";
+  import {
+    type ClassificationRootShow,
+    type ConceptGroup,
+    getShow,
+    getStates,
+    type ShowNode,
+    type VariableChild,
+    type VariableDeliveryModel,
+    type VariableStateModel,
+  } from "./api";
+  import { asyncResource } from "./async.svelte";
+  import BindingLeafView from "./BindingLeafView.svelte";
+  import {
+    addWindowBounds,
+    axisNoun,
+    bindingChildren,
+    catalogHref,
+    classGroupHref,
+    countFoldedMembers,
+    deliveryColumnRows,
+    deliveryWindows,
+    foldGroupedRows,
+    type GroupedRow,
+    groupFilterKeys,
+    groupHref,
+    leafSlug,
+    narrowGroupsToMembers,
+    nodeLabel,
+    OPEN_ENDED_VALID_TO,
+    type PickerRepresentation,
+    pickerWindowYears,
+    rankFilter,
+    registerPrefixOf,
+    rowCoversColumn,
+    variantLabel,
+    windowsOverlapWindow,
+    YEARLESS_VALID_FROM,
+  } from "./catalog";
+  import ClassificationGroupView from "./ClassificationGroupView.svelte";
+  import ClassificationLeafView from "./ClassificationLeafView.svelte";
+  import ConceptGroupRow from "./ConceptGroupRow.svelte";
+  import FilterInput from "./FilterInput.svelte";
+  import { clampYearWindow, yearWindowLabel } from "./period";
+  import { projectStore } from "./project_store.svelte";
+  import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
+  import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+  import {
+    ADD_WINDOW_REQUIRED_MESSAGE,
+    applyStagedPicks,
+    type CommittedMarker,
+    committedMarker,
+    committedPickerRows,
+    pickerRowKey,
+    rowDeliversInScope,
+    type StagedApplyOutcome,
+    type StagedPick,
+    type StagedPickerBand,
+    stagedApplyRefusal,
+    windowsOverlapPeriod,
+  } from "./staged_picker";
+  import StagedAddStatus from "./StagedAddStatus.svelte";
+  import {
+    Button,
+    type Column,
+    DataTable,
+    EmptyState,
+    FilterChip,
+    Panel,
+    Skeleton,
+    Tag,
+  } from "./ui";
+  import VariantsSummary from "./VariantsSummary.svelte";
+  import { windowStore } from "./window.svelte";
 
-// The provider arm renders its register list as a real DataTable: a Register
-// (name → catalog link) column and a Description (the purpose blurb, 2-line
-// clamped) column. The cell content is custom (a link / a clamped blurb), so the
-// `cell` escape hatch owns rendering; the column `key`s just index the row.
-type RegisterRow = {
-  fqid: string;
-  name?: string | null;
-  purpose?: string | null;
-};
-const registerColumns: Column<RegisterRow>[] = [
-  { key: "name", label: "Register" },
-  { key: "purpose", label: "Description" },
-];
-
-/** One delivery column beside a variable (Y-82): the name SCB delivers it under
- * — what a researcher who knows LISA by its columns is hunting for — and the
- * eras THAT NAME was delivered over, as ISO `windows` and as the `years` label
- * printed beside it. Y-83 adds the picker `rows` its checkbox stages — the
- * variable's rows that DELIVER this name, which is one per variant shipping it,
- * or the one row a #902 rename folded it into.
- *
- * The three era fields answer different questions and the cell needs all of
- * them. `windows` is NAME-grain — the name's eras pooled across every variant
- * that ships it — which is what the label prints and what OFFERS the tick, since
- * one tick covers them all. `windowsByVariant` keeps those same eras per
- * (variant, name), the grain an ADD is decided at: a sibling variant still
- * shipping a retired name would otherwise lend its years to the variant that
- * renamed it. The rows are COMMIT-grain: a folded rename is ONE row spanning the
- * whole chain, so gating on them would offer a retired name for its successor's
- * years (Y-104). */
-type DeliveryColumn = {
-  name: string;
-  years: string[];
-  windows: { from: string; to: string }[];
-  windowsByVariant: Map<string, { from: string; to: string }[]>;
-  rows: PickerRepresentation[];
-};
-
-type VariableBrowseRow =
-  | {
-      id: string;
-      kind: "group";
-      group: ConceptGroup;
-      label: string;
-      href: string;
-      /** A group row names no column: its members carry their own, shown in the
-       * facet navigator the row expands to. */
-      columns: DeliveryColumn[];
-    }
-  | {
-      id: string;
-      kind: "leaf";
-      fqid: string;
-      label: string;
-      columns: DeliveryColumn[];
-    };
-
-const variableColumns: Column<VariableBrowseRow>[] = [
-  { key: "label", label: "Variable" },
-  { key: "columns", label: "Delivery column", mono: true },
-];
-
-type ClassificationChild = ClassificationRootShow["children"][number];
-type ClassificationFamily = ClassificationRootShow["families"][number];
-
-type ClassificationBrowseRow =
-  | {
-      id: string;
-      kind: "family";
-      family: ClassificationFamily;
-      label: string;
-      href: string;
-      shortName: string;
-    }
-  | {
-      id: string;
-      kind: "group";
-      group: ConceptGroup;
-      label: string;
-      noun: string;
-      href: string;
-      shortName: "";
-    }
-  | {
-      id: string;
-      kind: "leaf";
-      fqid: string;
-      label: string;
-      shortName: string;
-    };
-
-const classificationColumns: Column<ClassificationBrowseRow>[] = [
-  { key: "label", label: "Name" },
-  { key: "shortName", label: "Current edition", align: "end" },
-];
-
-function variableBrowseRows(
-  rows: GroupedRow<VariableChild>[],
-  registerFqid: string,
-  columnsByFqid: Map<string, DeliveryColumn[]>,
-): VariableBrowseRow[] {
-  return rows.map((row) =>
-    row.kind === "group"
-      ? {
-          id: `group:${row.group.key}`,
-          kind: "group",
-          group: row.group,
-          label: row.group.label,
-          href: groupHref(registerFqid, row.group.key),
-          columns: [],
-        }
-      : {
-          id: row.item.fqid,
-          kind: "leaf",
-          fqid: row.item.fqid,
-          label: row.item.name ?? row.item.fqid,
-          columns: columnsByFqid.get(row.item.fqid) ?? [],
-        },
-  );
-}
-
-/** A register child's delivery columns, de-duplicated by NAME across the
- * variants that deliver it (one name = one column of the register, whichever
- * variants ship it) and carrying the union of those deliveries' windows. A
- * state SCB named no column for contributes nothing to name. Reads whatever
- * deliveries the child carries, so a child already narrowed by the chip lens
- * names only that variant's columns.
- *
- * `rows` are the variable's own picker rows that deliver the name — passed in
- * rather than built per column, because a #902 rename is ONE row two names lead
- * to, and the tick, the "In project" marker and the add all read that row. */
-function deliveryColumns(
-  child: VariableChild,
-  rows: readonly PickerRepresentation[],
-): DeliveryColumn[] {
-  const byName = new Map<string, VariableDeliveryModel[]>();
-  for (const delivery of child.deliveries) {
-    if (delivery.column == null) {
-      continue;
-    }
-    const named = byName.get(delivery.column);
-    if (named) {
-      named.push(delivery);
-    } else {
-      byName.set(delivery.column, [delivery]);
-    }
-  }
-  // A lone column needs no era label — there is nothing to tell it apart from —
-  // UNLESS its own delivery was interrupted, where the gap is the one thing the
-  // years say that the name does not (Y-104). Known before the rows are built, so
-  // the cell just renders whatever `years` holds.
-  const several = byName.size > 1;
-  return [...byName]
-    .map(([name, deliveries]) => {
-      // The eras THIS NAME was delivered over, per VARIANT that ships it —
-      // never the rows' windows, which for a folded rename span the chain's
-      // whole history. Kept split because an add is per (variant, name) even
-      // though the tick and the label are per name.
-      const byVariant = new Map<string, { from: string; to: string }[]>();
-      for (const d of deliveries) {
-        const eras = byVariant.get(d.variant) ?? [];
-        for (const w of d.windows) {
-          eras.push({ from: w.valid_from, to: w.valid_to });
-        }
-        byVariant.set(d.variant, eras);
-      }
-      const windowsByVariant = new Map(
-        [...byVariant].map(([variant, eras]) => [
-          variant,
-          deliveryWindows(eras),
-        ]),
-      );
-      // Pooled for the label and the tick: the name was delivered in a year if
-      // ANY variant delivered it then, which is what the researcher reads.
-      const windows = deliveryWindows([...byVariant.values()].flat());
-      return {
-        name,
-        years: several || windows.length > 1 ? eraLabels(windows) : [],
-        windows,
-        windowsByVariant,
-        rows: rows.filter((row) => rowCoversColumn(row, name)),
-      };
-    })
-    .sort(
-      (a, b) =>
-        firstYear(a.windows).localeCompare(firstYear(b.windows)) ||
-        a.name.localeCompare(b.name),
-    );
-}
-
-/** Sort key for a column: the year its earliest DATED era began. A column whose
- * eras all begin before the record does has no year to run with, so the
- * open-ended ceiling sorts it last. */
-function firstYear(windows: readonly { from: string; to: string }[]): string {
-  const dated = windows.find((w) => w.from !== YEARLESS_VALID_FROM);
-  return (dated?.from ?? OPEN_ENDED_VALID_TO).slice(0, 4);
-}
-
-/** A column's delivery years — ONE LABEL PER DISJOINT ERA, in order:
- * ["1968", "1995–1996", "1998–"] for a column delivered, interrupted, and
- * delivered again (Y-104). A list, not a joined string, because the cell renders
- * each era as its own unbreakable run: this page spells "still delivered" as a
- * TRAILING DASH, so a "1995–" left at the end of a wrapped line would read as
- * open-ended when it is the head of a closed range.
- *
- * The labels are YEAR-grain and the eras are not, so eras that differ can label
- * the same: a #319 monthly family missing a month is delivered in two disjoint
- * SUB-YEAR eras inside 2018, and "2018, 2018" tells a reader nothing the one
- * entry does not. Repeats are always adjacent — the windows are disjoint and
- * ordered, so a label can only recur while the year does — and are dropped. */
-function eraLabels(windows: readonly { from: string; to: string }[]): string[] {
-  const labels: string[] = [];
-  for (const window of windows) {
-    const label = eraYears(window);
-    if (label && label !== labels.at(-1)) {
-      labels.push(label);
-    }
-  }
-  return labels;
-}
-
-/** One era as years: "2018", "1990–2021", "2022–" while still delivered, or
- * "–1968" where delivery began before the record does. The undated side takes the
- * same bare dash the dated one does, so an era is never dropped from the list — a
- * missing entry would read as a delivery gap, which is the one thing this label
- * exists to show. An era undated at BOTH ends says nothing and is left out. */
-function eraYears(window: { from: string; to: string }): string {
-  const open = window.to === OPEN_ENDED_VALID_TO;
-  if (window.from === YEARLESS_VALID_FROM) {
-    return open ? "" : `–${window.to.slice(0, 4)}`;
-  }
-  const from = window.from.slice(0, 4);
-  return open
-    ? `${from}–`
-    : yearWindowLabel({
-        from: Number(from),
-        to: Number(window.to.slice(0, 4)),
-      });
-}
-
-/** Above this many eras, the label folds (Y-110): an interrupted delivery can run
- * to a dozen-plus disjoint eras, which pushes the row's NAME onto its own line
- * above a multi-line year block. At or under it the whole list still prints, same
- * as Y-104's own shape — 2–3 eras is the ordinary interrupted case and needs no
- * folding. */
-const ERA_LABEL_LIMIT = 3;
-
-/** The eras a column's label actually prints, and which ones it folds away. Past
- * `ERA_LABEL_LIMIT` only the first and last era print — the boundaries of the
- * whole delivery history — behind a `+N` affordance; the cell gives that
- * affordance both a `title` and an accessible name carrying the folded eras, so a
- * reader can see or hear every era without the row paying for it in height. */
-function visibleEras(years: readonly string[]): {
-  shown: readonly string[];
-  hidden: readonly string[];
-} {
-  if (years.length <= ERA_LABEL_LIMIT) {
-    return { shown: years, hidden: [] };
-  }
-  return {
-    shown: [years[0], years.at(-1) ?? years[0]],
-    hidden: years.slice(1, -1),
+  // The provider arm renders its register list as a real DataTable: a Register
+  // (name → catalog link) column and a Description (the purpose blurb, 2-line
+  // clamped) column. The cell content is custom (a link / a clamped blurb), so the
+  // `cell` escape hatch owns rendering; the column `key`s just index the row.
+  type RegisterRow = {
+    fqid: string;
+    name?: string | null;
+    purpose?: string | null;
   };
-}
+  const registerColumns: Column<RegisterRow>[] = [
+    { key: "name", label: "Register" },
+    { key: "purpose", label: "Description" },
+  ];
 
-/** The `+N` affordance's accessible name (Y-110): the hidden eras it folds away,
- * so a screen-reader user hears what a hovering reader sees in the `title` — the
- * visible "+N" alone would say only a count, never which eras it stands for. */
-function eraFoldLabel(hidden: readonly string[]): string {
-  return `+${hidden.length} more era${hidden.length === 1 ? "" : "s"}: ${hidden.join(", ")}`;
-}
+  /** One delivery column beside a variable (Y-82): the name SCB delivers it under
+   * — what a researcher who knows LISA by its columns is hunting for — and the
+   * eras THAT NAME was delivered over, as ISO `windows` and as the `years` label
+   * printed beside it. Y-83 adds the picker `rows` its checkbox stages — the
+   * variable's rows that DELIVER this name, which is one per variant shipping it,
+   * or the one row a #902 rename folded it into.
+   *
+   * The three era fields answer different questions and the cell needs all of
+   * them. `windows` is NAME-grain — the name's eras pooled across every variant
+   * that ships it — which is what the label prints and what OFFERS the tick, since
+   * one tick covers them all. `windowsByVariant` keeps those same eras per
+   * (variant, name), the grain an ADD is decided at: a sibling variant still
+   * shipping a retired name would otherwise lend its years to the variant that
+   * renamed it. The rows are COMMIT-grain: a folded rename is ONE row spanning the
+   * whole chain, so gating on them would offer a retired name for its successor's
+   * years (Y-104). */
+  type DeliveryColumn = {
+    name: string;
+    years: string[];
+    windows: { from: string; to: string }[];
+    windowsByVariant: Map<string, { from: string; to: string }[]>;
+    rows: PickerRepresentation[];
+  };
 
-function classificationBrowseRows(
-  rows: GroupedRow<ClassificationChild>[],
-  families: ClassificationFamily[],
-): ClassificationBrowseRow[] {
-  const familyRows: ClassificationBrowseRow[] = families.map((family) => ({
-    id: `family:${family.key}`,
-    kind: "family",
-    family,
-    label: `${family.label} (${family.editions.length} editions)`,
-    href: classGroupHref(family.key),
-    shortName: familyCurrentLabel(family),
-  }));
-  const itemRows: ClassificationBrowseRow[] = rows.map(
-    (row): ClassificationBrowseRow =>
+  type VariableBrowseRow =
+    | {
+        id: string;
+        kind: "group";
+        group: ConceptGroup;
+        label: string;
+        href: string;
+        /** A group row names no column: its members carry their own, shown in the
+         * facet navigator the row expands to. */
+        columns: DeliveryColumn[];
+      }
+    | {
+        id: string;
+        kind: "leaf";
+        fqid: string;
+        label: string;
+        columns: DeliveryColumn[];
+      };
+
+  const variableColumns: Column<VariableBrowseRow>[] = [
+    { key: "label", label: "Variable" },
+    { key: "columns", label: "Delivery column", mono: true },
+  ];
+
+  type ClassificationChild = ClassificationRootShow["children"][number];
+  type ClassificationFamily = ClassificationRootShow["families"][number];
+
+  type ClassificationBrowseRow =
+    | {
+        id: string;
+        kind: "family";
+        family: ClassificationFamily;
+        label: string;
+        href: string;
+        shortName: string;
+      }
+    | {
+        id: string;
+        kind: "group";
+        group: ConceptGroup;
+        label: string;
+        noun: string;
+        href: string;
+        shortName: "";
+      }
+    | {
+        id: string;
+        kind: "leaf";
+        fqid: string;
+        label: string;
+        shortName: string;
+      };
+
+  const classificationColumns: Column<ClassificationBrowseRow>[] = [
+    { key: "label", label: "Name" },
+    { key: "shortName", label: "Current edition", align: "end" },
+  ];
+
+  function variableBrowseRows(
+    rows: GroupedRow<VariableChild>[],
+    registerFqid: string,
+    columnsByFqid: Map<string, DeliveryColumn[]>,
+  ): VariableBrowseRow[] {
+    return rows.map((row) =>
       row.kind === "group"
         ? {
             id: `group:${row.group.key}`,
             kind: "group",
             group: row.group,
             label: row.group.label,
-            noun: axisNoun(row.group.axes),
-            href: classGroupHref(row.group.key),
-            shortName: "",
+            href: groupHref(registerFqid, row.group.key),
+            columns: [],
           }
         : {
             id: row.item.fqid,
             kind: "leaf",
             fqid: row.item.fqid,
             label: row.item.name ?? row.item.fqid,
-            shortName: row.item.short_name ?? "",
+            columns: columnsByFqid.get(row.item.fqid) ?? [],
           },
-  );
-  return [...familyRows, ...itemRows];
-}
-
-function familyCurrentLabel(family: ClassificationFamily): string {
-  const current = family.editions.filter((edition) => edition.is_current);
-  if (current.length === 1) {
-    return current[0]?.slug ?? "";
-  }
-  if (current.length > 1) {
-    return `${current.length} current`;
-  }
-  return `${family.editions.length} editions`;
-}
-
-function browseRowId(row: { id: string }): string {
-  return row.id;
-}
-
-function registerRowId(row: RegisterRow): string {
-  return row.fqid;
-}
-
-// Fetches and renders one catalog node by ref (`show`), switching on its `kind`.
-// A variable delegates to `BindingLeafView`, which owns the period/variant
-// resolution, warnings, graph and lineage (A5.3b); this view hands it the node and
-// the variable's whole state history, read before the leaf renders.
-let {
-  fqidPath,
-  regMetaVersion,
-  steward,
-  windowMinYear,
-  vintageYear,
-  windowMaxYear = vintageYear,
-  enforcePeriodBounds = false,
-}: {
-  fqidPath: string;
-  // C1: the deployment seed, threaded to BindingLeafView's "Add to project" so a
-  // pristine store can implicitly create the project (App → here → BindingLeafView).
-  regMetaVersion: string;
-  steward: string;
-  // #1037: steward-aware period-control bounds, threaded to BindingLeafView's
-  // period picker. Kept separate from `vintageYear`, which is the true catalog
-  // vintage for open-ended graph timelines.
-  windowMinYear: number;
-  // #631: the true catalog vintage year (App derives it from
-  // context.import_date), used by graph/picker timelines that need to
-  // extend open-ended histories to the catalog build vintage.
-  vintageYear: number;
-  windowMaxYear?: number;
-  // #1037: true only when App's bounds came from context.period_span,
-  // making them hard picker limits rather than global fallback hints.
-  enforcePeriodBounds?: boolean;
-} = $props();
-
-// One resource for both reads, so the page's single loading/error surface covers
-// the variable's states too: the leaf renders from its whole history, and a
-// failed states read is the page's error like a failed `show`. The states are read
-// by the node's CANONICAL fqid (a retired ref resolves to its successor).
-const resource = asyncResource(
-  async (): Promise<{
-    node: ShowNode;
-    states: VariableStateModel[];
-  }> => {
-    const node = await getShow(fqidPath);
-    const states = node.kind === "variable" ? await getStates(node.fqid) : [];
-    return { node, states };
-  },
-);
-const node = $derived(resource.data?.node ?? null);
-const states = $derived(resource.data?.states ?? []);
-const classificationSubjectKey = $derived.by((): string | null => {
-  if (node?.kind !== "classification") {
-    return null;
-  }
-  return node.family?.key ?? node.dimensions[0]?.key ?? null;
-});
-
-// In-memory type-to-filter over the current node's child list (a provider's 238
-// registers / a register's 740 bindings render flat otherwise). Reset on
-// navigation so a new node opens unfiltered. `rankFilter` matches on the leaf
-// slug + display name + FQID (registers also match their purpose blurb) and,
-// under an active filter, RANKS the survivors (exact → prefix → other-substring)
-// so a slug-named target jumps above a purpose-blurb-only match (#674); an empty
-// needle leaves the incoming alphabetical order untouched. matchesFilter folds
-// diacritics.
-let filter = $state("");
-// The register arm's variant chips (Y-82): multi-select, OR within the
-// selection, the same interaction as the group page's per-axis facet filters.
-// Filter-only — it narrows what the list shows, never the project.
-let selectedVariants = $state(new Set<string>());
-// Set by `clearVariants` (Y-94) so the live region announces the return to the
-// whole register once; `toggleVariant` and the navigation reset below both
-// supersede it (a new selection, or leaving the register, means the lift is no
-// longer the last thing that happened to the strip).
-let variantsLifted = $state(false);
-// The fieldset wrapping the chips (Y-94): bound so `clearVariants` can move
-// focus onto the strip BEFORE the "Clear variant filter" button — which
-// renders only `{#if selectedVariants.size > 0}` — unmounts out from under it.
-// Losing focus there would drop it to `<body>` with nothing announced (a6).
-let variantChipsEl = $state<HTMLFieldSetElement | null>(null);
-// Bumped every time the route below resets — the component is REUSED across
-// catalog paths (register → register included), so `fqidPath` changing is not
-// an unmount. `batchGuard` captures this alongside the project generation and
-// the study window, so a batch whose page changed while it was in flight is
-// abandoned rather than completing onto whatever page is on screen now. A plain
-// variable, not `$state`: nothing reads it reactively (only `batchGuard`'s
-// closure, well after this effect runs), and incrementing a tracked value inside
-// the very effect that depends on it is the read-writes-the-same-state loop
-// Svelte's `effect_update_depth_exceeded` warns about.
-let routeGeneration = 0;
-$effect(() => {
-  // `fqidPath` is the navigation key — touching it here clears the filter when
-  // the route changes (the component is reused across catalog paths).
-  void fqidPath;
-  filter = "";
-  selectedVariants = new Set();
-  variantsLifted = false;
-  selectedColumns = new Map();
-  addRefusal = null;
-  applyOutcome = null;
-  routeGeneration += 1;
-});
-
-function toggleVariant(variant: string): void {
-  const next = new Set(selectedVariants);
-  if (!next.delete(variant)) {
-    next.add(variant);
-  }
-  // Reassign so the `$state` proxy tracks the change (as ConceptGroupNavigator).
-  selectedVariants = next;
-  variantsLifted = false;
-}
-
-/** Lift the variant lens — the way back to the whole register. Leaves the text
- * filter alone, which is why the control says "variant filter". Moves focus to
- * the chip strip's first chip before emptying the selection (Y-94/a6): once
- * `selectedVariants` is empty the "Clear variant filter" button this handler
- * runs from unmounts, so focus has to already be somewhere that survives. */
-function clearVariants(): void {
-  variantChipsEl?.querySelector<HTMLInputElement>("input")?.focus();
-  variantsLifted = true;
-  selectedVariants = new Set();
-}
-
-// Everything the register arm derives from the node, hoisted OUT of the template
-// so it is computed once per node instead of once per keystroke: the text filter
-// re-runs its whole `{@const}` chain on every character, and none of this depends
-// on what was typed. (Empty for every other node kind — `bindingChildren` returns
-// [] unless the node is a register.)
-const registerChildren = $derived(node ? bindingChildren(node) : []);
-const registerGroups = $derived(
-  node && node.kind === "register" ? node.groups : undefined,
-);
-
-// The register's variants ride its node, and the Variants section below reads the
-// same list: the chips must spell a variant the way that section does.
-const registerVariantList = $derived(
-  node && node.kind === "register" ? node.variants : [],
-);
-/** How a variant is SPELLED on its chip: its catalog name — the word the Variants
- * section uses. The slug is the fallback, for a slug this list does not name. */
-const variantNames = $derived(
-  new Map(registerVariantList.map((v) => [v.slug, variantLabel(v)])),
-);
-
-// The variants that deliver at least one of this register's variables — the chip
-// set, read off the children rather than the register's variant list so a chip
-// can never narrow the list to nothing. A register delivered by ONE variant has
-// no variant axis to filter on, so it shows no chips. Ordered by SLUG.
-const registerVariants = $derived.by(() => {
-  const seen = new Set<string>();
-  for (const child of registerChildren) {
-    for (const delivery of child.deliveries) {
-      seen.add(delivery.variant);
-    }
-  }
-  return [...seen].sort();
-});
-
-// The chip lens, applied ONCE and to the data: each surviving child keeps only the
-// selected variants' deliveries (OR within the selection), and a child none of
-// them delivers is dropped. Everything downstream — the rows, the column cells,
-// the filter keys — then reads one already-narrowed list and never has to know
-// that variants exist. An empty selection is the whole register, untouched.
-const lensedChildren = $derived.by(() => {
-  if (selectedVariants.size === 0) {
-    return registerChildren;
-  }
-  const kept: VariableChild[] = [];
-  for (const child of registerChildren) {
-    const deliveries = child.deliveries.filter((d) =>
-      selectedVariants.has(d.variant),
     );
-    if (deliveries.length > 0) {
-      kept.push({ ...child, deliveries });
-    }
   }
-  return kept;
-});
 
-// The picker rows per child, off the LENSED children: one row per (variant,
-// representation) the variable is delivered as, over the exact eras the
-// deliveries carry (Y-104). The unit an Add commits in — the columns below point
-// at these, a band stages them, and a #902 rename is one row both its names lead
-// to.
-const rowsByFqid = $derived(
-  new Map(
-    lensedChildren.map((child) => [
-      child.fqid,
-      deliveryColumnRows(child.deliveries),
-    ]),
-  ),
-);
-
-// The delivery columns per child, off the LENSED children — so the cell and the
-// filter's column keys both say only what the selected variants deliver. The
-// filter reads them on every keystroke (twice per row — match, then rank) and the
-// surviving rows render them.
-const columnsByFqid = $derived(
-  new Map(
-    lensedChildren.map((child) => [
-      child.fqid,
-      deliveryColumns(child, rowsByFqid.get(child.fqid) ?? []),
-    ]),
-  ),
-);
-
-/** A child's delivery column NAMES, for the filter's match keys. */
-function columnNames(fqid: string): string[] {
-  return (columnsByFqid.get(fqid) ?? []).map((column) => column.name);
-}
-
-// #303 concept-group folding: grouped bindings become one expandable group row,
-// ungrouped bindings stay leaf rows. `registerRows` folds the WHOLE register —
-// the "of N" the readouts count against. `narrowedRows` folds the chip lens: the
-// lens narrows the CHILDREN and the groups' members FIRST, so a surviving group
-// row counts and indexes only what the selected variants deliver, and a group
-// left with one member gives way to that member's own leaf row. The text
-// filter ranks what is left, in the template, because only IT changes per
-// keystroke.
-const registerRows = $derived(
-  foldGroupedRows(registerChildren, registerGroups),
-);
-const narrowedRows = $derived(
-  selectedVariants.size === 0
-    ? registerRows
-    : foldGroupedRows(
-        lensedChildren,
-        narrowGroupsToMembers(registerGroups, lensedChildren),
-      ),
-);
-
-// ── Y-83: add delivery columns straight from the register list ───────────────
-// A researcher who knows LISA by its columns ticks ForvErs, ForvInk, Kon and
-// Alder here and adds all four in one action, instead of opening four variable
-// pages. The staging stack is the leaf's (`staged_picker.ts`): this page owns only
-// its own selection + scope, and every add still lands through
-// `projectStore.applyStagedDiff` (DESIGN.md -> Browse-only authoring).
-//
-// One BAND per listed variable, its rows the variable's own picker rows — so a
-// tick stages one add per (variable, concrete variant, representation), the same
-// fan-out `rowAddSegments` performs for a variable's own page. Built off the
-// LENSED children, so an active variant chip narrows what a tick adds to exactly
-// what the row shows.
-const pickerBands = $derived.by((): StagedPickerBand[] =>
-  lensedChildren.map((child) => ({
-    key: child.fqid,
-    registerPrefix: registerPrefixOf(child.fqid),
-    rows: rowsByFqid.get(child.fqid) ?? [],
-  })),
-);
-
-// The deployment seed is ready once /api/context has populated BOTH fields: an
-// implicit project created with an empty seed is never re-seeded, so the add stays
-// disabled until it lands (sub-second) — as on the leaf.
-const seedReady = $derived(regMetaVersion !== "" && steward !== "");
-
-// The register list carries NO period control of its own, so the study window IS
-// the add's period: every add is clipped to it, and without one an open-ended
-// column has no finite period to commit — `applyStagedPicks` refuses the batch and
-// the nudge points at the rail's window.
-const boundedProjectWindow = $derived(
-  windowStore.value === null || !enforcePeriodBounds
-    ? windowStore.value
-    : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
-);
-const addScope = $derived({
-  period: null,
-  window: pickerWindowYears(null, boundedProjectWindow),
-});
-/** The add scope as inclusive ISO bounds — what a delivery's eras are matched
- * against. Derived once: the cell asks it per listed column, and `stagedBatch`
- * per ticked one. */
-const addBounds = $derived(
-  addWindowBounds(addScope.period, addScope.window ?? null),
-);
-
-/** Is this column offered — for a tick, and for the batch a press stages? THIS
- * NAME's own eras met with the add scope, never the folded row's, which for a
- * rename chain spans the successor's years too. ONE predicate for the cell and
- * `stagedBatch`, so a tick can never be offered under a gate the Add then applies
- * differently — the Add only narrows it, per (variant, name), which no box could
- * show: a tick is one box over every variant that ships the name. A name with NO
- * eras (an alias spelling on a variant with no states of its own) is never
- * offered: there is no window to wait for, and no row to stage either. */
-function columnOffered(column: DeliveryColumn): boolean {
-  return (
-    column.windows.length > 0 && windowsOverlapWindow(column.windows, addBounds)
-  );
-}
-
-/** A scope's window in years — how a row and a refusal name it ("1990–2021"). */
-function scopeYears(scope: { window?: [number, number] | null }): string {
-  return scope.window
-    ? yearWindowLabel({ from: scope.window[0], to: scope.window[1] })
-    : "";
-}
-const windowYears = $derived(scopeYears(addScope));
-
-// Which listed columns are ALREADY in the draft — keyed by `pickerRowKey`, the
-// staging identity, so the marker is read from the same match the commit is.
-const committedRows = $derived(
-  committedPickerRows(projectStore.draft, pickerBands, addScope),
-);
-
-/** The tick identity: a delivery column of one variable. Deliberately NOT the
- * picker row key — one tick covers every variant that delivers the name. */
-function columnKey(fqid: string, name: string): string {
-  return `${fqid}::${name}`;
-}
-
-/** The ticked columns, each mapped to the concrete variants the list SHOWED that
- * column under at the moment it was ticked. The variants ride along because the chip
- * lens is LIVE and a tick is not: read at Add time instead, a lens lifted since the
- * tick would widen it to variants the researcher never saw, and a lens moved to
- * another variant would swap the tick onto that one. What an Add stages is the
- * intersection of the two (`stagedBatch`) — never wider than what was on screen when
- * the tick was made, never wider than what is on screen now.
- *
- * The captured variants are the rows' own `variant` heads, which is the whole row
- * here: the rows are built from deliveries that carry no `variant_family`
- * (`deliveryColumnRows`), so nothing in them is family-folded and a head never stands
- * for a concrete variant it does not name. */
-let selectedColumns = $state(new Map<string, ReadonlySet<string>>());
-let applying = $state(false);
-
-/** Why the last Add authored NOTHING, else null. ONE slot rather than a flag per
- * gate: every Add ends by setting it — to a reason, or to null — so a verdict about
- * one batch can never outlive the batch it refused. */
-let addRefusal = $state<string | null>(null);
-
-/** What the last Add committed (`addSelected`). Cleared on every exit but a
- * successful apply, same as `addRefusal`. */
-let applyOutcome = $state<StagedApplyOutcome | null>(null);
-
-function toggleColumn(fqid: string, column: DeliveryColumn): void {
-  const next = new Map(selectedColumns);
-  const key = columnKey(fqid, column.name);
-  // Off what the BOX reads (`stagedColumnKeys`), not off the bare key: a tick the
-  // lens has moved out of the batch shows as unticked, and clicking an unticked box
-  // must tick it. So a click always leaves the column in the state its box shows the
-  // opposite of — and re-ticking re-captures, under the variants on screen now.
-  if (stagedColumnKeys.has(key)) {
-    next.delete(key);
-  } else {
-    // Captured HERE rather than read back at Add time: what the row shows now is
-    // what the researcher is choosing, and the lens can move before they press Add.
-    next.set(key, new Set(column.rows.map((row) => row.variant)));
-  }
-  // Reassign so the `$state` proxy tracks the change (as `toggleVariant`).
-  selectedColumns = next;
-}
-
-/** Which listed columns are ALREADY fully in the draft, by tick identity, each with
- * the marker its "In project" tag wears against the study window (`committedMarker`;
- * the most severe across the variants that deliver it — one source outside the
- * window blocks the order however many others match it). Read off
- * `committedPickerRows` — the same match the commit is — and a column counts only
- * when EVERY variant's row for it is committed: partial cover (one variant added
- * from its own page) reads as NOT added, so the tick still has something to do.
- * Computed once per draft change rather than per rendered cell, and skipped
- * outright while nothing is committed (the ordinary browsing state). */
-const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
-  const committed = new Map<string, CommittedMarker>();
-  if (committedRows.size === 0) {
-    return committed;
-  }
-  for (const band of pickerBands) {
-    for (const column of columnsByFqid.get(band.key) ?? []) {
-      const markers: CommittedMarker[] = [];
-      if (
-        column.rows.length > 0 &&
-        column.rows.every((row) => {
-          const match = committedRows.get(pickerRowKey(band, row));
-          if (match !== undefined) {
-            markers.push(
-              committedMarker(match.sourcePeriod, boundedProjectWindow),
-            );
-          }
-          // THIS VARIANT's eras for the name must be inside what was committed, not
-          // just the ROW's: a #902 rename chain is ONE row spanning the whole chain,
-          // so a row-grain marker would say "In project" on a retired name whose
-          // years the committed source never reached — beside a tick refusing it.
-          // Pooled eras would do the same across variants, lending one variant's
-          // still-current name to the one that renamed it.
-          return (
-            match !== undefined &&
-            windowsOverlapPeriod(
-              column.windowsByVariant.get(row.variant) ?? [],
-              match.period,
-            )
-          );
-        })
-      ) {
-        committed.set(
-          columnKey(band.key, column.name),
-          markers.find((m) => m.tone === "error") ??
-            markers.find((m) => m.detail !== null) ??
-            markers[0],
-        );
+  /** A register child's delivery columns, de-duplicated by NAME across the
+   * variants that deliver it (one name = one column of the register, whichever
+   * variants ship it) and carrying the union of those deliveries' windows. A
+   * state SCB named no column for contributes nothing to name. Reads whatever
+   * deliveries the child carries, so a child already narrowed by the chip lens
+   * names only that variant's columns.
+   *
+   * `rows` are the variable's own picker rows that deliver the name — passed in
+   * rather than built per column, because a #902 rename is ONE row two names lead
+   * to, and the tick, the "In project" marker and the add all read that row. */
+  function deliveryColumns(
+    child: VariableChild,
+    rows: readonly PickerRepresentation[],
+  ): DeliveryColumn[] {
+    const byName = new Map<string, VariableDeliveryModel[]>();
+    for (const delivery of child.deliveries) {
+      if (delivery.column == null) {
+        continue;
+      }
+      const named = byName.get(delivery.column);
+      if (named) {
+        named.push(delivery);
+      } else {
+        byName.set(delivery.column, [delivery]);
       }
     }
+    // A lone column needs no era label — there is nothing to tell it apart from —
+    // UNLESS its own delivery was interrupted, where the gap is the one thing the
+    // years say that the name does not (Y-104). Known before the rows are built, so
+    // the cell just renders whatever `years` holds.
+    const several = byName.size > 1;
+    return [...byName]
+      .map(([name, deliveries]) => {
+        // The eras THIS NAME was delivered over, per VARIANT that ships it —
+        // never the rows' windows, which for a folded rename span the chain's
+        // whole history. Kept split because an add is per (variant, name) even
+        // though the tick and the label are per name.
+        const byVariant = new Map<string, { from: string; to: string }[]>();
+        for (const d of deliveries) {
+          const eras = byVariant.get(d.variant) ?? [];
+          for (const w of d.windows) {
+            eras.push({ from: w.valid_from, to: w.valid_to });
+          }
+          byVariant.set(d.variant, eras);
+        }
+        const windowsByVariant = new Map(
+          [...byVariant].map(([variant, eras]) => [
+            variant,
+            deliveryWindows(eras),
+          ]),
+        );
+        // Pooled for the label and the tick: the name was delivered in a year if
+        // ANY variant delivered it then, which is what the researcher reads.
+        const windows = deliveryWindows([...byVariant.values()].flat());
+        return {
+          name,
+          years: several || windows.length > 1 ? eraLabels(windows) : [],
+          windows,
+          windowsByVariant,
+          rows: rows.filter((row) => rowCoversColumn(row, name)),
+        };
+      })
+      .sort(
+        (a, b) =>
+          firstYear(a.windows).localeCompare(firstYear(b.windows)) ||
+          a.name.localeCompare(b.name),
+      );
   }
-  return committed;
-});
 
-// The staged batch: the LIVE list met with the ticks. Each ticked column NAME maps
-// onto the rows that DELIVER it — the variable's own rows, so what the list authors
-// is what its variable's page authors. A tick whose column the variant lens has since
-// hidden, or the study window has moved off, contributes nothing, and a variant it did
-// not cover when it was made is never added back — so the batch is bounded by BOTH the
-// page the tick was made on and the page it will be pressed on, and the count on the
-// bar always describes what the button adds.
-//
-// `adds` and `columns` are derived TOGETHER because they are two readings of one
-// sweep, in two different units, and the page shows both: the rows an Apply commits,
-// and the COLUMNS the bar counts and the confirmation reports. The rows are never the
-// unit a researcher sees — a column two variants deliver is one column and two adds,
-// and a renamed column ticked under both its names is two columns and one add — and
-// deriving them apart would let the promise and the confirmation disagree.
-const stagedBatch = $derived.by(
-  (): {
-    adds: StagedPick[];
-    columns: Set<string>;
-  } => {
-    const adds: StagedPick[] = [];
-    const columns = new Set<string>();
-    if (selectedColumns.size === 0) {
-      return { adds, columns };
+  /** Sort key for a column: the year its earliest DATED era began. A column whose
+   * eras all begin before the record does has no year to run with, so the
+   * open-ended ceiling sorts it last. */
+  function firstYear(windows: readonly { from: string; to: string }[]): string {
+    const dated = windows.find((w) => w.from !== YEARLESS_VALID_FROM);
+    return (dated?.from ?? OPEN_ENDED_VALID_TO).slice(0, 4);
+  }
+
+  /** A column's delivery years — ONE LABEL PER DISJOINT ERA, in order:
+   * ["1968", "1995–1996", "1998–"] for a column delivered, interrupted, and
+   * delivered again (Y-104). A list, not a joined string, because the cell renders
+   * each era as its own unbreakable run: this page spells "still delivered" as a
+   * TRAILING DASH, so a "1995–" left at the end of a wrapped line would read as
+   * open-ended when it is the head of a closed range.
+   *
+   * The labels are YEAR-grain and the eras are not, so eras that differ can label
+   * the same: a #319 monthly family missing a month is delivered in two disjoint
+   * SUB-YEAR eras inside 2018, and "2018, 2018" tells a reader nothing the one
+   * entry does not. Repeats are always adjacent — the windows are disjoint and
+   * ordered, so a label can only recur while the year does — and are dropped. */
+  function eraLabels(
+    windows: readonly { from: string; to: string }[],
+  ): string[] {
+    const labels: string[] = [];
+    for (const window of windows) {
+      const label = eraYears(window);
+      if (label && label !== labels.at(-1)) {
+        labels.push(label);
+      }
+    }
+    return labels;
+  }
+
+  /** One era as years: "2018", "1990–2021", "2022–" while still delivered, or
+   * "–1968" where delivery began before the record does. The undated side takes the
+   * same bare dash the dated one does, so an era is never dropped from the list — a
+   * missing entry would read as a delivery gap, which is the one thing this label
+   * exists to show. An era undated at BOTH ends says nothing and is left out. */
+  function eraYears(window: { from: string; to: string }): string {
+    const open = window.to === OPEN_ENDED_VALID_TO;
+    if (window.from === YEARLESS_VALID_FROM) {
+      return open ? "" : `–${window.to.slice(0, 4)}`;
+    }
+    const from = window.from.slice(0, 4);
+    return open
+      ? `${from}–`
+      : yearWindowLabel({
+          from: Number(from),
+          to: Number(window.to.slice(0, 4)),
+        });
+  }
+
+  /** Above this many eras, the label folds (Y-110): an interrupted delivery can run
+   * to a dozen-plus disjoint eras, which pushes the row's NAME onto its own line
+   * above a multi-line year block. At or under it the whole list still prints, same
+   * as Y-104's own shape — 2–3 eras is the ordinary interrupted case and needs no
+   * folding. */
+  const ERA_LABEL_LIMIT = 3;
+
+  /** The eras a column's label actually prints, and which ones it folds away. Past
+   * `ERA_LABEL_LIMIT` only the first and last era print — the boundaries of the
+   * whole delivery history — behind a `+N` affordance; the cell gives that
+   * affordance both a `title` and an accessible name carrying the folded eras, so a
+   * reader can see or hear every era without the row paying for it in height. */
+  function visibleEras(years: readonly string[]): {
+    shown: readonly string[];
+    hidden: readonly string[];
+  } {
+    if (years.length <= ERA_LABEL_LIMIT) {
+      return { shown: years, hidden: [] };
+    }
+    return {
+      shown: [years[0], years.at(-1) ?? years[0]],
+      hidden: years.slice(1, -1),
+    };
+  }
+
+  /** The `+N` affordance's accessible name (Y-110): the hidden eras it folds away,
+   * so a screen-reader user hears what a hovering reader sees in the `title` — the
+   * visible "+N" alone would say only a count, never which eras it stands for. */
+  function eraFoldLabel(hidden: readonly string[]): string {
+    return `+${hidden.length} more era${hidden.length === 1 ? "" : "s"}: ${hidden.join(", ")}`;
+  }
+
+  function classificationBrowseRows(
+    rows: GroupedRow<ClassificationChild>[],
+    families: ClassificationFamily[],
+  ): ClassificationBrowseRow[] {
+    const familyRows: ClassificationBrowseRow[] = families.map((family) => ({
+      id: `family:${family.key}`,
+      kind: "family",
+      family,
+      label: `${family.label} (${family.editions.length} editions)`,
+      href: classGroupHref(family.key),
+      shortName: familyCurrentLabel(family),
+    }));
+    const itemRows: ClassificationBrowseRow[] = rows.map(
+      (row): ClassificationBrowseRow =>
+        row.kind === "group"
+          ? {
+              id: `group:${row.group.key}`,
+              kind: "group",
+              group: row.group,
+              label: row.group.label,
+              noun: axisNoun(row.group.axes),
+              href: classGroupHref(row.group.key),
+              shortName: "",
+            }
+          : {
+              id: row.item.fqid,
+              kind: "leaf",
+              fqid: row.item.fqid,
+              label: row.item.name ?? row.item.fqid,
+              shortName: row.item.short_name ?? "",
+            },
+    );
+    return [...familyRows, ...itemRows];
+  }
+
+  function familyCurrentLabel(family: ClassificationFamily): string {
+    const current = family.editions.filter((edition) => edition.is_current);
+    if (current.length === 1) {
+      return current[0]?.slug ?? "";
+    }
+    if (current.length > 1) {
+      return `${current.length} current`;
+    }
+    return `${family.editions.length} editions`;
+  }
+
+  function browseRowId(row: { id: string }): string {
+    return row.id;
+  }
+
+  function registerRowId(row: RegisterRow): string {
+    return row.fqid;
+  }
+
+  // Fetches and renders one catalog node by ref (`show`), switching on its `kind`.
+  // A variable delegates to `BindingLeafView`, which owns the period/variant
+  // resolution, warnings, graph and lineage (A5.3b); this view hands it the node and
+  // the variable's whole state history, read before the leaf renders.
+  let {
+    fqidPath,
+    regMetaVersion,
+    steward,
+    windowMinYear,
+    vintageYear,
+    windowMaxYear = vintageYear,
+    enforcePeriodBounds = false,
+  }: {
+    fqidPath: string;
+    // C1: the deployment seed, threaded to BindingLeafView's "Add to project" so a
+    // pristine store can implicitly create the project (App → here → BindingLeafView).
+    regMetaVersion: string;
+    steward: string;
+    // #1037: steward-aware period-control bounds, threaded to BindingLeafView's
+    // period picker. Kept separate from `vintageYear`, which is the true catalog
+    // vintage for open-ended graph timelines.
+    windowMinYear: number;
+    // #631: the true catalog vintage year (App derives it from
+    // context.import_date), used by graph/picker timelines that need to
+    // extend open-ended histories to the catalog build vintage.
+    vintageYear: number;
+    windowMaxYear?: number;
+    // #1037: true only when App's bounds came from context.period_span,
+    // making them hard picker limits rather than global fallback hints.
+    enforcePeriodBounds?: boolean;
+  } = $props();
+
+  // One resource for both reads, so the page's single loading/error surface covers
+  // the variable's states too: the leaf renders from its whole history, and a
+  // failed states read is the page's error like a failed `show`. The states are read
+  // by the node's CANONICAL fqid (a retired ref resolves to its successor).
+  const resource = asyncResource(
+    async (): Promise<{
+      node: ShowNode;
+      states: VariableStateModel[];
+    }> => {
+      const node = await getShow(fqidPath);
+      const states = node.kind === "variable" ? await getStates(node.fqid) : [];
+      return { node, states };
+    },
+  );
+  const node = $derived(resource.data?.node ?? null);
+  const states = $derived(resource.data?.states ?? []);
+  const classificationSubjectKey = $derived.by((): string | null => {
+    if (node?.kind !== "classification") {
+      return null;
+    }
+    return node.family?.key ?? node.dimensions[0]?.key ?? null;
+  });
+
+  // In-memory type-to-filter over the current node's child list (a provider's 238
+  // registers / a register's 740 bindings render flat otherwise). Reset on
+  // navigation so a new node opens unfiltered. `rankFilter` matches on the leaf
+  // slug + display name + FQID (registers also match their purpose blurb) and,
+  // under an active filter, RANKS the survivors (exact → prefix → other-substring)
+  // so a slug-named target jumps above a purpose-blurb-only match (#674); an empty
+  // needle leaves the incoming alphabetical order untouched. matchesFilter folds
+  // diacritics.
+  let filter = $state("");
+  // The register arm's variant chips (Y-82): multi-select, OR within the
+  // selection, the same interaction as the group page's per-axis facet filters.
+  // Filter-only — it narrows what the list shows, never the project.
+  let selectedVariants = $state(new Set<string>());
+  // Set by `clearVariants` (Y-94) so the live region announces the return to the
+  // whole register once; `toggleVariant` and the navigation reset below both
+  // supersede it (a new selection, or leaving the register, means the lift is no
+  // longer the last thing that happened to the strip).
+  let variantsLifted = $state(false);
+  // The fieldset wrapping the chips (Y-94): bound so `clearVariants` can move
+  // focus onto the strip BEFORE the "Clear variant filter" button — which
+  // renders only `{#if selectedVariants.size > 0}` — unmounts out from under it.
+  // Losing focus there would drop it to `<body>` with nothing announced (a6).
+  let variantChipsEl = $state<HTMLFieldSetElement | null>(null);
+  // Bumped every time the route below resets — the component is REUSED across
+  // catalog paths (register → register included), so `fqidPath` changing is not
+  // an unmount. `batchGuard` captures this alongside the project generation and
+  // the study window, so a batch whose page changed while it was in flight is
+  // abandoned rather than completing onto whatever page is on screen now. A plain
+  // variable, not `$state`: nothing reads it reactively (only `batchGuard`'s
+  // closure, well after this effect runs), and incrementing a tracked value inside
+  // the very effect that depends on it is the read-writes-the-same-state loop
+  // Svelte's `effect_update_depth_exceeded` warns about.
+  let routeGeneration = 0;
+  $effect(() => {
+    // `fqidPath` is the navigation key — touching it here clears the filter when
+    // the route changes (the component is reused across catalog paths).
+    void fqidPath;
+    filter = "";
+    selectedVariants = new Set();
+    variantsLifted = false;
+    selectedColumns = new Map();
+    addRefusal = null;
+    applyOutcome = null;
+    routeGeneration += 1;
+  });
+
+  function toggleVariant(variant: string): void {
+    const next = new Set(selectedVariants);
+    if (!next.delete(variant)) {
+      next.add(variant);
+    }
+    // Reassign so the `$state` proxy tracks the change (as ConceptGroupNavigator).
+    selectedVariants = next;
+    variantsLifted = false;
+  }
+
+  /** Lift the variant lens — the way back to the whole register. Leaves the text
+   * filter alone, which is why the control says "variant filter". Moves focus to
+   * the chip strip's first chip before emptying the selection (Y-94/a6): once
+   * `selectedVariants` is empty the "Clear variant filter" button this handler
+   * runs from unmounts, so focus has to already be somewhere that survives. */
+  function clearVariants(): void {
+    variantChipsEl?.querySelector<HTMLInputElement>("input")?.focus();
+    variantsLifted = true;
+    selectedVariants = new Set();
+  }
+
+  // Everything the register arm derives from the node, hoisted OUT of the template
+  // so it is computed once per node instead of once per keystroke: the text filter
+  // re-runs its whole `{@const}` chain on every character, and none of this depends
+  // on what was typed. (Empty for every other node kind — `bindingChildren` returns
+  // [] unless the node is a register.)
+  const registerChildren = $derived(node ? bindingChildren(node) : []);
+  const registerGroups = $derived(
+    node && node.kind === "register" ? node.groups : undefined,
+  );
+
+  // The register's variants ride its node, and the Variants section below reads the
+  // same list: the chips must spell a variant the way that section does.
+  const registerVariantList = $derived(
+    node && node.kind === "register" ? node.variants : [],
+  );
+  /** How a variant is SPELLED on its chip: its catalog name — the word the Variants
+   * section uses. The slug is the fallback, for a slug this list does not name. */
+  const variantNames = $derived(
+    new Map(registerVariantList.map((v) => [v.slug, variantLabel(v)])),
+  );
+
+  // The variants that deliver at least one of this register's variables — the chip
+  // set, read off the children rather than the register's variant list so a chip
+  // can never narrow the list to nothing. A register delivered by ONE variant has
+  // no variant axis to filter on, so it shows no chips. Ordered by SLUG.
+  const registerVariants = $derived.by(() => {
+    const seen = new Set<string>();
+    for (const child of registerChildren) {
+      for (const delivery of child.deliveries) {
+        seen.add(delivery.variant);
+      }
+    }
+    return [...seen].sort();
+  });
+
+  // The chip lens, applied ONCE and to the data: each surviving child keeps only the
+  // selected variants' deliveries (OR within the selection), and a child none of
+  // them delivers is dropped. Everything downstream — the rows, the column cells,
+  // the filter keys — then reads one already-narrowed list and never has to know
+  // that variants exist. An empty selection is the whole register, untouched.
+  const lensedChildren = $derived.by(() => {
+    if (selectedVariants.size === 0) {
+      return registerChildren;
+    }
+    const kept: VariableChild[] = [];
+    for (const child of registerChildren) {
+      const deliveries = child.deliveries.filter((d) =>
+        selectedVariants.has(d.variant),
+      );
+      if (deliveries.length > 0) {
+        kept.push({ ...child, deliveries });
+      }
+    }
+    return kept;
+  });
+
+  // The picker rows per child, off the LENSED children: one row per (variant,
+  // representation) the variable is delivered as, over the exact eras the
+  // deliveries carry (Y-104). The unit an Add commits in — the columns below point
+  // at these, a band stages them, and a #902 rename is one row both its names lead
+  // to.
+  const rowsByFqid = $derived(
+    new Map(
+      lensedChildren.map((child) => [
+        child.fqid,
+        deliveryColumnRows(child.deliveries),
+      ]),
+    ),
+  );
+
+  // The delivery columns per child, off the LENSED children — so the cell and the
+  // filter's column keys both say only what the selected variants deliver. The
+  // filter reads them on every keystroke (twice per row — match, then rank) and the
+  // surviving rows render them.
+  const columnsByFqid = $derived(
+    new Map(
+      lensedChildren.map((child) => [
+        child.fqid,
+        deliveryColumns(child, rowsByFqid.get(child.fqid) ?? []),
+      ]),
+    ),
+  );
+
+  /** A child's delivery column NAMES, for the filter's match keys. */
+  function columnNames(fqid: string): string[] {
+    return (columnsByFqid.get(fqid) ?? []).map((column) => column.name);
+  }
+
+  // #303 concept-group folding: grouped bindings become one expandable group row,
+  // ungrouped bindings stay leaf rows. `registerRows` folds the WHOLE register —
+  // the "of N" the readouts count against. `narrowedRows` folds the chip lens: the
+  // lens narrows the CHILDREN and the groups' members FIRST, so a surviving group
+  // row counts and indexes only what the selected variants deliver, and a group
+  // left with one member gives way to that member's own leaf row. The text
+  // filter ranks what is left, in the template, because only IT changes per
+  // keystroke.
+  const registerRows = $derived(
+    foldGroupedRows(registerChildren, registerGroups),
+  );
+  const narrowedRows = $derived(
+    selectedVariants.size === 0
+      ? registerRows
+      : foldGroupedRows(
+          lensedChildren,
+          narrowGroupsToMembers(registerGroups, lensedChildren),
+        ),
+  );
+
+  // ── Y-83: add delivery columns straight from the register list ───────────────
+  // A researcher who knows LISA by its columns ticks ForvErs, ForvInk, Kon and
+  // Alder here and adds all four in one action, instead of opening four variable
+  // pages. The staging stack is the leaf's (`staged_picker.ts`): this page owns only
+  // its own selection + scope, and every add still lands through
+  // `projectStore.applyStagedDiff` (DESIGN.md -> Browse-only authoring).
+  //
+  // One BAND per listed variable, its rows the variable's own picker rows — so a
+  // tick stages one add per (variable, concrete variant, representation), the same
+  // fan-out `rowAddSegments` performs for a variable's own page. Built off the
+  // LENSED children, so an active variant chip narrows what a tick adds to exactly
+  // what the row shows.
+  const pickerBands = $derived.by((): StagedPickerBand[] =>
+    lensedChildren.map((child) => ({
+      key: child.fqid,
+      registerPrefix: registerPrefixOf(child.fqid),
+      rows: rowsByFqid.get(child.fqid) ?? [],
+    })),
+  );
+
+  // The deployment seed is ready once /api/context has populated BOTH fields: an
+  // implicit project created with an empty seed is never re-seeded, so the add stays
+  // disabled until it lands (sub-second) — as on the leaf.
+  const seedReady = $derived(regMetaVersion !== "" && steward !== "");
+
+  // The register list carries NO period control of its own, so the study window IS
+  // the add's period: every add is clipped to it, and without one an open-ended
+  // column has no finite period to commit — `applyStagedPicks` refuses the batch and
+  // the nudge points at the rail's window.
+  const boundedProjectWindow = $derived(
+    windowStore.value === null || !enforcePeriodBounds
+      ? windowStore.value
+      : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
+  );
+  const addScope = $derived({
+    period: null,
+    window: pickerWindowYears(null, boundedProjectWindow),
+  });
+  /** The add scope as inclusive ISO bounds — what a delivery's eras are matched
+   * against. Derived once: the cell asks it per listed column, and `stagedBatch`
+   * per ticked one. */
+  const addBounds = $derived(
+    addWindowBounds(addScope.period, addScope.window ?? null),
+  );
+
+  /** Is this column offered — for a tick, and for the batch a press stages? THIS
+   * NAME's own eras met with the add scope, never the folded row's, which for a
+   * rename chain spans the successor's years too. ONE predicate for the cell and
+   * `stagedBatch`, so a tick can never be offered under a gate the Add then applies
+   * differently — the Add only narrows it, per (variant, name), which no box could
+   * show: a tick is one box over every variant that ships the name. A name with NO
+   * eras (an alias spelling on a variant with no states of its own) is never
+   * offered: there is no window to wait for, and no row to stage either. */
+  function columnOffered(column: DeliveryColumn): boolean {
+    return (
+      column.windows.length > 0 &&
+      windowsOverlapWindow(column.windows, addBounds)
+    );
+  }
+
+  /** A scope's window in years — how a row and a refusal name it ("1990–2021"). */
+  function scopeYears(scope: { window?: [number, number] | null }): string {
+    return scope.window
+      ? yearWindowLabel({ from: scope.window[0], to: scope.window[1] })
+      : "";
+  }
+  const windowYears = $derived(scopeYears(addScope));
+
+  // Which listed columns are ALREADY in the draft — keyed by `pickerRowKey`, the
+  // staging identity, so the marker is read from the same match the commit is.
+  const committedRows = $derived(
+    committedPickerRows(projectStore.draft, pickerBands, addScope),
+  );
+
+  /** The tick identity: a delivery column of one variable. Deliberately NOT the
+   * picker row key — one tick covers every variant that delivers the name. */
+  function columnKey(fqid: string, name: string): string {
+    return `${fqid}::${name}`;
+  }
+
+  /** The ticked columns, each mapped to the concrete variants the list SHOWED that
+   * column under at the moment it was ticked. The variants ride along because the chip
+   * lens is LIVE and a tick is not: read at Add time instead, a lens lifted since the
+   * tick would widen it to variants the researcher never saw, and a lens moved to
+   * another variant would swap the tick onto that one. What an Add stages is the
+   * intersection of the two (`stagedBatch`) — never wider than what was on screen when
+   * the tick was made, never wider than what is on screen now.
+   *
+   * The captured variants are the rows' own `variant` heads, which is the whole row
+   * here: the rows are built from deliveries that carry no `variant_family`
+   * (`deliveryColumnRows`), so nothing in them is family-folded and a head never stands
+   * for a concrete variant it does not name. */
+  let selectedColumns = $state(new Map<string, ReadonlySet<string>>());
+  let applying = $state(false);
+
+  /** Why the last Add authored NOTHING, else null. ONE slot rather than a flag per
+   * gate: every Add ends by setting it — to a reason, or to null — so a verdict about
+   * one batch can never outlive the batch it refused. */
+  let addRefusal = $state<string | null>(null);
+
+  /** What the last Add committed (`addSelected`). Cleared on every exit but a
+   * successful apply, same as `addRefusal`. */
+  let applyOutcome = $state<StagedApplyOutcome | null>(null);
+
+  function toggleColumn(fqid: string, column: DeliveryColumn): void {
+    const next = new Map(selectedColumns);
+    const key = columnKey(fqid, column.name);
+    // Off what the BOX reads (`stagedColumnKeys`), not off the bare key: a tick the
+    // lens has moved out of the batch shows as unticked, and clicking an unticked box
+    // must tick it. So a click always leaves the column in the state its box shows the
+    // opposite of — and re-ticking re-captures, under the variants on screen now.
+    if (stagedColumnKeys.has(key)) {
+      next.delete(key);
+    } else {
+      // Captured HERE rather than read back at Add time: what the row shows now is
+      // what the researcher is choosing, and the lens can move before they press Add.
+      next.set(key, new Set(column.rows.map((row) => row.variant)));
+    }
+    // Reassign so the `$state` proxy tracks the change (as `toggleVariant`).
+    selectedColumns = next;
+  }
+
+  /** Which listed columns are ALREADY fully in the draft, by tick identity, each with
+   * the marker its "In project" tag wears against the study window (`committedMarker`;
+   * the most severe across the variants that deliver it — one source outside the
+   * window blocks the order however many others match it). Read off
+   * `committedPickerRows` — the same match the commit is — and a column counts only
+   * when EVERY variant's row for it is committed: partial cover (one variant added
+   * from its own page) reads as NOT added, so the tick still has something to do.
+   * Computed once per draft change rather than per rendered cell, and skipped
+   * outright while nothing is committed (the ordinary browsing state). */
+  const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
+    const committed = new Map<string, CommittedMarker>();
+    if (committedRows.size === 0) {
+      return committed;
     }
     for (const band of pickerBands) {
-      // Deduped by ROW: a rename chain ticked under both its names lands on the ONE
-      // row they share and is staged once, exactly as the variable's own page stages
-      // it — while BOTH names count toward the bar. Two columns of one variable ticked
-      // under DIFFERENT lenses stay apart all the same: a row only joins a tick whose
-      // captured variants cover it, so neither is ever staged under the other's
-      // variant.
-      const staged = new Set<PickerRepresentation>();
       for (const column of columnsByFqid.get(band.key) ?? []) {
-        const key = columnKey(band.key, column.name);
-        const tickedUnder = selectedColumns.get(key);
-        // The same gate the cell offered the tick under, so a tick made before
-        // the window moved leaves the batch exactly when its row stops being
-        // offered.
-        if (tickedUnder === undefined || !columnOffered(column)) {
-          continue;
-        }
-        for (const row of column.rows) {
-          // Per (VARIANT, NAME) as well as per name: the tick was offered off the
-          // POOLED eras, so a variant that still ships a retired name offers it for
-          // every variant — including one that renamed it, whose folded row reaches
-          // the window through the SUCCESSOR. That row must not be staged under the
-          // retired name. `rowDeliversInScope` cannot see the distinction: the row is
-          // the whole chain.
-          if (
-            !tickedUnder.has(row.variant) ||
-            !windowsOverlapWindow(
-              column.windowsByVariant.get(row.variant) ?? [],
-              addBounds,
-            ) ||
-            !rowDeliversInScope(row, addScope)
-          ) {
-            continue;
-          }
-          columns.add(key);
-          if (!staged.has(row)) {
-            staged.add(row);
-            adds.push({ band, row });
-          }
+        const markers: CommittedMarker[] = [];
+        if (
+          column.rows.length > 0 &&
+          column.rows.every((row) => {
+            const match = committedRows.get(pickerRowKey(band, row));
+            if (match !== undefined) {
+              markers.push(
+                committedMarker(match.sourcePeriod, boundedProjectWindow),
+              );
+            }
+            // THIS VARIANT's eras for the name must be inside what was committed, not
+            // just the ROW's: a #902 rename chain is ONE row spanning the whole chain,
+            // so a row-grain marker would say "In project" on a retired name whose
+            // years the committed source never reached — beside a tick refusing it.
+            // Pooled eras would do the same across variants, lending one variant's
+            // still-current name to the one that renamed it.
+            return (
+              match !== undefined &&
+              windowsOverlapPeriod(
+                column.windowsByVariant.get(row.variant) ?? [],
+                match.period,
+              )
+            );
+          })
+        ) {
+          committed.set(
+            columnKey(band.key, column.name),
+            markers.find((m) => m.tone === "error") ??
+              markers.find((m) => m.detail !== null) ??
+              markers[0],
+          );
         }
       }
     }
-    return { adds, columns };
-  },
-);
+    return committed;
+  });
 
-const stagedColumnKeys = $derived(stagedBatch.columns);
-const stagedColumns = $derived(stagedColumnKeys.size);
+  // The staged batch: the LIVE list met with the ticks. Each ticked column NAME maps
+  // onto the rows that DELIVER it — the variable's own rows, so what the list authors
+  // is what its variable's page authors. A tick whose column the variant lens has since
+  // hidden, or the study window has moved off, contributes nothing, and a variant it did
+  // not cover when it was made is never added back — so the batch is bounded by BOTH the
+  // page the tick was made on and the page it will be pressed on, and the count on the
+  // bar always describes what the button adds.
+  //
+  // `adds` and `columns` are derived TOGETHER because they are two readings of one
+  // sweep, in two different units, and the page shows both: the rows an Apply commits,
+  // and the COLUMNS the bar counts and the confirmation reports. The rows are never the
+  // unit a researcher sees — a column two variants deliver is one column and two adds,
+  // and a renamed column ticked under both its names is two columns and one add — and
+  // deriving them apart would let the promise and the confirmation disagree.
+  const stagedBatch = $derived.by(
+    (): {
+      adds: StagedPick[];
+      columns: Set<string>;
+    } => {
+      const adds: StagedPick[] = [];
+      const columns = new Set<string>();
+      if (selectedColumns.size === 0) {
+        return { adds, columns };
+      }
+      for (const band of pickerBands) {
+        // Deduped by ROW: a rename chain ticked under both its names lands on the ONE
+        // row they share and is staged once, exactly as the variable's own page stages
+        // it — while BOTH names count toward the bar. Two columns of one variable ticked
+        // under DIFFERENT lenses stay apart all the same: a row only joins a tick whose
+        // captured variants cover it, so neither is ever staged under the other's
+        // variant.
+        const staged = new Set<PickerRepresentation>();
+        for (const column of columnsByFqid.get(band.key) ?? []) {
+          const key = columnKey(band.key, column.name);
+          const tickedUnder = selectedColumns.get(key);
+          // The same gate the cell offered the tick under, so a tick made before
+          // the window moved leaves the batch exactly when its row stops being
+          // offered.
+          if (tickedUnder === undefined || !columnOffered(column)) {
+            continue;
+          }
+          for (const row of column.rows) {
+            // Per (VARIANT, NAME) as well as per name: the tick was offered off the
+            // POOLED eras, so a variant that still ships a retired name offers it for
+            // every variant — including one that renamed it, whose folded row reaches
+            // the window through the SUCCESSOR. That row must not be staged under the
+            // retired name. `rowDeliversInScope` cannot see the distinction: the row is
+            // the whole chain.
+            if (
+              !tickedUnder.has(row.variant) ||
+              !windowsOverlapWindow(
+                column.windowsByVariant.get(row.variant) ?? [],
+                addBounds,
+              ) ||
+              !rowDeliversInScope(row, addScope)
+            ) {
+              continue;
+            }
+            columns.add(key);
+            if (!staged.has(row)) {
+              staged.add(row);
+              adds.push({ band, row });
+            }
+          }
+        }
+      }
+      return { adds, columns };
+    },
+  );
 
-/** "1 column" / "3 columns" — the bar's count and its button say the same thing. */
-const columnCount = $derived(
-  `${stagedColumns} ${stagedColumns === 1 ? "column" : "columns"}`,
-);
+  const stagedColumnKeys = $derived(stagedBatch.columns);
+  const stagedColumns = $derived(stagedColumnKeys.size);
 
-// Moving the window retires the last refusal (see `addRefusal`) — it is exactly
-// what the refusal asked for. Only the refusal: the ticks survive, so "add again"
-// is one press, which is why this is its own effect rather than part of the
-// route-change clear above.
-$effect(() => {
-  void windowStore.value;
-  addRefusal = null;
-});
+  /** "1 column" / "3 columns" — the bar's count and its button say the same thing. */
+  const columnCount = $derived(
+    `${stagedColumns} ${stagedColumns === 1 ? "column" : "columns"}`,
+  );
 
-// Leaving the page mid-add abandons the batch rather than committing it into a
-// draft the researcher has navigated away from (the leaf's own guard).
-let unmounted = false;
-$effect(() => () => {
-  unmounted = true;
-});
+  // Moving the window retires the last refusal (see `addRefusal`) — it is exactly
+  // what the refusal asked for. Only the refusal: the ticks survive, so "add again"
+  // is one press, which is why this is its own effect rather than part of the
+  // route-change clear above.
+  $effect(() => {
+    void windowStore.value;
+    addRefusal = null;
+  });
 
-/** The gate a batch runs at every await: whether it STILL describes the page it was
- * pressed on. Captured at the press, because all four of its inputs can move under
- * an Add — the host can unmount, the ROUTE can change onto a different node without
- * unmounting (this component is reused register → register, `routeGeneration`), the
- * rail can New/Open, and the STUDY WINDOW can be dragged. The window is one of the
- * four because it is this page's period control and it lives in the rail, which an
- * Add does not disable: moving it while the resolves are out would otherwise commit the
- * batch under the years the researcher just left, beside a list already redrawn for
- * the years they chose.
- *
- * A closure rather than captured values threaded through, so every await inside
- * `applyStagedPicks` — the draft restore between press and commit, and the binding
- * resolves after it, each one more round trip the window outlives — asks the same
- * question. */
-function batchGuard(): () => boolean {
-  const stagedAgainst = projectStore.replacementGeneration;
-  const stagedYears = windowYears;
-  const stagedRoute = routeGeneration;
-  return () =>
-    unmounted ||
-    routeGeneration !== stagedRoute ||
-    projectStore.replacementGeneration !== stagedAgainst ||
-    windowYears !== stagedYears;
-}
+  // Leaving the page mid-add abandons the batch rather than committing it into a
+  // draft the researcher has navigated away from (the leaf's own guard).
+  let unmounted = false;
+  $effect(() => () => {
+    unmounted = true;
+  });
 
-async function addSelected(): Promise<void> {
-  // The button is NEVER natively `disabled` (see the markup) — including at zero
-  // staged columns — so it never drops keyboard focus to `<body>`, mid-add or
-  // after one that empties the selection. `aria-disabled` freezes the ACTION
-  // instead, which means every reason the bar would grey the button out has to
-  // be re-checked here, or a stray click (or Enter/Space) would run an Add the
-  // button visually refused.
-  if (applying || stagedColumns === 0 || !seedReady) {
-    return;
+  /** The gate a batch runs at every await: whether it STILL describes the page it was
+   * pressed on. Captured at the press, because all four of its inputs can move under
+   * an Add — the host can unmount, the ROUTE can change onto a different node without
+   * unmounting (this component is reused register → register, `routeGeneration`), the
+   * rail can New/Open, and the STUDY WINDOW can be dragged. The window is one of the
+   * four because it is this page's period control and it lives in the rail, which an
+   * Add does not disable: moving it while the resolves are out would otherwise commit the
+   * batch under the years the researcher just left, beside a list already redrawn for
+   * the years they chose.
+   *
+   * A closure rather than captured values threaded through, so every await inside
+   * `applyStagedPicks` — the draft restore between press and commit, and the binding
+   * resolves after it, each one more round trip the window outlives — asks the same
+   * question. */
+  function batchGuard(): () => boolean {
+    const stagedAgainst = projectStore.replacementGeneration;
+    const stagedYears = windowYears;
+    const stagedRoute = routeGeneration;
+    return () =>
+      unmounted ||
+      routeGeneration !== stagedRoute ||
+      projectStore.replacementGeneration !== stagedAgainst ||
+      windowYears !== stagedYears;
   }
-  // Bind the batch to the ticks AND to the page it was pressed on: the per-add
-  // resolves are a round trip, and a New/Open in the rail, a route change, or a drag
-  // of the study window during it means what lands is no longer a pick against the
-  // project, the page, or under the window the researcher pressed Add on
-  // (`batchGuard`, which `applyStagedPicks` asks again after every await of its own).
-  const lapsed = batchGuard();
-  const scope = addScope;
-  // Read before the await, so the confirmation counts the batch that was PRESSED and
-  // the prune consumes exactly the ticks it committed — not whatever the live list
-  // has become by the time the resolves land.
-  const { adds, columns: addedKeys } = stagedBatch;
-  applying = true;
-  try {
-    const result = await applyStagedPicks(
-      { adds, removes: [] },
-      {
-        scope,
-        studyWindow: boundedProjectWindow,
-        seed: { regMetaVersion, steward },
-        cancelled: lapsed,
-      },
-    );
-    if (result.kind !== "applied") {
-      // A refusal (period-required) or an abandonment (the project replaced, the
-      // window moved or the page changed mid resolve): either way nothing was
-      // authored, and a stale confirmation from an earlier, successful Add must not
-      // go on reading as current.
-      addRefusal = stagedApplyRefusal(
-        result,
-        scope,
-        ADD_WINDOW_REQUIRED_MESSAGE,
-      );
-      applyOutcome = null;
+
+  async function addSelected(): Promise<void> {
+    // The button is NEVER natively `disabled` (see the markup) — including at zero
+    // staged columns — so it never drops keyboard focus to `<body>`, mid-add or
+    // after one that empties the selection. `aria-disabled` freezes the ACTION
+    // instead, which means every reason the bar would grey the button out has to
+    // be re-checked here, or a stray click (or Enter/Space) would run an Add the
+    // button visually refused.
+    if (applying || stagedColumns === 0 || !seedReady) {
       return;
     }
-    addRefusal = null;
-    applyOutcome = result.outcome && { added: addedKeys.size, removed: 0 };
-    // The committed columns are consumed: they now read as in the project, and a
-    // second press can't re-add what this one did.
-    selectedColumns = new Map(
-      [...selectedColumns].filter(([key]) => !addedKeys.has(key)),
-    );
-  } finally {
-    applying = false;
+    // Bind the batch to the ticks AND to the page it was pressed on: the per-add
+    // resolves are a round trip, and a New/Open in the rail, a route change, or a drag
+    // of the study window during it means what lands is no longer a pick against the
+    // project, the page, or under the window the researcher pressed Add on
+    // (`batchGuard`, which `applyStagedPicks` asks again after every await of its own).
+    const lapsed = batchGuard();
+    const scope = addScope;
+    // Read before the await, so the confirmation counts the batch that was PRESSED and
+    // the prune consumes exactly the ticks it committed — not whatever the live list
+    // has become by the time the resolves land.
+    const { adds, columns: addedKeys } = stagedBatch;
+    applying = true;
+    try {
+      const result = await applyStagedPicks(
+        { adds, removes: [] },
+        {
+          scope,
+          studyWindow: boundedProjectWindow,
+          seed: { regMetaVersion, steward },
+          cancelled: lapsed,
+        },
+      );
+      if (result.kind !== "applied") {
+        // A refusal (period-required) or an abandonment (the project replaced, the
+        // window moved or the page changed mid resolve): either way nothing was
+        // authored, and a stale confirmation from an earlier, successful Add must not
+        // go on reading as current.
+        addRefusal = stagedApplyRefusal(
+          result,
+          scope,
+          ADD_WINDOW_REQUIRED_MESSAGE,
+        );
+        applyOutcome = null;
+        return;
+      }
+      addRefusal = null;
+      applyOutcome = result.outcome && { added: addedKeys.size, removed: 0 };
+      // The committed columns are consumed: they now read as in the project, and a
+      // second press can't re-add what this one did.
+      selectedColumns = new Map(
+        [...selectedColumns].filter(([key]) => !addedKeys.has(key)),
+      );
+    } finally {
+      applying = false;
+    }
   }
-}
 </script>
 
 {#if resource.loading}
@@ -990,10 +993,7 @@ async function addSelected(): Promise<void> {
     <p class="muted loading-status">Loading…</p>
     <div class="loading-geometry">
       <Skeleton width="min(24rem, 70%)" count={2} />
-      <Skeleton
-        variant="block"
-        count={fqidPath.startsWith("class/") ? 3 : 1}
-      />
+      <Skeleton variant="block" count={fqidPath.startsWith("class/") ? 3 : 1} />
     </div>
   </section>
 {:else if resource.error}
@@ -1032,7 +1032,11 @@ async function addSelected(): Promise<void> {
           >
             {#snippet cell(register, column)}
               {#if column.key === "name"}
-                <a class="row-link" href={catalogHref(register.fqid)} title={register.fqid}>
+                <a
+                  class="row-link"
+                  href={catalogHref(register.fqid)}
+                  title={register.fqid}
+                >
                   {register.name ?? register.fqid}
                 </a>
               {:else if register.purpose}
@@ -1171,7 +1175,10 @@ async function addSelected(): Promise<void> {
                          state (or the reason there is nothing to add) rides inside
                          it, so it wraps with the column it describes and joins the
                          tick's accessible name. -->
-                    <label class="delivery-column" class:out-of-window={!addable}>
+                    <label
+                      class="delivery-column"
+                      class:out-of-window={!addable}
+                    >
                       <input
                         class="cbox"
                         type="checkbox"
@@ -1200,8 +1207,9 @@ async function addSelected(): Promise<void> {
                           {@const sep = eras.hidden.length > 0 ? " … " : ", "}
                           <span class="column-years"
                             >{#each eras.shown as era, i (i)}{i > 0
-                              ? sep
-                              : ""}<span class="era">{era}</span>{/each}{#if eras.hidden.length > 0}{" "}<span
+                                ? sep
+                                : ""}<span class="era">{era}</span
+                              >{/each}{#if eras.hidden.length > 0}{" "}<span
                                 class="era-more"
                                 title={col.years.join(", ")}
                                 aria-label={eraFoldLabel(eras.hidden)}
@@ -1253,7 +1261,11 @@ async function addSelected(): Promise<void> {
                   href={row.href}
                 />
               {:else}
-                <a class="row-link" href={catalogHref(row.fqid)} title={row.fqid}>
+                <a
+                  class="row-link"
+                  href={catalogHref(row.fqid)}
+                  title={row.fqid}
+                >
                   {row.label}
                 </a>
               {/if}
@@ -1336,7 +1348,10 @@ async function addSelected(): Promise<void> {
       {@const familyNodes = node.families}
       <h2>{nodeLabel(node)}</h2>
       {#if clsRows.length > 0 || familyNodes.length > 0}
-        {@const classificationRows = classificationBrowseRows(clsRows, familyNodes)}
+        {@const classificationRows = classificationBrowseRows(
+          clsRows,
+          familyNodes,
+        )}
         <div class="classification-table">
           <Panel title="Classification systems" flush>
             <DataTable
@@ -1348,7 +1363,11 @@ async function addSelected(): Promise<void> {
               {#snippet cell(row, column)}
                 {#if column.key === "label"}
                   {#if row.kind === "family"}
-                    <a class="row-link" href={row.href} title={`${row.family.editions.length} editions`}>
+                    <a
+                      class="row-link"
+                      href={row.href}
+                      title={`${row.family.editions.length} editions`}
+                    >
                       {row.label}
                     </a>
                   {:else if row.kind === "group"}
@@ -1359,7 +1378,11 @@ async function addSelected(): Promise<void> {
                       href={row.href}
                     />
                   {:else}
-                    <a class="row-link" href={catalogHref(row.fqid)} title={row.shortName}>
+                    <a
+                      class="row-link"
+                      href={catalogHref(row.fqid)}
+                      title={row.shortName}
+                    >
                       {row.label}
                     </a>
                   {/if}
@@ -1395,7 +1418,8 @@ async function addSelected(): Promise<void> {
       <!-- The router sends the root and group refs to their own views, so a kind
            landing here is a routing mistake: say so rather than render nothing. -->
       <p class="error" role="alert">
-        This page cannot show a <code>{node.kind}</code> node: <code>{fqidPath}</code>
+        This page cannot show a <code>{node.kind}</code> node:
+        <code>{fqidPath}</code>
       </p>
     {/if}
   </article>

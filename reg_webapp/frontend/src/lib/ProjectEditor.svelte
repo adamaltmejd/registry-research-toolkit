@@ -1,126 +1,126 @@
 <script lang="ts">
-import { onDestroy } from "svelte";
-import { registerChildren } from "./catalog_names.svelte";
-import {
-  regMetaReleaseTag,
-  safeSourceSlots,
-  safeStudyWindow,
-} from "./project_data";
-import { projectStore } from "./project_store.svelte";
-import SourceEditor from "./SourceEditor.svelte";
-import StudyWindowSummary from "./StudyWindowSummary.svelte";
-import {
-  Button,
-  ConfirmDialog,
-  EmptyState,
-  KeyValue,
-  type KeyValueRow,
-  Panel,
-} from "./ui";
-import ValidationPanel from "./ValidationPanel.svelte";
-import { windowCoverageHints, windowDisjointFindings } from "./validation";
+  import { onDestroy } from "svelte";
+  import { registerChildren } from "./catalog_names.svelte";
+  import {
+    regMetaReleaseTag,
+    safeSourceSlots,
+    safeStudyWindow,
+  } from "./project_data";
+  import { projectStore } from "./project_store.svelte";
+  import SourceEditor from "./SourceEditor.svelte";
+  import StudyWindowSummary from "./StudyWindowSummary.svelte";
+  import {
+    Button,
+    ConfirmDialog,
+    EmptyState,
+    KeyValue,
+    type KeyValueRow,
+    Panel,
+  } from "./ui";
+  import { windowCoverageHints, windowDisjointFindings } from "./validation";
+  import ValidationPanel from "./ValidationPanel.svelte";
 
-// The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
-// Under #991 the project IS the cart: it SHOWS what the researcher picked while
-// browsing (sources + their columns), and adding/changing data always happens in
-// the catalog browser. So this page is browse-only authoring: view the picked
-// sources/columns, delete a source/column, edit the project NAME, and
-// Open/Download the project_data.json + Download order.json. Fixes for a
-// validation finding are reached via the ValidationPanel's outbound catalog link
-// (the catalog subject page is the only place a column is (re-)picked). This is:
-//  - the home/new screen (draft == null): New / Open buttons,
-//  - the loaded-draft view: the editable project name, a dirty indicator, a toolbar
-//    (New / Open / Download project_data.json / Download order.json),
-//    the open-error banner, the READ-ONLY sources/columns list, the ValidationPanel,
-//    and a provenance footer (steward / reg_meta / schema version, read-only).
-//
-// `reg_meta_version` (bare package version) and `steward` (the deployment's
-// steward id) are seeded from the deployment context (passed by App.svelte) and
-// shown read-only. Validation runs automatically against the current draft, so the
-// order download is gated on the current backend result instead of a manual
-// Validate click.
-const {
-  regMetaVersion,
-  steward,
-  orderInstructions = null,
-  providerQualified,
-}: {
-  regMetaVersion: string;
-  steward: string;
-  /** The steward's order hand-off (`steward.json` → `order_instructions`): how a
-   * researcher sends the project in. Absent where the deployment takes no orders. */
-  orderInstructions?: string | null;
-  /** Whether this deployment serves more than one provider, so a source card's
-   * title carries its provider. A deployment fact, read once at the app root and
-   * passed down like `steward` — this page fetches nothing of its own. */
-  providerQualified: boolean;
-} = $props();
-
-// A hidden <input type=file> driven by the toolbar "Open" button. Resetting its
-// value after each pick lets re-opening the SAME file fire `change` again.
-let fileInput: HTMLInputElement;
-
-// Reading a picked file's bytes is asynchronous, and anything the researcher does
-// meanwhile SUPERSEDES that read: a New or a newer Open makes it the wrong answer,
-// and this page's teardown leaves nobody to answer it. Bumping this retires one.
-let readGeneration = 0;
-
-// New and Open are the app's only deliberate replacements of a loaded project,
-// and both go through the store's replacement policy (`requestNewProject` /
-// `requestOpenProject`): with a dirty draft it holds the incoming project and
-// this page renders the confirmation below; with a clean one (or none) it
-// replaces straight away.
-function onNew(): void {
-  readGeneration += 1;
-  // c-i: a new project seeds this deployment's reg_meta release tag + its own
-  // steward id (both from /api/context); the steward PICKER is c-ii. The
-  // skeleton takes reg-core's project schema version (`projectSchemaVersion`);
-  // the release tag records the deployment's current catalog package.
-  projectStore.requestNewProject({
-    reg_meta_version: regMetaReleaseTag(regMetaVersion),
+  // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
+  // Under #991 the project IS the cart: it SHOWS what the researcher picked while
+  // browsing (sources + their columns), and adding/changing data always happens in
+  // the catalog browser. So this page is browse-only authoring: view the picked
+  // sources/columns, delete a source/column, edit the project NAME, and
+  // Open/Download the project_data.json + Download order.json. Fixes for a
+  // validation finding are reached via the ValidationPanel's outbound catalog link
+  // (the catalog subject page is the only place a column is (re-)picked). This is:
+  //  - the home/new screen (draft == null): New / Open buttons,
+  //  - the loaded-draft view: the editable project name, a dirty indicator, a toolbar
+  //    (New / Open / Download project_data.json / Download order.json),
+  //    the open-error banner, the READ-ONLY sources/columns list, the ValidationPanel,
+  //    and a provenance footer (steward / reg_meta / schema version, read-only).
+  //
+  // `reg_meta_version` (bare package version) and `steward` (the deployment's
+  // steward id) are seeded from the deployment context (passed by App.svelte) and
+  // shown read-only. Validation runs automatically against the current draft, so the
+  // order download is gated on the current backend result instead of a manual
+  // Validate click.
+  const {
+    regMetaVersion,
     steward,
+    orderInstructions = null,
+    providerQualified,
+  }: {
+    regMetaVersion: string;
+    steward: string;
+    /** The steward's order hand-off (`steward.json` → `order_instructions`): how a
+     * researcher sends the project in. Absent where the deployment takes no orders. */
+    orderInstructions?: string | null;
+    /** Whether this deployment serves more than one provider, so a source card's
+     * title carries its provider. A deployment fact, read once at the app root and
+     * passed down like `steward` — this page fetches nothing of its own. */
+    providerQualified: boolean;
+  } = $props();
+
+  // A hidden <input type=file> driven by the toolbar "Open" button. Resetting its
+  // value after each pick lets re-opening the SAME file fire `change` again.
+  let fileInput: HTMLInputElement;
+
+  // Reading a picked file's bytes is asynchronous, and anything the researcher does
+  // meanwhile SUPERSEDES that read: a New or a newer Open makes it the wrong answer,
+  // and this page's teardown leaves nobody to answer it. Bumping this retires one.
+  let readGeneration = 0;
+
+  // New and Open are the app's only deliberate replacements of a loaded project,
+  // and both go through the store's replacement policy (`requestNewProject` /
+  // `requestOpenProject`): with a dirty draft it holds the incoming project and
+  // this page renders the confirmation below; with a clean one (or none) it
+  // replaces straight away.
+  function onNew(): void {
+    readGeneration += 1;
+    // c-i: a new project seeds this deployment's reg_meta release tag + its own
+    // steward id (both from /api/context); the steward PICKER is c-ii. The
+    // skeleton takes reg-core's project schema version (`projectSchemaVersion`);
+    // the release tag records the deployment's current catalog package.
+    projectStore.requestNewProject({
+      reg_meta_version: regMetaReleaseTag(regMetaVersion),
+      steward,
+    });
+  }
+
+  async function onFilePicked(event: Event): Promise<void> {
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = ""; // allow re-picking the same file
+    if (!file) {
+      return; // the file picker was cancelled — nothing was asked for
+    }
+    const generation = ++readGeneration;
+    const text = await file.text();
+    if (generation !== readGeneration) {
+      return; // a newer New/Open, or this page going away, retired this read
+    }
+    // Parse and version-check BEFORE asking to replace anything: a file that can't
+    // be opened must raise the open-error banner, never the replacement question —
+    // and the guard above must precede it, because it is what raises that banner.
+    const parsed = projectStore.parseProjectText(text);
+    if (parsed != null) {
+      projectStore.requestOpenProject(parsed);
+    }
+  }
+
+  /** Keep the durable copy, then carry out the held replacement — the recovery
+   * half of the confirmation. `downloadProject` writes the file and re-baselines
+   * the draft, so nothing is lost by the replacement that follows. */
+  function downloadThenReplace(): void {
+    projectStore.downloadProject();
+    projectStore.confirmReplacement();
+  }
+
+  // This page is the only surface that asks the question, and it unmounts on a
+  // route change (`{#if route.name === "project"}`) — so drop any unanswered
+  // replacement with it. Left standing it would outlive its dialog: a catalog pick
+  // made in the meantime commits normally (a PENDING replacement bumps no
+  // `replacementGeneration`), and coming back to /project would re-raise a stale
+  // question whose confirm destroys the newly picked work.
+  onDestroy(() => {
+    readGeneration += 1;
+    projectStore.cancelReplacement();
   });
-}
-
-async function onFilePicked(event: Event): Promise<void> {
-  const input = event.currentTarget as HTMLInputElement;
-  const file = input.files?.[0];
-  input.value = ""; // allow re-picking the same file
-  if (!file) {
-    return; // the file picker was cancelled — nothing was asked for
-  }
-  const generation = ++readGeneration;
-  const text = await file.text();
-  if (generation !== readGeneration) {
-    return; // a newer New/Open, or this page going away, retired this read
-  }
-  // Parse and version-check BEFORE asking to replace anything: a file that can't
-  // be opened must raise the open-error banner, never the replacement question —
-  // and the guard above must precede it, because it is what raises that banner.
-  const parsed = projectStore.parseProjectText(text);
-  if (parsed != null) {
-    projectStore.requestOpenProject(parsed);
-  }
-}
-
-/** Keep the durable copy, then carry out the held replacement — the recovery
- * half of the confirmation. `downloadProject` writes the file and re-baselines
- * the draft, so nothing is lost by the replacement that follows. */
-function downloadThenReplace(): void {
-  projectStore.downloadProject();
-  projectStore.confirmReplacement();
-}
-
-// This page is the only surface that asks the question, and it unmounts on a
-// route change (`{#if route.name === "project"}`) — so drop any unanswered
-// replacement with it. Left standing it would outlive its dialog: a catalog pick
-// made in the meantime commits normally (a PENDING replacement bumps no
-// `replacementGeneration`), and coming back to /project would re-raise a stale
-// question whose confirm destroys the newly picked work.
-onDestroy(() => {
-  readGeneration += 1;
-  projectStore.cancelReplacement();
-});
 </script>
 
 <article class="editor">
@@ -145,18 +145,24 @@ onDestroy(() => {
     title="Replace the current project?"
   >
     {#snippet description()}
-      {projectStore.draft?.name || "Untitled project"} has unsaved changes since
-      its last download. Your browser keeps one recovery copy, and the replacement
-      overwrites it.
+      {projectStore.draft?.name || "Untitled project"} has unsaved changes since its
+      last download. Your browser keeps one recovery copy, and the replacement overwrites
+      it.
     {/snippet}
     {#snippet actions()}
-      <Button variant="default" onclick={() => projectStore.cancelReplacement()}>
+      <Button
+        variant="default"
+        onclick={() => projectStore.cancelReplacement()}
+      >
         Cancel
       </Button>
       <Button variant="default" onclick={downloadThenReplace}>
         Download project_data.json
       </Button>
-      <Button variant="danger" onclick={() => projectStore.confirmReplacement()}>
+      <Button
+        variant="danger"
+        onclick={() => projectStore.confirmReplacement()}
+      >
         Replace without downloading
       </Button>
     {/snippet}
@@ -165,7 +171,11 @@ onDestroy(() => {
   {#if projectStore.openError}
     <p class="banner error" role="alert">
       <span class="banner-text">{projectStore.openError}</span>
-      <Button variant="ghost" size="sm" onclick={() => projectStore.clearOpenError()}>
+      <Button
+        variant="ghost"
+        size="sm"
+        onclick={() => projectStore.clearOpenError()}
+      >
         Dismiss
       </Button>
     </p>
@@ -206,7 +216,9 @@ onDestroy(() => {
       <h2>
         {draft.name || "Untitled project"}
         {#if projectStore.dirty}
-          <span class="dirty" title="Unsaved changes since last download">● unsaved</span>
+          <span class="dirty" title="Unsaved changes since last download"
+            >● unsaved</span
+          >
         {/if}
       </h2>
     </header>
@@ -273,7 +285,9 @@ onDestroy(() => {
     <section aria-label="Sources">
       <Panel title="Sources ({sources.length})">
         {#if sources.length === 0}
-          <EmptyState title="No sources yet. Browse the catalog to add data to your project." />
+          <EmptyState
+            title="No sources yet. Browse the catalog to add data to your project."
+          />
         {:else}
           <!-- The common study window the cards below are marked against, and the
                one action that rewrites their periods to it. -->
@@ -282,7 +296,7 @@ onDestroy(() => {
             {#each sources as source, i (projectStore.sourceId(i))}
               <SourceEditor
                 sourceIndex={i}
-                source={source}
+                {source}
                 issues={projectStore.validation?.issues ?? []}
                 {providerQualified}
                 {studyWindow}

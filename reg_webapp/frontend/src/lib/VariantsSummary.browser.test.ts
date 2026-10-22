@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import VariantsSummary from "./VariantsSummary.svelte";
 import { datedVersions, variant } from "./variants-test-helpers";
+import VariantsSummary from "./VariantsSummary.svelte";
 
 // Presentational: the variants ride the register's `show` node, which
 // `CatalogNodeView` hands down, so these render with the list as a prop.

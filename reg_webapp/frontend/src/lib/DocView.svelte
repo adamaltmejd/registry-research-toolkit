@@ -1,17 +1,17 @@
 <script lang="ts">
-import { getDoc } from "./api";
-import { asyncResource } from "./async.svelte";
+  import { getDoc } from "./api";
+  import { asyncResource } from "./async.svelte";
 
-// The minimal documentation viewer (#394): metadata + a source POINTER + a
-// BOUNDED excerpt for one doc. `docs_get` also carries the full `body` (for
-// agents); the SPA never renders it — the excerpt is shown as TEXT and the source
-// pointer sends the
-// reader to the SCB original. NEVER {@html}: `excerpt` may carry FTS highlight
-// markers and Svelte's `{value}` auto-escaping is the republication guard.
-let { identifier }: { identifier: string } = $props();
+  // The minimal documentation viewer (#394): metadata + a source POINTER + a
+  // BOUNDED excerpt for one doc. `docs_get` also carries the full `body` (for
+  // agents); the SPA never renders it — the excerpt is shown as TEXT and the source
+  // pointer sends the
+  // reader to the SCB original. NEVER {@html}: `excerpt` may carry FTS highlight
+  // markers and Svelte's `{value}` auto-escaping is the republication guard.
+  let { identifier }: { identifier: string } = $props();
 
-const resource = asyncResource(() => getDoc(identifier));
-const doc = $derived(resource.data);
+  const resource = asyncResource(() => getDoc(identifier));
+  const doc = $derived(resource.data);
 </script>
 
 {#if resource.loading}

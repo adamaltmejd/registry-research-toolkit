@@ -1,40 +1,41 @@
 <script lang="ts">
-import type { CatalogSizes, Steward } from "./api";
+  import type { CatalogSizes, Steward } from "./api";
 
-// The landing/home page (#675), served at `/` — split from the data browser
-// (`/catalog`). It welcomes the visitor with the deployment's `long_name`, a
-// one-line catalog stats summary, and three entry-point cards.
-//
-// `steward` and `sizes` are threaded from App, which holds `/api/context`, so
-// Home makes no request of its own. Both are `null` until the context resolves —
-// the page renders without the steward name and with the stats line's space
-// reserved in that brief window, corrected on load.
-let {
-  steward = null,
-  sizes = null,
-}: { steward?: Steward | null; sizes?: CatalogSizes | null } = $props();
+  // The landing/home page (#675), served at `/` — split from the data browser
+  // (`/catalog`). It welcomes the visitor with the deployment's `long_name`, a
+  // one-line catalog stats summary, and three entry-point cards.
+  //
+  // `steward` and `sizes` are threaded from App, which holds `/api/context`, so
+  // Home makes no request of its own. Both are `null` until the context resolves —
+  // the page renders without the steward name and with the stats line's space
+  // reserved in that brief window, corrected on load.
+  let {
+    steward = null,
+    sizes = null,
+  }: { steward?: Steward | null; sizes?: CatalogSizes | null } = $props();
 
-// The entry points into the app. `/catalog` is the data browser, `/search` the
-// results page (a no-`?q=` `/search` renders a "start typing" prompt), `/project`
-// the authoring surface. Plain internal `<a>`s — the shell's `use:link` action
-// intercepts the clicks for pushState navigation.
-const entries = [
-  {
-    href: "/catalog",
-    title: "Browse the data",
-    blurb: "Explore providers, registers, and variables in the catalog.",
-  },
-  {
-    href: "/search",
-    title: "Search",
-    blurb: "Find registers, variables, codes, and classifications by keyword.",
-  },
-  {
-    href: "/project",
-    title: "Start a project",
-    blurb: "Assemble and validate a data request for your research.",
-  },
-];
+  // The entry points into the app. `/catalog` is the data browser, `/search` the
+  // results page (a no-`?q=` `/search` renders a "start typing" prompt), `/project`
+  // the authoring surface. Plain internal `<a>`s — the shell's `use:link` action
+  // intercepts the clicks for pushState navigation.
+  const entries = [
+    {
+      href: "/catalog",
+      title: "Browse the data",
+      blurb: "Explore providers, registers, and variables in the catalog.",
+    },
+    {
+      href: "/search",
+      title: "Search",
+      blurb:
+        "Find registers, variables, codes, and classifications by keyword.",
+    },
+    {
+      href: "/project",
+      title: "Start a project",
+      blurb: "Assemble and validate a data request for your research.",
+    },
+  ];
 </script>
 
 <section class="home">

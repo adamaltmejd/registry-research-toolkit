@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import { bindingFieldsFromResolution } from "./catalog";
-import { type ProjectData, sourceSnapshot } from "./project_data";
-import { projectStore, type StagedAdd } from "./project_store.svelte";
 import {
   add,
   openFile,
   SEED,
   storedProject,
 } from "./project-store-test-helpers";
+import { type ProjectData, sourceSnapshot } from "./project_data";
+import { projectStore, type StagedAdd } from "./project_store.svelte";
 
 // Split from project_store.svelte.test.ts by contract surface: the cart's commit
 // paths (applyStagedDiff, applySourcePeriodEdit). Sibling: project_store.svelte.test.ts.

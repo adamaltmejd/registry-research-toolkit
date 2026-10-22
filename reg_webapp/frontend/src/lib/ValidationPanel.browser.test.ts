@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import ValidationPanel from "./ValidationPanel.svelte";
 import { bindingAnchorId } from "./validation";
+import ValidationPanel from "./ValidationPanel.svelte";
 
 // PR D2 (UI audit finding 6): the findings summary must speak researcher —
 // human TITLE leads, the raw `code` is demoted but visible, and the locator is a

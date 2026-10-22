@@ -1,29 +1,29 @@
 <script lang="ts">
-import { type ClassificationShow, getGraph } from "./api";
-import { asyncResource } from "./async.svelte";
-import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
-import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
-import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
-import { nodeLabel } from "./catalog";
-import SubjectView from "./SubjectView.svelte";
+  import { type ClassificationShow, getGraph } from "./api";
+  import { asyncResource } from "./async.svelte";
+  import { nodeLabel } from "./catalog";
+  import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
+  import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
+  import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
+  import SubjectView from "./SubjectView.svelte";
 
-// The classification LEAF — a standard ("Utbildningsnivå") rendered through the
-// unified SubjectView shell (#638 PR1). The codes panel pages the edition's
-// `values` itself. The picker surface owns the compact classification
-// edition DAG (#906) over the relationship-graph contract (#761/#792); it is
-// navigational/read-only for now, not an add-to-project picker. No period picker,
-// docs surface, or LineageDetails here — classifications carry no study-window or
-// lineage/warnings.
-let { node }: { node: ClassificationShow } = $props();
+  // The classification LEAF — a standard ("Utbildningsnivå") rendered through the
+  // unified SubjectView shell (#638 PR1). The codes panel pages the edition's
+  // `values` itself. The picker surface owns the compact classification
+  // edition DAG (#906) over the relationship-graph contract (#761/#792); it is
+  // navigational/read-only for now, not an add-to-project picker. No period picker,
+  // docs surface, or LineageDetails here — classifications carry no study-window or
+  // lineage/warnings.
+  let { node }: { node: ClassificationShow } = $props();
 
-// The relationship graph for this classification edition (#678). Its OWN failure
-// domain: an error / empty (`nodes: []`) / unresolved fetch omits the graph and never
-// blanks the leaf (the meta renders regardless).
-const graphResource = asyncResource(() => getGraph(node.fqid));
-const graph = $derived(graphResource.data);
-const graphReady = $derived(
-  !graphResource.loading && !graphResource.error && graph != null,
-);
+  // The relationship graph for this classification edition (#678). Its OWN failure
+  // domain: an error / empty (`nodes: []`) / unresolved fetch omits the graph and never
+  // blanks the leaf (the meta renders regardless).
+  const graphResource = asyncResource(() => getGraph(node.fqid));
+  const graph = $derived(graphResource.data);
+  const graphReady = $derived(
+    !graphResource.loading && !graphResource.error && graph != null,
+  );
 </script>
 
 {#snippet description()}

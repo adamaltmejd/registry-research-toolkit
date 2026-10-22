@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import {
+  add,
+  openFile,
+  SEED,
+  storedProject,
+} from "./project-store-test-helpers";
+import {
   initDraftLifecycle,
   type ProjectPersistence,
   projectStore,
@@ -7,12 +13,6 @@ import {
   setPersistence,
   storeSchemaVersion,
 } from "./project_store.svelte";
-import {
-  add,
-  openFile,
-  SEED,
-  storedProject,
-} from "./project-store-test-helpers";
 import { projectSchemaVersion } from "./reg_core";
 
 // The store is a MODULE SINGLETON — each test must establish the state it needs

@@ -10,9 +10,6 @@ import {
   expectApplyDisabled,
   expectStagedAddColumnVisible,
 } from "./picker-test-helpers";
-import RepresentationPicker, {
-  type PickerBand,
-} from "./RepresentationPicker.svelte";
 import {
   AXES,
   clickFilter,
@@ -20,6 +17,9 @@ import {
   PROPS,
   row,
 } from "./representation-picker-test-helpers";
+import RepresentationPicker, {
+  type PickerBand,
+} from "./RepresentationPicker.svelte";
 import { type PickerCommittedRow, pickerRowKey } from "./staged_picker";
 
 // Split from RepresentationPicker.browser.test.ts by contract surface: staging, apply and footer.

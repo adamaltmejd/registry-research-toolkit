@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
-import { projectStore } from "./project_store.svelte";
 import { SEED } from "./project-store-test-helpers";
+import { projectStore } from "./project_store.svelte";
+import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
 
 // Split from ProjectEditor.browser.test.ts by contract surface: the order download
 // gate after `/project/order` answers 422 `order_blocked`. The materializer refuses

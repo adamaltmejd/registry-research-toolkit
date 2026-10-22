@@ -1,24 +1,24 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
+  import type { Snippet } from "svelte";
 
-// The unit of grouping (#804 / DESIGN.md → Panels): a header (micro-label
-// title + optional meta/badge) over a body, on a raised surface card. The
-// header title uses the label level — hierarchy from size and weight, not from
-// a heavy heading.
-//
-// `title` is a string OR a snippet (a title may carry a mono identifier). The
-// optional `meta` snippet rides the header's trailing edge (a count Tag, an
-// action). Omit-when-empty is the CONSUMER's concern — Panel always renders its
-// chrome; a caller with nothing to show simply doesn't render the Panel.
+  // The unit of grouping (#804 / DESIGN.md → Panels): a header (micro-label
+  // title + optional meta/badge) over a body, on a raised surface card. The
+  // header title uses the label level — hierarchy from size and weight, not from
+  // a heavy heading.
+  //
+  // `title` is a string OR a snippet (a title may carry a mono identifier). The
+  // optional `meta` snippet rides the header's trailing edge (a count Tag, an
+  // action). Omit-when-empty is the CONSUMER's concern — Panel always renders its
+  // chrome; a caller with nothing to show simply doesn't render the Panel.
 
-interface Props {
-  title: string | Snippet;
-  meta?: Snippet;
-  flush?: boolean;
-  children: Snippet;
-}
+  interface Props {
+    title: string | Snippet;
+    meta?: Snippet;
+    flush?: boolean;
+    children: Snippet;
+  }
 
-let { title, meta, flush = false, children }: Props = $props();
+  let { title, meta, flush = false, children }: Props = $props();
 </script>
 
 <section class="panel">

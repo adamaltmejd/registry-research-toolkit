@@ -1,10 +1,17 @@
 import { createRawSnippet } from "svelte";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import AppShell from "./AppShell.svelte";
 import { getShow } from "./api";
 import { rootShow } from "./api-test-helpers";
+import AppShell from "./AppShell.svelte";
 import { DATA_BROWSER_LABEL } from "./catalog";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { projectStore } from "./project_store.svelte";

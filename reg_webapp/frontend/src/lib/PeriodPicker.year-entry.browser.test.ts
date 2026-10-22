@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { userEvent } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import PeriodPicker from "./PeriodPicker.svelte";
 import type { Coverage } from "./period";
+import PeriodPicker from "./PeriodPicker.svelte";
 import type { ProjectStudyWindow } from "./project_data";
 
 // Split from PeriodPicker.browser.test.ts by contract surface: exact year entry

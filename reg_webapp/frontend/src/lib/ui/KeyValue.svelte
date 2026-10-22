@@ -1,26 +1,26 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
-import type { KeyValueRow } from "./types";
+  import type { Snippet } from "svelte";
+  import type { KeyValueRow } from "./types";
 
-// Labelled metadata rows (#804) — the primitive the many ad-hoc "label: value"
-// meta blocks converge on. A `<dl>` of term/description: the label is a muted
-// micro-label, the value is --text (mono-faced when it's an identifier, via the
-// row's `mono` flag).
-//
-// `rows` is the common `{ label, value, mono? }[]` data form. For values richer
-// than a string (a Tag, a link) pass the per-row `value` snippet: KeyValue still
-// owns the `.kv-row`/`dt`/`dd` structure (so the row stays component-styled —
-// caller-authored markup would fall outside this scoped CSS), and the snippet
-// only supplies the `<dd>` content. A row omitting `value` (plain-string path)
-// renders empty unless the snippet fills it.
+  // Labelled metadata rows (#804) — the primitive the many ad-hoc "label: value"
+  // meta blocks converge on. A `<dl>` of term/description: the label is a muted
+  // micro-label, the value is --text (mono-faced when it's an identifier, via the
+  // row's `mono` flag).
+  //
+  // `rows` is the common `{ label, value, mono? }[]` data form. For values richer
+  // than a string (a Tag, a link) pass the per-row `value` snippet: KeyValue still
+  // owns the `.kv-row`/`dt`/`dd` structure (so the row stays component-styled —
+  // caller-authored markup would fall outside this scoped CSS), and the snippet
+  // only supplies the `<dd>` content. A row omitting `value` (plain-string path)
+  // renders empty unless the snippet fills it.
 
-interface Props {
-  rows?: KeyValueRow[];
-  /** Per-row rich-value renderer; default renders `row.value`. */
-  value?: Snippet<[KeyValueRow]>;
-}
+  interface Props {
+    rows?: KeyValueRow[];
+    /** Per-row rich-value renderer; default renders `row.value`. */
+    value?: Snippet<[KeyValueRow]>;
+  }
 
-let { rows = [], value }: Props = $props();
+  let { rows = [], value }: Props = $props();
 </script>
 
 <dl class="key-value">

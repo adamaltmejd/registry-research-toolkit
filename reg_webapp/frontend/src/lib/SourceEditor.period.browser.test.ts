@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
-import { resetCatalogNames } from "./catalog_names.svelte";
 import { state } from "./catalog-test-helpers";
+import { resetCatalogNames } from "./catalog_names.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { storedProject } from "./project-store-test-helpers";
 import { holdRestore } from "./restore-test-helpers.svelte";
 import {
   renderCard,

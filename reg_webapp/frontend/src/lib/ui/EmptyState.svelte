@@ -1,20 +1,20 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
+  import type { Snippet } from "svelte";
 
-// Styled empty state (#804) — replaces unstyled "none found" text. Centered,
-// muted, restrained (the data-tool ethos: an empty region is quiet, not a
-// billboard). `title` is the headline; the optional `description` adds a line;
-// the optional `icon` snippet leads above the title; the optional `action`
-// snippet (typically a Button) sits below.
+  // Styled empty state (#804) — replaces unstyled "none found" text. Centered,
+  // muted, restrained (the data-tool ethos: an empty region is quiet, not a
+  // billboard). `title` is the headline; the optional `description` adds a line;
+  // the optional `icon` snippet leads above the title; the optional `action`
+  // snippet (typically a Button) sits below.
 
-interface Props {
-  title: string;
-  description?: string;
-  icon?: Snippet;
-  action?: Snippet;
-}
+  interface Props {
+    title: string;
+    description?: string;
+    icon?: Snippet;
+    action?: Snippet;
+  }
 
-let { title, description, icon, action }: Props = $props();
+  let { title, description, icon, action }: Props = $props();
 </script>
 
 <div class="empty-state">

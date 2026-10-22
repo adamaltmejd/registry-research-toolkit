@@ -1,22 +1,22 @@
 <script lang="ts">
-import type { BreadcrumbItem } from "./types";
+  import type { BreadcrumbItem } from "./types";
 
-// The topbar breadcrumb (#804 / DESIGN.md → App shell). `<nav
-// aria-label="Breadcrumb">` over an ordered list; the LAST item is the current
-// page — rendered as plain text with `aria-current="page"`, never a link.
-// The separator is a CSS `::before` (not a DOM character) so a screen reader
-// reads only the labels, not "slash" between each.
-//
-// Links carry the focus ring + accent-on-hover (the shared interactive-primitive
-// focus convention, #804). The caller owns the `href` shape (the router's
-// `use:link` intercepts internal anchors elsewhere — Breadcrumbs is purely
-// presentational and does no navigation itself).
+  // The topbar breadcrumb (#804 / DESIGN.md → App shell). `<nav
+  // aria-label="Breadcrumb">` over an ordered list; the LAST item is the current
+  // page — rendered as plain text with `aria-current="page"`, never a link.
+  // The separator is a CSS `::before` (not a DOM character) so a screen reader
+  // reads only the labels, not "slash" between each.
+  //
+  // Links carry the focus ring + accent-on-hover (the shared interactive-primitive
+  // focus convention, #804). The caller owns the `href` shape (the router's
+  // `use:link` intercepts internal anchors elsewhere — Breadcrumbs is purely
+  // presentational and does no navigation itself).
 
-interface Props {
-  items: BreadcrumbItem[];
-}
+  interface Props {
+    items: BreadcrumbItem[];
+  }
 
-let { items }: Props = $props();
+  let { items }: Props = $props();
 </script>
 
 <nav aria-label="Breadcrumb" class="breadcrumbs">
@@ -30,7 +30,10 @@ let { items }: Props = $props();
           <!-- Only the LAST item is the current page. An intentionally-plain
                non-final item (no href) is a plain span with NO aria-current, so a
                second "current page" can't leak into the a11y tree. -->
-          <span aria-current={isLast ? "page" : undefined} class:current={isLast}>
+          <span
+            aria-current={isLast ? "page" : undefined}
+            class:current={isLast}
+          >
             {item.label}
           </span>
         {/if}

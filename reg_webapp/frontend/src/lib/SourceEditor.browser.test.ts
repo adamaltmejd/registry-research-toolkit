@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { rootShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { storedProject } from "./project-store-test-helpers";
 import {
   providerShow,
   registerChild,

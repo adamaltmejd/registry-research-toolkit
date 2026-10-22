@@ -1,195 +1,196 @@
 <script lang="ts">
-import type { ClassificationGraphNode, RelationshipGraph } from "./api";
-import { catalogHref } from "./catalog";
-import {
-  type ClassificationDagEdge,
-  type ClassificationDagNode,
-  type ClassificationPoint,
-  classificationDagLayout,
-  clustersOf,
-  type NodeCluster,
-  resolveEdges,
-} from "./picker_graph";
+  import type { ClassificationGraphNode, RelationshipGraph } from "./api";
+  import { catalogHref } from "./catalog";
+  import {
+    type ClassificationDagEdge,
+    type ClassificationDagNode,
+    type ClassificationPoint,
+    classificationDagLayout,
+    clustersOf,
+    type NodeCluster,
+    resolveEdges,
+  } from "./picker_graph";
 
-// The classification-edition picker surface (#906): a compact DAG ordered by
-// succession topology, not by absolute distance on a year axis. It is read-only
-// for now: editions are navigable catalog nodes, not add-to-project columns.
-let { graph }: { graph: RelationshipGraph } = $props();
+  // The classification-edition picker surface (#906): a compact DAG ordered by
+  // succession topology, not by absolute distance on a year axis. It is read-only
+  // for now: editions are navigable catalog nodes, not add-to-project columns.
+  let { graph }: { graph: RelationshipGraph } = $props();
 
-const NODE_W = 168;
-const NODE_H = 58;
-const COL_GAP = 48;
-const ROW_GAP = 18;
-const PAD = 14;
-const EDGE_LABEL_BAND = 24;
+  const NODE_W = 168;
+  const NODE_H = 58;
+  const COL_GAP = 48;
+  const ROW_GAP = 18;
+  const PAD = 14;
+  const EDGE_LABEL_BAND = 24;
 
-interface DagCluster {
-  cluster: NodeCluster;
-  layout: ReturnType<typeof classificationDagLayout>;
-  width: number;
-  height: number;
-}
-
-function scrollActiveEdition(
-  node: HTMLElement,
-  active: boolean,
-): { update: (next: boolean) => void; destroy: () => void } {
-  let frame: number | null = null;
-  const scroll = () => {
-    frame = null;
-    if (active) {
-      node.scrollIntoView({ block: "nearest", inline: "center" });
-    }
-  };
-  const queue = () => {
-    if (frame != null) {
-      cancelAnimationFrame(frame);
-    }
-    frame = requestAnimationFrame(scroll);
-  };
-  if (active) {
-    queue();
+  interface DagCluster {
+    cluster: NodeCluster;
+    layout: ReturnType<typeof classificationDagLayout>;
+    width: number;
+    height: number;
   }
-  return {
-    update(next: boolean) {
-      active = next;
+
+  function scrollActiveEdition(
+    node: HTMLElement,
+    active: boolean,
+  ): { update: (next: boolean) => void; destroy: () => void } {
+    let frame: number | null = null;
+    const scroll = () => {
+      frame = null;
       if (active) {
-        queue();
+        node.scrollIntoView({ block: "nearest", inline: "center" });
       }
-    },
-    destroy() {
+    };
+    const queue = () => {
       if (frame != null) {
         cancelAnimationFrame(frame);
       }
-    },
-  };
-}
+      frame = requestAnimationFrame(scroll);
+    };
+    if (active) {
+      queue();
+    }
+    return {
+      update(next: boolean) {
+        active = next;
+        if (active) {
+          queue();
+        }
+      },
+      destroy() {
+        if (frame != null) {
+          cancelAnimationFrame(frame);
+        }
+      },
+    };
+  }
 
-const dagClusters = $derived.by((): DagCluster[] => {
-  const resolved = resolveEdges(graph);
-  const successionEdges = resolved.filter(
-    (edge) =>
-      edge.source.kind === "classification" &&
-      edge.target.kind === "classification",
-  );
-  let renderIds = new Set<string>();
-  if (graph.focus_id != null) {
-    const neighbors = new Map<string, Set<string>>();
-    for (const edge of successionEdges) {
-      const sourceNeighbors = neighbors.get(edge.source.id) ?? new Set();
-      sourceNeighbors.add(edge.target.id);
-      neighbors.set(edge.source.id, sourceNeighbors);
-      const targetNeighbors = neighbors.get(edge.target.id) ?? new Set();
-      targetNeighbors.add(edge.source.id);
-      neighbors.set(edge.target.id, targetNeighbors);
-    }
-    const queue = neighbors.has(graph.focus_id) ? [graph.focus_id] : [];
-    while (queue.length > 0) {
-      const id = queue.shift() as string;
-      if (renderIds.has(id)) {
-        continue;
-      }
-      renderIds.add(id);
-      for (const next of neighbors.get(id) ?? []) {
-        queue.push(next);
-      }
-    }
-  } else {
-    renderIds = new Set(
-      successionEdges.flatMap((edge) => [edge.source.id, edge.target.id]),
+  const dagClusters = $derived.by((): DagCluster[] => {
+    const resolved = resolveEdges(graph);
+    const successionEdges = resolved.filter(
+      (edge) =>
+        edge.source.kind === "classification" &&
+        edge.target.kind === "classification",
     );
-  }
-  if (renderIds.size === 0) {
-    return [];
-  }
-  return clustersOf(graph)
-    .map((cluster): DagCluster | null => {
-      const points = cluster.nodes
-        .filter(
-          (node): node is ClassificationPoint => node.kind === "classification",
-        )
-        .filter((point) => renderIds.has(point.node.id));
-      const ids = new Set(points.map((point) => point.node.id));
-      const edges = successionEdges.filter(
-        (edge) => ids.has(edge.source.id) && ids.has(edge.target.id),
-      );
-      const layout = classificationDagLayout(points, edges);
-      if (layout.nodes.length === 0 || layout.edges.length === 0) {
-        return null;
+    let renderIds = new Set<string>();
+    if (graph.focus_id != null) {
+      const neighbors = new Map<string, Set<string>>();
+      for (const edge of successionEdges) {
+        const sourceNeighbors = neighbors.get(edge.source.id) ?? new Set();
+        sourceNeighbors.add(edge.target.id);
+        neighbors.set(edge.source.id, sourceNeighbors);
+        const targetNeighbors = neighbors.get(edge.target.id) ?? new Set();
+        targetNeighbors.add(edge.source.id);
+        neighbors.set(edge.target.id, targetNeighbors);
       }
-      return {
-        cluster,
-        layout,
-        width:
-          PAD * 2 + layout.columns * NODE_W + (layout.columns - 1) * COL_GAP,
-        height:
-          PAD * 2 +
-          EDGE_LABEL_BAND +
-          layout.rows * NODE_H +
-          (layout.rows - 1) * ROW_GAP,
-      };
-    })
-    .filter((cluster): cluster is DagCluster => cluster != null);
-});
+      const queue = neighbors.has(graph.focus_id) ? [graph.focus_id] : [];
+      while (queue.length > 0) {
+        const id = queue.shift() as string;
+        if (renderIds.has(id)) {
+          continue;
+        }
+        renderIds.add(id);
+        for (const next of neighbors.get(id) ?? []) {
+          queue.push(next);
+        }
+      }
+    } else {
+      renderIds = new Set(
+        successionEdges.flatMap((edge) => [edge.source.id, edge.target.id]),
+      );
+    }
+    if (renderIds.size === 0) {
+      return [];
+    }
+    return clustersOf(graph)
+      .map((cluster): DagCluster | null => {
+        const points = cluster.nodes
+          .filter(
+            (node): node is ClassificationPoint =>
+              node.kind === "classification",
+          )
+          .filter((point) => renderIds.has(point.node.id));
+        const ids = new Set(points.map((point) => point.node.id));
+        const edges = successionEdges.filter(
+          (edge) => ids.has(edge.source.id) && ids.has(edge.target.id),
+        );
+        const layout = classificationDagLayout(points, edges);
+        if (layout.nodes.length === 0 || layout.edges.length === 0) {
+          return null;
+        }
+        return {
+          cluster,
+          layout,
+          width:
+            PAD * 2 + layout.columns * NODE_W + (layout.columns - 1) * COL_GAP,
+          height:
+            PAD * 2 +
+            EDGE_LABEL_BAND +
+            layout.rows * NODE_H +
+            (layout.rows - 1) * ROW_GAP,
+        };
+      })
+      .filter((cluster): cluster is DagCluster => cluster != null);
+  });
 
-function nodeLeft(node: ClassificationDagNode): number {
-  return PAD + node.column * (NODE_W + COL_GAP);
-}
-
-function nodeTop(node: ClassificationDagNode): number {
-  return PAD + EDGE_LABEL_BAND + node.row * (NODE_H + ROW_GAP);
-}
-
-function edgePath(edge: ClassificationDagEdge): string {
-  const sx = nodeLeft(edge.source) + NODE_W;
-  const sy = nodeTop(edge.source) + NODE_H / 2;
-  const tx = nodeLeft(edge.target);
-  const ty = nodeTop(edge.target) + NODE_H / 2;
-  const bend = Math.max(24, Math.abs(tx - sx) / 2);
-  return `M${sx} ${sy} C${sx + bend} ${sy} ${tx - bend} ${ty} ${tx} ${ty}`;
-}
-
-function edgeYear(edge: ClassificationDagEdge): string | null {
-  return edge.edge.effective_year != null
-    ? String(edge.edge.effective_year)
-    : null;
-}
-
-function edgeYearLeft(edge: ClassificationDagEdge): number {
-  const sx = nodeLeft(edge.source) + NODE_W;
-  const tx = nodeLeft(edge.target);
-  return sx + (tx - sx) / 2 - 17;
-}
-
-function edgeYearTop(edge: ClassificationDagEdge): number {
-  const sy = nodeTop(edge.source) + NODE_H / 2;
-  const ty = nodeTop(edge.target) + NODE_H / 2;
-  if (edge.source.row === edge.target.row) {
-    return sy - 26;
+  function nodeLeft(node: ClassificationDagNode): number {
+    return PAD + node.column * (NODE_W + COL_GAP);
   }
-  return (sy + ty) / 2 - 7;
-}
 
-function editionYear(node: ClassificationGraphNode): string {
-  return node.version_year != null ? String(node.version_year) : "undated";
-}
-
-function editionName(node: ClassificationGraphNode): string {
-  return node.short_name ?? node.label;
-}
-
-function editionHref(node: ClassificationGraphNode): string | null {
-  if (node.id === graph.focus_id || node.fqid == null) {
-    return null;
+  function nodeTop(node: ClassificationDagNode): number {
+    return PAD + EDGE_LABEL_BAND + node.row * (NODE_H + ROW_GAP);
   }
-  return catalogHref(node.fqid);
-}
 
-function editionLabel(node: ClassificationGraphNode): string {
-  const name = editionName(node);
-  const fullName = node.label !== name ? `, ${node.label}` : "";
-  return `${name}${fullName}, ${editionYear(node)}${node.is_current ? ", current edition" : ""}`;
-}
+  function edgePath(edge: ClassificationDagEdge): string {
+    const sx = nodeLeft(edge.source) + NODE_W;
+    const sy = nodeTop(edge.source) + NODE_H / 2;
+    const tx = nodeLeft(edge.target);
+    const ty = nodeTop(edge.target) + NODE_H / 2;
+    const bend = Math.max(24, Math.abs(tx - sx) / 2);
+    return `M${sx} ${sy} C${sx + bend} ${sy} ${tx - bend} ${ty} ${tx} ${ty}`;
+  }
+
+  function edgeYear(edge: ClassificationDagEdge): string | null {
+    return edge.edge.effective_year != null
+      ? String(edge.edge.effective_year)
+      : null;
+  }
+
+  function edgeYearLeft(edge: ClassificationDagEdge): number {
+    const sx = nodeLeft(edge.source) + NODE_W;
+    const tx = nodeLeft(edge.target);
+    return sx + (tx - sx) / 2 - 17;
+  }
+
+  function edgeYearTop(edge: ClassificationDagEdge): number {
+    const sy = nodeTop(edge.source) + NODE_H / 2;
+    const ty = nodeTop(edge.target) + NODE_H / 2;
+    if (edge.source.row === edge.target.row) {
+      return sy - 26;
+    }
+    return (sy + ty) / 2 - 7;
+  }
+
+  function editionYear(node: ClassificationGraphNode): string {
+    return node.version_year != null ? String(node.version_year) : "undated";
+  }
+
+  function editionName(node: ClassificationGraphNode): string {
+    return node.short_name ?? node.label;
+  }
+
+  function editionHref(node: ClassificationGraphNode): string | null {
+    if (node.id === graph.focus_id || node.fqid == null) {
+      return null;
+    }
+    return catalogHref(node.fqid);
+  }
+
+  function editionLabel(node: ClassificationGraphNode): string {
+    const name = editionName(node);
+    const fullName = node.label !== name ? `, ${node.label}` : "";
+    return `${name}${fullName}, ${editionYear(node)}${node.is_current ? ", current edition" : ""}`;
+  }
 </script>
 
 {#if dagClusters.length > 0}
@@ -214,12 +215,7 @@ function editionLabel(node: ClassificationGraphNode): string {
               : `Edition succession: ${layout.nodes.length} editions`}
             style={`width:${width}px; height:${height}px;`}
           >
-            <svg
-              class="edition-connectors"
-              width={width}
-              height={height}
-              aria-hidden="true"
-            >
+            <svg class="edition-connectors" {width} {height} aria-hidden="true">
               <defs>
                 <marker
                   id={`edition-arrow-${ci}`}
@@ -259,7 +255,8 @@ function editionLabel(node: ClassificationGraphNode): string {
               {@const node = item.point.node}
               {@const href = editionHref(node)}
               {@const focused = node.id === graph.focus_id}
-              {@const active = focused || (graph.focus_id == null && node.is_current)}
+              {@const active =
+                focused || (graph.focus_id == null && node.is_current)}
               <div
                 class="edition-node"
                 class:focused

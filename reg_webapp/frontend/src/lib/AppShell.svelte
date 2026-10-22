@@ -1,189 +1,193 @@
 <script lang="ts">
-import { Dialog } from "bits-ui";
-import type { Snippet } from "svelte";
-import { catalogHref, DATA_BROWSER_LABEL } from "./catalog";
-import { catalogRootChildren } from "./catalog_names.svelte";
-import {
-  type ProjectStudyWindow,
-  safeSourceBindings,
-  safeSourceSlots,
-} from "./project_data";
-import { projectStore, type ValidationStatus } from "./project_store.svelte";
-import { type Route, router } from "./router.svelte";
-import SearchOmnibox from "./SearchOmnibox.svelte";
-import { type BreadcrumbItem, Breadcrumbs } from "./ui";
-import YearWindowSlider from "./YearWindowSlider.svelte";
+  import { Dialog } from "bits-ui";
+  import type { Snippet } from "svelte";
+  import { catalogHref, DATA_BROWSER_LABEL } from "./catalog";
+  import { catalogRootChildren } from "./catalog_names.svelte";
+  import {
+    type ProjectStudyWindow,
+    safeSourceBindings,
+    safeSourceSlots,
+  } from "./project_data";
+  import { projectStore, type ValidationStatus } from "./project_store.svelte";
+  import { type Route, router } from "./router.svelte";
+  import SearchOmnibox from "./SearchOmnibox.svelte";
+  import { type BreadcrumbItem, Breadcrumbs } from "./ui";
+  import YearWindowSlider from "./YearWindowSlider.svelte";
 
-// The app shell (#803): a persistent left RAIL (brand + primary nav + the
-// project-window slider + the full provider facet list) and a TOPBAR (breadcrumb
-// + the promoted SearchOmnibox command bar), wrapping a wide content canvas. On
-// mobile the rail collapses to an overlay DRAWER toggled from the topbar, so all
-// providers — and the window slider — stay reachable without scrolling past the
-// fold.
-//
-// The project-window slider is a GLOBAL control (like the provider facets and
-// primary nav), so it lives in the rail, reachable on every route and inside the
-// drawer on mobile. Keeping it OUT of the topbar matches the design-system spec
-// (topbar = breadcrumb + command bar only) and removes the 375px overflow its
-// track caused when crammed into the topbar row.
-//
-// App.svelte stays the owner of the deployment context, banners, footer, and the
-// routed <main> switch; it passes the context-derived chrome props down and the
-// routed content in as `children`. The shell fetches its OWN provider list (the
-// same GET /api/catalog the CatalogRoot page uses) — it's contextual facet
-// navigation, independent of the routed page.
+  // The app shell (#803): a persistent left RAIL (brand + primary nav + the
+  // project-window slider + the full provider facet list) and a TOPBAR (breadcrumb
+  // + the promoted SearchOmnibox command bar), wrapping a wide content canvas. On
+  // mobile the rail collapses to an overlay DRAWER toggled from the topbar, so all
+  // providers — and the window slider — stay reachable without scrolling past the
+  // fold.
+  //
+  // The project-window slider is a GLOBAL control (like the provider facets and
+  // primary nav), so it lives in the rail, reachable on every route and inside the
+  // drawer on mobile. Keeping it OUT of the topbar matches the design-system spec
+  // (topbar = breadcrumb + command bar only) and removes the 375px overflow its
+  // track caused when crammed into the topbar row.
+  //
+  // App.svelte stays the owner of the deployment context, banners, footer, and the
+  // routed <main> switch; it passes the context-derived chrome props down and the
+  // routed content in as `children`. The shell fetches its OWN provider list (the
+  // same GET /api/catalog the CatalogRoot page uses) — it's contextual facet
+  // navigation, independent of the routed page.
 
-interface Props {
-  /** Steward branding for the brand block (long name + id), or null until the
-   * deployment context resolves. */
-  steward: { long_name: string; id: string } | null;
-  /** The project-window slider bounds + wiring (App owns the window store). */
-  windowMin: number;
-  windowMax: number;
-  windowValue: ProjectStudyWindow | null;
-  onWindowChange: (next: ProjectStudyWindow) => void;
-  onWindowClear: () => void;
-  /** The route-derived topbar breadcrumb trail (App derives it from the route). */
-  breadcrumbs: BreadcrumbItem[];
-  /** The routed content (App's <main> switch). */
-  children: Snippet;
-}
-
-let {
-  steward,
-  windowMin,
-  windowMax,
-  windowValue,
-  onWindowChange,
-  onWindowClear,
-  breadcrumbs,
-  children,
-}: Props = $props();
-
-const route = $derived(router.route);
-
-// The contextual provider facets — every provider + the classification-root
-// sentinel, the same catalog root the CatalogRoot page renders. Read on EVERY
-// route (not just `/catalog`) so the facets are always reachable, and through the
-// shared name cache, which is also where a cart source card gets its provider
-// word: the app reads `/api/catalog` once, not once per consumer.
-const root = $derived(catalogRootChildren());
-const providers = $derived(root.value ?? []);
-
-// The mobile drawer open state, bound to the Bits UI Dialog below (which owns
-// every other way it closes: Escape, a click or focus outside, and the return of
-// focus to the toggle). Closed by default; three things beyond the dialog's own
-// dismissals close it, below.
-let drawerOpen = $state(false);
-
-// 1. A navigation, so the drawer isn't left covering the freshly-routed page.
-$effect(() => {
-  // The bare reads are the dependency: re-run on every navigation. BOTH halves
-  // of the location, because `route` moves only when the pathname does (Y-65) —
-  // browser back/forward between two `?period`s on one leaf is a navigation the
-  // drawer must not stand through either.
-  route;
-  router.search;
-  drawerOpen = false;
-});
-
-// 2. Activating one of the drawer's OWN links, which is not the same thing: a
-// link to the route already showing is a no-op for the router (it never
-// re-assigns `route`), so the effect above never runs and the drawer would
-// stand over the page the researcher just asked to see. Delegated from the
-// drawer rather than written on each link, so a link added to the rail later
-// inherits it — and so the desktop rail, which renders the same markup with no
-// drawer to close, carries nothing.
-function closeOnLinkActivation(event: MouseEvent): void {
-  if ((event.target as Element | null)?.closest("a[href]")) {
-    drawerOpen = false;
+  interface Props {
+    /** Steward branding for the brand block (long name + id), or null until the
+     * deployment context resolves. */
+    steward: { long_name: string; id: string } | null;
+    /** The project-window slider bounds + wiring (App owns the window store). */
+    windowMin: number;
+    windowMax: number;
+    windowValue: ProjectStudyWindow | null;
+    onWindowChange: (next: ProjectStudyWindow) => void;
+    onWindowClear: () => void;
+    /** The route-derived topbar breadcrumb trail (App derives it from the route). */
+    breadcrumbs: BreadcrumbItem[];
+    /** The routed content (App's <main> switch). */
+    children: Snippet;
   }
-}
 
-// 3. Growing past the shell's 48rem breakpoint, where the persistent rail takes
-// over: the drawer must not stay open as a modal over the desktop layout, still
-// holding focus, aria-modal, and the page behind it locked from scrolling and
-// from the pointer.
-// The query is the same condition as the media query at the foot of this file:
-// the breakpoint has one value, and moving it means moving both.
-const mobile = window.matchMedia("(max-width: 48rem)");
-$effect(() => {
-  const closeOnDesktop = () => {
-    if (!mobile.matches) {
+  let {
+    steward,
+    windowMin,
+    windowMax,
+    windowValue,
+    onWindowChange,
+    onWindowClear,
+    breadcrumbs,
+    children,
+  }: Props = $props();
+
+  const route = $derived(router.route);
+
+  // The contextual provider facets — every provider + the classification-root
+  // sentinel, the same catalog root the CatalogRoot page renders. Read on EVERY
+  // route (not just `/catalog`) so the facets are always reachable, and through the
+  // shared name cache, which is also where a cart source card gets its provider
+  // word: the app reads `/api/catalog` once, not once per consumer.
+  const root = $derived(catalogRootChildren());
+  const providers = $derived(root.value ?? []);
+
+  // The mobile drawer open state, bound to the Bits UI Dialog below (which owns
+  // every other way it closes: Escape, a click or focus outside, and the return of
+  // focus to the toggle). Closed by default; three things beyond the dialog's own
+  // dismissals close it, below.
+  let drawerOpen = $state(false);
+
+  // 1. A navigation, so the drawer isn't left covering the freshly-routed page.
+  $effect(() => {
+    // The bare reads are the dependency: re-run on every navigation. BOTH halves
+    // of the location, because `route` moves only when the pathname does (Y-65) —
+    // browser back/forward between two `?period`s on one leaf is a navigation the
+    // drawer must not stand through either.
+    route;
+    router.search;
+    drawerOpen = false;
+  });
+
+  // 2. Activating one of the drawer's OWN links, which is not the same thing: a
+  // link to the route already showing is a no-op for the router (it never
+  // re-assigns `route`), so the effect above never runs and the drawer would
+  // stand over the page the researcher just asked to see. Delegated from the
+  // drawer rather than written on each link, so a link added to the rail later
+  // inherits it — and so the desktop rail, which renders the same markup with no
+  // drawer to close, carries nothing.
+  function closeOnLinkActivation(event: MouseEvent): void {
+    if ((event.target as Element | null)?.closest("a[href]")) {
       drawerOpen = false;
     }
-  };
-  mobile.addEventListener("change", closeOnDesktop);
-  return () => mobile.removeEventListener("change", closeOnDesktop);
-});
-
-// Whether the data-browser nav item is "active" — any catalog/group route. The
-// active state is signalled by weight + a left-edge marker + aria-current, never
-// hue alone (the design review's color-only-signalling flag).
-const dataBrowserActive = $derived(
-  route.name === "root" ||
-    route.name === "catalog-node" ||
-    route.name === "group" ||
-    route.name === "class-group",
-);
-
-const projectDraft = $derived(projectStore.draft);
-const projectSources = $derived(safeSourceSlots(projectDraft?.sources));
-const projectSourceCount = $derived(projectSources.length);
-const projectColumnCount = $derived(
-  projectSources.reduce(
-    (total, source) => total + safeSourceBindings(source).length,
-    0,
-  ),
-);
-const projectTitle = $derived.by(() => {
-  if (projectDraft == null) {
-    return "No project";
   }
-  const name =
-    typeof projectDraft.name === "string" ? projectDraft.name.trim() : "";
-  return name.length > 0 ? name : "Untitled project";
-});
-/** The rail's verdict: the draft's validation, except that a source the study
- * window has moved off blocks the ORDER whatever validation said — the panel's
- * own "Order blocked" wording, so the chip never reads "Warnings" or "Draft
- * valid" beside a closed order download. A failing or in-flight validation still
- * wins: it is the more specific thing to fix first. */
-type RailStatus = ValidationStatus | "blocked";
-const projectStatus = $derived.by((): RailStatus => {
-  const status = projectStore.validationStatus;
-  return projectStore.windowBlocked &&
-    (status === "ok" || status === "warnings")
-    ? "blocked"
-    : status;
-});
 
-// Same vocabulary as the ValidationPanel's verdict: the chip rides along on every
-// route, so a bare "Valid" beside a blocked order would claim more than the check
-// that actually completed (it validated the DRAFT, not the order).
-const STATUS_LABEL: Record<RailStatus, string> = {
-  unchecked: "Unchecked",
-  checking: "Checking",
-  ok: "Draft valid",
-  warnings: "Warnings",
-  errors: "Errors",
-  blocked: "Order blocked",
-};
+  // 3. Growing past the shell's 48rem breakpoint, where the persistent rail takes
+  // over: the drawer must not stay open as a modal over the desktop layout, still
+  // holding focus, aria-modal, and the page behind it locked from scrolling and
+  // from the pointer.
+  // The query is the same condition as the media query at the foot of this file:
+  // the breakpoint has one value, and moving it means moving both.
+  const mobile = window.matchMedia("(max-width: 48rem)");
+  $effect(() => {
+    const closeOnDesktop = () => {
+      if (!mobile.matches) {
+        drawerOpen = false;
+      }
+    };
+    mobile.addEventListener("change", closeOnDesktop);
+    return () => mobile.removeEventListener("change", closeOnDesktop);
+  });
 
-function isCurrent(active: boolean): "page" | undefined {
-  return active ? "page" : undefined;
-}
+  // Whether the data-browser nav item is "active" — any catalog/group route. The
+  // active state is signalled by weight + a left-edge marker + aria-current, never
+  // hue alone (the design review's color-only-signalling flag).
+  const dataBrowserActive = $derived(
+    route.name === "root" ||
+      route.name === "catalog-node" ||
+      route.name === "group" ||
+      route.name === "class-group",
+  );
 
-// The provider facet's display label: providers carry an optional name, the
-// classification-root a default one; both fall back to the FQID (the
-// CatalogRoot labelling).
-function facetLabel(child: { name?: string | null; fqid: string }): string {
-  return child.name ?? child.fqid;
-}
+  const projectDraft = $derived(projectStore.draft);
+  const projectSources = $derived(safeSourceSlots(projectDraft?.sources));
+  const projectSourceCount = $derived(projectSources.length);
+  const projectColumnCount = $derived(
+    projectSources.reduce(
+      (total, source) => total + safeSourceBindings(source).length,
+      0,
+    ),
+  );
+  const projectTitle = $derived.by(() => {
+    if (projectDraft == null) {
+      return "No project";
+    }
+    const name =
+      typeof projectDraft.name === "string" ? projectDraft.name.trim() : "";
+    return name.length > 0 ? name : "Untitled project";
+  });
+  /** The rail's verdict: the draft's validation, except that a source the study
+   * window has moved off blocks the ORDER whatever validation said — the panel's
+   * own "Order blocked" wording, so the chip never reads "Warnings" or "Draft
+   * valid" beside a closed order download. A failing or in-flight validation still
+   * wins: it is the more specific thing to fix first. */
+  type RailStatus = ValidationStatus | "blocked";
+  const projectStatus = $derived.by((): RailStatus => {
+    const status = projectStore.validationStatus;
+    return projectStore.windowBlocked &&
+      (status === "ok" || status === "warnings")
+      ? "blocked"
+      : status;
+  });
 
-function plural(count: number, singular: string, pluralLabel: string): string {
-  return `${count} ${count === 1 ? singular : pluralLabel}`;
-}
+  // Same vocabulary as the ValidationPanel's verdict: the chip rides along on every
+  // route, so a bare "Valid" beside a blocked order would claim more than the check
+  // that actually completed (it validated the DRAFT, not the order).
+  const STATUS_LABEL: Record<RailStatus, string> = {
+    unchecked: "Unchecked",
+    checking: "Checking",
+    ok: "Draft valid",
+    warnings: "Warnings",
+    errors: "Errors",
+    blocked: "Order blocked",
+  };
+
+  function isCurrent(active: boolean): "page" | undefined {
+    return active ? "page" : undefined;
+  }
+
+  // The provider facet's display label: providers carry an optional name, the
+  // classification-root a default one; both fall back to the FQID (the
+  // CatalogRoot labelling).
+  function facetLabel(child: { name?: string | null; fqid: string }): string {
+    return child.name ?? child.fqid;
+  }
+
+  function plural(
+    count: number,
+    singular: string,
+    pluralLabel: string,
+  ): string {
+    return `${count} ${count === 1 ? singular : pluralLabel}`;
+  }
 </script>
 
 <!-- The rail's contents, written once and rendered by both rails — the
@@ -210,7 +214,8 @@ function plural(count: number, singular: string, pluralLabel: string): string {
       href="/catalog"
       class="nav-item"
       class:active={dataBrowserActive}
-      aria-current={isCurrent(dataBrowserActive)}>{DATA_BROWSER_LABEL}</a>
+      aria-current={isCurrent(dataBrowserActive)}>{DATA_BROWSER_LABEL}</a
+    >
     <a
       href="/project"
       class="project-chip"
@@ -228,7 +233,11 @@ function plural(count: number, singular: string, pluralLabel: string): string {
       <span class="project-chip-title">{projectTitle}</span>
       <span class="project-chip-meta">
         <span>
-          {plural(projectSourceCount, "source", "sources")} · {plural(projectColumnCount, "column", "columns")}
+          {plural(projectSourceCount, "source", "sources")} · {plural(
+            projectColumnCount,
+            "column",
+            "columns",
+          )}
         </span>
         <span class={`project-status ${projectStatus}`}>
           <span class="project-status-dot" aria-hidden="true"></span>
@@ -276,7 +285,8 @@ function plural(count: number, singular: string, pluralLabel: string): string {
               class="facet"
               class:active
               title={child.fqid}
-              aria-current={isCurrent(active)}>{facetLabel(child)}</a>
+              aria-current={isCurrent(active)}>{facetLabel(child)}</a
+            >
           </li>
         {/each}
       </ul>

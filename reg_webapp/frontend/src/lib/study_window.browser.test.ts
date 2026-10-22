@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type { RegisterShow, VariableShow, VariableStateModel } from "./api";
@@ -12,13 +19,13 @@ import {
 } from "./api";
 import { registerShow } from "./api-test-helpers";
 import BindingLeafView from "./BindingLeafView.svelte";
-import { resetCatalogNames } from "./catalog_names.svelte";
 import { delivery, variableChild } from "./catalog-node-view-test-helpers";
 import { state as baseState } from "./catalog-test-helpers";
-import ProjectEditor from "./ProjectEditor.svelte";
+import { resetCatalogNames } from "./catalog_names.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { storedProject } from "./project-store-test-helpers";
+import ProjectEditor from "./ProjectEditor.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 

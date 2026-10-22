@@ -3,7 +3,6 @@ import { page, userEvent } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type { VariableStateModel } from "./api";
 import { getStates } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   pickerStates,
@@ -11,6 +10,7 @@ import {
   SEED,
   state,
 } from "./binding-leaf-view-test-helpers";
+import BindingLeafView from "./BindingLeafView.svelte";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";

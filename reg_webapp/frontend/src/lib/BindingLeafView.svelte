@@ -1,628 +1,634 @@
 <script lang="ts">
-import {
-  getGraph,
-  getRelatedDocuments,
-  getStates,
-  relatedDocumentFileHref,
-  type VariableGraphNode,
-  type VariableShow,
-  type VariableStateModel,
-} from "./api";
-import { asyncResource, unmountedFlag } from "./async.svelte";
-import {
-  coverageFromStates,
-  formatDataType,
-  formatStateWindow,
-  fqidSegments,
-  groupLinkFromFocus,
-  narrowStatesByModifier,
-  parseCodesParam,
-  pickerRepresentations,
-  pickerWindowYears,
-  qualifierFromFocus,
-  registerPrefixOf,
-  windowTitle,
-} from "./catalog";
-import {
-  matrixAnswerSource,
-  pagesLabel,
-  provenanceBlocks,
-} from "./curated_source";
-import DocMentionsPanel from "./DocMentionsPanel.svelte";
-import LineageDetails from "./LineageDetails.svelte";
-import PeriodPicker from "./PeriodPicker.svelte";
-import {
-  clampYearPeriodWire,
-  clampYearWindow,
-  nextResolutionQuery,
-  periodWireValid,
-  VALUE_SET_VERSION_NONE,
-} from "./period";
-import { projectStore } from "./project_store.svelte";
-import RepresentationPicker, {
-  type PickerApplyPayload,
-} from "./RepresentationPicker.svelte";
-import { router } from "./router.svelte";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import StagedAddStatus from "./StagedAddStatus.svelte";
-import SubjectView from "./SubjectView.svelte";
-import {
-  ADD_PERIOD_REQUIRED_MESSAGE,
-  applyStagedPicks,
-  committedPickerRows,
-  type StagedApplyOutcome,
-  stagedApplyRefusal,
-} from "./staged_picker";
-import TechnicalDetails from "./TechnicalDetails.svelte";
-import { KeyValue, type KeyValueRow, Tag } from "./ui";
-import ValueSetView from "./ValueSetView.svelte";
-import { windowStore } from "./window.svelte";
+  import {
+    getGraph,
+    getRelatedDocuments,
+    getStates,
+    relatedDocumentFileHref,
+    type VariableGraphNode,
+    type VariableShow,
+    type VariableStateModel,
+  } from "./api";
+  import { asyncResource, unmountedFlag } from "./async.svelte";
+  import {
+    coverageFromStates,
+    formatDataType,
+    formatStateWindow,
+    fqidSegments,
+    groupLinkFromFocus,
+    narrowStatesByModifier,
+    parseCodesParam,
+    pickerRepresentations,
+    pickerWindowYears,
+    qualifierFromFocus,
+    registerPrefixOf,
+    windowTitle,
+  } from "./catalog";
+  import {
+    matrixAnswerSource,
+    pagesLabel,
+    provenanceBlocks,
+  } from "./curated_source";
+  import DocMentionsPanel from "./DocMentionsPanel.svelte";
+  import LineageDetails from "./LineageDetails.svelte";
+  import {
+    clampYearPeriodWire,
+    clampYearWindow,
+    nextResolutionQuery,
+    periodWireValid,
+    VALUE_SET_VERSION_NONE,
+  } from "./period";
+  import PeriodPicker from "./PeriodPicker.svelte";
+  import { projectStore } from "./project_store.svelte";
+  import RepresentationPicker, {
+    type PickerApplyPayload,
+  } from "./RepresentationPicker.svelte";
+  import { router } from "./router.svelte";
+  import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+  import {
+    ADD_PERIOD_REQUIRED_MESSAGE,
+    applyStagedPicks,
+    committedPickerRows,
+    type StagedApplyOutcome,
+    stagedApplyRefusal,
+  } from "./staged_picker";
+  import StagedAddStatus from "./StagedAddStatus.svelte";
+  import SubjectView from "./SubjectView.svelte";
+  import TechnicalDetails from "./TechnicalDetails.svelte";
+  import { KeyValue, type KeyValueRow, Tag } from "./ui";
+  import ValueSetView from "./ValueSetView.svelte";
+  import { windowStore } from "./window.svelte";
 
-// The binding LEAF — the addressable variable, its resolution controls, the
-// states view, and the lineage panels. The variable's metadata (`node`) and its
-// whole state history (`states`) are loaded ONCE by the parent (CatalogNodeView,
-// no query) and passed in, so they're ALWAYS present — a cold deep-link to
-// `…/kon?period=2020` renders the metadata immediately while the states narrow.
-// The rest are facets this leaf reads itself, each its own failure domain: the
-// relationship graph, the data warnings and (LineageDetails) the lineage.
-//
-// Resolution state (`?period`/`?variant`/`?value_set_version`) lives in the URL
-// query (the single source of truth — see reg_webapp/DESIGN.md → Catalog router
-// structure), read off the router's reactive
-// `search` so changing it re-fetches WITHOUT a remount. WITH a `?period` we fetch
-// the resolved `states` subset to narrow the visible states; the metadata and
-// the full history are unaffected.
-let {
-  fqidPath,
-  node,
-  // Named `history` inside: `states` below is the derived set on show.
-  states: history,
-  regMetaVersion,
-  steward,
-  windowMinYear,
-  vintageYear,
-  windowMaxYear = vintageYear,
-  enforcePeriodBounds = false,
-}: {
-  fqidPath: string;
-  node: VariableShow;
-  /** The variable's whole state history (the `states` read, no modifiers). */
-  states: VariableStateModel[];
-  // C1: the deployment seed for an IMPLICIT "New project" when the store is
-  // pristine (App → CatalogNodeView → here). Empty until /api/context resolves — an
-  // implicit project created with an empty seed is NEVER re-seeded (it carries a
-  // blank reg_meta_version into project_data.json), so the Add action is DISABLED
-  // until both seed fields are present (sub-second; see `seedReady`).
-  regMetaVersion: string;
-  steward: string;
-  // #1037: steward-aware slider floor (App → CatalogNodeView → here).
-  windowMinYear: number;
-  // #631: the true catalog vintage year, used by open-ended graph timelines.
-  vintageYear: number;
-  // #1037: steward-aware period-control ceiling. Defaults to `vintageYear` for
-  // direct component callers that are outside App's steward context.
-  windowMaxYear?: number;
-  // #1037: true only for real steward-derived app bounds. The global 1960 floor
-  // is a fallback and must not erase genuinely earlier coverage.
-  enforcePeriodBounds?: boolean;
-} = $props();
+  // The binding LEAF — the addressable variable, its resolution controls, the
+  // states view, and the lineage panels. The variable's metadata (`node`) and its
+  // whole state history (`states`) are loaded ONCE by the parent (CatalogNodeView,
+  // no query) and passed in, so they're ALWAYS present — a cold deep-link to
+  // `…/kon?period=2020` renders the metadata immediately while the states narrow.
+  // The rest are facets this leaf reads itself, each its own failure domain: the
+  // relationship graph, the data warnings and (LineageDetails) the lineage.
+  //
+  // Resolution state (`?period`/`?variant`/`?value_set_version`) lives in the URL
+  // query (the single source of truth — see reg_webapp/DESIGN.md → Catalog router
+  // structure), read off the router's reactive
+  // `search` so changing it re-fetches WITHOUT a remount. WITH a `?period` we fetch
+  // the resolved `states` subset to narrow the visible states; the metadata and
+  // the full history are unaffected.
+  let {
+    fqidPath,
+    node,
+    // Named `history` inside: `states` below is the derived set on show.
+    states: history,
+    regMetaVersion,
+    steward,
+    windowMinYear,
+    vintageYear,
+    windowMaxYear = vintageYear,
+    enforcePeriodBounds = false,
+  }: {
+    fqidPath: string;
+    node: VariableShow;
+    /** The variable's whole state history (the `states` read, no modifiers). */
+    states: VariableStateModel[];
+    // C1: the deployment seed for an IMPLICIT "New project" when the store is
+    // pristine (App → CatalogNodeView → here). Empty until /api/context resolves — an
+    // implicit project created with an empty seed is NEVER re-seeded (it carries a
+    // blank reg_meta_version into project_data.json), so the Add action is DISABLED
+    // until both seed fields are present (sub-second; see `seedReady`).
+    regMetaVersion: string;
+    steward: string;
+    // #1037: steward-aware slider floor (App → CatalogNodeView → here).
+    windowMinYear: number;
+    // #631: the true catalog vintage year, used by open-ended graph timelines.
+    vintageYear: number;
+    // #1037: steward-aware period-control ceiling. Defaults to `vintageYear` for
+    // direct component callers that are outside App's steward context.
+    windowMaxYear?: number;
+    // #1037: true only for real steward-derived app bounds. The global 1960 floor
+    // is a fallback and must not erase genuinely earlier coverage.
+    enforcePeriodBounds?: boolean;
+  } = $props();
 
-// Read the resolution modifiers off the reactive query so the fetch re-runs when
-// they change.
-const params = $derived({
-  period: router.getQueryParam("period") ?? undefined,
-  variant: router.getQueryParam("variant") ?? undefined,
-  value_set_version: router.getQueryParam("value_set_version") ?? undefined,
-});
-const boundedPickerPeriod = $derived(
-  enforcePeriodBounds
-    ? clampYearPeriodWire(params.period, windowMinYear, windowMaxYear)
-    : (params.period ?? null),
-);
-const effectiveParams = $derived({
-  ...params,
-  period: boundedPickerPeriod ?? undefined,
-});
-const hasResolutionModifier = $derived(
-  params.variant !== undefined || params.value_set_version !== undefined,
-);
-
-// #905: a `?codes=<variant>::<column>` deep link (the picker's "codings vary" nudge)
-// focuses the value-set viewer on that ROW's `(variant, column)` coding. The variant
-// is carried because a column can be shared across variants/populations with distinct
-// codings, so the focus must target the clicked row's coding — not just the column.
-// This is a DEDICATED `?codes=` encoding, separate from the `?variant` RESOLUTION
-// modifier (which narrows + re-fetches), so the focus never perturbs the resolution.
-// Pure VIEW state — it does NOT re-fetch, so it's read separately from `params` and
-// passed straight to ValueSetView. A bare `<column>` (no `::`) parses variant=null.
-const codesFocus = $derived(parseCodesParam(router.getQueryParam("codes")));
-const focusColumn = $derived(codesFocus?.column ?? null);
-const focusVariant = $derived(codesFocus?.variant ?? null);
-
-// Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
-// history is shown (no redundant request; CatalogNodeView already read it). SYNC
-// `fn()` so the effect tracks the reactive `params`.
-const periodResource = asyncResource<VariableStateModel[] | null>(() =>
-  effectiveParams.period
-    ? getStates(node.fqid, effectiveParams)
-    : Promise.resolve(null),
-);
-
-// When `?variant` / `?value_set_version` narrows the resolution, the value-set
-// history still needs a PERIOD-ONLY scope for #744's outside-period disclosure.
-// Otherwise same-period rows for other variants/versions would be mislabeled as
-// outside the period instead of staying inline and greyed.
-const periodScopeResource = asyncResource<VariableStateModel[] | null>(() =>
-  effectiveParams.period && hasResolutionModifier
-    ? getStates(node.fqid, { period: effectiveParams.period })
-    : Promise.resolve(null),
-);
-
-const narrowedStates = $derived(periodResource.data ?? null);
-const periodScopeStates = $derived(
-  hasResolutionModifier ? (periodScopeResource.data ?? null) : null,
-);
-
-// ANY error on the primary period resolve (a 422 bad-modifier, but also a 5xx / 502 /
-// network drop where `status` stays null) is surfaced inline — the metadata +
-// the picker stay usable and the states fall back to the full history. Without
-// this (filtering to only 422/400), a server/network error would leave
-// `narrowedStates` null and wedge the states section on a permanent
-// "Loading states…" with no feedback.
-const narrowedError = $derived(
-  effectiveParams.period && periodResource.error ? periodResource.error : null,
-);
-const scopeError = $derived(
-  effectiveParams.period && !periodResource.error && hasResolutionModifier
-    ? periodScopeResource.error
-    : null,
-);
-
-// States that drive resolution-sensitive behavior: Add planning and the
-// single-state detail stay on the `?period` subset. The value-set list may render
-// full history separately so out-of-period value sets can be collapsed instead of
-// removed (#744).
-const resolvedStates = $derived.by(() =>
-  effectiveParams.period && !narrowedError ? narrowedStates : history,
-);
-
-// States to show: loading while a period resolve is in flight; a single resolved
-// state renders the detail view; multi/empty period resolves render the full
-// embedded history with `scopeStates` marking what is in-period (#744).
-const states = $derived.by(() => {
-  if (!effectiveParams.period || narrowedError) {
-    return history;
-  }
-  if (
-    narrowedStates === null ||
-    (hasResolutionModifier &&
-      periodScopeStates === null &&
-      periodScopeResource.loading)
-  ) {
-    return null;
-  }
-  return narrowedStates.length === 1 ? narrowedStates : history;
-});
-
-// Whether the visible states are period-narrowed (drives the "narrowed to X" note
-// + ValueSetView's empty-message wording).
-const isNarrowed = $derived(!!effectiveParams.period && !narrowedError);
-const stateScope = $derived(
-  isNarrowed
-    ? hasResolutionModifier
-      ? (periodScopeStates ?? resolvedStates)
-      : resolvedStates
-    : null,
-);
-
-// #905 (Codex P2): when a `?variant` / `?value_set_version` modifier is active, the
-// page shows a "Narrowed by" chip and the picker is scoped via
-// `narrowStatesByModifier`. The value-set view must reflect the SAME narrowing —
-// otherwise it would list OTHER variants'/versions' same-period codings as in-scope
-// rows, contradicting the rest of the page. Apply the modifier-narrowing (the SAME
-// helper the picker uses) ON TOP of the loading/single/multi `states` derivation and
-// the `stateScope` it pairs with — never instead of it, so the loading (`null`) and
-// single-state paths are preserved. With NO modifier active these pass through
-// unchanged (full history). ValueSetView stays PURE: the leaf decides which states it
-// gets; the view carries no resolution state.
-//
-// CRUCIALLY gated on `!narrowedError` (mirroring `resolvedStates`/`states`): when the
-// `?period` resolve FAILS, `states` deliberately falls back to `history` (full
-// history). A stale/typo `?variant` would then narrow that fallback to empty, defeating
-// the full-history fallback — so on a resolve error we skip the modifier narrowing and
-// let `valueSetStates`/`valueSetScope` equal the same full-history fallback the rest of
-// the page shows.
-const valueSetStates = $derived.by(() => {
-  if (states === null || narrowedError || !hasResolutionModifier) {
-    return states;
-  }
-  return [
-    ...narrowStatesByModifier(
-      states,
-      params.variant ?? null,
-      params.value_set_version ?? null,
-    ),
-  ];
-});
-const valueSetScope = $derived.by(() => {
-  if (stateScope === null || narrowedError || !hasResolutionModifier) {
-    return stateScope;
-  }
-  return [
-    ...narrowStatesByModifier(
-      stateScope,
-      params.variant ?? null,
-      params.value_set_version ?? null,
-    ),
-  ];
-});
-
-const technicalState = $derived.by(() => {
-  if (valueSetStates === null || valueSetStates.length !== 1) {
-    return null;
-  }
-  if (isNarrowed && valueSetScope !== null && valueSetScope.length === 0) {
-    return null;
-  }
-  return valueSetStates[0];
-});
-
-type Correction = {
-  state: VariableStateModel;
-  className: string;
-  evidence: string;
-  sourceEditions: string[];
-  providerDocumented: boolean;
-};
-
-function correctionsFromState(state: VariableStateModel): Correction[] {
-  return provenanceBlocks(state.provenance)
-    .filter((block) => block.startsWith("errata:"))
-    .flatMap((block) => correctionsFromBlock(state, block));
-}
-
-function correctionsFromBlock(
-  state: VariableStateModel,
-  provenance: string,
-): Correction[] {
-  // The class line may stand alone: the catalog publishes only source locators
-  // after it, never curator evidence (#1708).
-  const separator = provenance.indexOf("\n");
-  const head = separator < 0 ? provenance : provenance.slice(0, separator);
-  const className = head.slice("errata:".length).trim();
-  const body = separator < 0 ? "" : provenance.slice(separator + 1).trim();
-  const providerDocumented = className === "scoped-attributions";
-  if (providerDocumented || className === "overlapping-attributions") {
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(body);
-    } catch {
-      return [];
-    }
-    if (!Array.isArray(parsed)) {
-      return [];
-    }
-    const corrections: Correction[] = [];
-    for (const item of parsed) {
-      if (typeof item !== "object" || item === null) {
-        return [];
-      }
-      const record = item as Record<string, unknown>;
-      if (
-        typeof record.class !== "string" ||
-        !record.class.trim() ||
-        typeof record.evidence !== "string" ||
-        !record.evidence.trim() ||
-        !Array.isArray(record.source_editions) ||
-        record.source_editions.length === 0 ||
-        !record.source_editions.every(
-          (edition) => typeof edition === "string" && edition.trim(),
-        )
-      ) {
-        return [];
-      }
-      corrections.push({
-        state,
-        className: record.class.trim(),
-        evidence: record.evidence.trim(),
-        sourceEditions: record.source_editions,
-        providerDocumented,
-      });
-    }
-    return corrections;
-  }
-  const evidence = body;
-  return className
-    ? [
-        {
-          state,
-          className,
-          evidence,
-          sourceEditions: [],
-          providerDocumented: false,
-        },
-      ]
-    : [];
-}
-
-const corrections = $derived.by(() =>
-  (valueSetStates ?? []).flatMap(correctionsFromState),
-);
-const inferredGaps = $derived(
-  (valueSetStates ?? []).filter(
-    (state) => state.provenance === "inferred:resolution-gap",
-  ),
-);
-// Y-202: states spanning a pooled multi-year edition — one marked state over
-// the whole pooled range, with no inferred annual availability inside it.
-const pooledStates = $derived(
-  (valueSetStates ?? []).filter((state) => state.pooled),
-);
-
-// A curated matrix answer cites a page of an SCB PDF (`curated:matrix-answer`).
-// One line per distinct (document, pages): the state's own column's page when the
-// provenance names it, else every page the answer cites.
-const matrixSources = $derived.by(() => {
-  const seen = new Map<
-    string,
-    { documentUrl: string; sha256: string; pages: string }
-  >();
-  for (const state of valueSetStates ?? []) {
-    const source = matrixAnswerSource(state.provenance);
-    if (source === null) {
-      continue;
-    }
-    const own = state.delivery_column_name
-      ? source.pages[state.delivery_column_name]
-      : undefined;
-    const pages = pagesLabel(
-      own === undefined ? Object.values(source.pages) : [own],
-    );
-    seen.set(`${source.sha256} ${pages}`, { ...source, pages });
-  }
-  return [...seen.values()];
-});
-const hasMatrixSources = $derived(matrixSources.length > 0);
-// The register's rehosted PDFs, fetched only when a state cites one, to title and
-// link the cited document by its digest. Not the register-level document list
-// (RelatedDocumentsPanel): one SHA256-matched link. No docs DB, no match or a
-// failed fetch falls back to the provider URL the provenance names.
-const citedDocumentsResource = asyncResource((signal) =>
-  hasMatrixSources
-    ? getRelatedDocuments(registerPrefixOf(node.fqid), { signal })
-    : Promise.resolve(null),
-);
-function citedDocument(sha256: string): { href: string; title: string } | null {
-  const doc = citedDocumentsResource.data?.find((d) => d.sha256 === sha256);
-  return doc
-    ? {
-        href: relatedDocumentFileHref(
-          registerPrefixOf(node.fqid),
-          doc.filename,
-        ),
-        title: doc.title,
-      }
-    : null;
-}
-function documentName(url: string): string {
-  try {
-    const parsed = new URL(url);
-    const file = parsed.pathname.split("/").pop();
-    return file ? decodeURIComponent(file) : parsed.hostname;
-  } catch {
-    return url;
-  }
-}
-
-// ── The relationship-graph fetch (#678/#904) ────────────────────────────────
-// The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
-// #670 header identity (qualifier + group link), derived from the graph FOCUS node — no
-// separate `/dimensions` request. Read `node.fqid`
-// synchronously inside `fn` so the resource refetches when the leaf changes (same
-// pattern as `periodResource`).
-//
-// FAILURE-DOMAIN isolation: this resource is independent of `node`, so a graph
-// error / empty / timeout NEVER blanks the leaf — the picker falls back to the list, and
-// the header just omits the qualifier/link (both gate on a RESOLVED, non-empty graph;
-// additive).
-const graphResource = asyncResource(() => getGraph(node.fqid));
-const graph = $derived(graphResource.data);
-// The graph has RESOLVED (a settled fetch with a payload) — the gate the header
-// identity derivations wait on, mirroring the old `dimReady`. While in flight
-// (or on error) the header shows just `node.name`, then the qualifier appears
-// once — no flicker, never blanked.
-const graphReady = $derived(
-  !graphResource.loading && !graphResource.error && graph != null,
-);
-const graphHasDrawableContext = $derived(
-  graphReady &&
-    graph != null &&
-    (graph.edges.length > 0 ||
-      graph.nodes.some(
-        (n) =>
-          n.kind === "variable" &&
-          (n.same_as.length > 0 || n.states.length > 0),
-      )),
-);
-
-// The FOCUS variable node — the node whose `id === focus_id` (the requested
-// binding, post-same_as). The #670 header qualifier + group link read its
-// `facets` / `group_label`. A binding `/graph` always carries a variable focus;
-// the `kind` guard keeps TS sound (and tolerates a focus-less group payload).
-// `graphReady` (above) is the one render gate; this trusts the qualifier/link
-// helpers' null-tolerance (they accept a null focus), so it just reads from
-// `graph?.…` — a loading/errored/empty graph yields a null focus, never blanks.
-const focusNode = $derived.by((): VariableGraphNode | null => {
-  const f = graph?.nodes.find((n) => n.id === graph.focus_id);
-  return f?.kind === "variable" ? f : null;
-});
-
-// The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — the
-// focus node's facet labels (`kind: "facets"`); for a GROUPED member with no
-// facets (an edge group's split siblings) the leaf slug fallback
-// (`kind: "slug"`); `null` for an ungrouped variable (its `node.name` suffices),
-// or until the graph resolves. `node.fqid` is the leaf's own fqid (the
-// slug-fallback source — the focus node's fqid can be null).
-const qualifier = $derived(qualifierFromFocus(focusNode, node.fqid));
-
-// The "member of ⟨group label⟩" context link to the group subject page (#670) —
-// the focus node's `group_label` + the leaf `node.group` ref's href. Null when
-// ungrouped, or until the graph resolves (additive; never blanks).
-const groupLink = $derived(groupLinkFromFocus(focusNode, node.group));
-
-/** Write the resolution params to the URL (preserving the pathname), which the
- * reactive query picks up → refetch. An empty `period` clears the narrowing
- * (full history). `variant`/`value_set_version` are only meaningful WITH a
- * period (the server 422s them otherwise), so they're dropped when period is
- * cleared (the merge rule in `nextResolutionQuery`). */
-function setResolution(next: {
-  period?: string | null;
-  variant?: string | null;
-  value_set_version?: string | null;
-}): void {
-  const query = nextResolutionQuery(params, next);
-  router.navigate(window.location.pathname + (query ? `?${query}` : ""));
-}
-
-// ── C1: add to project ────────────────────────────────────────────────────────
-// The variable's provider/register prefix (first 2 segs of its 3-seg fqid). A
-// source's register_variant is `<prefix>/<variant>`, the variant taken from the
-// chosen STATE (each state carries its variant slug) — so the add is fully explicit:
-// this variable, at this variant, and (when several columns co-exist) this delivery
-// column.
-const registerPrefix = $derived(registerPrefixOf(node.fqid));
-
-// The deployment seed is ready once /api/context has populated BOTH fields (MINOR 3).
-// An implicit project created with an empty seed is never re-seeded, so the Add
-// action stays disabled until the seed is present (sub-second).
-const seedReady = $derived(regMetaVersion !== "" && steward !== "");
-
-// #615: the subject's data-availability span (year-grain), derived from the
-// full state history (the `states` prop) — the picker's slider draws it as the live track
-// and greys the not-delivered span. Computed client-side from already-present
-// data (no backend coverage field on the leaf node).
-const coverage = $derived(coverageFromStates(history));
-
-// ── #678/#995 redesign: direct representation picker ────────────────────────
-// The add-to-project surface lists the variable's representations (one row per
-// distinct variant + delivery column) over the FULL state history and stages
-// the user's multi-selection until the footer applies one store diff.
-// The picker (RepresentationPicker) owns the row layout + selection; THIS host
-// owns the data (enumeration) and the store wiring (commit + confirmation).
-//
-// The rows enumerate over `history` (the full history) — NOT the
-// period-narrowed subset: the period window only DIMS out-of-window rows
-// (`pickerWindow`), every row stays selectable. `pickerRepresentations` is pure +
-// unit-tested.
-//
-// A `?variant` / `?value_set_version` MODIFIER (the "Narrowed by" chip) is the
-// exception: it scopes the resolution to one axis, so the picker must offer ONLY
-// the rows consistent with that narrowing (`narrowStatesByModifier`) — otherwise
-// "select all" would add rows for variants / versions OUTSIDE the active
-// narrowing. With NO modifier active the states pass through unchanged (full
-// history, behavior unchanged).
-
-/** The selectable representation rows — one per distinct (variant, delivery
- * column) over the active state history (the full history, or the
- * variant/version-narrowed subset when a modifier is active). */
-const pickerStates = $derived(
-  narrowStatesByModifier(
-    history,
-    params.variant ?? null,
-    params.value_set_version ?? null,
-  ),
-);
-const yearIndependentSelection = $derived(
-  pickerStates.length > 0 &&
-    pickerStates.every((state) => state.period_scope === "year_independent"),
-);
-const pickerRows = $derived(pickerRepresentations(pickerStates));
-const pickerBands = $derived([
-  {
-    key: node.fqid,
-    name: node.name ?? node.fqid,
-    registerPrefix,
-    isSensitive: node.is_sensitive,
-    isIdentifier: node.is_identifier,
-    rows: pickerRows,
-  },
-]);
-const narrowedPeriodLabel = $derived(
-  (boundedPickerPeriod ?? params.period ?? "").split(",").join(" + "),
-);
-const boundedProjectWindow = $derived(
-  windowStore.value === null || !enforcePeriodBounds
-    ? windowStore.value
-    : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
-);
-const activePickerPeriod = $derived(
-  boundedPickerPeriod && !narrowedError && periodWireValid(boundedPickerPeriod)
-    ? boundedPickerPeriod
-    : null,
-);
-/** The active period window to DIM against, as an inclusive year pair (a
- * structurally valid `?period` wire wins, else the global study window), or null
- * (no dimming). */
-const pickerWindow = $derived(
-  pickerWindowYears(activePickerPeriod, boundedProjectWindow),
-);
-const committedRows = $derived(
-  committedPickerRows(projectStore.draft, pickerBands, {
-    period: activePickerPeriod,
-    window: pickerWindow,
-  }),
-);
-
-/** The applied outcome (drives the inline confirmation). */
-let applyOutcome = $state<StagedApplyOutcome | null>(null);
-
-/** Why the last Apply authored NOTHING, else null — a staged add that resolved no
- * finite period, or one with no years inside the add window (drives the inline
- * notice). Retired by a resolution change, a study-window move (the effects below)
- * and by any staging change, so it never outlives the pick it refused. */
-let addRefusal = $state<string | null>(null);
-
-// Moving the study window is what an outside-window refusal asks for, so it
-// retires the refusal (only the refusal: a confirmation still describes its Add).
-$effect(() => {
-  void pickerWindow;
-  addRefusal = null;
-});
-
-// A fresh resolution / leaf change clears the stale confirmation. Tracking
-// `fqidPath` (the navigation key) re-invalidates on a leaf change independent of
-// the parent's `{#key route.fqidPath}` remount, so a stale confirmation can never
-// survive onto a different variable.
-$effect(() => {
-  void params.period;
-  void params.variant;
-  void params.value_set_version;
-  void fqidPath;
-  applyOutcome = null;
-  addRefusal = null;
-});
-
-/** So a pick still waiting on the restore gate is abandoned rather than committed
- * into a draft from a page the researcher has navigated away from. */
-const unmounted = unmountedFlag();
-
-/** Apply the staged diff through the shared staging stack (`staged_picker.ts`),
- * which owns the fan-out, the resolve and the ONE store mutation; this view owns
- * only the lines it says about the result. */
-async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
-  const scope = { period: activePickerPeriod, window: pickerWindow };
-  const result = await applyStagedPicks(payload, {
-    scope,
-    studyWindow: boundedProjectWindow,
-    seed: { regMetaVersion, steward },
-    cancelled: unmounted,
+  // Read the resolution modifiers off the reactive query so the fetch re-runs when
+  // they change.
+  const params = $derived({
+    period: router.getQueryParam("period") ?? undefined,
+    variant: router.getQueryParam("variant") ?? undefined,
+    value_set_version: router.getQueryParam("value_set_version") ?? undefined,
   });
-  addRefusal = stagedApplyRefusal(result, scope, ADD_PERIOD_REQUIRED_MESSAGE);
-  if (result.kind === "applied") {
-    applyOutcome = result.outcome;
+  const boundedPickerPeriod = $derived(
+    enforcePeriodBounds
+      ? clampYearPeriodWire(params.period, windowMinYear, windowMaxYear)
+      : (params.period ?? null),
+  );
+  const effectiveParams = $derived({
+    ...params,
+    period: boundedPickerPeriod ?? undefined,
+  });
+  const hasResolutionModifier = $derived(
+    params.variant !== undefined || params.value_set_version !== undefined,
+  );
+
+  // #905: a `?codes=<variant>::<column>` deep link (the picker's "codings vary" nudge)
+  // focuses the value-set viewer on that ROW's `(variant, column)` coding. The variant
+  // is carried because a column can be shared across variants/populations with distinct
+  // codings, so the focus must target the clicked row's coding — not just the column.
+  // This is a DEDICATED `?codes=` encoding, separate from the `?variant` RESOLUTION
+  // modifier (which narrows + re-fetches), so the focus never perturbs the resolution.
+  // Pure VIEW state — it does NOT re-fetch, so it's read separately from `params` and
+  // passed straight to ValueSetView. A bare `<column>` (no `::`) parses variant=null.
+  const codesFocus = $derived(parseCodesParam(router.getQueryParam("codes")));
+  const focusColumn = $derived(codesFocus?.column ?? null);
+  const focusVariant = $derived(codesFocus?.variant ?? null);
+
+  // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
+  // history is shown (no redundant request; CatalogNodeView already read it). SYNC
+  // `fn()` so the effect tracks the reactive `params`.
+  const periodResource = asyncResource<VariableStateModel[] | null>(() =>
+    effectiveParams.period
+      ? getStates(node.fqid, effectiveParams)
+      : Promise.resolve(null),
+  );
+
+  // When `?variant` / `?value_set_version` narrows the resolution, the value-set
+  // history still needs a PERIOD-ONLY scope for #744's outside-period disclosure.
+  // Otherwise same-period rows for other variants/versions would be mislabeled as
+  // outside the period instead of staying inline and greyed.
+  const periodScopeResource = asyncResource<VariableStateModel[] | null>(() =>
+    effectiveParams.period && hasResolutionModifier
+      ? getStates(node.fqid, { period: effectiveParams.period })
+      : Promise.resolve(null),
+  );
+
+  const narrowedStates = $derived(periodResource.data ?? null);
+  const periodScopeStates = $derived(
+    hasResolutionModifier ? (periodScopeResource.data ?? null) : null,
+  );
+
+  // ANY error on the primary period resolve (a 422 bad-modifier, but also a 5xx / 502 /
+  // network drop where `status` stays null) is surfaced inline — the metadata +
+  // the picker stay usable and the states fall back to the full history. Without
+  // this (filtering to only 422/400), a server/network error would leave
+  // `narrowedStates` null and wedge the states section on a permanent
+  // "Loading states…" with no feedback.
+  const narrowedError = $derived(
+    effectiveParams.period && periodResource.error
+      ? periodResource.error
+      : null,
+  );
+  const scopeError = $derived(
+    effectiveParams.period && !periodResource.error && hasResolutionModifier
+      ? periodScopeResource.error
+      : null,
+  );
+
+  // States that drive resolution-sensitive behavior: Add planning and the
+  // single-state detail stay on the `?period` subset. The value-set list may render
+  // full history separately so out-of-period value sets can be collapsed instead of
+  // removed (#744).
+  const resolvedStates = $derived.by(() =>
+    effectiveParams.period && !narrowedError ? narrowedStates : history,
+  );
+
+  // States to show: loading while a period resolve is in flight; a single resolved
+  // state renders the detail view; multi/empty period resolves render the full
+  // embedded history with `scopeStates` marking what is in-period (#744).
+  const states = $derived.by(() => {
+    if (!effectiveParams.period || narrowedError) {
+      return history;
+    }
+    if (
+      narrowedStates === null ||
+      (hasResolutionModifier &&
+        periodScopeStates === null &&
+        periodScopeResource.loading)
+    ) {
+      return null;
+    }
+    return narrowedStates.length === 1 ? narrowedStates : history;
+  });
+
+  // Whether the visible states are period-narrowed (drives the "narrowed to X" note
+  // + ValueSetView's empty-message wording).
+  const isNarrowed = $derived(!!effectiveParams.period && !narrowedError);
+  const stateScope = $derived(
+    isNarrowed
+      ? hasResolutionModifier
+        ? (periodScopeStates ?? resolvedStates)
+        : resolvedStates
+      : null,
+  );
+
+  // #905 (Codex P2): when a `?variant` / `?value_set_version` modifier is active, the
+  // page shows a "Narrowed by" chip and the picker is scoped via
+  // `narrowStatesByModifier`. The value-set view must reflect the SAME narrowing —
+  // otherwise it would list OTHER variants'/versions' same-period codings as in-scope
+  // rows, contradicting the rest of the page. Apply the modifier-narrowing (the SAME
+  // helper the picker uses) ON TOP of the loading/single/multi `states` derivation and
+  // the `stateScope` it pairs with — never instead of it, so the loading (`null`) and
+  // single-state paths are preserved. With NO modifier active these pass through
+  // unchanged (full history). ValueSetView stays PURE: the leaf decides which states it
+  // gets; the view carries no resolution state.
+  //
+  // CRUCIALLY gated on `!narrowedError` (mirroring `resolvedStates`/`states`): when the
+  // `?period` resolve FAILS, `states` deliberately falls back to `history` (full
+  // history). A stale/typo `?variant` would then narrow that fallback to empty, defeating
+  // the full-history fallback — so on a resolve error we skip the modifier narrowing and
+  // let `valueSetStates`/`valueSetScope` equal the same full-history fallback the rest of
+  // the page shows.
+  const valueSetStates = $derived.by(() => {
+    if (states === null || narrowedError || !hasResolutionModifier) {
+      return states;
+    }
+    return [
+      ...narrowStatesByModifier(
+        states,
+        params.variant ?? null,
+        params.value_set_version ?? null,
+      ),
+    ];
+  });
+  const valueSetScope = $derived.by(() => {
+    if (stateScope === null || narrowedError || !hasResolutionModifier) {
+      return stateScope;
+    }
+    return [
+      ...narrowStatesByModifier(
+        stateScope,
+        params.variant ?? null,
+        params.value_set_version ?? null,
+      ),
+    ];
+  });
+
+  const technicalState = $derived.by(() => {
+    if (valueSetStates === null || valueSetStates.length !== 1) {
+      return null;
+    }
+    if (isNarrowed && valueSetScope !== null && valueSetScope.length === 0) {
+      return null;
+    }
+    return valueSetStates[0];
+  });
+
+  type Correction = {
+    state: VariableStateModel;
+    className: string;
+    evidence: string;
+    sourceEditions: string[];
+    providerDocumented: boolean;
+  };
+
+  function correctionsFromState(state: VariableStateModel): Correction[] {
+    return provenanceBlocks(state.provenance)
+      .filter((block) => block.startsWith("errata:"))
+      .flatMap((block) => correctionsFromBlock(state, block));
   }
-  return result.kind === "applied";
-}
+
+  function correctionsFromBlock(
+    state: VariableStateModel,
+    provenance: string,
+  ): Correction[] {
+    // The class line may stand alone: the catalog publishes only source locators
+    // after it, never curator evidence (#1708).
+    const separator = provenance.indexOf("\n");
+    const head = separator < 0 ? provenance : provenance.slice(0, separator);
+    const className = head.slice("errata:".length).trim();
+    const body = separator < 0 ? "" : provenance.slice(separator + 1).trim();
+    const providerDocumented = className === "scoped-attributions";
+    if (providerDocumented || className === "overlapping-attributions") {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(body);
+      } catch {
+        return [];
+      }
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+      const corrections: Correction[] = [];
+      for (const item of parsed) {
+        if (typeof item !== "object" || item === null) {
+          return [];
+        }
+        const record = item as Record<string, unknown>;
+        if (
+          typeof record.class !== "string" ||
+          !record.class.trim() ||
+          typeof record.evidence !== "string" ||
+          !record.evidence.trim() ||
+          !Array.isArray(record.source_editions) ||
+          record.source_editions.length === 0 ||
+          !record.source_editions.every(
+            (edition) => typeof edition === "string" && edition.trim(),
+          )
+        ) {
+          return [];
+        }
+        corrections.push({
+          state,
+          className: record.class.trim(),
+          evidence: record.evidence.trim(),
+          sourceEditions: record.source_editions,
+          providerDocumented,
+        });
+      }
+      return corrections;
+    }
+    const evidence = body;
+    return className
+      ? [
+          {
+            state,
+            className,
+            evidence,
+            sourceEditions: [],
+            providerDocumented: false,
+          },
+        ]
+      : [];
+  }
+
+  const corrections = $derived.by(() =>
+    (valueSetStates ?? []).flatMap(correctionsFromState),
+  );
+  const inferredGaps = $derived(
+    (valueSetStates ?? []).filter(
+      (state) => state.provenance === "inferred:resolution-gap",
+    ),
+  );
+  // Y-202: states spanning a pooled multi-year edition — one marked state over
+  // the whole pooled range, with no inferred annual availability inside it.
+  const pooledStates = $derived(
+    (valueSetStates ?? []).filter((state) => state.pooled),
+  );
+
+  // A curated matrix answer cites a page of an SCB PDF (`curated:matrix-answer`).
+  // One line per distinct (document, pages): the state's own column's page when the
+  // provenance names it, else every page the answer cites.
+  const matrixSources = $derived.by(() => {
+    const seen = new Map<
+      string,
+      { documentUrl: string; sha256: string; pages: string }
+    >();
+    for (const state of valueSetStates ?? []) {
+      const source = matrixAnswerSource(state.provenance);
+      if (source === null) {
+        continue;
+      }
+      const own = state.delivery_column_name
+        ? source.pages[state.delivery_column_name]
+        : undefined;
+      const pages = pagesLabel(
+        own === undefined ? Object.values(source.pages) : [own],
+      );
+      seen.set(`${source.sha256} ${pages}`, { ...source, pages });
+    }
+    return [...seen.values()];
+  });
+  const hasMatrixSources = $derived(matrixSources.length > 0);
+  // The register's rehosted PDFs, fetched only when a state cites one, to title and
+  // link the cited document by its digest. Not the register-level document list
+  // (RelatedDocumentsPanel): one SHA256-matched link. No docs DB, no match or a
+  // failed fetch falls back to the provider URL the provenance names.
+  const citedDocumentsResource = asyncResource((signal) =>
+    hasMatrixSources
+      ? getRelatedDocuments(registerPrefixOf(node.fqid), { signal })
+      : Promise.resolve(null),
+  );
+  function citedDocument(
+    sha256: string,
+  ): { href: string; title: string } | null {
+    const doc = citedDocumentsResource.data?.find((d) => d.sha256 === sha256);
+    return doc
+      ? {
+          href: relatedDocumentFileHref(
+            registerPrefixOf(node.fqid),
+            doc.filename,
+          ),
+          title: doc.title,
+        }
+      : null;
+  }
+  function documentName(url: string): string {
+    try {
+      const parsed = new URL(url);
+      const file = parsed.pathname.split("/").pop();
+      return file ? decodeURIComponent(file) : parsed.hostname;
+    } catch {
+      return url;
+    }
+  }
+
+  // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
+  // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
+  // #670 header identity (qualifier + group link), derived from the graph FOCUS node — no
+  // separate `/dimensions` request. Read `node.fqid`
+  // synchronously inside `fn` so the resource refetches when the leaf changes (same
+  // pattern as `periodResource`).
+  //
+  // FAILURE-DOMAIN isolation: this resource is independent of `node`, so a graph
+  // error / empty / timeout NEVER blanks the leaf — the picker falls back to the list, and
+  // the header just omits the qualifier/link (both gate on a RESOLVED, non-empty graph;
+  // additive).
+  const graphResource = asyncResource(() => getGraph(node.fqid));
+  const graph = $derived(graphResource.data);
+  // The graph has RESOLVED (a settled fetch with a payload) — the gate the header
+  // identity derivations wait on, mirroring the old `dimReady`. While in flight
+  // (or on error) the header shows just `node.name`, then the qualifier appears
+  // once — no flicker, never blanked.
+  const graphReady = $derived(
+    !graphResource.loading && !graphResource.error && graph != null,
+  );
+  const graphHasDrawableContext = $derived(
+    graphReady &&
+      graph != null &&
+      (graph.edges.length > 0 ||
+        graph.nodes.some(
+          (n) =>
+            n.kind === "variable" &&
+            (n.same_as.length > 0 || n.states.length > 0),
+        )),
+  );
+
+  // The FOCUS variable node — the node whose `id === focus_id` (the requested
+  // binding, post-same_as). The #670 header qualifier + group link read its
+  // `facets` / `group_label`. A binding `/graph` always carries a variable focus;
+  // the `kind` guard keeps TS sound (and tolerates a focus-less group payload).
+  // `graphReady` (above) is the one render gate; this trusts the qualifier/link
+  // helpers' null-tolerance (they accept a null focus), so it just reads from
+  // `graph?.…` — a loading/errored/empty graph yields a null focus, never blanks.
+  const focusNode = $derived.by((): VariableGraphNode | null => {
+    const f = graph?.nodes.find((n) => n.id === graph.focus_id);
+    return f?.kind === "variable" ? f : null;
+  });
+
+  // The member-distinguishing qualifier (e.g. "AGI · 2007 SNI edition") — the
+  // focus node's facet labels (`kind: "facets"`); for a GROUPED member with no
+  // facets (an edge group's split siblings) the leaf slug fallback
+  // (`kind: "slug"`); `null` for an ungrouped variable (its `node.name` suffices),
+  // or until the graph resolves. `node.fqid` is the leaf's own fqid (the
+  // slug-fallback source — the focus node's fqid can be null).
+  const qualifier = $derived(qualifierFromFocus(focusNode, node.fqid));
+
+  // The "member of ⟨group label⟩" context link to the group subject page (#670) —
+  // the focus node's `group_label` + the leaf `node.group` ref's href. Null when
+  // ungrouped, or until the graph resolves (additive; never blanks).
+  const groupLink = $derived(groupLinkFromFocus(focusNode, node.group));
+
+  /** Write the resolution params to the URL (preserving the pathname), which the
+   * reactive query picks up → refetch. An empty `period` clears the narrowing
+   * (full history). `variant`/`value_set_version` are only meaningful WITH a
+   * period (the server 422s them otherwise), so they're dropped when period is
+   * cleared (the merge rule in `nextResolutionQuery`). */
+  function setResolution(next: {
+    period?: string | null;
+    variant?: string | null;
+    value_set_version?: string | null;
+  }): void {
+    const query = nextResolutionQuery(params, next);
+    router.navigate(window.location.pathname + (query ? `?${query}` : ""));
+  }
+
+  // ── C1: add to project ────────────────────────────────────────────────────────
+  // The variable's provider/register prefix (first 2 segs of its 3-seg fqid). A
+  // source's register_variant is `<prefix>/<variant>`, the variant taken from the
+  // chosen STATE (each state carries its variant slug) — so the add is fully explicit:
+  // this variable, at this variant, and (when several columns co-exist) this delivery
+  // column.
+  const registerPrefix = $derived(registerPrefixOf(node.fqid));
+
+  // The deployment seed is ready once /api/context has populated BOTH fields (MINOR 3).
+  // An implicit project created with an empty seed is never re-seeded, so the Add
+  // action stays disabled until the seed is present (sub-second).
+  const seedReady = $derived(regMetaVersion !== "" && steward !== "");
+
+  // #615: the subject's data-availability span (year-grain), derived from the
+  // full state history (the `states` prop) — the picker's slider draws it as the live track
+  // and greys the not-delivered span. Computed client-side from already-present
+  // data (no backend coverage field on the leaf node).
+  const coverage = $derived(coverageFromStates(history));
+
+  // ── #678/#995 redesign: direct representation picker ────────────────────────
+  // The add-to-project surface lists the variable's representations (one row per
+  // distinct variant + delivery column) over the FULL state history and stages
+  // the user's multi-selection until the footer applies one store diff.
+  // The picker (RepresentationPicker) owns the row layout + selection; THIS host
+  // owns the data (enumeration) and the store wiring (commit + confirmation).
+  //
+  // The rows enumerate over `history` (the full history) — NOT the
+  // period-narrowed subset: the period window only DIMS out-of-window rows
+  // (`pickerWindow`), every row stays selectable. `pickerRepresentations` is pure +
+  // unit-tested.
+  //
+  // A `?variant` / `?value_set_version` MODIFIER (the "Narrowed by" chip) is the
+  // exception: it scopes the resolution to one axis, so the picker must offer ONLY
+  // the rows consistent with that narrowing (`narrowStatesByModifier`) — otherwise
+  // "select all" would add rows for variants / versions OUTSIDE the active
+  // narrowing. With NO modifier active the states pass through unchanged (full
+  // history, behavior unchanged).
+
+  /** The selectable representation rows — one per distinct (variant, delivery
+   * column) over the active state history (the full history, or the
+   * variant/version-narrowed subset when a modifier is active). */
+  const pickerStates = $derived(
+    narrowStatesByModifier(
+      history,
+      params.variant ?? null,
+      params.value_set_version ?? null,
+    ),
+  );
+  const yearIndependentSelection = $derived(
+    pickerStates.length > 0 &&
+      pickerStates.every((state) => state.period_scope === "year_independent"),
+  );
+  const pickerRows = $derived(pickerRepresentations(pickerStates));
+  const pickerBands = $derived([
+    {
+      key: node.fqid,
+      name: node.name ?? node.fqid,
+      registerPrefix,
+      isSensitive: node.is_sensitive,
+      isIdentifier: node.is_identifier,
+      rows: pickerRows,
+    },
+  ]);
+  const narrowedPeriodLabel = $derived(
+    (boundedPickerPeriod ?? params.period ?? "").split(",").join(" + "),
+  );
+  const boundedProjectWindow = $derived(
+    windowStore.value === null || !enforcePeriodBounds
+      ? windowStore.value
+      : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
+  );
+  const activePickerPeriod = $derived(
+    boundedPickerPeriod &&
+      !narrowedError &&
+      periodWireValid(boundedPickerPeriod)
+      ? boundedPickerPeriod
+      : null,
+  );
+  /** The active period window to DIM against, as an inclusive year pair (a
+   * structurally valid `?period` wire wins, else the global study window), or null
+   * (no dimming). */
+  const pickerWindow = $derived(
+    pickerWindowYears(activePickerPeriod, boundedProjectWindow),
+  );
+  const committedRows = $derived(
+    committedPickerRows(projectStore.draft, pickerBands, {
+      period: activePickerPeriod,
+      window: pickerWindow,
+    }),
+  );
+
+  /** The applied outcome (drives the inline confirmation). */
+  let applyOutcome = $state<StagedApplyOutcome | null>(null);
+
+  /** Why the last Apply authored NOTHING, else null — a staged add that resolved no
+   * finite period, or one with no years inside the add window (drives the inline
+   * notice). Retired by a resolution change, a study-window move (the effects below)
+   * and by any staging change, so it never outlives the pick it refused. */
+  let addRefusal = $state<string | null>(null);
+
+  // Moving the study window is what an outside-window refusal asks for, so it
+  // retires the refusal (only the refusal: a confirmation still describes its Add).
+  $effect(() => {
+    void pickerWindow;
+    addRefusal = null;
+  });
+
+  // A fresh resolution / leaf change clears the stale confirmation. Tracking
+  // `fqidPath` (the navigation key) re-invalidates on a leaf change independent of
+  // the parent's `{#key route.fqidPath}` remount, so a stale confirmation can never
+  // survive onto a different variable.
+  $effect(() => {
+    void params.period;
+    void params.variant;
+    void params.value_set_version;
+    void fqidPath;
+    applyOutcome = null;
+    addRefusal = null;
+  });
+
+  /** So a pick still waiting on the restore gate is abandoned rather than committed
+   * into a draft from a page the researcher has navigated away from. */
+  const unmounted = unmountedFlag();
+
+  /** Apply the staged diff through the shared staging stack (`staged_picker.ts`),
+   * which owns the fan-out, the resolve and the ONE store mutation; this view owns
+   * only the lines it says about the result. */
+  async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
+    const scope = { period: activePickerPeriod, window: pickerWindow };
+    const result = await applyStagedPicks(payload, {
+      scope,
+      studyWindow: boundedProjectWindow,
+      seed: { regMetaVersion, steward },
+      cancelled: unmounted,
+    });
+    addRefusal = stagedApplyRefusal(result, scope, ADD_PERIOD_REQUIRED_MESSAGE);
+    if (result.kind === "applied") {
+      applyOutcome = result.outcome;
+    }
+    return result.kind === "applied";
+  }
 </script>
 
 <!-- #638 PR1: the binding leaf renders through the unified SubjectView shell. The
@@ -687,13 +693,16 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
       <dd>{node.measurement_unit}</dd>
     {/if}
   </dl>
-
 {/snippet}
 
 {#snippet picker()}
   <div class="data-warnings">
     <ScopedDataWarnings fqid={node.fqid} />
-    <ScopedDataWarnings fqid={registerPrefixOf(node.fqid)} registerOnly collapsed />
+    <ScopedDataWarnings
+      fqid={registerPrefixOf(node.fqid)}
+      registerOnly
+      collapsed
+    />
   </div>
   <!-- #615: the period picker seeds from the global project window (windowStore)
        and shows the subject's coverage track. PRECEDENCE `?period` > window >
@@ -701,18 +710,20 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
        same `?period` URL path (a local change writes `?period` only, never the
        global window). -->
   {#if yearIndependentSelection}
-    <p class="muted">Year-independent delivery. An annual availability period does not apply.</p>
+    <p class="muted">
+      Year-independent delivery. An annual availability period does not apply.
+    </p>
   {:else}
-  <PeriodPicker
-    period={boundedPickerPeriod}
-    window={boundedProjectWindow}
-    {coverage}
-    {windowMinYear}
-    vintageYear={windowMaxYear}
-    {enforcePeriodBounds}
-    onsubmit={(period) => setResolution({ period })}
-    onclear={() => setResolution({ period: null })}
-  />
+    <PeriodPicker
+      period={boundedPickerPeriod}
+      window={boundedProjectWindow}
+      {coverage}
+      {windowMinYear}
+      vintageYear={windowMaxYear}
+      {enforcePeriodBounds}
+      onsubmit={(period) => setResolution({ period })}
+      onclear={() => setResolution({ period: null })}
+    />
   {/if}
 
   <!-- #678 redesign: the direct representation picker. The variable's
@@ -746,10 +757,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 
   <!-- Applying a period re-resolves this view, which clears the picker's staging —
        hence the refusal's "select and add again" rather than a bare retry. -->
-  <StagedAddStatus
-    outcome={applyOutcome}
-    blocked={addRefusal}
-  />
+  <StagedAddStatus outcome={applyOutcome} blocked={addRefusal} />
 
   {#if params.period && (params.variant || params.value_set_version)}
     <!-- Active narrowing modifiers, each clearable — so narrowing to one state
@@ -802,7 +810,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     <h3 id="states-heading">
       <!-- A #307 comma list reads as segments joined with "+" (the union the
            backend resolves since #340) — `2005..2010 + 2015..2020`. -->
-      States{#if isNarrowed && narrowedPeriodLabel}<span class="muted narrowed-note">
+      States{#if isNarrowed && narrowedPeriodLabel}<span
+          class="muted narrowed-note"
+        >
           · narrowed to {narrowedPeriodLabel}</span
         >{/if}
     </h3>
@@ -901,13 +911,16 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                     correction.state.variant_label ?? correction.state.variant,
                 },
                 {
-                  label:
-                    correction.providerDocumented
-                      ? "Catalog interval"
-                      : "Interval",
+                  label: correction.providerDocumented
+                    ? "Catalog interval"
+                    : "Interval",
                   value:
                     formatStateWindow(correction.state) ??
-                    windowTitle(correction.state.valid_from, correction.state.valid_to, correction.state.period_scope),
+                    windowTitle(
+                      correction.state.valid_from,
+                      correction.state.valid_to,
+                      correction.state.period_scope,
+                    ),
                   mono: true,
                 },
                 ...(correction.providerDocumented
@@ -934,7 +947,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
               ] satisfies KeyValueRow[]}
               <li>
                 <div
-                  title={windowTitle(correction.state.valid_from, correction.state.valid_to, correction.state.period_scope)}
+                  title={windowTitle(
+                    correction.state.valid_from,
+                    correction.state.valid_to,
+                    correction.state.period_scope,
+                  )}
                 >
                   <KeyValue rows={correctionFacts} />
                 </div>
@@ -958,7 +975,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
                 {
                   label: "Interval",
-                  value: windowTitle(state.valid_from, state.valid_to, state.period_scope),
+                  value: windowTitle(
+                    state.valid_from,
+                    state.valid_to,
+                    state.period_scope,
+                  ),
                   mono: true,
                 },
                 {
@@ -967,7 +988,13 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
               ] satisfies KeyValueRow[]}
               <li>
-                <div title={windowTitle(state.valid_from, state.valid_to, state.period_scope)}>
+                <div
+                  title={windowTitle(
+                    state.valid_from,
+                    state.valid_to,
+                    state.period_scope,
+                  )}
+                >
                   <KeyValue rows={gapFacts} />
                 </div>
               </li>
@@ -987,7 +1014,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
                 {
                   label: "Interval",
-                  value: windowTitle(state.valid_from, state.valid_to, state.period_scope),
+                  value: windowTitle(
+                    state.valid_from,
+                    state.valid_to,
+                    state.period_scope,
+                  ),
                   mono: true,
                 },
                 {
@@ -997,7 +1028,13 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
                 },
               ] satisfies KeyValueRow[]}
               <li>
-                <div title={windowTitle(state.valid_from, state.valid_to, state.period_scope)}>
+                <div
+                  title={windowTitle(
+                    state.valid_from,
+                    state.valid_to,
+                    state.period_scope,
+                  )}
+                >
                   <KeyValue rows={pooledFacts} />
                 </div>
               </li>
@@ -1022,7 +1059,11 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 />
 
 <style>
-  .data-warnings { display: flex; flex-direction: column; gap: var(--space-4); }
+  .data-warnings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
   /* #670: the member-distinguishing qualifier + group context link, sitting just
      under the shared concept header. Two inline pieces separated by a thin
      divider so the qualifier (what locates this member) reads as primary and the

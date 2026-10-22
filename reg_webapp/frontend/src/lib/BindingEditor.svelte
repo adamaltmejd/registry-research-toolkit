@@ -1,78 +1,78 @@
 <script lang="ts">
-import { catalogHref } from "./catalog";
-import { columnNames, UNASKED } from "./catalog_names.svelte";
-import { periodLabel } from "./period";
-import type { DraftBinding } from "./project_data";
-import { projectStore } from "./project_store.svelte";
-import { sourcePeriodToWire } from "./reg_core";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import { Button } from "./ui";
-import { bindingAnchorId } from "./validation";
+  import { catalogHref } from "./catalog";
+  import { columnNames, UNASKED } from "./catalog_names.svelte";
+  import { periodLabel } from "./period";
+  import type { DraftBinding } from "./project_data";
+  import { projectStore } from "./project_store.svelte";
+  import { sourcePeriodToWire } from "./reg_core";
+  import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+  import { Button } from "./ui";
+  import { bindingAnchorId } from "./validation";
 
-// READ-ONLY column row in the #991 data-order cart: it DISPLAYS the delivery
-// COLUMN this binding orders and the variable it came from, and offers "Remove
-// column" only. Editing a binding — variable, type, display_name, representation —
-// happens by re-picking in the catalog browser (the cart shows the cart, it doesn't
-// edit it). See reg_webapp/DESIGN.md and issue #991.
-const {
-  sourceIndex,
-  bindingIndex,
-  binding,
-  variant,
-  period: sourcePeriod,
-}: {
-  sourceIndex: number;
-  bindingIndex: number;
-  binding: DraftBinding;
-  /** The owning source's concrete variant slug and its stored period (wire form,
-   * null when it has none) — where this column's default name is resolved. */
-  variant: string;
-  period: string | null;
-} = $props();
+  // READ-ONLY column row in the #991 data-order cart: it DISPLAYS the delivery
+  // COLUMN this binding orders and the variable it came from, and offers "Remove
+  // column" only. Editing a binding — variable, type, display_name, representation —
+  // happens by re-picking in the catalog browser (the cart shows the cart, it doesn't
+  // edit it). See reg_webapp/DESIGN.md and issue #991.
+  const {
+    sourceIndex,
+    bindingIndex,
+    binding,
+    variant,
+    period: sourcePeriod,
+  }: {
+    sourceIndex: number;
+    bindingIndex: number;
+    binding: DraftBinding;
+    /** The owning source's concrete variant slug and its stored period (wire form,
+     * null when it has none) — where this column's default name is resolved. */
+    variant: string;
+    period: string | null;
+  } = $props();
 
-// A binding field coerced to a display string (non-string → "").
-function strField(field: keyof DraftBinding): string {
-  const v = binding[field];
-  return typeof v === "string" ? v : "";
-}
-const variable = $derived(strField("variable"));
-// A binding period narrows this column to its own years inside the source's
-// (#1462); the row says so, and resolves and warns at those years. Absent, the
-// column inherits the source period and the row says nothing.
-const ownPeriod = $derived(
-  binding.period == null ? null : sourcePeriodToWire(binding.period),
-);
-const period = $derived(ownPeriod ?? sourcePeriod);
+  // A binding field coerced to a display string (non-string → "").
+  function strField(field: keyof DraftBinding): string {
+    const v = binding[field];
+    return typeof v === "string" ? v : "";
+  }
+  const variable = $derived(strField("variable"));
+  // A binding period narrows this column to its own years inside the source's
+  // (#1462); the row says so, and resolves and warns at those years. Absent, the
+  // column inherits the source period and the row says nothing.
+  const ownPeriod = $derived(
+    binding.period == null ? null : sourcePeriodToWire(binding.period),
+  );
+  const period = $derived(ownPeriod ?? sourcePeriod);
 
-// The row LEADS with the delivery column — that is what the researcher ordered and
-// what lands in the extract. Where the FILE names it, the file wins: an explicit
-// `display_name` first (reg-core makes it the binding's OUTPUT column name, so it
-// wins even over a pinned `representation`), then the `representation` a pick pins
-// when it chose between co-existing columns.
-//
-// Carrying NEITHER is the ORDINARY case, not a broken one — a pick writes neither
-// (`representation: null` when the variable resolves to one column, issue #992),
-// and neither does a project_data.json authored outside this app. That column's name
-// is the reg_meta default at the source's (variant, period), which lives only in the
-// CATALOG — so the row resolves it there, through the same leaf resolve the picker
-// runs on a pick, cached per (fqid, period, variant) so a hundred-column cart asks
-// once. Nothing resolvable (no period, an unreachable backend, a coordinate outside
-// this steward's catalog) keeps today's answer: the FQID it was picked from, never
-// an invented placeholder. Nothing here is written back to the draft.
-const fileColumn = $derived(
-  strField("display_name") || strField("representation"),
-);
-const resolved = $derived(
-  fileColumn ? UNASKED : columnNames(variable, period, variant),
-);
-const resolvedNames = $derived(resolved.value ?? []);
-const columnName = $derived(fileColumn || resolvedNames[0] || "");
-// A column RENAMED within the source's period resolves to several names: the
-// current one leads, and the superseded ones trail it OLDEST-first so the hint
-// reads as a progression — the order the picker's own "was X, Y" hint uses.
-const supersededColumns = $derived(resolvedNames.slice(1).reverse());
-// What the delete button calls this row: the column it shows, else the variable.
-const columnLabel = $derived(columnName || variable);
+  // The row LEADS with the delivery column — that is what the researcher ordered and
+  // what lands in the extract. Where the FILE names it, the file wins: an explicit
+  // `display_name` first (reg-core makes it the binding's OUTPUT column name, so it
+  // wins even over a pinned `representation`), then the `representation` a pick pins
+  // when it chose between co-existing columns.
+  //
+  // Carrying NEITHER is the ORDINARY case, not a broken one — a pick writes neither
+  // (`representation: null` when the variable resolves to one column, issue #992),
+  // and neither does a project_data.json authored outside this app. That column's name
+  // is the reg_meta default at the source's (variant, period), which lives only in the
+  // CATALOG — so the row resolves it there, through the same leaf resolve the picker
+  // runs on a pick, cached per (fqid, period, variant) so a hundred-column cart asks
+  // once. Nothing resolvable (no period, an unreachable backend, a coordinate outside
+  // this steward's catalog) keeps today's answer: the FQID it was picked from, never
+  // an invented placeholder. Nothing here is written back to the draft.
+  const fileColumn = $derived(
+    strField("display_name") || strField("representation"),
+  );
+  const resolved = $derived(
+    fileColumn ? UNASKED : columnNames(variable, period, variant),
+  );
+  const resolvedNames = $derived(resolved.value ?? []);
+  const columnName = $derived(fileColumn || resolvedNames[0] || "");
+  // A column RENAMED within the source's period resolves to several names: the
+  // current one leads, and the superseded ones trail it OLDEST-first so the hint
+  // reads as a progression — the order the picker's own "was X, Y" hint uses.
+  const supersededColumns = $derived(resolvedNames.slice(1).reverse());
+  // What the delete button calls this row: the column it shows, else the variable.
+  const columnLabel = $derived(columnName || variable);
 </script>
 
 <!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
@@ -90,7 +90,8 @@ const columnLabel = $derived(columnName || variable);
          face; the word that introduces them is copy and does not. -->
     {#if supersededColumns.length > 0}
       <span class="rename-hint"
-        >was <span class="superseded">{supersededColumns.join(", ")}</span></span
+        >was <span class="superseded">{supersededColumns.join(", ")}</span
+        ></span
       >
     {/if}
     <!-- The variable is a machine FQID → mono and demoted under the column name (the
@@ -123,7 +124,13 @@ const columnLabel = $derived(columnName || variable);
   </Button>
 </div>
 {#if variable}
-  <ScopedDataWarnings fqid={variable} {period} {variant} representation={strField("representation") || null} framed={false} />
+  <ScopedDataWarnings
+    fqid={variable}
+    {period}
+    {variant}
+    representation={strField("representation") || null}
+    framed={false}
+  />
 {/if}
 
 <style>

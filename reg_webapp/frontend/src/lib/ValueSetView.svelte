@@ -1,355 +1,362 @@
 <script lang="ts">
-import type { DenseIntegerRangeModel, VariableStateModel } from "./api";
-import {
-  catalogHref,
-  conformanceNeedsNotice,
-  type DistinctValueSet,
-  distinctValueSets,
-  formatStateWindow,
-  formatWindow,
-  humanizeClassificationSlug,
-  matchesFilter,
-  type StateConformance,
-  type ValueSetTechnicalChange,
-  valueSetKeyForColumn,
-  windowTitle,
-} from "./catalog";
-import FilterInput from "./FilterInput.svelte";
-import { Tag } from "./ui";
-import ValueSetCodes from "./ValueSetCodes.svelte";
+  import type { DenseIntegerRangeModel, VariableStateModel } from "./api";
+  import {
+    catalogHref,
+    conformanceNeedsNotice,
+    type DistinctValueSet,
+    distinctValueSets,
+    formatStateWindow,
+    formatWindow,
+    humanizeClassificationSlug,
+    matchesFilter,
+    type StateConformance,
+    type ValueSetTechnicalChange,
+    valueSetKeyForColumn,
+    windowTitle,
+  } from "./catalog";
+  import FilterInput from "./FilterInput.svelte";
+  import { Tag } from "./ui";
+  import ValueSetCodes from "./ValueSetCodes.svelte";
 
-// The PURE value-set / coding viewer for a variable's `variable_state` rows
-// (extracted from the retired StatesView — #905). Presentation ONLY: it never
-// fetches, never navigates, and carries NO resolution (variant / value-set
-// version) state — the picker (RepresentationPicker) owns the
-// `?variant`/`?value_set_version` narrowing now, and BindingLeafView owns the URL
-// writes. This view just renders the codings the leaf hands it, focused (via
-// `focusColumn` + `focusVariant`) on the (variant, column) a deep-link points at.
-//
-// DELIBERATELY STANDALONE: kept as its own component (not folded back into the
-// leaf) so the graph/picker surface can host the same coding display next to selected
-// representations without duplicating value-set rendering.
-//
-//   length === 1 → single-state DETAIL (variant, validity, value-set version,
-//                  operational definition + the (code, label) table in a
-//                  height-constrained / large-list-collapsed container). Structural
-//                  fields live in BindingLeafView's bottom Technical details disclosure.
-//   length  > 1 → a VALUE-SET-centric view (#668 / dogfooding M13/M18/M20):
-//                  the states group by source value-set identity
-//                  (declared classifications do not replace `value_set_id`),
-//                  shown as a compact list by DEFAULT (the
-//                  union). A FilterInput narrows the list and a per-row "Isolate"
-//                  focuses one (both LOCAL view state); "All value sets" resets.
-//                  A `focusColumn` deep-link seeds the same isolation. A
-//                  classification value set links out (no code dump); a plain one
-//                  expands its codes.
-//   length === 0 → a clean "no state delivered for this period" message (a valid
-//                  period outside every validity window — NOT an error).
-let {
-  fqid,
-  states,
-  narrowed,
-  scopeStates = null,
-  focusColumn = null,
-  focusVariant = null,
-  commonName = null,
-  commonDescription = null,
-  commonDefinition = null,
-  commonUnit = null,
-}: {
-  /** The variable whose states these are: the ref its codes are read by. */
-  fqid: string;
-  states: VariableStateModel[];
-  /** True when these are the `?period`-narrowed subset (drives empty wording). */
-  narrowed: boolean;
-  /** The period-resolved subset when `states` intentionally carries full history. */
-  scopeStates?: VariableStateModel[] | null;
-  /** A delivery column to FOCUS (#905): the picker's "codings vary" nudge deep-links
-   * to `?codes=<variant>::<column>`, which BindingLeafView passes here. It seeds the
-   * local isolation onto the distinct value set that (`focusVariant`, column) resolves
-   * to and scrolls it into view. Null (or a column no state delivers) → no focus
-   * (the default union). */
-  focusColumn?: string | null;
-  /** The variant scoping the focus (#905): a delivery column can be shared across
-   * variants/populations with DISTINCT codings (picker rows are keyed
-   * `(variant, column)`), so the focus isolates THIS variant's coding. Null → the
-   * column is considered across all variants (a column unique across variants, or a
-   * deep link with no variant) — `valueSetKeyForColumn`'s back-compat path. */
-  focusVariant?: string | null;
-  /** Common facts already displayed by the containing variable view. */
-  commonName?: string | null;
-  commonDescription?: string | null;
-  commonDefinition?: string | null;
-  commonUnit?: string | null;
-} = $props();
+  // The PURE value-set / coding viewer for a variable's `variable_state` rows
+  // (extracted from the retired StatesView — #905). Presentation ONLY: it never
+  // fetches, never navigates, and carries NO resolution (variant / value-set
+  // version) state — the picker (RepresentationPicker) owns the
+  // `?variant`/`?value_set_version` narrowing now, and BindingLeafView owns the URL
+  // writes. This view just renders the codings the leaf hands it, focused (via
+  // `focusColumn` + `focusVariant`) on the (variant, column) a deep-link points at.
+  //
+  // DELIBERATELY STANDALONE: kept as its own component (not folded back into the
+  // leaf) so the graph/picker surface can host the same coding display next to selected
+  // representations without duplicating value-set rendering.
+  //
+  //   length === 1 → single-state DETAIL (variant, validity, value-set version,
+  //                  operational definition + the (code, label) table in a
+  //                  height-constrained / large-list-collapsed container). Structural
+  //                  fields live in BindingLeafView's bottom Technical details disclosure.
+  //   length  > 1 → a VALUE-SET-centric view (#668 / dogfooding M13/M18/M20):
+  //                  the states group by source value-set identity
+  //                  (declared classifications do not replace `value_set_id`),
+  //                  shown as a compact list by DEFAULT (the
+  //                  union). A FilterInput narrows the list and a per-row "Isolate"
+  //                  focuses one (both LOCAL view state); "All value sets" resets.
+  //                  A `focusColumn` deep-link seeds the same isolation. A
+  //                  classification value set links out (no code dump); a plain one
+  //                  expands its codes.
+  //   length === 0 → a clean "no state delivered for this period" message (a valid
+  //                  period outside every validity window — NOT an error).
+  let {
+    fqid,
+    states,
+    narrowed,
+    scopeStates = null,
+    focusColumn = null,
+    focusVariant = null,
+    commonName = null,
+    commonDescription = null,
+    commonDefinition = null,
+    commonUnit = null,
+  }: {
+    /** The variable whose states these are: the ref its codes are read by. */
+    fqid: string;
+    states: VariableStateModel[];
+    /** True when these are the `?period`-narrowed subset (drives empty wording). */
+    narrowed: boolean;
+    /** The period-resolved subset when `states` intentionally carries full history. */
+    scopeStates?: VariableStateModel[] | null;
+    /** A delivery column to FOCUS (#905): the picker's "codings vary" nudge deep-links
+     * to `?codes=<variant>::<column>`, which BindingLeafView passes here. It seeds the
+     * local isolation onto the distinct value set that (`focusVariant`, column) resolves
+     * to and scrolls it into view. Null (or a column no state delivers) → no focus
+     * (the default union). */
+    focusColumn?: string | null;
+    /** The variant scoping the focus (#905): a delivery column can be shared across
+     * variants/populations with DISTINCT codings (picker rows are keyed
+     * `(variant, column)`), so the focus isolates THIS variant's coding. Null → the
+     * column is considered across all variants (a column unique across variants, or a
+     * deep link with no variant) — `valueSetKeyForColumn`'s back-compat path. */
+    focusVariant?: string | null;
+    /** Common facts already displayed by the containing variable view. */
+    commonName?: string | null;
+    commonDescription?: string | null;
+    commonDefinition?: string | null;
+    commonUnit?: string | null;
+  } = $props();
 
-// Single-state DETAIL — PERIOD-AWARE (#905, Codex P2). A single state reaching the view
-// (`states.length === 1`) drives the detail — the full-history view with one recorded
-// state, OR a `?period` that BindingLeafView resolved to exactly one state (it passes
-// that single state as `states`). BUT when narrowed, the period must have actually
-// DELIVERED it: a variable with one historical state viewed at a `?period` OUTSIDE that
-// state falls back to the lone `node.states` (length 1) with an EMPTY `scopeStates`, and
-// must NOT render that out-of-era state as the in-period detail. So a narrowed view with
-// an empty period scope suppresses the single detail and falls through to the
-// "No state delivered for this period" path (consistent with `hasInPeriodValueSets`).
-// A multi-history view (`states.length > 1`) is never single regardless of scope, so the
-// value-set list / focus-isolation render. Uses only `states` + `scopeStates` — never
-// resolution-modifier coupling.
-const single = $derived.by(() => {
-  if (states.length !== 1) {
-    return null;
-  }
-  if (narrowed && scopeStates !== null && scopeStates.length === 0) {
-    return null;
-  }
-  return states[0];
-});
-
-// Distinct source domains retain whole-history usages; their visible conformance
-// notices follow the selected scope so another era’s certificates are not implied.
-const valueSets = $derived(distinctValueSets(states));
-const scopedValueSets = $derived(
-  scopeStates === null ? null : distinctValueSets(scopeStates),
-);
-const scopeValueSetKeys = $derived(
-  scopedValueSets === null
-    ? null
-    : new Set(scopedValueSets.map((vs) => vs.key)),
-);
-
-function visibleConformances(vs: DistinctValueSet): StateConformance[] {
-  if (scopedValueSets === null || !inPeriod(vs)) return vs.conformances;
-  return (
-    scopedValueSets.find((scoped) => scoped.key === vs.key)?.conformances ?? []
-  );
-}
-
-// The provider's own name for a coding (`value_set_version_label`, e.g. SCB's
-// "Civilstånd 1998-") is low-trust: it is a per-delivery label, often wrong about
-// the coding's actual coverage (#1301). It never titles a value set; it renders
-// verbatim as a muted secondary line attributed to the provider.
-const sourceVersionName = $derived(
-  `${(fqid.split("/")[0] ?? "").toUpperCase() || "Source"} version name`,
-);
-
-// Local filter + isolate: LOCAL view state (NOT a URL write). Isolation is keyed
-// by the value set's STABLE `key` (not a list index, which the filter's slice
-// would invalidate); null = the union (default). Both reset when the state set
-// changes underneath (navigation / narrowing) so a stale key can't isolate / a
-// stale needle can't hide the wrong value set. A `focusColumn` deep-link SEEDS the
-// isolation to the value set that column resolves to (#905).
-let isolatedKey = $state<string | null>(null);
-let filter = $state("");
-// Which code disclosures the reader has OPENED, by panel key (Y-46). The states
-// no longer carry their codes, so a `<details>` that is shut must hold no
-// ValueSetCodes at all — mounting one is what issues the request. It also DRIVES
-// each `<details open>`, so resetting the map with the rest of the local view
-// state shuts the twisty too: a re-resolve (an `?period` Apply, which refetches
-// this view without remounting it) can't leave a row expanded over an unmounted
-// panel.
-let openPanels = $state<Record<string, boolean>>({});
-$effect(() => {
-  void states;
-  void scopeStates;
-  void focusVariant;
-  openPanels = {};
-  // A deep-link `?codes=<variant>::<column>` seeds the isolation to that ROW's
-  // (variant-scoped, latest-era) distinct value set; absent / unmatched → the default
-  // union. `focusVariant` narrows to the clicked row's coding when a column is shared
-  // across variants.
-  isolatedKey =
-    focusColumn != null
-      ? valueSetKeyForColumn(states, focusColumn, focusVariant)
-      : null;
-  filter = "";
-});
-const isolated = $derived(
-  isolatedKey == null
-    ? null
-    : (valueSets.find((vs) => vs.key === isolatedKey) ?? null),
-);
-// The filtered union list — matched against the row label + every variant slug,
-// so hunting a variant ("doda") surfaces the value sets it uses. The isolate view
-// shows the single isolated set and ignores the filter.
-const shownValueSets = $derived(
-  valueSets
-    .filter((vs) =>
-      matchesFilter(filter, valueSetLabel(vs), vs.versionLabel, ...vs.variants),
-    )
-    .filter((vs) => inPeriod(vs)),
-);
-const collapsedValueSets = $derived(
-  scopeValueSetKeys === null
-    ? []
-    : valueSets
-        .filter((vs) =>
-          matchesFilter(
-            filter,
-            valueSetLabel(vs),
-            vs.versionLabel,
-            ...vs.variants,
-          ),
-        )
-        .filter((vs) => !inPeriod(vs)),
-);
-const filteredValueSetCount = $derived(
-  shownValueSets.length + collapsedValueSets.length,
-);
-
-// The UNFILTERED period scope: whether the period genuinely delivered ANY in-period
-// value set, computed BEFORE the text filter (#905, Codex P3). The empty hint keys off
-// this — not off `shownValueSets`/`collapsedValueSets`, which the filter already
-// narrows — so a filter that hides in-period rows (matching only an out-of-period one)
-// does NOT mis-report "No state delivered for this period". The filter's own
-// zero-results state describes "no matches" separately. Null scope (full history) →
-// always non-empty (no period to be empty for).
-const hasInPeriodValueSets = $derived(
-  scopeValueSetKeys === null || valueSets.some((vs) => inPeriod(vs)),
-);
-
-// Scroll the focused (isolated) detail into view once it renders — the deep-link
-// from the picker's "codings vary" nudge lands the user on the right coding. Gated
-// on a focusColumn so ordinary in-page isolation (a row's "Isolate" click) doesn't
-// yank the scroll position.
-let detailEl = $state<HTMLDivElement | null>(null);
-$effect(() => {
-  if (focusColumn != null && detailEl) {
-    detailEl.scrollIntoView({ block: "nearest" });
-  }
-});
-
-// A value set is IN PERIOD when the period-resolved subset contains its key.
-// Period-out-of-scope rows are collapsed under a disclosure so high-cardinality
-// variables keep their context without rendering every historical code list inline
-// (#744). No scope → everything is in period (full-history view).
-function inPeriod(vs: DistinctValueSet): boolean {
-  return scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
-}
-
-// The title for a distinct value set, from trustworthy data only: a
-// classification value set reads "LKF ⟨vintage⟩" (humanized slug); a plain one
-// reads its delivered windows ("Value set · 1990 – 2023", a gap year kept:
-// "2000, 2002"), or a neutral label when they are wholly unknown. The provider's version name is shown beside it, never as it.
-function valueSetLabel(vs: DistinctValueSet): string {
-  if (vs.classificationSlugs.length > 0) {
-    return vs.classificationSlugs.map(humanizeClassificationSlug).join(", ");
-  }
-  const span = usageWindowLabels(vs.coverage)
-    .map((w) => w.label)
-    .join(", ");
-  return span ? `Value set · ${span}` : "Value set";
-}
-
-function usageChanges(
-  usage: DistinctValueSet["usages"][number],
-): ValueSetTechnicalChange[] {
-  return usage.spans.flatMap((span) => span.changes ?? []);
-}
-
-function stateTextFacts(state: VariableStateModel) {
-  return (
-    [
-      ["Name", state.name, commonName],
-      ["Description", state.description, commonDescription],
-      ["Definition", state.definition, commonDefinition],
-      ["Unit", state.measurement_unit, commonUnit],
-    ] as const
-  ).flatMap(([label, value, common]) =>
-    value && value !== common ? [{ label, value }] : [],
-  );
-}
-
-function definitionStates(
-  usage: DistinctValueSet["usages"][number],
-): VariableStateModel[] {
-  return usage.states.filter(
-    (state) => state.operational_definition || stateTextFacts(state).length > 0,
-  );
-}
-
-function repeatedDefinitionLabels(states: VariableStateModel[]): Set<string> {
-  const counts = new Map<string, number>();
-  for (const state of states) {
-    const label = stateDefinitionBaseLabel(state);
-    counts.set(label, (counts.get(label) ?? 0) + 1);
-  }
-  return new Set(
-    [...counts.entries()]
-      .filter(([, count]) => count > 1)
-      .map(([label]) => label),
-  );
-}
-
-function stateDefinitionBaseLabel(s: VariableStateModel): string {
-  return (
-    s.delivery_column_name ?? formatStateWindow(s) ?? "Operational definition"
-  );
-}
-
-function stateDefinitionLabel(
-  s: VariableStateModel,
-  repeated: Set<string>,
-): string {
-  const label = stateDefinitionBaseLabel(s);
-  const window = formatStateWindow(s);
-  return repeated.has(label) && window ? `${label} (${window})` : label;
-}
-
-function stateDefinitionKey(s: VariableStateModel): string {
-  return [
-    s.state_id,
-    s.delivery_column_name ?? "",
-    s.valid_from,
-    s.valid_to,
-    s.value_set_version_label ?? "",
-  ].join("|");
-}
-
-function changeDateLabel(at: string): string {
-  return /^\d{4}-01-01$/.test(at) ? at.slice(0, 4) : at;
-}
-
-function technicalChangeLabel(change: ValueSetTechnicalChange): string {
-  return `changed ${changeDateLabel(change.at)}: ${change.notes.join("; ")}`;
-}
-
-function usageWindowLabels(
-  spans: DistinctValueSet["usages"][number]["spans"],
-): { label: string; pooled: boolean }[] {
-  return spans.flatMap((sp) => {
-    const label = formatWindow(sp.from, sp.to);
-    return label === null ? [] : [{ label, pooled: sp.pooled }];
+  // Single-state DETAIL — PERIOD-AWARE (#905, Codex P2). A single state reaching the view
+  // (`states.length === 1`) drives the detail — the full-history view with one recorded
+  // state, OR a `?period` that BindingLeafView resolved to exactly one state (it passes
+  // that single state as `states`). BUT when narrowed, the period must have actually
+  // DELIVERED it: a variable with one historical state viewed at a `?period` OUTSIDE that
+  // state falls back to the lone `node.states` (length 1) with an EMPTY `scopeStates`, and
+  // must NOT render that out-of-era state as the in-period detail. So a narrowed view with
+  // an empty period scope suppresses the single detail and falls through to the
+  // "No state delivered for this period" path (consistent with `hasInPeriodValueSets`).
+  // A multi-history view (`states.length > 1`) is never single regardless of scope, so the
+  // value-set list / focus-isolation render. Uses only `states` + `scopeStates` — never
+  // resolution-modifier coupling.
+  const single = $derived.by(() => {
+    if (states.length !== 1) {
+      return null;
+    }
+    if (narrowed && scopeStates !== null && scopeStates.length === 0) {
+      return null;
+    }
+    return states[0];
   });
-}
 
-function usageVariantLabel(variant: string): string | null {
-  return variant === "_default" ? null : variant;
-}
+  // Distinct source domains retain whole-history usages; their visible conformance
+  // notices follow the selected scope so another era’s certificates are not implied.
+  const valueSets = $derived(distinctValueSets(states));
+  const scopedValueSets = $derived(
+    scopeStates === null ? null : distinctValueSets(scopeStates),
+  );
+  const scopeValueSetKeys = $derived(
+    scopedValueSets === null
+      ? null
+      : new Set(scopedValueSets.map((vs) => vs.key)),
+  );
 
-function conformanceVariants(source: StateConformance): string[] {
-  return source.variants.filter((v) => usageVariantLabel(v) !== null);
-}
+  function visibleConformances(vs: DistinctValueSet): StateConformance[] {
+    if (scopedValueSets === null || !inPeriod(vs)) return vs.conformances;
+    return (
+      scopedValueSets.find((scoped) => scoped.key === vs.key)?.conformances ??
+      []
+    );
+  }
 
-/** What a notice's scope line has to add. `coding` names the value set the
- * verdict speaks for — set only where an entry groups SEVERAL codings (a
- * classification edition), since on a plain row that would just repeat the row's
- * own heading. A null scope drops the line entirely: the single-state detail
- * already lists the state's variant, window and coding above it. */
-type ConformanceScope = { coding: string | null };
+  // The provider's own name for a coding (`value_set_version_label`, e.g. SCB's
+  // "Civilstånd 1998-") is low-trust: it is a per-delivery label, often wrong about
+  // the coding's actual coverage (#1301). It never titles a value set; it renders
+  // verbatim as a muted secondary line attributed to the provider.
+  const sourceVersionName = $derived(
+    `${(fqid.split("/")[0] ?? "").toUpperCase() || "Source"} version name`,
+  );
 
-// `values` reads a coding through a state that carries it (keyed by the variable
-// and a state, not by the coding's id): any state of the distinct value set
-// answers the same codes, so the first one stands in.
-function stateOf(vs: DistinctValueSet): VariableStateModel | undefined {
-  return states.find((s) => s.value_set_id === vs.valueSetId);
-}
+  // Local filter + isolate: LOCAL view state (NOT a URL write). Isolation is keyed
+  // by the value set's STABLE `key` (not a list index, which the filter's slice
+  // would invalidate); null = the union (default). Both reset when the state set
+  // changes underneath (navigation / narrowing) so a stale key can't isolate / a
+  // stale needle can't hide the wrong value set. A `focusColumn` deep-link SEEDS the
+  // isolation to the value set that column resolves to (#905).
+  let isolatedKey = $state<string | null>(null);
+  let filter = $state("");
+  // Which code disclosures the reader has OPENED, by panel key (Y-46). The states
+  // no longer carry their codes, so a `<details>` that is shut must hold no
+  // ValueSetCodes at all — mounting one is what issues the request. It also DRIVES
+  // each `<details open>`, so resetting the map with the rest of the local view
+  // state shuts the twisty too: a re-resolve (an `?period` Apply, which refetches
+  // this view without remounting it) can't leave a row expanded over an unmounted
+  // panel.
+  let openPanels = $state<Record<string, boolean>>({});
+  $effect(() => {
+    void states;
+    void scopeStates;
+    void focusVariant;
+    openPanels = {};
+    // A deep-link `?codes=<variant>::<column>` seeds the isolation to that ROW's
+    // (variant-scoped, latest-era) distinct value set; absent / unmatched → the default
+    // union. `focusVariant` narrows to the clicked row's coding when a column is shared
+    // across variants.
+    isolatedKey =
+      focusColumn != null
+        ? valueSetKeyForColumn(states, focusColumn, focusVariant)
+        : null;
+    filter = "";
+  });
+  const isolated = $derived(
+    isolatedKey == null
+      ? null
+      : (valueSets.find((vs) => vs.key === isolatedKey) ?? null),
+  );
+  // The filtered union list — matched against the row label + every variant slug,
+  // so hunting a variant ("doda") surfaces the value sets it uses. The isolate view
+  // shows the single isolated set and ignores the filter.
+  const shownValueSets = $derived(
+    valueSets
+      .filter((vs) =>
+        matchesFilter(
+          filter,
+          valueSetLabel(vs),
+          vs.versionLabel,
+          ...vs.variants,
+        ),
+      )
+      .filter((vs) => inPeriod(vs)),
+  );
+  const collapsedValueSets = $derived(
+    scopeValueSetKeys === null
+      ? []
+      : valueSets
+          .filter((vs) =>
+            matchesFilter(
+              filter,
+              valueSetLabel(vs),
+              vs.versionLabel,
+              ...vs.variants,
+            ),
+          )
+          .filter((vs) => !inPeriod(vs)),
+  );
+  const filteredValueSetCount = $derived(
+    shownValueSets.length + collapsedValueSets.length,
+  );
 
-// The reader's toggle → `openPanels`; `openPanels` → the `open` attribute. An
-// attribute rather than `bind:open` because the key is an `{@const}` inside the
-// each block, and a binding's teardown reads that derived after the row is gone.
-function trackDisclosure(key: string, event: Event): void {
-  openPanels[key] = (event.currentTarget as HTMLDetailsElement).open;
-}
+  // The UNFILTERED period scope: whether the period genuinely delivered ANY in-period
+  // value set, computed BEFORE the text filter (#905, Codex P3). The empty hint keys off
+  // this — not off `shownValueSets`/`collapsedValueSets`, which the filter already
+  // narrows — so a filter that hides in-period rows (matching only an out-of-period one)
+  // does NOT mis-report "No state delivered for this period". The filter's own
+  // zero-results state describes "no matches" separately. Null scope (full history) →
+  // always non-empty (no period to be empty for).
+  const hasInPeriodValueSets = $derived(
+    scopeValueSetKeys === null || valueSets.some((vs) => inPeriod(vs)),
+  );
+
+  // Scroll the focused (isolated) detail into view once it renders — the deep-link
+  // from the picker's "codings vary" nudge lands the user on the right coding. Gated
+  // on a focusColumn so ordinary in-page isolation (a row's "Isolate" click) doesn't
+  // yank the scroll position.
+  let detailEl = $state<HTMLDivElement | null>(null);
+  $effect(() => {
+    if (focusColumn != null && detailEl) {
+      detailEl.scrollIntoView({ block: "nearest" });
+    }
+  });
+
+  // A value set is IN PERIOD when the period-resolved subset contains its key.
+  // Period-out-of-scope rows are collapsed under a disclosure so high-cardinality
+  // variables keep their context without rendering every historical code list inline
+  // (#744). No scope → everything is in period (full-history view).
+  function inPeriod(vs: DistinctValueSet): boolean {
+    return scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
+  }
+
+  // The title for a distinct value set, from trustworthy data only: a
+  // classification value set reads "LKF ⟨vintage⟩" (humanized slug); a plain one
+  // reads its delivered windows ("Value set · 1990 – 2023", a gap year kept:
+  // "2000, 2002"), or a neutral label when they are wholly unknown. The provider's version name is shown beside it, never as it.
+  function valueSetLabel(vs: DistinctValueSet): string {
+    if (vs.classificationSlugs.length > 0) {
+      return vs.classificationSlugs.map(humanizeClassificationSlug).join(", ");
+    }
+    const span = usageWindowLabels(vs.coverage)
+      .map((w) => w.label)
+      .join(", ");
+    return span ? `Value set · ${span}` : "Value set";
+  }
+
+  function usageChanges(
+    usage: DistinctValueSet["usages"][number],
+  ): ValueSetTechnicalChange[] {
+    return usage.spans.flatMap((span) => span.changes ?? []);
+  }
+
+  function stateTextFacts(state: VariableStateModel) {
+    return (
+      [
+        ["Name", state.name, commonName],
+        ["Description", state.description, commonDescription],
+        ["Definition", state.definition, commonDefinition],
+        ["Unit", state.measurement_unit, commonUnit],
+      ] as const
+    ).flatMap(([label, value, common]) =>
+      value && value !== common ? [{ label, value }] : [],
+    );
+  }
+
+  function definitionStates(
+    usage: DistinctValueSet["usages"][number],
+  ): VariableStateModel[] {
+    return usage.states.filter(
+      (state) =>
+        state.operational_definition || stateTextFacts(state).length > 0,
+    );
+  }
+
+  function repeatedDefinitionLabels(states: VariableStateModel[]): Set<string> {
+    const counts = new Map<string, number>();
+    for (const state of states) {
+      const label = stateDefinitionBaseLabel(state);
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+    return new Set(
+      [...counts.entries()]
+        .filter(([, count]) => count > 1)
+        .map(([label]) => label),
+    );
+  }
+
+  function stateDefinitionBaseLabel(s: VariableStateModel): string {
+    return (
+      s.delivery_column_name ?? formatStateWindow(s) ?? "Operational definition"
+    );
+  }
+
+  function stateDefinitionLabel(
+    s: VariableStateModel,
+    repeated: Set<string>,
+  ): string {
+    const label = stateDefinitionBaseLabel(s);
+    const window = formatStateWindow(s);
+    return repeated.has(label) && window ? `${label} (${window})` : label;
+  }
+
+  function stateDefinitionKey(s: VariableStateModel): string {
+    return [
+      s.state_id,
+      s.delivery_column_name ?? "",
+      s.valid_from,
+      s.valid_to,
+      s.value_set_version_label ?? "",
+    ].join("|");
+  }
+
+  function changeDateLabel(at: string): string {
+    return /^\d{4}-01-01$/.test(at) ? at.slice(0, 4) : at;
+  }
+
+  function technicalChangeLabel(change: ValueSetTechnicalChange): string {
+    return `changed ${changeDateLabel(change.at)}: ${change.notes.join("; ")}`;
+  }
+
+  function usageWindowLabels(
+    spans: DistinctValueSet["usages"][number]["spans"],
+  ): { label: string; pooled: boolean }[] {
+    return spans.flatMap((sp) => {
+      const label = formatWindow(sp.from, sp.to);
+      return label === null ? [] : [{ label, pooled: sp.pooled }];
+    });
+  }
+
+  function usageVariantLabel(variant: string): string | null {
+    return variant === "_default" ? null : variant;
+  }
+
+  function conformanceVariants(source: StateConformance): string[] {
+    return source.variants.filter((v) => usageVariantLabel(v) !== null);
+  }
+
+  /** What a notice's scope line has to add. `coding` names the value set the
+   * verdict speaks for — set only where an entry groups SEVERAL codings (a
+   * classification edition), since on a plain row that would just repeat the row's
+   * own heading. A null scope drops the line entirely: the single-state detail
+   * already lists the state's variant, window and coding above it. */
+  type ConformanceScope = { coding: string | null };
+
+  // `values` reads a coding through a state that carries it (keyed by the variable
+  // and a state, not by the coding's id): any state of the distinct value set
+  // answers the same codes, so the first one stands in.
+  function stateOf(vs: DistinctValueSet): VariableStateModel | undefined {
+    return states.find((s) => s.value_set_id === vs.valueSetId);
+  }
+
+  // The reader's toggle → `openPanels`; `openPanels` → the `open` attribute. An
+  // attribute rather than `bind:open` because the key is an `{@const}` inside the
+  // each block, and a binding's teardown reads that derived after the row is gone.
+  function trackDisclosure(key: string, event: Event): void {
+    openPanels[key] = (event.currentTarget as HTMLDetailsElement).open;
+  }
 </script>
 
 <!-- The (code, label) viewer — the SAME rendering for the detail mode and a
@@ -357,13 +364,18 @@ function trackDisclosure(key: string, event: Event): void {
      carry each coding's id and size, not its members, so the panel fetches its
      own bounded pages (and owns their loading / error / empty states) around the
      shared CodeList (#638 PR3). -->
-{#snippet valueSetTable(state: VariableStateModel | undefined, codeCount: number)}
+{#snippet valueSetTable(
+  state: VariableStateModel | undefined,
+  codeCount: number,
+)}
   <!-- A coding of a coded alias window is that window's, not the base state's:
        the column and window start name it, or `values` reads the state's own set. -->
   <ValueSetCodes
     ref={fqid}
     stateId={state?.state_id ?? ""}
-    column={state?.coding_window_from != null ? state.delivery_column_name : null}
+    column={state?.coding_window_from != null
+      ? state.delivery_column_name
+      : null}
     aliasWindowFrom={state?.coding_window_from ?? null}
     {codeCount}
     filterLabel="Filter value set"
@@ -384,7 +396,10 @@ function trackDisclosure(key: string, event: Event): void {
      which coding/variants/period each speaks for; the single-state detail states all
      three above already and passes null. Verdicts that say nothing (a clean "kept")
      render nothing at all, so every call site can hand over the whole set. -->
-{#snippet conformanceNotice(source: StateConformance, scope: ConformanceScope | null)}
+{#snippet conformanceNotice(
+  source: StateConformance,
+  scope: ConformanceScope | null,
+)}
   {@const conf = source.verdict}
   {#if conformanceNeedsNotice(conf)}
     <div class="conformance-notice extended">
@@ -393,9 +408,14 @@ function trackDisclosure(key: string, event: Event): void {
         The source declares
         <a href={catalogHref(`class/${conf.declared_classification_slug}`)}>
           {humanizeClassificationSlug(conf.declared_classification_slug)}
-        </a>. {conf.matched_code_count} source {conf.matched_code_count === 1 ? "code matches" : "codes match"} this classification;
-        {conf.nonconforming_code_count} {conf.nonconforming_code_count === 1 ? "is a source extension" : "are source extensions"}.
-        Source extensions are not official classification codes.
+        </a>. {conf.matched_code_count} source {conf.matched_code_count === 1
+          ? "code matches"
+          : "codes match"} this classification;
+        {conf.nonconforming_code_count}
+        {conf.nonconforming_code_count === 1
+          ? "is a source extension"
+          : "are source extensions"}. Source extensions are not official
+        classification codes.
       </p>
       {#if scope}
         <!-- The years the verdict was RECORDED over — the states that carry it, which
@@ -409,34 +429,53 @@ function trackDisclosure(key: string, event: Event): void {
           <p class="conformance-scope">
             {#if scope.coding}<span>{scope.coding}</span>{/if}
             {#if period}<span class="muted">recorded for {period}</span>{/if}
-            {#each variants as v (v)}<code class="vs-usage-variant">{v}</code>{/each}
+            {#each variants as v (v)}<code class="vs-usage-variant">{v}</code
+              >{/each}
           </p>
         {/if}
       {/if}
       {#if conf.matched_code_count > 0 && source.valueSetId !== null}
         {@const canonicalKey = `canonical:${source.stateId}:${source.aliasWindowFrom ?? ""}:${source.column ?? ""}:${conf.declared_classification_slug}`}
-        <details open={openPanels[canonicalKey] ?? false} ontoggle={(e) => trackDisclosure(canonicalKey, e)}>
+        <details
+          open={openPanels[canonicalKey] ?? false}
+          ontoggle={(e) => trackDisclosure(canonicalKey, e)}
+        >
           <summary>Matching source codes ({conf.matched_code_count})</summary>
           {#if openPanels[canonicalKey]}
-            <ValueSetCodes ref={fqid} stateId={source.stateId}
-              classification={`class/${conf.declared_classification_slug}`} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition="canonical" codeCount={conf.matched_code_count}
-              filterLabel="Filter matching source codes" filterPlaceholder="Filter matching source codes…" />
+            <ValueSetCodes
+              ref={fqid}
+              stateId={source.stateId}
+              classification={`class/${conf.declared_classification_slug}`}
+              column={source.column}
+              aliasWindowFrom={source.aliasWindowFrom}
+              partition="canonical"
+              codeCount={conf.matched_code_count}
+              filterLabel="Filter matching source codes"
+              filterPlaceholder="Filter matching source codes…"
+            />
           {/if}
         </details>
       {/if}
-      {#each [
-        { partition: "nonstandard" as const, label: "Nonstandard source codes", count: conf.nonstandard_code_count },
-        { partition: "sentinels" as const, label: "Special source codes", count: conf.sentinel_code_count },
-      ] as section (section.partition)}
+      {#each [{ partition: "nonstandard" as const, label: "Nonstandard source codes", count: conf.nonstandard_code_count }, { partition: "sentinels" as const, label: "Special source codes", count: conf.sentinel_code_count }] as section (section.partition)}
         {#if section.count > 0 && source.valueSetId !== null}
           {@const panelKey = `${section.partition}:${source.stateId}:${source.aliasWindowFrom ?? ""}:${source.column ?? ""}:${conf.declared_classification_slug}`}
-          <details open={openPanels[panelKey] ?? false} ontoggle={(e) => trackDisclosure(panelKey, e)}>
+          <details
+            open={openPanels[panelKey] ?? false}
+            ontoggle={(e) => trackDisclosure(panelKey, e)}
+          >
             <summary>{section.label} ({section.count})</summary>
             {#if openPanels[panelKey]}
-              <ValueSetCodes ref={fqid} stateId={source.stateId}
-                classification={`class/${conf.declared_classification_slug}`} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition={section.partition}
-                codeCount={section.count} filterLabel={`Filter ${section.label.toLowerCase()}`}
-                filterPlaceholder={`Filter ${section.label.toLowerCase()}…`} />
+              <ValueSetCodes
+                ref={fqid}
+                stateId={source.stateId}
+                classification={`class/${conf.declared_classification_slug}`}
+                column={source.column}
+                aliasWindowFrom={source.aliasWindowFrom}
+                partition={section.partition}
+                codeCount={section.count}
+                filterLabel={`Filter ${section.label.toLowerCase()}`}
+                filterPlaceholder={`Filter ${section.label.toLowerCase()}…`}
+              />
             {/if}
           </details>
         {/if}
@@ -458,59 +497,61 @@ function trackDisclosure(key: string, event: Event): void {
       {@const usageSpans = usageWindowLabels(u.spans)}
       {@const variantLabel = usageVariantLabel(u.variant)}
       {#if variantLabel || usageSpans.length > 0 || changes.length > 0 || definedStates.length > 0}
-      <li>
-        {#if variantLabel}
-          <code class="vs-usage-variant">{variantLabel}</code>
-        {/if}
-        {#if usageSpans.length > 0}
-          <span class="muted vs-usage-spans">
-            {#each usageSpans as w, i (`${w.label}|${i}`)}
-              {#if i > 0}, {/if}{w.label}{#if w.pooled}<span
-                  class="pooled-badge"
-                  title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
-                  >pooled</span
-                >{/if}
-            {/each}
-          </span>
-        {/if}
-        {#if changes.length > 0}
-          <span class="vs-change-list">
-            {#each changes as change (`${change.at}:${change.notes.join("|")}`)}
-              <span class="vs-change">{technicalChangeLabel(change)}</span>
-            {/each}
-          </span>
-        {/if}
-        {#if definedStates.length > 0}
-          <dl class="state-definitions">
-            {#each definedStates as s (stateDefinitionKey(s))}
-              <div>
-                <dt>
-                  {#if s.delivery_column_name}
-                    <code>{stateDefinitionLabel(s, repeatedLabels)}</code>
-                  {:else}
-                    {stateDefinitionLabel(s, repeatedLabels)}
-                  {/if}
-                  {#if s.pooled}<span
-                      class="pooled-badge"
-                      title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
-                      >pooled</span
-                    >{/if}
-                </dt>
-                <dd>
-                  {#each stateTextFacts(s) as fact, index}
-                    {#if index > 0}<br />{/if}
-                    <span class="micro-label">{fact.label}:</span>{" "}{fact.value}
-                  {/each}
-                  {#if s.operational_definition}
-                    {#if stateTextFacts(s).length > 0}<br />{/if}
-                    {s.operational_definition}
-                  {/if}
-                </dd>
-              </div>
-            {/each}
-          </dl>
-        {/if}
-      </li>
+        <li>
+          {#if variantLabel}
+            <code class="vs-usage-variant">{variantLabel}</code>
+          {/if}
+          {#if usageSpans.length > 0}
+            <span class="muted vs-usage-spans">
+              {#each usageSpans as w, i (`${w.label}|${i}`)}
+                {#if i > 0},
+                {/if}{w.label}{#if w.pooled}<span
+                    class="pooled-badge"
+                    title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
+                    >pooled</span
+                  >{/if}
+              {/each}
+            </span>
+          {/if}
+          {#if changes.length > 0}
+            <span class="vs-change-list">
+              {#each changes as change (`${change.at}:${change.notes.join("|")}`)}
+                <span class="vs-change">{technicalChangeLabel(change)}</span>
+              {/each}
+            </span>
+          {/if}
+          {#if definedStates.length > 0}
+            <dl class="state-definitions">
+              {#each definedStates as s (stateDefinitionKey(s))}
+                <div>
+                  <dt>
+                    {#if s.delivery_column_name}
+                      <code>{stateDefinitionLabel(s, repeatedLabels)}</code>
+                    {:else}
+                      {stateDefinitionLabel(s, repeatedLabels)}
+                    {/if}
+                    {#if s.pooled}<span
+                        class="pooled-badge"
+                        title="Pooled source edition: this state covers the whole pooled range; annual availability inside it is not inferred."
+                        >pooled</span
+                      >{/if}
+                  </dt>
+                  <dd>
+                    {#each stateTextFacts(s) as fact, index}
+                      {#if index > 0}<br />{/if}
+                      <span class="micro-label">{fact.label}:</span
+                      >{" "}{fact.value}
+                    {/each}
+                    {#if s.operational_definition}
+                      {#if stateTextFacts(s).length > 0}<br />{/if}
+                      {s.operational_definition}
+                    {/if}
+                  </dd>
+                </div>
+              {/each}
+            </dl>
+          {/if}
+        </li>
       {/if}
     {/each}
   </ul>
@@ -520,14 +561,20 @@ function trackDisclosure(key: string, event: Event): void {
      dumping its (often 1000+) codes — the M13/kommun fix; a plain value set
      expands its codes inline through the shared CodeList (#310). -->
 {#snippet classificationLinks(slugs: string[])}
-  {#each slugs as slug, index (slug)}{#if index > 0}, {/if}<a href={catalogHref(`class/${slug}`)}>{humanizeClassificationSlug(slug)}</a>{/each}
+  {#each slugs as slug, index (slug)}{#if index > 0},
+    {/if}<a href={catalogHref(`class/${slug}`)}
+      >{humanizeClassificationSlug(slug)}</a
+    >{/each}
 {/snippet}
 
 {#snippet valueSetBody(vs: DistinctValueSet)}
   {#if vs.classificationSlugs.length > 0}
     <p class="vs-classification">
-      The source declares {vs.classificationSlugs.length === 1 ? "this classification" : "these classifications"}:
-      {@render classificationLinks(vs.classificationSlugs)}. Source codes retain their own labels.
+      The source declares {vs.classificationSlugs.length === 1
+        ? "this classification"
+        : "these classifications"}:
+      {@render classificationLinks(vs.classificationSlugs)}. Source codes retain
+      their own labels.
     </p>
     {#each visibleConformances(vs) as c (`${c.stateId}:${c.aliasWindowFrom ?? ""}:${c.column ?? ""}:${c.verdict.declared_classification_slug}`)}
       {@render conformanceNotice(c, { coding: c.versionLabel })}
@@ -538,7 +585,10 @@ function trackDisclosure(key: string, event: Event): void {
     {/each}
     {#if vs.valueSetId !== null && vs.summary}
       {#if vs.summary.integer_range}
-        {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
+        {@render denseIntegerRange(
+          vs.summary.integer_range,
+          vs.summary.code_count,
+        )}
       {:else}
         {@render valueSetTable(stateOf(vs), vs.summary.code_count)}
       {/if}
@@ -558,7 +608,9 @@ function trackDisclosure(key: string, event: Event): void {
       {#if vs.classificationSlugs.length > 0}
         <!-- A classification value set: link out, never dump the (huge)
              code list. -->
-        <span class="vs-label">{@render classificationLinks(vs.classificationSlugs)}</span>
+        <span class="vs-label"
+          >{@render classificationLinks(vs.classificationSlugs)}</span
+        >
       {:else}
         <span class="vs-label">{valueSetLabel(vs)}</span>
         {#if vs.summary}
@@ -590,7 +642,10 @@ function trackDisclosure(key: string, event: Event): void {
            and only once opened (Y-46), so a long history of codings costs one
            bounded read of the ONE the reader asked for. -->
       {#if vs.summary.integer_range}
-        {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
+        {@render denseIntegerRange(
+          vs.summary.integer_range,
+          vs.summary.code_count,
+        )}
       {:else if vs.summary.code_count === 0}
         <!-- A known-empty coding: one sentence, and nothing to open for it. Still
              the shared panel's wording, so "empty" reads the same everywhere. -->
@@ -661,24 +716,30 @@ function trackDisclosure(key: string, event: Event): void {
     </dl>
 
     {#each s.classifications as classification (classification.slug)}
-    <p class="vs-classification">The source declares
-      <a href={catalogHref(`class/${classification.slug}`)}>{classification.short_name || classification.name || humanizeClassificationSlug(classification.slug)}</a>.
-    </p>
-    {#if classification.conformance}
-      {@render conformanceNotice(
-        {
-          verdict: classification.conformance,
-          stateId: s.state_id,
-          column: s.coding_window_from != null ? s.delivery_column_name : null,
-          aliasWindowFrom: s.coding_window_from ?? null,
-          valueSetId: s.value_set_id,
-          versionLabel: s.value_set_version_label,
-          variants: [s.variant],
-          spans: [{ from: s.valid_from, to: s.valid_to, pooled: s.pooled }],
-        },
-        null,
-      )}
-    {/if}
+      <p class="vs-classification">
+        The source declares
+        <a href={catalogHref(`class/${classification.slug}`)}
+          >{classification.short_name ||
+            classification.name ||
+            humanizeClassificationSlug(classification.slug)}</a
+        >.
+      </p>
+      {#if classification.conformance}
+        {@render conformanceNotice(
+          {
+            verdict: classification.conformance,
+            stateId: s.state_id,
+            column:
+              s.coding_window_from != null ? s.delivery_column_name : null,
+            aliasWindowFrom: s.coding_window_from ?? null,
+            valueSetId: s.value_set_id,
+            versionLabel: s.value_set_version_label,
+            variants: [s.variant],
+            spans: [{ from: s.valid_from, to: s.valid_to, pooled: s.pooled }],
+          },
+          null,
+        )}
+      {/if}
     {/each}
 
     {#if s.value_set_id !== null && s.value_set_summary}
@@ -704,8 +765,8 @@ function trackDisclosure(key: string, event: Event): void {
          sets. A text filter that hides in-period rows falls through to the union
          branch's own "No value set matches the filter" instead (#905, Codex P3). -->
     <p class="muted picker-hint">
-      No state delivered for this period. Historical value sets outside this period
-      are collapsed below.
+      No state delivered for this period. Historical value sets outside this
+      period are collapsed below.
     </p>
   {:else}
     <p class="muted picker-hint">
@@ -777,8 +838,8 @@ function trackDisclosure(key: string, event: Event): void {
       <details class="out-of-period">
         <summary>
           {collapsedValueSets.length}
-          {collapsedValueSets.length === 1 ? "value set" : "value sets"} outside
-          this period
+          {collapsedValueSets.length === 1 ? "value set" : "value sets"} outside this
+          period
         </summary>
         <ul class="vs-list out-of-period-list">
           {#each collapsedValueSets as vs (vs.key)}

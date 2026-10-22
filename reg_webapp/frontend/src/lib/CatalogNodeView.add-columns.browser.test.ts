@@ -16,8 +16,8 @@ import {
   tickColumn,
   withLisaVariants,
 } from "./catalog-node-view-test-helpers";
-import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { projectStore } from "./project_store.svelte";
 import { holdRestore } from "./restore-test-helpers.svelte";
 import { windowStore } from "./window.svelte";
 

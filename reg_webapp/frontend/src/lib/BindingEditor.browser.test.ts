@@ -5,11 +5,11 @@ import type { VariableStateModel } from "./api";
 import { getStates } from "./api";
 import BindingEditor from "./BindingEditor.svelte";
 import { bindingFieldsFromResolution } from "./catalog";
-import { resetCatalogNames } from "./catalog_names.svelte";
 import { state } from "./catalog-test-helpers";
+import { resetCatalogNames } from "./catalog_names.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import type { DraftBinding, ProjectBinding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { storedProject } from "./project-store-test-helpers";
 
 // #991/#993: BindingEditor is the READ-ONLY cart column row — it DISPLAYS the
 // delivery column ordered (and the variable it came from) and offers delete only.

@@ -1,68 +1,68 @@
 <script lang="ts">
-import { Button } from "bits-ui";
-import type { Snippet } from "svelte";
-import type {
-  HTMLAnchorAttributes,
-  HTMLButtonAttributes,
-} from "svelte/elements";
-import type { ButtonSize, ButtonVariant } from "./types";
+  import { Button } from "bits-ui";
+  import type { Snippet } from "svelte";
+  import type {
+    HTMLAnchorAttributes,
+    HTMLButtonAttributes,
+  } from "svelte/elements";
+  import type { ButtonSize, ButtonVariant } from "./types";
 
-// The shared button (#804). Behavior + polymorphism come from Bits UI's
-// headless `Button` (verified against node_modules/bits-ui/dist/bits/button:
-// it renders a real <button>, switches to <a> when `href` is set, carries the
-// disabled a11y, and forwards `class` + the rest of the HTML attributes). We
-// only own the variant/size scoped CSS + the brand focus ring.
-//
-// `href` makes it a link (Bits UI's polymorphic branch); pass `onclick` for the
-// button branch. The brand accent paints `primary` ONLY (DESIGN.md accent-vs-
-// status: accent is interactive chrome, never status — there's no "success"
-// button variant; `danger` is its own cool error stop).
-//
-// `...rest` threads any native HTML attribute through to the rendered element:
-// icon-button `aria-label`, `title`, form `form`/`name`, link-only `target`/
-// `rel`/`download`, etc. A caller `class` merges WITH the variant/size hook
-// (doesn't clobber it). The explicit `href`/`type`/`disabled`/`onclick` stay
-// first-class so Bits UI's anchor-vs-button union narrows on `href`/`type`.
+  // The shared button (#804). Behavior + polymorphism come from Bits UI's
+  // headless `Button` (verified against node_modules/bits-ui/dist/bits/button:
+  // it renders a real <button>, switches to <a> when `href` is set, carries the
+  // disabled a11y, and forwards `class` + the rest of the HTML attributes). We
+  // only own the variant/size scoped CSS + the brand focus ring.
+  //
+  // `href` makes it a link (Bits UI's polymorphic branch); pass `onclick` for the
+  // button branch. The brand accent paints `primary` ONLY (DESIGN.md accent-vs-
+  // status: accent is interactive chrome, never status — there's no "success"
+  // button variant; `danger` is its own cool error stop).
+  //
+  // `...rest` threads any native HTML attribute through to the rendered element:
+  // icon-button `aria-label`, `title`, form `form`/`name`, link-only `target`/
+  // `rel`/`download`, etc. A caller `class` merges WITH the variant/size hook
+  // (doesn't clobber it). The explicit `href`/`type`/`disabled`/`onclick` stay
+  // first-class so Bits UI's anchor-vs-button union narrows on `href`/`type`.
 
-// HTMLAnchorAttributes ∪ HTMLButtonAttributes covers both branches; the explicit
-// props are stripped so a caller can't pass them twice (and `class` is merged via
-// `className`, not spread raw).
-type RestProps = Omit<
-  HTMLAnchorAttributes & HTMLButtonAttributes,
-  "href" | "type" | "disabled" | "onclick" | "class"
->;
+  // HTMLAnchorAttributes ∪ HTMLButtonAttributes covers both branches; the explicit
+  // props are stripped so a caller can't pass them twice (and `class` is merged via
+  // `className`, not spread raw).
+  type RestProps = Omit<
+    HTMLAnchorAttributes & HTMLButtonAttributes,
+    "href" | "type" | "disabled" | "onclick" | "class"
+  >;
 
-interface Props extends RestProps {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  href?: string;
-  type?: "button" | "submit" | "reset";
-  disabled?: boolean;
-  onclick?: (event: MouseEvent) => void;
-  /** Merged with the variant/size hook, not clobbering it. */
-  class?: string;
-  children: Snippet;
-}
+  interface Props extends RestProps {
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    href?: string;
+    type?: "button" | "submit" | "reset";
+    disabled?: boolean;
+    onclick?: (event: MouseEvent) => void;
+    /** Merged with the variant/size hook, not clobbering it. */
+    class?: string;
+    children: Snippet;
+  }
 
-let {
-  variant = "default",
-  size = "md",
-  href,
-  type,
-  disabled,
-  onclick,
-  class: className,
-  children,
-  ...rest
-}: Props = $props();
+  let {
+    variant = "default",
+    size = "md",
+    href,
+    type,
+    disabled,
+    onclick,
+    class: className,
+    children,
+    ...rest
+  }: Props = $props();
 
-// The variant/size formula in one place — shared by both the anchor and button
-// branches. `ui-btn` (not a generic `.btn`) namespaces the global style hook so a
-// stray `class="btn"` elsewhere can't inherit this foundational primitive's CSS.
-// A caller `class` is appended so call sites can add layout/spacing hooks.
-const classes = $derived(
-  `ui-btn variant-${variant} size-${size}${className ? ` ${className}` : ""}`,
-);
+  // The variant/size formula in one place — shared by both the anchor and button
+  // branches. `ui-btn` (not a generic `.btn`) namespaces the global style hook so a
+  // stray `class="btn"` elsewhere can't inherit this foundational primitive's CSS.
+  // A caller `class` is appended so call sites can add layout/spacing hooks.
+  const classes = $derived(
+    `ui-btn variant-${variant} size-${size}${className ? ` ${className}` : ""}`,
+  );
 </script>
 
 <!-- Bits UI narrows on the presence of `href` (anchor) vs `type` (button); pass
@@ -97,7 +97,9 @@ const classes = $derived(
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: background var(--motion-fast), border-color var(--motion-fast);
+    transition:
+      background var(--motion-fast),
+      border-color var(--motion-fast);
   }
   :global(.ui-btn:focus-visible) {
     outline: none;

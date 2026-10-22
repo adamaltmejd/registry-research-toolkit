@@ -10,8 +10,8 @@ import {
   pickerRepresentations,
 } from "./catalog";
 import { state } from "./catalog-test-helpers";
-import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { projectStore } from "./project_store.svelte";
 import {
   applyStagedPicks,
   type StagedPick,

@@ -1,12 +1,12 @@
 <script lang="ts">
-import type { ClassificationShow, Derivation } from "./api";
-import { catalogHref } from "./catalog";
+  import type { ClassificationShow, Derivation } from "./api";
+  import { catalogHref } from "./catalog";
 
-let { node }: { node: ClassificationShow } = $props();
+  let { node }: { node: ClassificationShow } = $props();
 
-const hasDerivedRefs = $derived(
-  (node.derived_from?.length ?? 0) > 0 || (node.derivatives?.length ?? 0) > 0,
-);
+  const hasDerivedRefs = $derived(
+    (node.derived_from?.length ?? 0) > 0 || (node.derivatives?.length ?? 0) > 0,
+  );
 </script>
 
 <!-- A derivation names its classification by FQID; one outside the catalog (no

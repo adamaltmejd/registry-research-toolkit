@@ -14,8 +14,8 @@ import {
   twoSingleColGraph,
   vnode,
 } from "./concept-group-view-test-helpers";
-import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 

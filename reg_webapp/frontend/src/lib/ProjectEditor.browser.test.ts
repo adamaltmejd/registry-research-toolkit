@@ -1,15 +1,22 @@
 import type { ComponentProps } from "svelte";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { registerShow } from "./api-test-helpers";
-import { resetCatalogNames } from "./catalog_names.svelte";
 import { delivery, variableChild } from "./catalog-node-view-test-helpers";
-import ProjectEditor from "./ProjectEditor.svelte";
-import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
+import { resetCatalogNames } from "./catalog_names.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import type { RawDraft } from "./project_data";
 import { projectStore, setPersistence } from "./project_store.svelte";
-import { storedProject } from "./project-store-test-helpers";
+import ProjectEditor from "./ProjectEditor.svelte";
+import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
 import { projectSchemaVersion } from "./reg_core";
 import { variant } from "./variants-test-helpers";
 

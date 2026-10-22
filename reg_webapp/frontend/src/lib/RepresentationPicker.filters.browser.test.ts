@@ -3,9 +3,6 @@ import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type { GroupAxisModel } from "./api";
 import type { PickerRepresentation } from "./catalog";
-import RepresentationPicker, {
-  type PickerBand,
-} from "./RepresentationPicker.svelte";
 import {
   AXES,
   clickFilter,
@@ -18,6 +15,9 @@ import {
   row,
   visibleColumns,
 } from "./representation-picker-test-helpers";
+import RepresentationPicker, {
+  type PickerBand,
+} from "./RepresentationPicker.svelte";
 
 // RepresentationPicker drives the concept-group column picker. #908 adds
 // dimension-type marking (per-row axis markers) + per-dimension filter controls

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
-import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import type { Coverage } from "./period";
+import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import type { ProjectStudyWindow } from "./project_data";
 
 // The #615 availability-aware local period slider (the subject page's default

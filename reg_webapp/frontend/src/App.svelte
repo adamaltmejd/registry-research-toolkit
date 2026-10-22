@@ -1,108 +1,108 @@
 <script lang="ts">
-import { onMount } from "svelte";
-import AppShell from "./lib/AppShell.svelte";
-import { type Context, errMessage, getContext } from "./lib/api";
-import CatalogNodeView from "./lib/CatalogNodeView.svelte";
-import CatalogRoot from "./lib/CatalogRoot.svelte";
-import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
-import ConceptGroupView from "./lib/ConceptGroupView.svelte";
-import { routeBreadcrumbs } from "./lib/catalog";
-import { providerQualified } from "./lib/catalog_names.svelte";
-import DocView from "./lib/DocView.svelte";
-import Home from "./lib/Home.svelte";
-import ProjectEditor from "./lib/ProjectEditor.svelte";
-import { initDraftLifecycle, projectStore } from "./lib/project_store.svelte";
-import { link, router } from "./lib/router.svelte";
-import SearchView from "./lib/SearchView.svelte";
-import VariantBrowser from "./lib/VariantBrowser.svelte";
-import { windowStore } from "./lib/window.svelte";
+  import { onMount } from "svelte";
+  import { type Context, errMessage, getContext } from "./lib/api";
+  import AppShell from "./lib/AppShell.svelte";
+  import { routeBreadcrumbs } from "./lib/catalog";
+  import { providerQualified } from "./lib/catalog_names.svelte";
+  import CatalogNodeView from "./lib/CatalogNodeView.svelte";
+  import CatalogRoot from "./lib/CatalogRoot.svelte";
+  import ClassificationGroupView from "./lib/ClassificationGroupView.svelte";
+  import ConceptGroupView from "./lib/ConceptGroupView.svelte";
+  import DocView from "./lib/DocView.svelte";
+  import Home from "./lib/Home.svelte";
+  import { initDraftLifecycle, projectStore } from "./lib/project_store.svelte";
+  import ProjectEditor from "./lib/ProjectEditor.svelte";
+  import { link, router } from "./lib/router.svelte";
+  import SearchView from "./lib/SearchView.svelte";
+  import VariantBrowser from "./lib/VariantBrowser.svelte";
+  import { windowStore } from "./lib/window.svelte";
 
-// The app root: owns the deployment context (GET /api/context), the DRAFT
-// LIFECYCLE, the beforeunload guard, the context-error banner, the routed <main>
-// switch, and the citation footer. The chrome (left rail + topbar command bar)
-// is delegated to AppShell (#803); App passes the context-derived props down and
-// the routed content in as the shell's `children`. Internal <a> clicks are
-// intercepted at the root container so navigation is pushState (no full reload).
-let context = $state<Context | null>(null);
-let contextError = $state<string | null>(null);
+  // The app root: owns the deployment context (GET /api/context), the DRAFT
+  // LIFECYCLE, the beforeunload guard, the context-error banner, the routed <main>
+  // switch, and the citation footer. The chrome (left rail + topbar command bar)
+  // is delegated to AppShell (#803); App passes the context-derived props down and
+  // the routed content in as the shell's `children`. Internal <a> clicks are
+  // intercepted at the root container so navigation is pushState (no full reload).
+  let context = $state<Context | null>(null);
+  let contextError = $state<string | null>(null);
 
-// Restore, debounced autosave and automatic validation are wired ONCE here, at
-// the application's reactive root — the draft is authored from the catalog and
-// only read at /project, so its lifecycle can't belong to a route. Called at
-// component init (it registers $effects) and never anywhere else: a second
-// caller would autosave and validate every edit twice.
-initDraftLifecycle();
+  // Restore, debounced autosave and automatic validation are wired ONCE here, at
+  // the application's reactive root — the draft is authored from the catalog and
+  // only read at /project, so its lifecycle can't belong to a route. Called at
+  // component init (it registers $effects) and never anywhere else: a second
+  // caller would autosave and validate every edit twice.
+  initDraftLifecycle();
 
-// The deployment context is app-global and immutable for the session — fetch
-// once at mount (not an $effect that could re-run). Also wire the beforeunload
-// warning (see reg_webapp/DESIGN.md → Browser storage + project-file persistence
-// (the SPA store)): a tab/window close with a dirty draft prompts the
-// browser's native "leave site?" dialog (autosaved-but-not-downloaded state is
-// recoverable from IndexedDB in A5.4, but the file download is the durable copy).
-onMount(() => {
-  getContext()
-    .then((resp) => {
-      context = resp;
-    })
-    .catch((e) => {
-      contextError = errMessage(e);
-    });
+  // The deployment context is app-global and immutable for the session — fetch
+  // once at mount (not an $effect that could re-run). Also wire the beforeunload
+  // warning (see reg_webapp/DESIGN.md → Browser storage + project-file persistence
+  // (the SPA store)): a tab/window close with a dirty draft prompts the
+  // browser's native "leave site?" dialog (autosaved-but-not-downloaded state is
+  // recoverable from IndexedDB in A5.4, but the file download is the durable copy).
+  onMount(() => {
+    getContext()
+      .then((resp) => {
+        context = resp;
+      })
+      .catch((e) => {
+        contextError = errMessage(e);
+      });
 
-  const onBeforeUnload = (event: BeforeUnloadEvent) => {
-    if (projectStore.dirty) {
-      event.preventDefault();
-      // Legacy assignment kept for older browsers that gate the prompt on it.
-      event.returnValue = "";
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (projectStore.dirty) {
+        event.preventDefault();
+        // Legacy assignment kept for older browsers that gate the prompt on it.
+        event.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  });
+
+  const route = $derived(router.route);
+  // The deployment's bare reg_meta package version + its steward id, seeded into a
+  // new project's skeleton (ProjectEditor formats the version into a `reg_meta/v`
+  // release tag). Both fall back to the empty string until /api/context resolves (a
+  // new project before the context loads is an edge case; the seed is corrected on
+  // the next New).
+  const regMetaVersion = $derived(context?.reg_meta_version ?? "");
+  const steward = $derived(context?.steward.id ?? "");
+  // The catalog VINTAGE for the site-wide footer (#355 decision 2): the date the
+  // reg_meta DB was built. `import_date` is a UTC timestamp string
+  // (e.g. "2026-06-12T08:30:00Z"); show just the leading YYYY-MM-DD (split on "T").
+  const buildDate = $derived(context?.import_date.split("T")[0] ?? "");
+
+  // The header window slider's bounds (#611 → Period model). A steward deployment
+  // can expose a best-effort catalog-wide year span; use it so filtered catalogs do
+  // not show decades of empty track. Global/unparseable deployments fall back to
+  // the historical 1960 → catalog-vintage range.
+  const FALLBACK_WINDOW_FLOOR_YEAR = 1960;
+  const catalogVintageYear = $derived(
+    Number(context?.import_date.slice(0, 4)) || new Date().getFullYear(),
+  );
+  const catalogPeriodSpan = $derived(context?.period_span ?? null);
+  const enforcePeriodBounds = $derived(catalogPeriodSpan !== null);
+  const windowMinYear = $derived(
+    catalogPeriodSpan?.from ?? FALLBACK_WINDOW_FLOOR_YEAR,
+  );
+  const windowMaxYear = $derived(catalogPeriodSpan?.to ?? catalogVintageYear);
+
+  $effect(() => {
+    if (enforcePeriodBounds) {
+      windowStore.clampTo(windowMinYear, windowMaxYear);
     }
-  };
-  window.addEventListener("beforeunload", onBeforeUnload);
-  return () => window.removeEventListener("beforeunload", onBeforeUnload);
-});
+  });
 
-const route = $derived(router.route);
-// The deployment's bare reg_meta package version + its steward id, seeded into a
-// new project's skeleton (ProjectEditor formats the version into a `reg_meta/v`
-// release tag). Both fall back to the empty string until /api/context resolves (a
-// new project before the context loads is an edge case; the seed is corrected on
-// the next New).
-const regMetaVersion = $derived(context?.reg_meta_version ?? "");
-const steward = $derived(context?.steward.id ?? "");
-// The catalog VINTAGE for the site-wide footer (#355 decision 2): the date the
-// reg_meta DB was built. `import_date` is a UTC timestamp string
-// (e.g. "2026-06-12T08:30:00Z"); show just the leading YYYY-MM-DD (split on "T").
-const buildDate = $derived(context?.import_date.split("T")[0] ?? "");
+  // The route-derived topbar breadcrumb (#803). Structural only — raw slug labels;
+  // the routed page owns its rich, display-name header.
+  const breadcrumbItems = $derived(routeBreadcrumbs(route));
 
-// The header window slider's bounds (#611 → Period model). A steward deployment
-// can expose a best-effort catalog-wide year span; use it so filtered catalogs do
-// not show decades of empty track. Global/unparseable deployments fall back to
-// the historical 1960 → catalog-vintage range.
-const FALLBACK_WINDOW_FLOOR_YEAR = 1960;
-const catalogVintageYear = $derived(
-  Number(context?.import_date.slice(0, 4)) || new Date().getFullYear(),
-);
-const catalogPeriodSpan = $derived(context?.period_span ?? null);
-const enforcePeriodBounds = $derived(catalogPeriodSpan !== null);
-const windowMinYear = $derived(
-  catalogPeriodSpan?.from ?? FALLBACK_WINDOW_FLOOR_YEAR,
-);
-const windowMaxYear = $derived(catalogPeriodSpan?.to ?? catalogVintageYear);
-
-$effect(() => {
-  if (enforcePeriodBounds) {
-    windowStore.clampTo(windowMinYear, windowMaxYear);
-  }
-});
-
-// The route-derived topbar breadcrumb (#803). Structural only — raw slug labels;
-// the routed page owns its rich, display-name header.
-const breadcrumbItems = $derived(routeBreadcrumbs(route));
-
-// Whether this deployment serves more than one provider — a deployment fact, read
-// HERE (from the same catalog root the shell's provider rail reads, so it costs no
-// extra request) and passed down like `steward`, never fetched by a route. A cart
-// source card titles itself with its register; where two providers can each own a
-// register of that name, the title carries the provider too.
-const qualified = $derived(providerQualified());
+  // Whether this deployment serves more than one provider — a deployment fact, read
+  // HERE (from the same catalog root the shell's provider rail reads, so it costs no
+  // extra request) and passed down like `steward`, never fetched by a route. A cart
+  // source card titles itself with its register; where two providers can each own a
+  // register of that name, the title carries the provider too.
+  const qualified = $derived(providerQualified());
 </script>
 
 <!-- Click interception is delegated from the root container via the `link`
@@ -132,7 +132,10 @@ const qualified = $derived(providerQualified());
         <!-- #675: the landing page at `/`, split from the data browser. App holds
              the context, so pass the steward and the catalog sizes through —
              Home fetches nothing. -->
-        <Home steward={context?.steward ?? null} sizes={context?.sizes ?? null} />
+        <Home
+          steward={context?.steward ?? null}
+          sizes={context?.sizes ?? null}
+        />
       {:else if route.name === "root"}
         <CatalogRoot />
       {:else if route.name === "catalog-node"}
@@ -203,7 +206,8 @@ const qualified = $derived(providerQualified());
          Guarded on `context` (rendered only once the deployment context loaded). -->
     {#if context}
       <footer class="vintage muted">
-        as of reg_meta v{regMetaVersion} · schema {context.schema_version} · built {buildDate}
+        as of reg_meta v{regMetaVersion} · schema {context.schema_version} · built
+        {buildDate}
       </footer>
     {/if}
   </AppShell>

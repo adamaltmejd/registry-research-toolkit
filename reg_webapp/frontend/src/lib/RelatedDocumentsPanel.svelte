@@ -1,46 +1,46 @@
 <script lang="ts">
-import {
-  getRelatedDocuments,
-  type RelatedDocument,
-  relatedDocumentFileHref,
-} from "./api";
-import { asyncResource } from "./async.svelte";
+  import {
+    getRelatedDocuments,
+    type RelatedDocument,
+    relatedDocumentFileHref,
+  } from "./api";
+  import { asyncResource } from "./async.svelte";
 
-// Rehosted register-version PDFs for a register page (#742/#967). This is
-// authoritative register-level source metadata, distinct from the fuzzy FTS
-// mentions in `DocMentionsPanel`, and must not be inherited by variable pages.
-// `register` is the register's FQID.
-let { register }: { register: string } = $props();
+  // Rehosted register-version PDFs for a register page (#742/#967). This is
+  // authoritative register-level source metadata, distinct from the fuzzy FTS
+  // mentions in `DocMentionsPanel`, and must not be inherited by variable pages.
+  // `register` is the register's FQID.
+  let { register }: { register: string } = $props();
 
-const resource = asyncResource((signal) =>
-  getRelatedDocuments(register, { signal }),
-);
-const data = $derived(resource.data);
-// `null` = the deployment has no docs database: omit the section, as for none.
-const documents = $derived(data ?? []);
-const show = $derived(
-  resource.loading || !!resource.error || documents.length > 0,
-);
+  const resource = asyncResource((signal) =>
+    getRelatedDocuments(register, { signal }),
+  );
+  const data = $derived(resource.data);
+  // `null` = the deployment has no docs database: omit the section, as for none.
+  const documents = $derived(data ?? []);
+  const show = $derived(
+    resource.loading || !!resource.error || documents.length > 0,
+  );
 
-function bytesLabel(bytes: number): string {
-  if (bytes < 1024) {
-    return `${bytes} B`;
+  function bytesLabel(bytes: number): string {
+    if (bytes < 1024) {
+      return `${bytes} B`;
+    }
+    const kib = bytes / 1024;
+    if (kib < 1024) {
+      return `${kib.toFixed(kib < 10 ? 1 : 0)} KB`;
+    }
+    const mib = kib / 1024;
+    return `${mib.toFixed(mib < 10 ? 1 : 0)} MB`;
   }
-  const kib = bytes / 1024;
-  if (kib < 1024) {
-    return `${kib.toFixed(kib < 10 ? 1 : 0)} KB`;
-  }
-  const mib = kib / 1024;
-  return `${mib.toFixed(mib < 10 ? 1 : 0)} MB`;
-}
 
-function sourceHost(doc: RelatedDocument): string {
-  try {
-    return new URL(doc.source_url).hostname;
-  } catch {
-    return "source";
+  function sourceHost(doc: RelatedDocument): string {
+    try {
+      return new URL(doc.source_url).hostname;
+    } catch {
+      return "source";
+    }
   }
-}
 </script>
 
 {#if show}
@@ -57,7 +57,10 @@ function sourceHost(doc: RelatedDocument): string {
       <ul class="documents">
         {#each documents as doc (doc.filename)}
           <li>
-            <a class="title" href={relatedDocumentFileHref(register, doc.filename)}>
+            <a
+              class="title"
+              href={relatedDocumentFileHref(register, doc.filename)}
+            >
               {doc.title}
             </a>
             <p class="attribution">

@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { getStates, getWarnings } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   pickerStates,
@@ -10,9 +9,10 @@ import {
   SEED,
   state,
 } from "./binding-leaf-view-test-helpers";
+import BindingLeafView from "./BindingLeafView.svelte";
 import { expectStagedAddColumnVisible } from "./picker-test-helpers";
-import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { projectStore } from "./project_store.svelte";
 import { holdRestore } from "./restore-test-helpers.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";

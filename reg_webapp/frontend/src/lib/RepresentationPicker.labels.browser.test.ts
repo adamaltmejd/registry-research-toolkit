@@ -1,8 +1,5 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { render } from "vitest-browser-svelte";
-import RepresentationPicker, {
-  type PickerBand,
-} from "./RepresentationPicker.svelte";
 import {
   atEveryWidth,
   edge,
@@ -14,6 +11,9 @@ import {
   PROPS,
   row,
 } from "./representation-picker-test-helpers";
+import RepresentationPicker, {
+  type PickerBand,
+} from "./RepresentationPicker.svelte";
 
 // Split from RepresentationPicker.browser.test.ts by contract surface: cell/row labels: era codings, codings-vary links, lane gutter, rename hints.
 // Siblings: RepresentationPicker.{graph,graph-fallback,graph-history,labels,filters,staging,row-identity}.browser.test.ts.

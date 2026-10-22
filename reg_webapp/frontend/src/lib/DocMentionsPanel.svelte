@@ -1,68 +1,68 @@
 <script lang="ts">
-import { getDocsForVariable, type VariableShow } from "./api";
-import { asyncResource } from "./async.svelte";
-import { fqidSegments, showingOf } from "./catalog";
-import { parseInlineMarkdown } from "./inline_markdown";
+  import { getDocsForVariable, type VariableShow } from "./api";
+  import { asyncResource } from "./async.svelte";
+  import { fqidSegments, showingOf } from "./catalog";
+  import { parseInlineMarkdown } from "./inline_markdown";
 
-// The binding-leaf "Parsed documentation" panel (#402/#967). A SIBLING of
-// LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
-// (the docs FTS index), so it's an independent FAILURE DOMAIN: a docs fetch
-// error / timeout / absent index must NEVER blank or wedge the leaf (mirrors how
-// #394's SearchView fires a second independent asyncResource for its docs group).
-// The whole panel's worst case is one inline muted/error line inside this section.
-//
-// The hook is FUZZY — a name/provider_key text match, NOT an authoritative
-// variable→doc link; the section-level caption marks the list as heuristic.
-//
-// Omit-when-empty (the LineagePanels / DimensionsPanel ethos): the WHOLE section
-// is omitted when there's nothing usable to show — no docs index, no docs for
-// this register, or zero hits — but NOT while still loading or on error (we never
-// hide a section whose state is unknown, which would read as a confirmed absence).
-let { node }: { node: VariableShow } = $props();
+  // The binding-leaf "Parsed documentation" panel (#402/#967). A SIBLING of
+  // LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
+  // (the docs FTS index), so it's an independent FAILURE DOMAIN: a docs fetch
+  // error / timeout / absent index must NEVER blank or wedge the leaf (mirrors how
+  // #394's SearchView fires a second independent asyncResource for its docs group).
+  // The whole panel's worst case is one inline muted/error line inside this section.
+  //
+  // The hook is FUZZY — a name/provider_key text match, NOT an authoritative
+  // variable→doc link; the section-level caption marks the list as heuristic.
+  //
+  // Omit-when-empty (the LineagePanels / DimensionsPanel ethos): the WHOLE section
+  // is omitted when there's nothing usable to show — no docs index, no docs for
+  // this register, or zero hits — but NOT while still loading or on error (we never
+  // hide a section whose state is unknown, which would read as a confirmed absence).
+  let { node }: { node: VariableShow } = $props();
 
-// The register FQID = the first two FQID segments (`scb/lisa/kon` → `scb/lisa`).
-const register = $derived(fqidSegments(node.fqid).slice(0, 2).join("/"));
-// The query: the variable's display name when present, else its slug (3rd
-// segment). $derived off `node` so the fetch refetches when the leaf changes.
-const q = $derived(node.name?.trim() || fqidSegments(node.fqid)[2]);
+  // The register FQID = the first two FQID segments (`scb/lisa/kon` → `scb/lisa`).
+  const register = $derived(fqidSegments(node.fqid).slice(0, 2).join("/"));
+  // The query: the variable's display name when present, else its slug (3rd
+  // segment). $derived off `node` so the fetch refetches when the leaf changes.
+  const q = $derived(node.name?.trim() || fqidSegments(node.fqid)[2]);
 
-// #670: a grouped member shares its concept `node.name` with ~31 siblings, and
-// the FTS runs on that shared name — so a member's hits are CONCEPT-grain
-// (identical across the group), not member-specific. Caption them as such so the
-// shared matches don't read as member-specific. Conditioned on `node.group` (the
-// grouped-member marker); ungrouped variables keep only the fuzzy note.
-const grouped = $derived(!!node.group);
+  // #670: a grouped member shares its concept `node.name` with ~31 siblings, and
+  // the FTS runs on that shared name — so a member's hits are CONCEPT-grain
+  // (identical across the group), not member-specific. Caption them as such so the
+  // shared matches don't read as member-specific. Conditioned on `node.group` (the
+  // grouped-member marker); ungrouped variables keep only the fuzzy note.
+  const grouped = $derived(!!node.group);
 
-// Read `q`/`register` SYNCHRONOUSLY inside `fn` so the effect tracks them and
-// refetches when the leaf changes (same pattern as BindingLeafView's
-// periodResource / LineagePanels' resources). The teardown `signal` aborts a
-// superseded request; `getDocsForVariable` layers its ~12s timeout on top.
-const resource = asyncResource((signal) =>
-  getDocsForVariable(q, { register, limit: 5, signal }),
-);
+  // Read `q`/`register` SYNCHRONOUSLY inside `fn` so the effect tracks them and
+  // refetches when the leaf changes (same pattern as BindingLeafView's
+  // periodResource / LineagePanels' resources). The teardown `signal` aborts a
+  // superseded request; `getDocsForVariable` layers its ~12s timeout on top.
+  const resource = asyncResource((signal) =>
+    getDocsForVariable(q, { register, limit: 5, signal }),
+  );
 
-const data = $derived(resource.data);
-const results = $derived(data?.items ?? []);
-// Show the section while loading / on error / when it has usable hits; omit it
-// once we KNOW there's nothing to show — no docs index (`null`), no docs for this
-// register, or zero hits (those resolved-empty states are noise on the subject
-// page).
-const show = $derived(
-  resource.loading ||
-    !!resource.error ||
-    (!!data && data.register_ingested && results.length > 0),
-);
+  const data = $derived(resource.data);
+  const results = $derived(data?.items ?? []);
+  // Show the section while loading / on error / when it has usable hits; omit it
+  // once we KNOW there's nothing to show — no docs index (`null`), no docs for this
+  // register, or zero hits (those resolved-empty states are noise on the subject
+  // page).
+  const show = $derived(
+    resource.loading ||
+      !!resource.error ||
+      (!!data && data.register_ingested && results.length > 0),
+  );
 
-function sourceLabel(url: string, title?: string | null): string {
-  if (title) {
-    return `Source PDF: ${title}`;
+  function sourceLabel(url: string, title?: string | null): string {
+    if (title) {
+      return `Source PDF: ${title}`;
+    }
+    try {
+      return `Source PDF: ${new URL(url).hostname}`;
+    } catch {
+      return "Source PDF";
+    }
   }
-  try {
-    return `Source PDF: ${new URL(url).hostname}`;
-  } catch {
-    return "Source PDF";
-  }
-}
 </script>
 
 {#if show}
@@ -114,9 +114,9 @@ function sourceLabel(url: string, title?: string | null): string {
                    renders as <mark> ("matched term"); `*…*`/`_…_` render as <em>. -->
               <span class="hit-detail muted"
                 >{#each parseInlineMarkdown(r.snippet) as seg, si (si)}{#if seg.emphasis === "strong"}<mark
-                    >{seg.text}</mark
-                  >{:else if seg.emphasis === "em"}<em>{seg.text}</em
-                  >{:else}{seg.text}{/if}{/each}</span
+                      >{seg.text}</mark
+                    >{:else if seg.emphasis === "em"}<em>{seg.text}</em
+                    >{:else}{seg.text}{/if}{/each}</span
               >
             {/if}
             {#if r.source_url}

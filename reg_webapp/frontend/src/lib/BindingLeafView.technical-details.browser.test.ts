@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   resetLeaf,
@@ -9,6 +8,7 @@ import {
   single,
   state,
 } from "./binding-leaf-view-test-helpers";
+import BindingLeafView from "./BindingLeafView.svelte";
 
 // Split from BindingLeafView.browser.test.ts by contract surface: tags, notes and the Technical details disclosure.
 // Siblings: BindingLeafView{,.graph,.rows,.technical-details,.provenance,.period}.browser.test.ts.

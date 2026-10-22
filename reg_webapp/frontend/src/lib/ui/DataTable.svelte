@@ -1,138 +1,138 @@
 <script lang="ts" generics="Row extends object">
-import type { Snippet } from "svelte";
-import type { Column } from "./types";
+  import type { Snippet } from "svelte";
+  import type { Column } from "./types";
 
-// The workhorse table (#804 / DESIGN.md → DataTable): label-level headers,
-// right-aligned mono numerics, zebra-free hairline rows, hover state.
-//
-// Column-definition API: `columns` describes each column (key/label/align/mono/
-// numeric/width); `rows` are the row objects. A `numeric` column right-aligns +
-// mono-faces a measure; `mono` mono-faces an identifier; `align` overrides. The
-// `cell` snippet is the escape hatch for custom cell content — default renders
-// `row[column.key]`.
-//
-// Row navigation (optional): pass `rowNavigation` for link-list tables whose
-// row/card surface should delegate a plain click to the row's primary `a[href]`.
-// The anchor remains the only tab stop and accessible link; rows stay role=table
-// rows with no tabindex. Omit it and it's a plain static table. `getRowId` keys
-// the rows (stable identity across re-renders).
-//
-// RESPONSIVE: at <=48rem the default table stacks (each <tr> becomes a card,
-// cells stack with their column micro-label as a `::before` prefix). The framed
-// variant keeps a visible header row and renders flat grid rows instead, so the
-// table surface does not contain card rows. Framed two-column tables collapse to
-// one visual column: the first column is the primary heading and the second cell
-// reads as secondary text underneath. Because CSS `display` changes strip native
-// table roles in Firefox/Safari, the ARIA roles are set EXPLICITLY and
-// unconditionally (table, rowgroup, row, columnheader/cell) so the
-// narrow forms keep valid table semantics. The first column is the primary title
-// (no micro-label prefix); the `data-label` on each <td> feeds the decorative
-// prefix for the rest.
+  // The workhorse table (#804 / DESIGN.md → DataTable): label-level headers,
+  // right-aligned mono numerics, zebra-free hairline rows, hover state.
+  //
+  // Column-definition API: `columns` describes each column (key/label/align/mono/
+  // numeric/width); `rows` are the row objects. A `numeric` column right-aligns +
+  // mono-faces a measure; `mono` mono-faces an identifier; `align` overrides. The
+  // `cell` snippet is the escape hatch for custom cell content — default renders
+  // `row[column.key]`.
+  //
+  // Row navigation (optional): pass `rowNavigation` for link-list tables whose
+  // row/card surface should delegate a plain click to the row's primary `a[href]`.
+  // The anchor remains the only tab stop and accessible link; rows stay role=table
+  // rows with no tabindex. Omit it and it's a plain static table. `getRowId` keys
+  // the rows (stable identity across re-renders).
+  //
+  // RESPONSIVE: at <=48rem the default table stacks (each <tr> becomes a card,
+  // cells stack with their column micro-label as a `::before` prefix). The framed
+  // variant keeps a visible header row and renders flat grid rows instead, so the
+  // table surface does not contain card rows. Framed two-column tables collapse to
+  // one visual column: the first column is the primary heading and the second cell
+  // reads as secondary text underneath. Because CSS `display` changes strip native
+  // table roles in Firefox/Safari, the ARIA roles are set EXPLICITLY and
+  // unconditionally (table, rowgroup, row, columnheader/cell) so the
+  // narrow forms keep valid table semantics. The first column is the primary title
+  // (no micro-label prefix); the `data-label` on each <td> feeds the decorative
+  // prefix for the rest.
 
-interface Props {
-  columns: Column<Row>[];
-  rows: Row[];
-  /** Custom cell renderer; default renders `row[column.key]`. */
-  cell?: Snippet<[Row, Column<Row>]>;
-  /** Stable row id, used as the row key. */
-  getRowId?: (row: Row) => string;
-  /** Link-list variant: plain row/card clicks delegate to the row's primary anchor. */
-  rowNavigation?: boolean;
-  /** Give the table the raised panel surface; the column headers become the title row. */
-  framed?: boolean;
-}
-
-let {
-  columns,
-  rows,
-  cell,
-  getRowId,
-  rowNavigation = false,
-  framed = false,
-}: Props = $props();
-
-type MouseStart = { row: EventTarget | null; x: number; y: number };
-let mouseStart: MouseStart | null = null;
-
-function alignOf(col: Column<Row>): "start" | "end" {
-  return col.align ?? (col.numeric ? "end" : "start");
-}
-
-// A `cell` snippet can render its own link/button. A click on that nested
-// control bubbles to the row, so bail when the event originated from an
-// interactive descendant rather than the row itself — otherwise the row would
-// hijack the control's own activation.
-const INTERACTIVE =
-  'a[href], button, input, select, textarea, label, [role="button"], [tabindex]';
-
-function fromInteractiveChild(
-  event: Event,
-  rowEl: EventTarget | null,
-): boolean {
-  const target = event.target;
-  if (!(target instanceof Element)) return false;
-  const hit = target.closest(INTERACTIVE);
-  // Only a DESCENDANT control should bail, never the row itself.
-  return hit !== null && hit !== rowEl;
-}
-
-function rowSelectionText(rowEl: HTMLElement): boolean {
-  const selection = window.getSelection();
-  if (
-    selection === null ||
-    selection.isCollapsed ||
-    selection.toString().trim() === ""
-  ) {
-    return false;
+  interface Props {
+    columns: Column<Row>[];
+    rows: Row[];
+    /** Custom cell renderer; default renders `row[column.key]`. */
+    cell?: Snippet<[Row, Column<Row>]>;
+    /** Stable row id, used as the row key. */
+    getRowId?: (row: Row) => string;
+    /** Link-list variant: plain row/card clicks delegate to the row's primary anchor. */
+    rowNavigation?: boolean;
+    /** Give the table the raised panel surface; the column headers become the title row. */
+    framed?: boolean;
   }
-  const { anchorNode, focusNode } = selection;
-  return (
-    (anchorNode !== null && rowEl.contains(anchorNode)) ||
-    (focusNode !== null && rowEl.contains(focusNode))
-  );
-}
 
-function movedSinceMouseDown(event: MouseEvent, rowEl: HTMLElement): boolean {
-  if (mouseStart === null || mouseStart.row !== rowEl) return false;
-  const dx = event.clientX - mouseStart.x;
-  const dy = event.clientY - mouseStart.y;
-  return Math.hypot(dx, dy) > 4;
-}
+  let {
+    columns,
+    rows,
+    cell,
+    getRowId,
+    rowNavigation = false,
+    framed = false,
+  }: Props = $props();
 
-function primaryRowLink(rowEl: HTMLElement): HTMLAnchorElement | null {
-  const link = rowEl.querySelector("a[href]");
-  return link instanceof HTMLAnchorElement ? link : null;
-}
+  type MouseStart = { row: EventTarget | null; x: number; y: number };
+  let mouseStart: MouseStart | null = null;
 
-function onrowmousedown(event: MouseEvent): void {
-  mouseStart =
-    event.button === 0
-      ? { row: event.currentTarget, x: event.clientX, y: event.clientY }
-      : null;
-}
+  function alignOf(col: Column<Row>): "start" | "end" {
+    return col.align ?? (col.numeric ? "end" : "start");
+  }
 
-function onrownavigationclick(event: MouseEvent): void {
-  const rowEl = event.currentTarget;
-  if (!(rowEl instanceof HTMLElement)) {
+  // A `cell` snippet can render its own link/button. A click on that nested
+  // control bubbles to the row, so bail when the event originated from an
+  // interactive descendant rather than the row itself — otherwise the row would
+  // hijack the control's own activation.
+  const INTERACTIVE =
+    'a[href], button, input, select, textarea, label, [role="button"], [tabindex]';
+
+  function fromInteractiveChild(
+    event: Event,
+    rowEl: EventTarget | null,
+  ): boolean {
+    const target = event.target;
+    if (!(target instanceof Element)) return false;
+    const hit = target.closest(INTERACTIVE);
+    // Only a DESCENDANT control should bail, never the row itself.
+    return hit !== null && hit !== rowEl;
+  }
+
+  function rowSelectionText(rowEl: HTMLElement): boolean {
+    const selection = window.getSelection();
+    if (
+      selection === null ||
+      selection.isCollapsed ||
+      selection.toString().trim() === ""
+    ) {
+      return false;
+    }
+    const { anchorNode, focusNode } = selection;
+    return (
+      (anchorNode !== null && rowEl.contains(anchorNode)) ||
+      (focusNode !== null && rowEl.contains(focusNode))
+    );
+  }
+
+  function movedSinceMouseDown(event: MouseEvent, rowEl: HTMLElement): boolean {
+    if (mouseStart === null || mouseStart.row !== rowEl) return false;
+    const dx = event.clientX - mouseStart.x;
+    const dy = event.clientY - mouseStart.y;
+    return Math.hypot(dx, dy) > 4;
+  }
+
+  function primaryRowLink(rowEl: HTMLElement): HTMLAnchorElement | null {
+    const link = rowEl.querySelector("a[href]");
+    return link instanceof HTMLAnchorElement ? link : null;
+  }
+
+  function onrowmousedown(event: MouseEvent): void {
+    mouseStart =
+      event.button === 0
+        ? { row: event.currentTarget, x: event.clientX, y: event.clientY }
+        : null;
+  }
+
+  function onrownavigationclick(event: MouseEvent): void {
+    const rowEl = event.currentTarget;
+    if (!(rowEl instanceof HTMLElement)) {
+      mouseStart = null;
+      return;
+    }
+    const dragged = movedSinceMouseDown(event, rowEl);
     mouseStart = null;
-    return;
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      fromInteractiveChild(event, event.currentTarget)
+    ) {
+      return;
+    }
+    if (rowSelectionText(rowEl) || dragged) return;
+    primaryRowLink(rowEl)?.click();
   }
-  const dragged = movedSinceMouseDown(event, rowEl);
-  mouseStart = null;
-  if (
-    event.defaultPrevented ||
-    event.button !== 0 ||
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey ||
-    fromInteractiveChild(event, event.currentTarget)
-  ) {
-    return;
-  }
-  if (rowSelectionText(rowEl) || dragged) return;
-  primaryRowLink(rowEl)?.click();
-}
 </script>
 
 <!-- Roles are set EXPLICITLY on every element (not left to native HTML-AAM

@@ -1,485 +1,493 @@
 <script lang="ts">
-import { unmountedFlag } from "./async.svelte";
-import BindingEditor from "./BindingEditor.svelte";
-import { fqidSegments, sourceCardHeading } from "./catalog";
-import { sourceNames } from "./catalog_names.svelte";
-import {
-  normalizePeriodRows,
-  periodWindowRelation,
-  resolveYearEntry,
-  yearSegmentsFromWire,
-  yearWindowLabel,
-} from "./period";
-import {
-  type ProjectSourcePeriod,
-  type ProjectStudyWindow,
-  type SafeSource,
-  safeSourceBindings,
-  safeSourceName,
-  safeSourcePeriod,
-  safeSourceRegisterVariant,
-  sourceBindingsMalformed,
-  sourceSnapshot,
-} from "./project_data";
-import {
-  projectStore,
-  type SourcePeriodEditTarget,
-} from "./project_store.svelte";
-import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
-import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
-import {
-  Button,
-  ConfirmDialog,
-  EmptyState,
-  KeyValue,
-  type KeyValueRow,
-  Tag,
-} from "./ui";
-import {
-  issuesUnderPointer,
-  jsonPointer,
-  sourceAnchorId,
-  type ValidationIssue,
-} from "./validation";
+  import { unmountedFlag } from "./async.svelte";
+  import BindingEditor from "./BindingEditor.svelte";
+  import { fqidSegments, sourceCardHeading } from "./catalog";
+  import { sourceNames } from "./catalog_names.svelte";
+  import {
+    normalizePeriodRows,
+    periodWindowRelation,
+    resolveYearEntry,
+    yearSegmentsFromWire,
+    yearWindowLabel,
+  } from "./period";
+  import {
+    type ProjectSourcePeriod,
+    type ProjectStudyWindow,
+    type SafeSource,
+    safeSourceBindings,
+    safeSourceName,
+    safeSourcePeriod,
+    safeSourceRegisterVariant,
+    sourceBindingsMalformed,
+    sourceSnapshot,
+  } from "./project_data";
+  import {
+    projectStore,
+    type SourcePeriodEditTarget,
+  } from "./project_store.svelte";
+  import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
+  import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
+  import {
+    Button,
+    ConfirmDialog,
+    EmptyState,
+    KeyValue,
+    type KeyValueRow,
+    Tag,
+  } from "./ui";
+  import {
+    issuesUnderPointer,
+    jsonPointer,
+    sourceAnchorId,
+    type ValidationIssue,
+  } from "./validation";
 
-// The source card of the #991 data-order cart: the cart SHOWS what has been picked
-// (a register and the columns taken from it) and supports delete + navigate-out —
-// a wrong variable, variant or representation is fixed by picking again in the
-// catalog, never by editing the row. The ONE exception is this source's PERIOD
-// (Y-81): it is a field of the source rather than of any pick, and this card is the
-// only surface that shows a source whole — its full coordinate and every binding it
-// carries — which is what a source-wide period rewrite has to be looked at against.
-// The header still rolls up all errors under `/sources/{i}` as a badge (fixes are
-// reached via the ValidationPanel's catalog link). See reg_webapp/DESIGN.md.
-const {
-  sourceIndex,
-  source,
-  issues,
-  providerQualified,
-  studyWindow,
-}: {
-  sourceIndex: number;
-  source: SafeSource;
-  issues: ValidationIssue[];
-  /** Whether this deployment serves more than one provider, so the card names
-   * the provider that owns the register above its heading: a bare register name
-   * can stand for two registers there. A deployment fact, read once in
-   * `App.svelte` and threaded down like `steward` — no route fetches it. */
-  providerQualified: boolean;
-  /** The project's own study window, or null when none is set — what this
-   * source's period is MARKED against when the two differ. An authoring seed,
-   * never an inheritance (crates/reg-core/DESIGN.md): each source keeps its own
-   * concrete period, so divergence is shown rather than hidden. */
-  studyWindow: ProjectStudyWindow | null;
-} = $props();
+  // The source card of the #991 data-order cart: the cart SHOWS what has been picked
+  // (a register and the columns taken from it) and supports delete + navigate-out —
+  // a wrong variable, variant or representation is fixed by picking again in the
+  // catalog, never by editing the row. The ONE exception is this source's PERIOD
+  // (Y-81): it is a field of the source rather than of any pick, and this card is the
+  // only surface that shows a source whole — its full coordinate and every binding it
+  // carries — which is what a source-wide period rewrite has to be looked at against.
+  // The header still rolls up all errors under `/sources/{i}` as a badge (fixes are
+  // reached via the ValidationPanel's catalog link). See reg_webapp/DESIGN.md.
+  const {
+    sourceIndex,
+    source,
+    issues,
+    providerQualified,
+    studyWindow,
+  }: {
+    sourceIndex: number;
+    source: SafeSource;
+    issues: ValidationIssue[];
+    /** Whether this deployment serves more than one provider, so the card names
+     * the provider that owns the register above its heading: a bare register name
+     * can stand for two registers there. A deployment fact, read once in
+     * `App.svelte` and threaded down like `steward` — no route fetches it. */
+    providerQualified: boolean;
+    /** The project's own study window, or null when none is set — what this
+     * source's period is MARKED against when the two differ. An authoring seed,
+     * never an inheritance (crates/reg-core/DESIGN.md): each source keeps its own
+     * concrete period, so divergence is shown rather than hidden. */
+    studyWindow: ProjectStudyWindow | null;
+  } = $props();
 
-/** Instance-scoped ids, so every card's period fields keep real `<label for>`
- * pairs on a page that renders one card per source. */
-const uid = $props.id();
+  /** Instance-scoped ids, so every card's period fields keep real `<label for>`
+   * pairs on a page that renders one card per source. */
+  const uid = $props.id();
 
-const sourcePtr = $derived(jsonPointer(["sources", sourceIndex]));
-const rolledUp = $derived(issuesUnderPointer(issues, sourcePtr));
-const errorCount = $derived(rolledUp.filter((i) => i.level === "error").length);
+  const sourcePtr = $derived(jsonPointer(["sources", sourceIndex]));
+  const rolledUp = $derived(issuesUnderPointer(issues, sourcePtr));
+  const errorCount = $derived(
+    rolledUp.filter((i) => i.level === "error").length,
+  );
 
-const registerVariant = $derived(safeSourceRegisterVariant(source));
+  const registerVariant = $derived(safeSourceRegisterVariant(source));
 
-// The card is HEADED by the REGISTER this source delivers from and qualified by the
-// concrete VARIANT it extracts, in the catalog's own words — what the researcher
-// picked, spelled as every other route spells it. The names live only in the
-// catalog, so they are READ from it (cached per register); until they land the raw
-// coordinate heads the card. The source's `name` is a generated join key (`LISA`,
-// `LISA_2`, `LISA_3` for three variants of one register), so it titles nothing; it
-// stays visible as a detail row below because panels join on it.
-const names = $derived(sourceNames(registerVariant));
-const sourceMalformed = $derived(source === null);
-const heading = $derived(
-  sourceMalformed
-    ? "(malformed source)"
-    : sourceCardHeading(names.register, registerVariant) || "(no register)",
-);
-// The variant that names the POPULATION this source extracts: the one qualifier
-// that belongs in the title, under the heading, because it is what the researcher
-// picked alongside the register (the variant browser's own heading-plus-meta
-// shape). Absent until the whole name has landed — `sourceNames` is
-// all-or-nothing — so it cannot appear beside a coordinate heading.
-const variantName = $derived(names.variant);
-// The provider that OWNS the register is a different kind of thing: an attribute
-// of the register, not part of what was picked, and only worth saying where the
-// deployment serves more than one (elsewhere it is the same word on every card).
-// So it goes where this card puts its other named attributes — a labelled metadata
-// row — rather than as a second unlabelled line no reader could tell from the
-// variant.
-const providerName = $derived(providerQualified ? names.provider : null);
-// The heading has fallen back to the raw coordinate: while the names are in flight,
-// and wherever they cannot be read at all. It is then a machine identifier standing
-// in for a name, so it takes the machine face and prints only once on the card.
-const titleIsCoordinate = $derived(heading === registerVariant);
-// The concrete variant the source extracts, for the columns' own catalog resolve:
-// a column's default name is the one delivered at THIS variant and period.
-const variantSlug = $derived(fqidSegments(registerVariant)[2] ?? "");
+  // The card is HEADED by the REGISTER this source delivers from and qualified by the
+  // concrete VARIANT it extracts, in the catalog's own words — what the researcher
+  // picked, spelled as every other route spells it. The names live only in the
+  // catalog, so they are READ from it (cached per register); until they land the raw
+  // coordinate heads the card. The source's `name` is a generated join key (`LISA`,
+  // `LISA_2`, `LISA_3` for three variants of one register), so it titles nothing; it
+  // stays visible as a detail row below because panels join on it.
+  const names = $derived(sourceNames(registerVariant));
+  const sourceMalformed = $derived(source === null);
+  const heading = $derived(
+    sourceMalformed
+      ? "(malformed source)"
+      : sourceCardHeading(names.register, registerVariant) || "(no register)",
+  );
+  // The variant that names the POPULATION this source extracts: the one qualifier
+  // that belongs in the title, under the heading, because it is what the researcher
+  // picked alongside the register (the variant browser's own heading-plus-meta
+  // shape). Absent until the whole name has landed — `sourceNames` is
+  // all-or-nothing — so it cannot appear beside a coordinate heading.
+  const variantName = $derived(names.variant);
+  // The provider that OWNS the register is a different kind of thing: an attribute
+  // of the register, not part of what was picked, and only worth saying where the
+  // deployment serves more than one (elsewhere it is the same word on every card).
+  // So it goes where this card puts its other named attributes — a labelled metadata
+  // row — rather than as a second unlabelled line no reader could tell from the
+  // variant.
+  const providerName = $derived(providerQualified ? names.provider : null);
+  // The heading has fallen back to the raw coordinate: while the names are in flight,
+  // and wherever they cannot be read at all. It is then a machine identifier standing
+  // in for a name, so it takes the machine face and prints only once on the card.
+  const titleIsCoordinate = $derived(heading === registerVariant);
+  // The concrete variant the source extracts, for the columns' own catalog resolve:
+  // a column's default name is the one delivered at THIS variant and period.
+  const variantSlug = $derived(fqidSegments(registerVariant)[2] ?? "");
 
-// Defensive: a malformed opened spec may carry `bindings` as a non-array. Show an
-// inline note instead of the list (full-replace-with-guards, maintainer decision)
-// rather than crashing — the draft stays verbatim for serialize/validate.
-const bindings = $derived(safeSourceBindings(source));
-const bindingsMalformed = $derived(sourceBindingsMalformed(source));
+  // Defensive: a malformed opened spec may carry `bindings` as a non-array. Show an
+  // inline note instead of the list (full-replace-with-guards, maintainer decision)
+  // rather than crashing — the draft stays verbatim for serialize/validate.
+  const bindings = $derived(safeSourceBindings(source));
+  const bindingsMalformed = $derived(sourceBindingsMalformed(source));
 
-// The panel/order join key (reg_meta `OrderEntry.source`) — the one thing that
-// still differs between two sources an imported spec put on the SAME
-// register_variant (an import routinely does; the catalog's own add path can't
-// author it, since it finds-or-creates by variant). Shared by the detail row below
-// and every per-source control's accessible name.
-const sourceName = $derived(safeSourceName(source) || "(unnamed source)");
+  // The panel/order join key (reg_meta `OrderEntry.source`) — the one thing that
+  // still differs between two sources an imported spec put on the SAME
+  // register_variant (an import routinely does; the catalog's own add path can't
+  // author it, since it finds-or-creates by variant). Shared by the detail row below
+  // and every per-source control's accessible name.
+  const sourceName = $derived(safeSourceName(source) || "(unnamed source)");
 
-const period = $derived(safeSourcePeriod(source) as ProjectSourcePeriod);
-// The stored period as its WIRE string (list-period aware — `sourcePeriodToWire` already
-// joins list segments); null when the source carries none or an unshapeable one.
-const periodWire = $derived(sourcePeriodToWire(period));
+  const period = $derived(safeSourcePeriod(source) as ProjectSourcePeriod);
+  // The stored period as its WIRE string (list-period aware — `sourcePeriodToWire` already
+  // joins list segments); null when the source carries none or an unshapeable one.
+  const periodWire = $derived(sourcePeriodToWire(period));
 
-// The coordinate rows, rendered through the shared KeyValue primitive
-// (#804) — same metadata-row styling ProjectEditor uses. The provider heads them
-// where the deployment has more than one: it is a word, not an identifier, so it
-// takes no mono, and the label is what tells it from the variant in the title. The
-// register_variant is a machine FQID coordinate (mono): the source extracts that
-// CONCRETE variant, so it stays on the card even once the heading names it in
-// words — but only then, because a heading that has fallen back to the coordinate
-// would print it twice.
-// `name` is the panel/order join key (reg_meta `OrderEntry.source`) — a machine
-// identifier, so mono.
-const metaRows = $derived([
-  ...(providerName ? [{ label: "Provider", value: providerName }] : []),
-  ...(titleIsCoordinate
-    ? []
-    : [{ label: "Register variant", value: registerVariant, mono: true }]),
-  {
-    label: "Source name",
-    value: sourceName,
-    mono: true,
-  },
-] satisfies KeyValueRow[]);
+  // The coordinate rows, rendered through the shared KeyValue primitive
+  // (#804) — same metadata-row styling ProjectEditor uses. The provider heads them
+  // where the deployment has more than one: it is a word, not an identifier, so it
+  // takes no mono, and the label is what tells it from the variant in the title. The
+  // register_variant is a machine FQID coordinate (mono): the source extracts that
+  // CONCRETE variant, so it stays on the card even once the heading names it in
+  // words — but only then, because a heading that has fallen back to the coordinate
+  // would print it twice.
+  // `name` is the panel/order join key (reg_meta `OrderEntry.source`) — a machine
+  // identifier, so mono.
+  const metaRows = $derived([
+    ...(providerName ? [{ label: "Provider", value: providerName }] : []),
+    ...(titleIsCoordinate
+      ? []
+      : [{ label: "Register variant", value: registerVariant, mono: true }]),
+    {
+      label: "Source name",
+      value: sourceName,
+      mono: true,
+    },
+  ] satisfies KeyValueRow[]);
 
-// ── The source's period (Y-81, list segments Y-101) ─────────────────────────
-//
-// Authored in the catalog's own period vocabulary: a YEAR RANGE per row, the one
-// grammar the catalog's `PeriodPicker` authors, one row for a plain period and one
-// row per segment of a #307 comma list (`2015..2017,2019..2020` — what two
-// disjoint picks on a register variant merge into) — the single-range case is the
-// one-row form of this. Written back through the same wire shaping a pick uses. A
-// TOKEN period (`HT2018`) is a different vocabulary nothing here authors; it is
-// shown as it stands, never silently rewritten into a span.
+  // ── The source's period (Y-81, list segments Y-101) ─────────────────────────
+  //
+  // Authored in the catalog's own period vocabulary: a YEAR RANGE per row, the one
+  // grammar the catalog's `PeriodPicker` authors, one row for a plain period and one
+  // row per segment of a #307 comma list (`2015..2017,2019..2020` — what two
+  // disjoint picks on a register variant merge into) — the single-range case is the
+  // one-row form of this. Written back through the same wire shaping a pick uses. A
+  // TOKEN period (`HT2018`) is a different vocabulary nothing here authors; it is
+  // shown as it stands, never silently rewritten into a span.
 
-/** One row's two fields, as TEXT — kept as typed rather than parsed, so a refused
- * entry stays on screen as it was typed instead of being rewritten. */
-interface YearRow {
-  from: string;
-  to: string;
-}
+  /** One row's two fields, as TEXT — kept as typed rather than parsed, so a refused
+   * entry stays on screen as it was typed instead of being rewritten. */
+  interface YearRow {
+    from: string;
+    to: string;
+  }
 
-/** The stored period's segments as year windows — null for a token/mixed period
- * (unrepresentable) as well as for an unset one (nothing stored to segment). */
-const storedSegments = $derived(
-  periodWire === null ? null : yearSegmentsFromWire(periodWire),
-);
-/** The stored period as one row per segment, in stored order — a source with no
- * period yet is one blank row (what it's missing, not another grammar). Only
- * meaningful while `yearsEditable`. */
-const storedRows = $derived<YearRow[]>(
-  storedSegments === null
-    ? [{ from: "", to: "" }]
-    : storedSegments.map((w) => ({ from: String(w.from), to: String(w.to) })),
-);
-/** Whether the rows can author THIS source's period: every segment a bare year or
- * a uniform-year range. A source with no period yet is authored by them too. */
-const yearsEditable = $derived(periodWire === null || storedSegments !== null);
+  /** The stored period's segments as year windows — null for a token/mixed period
+   * (unrepresentable) as well as for an unset one (nothing stored to segment). */
+  const storedSegments = $derived(
+    periodWire === null ? null : yearSegmentsFromWire(periodWire),
+  );
+  /** The stored period as one row per segment, in stored order — a source with no
+   * period yet is one blank row (what it's missing, not another grammar). Only
+   * meaningful while `yearsEditable`. */
+  const storedRows = $derived<YearRow[]>(
+    storedSegments === null
+      ? [{ from: "", to: "" }]
+      : storedSegments.map((w) => ({ from: String(w.from), to: String(w.to) })),
+  );
+  /** Whether the rows can author THIS source's period: every segment a bare year or
+   * a uniform-year range. A source with no period yet is authored by them too. */
+  const yearsEditable = $derived(
+    periodWire === null || storedSegments !== null,
+  );
 
-/** The rows as EDITED, or null while they mirror the stored segments untouched —
- * the same "has this been touched" signal `editedFrom` gates the write on. */
-let rows = $state<YearRow[] | null>(null);
-/** Whether the rows have been committed (blur or Apply) — a half-typed year must
- * not announce a refusal on every keystroke. */
-let entryCommitted = $state(false);
-/** The last Apply was refused because the SOURCE moved under the edit — a different
- * thing from `entryRefusal`, which is the rows themselves being unusable. */
-let writeRefused = $state(false);
-/** The windows a landed write set, until the next keystroke retires them. A form
- * that says nothing on success leaves the researcher to infer it from a greyed
- * button — and where the new period neither crosses the study window nor changes a
- * finding, there is nothing else on the card that moves. */
-let appliedWindows = $state<ProjectStudyWindow[] | null>(null);
-/** The last Apply had nothing to write — the rows named exactly the stored period,
- * or nothing was ever touched. A different thing from `entryRefusal`: the rows ARE
- * usable, there is just no change to make. */
-let unchangedNotice = $state(false);
-/** An Apply is in flight — from the press that found something to write until the
- * store's write returns. The whole span is the restore-gate wait below (the write
- * itself is synchronous), so this doubles as "waiting for the draft to settle". The
- * year fields, Add, Remove and the Apply button freeze for it: a second press
- * while one is held on the gate must not queue a write of its own — the first
- * press's write may already have moved the draft by the time a queued second one
- * runs, raising a staleness refusal for a write that did land (a1/a3). */
-let applying = $state(false);
-/** The source as it stood when this edit began — the value the researcher was
- * looking at, which the store re-checks the write against. Plain, not `$state`:
- * nothing renders from it. */
-let editedFrom: SourcePeriodEditTarget | null = null;
-/** So an Apply still waiting on the restore gate in `applyPeriod` is abandoned
- * rather than written behind the researcher's back. */
-const unmounted = unmountedFlag();
+  /** The rows as EDITED, or null while they mirror the stored segments untouched —
+   * the same "has this been touched" signal `editedFrom` gates the write on. */
+  let rows = $state<YearRow[] | null>(null);
+  /** Whether the rows have been committed (blur or Apply) — a half-typed year must
+   * not announce a refusal on every keystroke. */
+  let entryCommitted = $state(false);
+  /** The last Apply was refused because the SOURCE moved under the edit — a different
+   * thing from `entryRefusal`, which is the rows themselves being unusable. */
+  let writeRefused = $state(false);
+  /** The windows a landed write set, until the next keystroke retires them. A form
+   * that says nothing on success leaves the researcher to infer it from a greyed
+   * button — and where the new period neither crosses the study window nor changes a
+   * finding, there is nothing else on the card that moves. */
+  let appliedWindows = $state<ProjectStudyWindow[] | null>(null);
+  /** The last Apply had nothing to write — the rows named exactly the stored period,
+   * or nothing was ever touched. A different thing from `entryRefusal`: the rows ARE
+   * usable, there is just no change to make. */
+  let unchangedNotice = $state(false);
+  /** An Apply is in flight — from the press that found something to write until the
+   * store's write returns. The whole span is the restore-gate wait below (the write
+   * itself is synchronous), so this doubles as "waiting for the draft to settle". The
+   * year fields, Add, Remove and the Apply button freeze for it: a second press
+   * while one is held on the gate must not queue a write of its own — the first
+   * press's write may already have moved the draft by the time a queued second one
+   * runs, raising a staleness refusal for a write that did land (a1/a3). */
+  let applying = $state(false);
+  /** The source as it stood when this edit began — the value the researcher was
+   * looking at, which the store re-checks the write against. Plain, not `$state`:
+   * nothing renders from it. */
+  let editedFrom: SourcePeriodEditTarget | null = null;
+  /** So an Apply still waiting on the restore gate in `applyPeriod` is abandoned
+   * rather than written behind the researcher's back. */
+  const unmounted = unmountedFlag();
 
-/** The rows on screen: the edited buffer once touched, else the stored segments. */
-const displayRows = $derived(rows ?? storedRows);
+  /** The rows on screen: the edited buffer once touched, else the stored segments. */
+  const displayRows = $derived(rows ?? storedRows);
 
-/** A refusal about one or more rows: the message, and which row(s)/field(s) it
- * marks — so a within-row grammar problem highlights just its own field while a
- * cross-row overlap highlights both rows whole. Shared shape for `rowProblem` and
- * `overlapProblem` below. */
-interface RowsProblem {
-  problem: string;
-  rows: { index: number; from: boolean; to: boolean }[];
-}
+  /** A refusal about one or more rows: the message, and which row(s)/field(s) it
+   * marks — so a within-row grammar problem highlights just its own field while a
+   * cross-row overlap highlights both rows whole. Shared shape for `rowProblem` and
+   * `overlapProblem` below. */
+  interface RowsProblem {
+    problem: string;
+    rows: { index: number; from: boolean; to: boolean }[];
+  }
 
-/** Each row resolved by the shared `resolveYearEntry` (no band — this card writes
- * the wire itself), or null for every row while nothing has been touched yet
- * (mirrors the untouched-entry null the single-row card used before Y-101). */
-const rowResolutions = $derived(
-  displayRows.map((row) =>
-    rows === null ? null : resolveYearEntry(row.from, row.to),
-  ),
-);
+  /** Each row resolved by the shared `resolveYearEntry` (no band — this card writes
+   * the wire itself), or null for every row while nothing has been touched yet
+   * (mirrors the untouched-entry null the single-row card used before Y-101). */
+  const rowResolutions = $derived(
+    displayRows.map((row) =>
+      rows === null ? null : resolveYearEntry(row.from, row.to),
+    ),
+  );
 
-/** The first row whose own grammar/order is bad, by the card's existing year rule
- * — the same "From after To" / "must be a four-digit year" refusal the single-row
- * card always used, now naming which row it's about. */
-const rowProblem = $derived.by((): RowsProblem | null => {
-  for (let i = 0; i < rowResolutions.length; i++) {
-    const r = rowResolutions[i];
-    if (r !== null && "problem" in r) {
-      return { problem: r.problem, rows: [{ index: i, ...r.at }] };
+  /** The first row whose own grammar/order is bad, by the card's existing year rule
+   * — the same "From after To" / "must be a four-digit year" refusal the single-row
+   * card always used, now naming which row it's about. */
+  const rowProblem = $derived.by((): RowsProblem | null => {
+    for (let i = 0; i < rowResolutions.length; i++) {
+      const r = rowResolutions[i];
+      if (r !== null && "problem" in r) {
+        return { problem: r.problem, rows: [{ index: i, ...r.at }] };
+      }
     }
-  }
-  return null;
-});
-
-/** Every row's window, once ALL of them resolve cleanly — the input
- * `normalizePeriodRows` sorts/merges, or refuses on a real overlap. Null while
- * untouched or while any row is individually bad (`rowProblem` already covers
- * that case). */
-const rowWindows = $derived.by((): ProjectStudyWindow[] | null => {
-  if (rows === null || rowProblem !== null) {
     return null;
+  });
+
+  /** Every row's window, once ALL of them resolve cleanly — the input
+   * `normalizePeriodRows` sorts/merges, or refuses on a real overlap. Null while
+   * untouched or while any row is individually bad (`rowProblem` already covers
+   * that case). */
+  const rowWindows = $derived.by((): ProjectStudyWindow[] | null => {
+    if (rows === null || rowProblem !== null) {
+      return null;
+    }
+    return rowResolutions.map(
+      (r) => (r as { years: ProjectStudyWindow }).years,
+    );
+  });
+
+  const normalized = $derived(
+    rowWindows === null ? null : normalizePeriodRows(rowWindows),
+  );
+
+  /** Two rows sharing a year: coalescing them would erase which row the researcher
+   * meant, so this refuses instead — same status line, a new sentence naming the
+   * two spans at fault (the VALIDATED windows, not the raw field text). */
+  const overlapProblem = $derived.by((): RowsProblem | null => {
+    if (rowWindows === null || normalized === null || "period" in normalized) {
+      return null;
+    }
+    const { a, b } = normalized;
+    return {
+      problem: `${yearWindowLabel(rowWindows[a])} and ${yearWindowLabel(rowWindows[b])} overlap — a year can only be in one segment.`,
+      rows: [
+        { index: a, from: true, to: true },
+        { index: b, from: true, to: true },
+      ],
+    };
+  });
+
+  const entryProblem = $derived(rowProblem ?? overlapProblem);
+  /** The refusal to show, once the rows have been committed. */
+  const entryRefusal = $derived(entryCommitted ? entryProblem : null);
+  /** The refusal line is only described-by while it actually says something. */
+  const problemId = $derived(
+    entryRefusal === null ? undefined : `${uid}-problem`,
+  );
+  /** Whether row `index`'s `side` field is the one a refusal is about. */
+  function rowInvalid(index: number, side: "from" | "to"): boolean {
+    return (
+      entryRefusal?.rows.some((r) => r.index === index && r[side]) ?? false
+    );
   }
-  return rowResolutions.map((r) => (r as { years: ProjectStudyWindow }).years);
-});
 
-const normalized = $derived(
-  rowWindows === null ? null : normalizePeriodRows(rowWindows),
-);
+  /** The wire the rows would write, or null when they name no valid list / no
+   * change from what is stored. */
+  const proposedWire = $derived.by(() => {
+    if (normalized === null || !("period" in normalized)) {
+      return null;
+    }
+    const wire = sourcePeriodToWire(normalized.period);
+    return wire === periodWire ? null : wire;
+  });
 
-/** Two rows sharing a year: coalescing them would erase which row the researcher
- * meant, so this refuses instead — same status line, a new sentence naming the
- * two spans at fault (the VALIDATED windows, not the raw field text). */
-const overlapProblem = $derived.by((): RowsProblem | null => {
-  if (rowWindows === null || normalized === null || "period" in normalized) {
-    return null;
-  }
-  const { a, b } = normalized;
-  return {
-    problem: `${yearWindowLabel(rowWindows[a])} and ${yearWindowLabel(rowWindows[b])} overlap — a year can only be in one segment.`,
-    rows: [
-      { index: a, from: true, to: true },
-      { index: b, from: true, to: true },
-    ],
-  };
-});
+  /** The confirmation a landed write leaves in the refusal's own region — one line
+   * that is either explaining a refusal or reporting a write, never both. */
+  const appliedLabel = $derived(
+    appliedWindows === null
+      ? null
+      : `Period set to ${appliedWindows.map(yearWindowLabel).join(", ")}.`,
+  );
 
-const entryProblem = $derived(rowProblem ?? overlapProblem);
-/** The refusal to show, once the rows have been committed. */
-const entryRefusal = $derived(entryCommitted ? entryProblem : null);
-/** The refusal line is only described-by while it actually says something. */
-const problemId = $derived(
-  entryRefusal === null ? undefined : `${uid}-problem`,
-);
-/** Whether row `index`'s `side` field is the one a refusal is about. */
-function rowInvalid(index: number, side: "from" | "to"): boolean {
-  return entryRefusal?.rows.some((r) => r.index === index && r[side]) ?? false;
-}
+  /** How this source's period sits against the study window (`periodWindowRelation`)
+   * — what the card MARKS, null when there is nothing to mark. The whole point of a
+   * per-source period is that it MAY differ, so a difference is said, not flagged;
+   * a period with NO years inside the window is the one divergence that blocks the
+   * order, and says so. A source with no period at all relates to nothing; that it
+   * has none is the validator's finding, not this marker's. Judged by the years the
+   * period covers, never by how the wire spells it or how many segments it has. */
+  const windowRelation = $derived(periodWindowRelation(period, studyWindow));
 
-/** The wire the rows would write, or null when they name no valid list / no
- * change from what is stored. */
-const proposedWire = $derived.by(() => {
-  if (normalized === null || !("period" in normalized)) {
-    return null;
-  }
-  const wire = sourcePeriodToWire(normalized.period);
-  return wire === periodWire ? null : wire;
-});
-
-/** The confirmation a landed write leaves in the refusal's own region — one line
- * that is either explaining a refusal or reporting a write, never both. */
-const appliedLabel = $derived(
-  appliedWindows === null
-    ? null
-    : `Period set to ${appliedWindows.map(yearWindowLabel).join(", ")}.`,
-);
-
-/** How this source's period sits against the study window (`periodWindowRelation`)
- * — what the card MARKS, null when there is nothing to mark. The whole point of a
- * per-source period is that it MAY differ, so a difference is said, not flagged;
- * a period with NO years inside the window is the one divergence that blocks the
- * order, and says so. A source with no period at all relates to nothing; that it
- * has none is the validator's finding, not this marker's. Judged by the years the
- * period covers, never by how the wire spells it or how many segments it has. */
-const windowRelation = $derived(periodWindowRelation(period, studyWindow));
-
-/** The edit starts HERE: capture the source as it is, so a write onto a source
- * that has moved since — a column removed from this very card, a project
- * replaced — is refused rather than landing on a value nobody looked at. Shared by
- * every row mutation (typing, Add, Remove) that turns `rows` from "mirroring
- * stored" into an active edit. */
-function beginEdit(): void {
-  editedFrom = {
-    sourceName: safeSourceName(source),
-    registerVariant,
-    snapshot: sourceSnapshot(source),
-    replacementGeneration: projectStore.replacementGeneration,
-  };
-  writeRefused = false;
-  appliedWindows = null;
-  unchangedNotice = false;
-}
-
-function editYear(index: number, side: "from" | "to", value: string): void {
-  if (rows === null) {
-    beginEdit();
-  }
-  const base = rows ?? storedRows;
-  rows = base.map((r, i) => (i === index ? { ...r, [side]: value } : r));
-}
-
-/** Append an empty segment row at the end — the researcher fills it in like any
- * other. */
-function addRow(): void {
-  if (rows === null) {
-    beginEdit();
-  }
-  rows = [...(rows ?? storedRows), { from: "", to: "" }];
-}
-
-/** Drop one segment row. The template hides this control while only one row
- * remains — a period always has at least one row to hold it. */
-function removeRow(index: number): void {
-  if (rows === null) {
-    beginEdit();
-  }
-  rows = (rows ?? storedRows).filter((_, i) => i !== index);
-}
-
-/** Commit the edited period: ONE period-only diff through the store's guarded
- * `applySourcePeriodEdit`, never unioned with anything else. Either way the fields
- * are re-armed on the source as it NOW stands — after a refusal that is the whole
- * point, since the source moved and the next Apply has to be made against a value
- * the researcher can see, so the alert says the years were reset. */
-async function applyPeriod(): Promise<void> {
-  if (applying) {
-    // Held on the SAME gate as an earlier press: the fields are already frozen on
-    // what that press captured, so this one has nothing new to contribute.
-    return;
-  }
-  // Committing FIRST is what makes a refused Apply say why: rows that name no
-  // window leave `proposedWire` null, so the write below is skipped and the
-  // refusal line renders instead.
-  entryCommitted = true;
-  const target = editedFrom;
-  const wire = proposedWire;
-  if (target === null || wire === null) {
-    // Nothing to write: either `entryProblem` already explains why (rendered via
-    // `entryRefusal` below), or the rows name exactly the stored period (typed
-    // back to it, or never touched at all) — say so rather than leaving Apply
-    // looking like it silently did nothing. Retiring the other two verdicts here
-    // too: this press is what the status line now reports, not whatever an
-    // earlier one left behind.
-    unchangedNotice = entryProblem === null;
+  /** The edit starts HERE: capture the source as it is, so a write onto a source
+   * that has moved since — a column removed from this very card, a project
+   * replaced — is refused rather than landing on a value nobody looked at. Shared by
+   * every row mutation (typing, Add, Remove) that turns `rows` from "mirroring
+   * stored" into an active edit. */
+  function beginEdit(): void {
+    editedFrom = {
+      sourceName: safeSourceName(source),
+      registerVariant,
+      snapshot: sourceSnapshot(source),
+      replacementGeneration: projectStore.replacementGeneration,
+    };
     writeRefused = false;
     appliedWindows = null;
-    return;
+    unchangedNotice = false;
   }
-  unchangedNotice = false;
-  applying = true;
-  try {
-    const written = yearSegmentsFromWire(wire);
-    // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS, so
-    // this waits for it exactly as the catalog's Add path does: the store re-checks
-    // the edit against the draft it finds, and that check is only worth anything
-    // once the draft it reads is the SETTLED one. The wait is unbounded, so a card
-    // gone by the time it returns — the researcher left /project — abandons the
-    // write rather than landing it on a page nobody is looking at. `applying` keeps
-    // the fields read-only for the whole span, so nothing typed here can revise
-    // `wire`, and a second press can't queue behind this one.
-    await projectStore.restored;
-    if (unmounted()) {
+
+  function editYear(index: number, side: "from" | "to", value: string): void {
+    if (rows === null) {
+      beginEdit();
+    }
+    const base = rows ?? storedRows;
+    rows = base.map((r, i) => (i === index ? { ...r, [side]: value } : r));
+  }
+
+  /** Append an empty segment row at the end — the researcher fills it in like any
+   * other. */
+  function addRow(): void {
+    if (rows === null) {
+      beginEdit();
+    }
+    rows = [...(rows ?? storedRows), { from: "", to: "" }];
+  }
+
+  /** Drop one segment row. The template hides this control while only one row
+   * remains — a period always has at least one row to hold it. */
+  function removeRow(index: number): void {
+    if (rows === null) {
+      beginEdit();
+    }
+    rows = (rows ?? storedRows).filter((_, i) => i !== index);
+  }
+
+  /** Commit the edited period: ONE period-only diff through the store's guarded
+   * `applySourcePeriodEdit`, never unioned with anything else. Either way the fields
+   * are re-armed on the source as it NOW stands — after a refusal that is the whole
+   * point, since the source moved and the next Apply has to be made against a value
+   * the researcher can see, so the alert says the years were reset. */
+  async function applyPeriod(): Promise<void> {
+    if (applying) {
+      // Held on the SAME gate as an earlier press: the fields are already frozen on
+      // what that press captured, so this one has nothing new to contribute.
       return;
     }
-    writeRefused = !projectStore.applySourcePeriodEdit({
-      ...target,
-      period: sourcePeriodFromWire(wire),
-    });
-    appliedWindows = writeRefused ? null : written;
-    rows = null;
-    entryCommitted = false;
-    editedFrom = null;
-  } finally {
-    applying = false;
+    // Committing FIRST is what makes a refused Apply say why: rows that name no
+    // window leave `proposedWire` null, so the write below is skipped and the
+    // refusal line renders instead.
+    entryCommitted = true;
+    const target = editedFrom;
+    const wire = proposedWire;
+    if (target === null || wire === null) {
+      // Nothing to write: either `entryProblem` already explains why (rendered via
+      // `entryRefusal` below), or the rows name exactly the stored period (typed
+      // back to it, or never touched at all) — say so rather than leaving Apply
+      // looking like it silently did nothing. Retiring the other two verdicts here
+      // too: this press is what the status line now reports, not whatever an
+      // earlier one left behind.
+      unchangedNotice = entryProblem === null;
+      writeRefused = false;
+      appliedWindows = null;
+      return;
+    }
+    unchangedNotice = false;
+    applying = true;
+    try {
+      const written = yearSegmentsFromWire(wire);
+      // The draft lifecycle is application-owned and its restore is ASYNCHRONOUS, so
+      // this waits for it exactly as the catalog's Add path does: the store re-checks
+      // the edit against the draft it finds, and that check is only worth anything
+      // once the draft it reads is the SETTLED one. The wait is unbounded, so a card
+      // gone by the time it returns — the researcher left /project — abandons the
+      // write rather than landing it on a page nobody is looking at. `applying` keeps
+      // the fields read-only for the whole span, so nothing typed here can revise
+      // `wire`, and a second press can't queue behind this one.
+      await projectStore.restored;
+      if (unmounted()) {
+        return;
+      }
+      writeRefused = !projectStore.applySourcePeriodEdit({
+        ...target,
+        period: sourcePeriodFromWire(wire),
+      });
+      appliedWindows = writeRefused ? null : written;
+      rows = null;
+      entryCommitted = false;
+      editedFrom = null;
+    } finally {
+      applying = false;
+    }
   }
-}
 
-// The removal question and the delete button's accessible name are SENTENCES, and
-// they name this source in words rather than reciting the heading and the line
-// under it: a heading is layout, copy is prose. A malformed slot, or a source
-// carrying no coordinate at all, has no words to be named by — the question then
-// says "this source", which the card around it already places, and the button
-// keeps its visible text as its whole name.
-const identified = $derived(!sourceMalformed && registerVariant !== "");
-const columnCount = $derived(
-  `${bindings.length} column${bindings.length === 1 ? "" : "s"}`,
-);
-// How a per-source control NAMES this source: the generated join key
-// (`sourceName`) first, since it is the one thing still unique between two sources
-// an imported spec put on the SAME register_variant — the heading and variant a
-// control used to lean on alone are then identical between them (a2). The
-// heading (+ variant, when named) still rides along for a reader who does not
-// recognise the generated name on its own. Spelled ONCE, because every per-source
-// control interpolates it and two spellings would let one card be named two ways.
-const identifiedName = $derived(
-  `${sourceName} (${heading}${variantName ? `, ${variantName}` : ""})`,
-);
-const removeQuestion = $derived(
-  identified
-    ? `Remove the source ${identifiedName} and its ${columnCount}?`
-    : `Remove this source and its ${columnCount}?`,
-);
-const removeLabel = $derived(
-  identified ? `Remove source ${identifiedName}` : undefined,
-);
-const applyPeriodLabel = $derived(
-  identified ? `Apply period for ${identifiedName}` : undefined,
-);
-/** The year pair's accessible name. Every card contributes a field labelled "From"
- * and one labelled "To"; naming the GROUP per source tells them apart in a flat
- * form-field list without touching the visible labels the fields are named by. */
-const periodGroupLabel = $derived(
-  identified ? `Period for ${identifiedName}` : "Period",
-);
+  // The removal question and the delete button's accessible name are SENTENCES, and
+  // they name this source in words rather than reciting the heading and the line
+  // under it: a heading is layout, copy is prose. A malformed slot, or a source
+  // carrying no coordinate at all, has no words to be named by — the question then
+  // says "this source", which the card around it already places, and the button
+  // keeps its visible text as its whole name.
+  const identified = $derived(!sourceMalformed && registerVariant !== "");
+  const columnCount = $derived(
+    `${bindings.length} column${bindings.length === 1 ? "" : "s"}`,
+  );
+  // How a per-source control NAMES this source: the generated join key
+  // (`sourceName`) first, since it is the one thing still unique between two sources
+  // an imported spec put on the SAME register_variant — the heading and variant a
+  // control used to lean on alone are then identical between them (a2). The
+  // heading (+ variant, when named) still rides along for a reader who does not
+  // recognise the generated name on its own. Spelled ONCE, because every per-source
+  // control interpolates it and two spellings would let one card be named two ways.
+  const identifiedName = $derived(
+    `${sourceName} (${heading}${variantName ? `, ${variantName}` : ""})`,
+  );
+  const removeQuestion = $derived(
+    identified
+      ? `Remove the source ${identifiedName} and its ${columnCount}?`
+      : `Remove this source and its ${columnCount}?`,
+  );
+  const removeLabel = $derived(
+    identified ? `Remove source ${identifiedName}` : undefined,
+  );
+  const applyPeriodLabel = $derived(
+    identified ? `Apply period for ${identifiedName}` : undefined,
+  );
+  /** The year pair's accessible name. Every card contributes a field labelled "From"
+   * and one labelled "To"; naming the GROUP per source tells them apart in a flat
+   * form-field list without touching the visible labels the fields are named by. */
+  const periodGroupLabel = $derived(
+    identified ? `Period for ${identifiedName}` : "Period",
+  );
 
-// Removing a source takes its whole column list with it, and nothing in the cart
-// puts them back (re-picking happens in the catalog), so it ASKS first — naming the
-// register and how many columns go. Removing ONE column doesn't: that's a single
-// row the researcher is pointing at. The shared ConfirmDialog carries the modal
-// semantics, as it does for the project-replacement question in ProjectEditor.
-let removeOpen = $state(false);
-function confirmRemove(): void {
-  removeOpen = false;
-  projectStore.removeSource(sourceIndex);
-}
+  // Removing a source takes its whole column list with it, and nothing in the cart
+  // puts them back (re-picking happens in the catalog), so it ASKS first — naming the
+  // register and how many columns go. Removing ONE column doesn't: that's a single
+  // row the researcher is pointing at. The shared ConfirmDialog carries the modal
+  // semantics, as it does for the project-replacement question in ProjectEditor.
+  let removeOpen = $state(false);
+  function confirmRemove(): void {
+    removeOpen = false;
+    projectStore.removeSource(sourceIndex);
+  }
 </script>
 
 <!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
@@ -530,13 +538,10 @@ function confirmRemove(): void {
     </Button>
   </header>
 
-  <ConfirmDialog
-    bind:open={removeOpen}
-    title={removeQuestion}
-  >
+  <ConfirmDialog bind:open={removeOpen} title={removeQuestion}>
     {#snippet description()}
-      The source leaves this project with every column it carries. Pick them again
-      in the catalog to bring them back.
+      The source leaves this project with every column it carries. Pick them
+      again in the catalog to bring them back.
     {/snippet}
     {#snippet actions()}
       <Button
@@ -682,7 +687,9 @@ function confirmRemove(): void {
       <p
         class="problem"
         class:refused={!applying && entryRefusal !== null}
-        class:applied={!applying && entryRefusal === null && appliedLabel !== null}
+        class:applied={!applying &&
+          entryRefusal === null &&
+          appliedLabel !== null}
         class:info={applying ||
           (entryRefusal === null && appliedLabel === null && unchangedNotice)}
         id="{uid}-problem"
@@ -727,9 +734,9 @@ function confirmRemove(): void {
              shown. -->
         <p class="problem refused">
           <span aria-hidden="true">✕</span>
-          No years inside the study window {yearWindowLabel(studyWindow)}, so the
-          order is blocked. Change the period to overlap the window, or remove the
-          source.
+          No years inside the study window {yearWindowLabel(studyWindow)}, so
+          the order is blocked. Change the period to overlap the window, or
+          remove the source.
         </p>
       {/if}
     </div>
@@ -743,14 +750,20 @@ function confirmRemove(): void {
 
       {#if bindingsMalformed}
         <p class="error" role="alert">
-          This source's <code>bindings</code> are malformed — fix via re-download or hand-edit.
+          This source's <code>bindings</code> are malformed — fix via re-download
+          or hand-edit.
         </p>
       {:else if bindings.length === 0}
         <EmptyState
           title="No columns yet. Browse the catalog to add columns from this register."
         />
       {:else}
-        <ScopedDataWarnings fqid={fqidSegments(registerVariant).slice(0, 2).join("/")} period={periodWire} registerOnly framed={false} />
+        <ScopedDataWarnings
+          fqid={fqidSegments(registerVariant).slice(0, 2).join("/")}
+          period={periodWire}
+          registerOnly
+          framed={false}
+        />
         <ul class="binding-list">
           <!-- Keyed by the store-owned STABLE client id (issue #200), not the index,
                so a middle binding remove remounts the correct BindingEditor instance.
@@ -762,9 +775,9 @@ function confirmRemove(): void {
                    resolves it at this source's coordinate, not the variable's
                    whole history. -->
               <BindingEditor
-                sourceIndex={sourceIndex}
+                {sourceIndex}
                 bindingIndex={j}
-                binding={binding}
+                {binding}
                 variant={variantSlug}
                 period={periodWire}
               />

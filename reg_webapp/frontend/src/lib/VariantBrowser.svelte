@@ -1,92 +1,98 @@
 <script lang="ts">
-import { getShow } from "./api";
-import { asyncResource } from "./async.svelte";
-import { catalogHref } from "./catalog";
-import SubjectView from "./SubjectView.svelte";
-import { Button, EmptyState, KeyValue, type KeyValueRow, Skeleton } from "./ui";
-import { foldVersions, groupVariants, showsDistinctGroup } from "./variants";
+  import { getShow } from "./api";
+  import { asyncResource } from "./async.svelte";
+  import { catalogHref } from "./catalog";
+  import SubjectView from "./SubjectView.svelte";
+  import {
+    Button,
+    EmptyState,
+    KeyValue,
+    type KeyValueRow,
+    Skeleton,
+  } from "./ui";
+  import { foldVersions, groupVariants, showsDistinctGroup } from "./variants";
 
-// The register's variants PAGE (Y-79): `/catalog/<provider>/<register>/variants`,
-// the route behind the register page's compact `VariantsSummary`. The variant
-// axis is a register SUB-RESOURCE (NOT an FQID path segment; see crates/DESIGN.md
-// → Two-level variable model), so it has its own fixed-shape route rather than a
-// catalog node. A5.3a DISPLAYS the variants for a register; the selection + the
-// period/state resolution that consumes `?variant` is A5.3b.
-//
-// Versions are FOLDED (`variants.ts`): SCB delivers one `register_version` per
-// year, so LISA's seven variants carry 105 of them, each repeating the previous
-// one's prose with the year moved on. A run that says the same thing renders as
-// ONE block spanning its years; a changed description, population or object type
-// opens the next block, which is the only part a reader came for.
-//
-// Unlike the register page's summary, this page does NOT hide a `_default`
-// variant (#673/M4): the summary suppresses itself because a `_default`-only
-// register has no variant axis worth a section, but its `register_version` prose
-// is real and this deep-linkable page is the only place it can be read.
-const { registerFqid }: { registerFqid: string } = $props();
+  // The register's variants PAGE (Y-79): `/catalog/<provider>/<register>/variants`,
+  // the route behind the register page's compact `VariantsSummary`. The variant
+  // axis is a register SUB-RESOURCE (NOT an FQID path segment; see crates/DESIGN.md
+  // → Two-level variable model), so it has its own fixed-shape route rather than a
+  // catalog node. A5.3a DISPLAYS the variants for a register; the selection + the
+  // period/state resolution that consumes `?variant` is A5.3b.
+  //
+  // Versions are FOLDED (`variants.ts`): SCB delivers one `register_version` per
+  // year, so LISA's seven variants carry 105 of them, each repeating the previous
+  // one's prose with the year moved on. A run that says the same thing renders as
+  // ONE block spanning its years; a changed description, population or object type
+  // opens the next block, which is the only part a reader came for.
+  //
+  // Unlike the register page's summary, this page does NOT hide a `_default`
+  // variant (#673/M4): the summary suppresses itself because a `_default`-only
+  // register has no variant axis worth a section, but its `register_version` prose
+  // is real and this deep-linkable page is the only place it can be read.
+  const { registerFqid }: { registerFqid: string } = $props();
 
-// The variants ride the register's `show` node; a ref that is not a register has
-// none.
-const variants = asyncResource(() => getShow(registerFqid));
-// Fold in the derived, not in the template: `foldKey` stringifies every version
-// body, so folding under `{#each}` would re-walk the whole wall on each render.
-const entries = $derived(
-  groupVariants(
-    variants.data?.kind === "register" ? variants.data.variants : [],
-  ).map((group) => ({
-    ...group,
-    segments: group.segments.map((segment) => ({
-      ...segment,
-      blocks: foldVersions(segment.variant.versions ?? []),
+  // The variants ride the register's `show` node; a ref that is not a register has
+  // none.
+  const variants = asyncResource(() => getShow(registerFqid));
+  // Fold in the derived, not in the template: `foldKey` stringifies every version
+  // body, so folding under `{#each}` would re-walk the whole wall on each render.
+  const entries = $derived(
+    groupVariants(
+      variants.data?.kind === "register" ? variants.data.variants : [],
+    ).map((group) => ({
+      ...group,
+      segments: group.segments.map((segment) => ({
+        ...segment,
+        blocks: foldVersions(segment.variant.versions ?? []),
+      })),
     })),
-  })),
-);
-
-function rows(...rows: KeyValueRow[]): KeyValueRow[] {
-  return rows.filter((row) => row.value);
-}
-
-function versionRows(version: {
-  description?: string | null;
-  measurement_information?: string | null;
-}): KeyValueRow[] {
-  return rows(
-    { label: "Description", value: version.description ?? undefined },
-    {
-      label: "Measurement",
-      value: version.measurement_information ?? undefined,
-    },
   );
-}
 
-function populationRows(population: {
-  name: string;
-  definition?: string | null;
-  comment?: string | null;
-  date_range?: string | null;
-}): KeyValueRow[] {
-  return rows(
-    { label: "Name", value: population.name },
-    { label: "Definition", value: population.definition ?? undefined },
-    { label: "Comment", value: population.comment ?? undefined },
-    // A bare delivery year — mono, like every other year on the page.
-    {
-      label: "Date range",
-      value: population.date_range ?? undefined,
-      mono: true,
-    },
-  );
-}
+  function rows(...rows: KeyValueRow[]): KeyValueRow[] {
+    return rows.filter((row) => row.value);
+  }
 
-function objectTypeRows(objectType: {
-  name: string;
-  definition?: string | null;
-}): KeyValueRow[] {
-  return rows(
-    { label: "Name", value: objectType.name },
-    { label: "Definition", value: objectType.definition ?? undefined },
-  );
-}
+  function versionRows(version: {
+    description?: string | null;
+    measurement_information?: string | null;
+  }): KeyValueRow[] {
+    return rows(
+      { label: "Description", value: version.description ?? undefined },
+      {
+        label: "Measurement",
+        value: version.measurement_information ?? undefined,
+      },
+    );
+  }
+
+  function populationRows(population: {
+    name: string;
+    definition?: string | null;
+    comment?: string | null;
+    date_range?: string | null;
+  }): KeyValueRow[] {
+    return rows(
+      { label: "Name", value: population.name },
+      { label: "Definition", value: population.definition ?? undefined },
+      { label: "Comment", value: population.comment ?? undefined },
+      // A bare delivery year — mono, like every other year on the page.
+      {
+        label: "Date range",
+        value: population.date_range ?? undefined,
+        mono: true,
+      },
+    );
+  }
+
+  function objectTypeRows(objectType: {
+    name: string;
+    definition?: string | null;
+  }): KeyValueRow[] {
+    return rows(
+      { label: "Name", value: objectType.name },
+      { label: "Definition", value: objectType.definition ?? undefined },
+    );
+  }
 </script>
 
 <!-- The page rides `SubjectView` for the article wrapper + title/fqid header
@@ -160,7 +166,8 @@ function objectTypeRows(objectType: {
                     <!-- The block spans years but prints ONE delivery's text
                          verbatim (years inside it included), so name which. -->
                     <p class="as-delivered muted">
-                      Wording as delivered for <code>{block.version.name}</code>.
+                      Wording as delivered for <code>{block.version.name}</code
+                      >.
                     </p>
                   {/if}
                   {#if vRows.length > 0}

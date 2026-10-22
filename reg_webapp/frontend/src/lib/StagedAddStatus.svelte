@@ -1,26 +1,26 @@
 <script lang="ts">
-import { type StagedApplyOutcome, stagedDiffSummary } from "./staged_picker";
+  import { type StagedApplyOutcome, stagedDiffSummary } from "./staged_picker";
 
-// The one line a catalog page says after an Apply: the REFUSAL when the batch was
-// declined whole and nothing was authored, else the CONFIRMATION of what was
-// committed. One component because all three authoring pages (binding leaf, concept
-// group, register list) say it, and a third copy of the markup + tint is exactly the
-// leaf-duplication AGENTS.md names.
+  // The one line a catalog page says after an Apply: the REFUSAL when the batch was
+  // declined whole and nothing was authored, else the CONFIRMATION of what was
+  // committed. One component because all three authoring pages (binding leaf, concept
+  // group, register list) say it, and a third copy of the markup + tint is exactly the
+  // leaf-duplication AGENTS.md names.
 
-let {
-  outcome = null,
-  blocked = null,
-}: {
-  /** What the last Apply committed, or null (nothing applied yet / cleared). */
-  outcome?: StagedApplyOutcome | null;
-  /** The refusal copy when an Apply was declined whole and nothing was authored,
-   * else null. The page passes its own wording: it knows which gate refused and
-   * which of ITS controls the researcher can reach for. A refusal wins over a stale
-   * confirmation. */
-  blocked?: string | null;
-} = $props();
+  let {
+    outcome = null,
+    blocked = null,
+  }: {
+    /** What the last Apply committed, or null (nothing applied yet / cleared). */
+    outcome?: StagedApplyOutcome | null;
+    /** The refusal copy when an Apply was declined whole and nothing was authored,
+     * else null. The page passes its own wording: it knows which gate refused and
+     * which of ITS controls the researcher can reach for. A refusal wins over a stale
+     * confirmation. */
+    blocked?: string | null;
+  } = $props();
 
-const applied = $derived(outcome === null ? "" : stagedDiffSummary(outcome));
+  const applied = $derived(outcome === null ? "" : stagedDiffSummary(outcome));
 </script>
 
 {#if blocked}

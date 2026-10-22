@@ -1,40 +1,40 @@
 <script lang="ts">
-import { AlertDialog } from "bits-ui";
-import type { Snippet } from "svelte";
+  import { AlertDialog } from "bits-ui";
+  import type { Snippet } from "svelte";
 
-// The shared confirmation dialog (#804). Behavior + a11y come from Bits UI's
-// headless `AlertDialog`: role="alertdialog", the title/description wiring, the
-// focus trap and the return of focus to whatever was focused when it opened. We
-// only own the chrome and the action row.
-//
-// `interactOutsideBehavior` is left at its "ignore" default, which is right for
-// every question worth asking: a stray click on the scrim must not answer one.
-// Escape and the caller's Cancel button are the ways out.
-//
-// Bits UI PORTALS the overlay and content to <body>, so their classes land outside
-// this component's scoped CSS — they are styled through `:global`, namespaced
-// `ui-dialog*` the way `Button.svelte` namespaces `.ui-btn`.
+  // The shared confirmation dialog (#804). Behavior + a11y come from Bits UI's
+  // headless `AlertDialog`: role="alertdialog", the title/description wiring, the
+  // focus trap and the return of focus to whatever was focused when it opened. We
+  // only own the chrome and the action row.
+  //
+  // `interactOutsideBehavior` is left at its "ignore" default, which is right for
+  // every question worth asking: a stray click on the scrim must not answer one.
+  // Escape and the caller's Cancel button are the ways out.
+  //
+  // Bits UI PORTALS the overlay and content to <body>, so their classes land outside
+  // this component's scoped CSS — they are styled through `:global`, namespaced
+  // `ui-dialog*` the way `Button.svelte` namespaces `.ui-btn`.
 
-interface Props {
-  /** Bindable for a caller that owns the flag; a caller whose truth lives
-   *  elsewhere (a store) passes a one-way `open` plus `onOpenChange`. */
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  /** The question, as a heading. */
-  title: string;
-  /** What answering it costs. */
-  description: Snippet;
-  /** The answers, right-aligned — Cancel first, the destructive one last. */
-  actions: Snippet;
-}
+  interface Props {
+    /** Bindable for a caller that owns the flag; a caller whose truth lives
+     *  elsewhere (a store) passes a one-way `open` plus `onOpenChange`. */
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    /** The question, as a heading. */
+    title: string;
+    /** What answering it costs. */
+    description: Snippet;
+    /** The answers, right-aligned — Cancel first, the destructive one last. */
+    actions: Snippet;
+  }
 
-let {
-  open = $bindable(false),
-  onOpenChange,
-  title,
-  description,
-  actions,
-}: Props = $props();
+  let {
+    open = $bindable(false),
+    onOpenChange,
+    title,
+    description,
+    actions,
+  }: Props = $props();
 </script>
 
 <AlertDialog.Root bind:open {onOpenChange}>

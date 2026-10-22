@@ -11,9 +11,9 @@ import type {
   VariableStateModel,
 } from "./api";
 import { registerShow, rootShow, stubApi } from "./api-test-helpers";
+import { storedProject } from "./project-store-test-helpers";
 import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
-import { storedProject } from "./project-store-test-helpers";
 import SourceEditor from "./SourceEditor.svelte";
 import { variant } from "./variants-test-helpers";
 

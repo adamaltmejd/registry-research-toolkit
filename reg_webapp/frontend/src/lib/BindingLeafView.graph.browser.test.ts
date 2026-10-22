@@ -3,7 +3,6 @@ import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import type { GraphState, RelationshipGraph, VariableGraphNode } from "./api";
 import { getGraph } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   node,
@@ -12,6 +11,7 @@ import {
   single,
   state,
 } from "./binding-leaf-view-test-helpers";
+import BindingLeafView from "./BindingLeafView.svelte";
 
 // Split from BindingLeafView.browser.test.ts by contract surface: picker graph mounting and graph-focus member identity.
 // Siblings: BindingLeafView{,.graph,.rows,.technical-details,.provenance,.period}.browser.test.ts.

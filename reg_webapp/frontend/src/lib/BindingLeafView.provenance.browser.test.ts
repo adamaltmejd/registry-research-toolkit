@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { getRelatedDocuments } from "./api";
-import BindingLeafView from "./BindingLeafView.svelte";
 import { leaf, resetLeaf, SEED, state } from "./binding-leaf-view-test-helpers";
+import BindingLeafView from "./BindingLeafView.svelte";
 
 // Split from BindingLeafView.browser.test.ts by contract surface: inferred gap
 // attribution and curated matrix-answer sources.

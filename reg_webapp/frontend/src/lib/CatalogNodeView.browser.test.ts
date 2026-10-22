@@ -19,8 +19,8 @@ import {
   getValues,
 } from "./api";
 import { registerShow } from "./api-test-helpers";
-import CatalogNodeView from "./CatalogNodeView.svelte";
 import { variableChild } from "./catalog-node-view-test-helpers";
+import CatalogNodeView from "./CatalogNodeView.svelte";
 import { projectStore } from "./project_store.svelte";
 import { variant } from "./variants-test-helpers";
 import { windowStore } from "./window.svelte";

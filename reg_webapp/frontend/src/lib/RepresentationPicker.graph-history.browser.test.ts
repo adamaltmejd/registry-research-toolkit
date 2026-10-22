@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import RepresentationPicker, {
-  type PickerBand,
-} from "./RepresentationPicker.svelte";
 import {
   edge,
   graph,
@@ -12,6 +9,9 @@ import {
   PROPS,
   row,
 } from "./representation-picker-test-helpers";
+import RepresentationPicker, {
+  type PickerBand,
+} from "./RepresentationPicker.svelte";
 
 // Split from RepresentationPicker.browser.test.ts by contract surface: graph succession history, renamed lanes and folded variant families.
 // Siblings: RepresentationPicker.{graph,graph-fallback,graph-history,labels,filters,staging,row-identity}.browser.test.ts.

@@ -1,236 +1,250 @@
 <script lang="ts">
-import { Tabs } from "bits-ui";
-import {
-  type ClassificationGraphNode,
-  type ClassificationShow,
-  type ClassificationSubjectShow,
-  type ConceptGroupMember,
-  classificationGroupRef,
-  type FamilyEdition,
-  getGraph,
-  getShow,
-  type RelationshipGraph,
-} from "./api";
-import { asyncResource } from "./async.svelte";
-import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
-import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
-import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
-import { catalogHref, leafSlug } from "./catalog";
-import { classificationGraphHasRenderableSuccession } from "./picker_graph";
-import { router } from "./router.svelte";
-import SubjectView from "./SubjectView.svelte";
-import TechnicalDetails from "./TechnicalDetails.svelte";
+  import { Tabs } from "bits-ui";
+  import {
+    type ClassificationGraphNode,
+    type ClassificationShow,
+    type ClassificationSubjectShow,
+    type ConceptGroupMember,
+    classificationGroupRef,
+    type FamilyEdition,
+    getGraph,
+    getShow,
+    type RelationshipGraph,
+  } from "./api";
+  import { asyncResource } from "./async.svelte";
+  import { catalogHref, leafSlug } from "./catalog";
+  import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
+  import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
+  import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
+  import { classificationGraphHasRenderableSuccession } from "./picker_graph";
+  import { router } from "./router.svelte";
+  import SubjectView from "./SubjectView.svelte";
+  import TechnicalDetails from "./TechnicalDetails.svelte";
 
-// The classification-umbrella SUBJECT page (#756): fetches a classification
-// umbrella by key and renders its members + facets. The classification sibling of
-// ConceptGroupView, but MUCH thinner — a classification umbrella is catalog-global
-// (no provider/register), its members carry no coverage, and classifications have
-// no year-grain study window, so there is NO period picker, NO availability lens,
-// NO coverage greying. It gives the umbrella group (e.g. the SUN umbrella, key
-// `sun`) a first-class subject page like the register groups have, instead of the
-// inline <details> fold the classification-root browse used before (#673 → #756).
-//
-// Renders through the unified SubjectView shell (#638 PR1), same as the register
-// group + the leaves: a `description` (a Technical details disclosure holding
-// key/axes/source) and a `picker` (the member selector — member chips, each
-// labelled by the member's own curated short facet label; classification umbrellas
-// are axis-less, so there is no shared group facet axis). The loading / error arms
-// stay OUTSIDE the shell (the shell is the success body). Identity is carried by the
-// #803 topbar trail + the page <h2> (SubjectView title), not an in-page breadcrumb.
-interface Props {
-  key: string;
-  activeFqid?: string | null;
-  initialActiveNode?: ClassificationShow | null;
-}
-
-let { key, activeFqid = null, initialActiveNode = null }: Props = $props();
-
-const resource = asyncResource(async (): Promise<ClassificationSubjectShow> => {
-  const ref = classificationGroupRef(key);
-  const shown = await getShow(ref);
-  if (
-    shown.kind !== "classification_group" &&
-    shown.kind !== "classification_family"
-  ) {
-    throw new Error(`${ref} did not resolve to a classification group`);
+  // The classification-umbrella SUBJECT page (#756): fetches a classification
+  // umbrella by key and renders its members + facets. The classification sibling of
+  // ConceptGroupView, but MUCH thinner — a classification umbrella is catalog-global
+  // (no provider/register), its members carry no coverage, and classifications have
+  // no year-grain study window, so there is NO period picker, NO availability lens,
+  // NO coverage greying. It gives the umbrella group (e.g. the SUN umbrella, key
+  // `sun`) a first-class subject page like the register groups have, instead of the
+  // inline <details> fold the classification-root browse used before (#673 → #756).
+  //
+  // Renders through the unified SubjectView shell (#638 PR1), same as the register
+  // group + the leaves: a `description` (a Technical details disclosure holding
+  // key/axes/source) and a `picker` (the member selector — member chips, each
+  // labelled by the member's own curated short facet label; classification umbrellas
+  // are axis-less, so there is no shared group facet axis). The loading / error arms
+  // stay OUTSIDE the shell (the shell is the success body). Identity is carried by the
+  // #803 topbar trail + the page <h2> (SubjectView title), not an in-page breadcrumb.
+  interface Props {
+    key: string;
+    activeFqid?: string | null;
+    initialActiveNode?: ClassificationShow | null;
   }
-  return shown;
-});
-const node = $derived(resource.data);
-const EMPTY_GRAPH: RelationshipGraph = { nodes: [], edges: [], focus_id: null };
-// Classification umbrella pages consume the same relationship-graph contract as
-// classification leaves (#757/#761), but read-only: editions navigate to their leaf
-// pages; there is no add-to-project picker for classifications.
-const graphResource = asyncResource(() => {
-  const activeKey = key;
-  return node != null
-    ? getGraph(classificationGroupRef(activeKey))
-    : Promise.resolve(EMPTY_GRAPH);
-});
-const graph = $derived(graphResource.data);
-const graphReady = $derived(
-  !graphResource.loading && !graphResource.error && graph != null,
-);
 
-interface EditionTab {
-  value: string;
-  fqid: string;
-  label: string;
-  name: string;
-  meta: string;
-  versionYear: number | null;
-  isCurrent: boolean;
-}
+  let { key, activeFqid = null, initialActiveNode = null }: Props = $props();
 
-/** A member's display label: its own curated short facet label (umbrellas are
- * axis-less — each member carries its own picker label, with no shared group
- * axis), falling back to the member name, then its leaf slug. */
-function memberLabel(member: ConceptGroupMember): string {
-  return member.facets[0]?.label ?? member.name ?? leafSlug(member.fqid);
-}
-
-function editionLabel(edition: FamilyEdition): string {
-  return edition.name ?? edition.slug;
-}
-
-function graphNodeForFqid(fqid: string | null): ClassificationGraphNode | null {
-  if (fqid == null || graph == null) {
-    return null;
-  }
-  return (
-    graph.nodes.find(
-      (item): item is ClassificationGraphNode =>
-        item.kind === "classification" && item.fqid === fqid,
-    ) ?? null
+  const resource = asyncResource(
+    async (): Promise<ClassificationSubjectShow> => {
+      const ref = classificationGroupRef(key);
+      const shown = await getShow(ref);
+      if (
+        shown.kind !== "classification_group" &&
+        shown.kind !== "classification_family"
+      ) {
+        throw new Error(`${ref} did not resolve to a classification group`);
+      }
+      return shown;
+    },
   );
-}
-
-function memberTab(member: ConceptGroupMember): EditionTab {
-  const point = graphNodeForFqid(member.fqid);
-  return {
-    value: member.fqid,
-    fqid: member.fqid,
-    label: memberLabel(member),
-    name: member.name ?? member.fqid,
-    meta: leafSlug(member.fqid),
-    versionYear: point?.version_year ?? null,
-    isCurrent: point?.is_current ?? false,
+  const node = $derived(resource.data);
+  const EMPTY_GRAPH: RelationshipGraph = {
+    nodes: [],
+    edges: [],
+    focus_id: null,
   };
-}
+  // Classification umbrella pages consume the same relationship-graph contract as
+  // classification leaves (#757/#761), but read-only: editions navigate to their leaf
+  // pages; there is no add-to-project picker for classifications.
+  const graphResource = asyncResource(() => {
+    const activeKey = key;
+    return node != null
+      ? getGraph(classificationGroupRef(activeKey))
+      : Promise.resolve(EMPTY_GRAPH);
+  });
+  const graph = $derived(graphResource.data);
+  const graphReady = $derived(
+    !graphResource.loading && !graphResource.error && graph != null,
+  );
 
-function familyTab(edition: FamilyEdition): EditionTab {
-  return {
-    value: edition.fqid,
-    fqid: edition.fqid,
-    label: editionLabel(edition),
-    name: edition.name ?? edition.slug,
-    meta: `${edition.slug}${edition.is_current ? " - current" : ""}`,
-    versionYear: edition.version_year ?? null,
-    isCurrent: edition.is_current,
-  };
-}
-
-const tabs = $derived.by((): EditionTab[] => {
-  if (node?.kind === "classification_family") {
-    return node.editions.map(familyTab);
+  interface EditionTab {
+    value: string;
+    fqid: string;
+    label: string;
+    name: string;
+    meta: string;
+    versionYear: number | null;
+    isCurrent: boolean;
   }
-  if (node?.kind === "classification_group") {
-    return node.members.map(memberTab);
-  }
-  return [];
-});
-const expectsEditionGraph = $derived(
-  tabs.length > 1 || (initialActiveNode?.family?.editions.length ?? 0) > 1,
-);
 
-function latestTabFqid(tabList: EditionTab[]): string | null {
-  let best: EditionTab | null = null;
-  for (const tab of tabList) {
-    if (best == null) {
-      best = tab;
-      continue;
+  /** A member's display label: its own curated short facet label (umbrellas are
+   * axis-less — each member carries its own picker label, with no shared group
+   * axis), falling back to the member name, then its leaf slug. */
+  function memberLabel(member: ConceptGroupMember): string {
+    return member.facets[0]?.label ?? member.name ?? leafSlug(member.fqid);
+  }
+
+  function editionLabel(edition: FamilyEdition): string {
+    return edition.name ?? edition.slug;
+  }
+
+  function graphNodeForFqid(
+    fqid: string | null,
+  ): ClassificationGraphNode | null {
+    if (fqid == null || graph == null) {
+      return null;
     }
-    if (tab.isCurrent !== best.isCurrent) {
-      if (tab.isCurrent) {
+    return (
+      graph.nodes.find(
+        (item): item is ClassificationGraphNode =>
+          item.kind === "classification" && item.fqid === fqid,
+      ) ?? null
+    );
+  }
+
+  function memberTab(member: ConceptGroupMember): EditionTab {
+    const point = graphNodeForFqid(member.fqid);
+    return {
+      value: member.fqid,
+      fqid: member.fqid,
+      label: memberLabel(member),
+      name: member.name ?? member.fqid,
+      meta: leafSlug(member.fqid),
+      versionYear: point?.version_year ?? null,
+      isCurrent: point?.is_current ?? false,
+    };
+  }
+
+  function familyTab(edition: FamilyEdition): EditionTab {
+    return {
+      value: edition.fqid,
+      fqid: edition.fqid,
+      label: editionLabel(edition),
+      name: edition.name ?? edition.slug,
+      meta: `${edition.slug}${edition.is_current ? " - current" : ""}`,
+      versionYear: edition.version_year ?? null,
+      isCurrent: edition.is_current,
+    };
+  }
+
+  const tabs = $derived.by((): EditionTab[] => {
+    if (node?.kind === "classification_family") {
+      return node.editions.map(familyTab);
+    }
+    if (node?.kind === "classification_group") {
+      return node.members.map(memberTab);
+    }
+    return [];
+  });
+  const expectsEditionGraph = $derived(
+    tabs.length > 1 || (initialActiveNode?.family?.editions.length ?? 0) > 1,
+  );
+
+  function latestTabFqid(tabList: EditionTab[]): string | null {
+    let best: EditionTab | null = null;
+    for (const tab of tabList) {
+      if (best == null) {
+        best = tab;
+        continue;
+      }
+      if (tab.isCurrent !== best.isCurrent) {
+        if (tab.isCurrent) {
+          best = tab;
+        }
+        continue;
+      }
+      const tabYear = tab.versionYear ?? Number.NEGATIVE_INFINITY;
+      const bestYear = best.versionYear ?? Number.NEGATIVE_INFINITY;
+      if (tabYear > bestYear) {
         best = tab;
       }
-      continue;
     }
-    const tabYear = tab.versionYear ?? Number.NEGATIVE_INFINITY;
-    const bestYear = best.versionYear ?? Number.NEGATIVE_INFINITY;
-    if (tabYear > bestYear) {
-      best = tab;
+    return best?.fqid ?? null;
+  }
+
+  let selectedFqid = $state<string | null>(null);
+  const tabSelectionReady = $derived(
+    node?.kind !== "classification_group" || !graphResource.loading,
+  );
+
+  $effect(() => {
+    const requested =
+      activeFqid != null && tabs.some((tab) => tab.fqid === activeFqid)
+        ? activeFqid
+        : null;
+    if (requested != null) {
+      selectedFqid = requested;
+      return;
     }
-  }
-  return best?.fqid ?? null;
-}
+    if (!tabSelectionReady) {
+      return;
+    }
+    if (
+      selectedFqid == null ||
+      !tabs.some((tab) => tab.fqid === selectedFqid)
+    ) {
+      selectedFqid = latestTabFqid(tabs);
+    }
+  });
 
-let selectedFqid = $state<string | null>(null);
-const tabSelectionReady = $derived(
-  node?.kind !== "classification_group" || !graphResource.loading,
-);
+  const activeNodeResource = asyncResource(async () => {
+    const fqid = selectedFqid;
+    if (fqid == null) {
+      return null;
+    }
+    if (initialActiveNode?.fqid === fqid) {
+      return initialActiveNode;
+    }
+    const resolved = await getShow(fqid);
+    if (resolved.kind !== "classification") {
+      throw new Error(`${fqid} did not resolve to a classification`);
+    }
+    return resolved;
+  });
+  const activeNode = $derived(activeNodeResource.data);
+  const focusedGraph = $derived.by((): RelationshipGraph | null => {
+    if (graph == null || selectedFqid == null) {
+      return graph;
+    }
+    const focus = graphNodeForFqid(selectedFqid);
+    return focus == null ? graph : { ...graph, focus_id: focus.id };
+  });
+  const graphRenderable = $derived(
+    graphReady &&
+      focusedGraph != null &&
+      classificationGraphHasRenderableSuccession(focusedGraph),
+  );
+  const reserveEditionGraph = $derived(
+    expectsEditionGraph && (graphResource.loading || graphRenderable),
+  );
 
-$effect(() => {
-  const requested =
-    activeFqid != null && tabs.some((tab) => tab.fqid === activeFqid)
-      ? activeFqid
-      : null;
-  if (requested != null) {
-    selectedFqid = requested;
-    return;
+  function selectEdition(value: string): void {
+    const tab = tabs.find((item) => item.value === value);
+    if (tab == null) {
+      return;
+    }
+    selectedFqid = tab.fqid;
+    router.navigate(catalogHref(tab.fqid));
   }
-  if (!tabSelectionReady) {
-    return;
-  }
-  if (selectedFqid == null || !tabs.some((tab) => tab.fqid === selectedFqid)) {
-    selectedFqid = latestTabFqid(tabs);
-  }
-});
-
-const activeNodeResource = asyncResource(async () => {
-  const fqid = selectedFqid;
-  if (fqid == null) {
-    return null;
-  }
-  if (initialActiveNode?.fqid === fqid) {
-    return initialActiveNode;
-  }
-  const resolved = await getShow(fqid);
-  if (resolved.kind !== "classification") {
-    throw new Error(`${fqid} did not resolve to a classification`);
-  }
-  return resolved;
-});
-const activeNode = $derived(activeNodeResource.data);
-const focusedGraph = $derived.by((): RelationshipGraph | null => {
-  if (graph == null || selectedFqid == null) {
-    return graph;
-  }
-  const focus = graphNodeForFqid(selectedFqid);
-  return focus == null ? graph : { ...graph, focus_id: focus.id };
-});
-const graphRenderable = $derived(
-  graphReady &&
-    focusedGraph != null &&
-    classificationGraphHasRenderableSuccession(focusedGraph),
-);
-const reserveEditionGraph = $derived(
-  expectsEditionGraph && (graphResource.loading || graphRenderable),
-);
-
-function selectEdition(value: string): void {
-  const tab = tabs.find((item) => item.value === value);
-  if (tab == null) {
-    return;
-  }
-  selectedFqid = tab.fqid;
-  router.navigate(catalogHref(tab.fqid));
-}
 </script>
 
 {#snippet valueSet()}
   {#if tabs.length > 0 && selectedFqid != null}
-    <section class="edition-tabs-section" aria-labelledby="edition-tabs-heading">
+    <section
+      class="edition-tabs-section"
+      aria-labelledby="edition-tabs-heading"
+    >
       <h3 id="edition-tabs-heading">Value set</h3>
       <div class="edition-tabs">
         <Tabs.Root
@@ -239,7 +253,10 @@ function selectEdition(value: string): void {
           activationMode="manual"
           loop
         >
-          <Tabs.List class="edition-tab-list" aria-label="Classification editions">
+          <Tabs.List
+            class="edition-tab-list"
+            aria-label="Classification editions"
+          >
             {#each tabs as tab (tab.value)}
               <Tabs.Trigger
                 value={tab.value}
@@ -306,7 +323,7 @@ function selectEdition(value: string): void {
       title={node.label}
       {description}
       {picker}
-      valueSet={valueSet}
+      {valueSet}
       {relationships}
     />
   </div>
@@ -335,7 +352,7 @@ function selectEdition(value: string): void {
       title={`Classification group: ${node.label}`}
       {description}
       {picker}
-      valueSet={valueSet}
+      {valueSet}
       {relationships}
     />
   </div>

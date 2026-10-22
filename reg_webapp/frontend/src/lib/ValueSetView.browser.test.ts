@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { getValues } from "./api";
-import ValueSetView from "./ValueSetView.svelte";
 import {
   classState,
   coding,
@@ -12,6 +11,7 @@ import {
   serveValues,
   state,
 } from "./value-set-view-test-helpers";
+import ValueSetView from "./ValueSetView.svelte";
 
 // The pure value-set / coding viewer (#905 — extracted from the retired StatesView,
 // #668 dogfooding M13/M18/M20). The kommun shape blows up by VINTAGE (415 states);

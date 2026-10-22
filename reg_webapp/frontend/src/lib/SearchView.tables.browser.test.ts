@@ -1,9 +1,16 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { search } from "./api";
-import SearchView from "./SearchView.svelte";
 import { mockSearch, type Pages, setQuery } from "./search-view-test-helpers";
+import SearchView from "./SearchView.svelte";
 
 // Split from SearchView.browser.test.ts by contract surface:
 // compact per-type tables. Siblings: SearchView.*.browser.test.ts.

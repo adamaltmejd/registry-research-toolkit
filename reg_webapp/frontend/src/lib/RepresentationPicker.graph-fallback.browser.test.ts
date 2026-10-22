@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
-import RepresentationPicker, {
-  type PickerBand,
-} from "./RepresentationPicker.svelte";
 import {
   clickFilter,
   edge,
@@ -14,6 +11,9 @@ import {
   row,
   visibleColumns,
 } from "./representation-picker-test-helpers";
+import RepresentationPicker, {
+  type PickerBand,
+} from "./RepresentationPicker.svelte";
 
 // Split from RepresentationPicker.browser.test.ts by contract surface: when graph mode falls back to the compact list.
 // Siblings: RepresentationPicker.{graph,graph-fallback,graph-history,labels,filters,staging,row-identity}.browser.test.ts.

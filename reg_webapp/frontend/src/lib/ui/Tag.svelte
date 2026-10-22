@@ -1,41 +1,42 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
-import type { PlainTone, StatusTone } from "./types";
+  import type { Snippet } from "svelte";
+  import type { PlainTone, StatusTone } from "./types";
 
-// A small inline label (#804). One component, `tone`-driven, covering the three
-// disjoint color sub-systems (DESIGN.md → Color): brand chrome (neutral/accent),
-// the categorical TYPE palette (reg/var/code/class/group → --cat-*), and the
-// status set (error/warn/info/ok → status fg over its *-bg fill).
-//
-// Status tones pair with a GLYPH, never hue alone (the accent-vs-status rule):
-// status callers MUST pass a leading-glyph snippet (✕ ▲ i ✓ — see DESIGN.md).
-// The component can't synthesize one (the glyph is caller-domain), so it just
-// renders the slot ahead of the label; categorical/chrome tones omit it. The
-// `Props` union makes `glyph` REQUIRED at the type level for a status `tone` and
-// optional otherwise, so a color-only status tag won't compile.
-//
-// a11y: status meaning must ALSO be carried by the label text or surrounding
-// context — the tone (color) and the glyph (`aria-hidden`) are visual-only, so an
-// assistive-tech user gets only the label.
-//
-// The base is copy-faced (frontend/DESIGN.md binds the tag primitive to UI copy): a
-// tag label is a word of UI text. `mono` opts a tag into --font-mono for the
-// exception, an identifier shown as a tag.
-// A single component (not a separate Badge): a count/status pill and a type tag
-// differ only by tone + glyph, so a `tone` prop spans both with no semantic split.
+  // A small inline label (#804). One component, `tone`-driven, covering the three
+  // disjoint color sub-systems (DESIGN.md → Color): brand chrome (neutral/accent),
+  // the categorical TYPE palette (reg/var/code/class/group → --cat-*), and the
+  // status set (error/warn/info/ok → status fg over its *-bg fill).
+  //
+  // Status tones pair with a GLYPH, never hue alone (the accent-vs-status rule):
+  // status callers MUST pass a leading-glyph snippet (✕ ▲ i ✓ — see DESIGN.md).
+  // The component can't synthesize one (the glyph is caller-domain), so it just
+  // renders the slot ahead of the label; categorical/chrome tones omit it. The
+  // `Props` union makes `glyph` REQUIRED at the type level for a status `tone` and
+  // optional otherwise, so a color-only status tag won't compile.
+  //
+  // a11y: status meaning must ALSO be carried by the label text or surrounding
+  // context — the tone (color) and the glyph (`aria-hidden`) are visual-only, so an
+  // assistive-tech user gets only the label.
+  //
+  // The base is copy-faced (frontend/DESIGN.md binds the tag primitive to UI copy): a
+  // tag label is a word of UI text. `mono` opts a tag into --font-mono for the
+  // exception, an identifier shown as a tag.
+  // A single component (not a separate Badge): a count/status pill and a type tag
+  // differ only by tone + glyph, so a `tone` prop spans both with no semantic split.
 
-// Discriminated on `tone`: a status tone REQUIRES `glyph`, a plain tone makes it
-// optional. `tone` defaults to "neutral" (a plain tone) when omitted.
-type Props = { mono?: boolean; children: Snippet } & (
-  | { tone?: PlainTone; glyph?: Snippet }
-  | { tone: StatusTone; glyph: Snippet }
-);
+  // Discriminated on `tone`: a status tone REQUIRES `glyph`, a plain tone makes it
+  // optional. `tone` defaults to "neutral" (a plain tone) when omitted.
+  type Props = { mono?: boolean; children: Snippet } & (
+    | { tone?: PlainTone; glyph?: Snippet }
+    | { tone: StatusTone; glyph: Snippet }
+  );
 
-let { tone = "neutral", mono = false, glyph, children }: Props = $props();
+  let { tone = "neutral", mono = false, glyph, children }: Props = $props();
 </script>
 
 <span class="tag tone-{tone}" class:mono>
-  {#if glyph}<span class="glyph" aria-hidden="true">{@render glyph()}</span>{/if}
+  {#if glyph}<span class="glyph" aria-hidden="true">{@render glyph()}</span
+    >{/if}
   <span class="label">{@render children()}</span>
 </span>
 

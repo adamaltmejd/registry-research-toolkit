@@ -1,10 +1,17 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
 import { render } from "vitest-browser-svelte";
 import { search } from "./api";
 import { router } from "./router.svelte";
-import SearchView from "./SearchView.svelte";
 import { mockSearch, setQuery } from "./search-view-test-helpers";
+import SearchView from "./SearchView.svelte";
 
 // Stub the search GET the view drives; keep the rest of api.ts real (the type
 // exports). SearchView reads `?q=` off the `router` singleton, so each case sets
