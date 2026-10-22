@@ -5,3 +5,4 @@ variants = ["vgr/primarvard/_default"]
 [[table]]
 table = "SWECOV_PRIMARY_CARE_VGR_PV"
 edition = { from = 2015, to = 2023 }
+period_column = { name = "year", encoding = "year" }

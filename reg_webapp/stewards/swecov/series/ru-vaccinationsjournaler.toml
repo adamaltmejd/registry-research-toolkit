@@ -5,3 +5,4 @@ variants = ["region-uppsala/pandemrix-vaccinationer/_default"]
 [[table]]
 table = "RU_Vaccinationsjournaler"
 edition = { from = 2009, to = 2010 }
+period_column = { name = "Vaccinationsdatum", encoding = "date" }

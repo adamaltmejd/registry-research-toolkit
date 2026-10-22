@@ -5,6 +5,7 @@ variants = ["fohm/nvr/_default"]
 [[table]]
 table = "FHM_NVR_Barn"
 edition = { from = 2013, to = 2024 }
+period_column = { name = "vaccination_date", encoding = "date" }
 partition = "barnvaccin"
 
 [[column]]

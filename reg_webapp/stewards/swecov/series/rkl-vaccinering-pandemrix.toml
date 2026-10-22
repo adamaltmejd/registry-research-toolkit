@@ -5,3 +5,4 @@ variants = ["region-kalmar/pandemrix-vaccinationer/_default"]
 [[table]]
 table = "RKL_Vaccinering_Pandemrix"
 edition = { from = 2009, to = 2010 }
+period_column = { name = "VACCINE_DATE", encoding = "date" }

@@ -5,6 +5,7 @@ variants = ["sos/sol/sol"]
 [[table]]
 table = "SWECOV_SOS_SOL"
 edition = { from = 2018, to = 2023 }
+period_column = { name = "AR", encoding = "year" }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"

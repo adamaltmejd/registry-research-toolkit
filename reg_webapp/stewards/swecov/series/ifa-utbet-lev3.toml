@@ -5,3 +5,4 @@ variants = ["iaf/utbetalning/_default"]
 [[table]]
 table = "IFA_Utbet_Lev3"
 edition = { from = 2015, to = 2023 }
+period_column = { name = "utbetdatum", encoding = "date" }

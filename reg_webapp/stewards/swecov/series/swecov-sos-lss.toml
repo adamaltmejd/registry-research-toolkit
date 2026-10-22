@@ -5,6 +5,7 @@ variants = ["sos/lss/_default"]
 [[table]]
 table = "SWECOV_SOS_LSS"
 edition = { from = 2015, to = 2023 }
+period_column = { name = "AR", encoding = "year" }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
