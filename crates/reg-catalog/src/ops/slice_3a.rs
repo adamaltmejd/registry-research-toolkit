@@ -1,11 +1,11 @@
-//! Slice 3a's operations: `search` and `context`.
+//! Slice 3a's operations: `search`, `search_facets` and `context`.
 
 use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
 
-use super::search::{SearchPage, TYPES, search};
+use super::search::{RegisterFacets, SearchPage, TYPES, facets, search};
 use super::{Cache, Operation, Param, Params, Server, Steward, Type, component};
 use crate::held::{self, Narrow};
 use crate::{Code, Error, Scope};
@@ -32,6 +32,21 @@ pub const OPERATIONS: &[Operation] = &[
         cache: Cache::Minute,
         run: search,
         result: component::<SearchPage>,
+    },
+    Operation {
+        name: "search_facets",
+        paths: &["/api/search/facets"],
+        tool: None,
+        description: "Per register, how many of its variables match `q` under `search`'s \
+            variable matching, every match counted (no paging) and before concept groups \
+            fold; registers without a match are absent.",
+        params: &[
+            Param::required("q", Type::String),
+            Param::optional("scope", Type::Scope),
+        ],
+        cache: Cache::Minute,
+        run: facets,
+        result: component::<RegisterFacets>,
     },
     Operation {
         name: "context",

@@ -1360,6 +1360,76 @@
         }
       }
     },
+    "/api/search/facets": {
+      "get": {
+        "description": "Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent.",
+        "operationId": "search_facets",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RegisterFacets"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/states/{ref}": {
       "get": {
         "description": "A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or name, case-insensitive (a slug only where it is also the name).",
@@ -4412,6 +4482,39 @@
             }
           }
         ]
+      },
+      "RegisterFacet": {
+        "type": "object",
+        "required": [
+          "variable_matches"
+        ],
+        "properties": {
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variable_matches": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RegisterFacets": {
+        "type": "object",
+        "description": "`shape.RegisterFacets`: per register, how many of its variables the variable arm\nadmits for the query, unbounded by paging and before concept groups fold.",
+        "required": [
+          "registers"
+        ],
+        "properties": {
+          "registers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisterFacet"
+            }
+          }
+        }
       },
       "RegisterYears": {
         "allOf": [

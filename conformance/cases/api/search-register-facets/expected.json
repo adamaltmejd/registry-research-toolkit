@@ -1,0 +1,25 @@
+[
+  {
+    "status": 200,
+    "headers": {"cache-control": "public, max-age=60, s-maxage=86400, must-revalidate"},
+    "json": {
+      "/data/registers": [{"fqid": "scb/example", "variable_matches": 2}],
+      "/meta/scope": "holdings"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [
+        {"fqid": "scb/example", "variable_matches": 3},
+        {"fqid": "sos/unheld", "variable_matches": 1}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [{"fqid": "scb/example", "variable_matches": 1}]
+    }
+  }
+]
