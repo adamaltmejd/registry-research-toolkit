@@ -1,6 +1,6 @@
 id = "ifa-kkvecka-lev3"
 register = "iaf/kassakortsvecka"
-variants = ["iaf/kassakortsvecka/_default"]
+variants = ["iaf/kassakortsvecka/kalender"]
 
 [[table]]
 table = "IFA_KKvecka_Lev3"

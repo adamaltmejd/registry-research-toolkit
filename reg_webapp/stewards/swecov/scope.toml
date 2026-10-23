@@ -2685,8 +2685,9 @@ provider = "iaf"
 provider_name = "Inspektionen för arbetslöshetsförsäkringen"
 register = "kassakortsvecka"
 register_name = "Kassakortsveckor"
-variant = "_default"
-variant_slug = "_default"
+# A year-independent variant needs a concrete slug (inventory.py `_check_period_scope`).
+variant = "kalender"
+variant_slug = "kalender"
 variant_name = "Kassakortsveckor"
 tables = ["IFA_KKvecka_Lev2", "IFA_KKvecka_Lev3"]
 period_scope = "year_independent"
