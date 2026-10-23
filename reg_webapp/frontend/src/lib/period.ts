@@ -339,6 +339,32 @@ export function clampYearWindow(
   return { from: Math.min(from, to), to: Math.max(from, to) };
 }
 
+/** The years an axis rounds out to (DESIGN.md → Time). */
+const AXIS_GRID = 5;
+
+/** A page's time axis (DESIGN.md → Time): from the first to the last year of
+ * the data the page draws, joined with the study window when a project is open,
+ * rounded out to the 5-year grid. `years` are already resolved: an open end at
+ * the catalog's last year, an unknown start at its first. With neither data
+ * nor a window the axis is `catalog`, the catalog's span. A span on one grid
+ * year keeps one grid step of width, taken backward where a step forward
+ * would pass the catalog's last year. */
+export function dataAxis(
+  years: Iterable<number>,
+  window: ProjectStudyWindow | null,
+  catalog: readonly [number, number],
+): [number, number] {
+  const all = [...years];
+  if (window) all.push(window.from, window.to);
+  if (all.length === 0) all.push(...catalog);
+  const from = Math.floor(Math.min(...all) / AXIS_GRID) * AXIS_GRID;
+  const to = Math.ceil(Math.max(...all) / AXIS_GRID) * AXIS_GRID;
+  if (to > from) return [from, to];
+  return to + AXIS_GRID > catalog[1]
+    ? [from - AXIS_GRID, to]
+    : [from, to + AXIS_GRID];
+}
+
 /** Clamp only a year-grain `?period` wire to `[min, max]`. Non-year-grain
  * values stay verbatim because the year slider renders them read-only instead of
  * silently rewriting richer period grammar. */
@@ -446,7 +472,7 @@ export function uncoveredYears(
 /** The seed window for the availability slider when there is no explicit
  * `?period` to honour (#671): the part of the data COVERAGE the project window
  * actually frames, so a variable's true coverage shows UP FRONT rather than the
- * full 1960–vintage span reading as available. Pure — unit-tested in
+ * catalog's whole span reading as available. Pure — unit-tested in
  * `period.test.ts`.
  *
  * The coverage side is `coverageBandEdges` above, resolved against the supplied

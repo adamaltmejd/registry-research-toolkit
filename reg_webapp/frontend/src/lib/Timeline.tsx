@@ -39,7 +39,7 @@ const MIN_GAP_PCT = 12;
 const AXIS_STEPS = [5, 10, 20, 25, 50];
 
 interface DrawingProps {
-  /** The axis, inclusive years: the catalog's first to last. */
+  /** The axis, inclusive years: the page's data span (`dataAxis`). */
   axis: Years;
   /** The active window: the source period when one is set, else the project
    * window; null draws no band. */
@@ -248,7 +248,7 @@ function Legend({ band, gaps }: { band: string | null; gaps: boolean }) {
 }
 
 interface TimelineProps {
-  /** The catalog's first and last year (DESIGN.md → Time). */
+  /** The page's axis (`dataAxis`, DESIGN.md → Time). */
   axis: Years;
   /** The active window, or null with no project window and no source period:
    * then there is no band. */
@@ -264,8 +264,8 @@ interface TimelineProps {
 }
 
 /**
- * The read-only Timeline (DESIGN.md → Time): one axis over the catalog's
- * years, the active window as an `accent-bg` band, coverage as an ink bar with
+ * The read-only Timeline (DESIGN.md → Time): one axis over the page's data
+ * and the study window, the active window as an `accent-bg` band, coverage as an ink bar with
  * edition ticks, a gap inside coverage hatched, and the window's uncovered part
  * in `info-bg`. For register and group panes; the variable page's is
  * `VariableTimeline`.
@@ -305,7 +305,7 @@ export function Timeline({
 
 type PickerProps = Omit<
   ComponentProps<typeof RepresentationPicker>,
-  "window" | "timeline" | "catalogYears"
+  "window" | "timeline" | "drawnYears" | "catalogSpan"
 >;
 
 interface VariableTimelineProps extends PickerProps {
@@ -320,9 +320,10 @@ interface VariableTimelineProps extends PickerProps {
   coverage: Coverage | null;
   /** The subject's delivered years, or null to draw coverage solid. */
   years: readonly number[] | null;
-  /** The catalog's first year: the axis floor. */
+  /** The catalog's first year: the steward floor, where an unknown coverage
+   * start is drawn, and the axis fallback. */
   windowMinYear: number;
-  /** The catalog's last year: the axis ceiling and the open-ended coverage
+  /** The catalog's last year: the steward ceiling and the open-ended coverage
    * end. */
   windowMaxYear: number;
   /** Treat the outer bounds as hard steward limits, not global fallbacks. */
@@ -411,33 +412,37 @@ export function VariableTimeline({
       ? boundedPeriod
       : null;
 
-  // The axis: the catalog's years, widened only to what is drawn on it (which
-  // the steward's bounds already clamp, so a steward axis is its span). The
-  // lanes may widen it further to a column's years; the slider takes the axis
-  // the graph draws.
-  const drawn: number[] = [];
-  for (const w of [boundedWindow, boundedPeriodWindow]) {
-    if (w) drawn.push(w.from, w.to);
-  }
-  if (boundedCoverage) {
-    if (boundedCoverage.from !== null) drawn.push(boundedCoverage.from);
-    drawn.push(boundedCoverage.to ?? ceiling);
-  }
-  const max = Math.max(ceiling, ...drawn);
-  const min = Math.min(windowMinYear, ...drawn, max);
-
+  // Coverage as drawn: an unknown start at the catalog's first year, an open
+  // end at its last (DESIGN.md → Time).
+  const covered = coverageBandEdges(
+    boundedCoverage,
+    windowMinYear,
+    ceiling,
+    ceiling,
+  );
   // Seed (#671): explicit year `?period` > window∩coverage > coverage > window.
   const seeded =
     boundedPeriodWindow ??
-    intersectCoverageWindow(boundedCoverage, boundedWindow, min, ceiling);
-  const covered = coverageBandEdges(boundedCoverage, min, max, ceiling);
+    intersectCoverageWindow(
+      boundedCoverage,
+      boundedWindow,
+      windowMinYear,
+      ceiling,
+    );
   // The one legal span for the thumbs: the selection never leaves
   // availability.
-  const lo = covered?.from ?? min;
-  const hi = covered?.to ?? max;
+  const lo = covered?.from ?? windowMinYear;
+  const hi = covered?.to ?? ceiling;
 
   // The selection shown: the thumbs mid-drag, else the seed.
-  const selection = clampYearWindow(dragging ?? seeded, min, max);
+  const selection = dragging ?? seeded;
+
+  // What the coverage row draws (DESIGN.md → Time): the coverage and the
+  // selection. The lanes join it with the columns, the variables a succession
+  // reaches and the study window into the page's one axis, which the slider
+  // takes; a drag stays on that axis.
+  const drawn = [seeded.from, seeded.to];
+  if (covered) drawn.push(covered.from, covered.to);
   const userChosen = periodWindow !== null || dragging !== null;
 
   /** The thumbs' next position: only the thumb that moved is clamped into
@@ -551,7 +556,8 @@ export function VariableTimeline({
       <RepresentationPicker
         {...picker}
         window={dragging ? [dragging.from, dragging.to] : pickerWindow}
-        catalogYears={[min, max]}
+        drawnYears={drawn}
+        catalogSpan={[windowMinYear, ceiling]}
         timeline={{
           head: (
             <Head

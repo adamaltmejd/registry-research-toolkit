@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   clampYearWindow,
   coverageBandEdges,
+  dataAxis,
   intersectCoverageWindow,
   nextResolutionQuery,
   normalizePeriodRows,
@@ -17,6 +18,26 @@ import {
 // live in conformance/cases/grammar/ (period.jsonl, source_period.jsonl), which
 // reg_core.test.ts runs through the WASM module. This file pins the SPA's own
 // composition of those answers.
+
+// DESIGN.md → Time: data ∪ study window, rounded out to the 5-year grid.
+// Fails if the axis goes back to the catalog span, drops the window, or stops
+// rounding, or widens a one-year axis past the catalog's last year.
+describe("dataAxis", () => {
+  it.each([
+    ["data inside the window's grid", [1964, 2024], null, [1960, 2025]],
+    [
+      "the window widens the data",
+      [2003, 2012],
+      { from: 2015, to: 2023 },
+      [2000, 2025],
+    ],
+    ["nothing drawn falls back to the catalog", [], null, [1945, 2025]],
+    ["one grid year keeps a step", [2020], null, [2020, 2025]],
+    ["the catalog's last year steps backward", [2025], null, [2020, 2025]],
+  ] as const)("%s", (_, years, window, expected) => {
+    expect(dataAxis(years, window, [1947, 2025])).toEqual(expected);
+  });
+});
 
 describe("nextResolutionQuery (resolution-merge rule)", () => {
   it("clearing the period DROPS the variant/value_set_version modifiers", () => {

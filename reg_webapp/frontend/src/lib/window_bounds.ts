@@ -1,4 +1,5 @@
 import type { Context } from "./api";
+import type { ProjectStudyWindow } from "./project_data";
 
 // The study window's bounds (#611 → Period model): the viewed catalog's first and
 // last year (`/api/context` `period_span`: a steward's held periods, the global
@@ -26,4 +27,15 @@ export function windowBounds(context: Context | null): WindowBounds {
     enforced: span !== null,
     vintageYear,
   };
+}
+
+/** The first year of a new project's study window (DESIGN.md → Time). */
+const DEFAULT_WINDOW_FROM_YEAR = 2015;
+
+/** A new project's study window: 2015 to the catalog's last year, or the
+ * whole span when the catalog ends before 2015. */
+export function defaultStudyWindow(bounds: WindowBounds): ProjectStudyWindow {
+  return bounds.max < DEFAULT_WINDOW_FROM_YEAR
+    ? { from: bounds.min, to: bounds.max }
+    : { from: Math.max(bounds.min, DEFAULT_WINDOW_FROM_YEAR), to: bounds.max };
 }

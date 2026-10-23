@@ -33,7 +33,7 @@ import {
   YEARLESS_VALID_FROM,
 } from "./catalog";
 import { catalogRootChildren } from "./catalog_names";
-import { clampYearWindow, yearWindowLabel } from "./period";
+import { clampYearWindow, dataAxis, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store";
 import viewStyles from "./RegisterView.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
@@ -563,7 +563,6 @@ export function RegisterView({
   const shown = countFoldedMembers(listedRows);
   const narrowed = selectedVariants.size > 0;
   const childrenByFqid = new Map(lensed.map((child) => [child.fqid, child]));
-  const axis: YearSpan = [period.windowMinYear, period.windowMaxYear];
   // The register's delivered years, every variable's windows together: the
   // Timeline's coverage and edition ticks.
   const registerYears = deliveredYears(
@@ -574,6 +573,12 @@ export function RegisterView({
     ),
     period.vintageYear,
   );
+  // One axis for the Timeline and every row (DESIGN.md → Time): the
+  // register's years with the study window, rounded out.
+  const axis: YearSpan = dataAxis(registerYears, add.bounded, [
+    period.windowMinYear,
+    period.windowMaxYear,
+  ]);
   const windowSpan: YearSpan | null = add.bounded
     ? [add.bounded.from, add.bounded.to]
     : null;
