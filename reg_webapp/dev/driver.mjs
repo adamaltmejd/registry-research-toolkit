@@ -418,7 +418,7 @@ async function blockedOrderCase(page, counts, shoot) {
   await page.getByRole("textbox", { name: "Name" }).fill("Draft");
   await named;
   await settled(page);
-  check((await reason.count()) === 0,"naming the project must clear the reason");
+  check((await reason.count()) === 0, "naming the project must clear the reason");
 
   const blocked = page.waitForResponse((r) => posts(r.request(), ORDER_PATH));
   await ui.download.click();

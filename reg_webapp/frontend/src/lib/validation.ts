@@ -585,9 +585,9 @@ export function findingLocation(
  * MODEL. This resolves those values back to positions against the current draft.
  *
  * `""` (the whole document) when nothing matches: a project-level finding
- * (`steward_mismatch`, `project_unnamed`, `project_empty`) names no coordinate, and a source or
- * binding edited away since the request has no card left to locate. The panel's
- * existing no-location fallback then applies.
+ * (`steward_mismatch`, `project_unnamed`, `project_empty`) names no coordinate,
+ * and a source or binding edited away since the request has no card left to
+ * locate. The panel's existing no-location fallback then applies.
  */
 export function orderFindingPointer(
   finding: { source?: string | null; variable?: string | null },

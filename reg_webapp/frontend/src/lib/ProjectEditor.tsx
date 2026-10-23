@@ -289,8 +289,8 @@ export function ProjectEditor({
                   : nameBlocked
                     ? "Blocked — the project has no name; see below"
                     : windowBlocked
-                    ? "Blocked — a source has no years inside the study window; see below"
-                    : "Not available yet — see the validation results below"
+                      ? "Blocked — a source has no years inside the study window; see below"
+                      : "Not available yet — see the validation results below"
               }
               onPress={() => void projectStore.downloadOrder()}
             >
