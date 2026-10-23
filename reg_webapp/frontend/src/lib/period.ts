@@ -519,36 +519,6 @@ export function intersectCoverageWindow(
   return { from, to };
 }
 
-/** The not-delivered gaps of a `selection` window against the subject's
- * `coverage` — the sub-spans inside the selection but OUTSIDE coverage (#615
- * availability deviation). Returns the leading gap (selection starts before a
- * FINITE coverage start) and/or trailing gap (selection ends after a FINITE
- * coverage end), each a year-int `{from, to}`; an empty array when coverage
- * fully covers the selection, the relevant side is unbounded (null = no gap
- * there), or there is no coverage to compare against. Inclusive bounds. */
-export function notDeliveredGaps(
-  selection: ProjectStudyWindow,
-  coverage: Coverage | null,
-): ProjectStudyWindow[] {
-  if (coverage === null) {
-    return [];
-  }
-  const gaps: ProjectStudyWindow[] = [];
-  if (coverage.from !== null && selection.from < coverage.from) {
-    gaps.push({
-      from: selection.from,
-      to: Math.min(selection.to, coverage.from - 1),
-    });
-  }
-  if (coverage.to !== null && selection.to > coverage.to) {
-    gaps.push({
-      from: Math.max(selection.from, coverage.to + 1),
-      to: selection.to,
-    });
-  }
-  return gaps.filter((g) => g.from <= g.to);
-}
-
 /** Whether two year windows describe the SAME span (the user-deviation test:
  * `?period` ≠ the project window). Null-safe — two nulls are equal. */
 export function sameYearWindow(
