@@ -8,8 +8,10 @@ edition = { from = 2014, to = 2022 }
 
 [[column]]
 column = "bordnr"
-unmap = "Birth join key of the lev2 aspect table; the GravReg bordnr is orderable from GravReg_Barn_lev2, its primary table. Maintainer-decided 2026-09-02 (GravReg lev2 join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "graviditetsregistret/graviditetsregistret/_default", variable = "graviditetsregistret/graviditetsregistret/bordnr", representation = "bordnr", carried = true }]
+reason = "Carried row key (#1844): the birth order within the pregnancy, part of the variant's row key, so every file of this table carries it; GravReg_Barn_lev2 serves the ordered cell, so the one-source-per-cell rule holds."
 
 [[column]]
 column = "glopnr"
-unmap = "Pregnancy join key of the lev2 aspect table; the GravReg glopnr is orderable from GravReg_Gravniva_lev2, its primary table. Maintainer-decided 2026-09-02 (GravReg lev2 join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "graviditetsregistret/graviditetsregistret/_default", variable = "graviditetsregistret/graviditetsregistret/glopnr", representation = "glopnr", carried = true }]
+reason = "Carried row key (#1844): the pregnancy id, the variant's row key, so every file of this table carries it; GravReg_Gravniva_lev2 serves the ordered cell, so the one-source-per-cell rule holds."

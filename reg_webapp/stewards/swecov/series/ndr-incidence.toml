@@ -9,4 +9,5 @@ period_column = { name = "I_DiagnosisDate", encoding = "date" }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-unmap = "Person join key of the incidence holding; the NDR personnr is orderable from NDR_children_2007 and NDR_adults_2010. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "ndr/nationella-diabetesregistret/_default", variable = "ndr/nationella-diabetesregistret/personnr", representation = "PersonNr", carried = true }]
+reason = "Carried row key (#1844): the person id, the variant's row key, so every file of this table carries it; NDR_children_2007 and NDR_adults_2010 serves the ordered cell, so the one-source-per-cell rule holds."

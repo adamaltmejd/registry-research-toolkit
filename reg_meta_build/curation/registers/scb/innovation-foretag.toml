@@ -7880,7 +7880,7 @@ members = [{ variable = "cis2016-cooperation-group-enterprises-sweden", coords =
 native_id = "257.553"
 slug = "_default"
 display_group = "Innovation i företagssektorn"
-panel_entity_key = "orgnr"
+panel_entity_key = ["orgnr", "orgnr-12", "peorgnrhe"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 

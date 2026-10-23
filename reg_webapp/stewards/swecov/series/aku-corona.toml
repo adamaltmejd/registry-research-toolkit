@@ -36,9 +36,11 @@ unmap = "Known shared person/measurement-period field also held in AKU_RL_2022. 
 [[column]]
 column = "P1105_LopNr_PersonNr"
 tables = ["AKU_Corona_2021"]
-unmap = "Known shared person/measurement-period field also held in AKU_RL_2021. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/personnr representation PersonNr for 2021. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+mappings = [{ register_variant = "scb/aku/aku-januari-2021", variable = "scb/aku/personnr", representation = "PersonNr", carried = true }]
+reason = "Carried row key (#1844): the person id, the variant's row key, so every file of this table carries it; AKU_RL_2021 serves the ordered cell, so the one-source-per-cell rule holds."
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
 tables = ["AKU_Corona_2022"]
-unmap = "Known shared person/measurement-period field also held in AKU_RL_2022. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/personnr representation PersonNr for 2022. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+mappings = [{ register_variant = "scb/aku/aku-januari-2021", variable = "scb/aku/personnr", representation = "PersonNr", carried = true }]
+reason = "Carried row key (#1844): the person id, the variant's row key, so every file of this table carries it; AKU_RL_2022 serves the ordered cell, so the one-source-per-cell rule holds."

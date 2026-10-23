@@ -274,7 +274,7 @@ delivery_column = "Varulager"
 native_id = "168.241"
 slug = "fek-slutdata"
 display_group = "FEK Slutdata (företagsenhet)"
-panel_entity_key = "person-orgnr"
+panel_entity_key = ["person-orgnr", "fenr"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 

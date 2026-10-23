@@ -8,4 +8,5 @@ edition = { from = 2015, to = 2020 }
 
 [[column]]
 column = "P1105_Lopnr_personnr"
-unmap = "Person join key of the SÄBO membership holding; swecov/population/personnr is orderable from Population_PersonNr_20241231, which covers this edition (#1170)."
+mappings = [{ register_variant = "swecov/population/_default", variable = "swecov/population/personnr", representation = "PersonNr", carried = true }]
+reason = "Carried row key (#1844): the person id, the variant's row key, so every file of this table carries it; Population_PersonNr_20241231 serves the ordered cell, so the one-source-per-cell rule holds."
