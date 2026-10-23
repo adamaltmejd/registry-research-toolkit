@@ -42,8 +42,7 @@
 .years {
   font-variant-numeric: tabular-nums;
 }
-/* The variable: its name in the text face, the FQID in mono under it, breaking
-   in place at 375px. */
+/* The variable: its name in the text face, breaking in place at 375px. */
 .variableLine {
   display: flex;
   flex-wrap: wrap;
@@ -56,11 +55,5 @@
 .variable {
   min-width: 0;
   color: var(--text);
-  overflow-wrap: anywhere;
-}
-.fqid {
-  min-width: 0;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
   overflow-wrap: anywhere;
 }

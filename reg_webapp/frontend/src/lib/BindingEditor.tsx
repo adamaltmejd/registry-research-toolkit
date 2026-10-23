@@ -1,6 +1,8 @@
+import { useState } from "react";
 import styles from "./BindingEditor.module.css";
 import { catalogHref, registerPrefixOf } from "./catalog";
 import { columnNames, registerRead, UNASKED } from "./catalog_names";
+import { focusAfterRemoval } from "./focus_after_removal";
 import { periodLabel, periodWindowRelation } from "./period";
 import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
@@ -8,12 +10,13 @@ import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
+import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { useCatalogRead } from "./use_store_read";
-import { bindingAnchorId } from "./validation";
+import { bindingAnchorId, sourceAnchorId } from "./validation";
 
 // READ-ONLY column row in the #991 data-order cart: it DISPLAYS the delivery
-// COLUMN this binding orders and the variable it came from, and offers "Remove
-// column" only. Editing a binding — variable, type, display_name, representation —
+// COLUMN this binding orders and the variable it came from, and offers a quiet
+// "Remove" only. Editing a binding — variable, type, display_name, representation —
 // happens by re-picking in the catalog browser. See reg_webapp/DESIGN.md and #991.
 
 interface Props {
@@ -39,6 +42,24 @@ function readColumnNames(key: string) {
   return columnNames(fqid, period, variant);
 }
 const readUnasked = () => UNASKED;
+
+/** After a column leaves, focus moves to the row that took its place, else the
+ * one before it, else the source's heading: never to `<body>`. */
+function focusAfterColumnRemoval(
+  sourceIndex: number,
+  bindingIndex: number,
+): void {
+  const row = (i: number) =>
+    document
+      .getElementById(bindingAnchorId(sourceIndex, i))
+      ?.querySelector("button");
+  focusAfterRemoval([
+    () => row(bindingIndex),
+    () => (bindingIndex > 0 ? row(bindingIndex - 1) : null),
+    () =>
+      document.getElementById(sourceAnchorId(sourceIndex))?.querySelector("h3"),
+  ]);
+}
 
 export function BindingEditor({
   sourceIndex,
@@ -99,6 +120,7 @@ export function BindingEditor({
   // What the delete button calls this row: the column it shows, else the variable.
   const columnLabel = columnName || variable;
   const representation = strField("representation") || null;
+  const [removeOpen, setRemoveOpen] = useState(false);
   // A fresh object per render is fine: the island assigns it onto the live
   // instance, and an unchanged value moves nothing there.
   const warningProps = {
@@ -148,7 +170,8 @@ export function BindingEditor({
           </div>
           {/* The variable it came from: its name in the text face, linked to its
               catalog page (the cart is read-only, so re-picking happens there,
-              #991), and the FQID in mono under it. */}
+              #991). The FQID stays out of the list: it is in the "Fix in
+              catalog" links and the downloaded files (#1839). */}
           {variable ? (
             <span className={styles.variableLine}>
               <a
@@ -157,20 +180,48 @@ export function BindingEditor({
               >
                 {variableName ?? variable}
               </a>
-              {variableName && <code className={styles.fqid}>{variable}</code>}
             </span>
           ) : (
             <span className={styles.bindingPeriod}>(no variable)</span>
           )}
         </div>
+        {/* A per-row action is quiet (#1837): `danger` is for the dialog's
+            answer, not for every row of the list. */}
         <Button
-          variant="danger"
+          variant="ghost"
           aria-label={columnLabel ? `Remove column ${columnLabel}` : undefined}
-          onPress={() => projectStore.removeBinding(sourceIndex, bindingIndex)}
+          onPress={() => setRemoveOpen(true)}
         >
-          Remove column
+          Remove
         </Button>
       </div>
+      <ConfirmDialog
+        isOpen={removeOpen}
+        onOpenChange={setRemoveOpen}
+        title={
+          columnLabel
+            ? `Remove the column ${columnLabel}?`
+            : "Remove this column?"
+        }
+        actions={
+          <>
+            <Button onPress={() => setRemoveOpen(false)}>Cancel</Button>
+            <Button
+              variant="danger"
+              onPress={() => {
+                setRemoveOpen(false);
+                projectStore.removeBinding(sourceIndex, bindingIndex);
+                focusAfterColumnRemoval(sourceIndex, bindingIndex);
+              }}
+            >
+              Remove column
+            </Button>
+          </>
+        }
+      >
+        The column leaves this project. Pick it again in the catalog to bring it
+        back.
+      </ConfirmDialog>
       {variable && <ScopedDataWarnings {...warningProps} />}
     </>
   );

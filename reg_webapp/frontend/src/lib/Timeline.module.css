@@ -54,13 +54,11 @@
   position: absolute;
 }
 
-/* The active window: the accent-bg wash between two accent bounds. */
+/* The active window: the shared window band (ui/WindowBand). */
 .band {
+  composes: band from "./ui/WindowBand.module.css";
   top: 0;
   bottom: 0;
-  box-sizing: border-box;
-  border-inline: 1.5px solid var(--accent);
-  background: var(--accent-bg);
 }
 /* Where the band leaves coverage, the wash gives way to info-bg below it. */
 .bandCut {
@@ -143,28 +141,10 @@
   position: relative;
   height: 100%;
 }
+/* The band's bounds as thumbs (ui/WindowBand), centred on the coverage bar. */
 .thumb {
+  composes: thumb from "./ui/WindowBand.module.css";
   top: 12px;
-  width: 8px;
-  height: 16px;
-  box-sizing: border-box;
-  border: 1px solid var(--surface);
-  border-radius: var(--radius-sm);
-  background: var(--accent);
-  cursor: ew-resize;
-  transition: box-shadow var(--duration-quick) var(--ease-standard);
-}
-/* A 24px target around the slim face (WCAG 2.5.8), for touch. */
-.thumb::before {
-  content: "";
-  position: absolute;
-  inset: -4px -8px;
-}
-.thumb[data-dragging] {
-  background: var(--accent-hover);
-}
-.thumb[data-focus-visible] {
-  box-shadow: var(--focus-ring);
 }
 
 /* Under the drawing: the legend, and Clear while a period is applied. */
@@ -215,10 +195,4 @@
 .legendOutside::before {
   border: 1px solid var(--accent);
   background: var(--info-bg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .thumb {
-    transition: none;
-  }
 }

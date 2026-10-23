@@ -330,8 +330,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   key hint; the key hints are `text-muted` on `surface-sunken`. There are no "Search" or
   "Project" nav items; the bar and the banner are those. Its content shares the shell's
   `shell-max` and centring, so the banner sits over the detail pane rather than at the
-  screen's edge. It sticks to the top of the page above `breakpoint-narrow`; below it
-  the bar wraps and scrolls away with the page.
+  screen's edge. Where the row is tight the brand wraps and the search bar shrinks
+  before the banner leaves the row. It sticks to the top of the page above
+  `breakpoint-narrow`; below it the brand, the bar and the banner take a row each and
+  scroll away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
   then the selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
@@ -406,7 +408,10 @@ Time is the axis every relation is drawn on.
   it is bounded by the viewed catalog's first and last year (`/api/context`
   `period_span`). It shades every `Timeline` and `LaneGraph` as an `accent-bg` band with
   `accent` bounds and `accent-ink` years on the axis. With no project open there is no
-  band.
+  band. That **window band** is the one drawing of a period control: where the period is
+  set (the banner's study window, a variable page's source period) the band is dragged
+  by slim `accent` thumbs on its bounds; both compose the same classes
+  (`ui/WindowBand.module.css`), and a new period selector does too.
 - A **source period** narrows the window for one variable. It stays allowed but is the
   exception: on a variable page the `Timeline`'s band is a selection, two thumbs bounded
   by the variable's availability. The thumbs move live while dragged and the period is
@@ -519,13 +524,18 @@ not grow new visual language meanwhile.
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
   verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
   "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
-  "Checking" with no glyph. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
+  "Checking" with no glyph. Its slot is as wide as the widest verdict, so the banner
+  keeps one size while validation runs. A verdict with findings (Warnings, Errors, Order
+  blocked) is a link, in its status hue with the link's `accent` rule, to /project,
+  where the first non-empty findings group scrolls into view and takes focus; Valid and
+  Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
   never a status hue. The study window is the period picker: an inline two-thumb RAC
-  `Slider` (no popover) bounded by the viewed catalog's first and last year, its years
-  an `accent-ink` `mono` readout, with a "Clear" ghost action. With no project open it
-  is the same box, empty and untinted with a `border` leading bar, holding a `default`
-  "Create a project" Button, which starts a project and opens it, and nothing in the
-  catalog is tinted.
+  `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn as
+  the Timeline's window band (see Time) on a `surface` strip, its years an `accent-ink`
+  `mono` readout, with a "Clear" ghost action; the label, the readout and Clear keep one
+  line. With no project open it is the same box, empty and untinted with a `border`
+  leading bar, holding a `default` "Create a project" Button, which starts a project and
+  opens it, and nothing in the catalog is tinted.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", or the group's name on a group page; one line, truncated with an
   ellipsis, the whole of it as hover text) (#1825), then items on `bg`, one selected (2
@@ -541,7 +551,9 @@ not grow new visual language meanwhile.
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
   signal). The same shape as a lane span, so the two read as one object. The project's
   column list chips every column, its superseded names too, beside the variable's name
-  in the text face and its FQID in `mono` `text-muted`.
+  in the text face; the FQID stays out of that list (it is in the findings' "Fix in
+  catalog" links and the downloaded files). Each row's remove action is a quiet ghost
+  "Remove" that asks first in a `Dialog`, whose answer is the `danger` button.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
   register's or a variable's page title, where it leads with a glyph in its ink (a table
   for a register, one filled column of it for a variable). The label is fixed per type

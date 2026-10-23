@@ -2,6 +2,6 @@
   "id": "swecov",
   "name": "SWECOV",
   "long_name": "SWECOV register-data catalog",
-  "description": "SWECOV, the Swedish COVID-19 research data infrastructure, is a research database of Swedish register data held on MONA at Statistics Sweden. Browse the register variables SWECOV holds, with their definitions and the years they cover, and collect the ones you need into a project to order.",
+  "description": "This website describes the Swedish register data available to researchers in the SWECOV project. Browse the register variables, their definitions and the years they cover, and collect the ones you need for your study into a data order. Read more about SWECOV on [swecov.se](https://swecov.se).",
   "order_instructions": "To order data, email your project_data.json to your SWECOV coordinator. They review the project and generate order.json from it, so you do not need to download or send order.json."
 }

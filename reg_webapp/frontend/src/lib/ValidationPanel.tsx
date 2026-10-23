@@ -2,6 +2,7 @@ import { Button as AriaButton } from "react-aria-components";
 import type { OrderBlocking, ValidationResultModel } from "./api";
 import type { SafeSource } from "./project_data";
 import type { RequestErrorSource, ValidationStatus } from "./project_store";
+import { useRevealFindings } from "./reveal_findings";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
 import styles from "./ValidationPanel.module.css";
@@ -167,6 +168,7 @@ export function ValidationPanel({
   onRetryOrder,
 }: Props) {
   const grouped = groupByLevel(result?.issues ?? []);
+  useRevealFindings();
   return (
     <section className={styles.validation} aria-label="Validation results">
       {requestError && (
@@ -206,8 +208,9 @@ export function ValidationPanel({
         <fieldset
           className={`${styles.group} ${styles.error}`}
           aria-labelledby="order-findings-heading"
+          data-findings
         >
-          <h4 className="micro-label" id="order-findings-heading">
+          <h4 className="micro-label" id="order-findings-heading" tabIndex={-1}>
             Blocking findings ({orderFindings.length})
           </h4>
           <ul>
@@ -245,8 +248,13 @@ export function ValidationPanel({
         <fieldset
           className={`${styles.group} ${styles.error}`}
           aria-labelledby="window-findings-heading"
+          data-findings
         >
-          <h4 className="micro-label" id="window-findings-heading">
+          <h4
+            className="micro-label"
+            id="window-findings-heading"
+            tabIndex={-1}
+          >
             Blocking the order: outside the study window (
             {windowFindings.length})
           </h4>
@@ -291,8 +299,12 @@ export function ValidationPanel({
           {LEVELS.map(
             (level) =>
               grouped[level].length > 0 && (
-                <div key={level} className={`${styles.group} ${styles[level]}`}>
-                  <h4 className="micro-label">
+                <div
+                  key={level}
+                  className={`${styles.group} ${styles[level]}`}
+                  data-findings
+                >
+                  <h4 className="micro-label" tabIndex={-1}>
                     {LEVEL_LABEL[level]} ({grouped[level].length})
                   </h4>
                   <ul>
