@@ -526,10 +526,10 @@ Per binding, in declaration order, over its source's period
    split at member boundaries and each day goes to one member: the member whose states
    deliver it, else the named variant, where the clip removes it, so no variant is
    invented. The build guarantees a family is a chain whose members share no delivered
-   day, nor a day a steward holds under them (`validate_built_db`), so the split needs
-   no tie-break and holdings never decide it. A day the delivering member holds no table
-   for stays with it and blocks as a coverage gap whichever member the source names; a
-   holding under a member that does not deliver the day never takes it (conformance
+   day (`validate_built_db`), so the split needs no tie-break and holdings never decide
+   it. A day the delivering member holds no table for stays with it and blocks as a
+   coverage gap whichever member the source names; a holding under a member that does
+   not deliver the day never takes it (conformance
    `order/variant-family-held-elsewhere`). `_default` resolves the named variant
    exactly. Each binding is then resolved once over the members' shares and clipped to
    the union of its states there, so a column first delivered in 2019 under a 2018–2020
