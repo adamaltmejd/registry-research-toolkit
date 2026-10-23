@@ -45,9 +45,10 @@ function isOtherTextEntry(
   return target instanceof HTMLTextAreaElement || target.isContentEditable;
 }
 
-/** The top bar (DESIGN.md → Layout): the brand (the deployment's name), the
- * one search bar and the project banner. There are no "Search" or "Project" nav items; the bar and the
- * banner are those. It sticks to the top of the page, and publishes its height
+/** The top bar (DESIGN.md → Layout): the brand (the deployment's name, or its
+ * logo where the name does not fit), the one search bar and the project
+ * banner. There are no "Search" or "Project" nav items; the bar and the banner
+ * are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
 export function TopBar({ steward, regMetaVersion, bounds }: Props) {
