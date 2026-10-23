@@ -258,7 +258,10 @@ export function SourceEditor({
    * `applySourcePeriodEdit`, replacing the period with the span they frame. */
   async function applyPeriod(at: ProjectStudyWindow): Promise<void> {
     if (applying.current) {
-      // Held on the SAME gate as an earlier rest: that write lands first.
+      // A rest while an earlier write waits on the restore gate is dropped,
+      // not queued: its edit snapshot predates that write, so the store would
+      // refuse it. The thumbs then return to the period that landed, so what
+      // shows is what is saved. Only reachable before the draft has restored.
       return;
     }
     const target = editedFrom.current;
