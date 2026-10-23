@@ -34,7 +34,7 @@ import {
 // browsing (sources + their columns), and adding/changing data always happens in
 // the catalog browser. So this page is browse-only authoring: view the picked
 // sources/columns, delete a source/column, edit the project NAME and each source's
-// period, and Open/Download the project_data.json + Download order.json. It is:
+// period, and Open/Download the project_data.json + Download order. It is:
 //  - the home/new screen (draft == null): New / Open buttons,
 //  - the loaded-draft view: the editable name, a dirty indicator, the toolbar, the
 //    open-error banner, the sources/columns list, the ValidationPanel and a
@@ -294,7 +294,7 @@ export function ProjectEditor({
               }
               onPress={() => void projectStore.downloadOrder()}
             >
-              {orderBusy ? "Downloading…" : "Download order.json"}
+              {orderBusy ? "Downloading…" : "Download order"}
             </Button>
           </div>
           {/* The order manifest carries the name as its provenance, so a blank
@@ -314,14 +314,15 @@ export function ProjectEditor({
               }
             >
               <span id={ORDER_NAME_REASON_ID}>
-                Name the project to download order.json.
+                Name the project to download the order.
               </span>
             </StatusRow>
           )}
           {/* The two downloads hand over DIFFERENT artifacts, said visibly. */}
           <p className="muted">
-            <code>project_data.json</code> is the editable project draft;{" "}
-            <code>order.json</code> is the order manifest generated from it.
+            <code>project_data.json</code> is the editable project draft; the
+            order file is the order manifest generated from it, named after the
+            project and the date.
           </p>
           {/* The steward's own words on how to hand the project in: the next
               step, so plain body text. */}

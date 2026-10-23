@@ -17,8 +17,9 @@ All under the export root, set at the top of the script:
 
 ## Run an order
 
-1. Download the order's `order.json` from the catalog (data.swecov.se) after validating
-   the project.
+1. Download the order from the catalog (data.swecov.se) after validating the project.
+   The file is named `order_<project>_<date>.json`; the coordinator renames it in the
+   next step.
 2. Upload it to MONA together with `swecov_extract.R`, and save it as
    `orders\<project number>.json` (for example `orders\1234.json`).
 3. In R on MONA, `source("swecov_extract.R")`, or run `Rscript swecov_extract.R`. Every

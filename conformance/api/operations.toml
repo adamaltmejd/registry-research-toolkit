@@ -243,7 +243,7 @@ note = "A register's related documents; the JSON metadata for the document downl
 route = "POST /api/project/order/manifest"
 media_type = "application/json"
 operation = "order"
-note = "The manifest bytes byte-identical to `order`'s `data`, as `attachment; filename=\"order.json\"`."
+note = "The manifest bytes byte-identical to `order`'s `data`, as an attachment named `order_<slug>_<UTC date>.json`."
 
 [[download]]
 route = "GET /api/docs/file/{ref}/{filename}"

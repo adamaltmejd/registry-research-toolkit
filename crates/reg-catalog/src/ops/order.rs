@@ -231,15 +231,58 @@ pub fn order(server: &Server, _scope: Scope, params: &Params) -> Result<Value, E
     Ok(serde_json::to_value(materialize(server, params)?).expect("Manifest serializes"))
 }
 
-/// The manifest download: [`order`]'s document as the exact bytes, an attachment.
+/// The manifest download: [`order`]'s document as the exact bytes, an attachment
+/// named `order_<slug>_<YYYY-MM-DD>.json` after the project and the server's UTC date.
 pub fn manifest(server: &Server, _scope: Scope, params: &Params) -> Result<Raw, Error> {
+    let manifest = materialize(server, params)?;
+    let filename = download_filename(&manifest.provenance.project_name, utc_date());
     Ok(Raw {
-        bytes: to_json_pretty(&materialize(server, params)?).into_bytes(),
+        bytes: to_json_pretty(&manifest).into_bytes(),
         headers: vec![(
             "content-disposition",
-            "attachment; filename=\"order.json\"".to_owned(),
+            format!("attachment; filename=\"{filename}\""),
         )],
     })
+}
+
+/// The longest project slug in a download name.
+const SLUG_MAX: usize = 60;
+
+/// `order_<slug>_<date>.json`. The slug is the name through `fold_search` (case and
+/// accents folded: å, ä, é to a, a, e), with each run of other characters as one `-`,
+/// trimmed and capped at [`SLUG_MAX`]; a name with no ASCII letter or digit (a blank
+/// one never reaches here) is `project`. It is ASCII, so the header needs no
+/// `filename*`.
+fn download_filename(name: &str, (year, month, day): (i64, u32, u32)) -> String {
+    let mut slug = String::new();
+    for c in reg_core::fold_search(name).chars() {
+        if c.is_ascii_alphanumeric() {
+            slug.push(c);
+        } else if !slug.ends_with('-') {
+            slug.push('-');
+        }
+    }
+    slug.truncate(SLUG_MAX);
+    let slug = slug.trim_matches('-');
+    let slug = if slug.is_empty() { "project" } else { slug };
+    format!("order_{slug}_{year:04}-{month:02}-{day:02}.json")
+}
+
+/// Today's UTC date, from the system clock (Hinnant's `civil_from_days`).
+fn utc_date() -> (i64, u32, u32) {
+    let secs = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |d| d.as_secs());
+    let z = i64::try_from(secs / 86_400).expect("a day count") + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z.rem_euclid(146_097);
+    let yoe = (doe - doe / 1_460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let day = u32::try_from(doy - (153 * mp + 2) / 5 + 1).expect("a day");
+    let month = u32::try_from(if mp < 10 { mp + 3 } else { mp - 9 }).expect("a month");
+    let year = yoe + era * 400 + i64::from(month <= 2);
+    (year, month, day)
 }
 
 fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
