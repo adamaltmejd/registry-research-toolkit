@@ -2483,7 +2483,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (12.2.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (12.3.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward
@@ -3022,6 +3022,34 @@ files, so each file carries its own row keys and the user joins a projection fil
 parent's on a shared id, even when the projection sits at another grain
 ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"). An undeclared overlap
 stays a refusal; the order never deduplicates one.
+
+**Carried keys.** An auxiliary delivery of a variant often holds the variant's row key
+as its only join column: an aspect table beside the main table (SCRCR treatment tables
+beside the tumour table), or a table over a span no single main table covers (NDR's
+family-history table beside annual contact tables, SWECOV's birth-information table
+beside the annual RTB tables). The main tables serve the key cell; a second mapping of
+the key would be a second claim on it (`inventory_cell_conflict`), and an unmapped key
+leaves the auxiliary table's order files without a row key, so they cannot be joined
+(maintainer ruling 2026-10-23: an order carries each file's row key). A projection fits
+only a same-edition delivery with one parent. The auxiliary key column instead maps with
+`carried = true`: it is the variant's row key in that table, carried in every file of
+the table as a held key, and it serves no cell. The one-to-one rule skips it, so the key
+cell keeps its one location, and an order of the key alone never reaches the auxiliary
+table, as before. A carried mapping takes no member, window or warning (it rides along
+with its table's whole edition), and a table serves some cell of each variant it carries
+a key of (a file of that table and variant is emitted only for a served cell, so the key
+would otherwise never ride along); both refuse as `inventory_carried_key_invalid`. Its
+variable must be a panel key (`panel_entity_key` or `panel_time_key`) of its variant,
+since the order carries nothing else; compilation refuses any other in the fold gate,
+located at the mapping. `holding_key` stores it, apart from `holding_mapping`, so a
+reader that predates it never matches it as a served cell: the bump is minor (12.3.0),
+and a 12.0 to 12.2 reader orders those files without the key, as it does today. The
+order's held keys read both relations ([../crates/DESIGN.md](../crates/DESIGN.md),
+"Order manifest", step 5), and the reader gate is 12.3. `holding_key` is a base table,
+so a 12.2 base cannot be derived up to 12.3 (derive rebuilds only the derived tables,
+and `validate_built_db` refuses a missing table): the next steward build rebuilds the
+global base under 12.3.0, as for 12.1.0. Coverage diagnostics skip carried mappings,
+since the catalog owes a cell nothing serves no window.
 
 **Column windows** (#1645). A windowed mapping serves its coordinate only inside its
 window, so the overlap check compares the window, as for a year or month member, and the

@@ -1,0 +1,34 @@
+version = 1
+steward = "swecov"
+
+# A carried key rides along with its table's whole edition and serves no cell, so
+# a window narrows nothing it serves.
+[[table]]
+id = "Aux"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+carried = true
+window = { from = 2016, to = 2017 }
+
+# A carried key of a variant the table serves no cell of never rides along.
+[[table]]
+id = "Dead"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+carried = true
+[[table.column]]
+name = "Amount"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/amount"
+representation = "Amount"

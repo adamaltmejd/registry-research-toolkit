@@ -1,0 +1,99 @@
+{
+  "warnings": [],
+  "tables": [
+    {
+      "physical_id": "Aux",
+      "scope": "intervals",
+      "edition": {
+        "from": 2012,
+        "to": 2024
+      },
+      "partition": null,
+      "projection": null,
+      "period_column": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Main",
+      "scope": "intervals",
+      "edition": {
+        "from": 2015,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": null,
+      "period_column": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Aux",
+      "lo": "2012-01-01",
+      "hi": "2024-12-31"
+    },
+    {
+      "physical_id": "Main",
+      "lo": "2015-01-01",
+      "hi": "2019-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Aux",
+      "name": "Extra",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Aux",
+      "name": "Id",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Main",
+      "name": "Amount",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Main",
+      "name": "Id",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Aux",
+      "name": "Extra",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/extra",
+      "representation_literal": "Extra",
+      "representation_canonical": "Extra"
+    },
+    {
+      "physical_id": "Main",
+      "name": "Amount",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/amount",
+      "representation_literal": "Amount",
+      "representation_canonical": "Amount"
+    },
+    {
+      "physical_id": "Main",
+      "name": "Id",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    }
+  ],
+  "keys": [
+    {
+      "physical_id": "Aux",
+      "name": "Id",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    }
+  ]
+}

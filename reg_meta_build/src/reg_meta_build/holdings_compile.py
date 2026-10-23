@@ -14,6 +14,7 @@ from ._resolved_common import _storage_id
 from .data_warnings import DataWarning, keep_warning, mapping_data_warnings
 from .db import catalog_coordinate_ids, stored_data_warnings, write_data_warnings
 from .errors import EXIT_CONFIG, RegMetaError
+from .fqid_slugs import _decode_panel_entity_key_refs
 from .holdings_accounting import (
     INVENTORY_ROLE_PATH,
     HoldingsAccounting,
@@ -68,9 +69,13 @@ def canonical_inventory(
     *,
     coordinate_ids: tuple[dict[str, int], dict[str, int]] | None = None,
 ) -> DeliveryInventory:
-    """Canonicalize against the resolver's whole-history delivery universe."""
+    """Canonicalize against the resolver's whole-history delivery universe.
+
+    A carried key must be a panel key of its variant: the order carries it only as
+    the variant's row key, so any other variable would never ride along."""
     variables, variants = coordinate_ids or catalog_coordinate_ids(conn)
     universes: dict[tuple[int, int], dict[str, str]] = {}
+    panel_keys: dict[int, set[str]] = {}
     rejections = []
     tables = []
     for table in inventory.tables:
@@ -87,6 +92,24 @@ def canonical_inventory(
                         f"{locator}: unresolved coordinate {mapping.register_variant} {mapping.variable}"
                     )
                     continue
+                if mapping.carried:
+                    if variant_id not in panel_keys:
+                        entity, time = conn.execute(
+                            "SELECT panel_entity_key, panel_time_key "
+                            "FROM register_variant WHERE register_variant_id = ?",
+                            (variant_id,),
+                        ).fetchone()
+                        panel_keys[variant_id] = {
+                            *_decode_panel_entity_key_refs(entity),
+                            *_decode_panel_entity_key_refs(time),
+                        }
+                    if mapping.variable.rsplit("/", 1)[1] not in panel_keys[variant_id]:
+                        rejections.append(
+                            f"{locator}: carried {mapping.variable} is not a panel key "
+                            f"of {mapping.register_variant}; a carried key is its "
+                            "variant's row key"
+                        )
+                        continue
                 key = variable_id, variant_id
                 if key not in universes:
                     universes[key] = dict(
@@ -528,6 +551,18 @@ def compile_holdings(
                     if mapping.window is not None
                     else (None, None)
                 )
+                if mapping.carried:
+                    conn.execute(
+                        "INSERT INTO holding_key(column_id, variant_id, variable_id, representation_literal, representation_canonical) VALUES (?, ?, ?, ?, ?)",
+                        (
+                            column_id,
+                            variants[mapping.register_variant],
+                            variables[mapping.variable],
+                            literal.representation,
+                            mapping.representation,
+                        ),
+                    )
+                    continue
                 conn.execute(
                     "INSERT INTO holding_mapping(column_id, variant_id, variable_id, representation_literal, representation_canonical, member_position, member_lo, member_hi, window_lo, window_hi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (

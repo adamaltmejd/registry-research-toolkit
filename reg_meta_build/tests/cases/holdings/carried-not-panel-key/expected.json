@@ -1,0 +1,7 @@
+{
+  "error_contains": "carried scb/example/extra is not a panel key of scb/example/annual",
+  "error_locators": [
+    "policy/inventory.toml:table['Aux'].column['Extra'].mapping[0]"
+  ],
+  "rejected_mappings": 1
+}

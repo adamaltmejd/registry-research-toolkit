@@ -378,8 +378,9 @@ fn placement(entry: &Entry) -> (String, String, String) {
 /// entry takes the source of the file's first entry and the union of the file's
 /// requested days, narrowed to a year or month member's or a column window's own
 /// period (a member or window the union does not reach is not added); a
-/// year-independent file's keys request `_default`. Ordered by file (table, variant,
-/// edition), then member index and column, after every ordered entry.
+/// year-independent file's keys request `_default`. An auxiliary table's carried key
+/// (`holding_key`, never a served mapping) comes along the same way. Ordered by file
+/// (table, variant, edition), then member index and column, after every ordered entry.
 fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> {
     let mut stmt = conn.prepare_cached(&format!(
         "SELECT hc.name, p.slug || '/' || r.slug || '/' || v.slug, \
@@ -390,8 +391,17 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
          JOIN variable v ON v.variable_id = hm.variable_id \
          JOIN register r ON r.register_id = v.register_id \
          JOIN provider p ON p.provider_id = r.provider_id \
-         WHERE ht.physical_id = ? AND hm.variant_id = ? AND {IS_KEY} \
-         ORDER BY hc.name, v.slug, hm.representation_canonical"
+         WHERE ht.physical_id = ?1 AND hm.variant_id = ?2 AND {IS_KEY} \
+         UNION ALL \
+         SELECT hc.name, p.slug || '/' || r.slug || '/' || v.slug, \
+         hm.representation_canonical, NULL, NULL, NULL, NULL, NULL \
+         FROM holding_key hm JOIN holding_column hc USING(column_id) \
+         JOIN holding_table ht USING(table_id) \
+         JOIN variable v ON v.variable_id = hm.variable_id \
+         JOIN register r ON r.register_id = v.register_id \
+         JOIN provider p ON p.provider_id = r.provider_id \
+         WHERE ht.physical_id = ?1 AND hm.variant_id = ?2 AND {IS_KEY} \
+         ORDER BY 1, 2, 3"
     ))?;
     let mut keys = Vec::new();
     for file in files(entries).into_values() {

@@ -1,6 +1,6 @@
 {
   "passed": false,
   "failures_contain": [
-    "holding_table lacks columns period_column, period_encoding of schema 12.2.0"
+    "holding_table lacks columns period_column, period_encoding of schema 12.3.0"
   ]
 }

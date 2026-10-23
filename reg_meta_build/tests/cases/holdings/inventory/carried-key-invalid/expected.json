@@ -1,0 +1,15 @@
+{
+  "note": "A carried key (an auxiliary table's join key) rides along with its table's whole edition and serves no cell, so it takes no member, window or data_warning; and it rides along only in a file of its table's own variant, so the table must serve some cell of that variant.",
+  "fails_if": "a carried mapping with a window is admitted (the compiled holding_key has no window, so the key would silently ride along over the whole edition), or a table carrying a key of a variant it serves no cell of is admitted (no file of it is ever ordered, so the key never rides along and nothing says so)",
+  "error": {
+    "code": "inventory_carried_key_invalid",
+    "locators": [
+      "table['Aux'].column['Id'].mapping[0]",
+      "table['Dead']"
+    ],
+    "message_contains": [
+      "carried key scb/example/annual scb/example/id takes no member, window or data_warning",
+      "table['Dead']: Value error, carries a key of scb/example/annual but serves no cell of it"
+    ]
+  }
+}

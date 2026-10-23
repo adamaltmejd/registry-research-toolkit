@@ -257,3 +257,24 @@ name = "Month"
 register_variant = "scb/example/monthly"
 variable = "scb/example/month"
 representation = "Month"
+
+# An auxiliary delivery with no parent to project (as SWECOV's NDR and
+# birth-information tables): Aux spans 2016..2020 beside Wide's 2018, and its Id,
+# the annual row key, is carried. Wide alone serves the Id cell; Aux's files carry
+# Id as a held key.
+[[table]]
+id = "Aux"
+edition = { from = 2016, to = 2020 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+carried = true
+[[table.column]]
+name = "Note"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/note"
+representation = "Note"
