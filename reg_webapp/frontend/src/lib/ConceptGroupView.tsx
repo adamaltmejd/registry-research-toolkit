@@ -340,6 +340,7 @@ export function ConceptGroupView({
   const committedRows = committedPickerRows(draft, bands, {
     period: activePeriod,
     window: pickerWindow,
+    studyWindow: projectWindow,
   });
   // Where the group as a whole has data: the Timeline's coverage.
   const coverage = unionCoverage(bands);

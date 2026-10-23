@@ -36,7 +36,11 @@ import {
   type StagedAdd,
   type StagedRemove,
 } from "./project_store";
-import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
+import {
+  sourcePeriodFromWire,
+  sourcePeriodToWire,
+  studyWindowInterval,
+} from "./reg_core";
 
 export interface StagedPickerBand {
   key: string;
@@ -72,6 +76,9 @@ export interface PickerSourcePeriod {
 export interface PickerCommitScope {
   period?: string | null | undefined;
   window?: [number, number] | null;
+  /** The project's study window, when the page's own `?period` sets the add
+   * window: a folded row's variant share outside it is left out (#1834). */
+  studyWindow?: ProjectStudyWindow | null;
 }
 
 type CommitVariantSegment = Pick<PickerVariantSegment, "variant" | "windows">;
@@ -191,8 +198,31 @@ function relevantSegments(
   const overlapping = segments.filter((segment) =>
     windowsOverlapWindow(segment.windows, addWindow),
   );
+  const relevant = overlapping.length > 0 ? overlapping : segments;
+  // A page `?period` can reach past the study window, and the variant share it
+  // reaches only there (LISA 15+ from 2010 under a 1980–2005 window) would be a
+  // source outside the window, which the Apply refuses (#1834). Leave such a share
+  // out while another overlaps the window; a row with none keeps them all, so the
+  // Apply still names it. simplify: deleted when a source spans its variant
+  // family (#1840) and a folded row is one add.
+  const study = scope.studyWindow
+    ? studyWindowInterval(scope.studyWindow)
+    : null;
+  const inStudy =
+    study && addWindow
+      ? {
+          from: addWindow.from > study[0] ? addWindow.from : study[0],
+          to: addWindow.to < study[1] ? addWindow.to : study[1],
+        }
+      : null;
+  const inside =
+    inStudy && inStudy.from <= inStudy.to
+      ? relevant.filter((segment) =>
+          windowsOverlapWindow(segment.windows, inStudy),
+        )
+      : [];
   return {
-    segments: overlapping.length > 0 ? overlapping : segments,
+    segments: inside.length > 0 ? inside : relevant,
     addWindow,
     folded: true,
   };
@@ -776,8 +806,11 @@ export async function applyStagedPicks(
   // project window to clip it to, has none: applying it would author `period: ""`
   // and an underivable `type: ""` onto a draft that autosaves before /project is
   // ever opened. Refuse BEFORE any mutation (a null draft is not even minted).
-  let candidates = payload.adds.flatMap((pick) =>
-    stagedAddCandidates(pick, ctx.scope),
+  const candidates = payload.adds.flatMap((pick) =>
+    stagedAddCandidates(pick, {
+      ...ctx.scope,
+      studyWindow: ctx.studyWindow ?? null,
+    }),
   );
   // A column with NO years inside the add window has no overlap to persist: the
   // common study window blocks it rather than inventing a period (reg_webapp/
@@ -796,26 +829,20 @@ export async function applyStagedPicks(
   // The add window may be the page's own `?period`, not the study window. An add
   // it resolves wholly outside the study window is a disjoint source, which blocks
   // the order (reg_webapp/DESIGN.md → Common study window) — refused here, naming
-  // the window, rather than "applied" into a blocked project. The test is per
-  // pick: a folded row fans out per variant (LISA 16+ until 2009, 15+ from 2010),
-  // and a variant's share wholly outside the window is dropped while another share
-  // overlaps it (#1834). simplify: deleted when a source spans its variant family
-  // (#1840) and a pick is one candidate.
+  // the window, rather than "applied" into a blocked project.
   const studyWindow = ctx.studyWindow ?? null;
   if (studyWindow !== null) {
-    const inside = (candidate: StagedAddCandidate) =>
-      periodWindowRelation(candidate.period, studyWindow) !== "disjoint";
-    const overlapping = new Set(
-      candidates.filter(inside).map((candidate) => candidate.pick),
-    );
     const disjoint = [
       ...new Set(
         candidates
-          .filter((candidate) => !overlapping.has(candidate.pick))
+          .filter(
+            (candidate) =>
+              periodWindowRelation(candidate.period, studyWindow) ===
+              "disjoint",
+          )
           .map((candidate) => candidate.pick.row.column),
       ),
     ];
-    candidates = candidates.filter(inside);
     if (disjoint.length > 0) {
       return { kind: "outside-study-window", columns: disjoint, studyWindow };
     }

@@ -14,6 +14,7 @@ import { projectStore } from "./project_store";
 import { storedProject } from "./project-store-test-helpers";
 import {
   applyStagedPicks,
+  committedPickerRows,
   type StagedPick,
   type StagedPickerBand,
 } from "./staged_picker";
@@ -493,9 +494,20 @@ describe("applyStagedPicks against the study window", () => {
     expect(
       storedProject()?.sources.map((s) => [s.register_variant, s.period]),
     ).toEqual([["scb/lisa/individer-16plus", { from: 2004, to: 2009 }]]);
+    // …and the picker reads the row back as in the project, so it is not offered
+    // for a second add (fails if the marker still expects the 15+ share).
+    const committed = committedPickerRows(
+      projectStore.draft,
+      [bandOf(key, pickerRepresentations(dispInk))],
+      { period: "2004..2012", window: [1980, 2005], studyWindow },
+    );
+    expect([...committed.values()].map((c) => c.registerVariant)).toEqual([
+      "scb/lisa/individer-16plus",
+    ]);
   });
 
   it("still refuses a pick with no years inside the window", async () => {
+    // Fails if the #1834 relaxation lets a wholly outside pick through.
     stubResolve(dispInk);
     newProject();
     const before = JSON.stringify(projectStore.draft);

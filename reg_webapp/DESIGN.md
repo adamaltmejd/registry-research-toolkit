@@ -1740,7 +1740,11 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   names the columns and the window in the picker's status row. A subject page's own
   `?period` overrides the add window, so the study window is checked as well: an add the
   page period resolves wholly outside it would author a source that blocks the order,
-  and is refused the same way (`outside-study-window`), naming the study window.
+  and is refused the same way (`outside-study-window`), naming the study window. A
+  folded row's variant share wholly outside the study window is left out while another
+  share overlaps it (#1834): a LISA column picked over 2004–2012 under a 1980–2005
+  window adds its 16+ years and leaves the 15+ ones out. That goes when a source spans
+  its variant family (#1840).
 - **A window edit never rewrites a source period.** The slider writes `window` and
   nothing else. A source the new window leaves with no years inside it keeps its period
   and blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder`
