@@ -1,49 +1,33 @@
-import { type CSSProperties, type ReactNode, useId, useState } from "react";
+import {
+  type ComponentProps,
+  type CSSProperties,
+  type ReactNode,
+  useId,
+  useState,
+} from "react";
 import { Slider, SliderThumb, SliderTrack } from "react-aria-components";
 import {
   type Coverage,
   clampYearPeriodWire,
   clampYearWindow,
   coverageBandEdges,
+  coverageMarks,
   intersectCoverageWindow,
   periodWindowRelation,
   sameYearWindow,
+  uncoveredYears,
   yearWindowFromWire,
   yearWindowRepresentable,
   yearWindowToWire,
 } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
+import { RepresentationPicker } from "./RepresentationPicker";
 import { studyWindowInterval } from "./reg_core";
 import styles from "./Timeline.module.css";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
 
 type Years = ProjectStudyWindow;
-
-/** Inclusive runs of consecutive years. */
-function runs(years: readonly number[]): Years[] {
-  const out: Years[] = [];
-  for (const y of years) {
-    const last = out.at(-1);
-    if (last && y === last.to + 1) last.to = y;
-    else out.push({ from: y, to: y });
-  }
-  return out;
-}
-
-/** The years of `window` outside `covered`: what the window asks for that the
- * subject does not deliver. */
-function uncovered(window: Years, covered: Years | null): Years[] {
-  if (covered === null) return [];
-  const out: Years[] = [];
-  if (window.from < covered.from) {
-    out.push({ from: window.from, to: Math.min(window.to, covered.from - 1) });
-  }
-  if (window.to > covered.to) {
-    out.push({ from: Math.max(window.from, covered.to + 1), to: window.to });
-  }
-  return out.filter((r) => r.from <= r.to);
-}
 
 const span = (r: Years) =>
   r.from === r.to ? `${r.from}` : `${r.from}–${r.to}`;
@@ -64,15 +48,13 @@ interface DrawingProps {
   covered: Years | null;
   /** The delivered years, or null to draw coverage as one bar. */
   years: readonly number[] | null;
-  /** The selection's slider, laid over the drawing (variable page). */
-  overlay?: ReactNode;
 }
 
 /** The drawing: the band, coverage as an ink bar cut by edition ticks, a gap
  * inside coverage as a hatch, the uncovered part of the band in `info-bg`,
  * then the axis. A year is a cell, [year, year + 1). Hidden from assistive
  * technology: the header and the legend say the same in words. */
-function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
+function Drawing({ axis, band, covered, years }: DrawingProps) {
   const cells = axis.to - axis.from + 1;
   const pct = (year: number) => ((year - axis.from) / cells) * 100;
   const place = (r: Years): CSSProperties => ({
@@ -80,23 +62,8 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
     width: `${pct(r.to + 1) - pct(r.from)}%`,
   });
 
-  const delivered =
-    covered === null
-      ? []
-      : years === null
-        ? [covered]
-        : runs(years.filter((y) => y >= covered.from && y <= covered.to));
-  const gaps: Years[] = [];
-  for (let i = 1; i < delivered.length; i += 1) {
-    gaps.push({ from: delivered[i - 1].to + 1, to: delivered[i].from - 1 });
-  }
-  const ticks =
-    years === null
-      ? []
-      : delivered.flatMap((r) =>
-          Array.from({ length: r.to - r.from }, (_, i) => r.from + i + 1),
-        );
-  const outside = band ? uncovered(band, covered) : [];
+  const { delivered, gaps, ticks } = coverageMarks(covered, years);
+  const outside = band ? uncoveredYears(band, covered) : [];
 
   const labels: {
     year: number;
@@ -193,7 +160,6 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
           />
         ))}
       </div>
-      {overlay}
       <div className={styles.axis} aria-hidden="true">
         {labels.map((l) => (
           <span
@@ -227,57 +193,58 @@ interface HeadProps {
   id?: string;
   label: string;
   covered: Years | null;
-  /** The band's years outside coverage: an informational note, not a warning. */
+  /** The band's years outside coverage. The drawing shows them in `info-bg`;
+   * the header names them for a screen reader only (#1833). */
   outside: readonly Years[];
+  /** Clear, while a source period is applied (variable page). */
+  action?: ReactNode;
 }
 
 /** The `label` header: what the drawing is against, then the covered years. */
-function Head({ id, label, covered, outside }: HeadProps) {
+function Head({ id, label, covered, outside, action }: HeadProps) {
   return (
-    <div id={id} className={styles.head}>
-      <span className="micro-label">{label}</span>
-      <span className={styles.headFacts}>
-        {outside.length > 0 && (
-          <span className={styles.info}>
-            <span aria-hidden="true">i</span> Not covered{" "}
-            {outside.map(span).join(", ")}
-          </span>
-        )}
-        {covered && (
-          <span className={styles.covered}>
-            <span className="visually-hidden">Covered </span>
-            {span(covered)}
-          </span>
-        )}
+    <div className={styles.head}>
+      <span id={id} className="micro-label">
+        {label}
       </span>
+      {action}
+      {covered && (
+        <span className={styles.covered}>
+          <span className="visually-hidden">Covered </span>
+          {span(covered)}
+          {outside.length > 0 && (
+            <span className="visually-hidden">
+              . Not covered {outside.map(span).join(", ")}
+            </span>
+          )}
+        </span>
+      )}
     </div>
   );
 }
 
 /** The legend, in `label` text: only the marks the drawing shows. */
-function Legend({
-  band,
-  gaps,
-  outside,
-}: {
-  band: string | null;
-  gaps: boolean;
-  outside: boolean;
-}) {
+function Legend({ band, gaps }: { band: string | null; gaps: boolean }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
-      {band && <li className={styles.legendBand}>{band}</li>}
-      <li className={styles.legendCoverage}>Delivered years</li>
-      {gaps && <li className={styles.legendGap}>Gap inside coverage</li>}
-      {outside && <li className={styles.legendOutside}>Window not covered</li>}
+      {band && (
+        <li>
+          <i className={styles.keyBand} />
+          {band}
+        </li>
+      )}
+      <li>
+        <i className={styles.keyCoverage} />
+        Delivered years
+      </li>
+      {gaps && (
+        <li>
+          <i className={styles.keyGap} />
+          Gap inside coverage
+        </li>
+      )}
     </ul>
   );
-}
-
-function hasGaps(covered: Years | null, years: readonly number[] | null) {
-  if (covered === null || years === null) return false;
-  const inside = years.filter((y) => y >= covered.from && y <= covered.to);
-  return inside.length < covered.to - covered.from + 1;
 }
 
 interface TimelineProps {
@@ -300,8 +267,8 @@ interface TimelineProps {
  * The read-only Timeline (DESIGN.md → Time): one axis over the catalog's
  * years, the active window as an `accent-bg` band, coverage as an ink bar with
  * edition ticks, a gap inside coverage hatched, and the window's uncovered part
- * in `info-bg` with an "i" note in the header. For register and group panes;
- * the variable page's selectable one is `PeriodTimeline`.
+ * in `info-bg`. For register and group panes; the variable page's is
+ * `VariableTimeline`.
  */
 export function Timeline({
   axis,
@@ -313,7 +280,7 @@ export function Timeline({
 }: TimelineProps) {
   const covered = coverageBandEdges(coverage, axis.from, axis.to, vintageYear);
   const band = window ? clampYearWindow(window, axis.from, axis.to) : null;
-  const outside = band ? uncovered(band, covered) : [];
+  const outside = band ? uncoveredYears(band, covered) : [];
   const bandName =
     band === null
       ? null
@@ -330,18 +297,25 @@ export function Timeline({
       <Drawing axis={axis} band={band} covered={covered} years={years} />
       <Legend
         band={bandName}
-        gaps={hasGaps(covered, years)}
-        outside={outside.length > 0}
+        gaps={coverageMarks(covered, years).gaps.length > 0}
       />
     </section>
   );
 }
 
-interface PeriodTimelineProps {
+type PickerProps = Omit<
+  ComponentProps<typeof RepresentationPicker>,
+  "window" | "timeline" | "catalogYears"
+>;
+
+interface VariableTimelineProps extends PickerProps {
   /** The active `?period` from the URL (null = full history). */
   period: string | null;
   /** The global project window (#614), or null = none set. */
   window: ProjectStudyWindow | null;
+  /** The window the columns are read against: a valid `?period`, else the
+   * project window (`pickerWindowYears`). */
+  pickerWindow: [number, number] | null;
   /** The subject's data-availability span, or null = unknown. */
   coverage: Coverage | null;
   /** The subject's delivered years, or null to draw coverage solid. */
@@ -350,7 +324,7 @@ interface PeriodTimelineProps {
   windowMinYear: number;
   /** The catalog's last year: the axis ceiling and the open-ended coverage
    * end. */
-  vintageYear: number;
+  windowMaxYear: number;
   /** Treat the outer bounds as hard steward limits, not global fallbacks. */
   enforcePeriodBounds: boolean;
   /** Called with the chosen wire value when a thumb comes to rest. */
@@ -360,17 +334,19 @@ interface PeriodTimelineProps {
 }
 
 /**
- * The variable page's Timeline (#615, Y-16; DESIGN.md → Time): the band is
- * the source period, a selection whose two thumbs stop at the variable's
- * availability. The thumbs move live while dragged and the period is applied
- * when they come to rest (on release, or on each committed key press), so a
- * drag is one URL change; there are no year fields and no Apply (maintainer
- * ruling 2026-10-22).
+ * The variable page's one Timeline (#615, #1833; DESIGN.md → Time): coverage,
+ * the variable's columns and the variables a succession reaches, drawn as one
+ * LaneGraph on one axis. The band is the source period, a selection whose two
+ * thumbs over the coverage row stop at the variable's availability. The thumbs
+ * move live while dragged (the band and the columns' in/out follow them) and
+ * the period is applied when they come to rest (on release, or on each
+ * committed key press), so a drag is one URL change; there are no year fields
+ * and no Apply (maintainer ruling 2026-10-22).
  *
  * A source period that differs from the project window inside the variable's
  * availability says so in a `warn` row with Reset; a window wider than the
- * availability is an `info` note in the header and an `info-bg` band, not a
- * warning, and a period narrowed only to that availability is no deviation.
+ * availability is the `info-bg` part of the band, not a warning, and a period
+ * narrowed only to that availability is no deviation.
  *
  * A non-year `?period` (a term, a list, `_default`) is valid URL state this UI
  * does not author: it reads as text with Clear and is never rewritten.
@@ -378,21 +354,23 @@ interface PeriodTimelineProps {
  * Nothing here remounts when the applied `?period` changes (Y-65), so the
  * keyboard focus on a thumb stays put while each key press applies.
  */
-export function PeriodTimeline({
+export function VariableTimeline({
   period,
   window,
+  pickerWindow,
   coverage,
   years,
   windowMinYear,
-  vintageYear,
+  windowMaxYear,
   enforcePeriodBounds,
   onSubmit,
   onClear,
-}: PeriodTimelineProps) {
+  ...picker
+}: VariableTimelineProps) {
   const labelId = useId();
   // The thumbs mid-drag; null when they rest on the applied selection.
   const [dragging, setDragging] = useState<ProjectStudyWindow | null>(null);
-  const ceiling = vintageYear;
+  const ceiling = windowMaxYear;
   const boundedPeriod = enforcePeriodBounds
     ? clampYearPeriodWire(period, windowMinYear, ceiling)
     : period;
@@ -434,7 +412,9 @@ export function PeriodTimeline({
       : null;
 
   // The axis: the catalog's years, widened only to what is drawn on it (which
-  // the steward's bounds already clamp, so a steward axis is its span).
+  // the steward's bounds already clamp, so a steward axis is its span). The
+  // lanes may widen it further to a column's years; the slider takes the axis
+  // the graph draws.
   const drawn: number[] = [];
   for (const w of [boundedWindow, boundedPeriodWindow]) {
     if (w) drawn.push(w.from, w.to);
@@ -474,11 +454,11 @@ export function PeriodTimeline({
 
   // Periods are compared inside the variable's availability
   // (`periodWindowRelation`, the rule /project judges sources by): years it has
-  // no data for are the data's narrowing, not the user's, and say so in the "i"
-  // note, never the ▲ row. So the default seed (window∩coverage), that seed
-  // applied, and the window itself all match the window. A window wholly
-  // outside availability has no part to match: any selection other than the
-  // window itself differs.
+  // no data for are the data's narrowing, not the user's, and show as the
+  // band's `info-bg` part, never the ▲ row. So the default seed
+  // (window∩coverage), that seed applied, and the window itself all match the
+  // window. A window wholly outside availability has no part to match: any
+  // selection other than the window itself differs.
   const coveredDays = covered && studyWindowInterval(covered);
   const matchesWindow =
     boundedWindow !== null &&
@@ -511,125 +491,140 @@ export function PeriodTimeline({
           ),
         };
   // The band is the active window: a source period that differs, else the
-  // project window (the thumbs may sit on the narrower seed), so "not
-  // covered" shows for as long as the period only follows availability.
+  // project window (the thumbs may sit on the narrower seed), so the uncovered
+  // years show for as long as the period only follows availability.
   const showBand =
     subAnnualPeriod === null && (userChosen || boundedWindow !== null);
   const band = showBand ? (sourceKind ? selection : boundedWindow) : null;
-  const outside = band ? uncovered(band, covered) : [];
+  const outside = band ? uncoveredYears(band, covered) : [];
 
-  const cells = max - min + 1;
-  // RAC places a thumb at (value − min) / (max − min) of its track; inset by
-  // half a year cell each side, each thumb sits on the centre of its year.
-  const trackInset = `${(0.5 / cells) * 100}%`;
+  function slider(axis: [number, number]): ReactNode {
+    // RAC places a thumb at (value − min) / (max − min) of its track; inset by
+    // half a year cell each side, each thumb sits on the centre of its year.
+    const trackInset = `${(0.5 / (axis[1] - axis[0] + 1)) * 100}%`;
+    return (
+      <Slider
+        className={styles.slider}
+        aria-label="Period window (years)"
+        minValue={axis[0]}
+        maxValue={axis[1]}
+        value={[selection.from, selection.to]}
+        formatOptions={{ useGrouping: false }}
+        style={{ left: trackInset, right: trackInset }}
+        onChange={(next) => {
+          const at = moved(next);
+          if (!sameYearWindow(at, selection)) setDragging(at);
+        }}
+        onChangeEnd={(next) => {
+          const at = moved(next);
+          setDragging(null);
+          // A rest where the period already is applies nothing: a click
+          // on a thumb must not turn the seed into a URL period.
+          if (
+            !sameYearWindow(at, boundedPeriodWindow ?? seeded) ||
+            (periodWindow === null && dragging !== null)
+          ) {
+            onSubmit(yearWindowToWire(at));
+          }
+        }}
+      >
+        <SliderTrack className={styles.track}>
+          <SliderThumb
+            index={0}
+            aria-label="From year"
+            className={styles.thumb}
+          />
+          <SliderThumb
+            index={1}
+            aria-label="To year"
+            className={styles.thumb}
+          />
+        </SliderTrack>
+      </Slider>
+    );
+  }
 
   return (
-    // `period-picker` names the card for the flows driver.
-    <section
-      className={`period-picker ${styles.timeline}`}
-      aria-labelledby={labelId}
-    >
-      <Head
-        id={labelId}
-        label={headLabel(band !== null, sourceKind)}
-        covered={covered}
-        outside={outside}
-      />
-      <Drawing
-        axis={{ from: min, to: max }}
-        band={band}
-        covered={covered}
-        years={years}
-        overlay={
-          <Slider
-            className={styles.slider}
-            aria-label="Period window (years)"
-            minValue={min}
-            maxValue={max}
-            value={[selection.from, selection.to]}
-            formatOptions={{ useGrouping: false }}
-            style={{ left: trackInset, right: trackInset }}
-            onChange={(next) => {
-              const at = moved(next);
-              if (!sameYearWindow(at, selection)) setDragging(at);
-            }}
-            onChangeEnd={(next) => {
-              const at = moved(next);
-              setDragging(null);
-              // A rest where the period already is applies nothing: a click
-              // on a thumb must not turn the seed into a URL period.
-              if (
-                !sameYearWindow(at, boundedPeriodWindow ?? seeded) ||
-                (periodWindow === null && dragging !== null)
-              ) {
-                onSubmit(yearWindowToWire(at));
+    // `period-picker` names the card for the flows driver; the picker inside
+    // lays it out.
+    <section className="period-picker" aria-labelledby={labelId}>
+      <RepresentationPicker
+        {...picker}
+        window={dragging ? [dragging.from, dragging.to] : pickerWindow}
+        catalogYears={[min, max]}
+        timeline={{
+          head: (
+            <Head
+              id={labelId}
+              label={headLabel(band !== null, sourceKind)}
+              covered={covered}
+              outside={outside}
+              action={
+                period !== null && (
+                  <Button variant="ghost" onPress={onClear}>
+                    Clear period
+                  </Button>
+                )
               }
-            }}
-          >
-            <SliderTrack className={styles.track}>
-              <SliderThumb
-                index={0}
-                aria-label="From year"
-                className={styles.thumb}
-              />
-              <SliderThumb
-                index={1}
-                aria-label="To year"
-                className={styles.thumb}
-              />
-            </SliderTrack>
-          </Slider>
-        }
-      />
-      <div className={styles.foot}>
-        <Legend
-          band={
-            band === null ? null : sourceKind ? "Source period" : "Study window"
-          }
-          gaps={hasGaps(covered, years)}
-          outside={outside.length > 0}
-        />
-        {period !== null && (
-          <Button variant="ghost" onPress={onClear}>
-            Clear period
-          </Button>
-        )}
-      </div>
-      {/* One standing live region for the period's warning, so a row that
-          appears after a move is announced. */}
-      <StatusRow
-        live="status"
-        tone={
-          subAnnualPeriod !== null || (differs && boundedWindow) ? "warn" : null
-        }
-        action={
-          subAnnualPeriod === null &&
-          differs &&
-          resetWindow && (
-            <Button
-              variant="ghost"
-              onPress={() => onSubmit(yearWindowToWire(resetWindow))}
-            >
-              Reset
-            </Button>
-          )
-        }
-      >
-        {subAnnualPeriod !== null ? (
-          <>
-            The active period <code>{subAnnualPeriod}</code> is not a span of
-            whole years, so the Timeline shows the project window.
-          </>
-        ) : (
-          differs &&
-          boundedWindow && (
+            />
+          ),
+          band: band && [band.from, band.to],
+          coverage: {
+            covered,
+            years,
+            outside,
+            bandName:
+              band === null
+                ? null
+                : sourceKind
+                  ? "Source period"
+                  : "Study window",
+          },
+          overlay: subAnnualPeriod === null ? slider : undefined,
+          foot: (
             <>
-              Differs from the project window ({boundedWindow.from}–
-              {boundedWindow.to}).
+              {/* One standing live region for the period's warning, so a row
+                  that appears after a move is announced. */}
+              <StatusRow
+                live="status"
+                tone={
+                  subAnnualPeriod !== null || (differs && boundedWindow)
+                    ? "warn"
+                    : null
+                }
+                action={
+                  subAnnualPeriod === null &&
+                  differs &&
+                  resetWindow && (
+                    <Button
+                      variant="ghost"
+                      onPress={() => onSubmit(yearWindowToWire(resetWindow))}
+                    >
+                      Reset
+                    </Button>
+                  )
+                }
+              >
+                {subAnnualPeriod !== null ? (
+                  <>
+                    The active period <code>{subAnnualPeriod}</code> is not a
+                    span of whole years, so the Timeline shows the project
+                    window.
+                  </>
+                ) : (
+                  differs &&
+                  boundedWindow && (
+                    <>
+                      Differs from the project window ({boundedWindow.from}–
+                      {boundedWindow.to}).
+                    </>
+                  )
+                )}
+              </StatusRow>
             </>
-          )
-        )}
-      </StatusRow>
+          ),
+        }}
+      />
     </section>
   );
 }

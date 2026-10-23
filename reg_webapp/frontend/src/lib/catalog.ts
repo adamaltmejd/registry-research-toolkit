@@ -2527,6 +2527,7 @@ export function coverageFromStates(
 ): Coverage | null {
   let from: number | null = null;
   let to: number | null = null;
+  let openEnded = false;
   for (const s of states) {
     if (s.period_scope === "year_independent") continue;
     // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
@@ -2538,12 +2539,16 @@ export function coverageFromStates(
     }
     // The open-ended sentinel is "still delivered" → the END stays unbounded
     // (null), the picker projects it to the vintage ceiling for the track.
+    // One still-delivered state leaves the whole union open, whatever the
+    // finite ends of the others.
+    if (s.valid_to === OPEN_ENDED_VALID_TO) openEnded = true;
     const toYear =
       s.valid_to === OPEN_ENDED_VALID_TO ? null : yearOf(s.valid_to);
     if (toYear !== null && (to === null || toYear > to)) {
       to = toYear;
     }
   }
+  if (openEnded) to = null;
   // BOTH bounds unknown (e.g. a wholly open-ended-on-both-sides state) → no
   // coverage track to draw, like an empty/bound-less set. A single finite side
   // is enough to draw + gap against.

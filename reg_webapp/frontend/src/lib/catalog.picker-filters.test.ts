@@ -219,7 +219,9 @@ describe("pickerWindowYears + representationInWindow (#678 dimming)", () => {
 describe("coverageFromStates (#615 availability span)", () => {
   it("the open-ended sentinel leaves the END unbounded (null), start preserved", () => {
     // `9999-12-31` = "still delivered" → `to: null`; the picker projects the open
-    // end to the slider's vintage ceiling, never a literal 9999 track.
+    // end to the slider's vintage ceiling, never a literal 9999 track. A
+    // finite sibling state does not cap it: the union stayed at 2008 and the
+    // Timeline's thumbs stopped short of years the column still delivers.
     expect(
       coverageFromStates([
         state({
@@ -227,8 +229,13 @@ describe("coverageFromStates (#615 availability span)", () => {
           valid_from: "2005-01-01",
           valid_to: "9999-12-31",
         }),
+        state({
+          state_id: "2",
+          valid_from: "2001-01-01",
+          valid_to: "2008-12-31",
+        }),
       ]),
-    ).toEqual({ from: 2005, to: null });
+    ).toEqual({ from: 2001, to: null });
   });
 
   it("the yearless floor (0001) leaves the START unbounded but PRESERVES a finite end", () => {

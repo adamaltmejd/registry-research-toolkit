@@ -1061,9 +1061,11 @@ async function periodFocusCase(page, counts, shoot) {
   await release();
   await resolved;
   await settled(page);
+  // The column is inside the period card since the Timeline and the columns
+  // are one drawing (#1833), so the check is that focus is still on it.
   const moved = await focusState(page);
   check(
-    moved.inPeriodCard === false,
+    await focused(elsewhere),
     `focus was pulled back to ${JSON.stringify(moved)} after the researcher left`,
   );
 

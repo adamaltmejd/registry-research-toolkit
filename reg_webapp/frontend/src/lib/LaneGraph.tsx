@@ -1,6 +1,7 @@
-import { useCallback, useId, useState } from "react";
+import { type ReactNode, useCallback, useId, useState } from "react";
 import styles from "./LaneGraph.module.css";
 import {
+  COVERAGE_HEIGHT,
   type LaneEdgeKind,
   type LaneGeometry,
   type LaneSpanGeometryInput,
@@ -9,6 +10,8 @@ import {
   type PlacedSpan,
   SPAN_HEIGHT,
 } from "./lane_graph";
+import { coverageMarks } from "./period";
+import type { ProjectStudyWindow } from "./project_data";
 import { ColumnChip, type ColumnChipState } from "./ui/ColumnChip";
 
 export interface LaneModel {
@@ -57,6 +60,19 @@ export interface LaneEdgeModel {
   kind: LaneEdgeKind;
 }
 
+/** The variable page's coverage row (DESIGN.md → Time → Timeline), drawn
+ * between the axis and the lanes. */
+export interface LaneCoverage {
+  /** The coverage edges, open ends resolved; null when unknown. */
+  covered: ProjectStudyWindow | null;
+  /** The delivered years, or null to draw coverage as one bar. */
+  years: readonly number[] | null;
+  /** The band's years outside coverage, in `info-bg` on this row. */
+  outside: readonly ProjectStudyWindow[];
+  /** What the band is, for the legend. */
+  bandName: string | null;
+}
+
 interface Props {
   label: string;
   lanes: LaneModel[];
@@ -66,6 +82,9 @@ interface Props {
   axis: [number, number];
   /** The active window, shaded as a band; null draws none. */
   window: [number, number] | null;
+  coverage?: LaneCoverage;
+  /** Laid over the coverage row's track (the period slider), on `axis`. */
+  overlay?: (axis: [number, number]) => ReactNode;
   isDisabled?: boolean;
   onToggle: (spanId: string) => void;
 }
@@ -77,7 +96,8 @@ interface Props {
  * `accent-bg` band. The marks are one decorative SVG; the lanes and spans are
  * HTML over it, so every span is a real checkbox in reading order, named with
  * its column, variable and years. Tab walks the spans lane by lane and Space
- * toggles one.
+ * toggles one. On a variable page a coverage row heads the lanes, so the
+ * Timeline and the columns are one drawing on one axis (#1833).
  */
 export function LaneGraph({
   label,
@@ -86,6 +106,8 @@ export function LaneGraph({
   edges,
   axis,
   window,
+  coverage,
+  overlay,
   isDisabled = false,
   onToggle,
 }: Props) {
@@ -105,7 +127,15 @@ export function LaneGraph({
 
   const geometry =
     width > 0
-      ? laneGeometry({ lanes, spans, edges, axis, window, width })
+      ? laneGeometry({
+          lanes,
+          spans,
+          edges,
+          axis,
+          window,
+          width,
+          coverageRow: coverage !== undefined,
+        })
       : null;
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
@@ -126,10 +156,25 @@ export function LaneGraph({
             <Marks
               geometry={geometry}
               lanes={lanes}
+              axis={axis}
+              coverage={coverage}
               width={width}
               hovered={hovered}
               markerId={markerId}
             />
+            {overlay && geometry.coverageY !== null && (
+              <div
+                className={styles.overlay}
+                style={{
+                  left: geometry.trackX,
+                  top: geometry.coverageY,
+                  width: geometry.trackWidth,
+                  height: COVERAGE_HEIGHT,
+                }}
+              >
+                {overlay(axis)}
+              </div>
+            )}
             {!geometry.stacked && (
               <span
                 className={styles.axisCaption}
@@ -137,6 +182,19 @@ export function LaneGraph({
                 aria-hidden="true"
               >
                 Variable
+              </span>
+            )}
+            {!geometry.stacked && geometry.coverageY !== null && (
+              <span
+                className={styles.coverageCaption}
+                style={{
+                  top: geometry.coverageY,
+                  height: COVERAGE_HEIGHT,
+                  width: geometry.trackX - 16,
+                }}
+                aria-hidden="true"
+              >
+                Coverage
               </span>
             )}
             <ol className={styles.lanes} aria-label={label}>
@@ -185,7 +243,13 @@ export function LaneGraph({
           </>
         )}
       </div>
+      {spans.some((s) => s.selectable) && (
+        <p className={styles.hint}>
+          Click a column to tick it for the project.
+        </p>
+      )}
       <Legend
+        coverage={coverage}
         succession={kinds.has("succession")}
         rename={kinds.has("rename")}
         inProject={spans.some((s) => s.state === "in")}
@@ -199,18 +263,35 @@ export function LaneGraph({
 function Marks({
   geometry,
   lanes,
+  axis,
+  coverage,
   width,
   hovered,
   markerId,
 }: {
   geometry: LaneGeometry;
   lanes: LaneModel[];
+  axis: [number, number];
+  coverage: LaneCoverage | undefined;
   width: number;
   hovered: string | null;
   markerId: string;
 }) {
   const marker = `${markerId}-arrow`;
+  const hatch = `${markerId}-hatch`;
   const bottom = geometry.height;
+  const x = (year: number) =>
+    geometry.trackX +
+    ((year - axis[0]) / (axis[1] + 1 - axis[0])) * geometry.trackWidth;
+  const run = (r: ProjectStudyWindow) => ({
+    x: x(r.from),
+    width: x(r.to + 1) - x(r.from),
+  });
+  const cy = geometry.coverageY;
+  const marks =
+    coverage && cy !== null
+      ? coverageMarks(coverage.covered, coverage.years)
+      : null;
   return (
     <svg
       className={styles.marks}
@@ -230,6 +311,15 @@ function Marks({
         >
           <path d="M0,0 L8,4 L0,8 z" className={styles.arrowhead} />
         </marker>
+        <pattern
+          id={hatch}
+          width="4"
+          height="4"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <rect width="2" height="4" className={styles.hatch} />
+        </pattern>
       </defs>
       {geometry.lanes.map((lane) =>
         lanes.find((l) => l.id === lane.id)?.current ? (
@@ -265,6 +355,58 @@ function Marks({
             ),
           )}
         </>
+      )}
+      {coverage && cy !== null && marks && (
+        <g>
+          {/* Where the band leaves coverage, its wash gives way to info-bg on
+              this row; the lanes below keep the band whole. */}
+          {coverage.outside.map((r) => (
+            <rect
+              key={`u${r.from}`}
+              className={styles.uncovered}
+              y={cy}
+              height={COVERAGE_HEIGHT}
+              {...run(r)}
+            />
+          ))}
+          {marks.delivered.map((r) => (
+            <rect
+              key={`d${r.from}`}
+              className={styles.coverage}
+              y={cy + 14}
+              height={12}
+              rx={1}
+              x={run(r).x}
+              width={Math.max(run(r).width, 2)}
+            />
+          ))}
+          {marks.gaps.map((r) => (
+            <rect
+              key={`g${r.from}`}
+              fill={`url(#${hatch})`}
+              y={cy + 14}
+              height={12}
+              {...run(r)}
+            />
+          ))}
+          {marks.ticks.map((year) => (
+            <line
+              key={`t${year}`}
+              className={styles.edition}
+              x1={x(year)}
+              x2={x(year)}
+              y1={cy + 14}
+              y2={cy + 26}
+            />
+          ))}
+          <line
+            className={styles.rule}
+            x1={0}
+            x2={width}
+            y1={cy + COVERAGE_HEIGHT}
+            y2={cy + COVERAGE_HEIGHT}
+          />
+        </g>
       )}
       {geometry.lanes.map((lane) => (
         <line
@@ -365,9 +507,17 @@ function Span({
     at.label === "inside" &&
     at.segments.length === 1 &&
     labelWidth(`${span.name} ${span.years}`) <= at.width;
+  // An unnamed series (an interrupted delivery) carries its name once, on its
+  // widest part, so a one-year first delivery does not clip it.
+  const widest = at.segments.reduce(
+    (best, segment, i) => (segment.width > at.segments[best].width ? i : best),
+    0,
+  );
   const faces = at.segments.map((segment, i) => {
     const name =
-      at.label !== "inside" ? "" : (segment.name ?? (i === 0 ? span.name : ""));
+      at.label !== "inside"
+        ? ""
+        : (segment.name ?? (i === widest ? span.name : ""));
     return (
       <ColumnChip
         // Positional: the segments are rebuilt whole from the span.
@@ -463,6 +613,7 @@ function Span({
 }
 
 function Legend({
+  coverage,
   succession,
   rename,
   inProject,
@@ -474,9 +625,29 @@ function Legend({
   inProject: boolean;
   blocked: boolean;
   window: boolean;
+  coverage: LaneCoverage | undefined;
 }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
+      {coverage?.bandName && (
+        <li>
+          <i className={styles.keyBand} />
+          {coverage.bandName}
+        </li>
+      )}
+      {coverage && (
+        <li>
+          <i className={styles.keyCoverage} />
+          Delivered years
+        </li>
+      )}
+      {coverage &&
+        coverageMarks(coverage.covered, coverage.years).gaps.length > 0 && (
+          <li>
+            <i className={styles.keyGap} />
+            Gap inside coverage
+          </li>
+        )}
       {succession && (
         <li>
           <i className={styles.keySuccession} />

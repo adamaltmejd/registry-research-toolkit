@@ -855,7 +855,7 @@ Per-kind mapping into the six sections:
   | Section       | Variable (`BindingLeafView`)                                                                                                                             | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
   | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
   | description   | definition / description / unit `<dl>`                                                                                                                   | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `PeriodTimeline` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                                                              | `ClassificationEditionGraph` compact edition DAG (#906)          | `Timeline` (read-only coverage) + `RepresentationPicker` (list or graph/time-band)                                                            |
+  | picker        | `VariableTimeline`: one `RepresentationPicker` graph headed by the coverage row and period slider, + add-to-project                                      | `ClassificationEditionGraph` compact edition DAG (#906)          | `Timeline` (read-only coverage) + `RepresentationPicker` (list or graph/time-band)                                                            |
   | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | —                                                                                                                                             |
   | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
   | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | —                                                                                                                                             |
@@ -901,13 +901,15 @@ kind:
   `RepresentationPicker.tsx` (filters, staging, the sticky footer). One shared staged
   diff footer labels the action by diff shape ("Add to project", "Remove from project",
   or "Apply changes"); the register list's add bar uses the same words. A committed
-  column whose source and the study window disagree is listed in words under the graph.
-  A **per-dimension filter strip** narrows a large multi-axis group to one axis value
-  (#908, `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in
-  `catalog.ts`); a dimension surfaces only when it discriminates (≥2 distinct values).
-  Filtering is a presentation lens: a hidden-but-selected row still commits, and the
-  footer signals this. OR within a dimension, AND across. The binding leaf uses the same
-  picker, with read-only neighbour lanes for variables a succession edge reaches.
+  column whose source and the study window disagree is listed in words under the graph;
+  on the variable page only one outside the window is, since the Timeline's ▲ row speaks
+  for differing years there (#1833). A **per-dimension filter strip** narrows a large
+  multi-axis group to one axis value (#908, `pickerFilterDimensions` / `pickerRowPasses`
+  / `PickerDimension` in `catalog.ts`); a dimension surfaces only when it discriminates
+  (≥2 distinct values). Filtering is a presentation lens: a hidden-but-selected row
+  still commits, and the footer signals this. OR within a dimension, AND across. The
+  binding leaf uses the same picker, with read-only neighbour lanes for variables a
+  succession edge reaches.
 
   The **sequential-rename collapse** (#902) is client-side and purely presentational:
 
@@ -925,16 +927,20 @@ kind:
 The **time axis** is the `Timeline` (`src/lib/Timeline.tsx`; see the Project-window
 store section): one axis over the viewed catalog's years, the active window as a band,
 the subject's coverage as a bar cut by edition ticks, a gap inside coverage hatched, and
-the part of the window outside coverage in the `info` tint with a "Not covered" note in
-the header. An open-ended coverage end is projected to the catalog vintage
+the part of the window outside coverage in the `info` tint (named in the header to a
+screen reader only). An open-ended coverage end is projected to the catalog vintage
 (`coverageBandEdges` in `period.ts`). The control does a different job per kind:
 
-- On the **variable** it is `PeriodTimeline`, the selectable form: a RAC two-thumb
-  `Slider` laid over the drawing, with Clear. It drives resolution: a thumb coming to
-  rest (on release, or on each key press) writes `?period` (precedence `?period` >
-  project window > full history), which **refetches** the `resolve_at` subset and
-  narrows the visible states. There are no exact-year fields and no Apply (maintainer
-  ruling 2026-10-22): a drag is one URL change, not one per year crossed. Richer
+- On the **variable** it is `VariableTimeline`, the selectable form, and one drawing
+  with the columns (#1833): the `RepresentationPicker`'s `LaneGraph` headed by a
+  coverage row, with a RAC two-thumb `Slider` laid over that row and Clear in the
+  header. The variable's columns and the variables a succession reaches are the lanes
+  below it, on the same axis. `VariableTimeline` owns the drag, so the band and the
+  columns' in/out follow the thumbs live. It drives resolution: a thumb coming to rest
+  (on release, or on each key press) writes `?period` (precedence `?period` > project
+  window > full history), which **refetches** the `resolve_at` subset and narrows the
+  visible states. There are no exact-year fields and no Apply (maintainer ruling
+  2026-10-22): a drag is one URL change, not one per year crossed. Richer
   server-supported `?period` wires (terms, comma lists, `_default`) remain valid
   deep-link state; one that is not a span of whole years is reported in a warning row,
   the drawing shows the project window, Clear drops it, and it is not rewritten unless
@@ -1515,23 +1521,22 @@ register reaching back to 1990 is an ordinary order — and the `/project` sourc
 the only surface that shows a source WHOLE: its full coordinate, its stored period and
 every column it carries, including columns no one catalog page lists. That is what a
 source-wide rewrite has to be looked at against, so that is where it is made. The card
-authors it in the catalog's own period vocabulary — exact-year fields and one Apply, the
-same entry `PeriodTimeline` carries beside its slider, plus "Add years" and a per-row
-Remove (hidden at one row) — and writes back through the same wire shaping a pick uses.
-Applying sorts and merges the rows into the disjoint ascending wire
-`periodCoverageUnion` would produce, refusing a within-row disorder or a genuine
-cross-row overlap in the same status line rather than silently collapsing one; a token
-period (`HT2018`) is a different vocabulary the rows do not author, and is shown as it
-stands. Where the years the period covers differ from the project's `window` (narrower,
-wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs from study window
-2005–2020"). Like the variable page's period card, it judges the two inside the years
-the source's columns are delivered in (the register read the card already makes for its
-name; period ruling 2026-10-22), so a period of window ∩ availability, what an add
-writes, is no divergence, and while that read is out the card marks nothing. The window
-is an authoring seed, not an inheritance (reg-core puts `period` on `Source` and,
-narrowed, on `Binding`; never on `window`), so divergence is shown rather than warned
-about. The one divergence that is more than shown is a period with no years inside the
-window at all, which blocks the order (see "Common study window").
+authors it in the catalog's own period vocabulary — exact-year fields and one Apply,
+plus "Add years" and a per-row Remove (hidden at one row) — and writes back through the
+same wire shaping a pick uses. Applying sorts and merges the rows into the disjoint
+ascending wire `periodCoverageUnion` would produce, refusing a within-row disorder or a
+genuine cross-row overlap in the same status line rather than silently collapsing one; a
+token period (`HT2018`) is a different vocabulary the rows do not author, and is shown
+as it stands. Where the years the period covers differ from the project's `window`
+(narrower, wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs from
+study window 2005–2020"). Like the variable page's period card, it judges the two inside
+the years the source's columns are delivered in (the register read the card already
+makes for its name; period ruling 2026-10-22), so a period of window ∩ availability,
+what an add writes, is no divergence, and while that read is out the card marks nothing.
+The window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`
+and, narrowed, on `Binding`; never on `window`), so divergence is shown rather than
+warned about. The one divergence that is more than shown is a period with no years
+inside the window at all, which blocks the order (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -1644,7 +1649,7 @@ active study window (`{from, to}` int years, or `null` = full history). The
 `ProjectBanner` study-window slider and each subject page's period control go through it
 rather than touching the project store or `localStorage` directly.
 
-The variable page's `PeriodTimeline` (#615/#671) seeds its pending selection with
+The variable page's `VariableTimeline` (#615/#671) seeds its pending selection with
 coverage-aware precedence — explicit year `?period` > intersection(coverage, window)
 when a window is set > the coverage span when none is > the bare window when there is no
 coverage > full bounds when neither — so a variable's true data coverage shows up front

@@ -32,11 +32,10 @@
   border: 0;
 }
 
-/* Shared exact-year entry (Y-100/A-220): the catalog's `PeriodTimeline` and the
-   /project cart's per-source period editor (`SourceEditor`, Y-81) each hold two
-   `<input class="year">` fields resolved by the shared `resolveYearEntry`
-   (period.ts) and a `role="status"` line reporting what they resolve to. The
-   shared visual form lives here; layout-owned spacing (each host's own
+/* Shared exact-year entry (Y-100/A-220): the /project cart's per-source period
+   editor (`SourceEditor`, Y-81) holds two `<input class="year">` fields
+   resolved by the shared `resolveYearEntry` (period.ts) and a `role="status"`
+   line reporting what they resolve to. The shared visual form lives here; layout-owned spacing (each host's own
    `.problem` margin) and states only one host has (`SourceEditor`'s
    `.year:read-only`) stay local to it. */
 .year {
