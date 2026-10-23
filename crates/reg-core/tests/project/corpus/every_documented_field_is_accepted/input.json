@@ -4,6 +4,7 @@
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "every_documented_field",
   "window": {"from": 2018, "to": 2019},
+  "extract_format": "parquet",
   "sources": [
     {
       "name": "lisa_2018",

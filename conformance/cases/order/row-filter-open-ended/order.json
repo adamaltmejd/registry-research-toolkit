@@ -27,16 +27,17 @@
       "source": "Example"
     }
   ],
+  "extract_format": "csv",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "238094ffd860fece9e9cacca59cca3f99b495d32ed398f9607b1a54f0624ab05",
     "catalog_schema_version": "12.2.0",
     "mode": "steward_holdings",
-    "project_hash": "66239266c31d774e30b032095242847a436d8656234eee34d9e950f295cae2a1",
+    "project_hash": "983eb4ebf47ed189688ed25918d4449813887a7679c84dc704c24571086b6153",
     "project_name": "Reader case",
     "project_reg_meta_version": "reg_meta/v0.40.1",
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

@@ -617,24 +617,34 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
 `coverage_gap`, `column_window_unavailable`) as structured fields of `order_blocked`, so
-a researcher fixes the whole order in one edit. An empty project is a valid draft that
+a researcher fixes the whole order in one edit. One finding follows that pass, because
+it reads the finished entries, held keys included: `stata_name_invalid`, once per
+physical column a `dta` order on a steward artifact would write under a name a `.dta`
+file cannot hold (more than 32 characters, a character other than a letter, ASCII digit
+or `_`, a leading digit, or a reserved word; ReadStat's rule, which the extract runner
+repeats). The runner would refuse the order on MONA; blocking here tells the researcher
+in the browser, where switching to `parquet` or `csv` is one edit. 68 SWECOV columns are
+over 32 characters (the financial-statement tables), and truncating them collides in at
+least one table, so the order never renames. An empty project is a valid draft that
 cannot become a header-only manifest; so is an unnamed one (a blank or whitespace-only
 `name`), which cannot fill `provenance.project_name`. Only `order` reports these two:
 `validate` judges the draft, which may be both.
 
-**The manifest is a versioned JSON contract.** It carries provenance (mode, steward,
-artifact kind, project name, schema version, declared reg_meta version and SHA-256 of
-the project's canonical JSON, catalog schema version and `generation_id`), the entries
-(logical coordinate with the canonical representation, the clipped `requested_period`,
-the physical edition, table, column, optional partition, optional projection token and
-optional `member` index, `key: true` on a held key no binding ordered, and the file's
-optional row `filter`) and the clips. It is written here and read offline by the
-steward-side extract system, so it is self-contained. That system is the MONA extract
-runner ([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md)): a data manager
-runs it inside MONA, it writes the files there, and nothing row-level leaves. Its bytes
-are sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across
-runs; periods render through the shared grammar, except a row filter's ISO day bounds.
-No timestamps: the only time-shaped values come from the artifact and the project.
+**The manifest is a versioned JSON contract.** It carries the extract format (the
+project's `extract_format`, resolved to `dta` when the project sets none, so the runner
+has no default of its own), provenance (mode, steward, artifact kind, project name,
+schema version, declared reg_meta version and SHA-256 of the project's canonical JSON,
+catalog schema version and `generation_id`), the entries (logical coordinate with the
+canonical representation, the clipped `requested_period`, the physical edition, table,
+column, optional partition, optional projection token and optional `member` index,
+`key: true` on a held key no binding ordered, and the file's optional row `filter`) and
+the clips. It is written here and read offline by the steward-side extract system, so it
+is self-contained. That system is the MONA extract runner
+([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md)): a data manager runs it
+inside MONA, it writes the files there, and nothing row-level leaves. Its bytes are
+sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across runs;
+periods render through the shared grammar, except a row filter's ISO day bounds. No
+timestamps: the only time-shaped values come from the artifact and the project.
 `partition`, `projection` (the table's token), `member` (`{"position": N}`,
 `{"year": YYYY}` or `{"month": "YYYY-MM"}`), `key`, `filter` and a filter range's `from`
 and `to` are the only optional fields; absent means none (an ordered entry for `key`, an
@@ -643,10 +653,12 @@ partitions, projections, pivot members or period columns, and an order that bind
 held key, produces the bytes it did before any existed. The parent (`projection_of`) is
 not in the manifest: the token is the placement.
 
-**Version 1 is frozen** (2026-10-22, with its first reader, the extract runner). Every
-object is closed; this is the whole field set:
+**Version 2 is frozen** (2026-10-23; version 1, frozen 2026-10-22 with its first reader,
+the extract runner, had no `extract_format` and is retired). Every object is closed;
+this is the whole field set:
 
-- root: `version` (the integer 1), `provenance`, `entries` (non-empty), `clips`;
+- root: `version` (the integer 2), `extract_format` (`dta`, `parquet` or `csv`),
+  `provenance`, `entries` (non-empty), `clips`;
 - `provenance`: `mode`, `steward`, `project_name`, `project_schema_version`,
   `project_reg_meta_version`, `project_hash`, `catalog_schema_version`,
   `catalog_generation_id`, `artifact_kind`, all strings, all non-empty (`project_name`
@@ -661,8 +673,8 @@ object is closed; this is the whole field set:
 - clip: `source`, `variable`, `requested_period`, `ordered_period`.
 
 Rust writes only these fields; the runner enforces the set, refusing a version other
-than 1, a mode other than `steward_holdings`, another steward's order and any unknown
-field. So any change to the shape, an added optional field included, is version 2: a v1
+than 2, a mode other than `steward_holdings`, another steward's order and any unknown
+field. So any change to the shape, an added optional field included, is version 3: a v2
 runner refuses it rather than misreading it.
 
 The manifest stays pretty-printed. MONA's upload limit is 10 MB; a typical order is
@@ -685,17 +697,17 @@ requested period, a split by clipped period would only repeat the same rows and 
 columns from their keys; the file's row filter (step 6) narrows its rows to the union of
 its entries' requested periods instead. In the global fallback the edition is the
 entry's merged requested period, so nothing changes there. The placement is the
-partition, the projection or neither, named in slug spelling
-(`lisa_individer-15plus_2019.csv`, `agi_individuppgifter-agi_arb_2021-03.csv` for a
-partition, `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in
-as two tables comes out as two files: shard identity (reporter stream, municipality) may
-exist in no column, so a union would destroy information, and a projection may have a
-finer grain than its parent. Each file carries its own keys, ordered or added as held
-keys (step 5), so a researcher who orders one non-key column still gets a joinable file;
-the user joins a projection file to its parent's on the shared key. The extract runner
-writes a key entry's column like any other and may tell it apart by `key`. A
-multi-period range is one file, filtered to the requested ranges when its table declares
-a period column.
+partition, the projection or neither, named in slug spelling with the extract format's
+extension (`lisa_individer-15plus_2019.dta`, `agi_individuppgifter-agi_arb_2021-03.dta`
+for a partition, `<register>_<variant>_<token>_<period>.dta` for a projection). What
+goes in as two tables comes out as two files: shard identity (reporter stream,
+municipality) may exist in no column, so a union would destroy information, and a
+projection may have a finer grain than its parent. Each file carries its own keys,
+ordered or added as held keys (step 5), so a researcher who orders one non-key column
+still gets a joinable file; the user joins a projection file to its parent's on the
+shared key. The extract runner writes a key entry's column like any other and may tell
+it apart by `key`. A multi-period range is one file, filtered to the requested ranges
+when its table declares a period column.
 
 Design limit: sibling projections cannot share a key the parent lacks. Two projections
 of one parent that both map a key the parent does not map (a child id two narrow

@@ -28,7 +28,7 @@ use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken, is_slug};
 use crate::interval::{Interval, gaps, render};
-use crate::project::{ColumnType, IdSubtype, NumericSubtype, SourcePeriod};
+use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype, SourcePeriod};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 5] = [
@@ -38,7 +38,7 @@ const PROJECT_REQUIRED: [&str; 5] = [
     "name",
     "sources",
 ];
-const PROJECT_OPTIONAL: [&str; 2] = ["panels", "window"];
+const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "extract_format"];
 const SOURCE_KEYS: [&str; 4] = ["name", "register_variant", "period", "bindings"];
 const BINDING_KEYS: [&str; 10] = [
     "variable",
@@ -449,6 +449,24 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
             "invalid_field_type",
             "/steward".into(),
             "steward must be a string".into(),
+        ),
+    }
+    match get(root, "extract_format") {
+        None => {}
+        Some(Value::String(s)) if ExtractFormat::parse(s).is_some() => {}
+        Some(Value::String(s)) => issues.error(
+            "invalid_enum_value",
+            "/extract_format".into(),
+            format!(
+                "extract_format must be one of {}; got {}",
+                allowed(ExtractFormat::ALL.iter().map(|v| v.as_str())),
+                q(s)
+            ),
+        ),
+        Some(_) => issues.error(
+            "invalid_field_type",
+            "/extract_format".into(),
+            "extract_format must be a string".into(),
         ),
     }
 }

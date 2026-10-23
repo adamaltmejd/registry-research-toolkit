@@ -59,6 +59,7 @@
       "source": "Diagnoser"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "b10dae65e3cee8f506241cefc56fcc2ba0a163a44194943f3c975af0d763d6c7",
@@ -70,5 +71,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

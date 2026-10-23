@@ -5118,11 +5118,15 @@
               },
               "type": "array"
             },
+            "extract_format": {
+              "$ref": "#/$defs/ProjectExtractFormat",
+              "description": "The file format the extract runner writes every file in: the project's\n`extract_format`, `dta` when it sets none."
+            },
             "provenance": {
               "$ref": "#/$defs/OrderProvenance"
             },
             "version": {
-              "description": "The manifest contract version, 1.",
+              "description": "The manifest contract version, 2.",
               "format": "int32",
               "minimum": 0,
               "type": "integer"
@@ -5130,6 +5134,7 @@
           },
           "required": [
             "version",
+            "extract_format",
             "provenance",
             "entries",
             "clips"
@@ -5295,6 +5300,14 @@
               "type": "object"
             }
           ]
+        },
+        "ProjectExtractFormat": {
+          "enum": [
+            "dta",
+            "parquet",
+            "csv"
+          ],
+          "type": "string"
         },
         "Scope": {
           "description": "`holdings`: what this steward holds, the default on a steward catalog and\nunavailable on the global one. `reference`: every register in the catalog. Answer\nfrom the default; repeat with `reference` when asked what exists elsewhere or when\nholdings comes up empty, and say the data exists but is not held.",

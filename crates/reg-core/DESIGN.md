@@ -37,6 +37,19 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   keys and table reads for one delivery. A binding period is never `"_default"`
   (inheritance is spelled by omission), and its days must lie within the source
   period's, so a `"_default"` source takes no binding periods.
+- **`extract_format`** (optional, top level): `dta` (absent means this), `parquet` or
+  `csv`, the one format the steward's extract runner writes every file of the order in.
+  It is a project fact, not an order parameter: it is the researcher's choice of
+  analysis tool, saved with the project the SPA edits and re-uploads, covered by the
+  project hash the manifest echoes, and the order operation takes a project and nothing
+  else. A parameter on the order request would be a second input every client (SPA, MCP
+  `order`, a hand-posted JSON) must remember, and a downloaded manifest could no longer
+  be traced to the saved project that made it. It is provider-neutral and says nothing
+  about holdings, so it stays inside the logical contract below; the manifest resolves
+  absence to `dta`, so the runner has no default of its own. Stata is the default
+  because most SWECOV researchers use it, and CSV loses the SQL types (leading-zero
+  codes, dates, large ids) on read; one format per order, because writing several would
+  duplicate every extract on MONA for no reader.
 - **Composite keys.** `entity_key` and `time_key` arrays are in the schema from the
   start; the validator enforces their ordering and homogeneity.
 - **The structural validator**: every rule checkable from the document alone.
@@ -105,11 +118,11 @@ The crate splits a shape layer from a rule layer:
 
 - **Types** (`project.rs`) are pure shape. They keep each value's raw spelling (an int
   year stays an int, `"2018"` stays a string) and serialize every optional field, absent
-  as `null`, except `Binding.period`, which is omitted when unset so a project without
-  binding periods keeps its hash; that encoding is what the project hash covers.
-  Structural rules are not re-encoded as deserialization failures: that would turn the
-  issue-accumulating contract into a fail-fast one, and every consumer needs the full
-  list.
+  as `null`, except `Binding.period` and `extract_format`, which are omitted when unset
+  so a project without them keeps its hash; that encoding is what the project hash
+  covers. Structural rules are not re-encoded as deserialization failures: that would
+  turn the issue-accumulating contract into a fail-fast one, and every consumer needs
+  the full list.
 - **The structural validator** (`structural.rs`) reads the raw JSON tree, not the types.
   A wrong enum value must surface as an accumulated `invalid_enum_value`, not a
   deserialization error, and the validator must report on documents the types cannot
@@ -150,7 +163,7 @@ codes are additive.
   | `invalid_root`                         | The root is not an object.                                                                                                                                                                                                                                                                                                                       |
   | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                                                          |
   | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null, a non-string `representation`). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                |
-  | `invalid_enum_value`                   | `type`, `id_subtype` or `numeric_subtype` is outside its allowed set.                                                                                                                                                                                                                                                                            |
+  | `invalid_enum_value`                   | `type`, `id_subtype`, `numeric_subtype` or `extract_format` is outside its allowed set.                                                                                                                                                                                                                                                          |
   | `invalid_slug`                         | `steward` is not a slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`). Any slug is accepted; whether a deployment serves it is the semantic layer's and the order's `steward_mismatch`.                                                                                                                                                                |
   | `unexpected_field`                     | An unknown key on a closed object, whatever its value.                                                                                                                                                                                                                                                                                           |
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `value_set` is not `class/<slug>`, or a `register_variant` is not `<provider>/<register>/<variant>`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                                                          |

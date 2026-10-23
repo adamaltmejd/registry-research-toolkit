@@ -68,6 +68,7 @@
       "source": "Example"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "1f866a0db76517093d3e1abd75b273724b8a951cfe028375c808f4a406d1a15d",
@@ -79,5 +80,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

@@ -11,6 +11,10 @@
     "sources"
   ],
   "properties": {
+    "extract_format": {
+      "$ref": "#/$defs/ProjectExtractFormat",
+      "description": "The file format every extracted file is written in; absent means `dta`."
+    },
     "name": {
       "type": "string"
     },
@@ -146,6 +150,14 @@
         }
       ],
       "description": "A panel's entity key: one column, or a composite."
+    },
+    "ProjectExtractFormat": {
+      "type": "string",
+      "enum": [
+        "dta",
+        "parquet",
+        "csv"
+      ]
     },
     "ProjectIdSubtype": {
       "type": "string",

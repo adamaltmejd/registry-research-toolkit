@@ -55,6 +55,7 @@
       "source": "S2019"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "335c0bc91163525b32ec4246ea35db40e8fd4c2188ddbafc95a8c919be6e605f",
@@ -66,5 +67,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

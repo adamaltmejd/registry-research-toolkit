@@ -18,6 +18,7 @@
       "source": "Example"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "catalog",
     "catalog_generation_id": "d0acd1f776df4d2a743970476ca6e6d5ea9d9b55542de2a9d3576f46369be757",
@@ -29,5 +30,5 @@
     "project_schema_version": "3.0.0",
     "steward": "global"
   },
-  "version": 1
+  "version": 2
 }

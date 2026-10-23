@@ -68,6 +68,7 @@
       "source": "Monthly"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "582daf5815b89e658901e474fca359bf5388e57340a781e7ee4127b0248b60f1",
@@ -79,5 +80,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

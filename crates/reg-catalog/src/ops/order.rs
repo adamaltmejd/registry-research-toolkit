@@ -16,7 +16,9 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::project::{Binding, ProjectData, Source, project_hash, to_json_pretty};
+use reg_core::project::{
+    Binding, ExtractFormat, ProjectData, Source, project_hash, to_json_pretty,
+};
 use reg_core::{Fqid, Interval, ValidationResult, gaps, intersect, merge, quote, render};
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
@@ -30,15 +32,18 @@ use super::{Params, Raw, Server};
 use crate::{Catalog, Code, Error, Scope};
 
 /// The order manifest contract version.
-const VERSION: u8 = 1;
+const VERSION: u8 = 2;
 
 /// The order manifest: machine-written here, machine-read by the steward-side
 /// extract system, never hand-edited.
 #[derive(Serialize, ToSchema)]
 #[schema(as = OrderManifest)]
 pub struct Manifest {
-    /// The manifest contract version, 1.
+    /// The manifest contract version, 2.
     version: u8,
+    /// The file format the extract runner writes every file in: the project's
+    /// `extract_format`, `dta` when it sets none.
+    extract_format: ExtractFormat,
     provenance: Provenance,
     /// One per resolved logical-to-physical binding, per source and binding in
     /// declaration order, then by table, edition and column; then each file's
@@ -351,8 +356,17 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
         order.entries.extend(keys);
         row_filters(&conn, &mut order.entries)?;
     }
+    let extract_format = project.extract_format();
+    // Checked on the whole order, held keys included: each is a column of a file.
+    if extract_format == ExtractFormat::Dta && order.steward {
+        let findings = stata_names(&order.entries);
+        if !findings.is_empty() {
+            return Err(blocked(findings));
+        }
+    }
     Ok(Manifest {
         version: VERSION,
+        extract_format,
         provenance: provenance(catalog, &project),
         entries: order.entries,
         clips: order.clips,
@@ -540,6 +554,50 @@ fn row_filters(conn: &Connection, entries: &mut [Entry]) -> Result<(), Error> {
         e.filter = filters.get(&placement(e)).cloned();
     }
     Ok(())
+}
+
+/// `stata_name_invalid`, once per physical column that cannot be a Stata variable
+/// name, so a `dta` order the extract runner would refuse blocks here instead.
+fn stata_names(entries: &[Entry]) -> Vec<Blocking> {
+    let mut seen = BTreeSet::new();
+    entries
+        .iter()
+        .filter(|e| !is_stata_name(&e.physical.column))
+        .filter(|e| seen.insert((&e.physical.table, &e.physical.column)))
+        .map(|e| Blocking {
+            code: "stata_name_invalid",
+            message: format!(
+                "column {} of table {} is not a Stata variable name (1 to 32 letters, \
+                 digits or underscores, not starting with a digit, not a reserved word), \
+                 so it cannot be written to a .dta file — set extract_format to parquet \
+                 or csv",
+                quote(&e.physical.column),
+                quote(&e.physical.table)
+            ),
+            source: Some(e.source.clone()),
+            variable: Some(e.logical.variable.clone()),
+            period: Some(e.requested_period.clone()),
+        })
+        .collect()
+}
+
+/// Whether `name` is a variable name a `.dta` file (format 118) can hold: `ReadStat`'s
+/// rule, which `stata_name_ok` in `reg_mona_runner/swecov_extract.R` repeats. 1 to 32
+/// characters; a letter or `_` first, then letters, ASCII digits and `_`; not one of
+/// Stata's reserved words, nor `str` followed by a digit.
+fn is_stata_name(name: &str) -> bool {
+    const RESERVED: [&str; 20] = [
+        "_all", "_b", "byte", "_coef", "_cons", "double", "float", "if", "in", "int", "long", "_n",
+        "_N", "_pi", "_pred", "_rc", "_skip", "strL", "using", "with",
+    ];
+    let mut chars = name.chars();
+    chars.next().is_some_and(|c| c.is_alphabetic() || c == '_')
+        && chars.all(|c| c.is_alphabetic() || c.is_ascii_digit() || c == '_')
+        && name.chars().count() <= 32
+        && !RESERVED.contains(&name)
+        && !name
+            .strip_prefix("str")
+            .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
 }
 
 /// `project_invalid`: validate's issues for a project rejected before the catalog.

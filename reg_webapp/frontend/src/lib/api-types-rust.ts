@@ -1026,10 +1026,15 @@ export interface components {
              *     index and column.
              */
             entries: components["schemas"]["OrderEntry"][];
+            /**
+             * @description The file format the extract runner writes every file in: the project's
+             *     `extract_format`, `dta` when it sets none.
+             */
+            extract_format: components["schemas"]["ProjectExtractFormat"];
             provenance: components["schemas"]["OrderProvenance"];
             /**
              * Format: int32
-             * @description The manifest contract version, 1.
+             * @description The manifest contract version, 2.
              */
             version: number;
         };
@@ -1148,6 +1153,8 @@ export interface components {
         ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
+            /** @description The file format every extracted file is written in; absent means `dta`. */
+            extract_format?: components["schemas"]["ProjectExtractFormat"];
             name: string;
             panels?: components["schemas"]["ProjectPanel"][];
             reg_meta_version: string;
@@ -1163,6 +1170,8 @@ export interface components {
         };
         /** @description A panel's entity key: one column, or a composite. */
         ProjectEntityKey: string | string[];
+        /** @enum {string} */
+        ProjectExtractFormat: "dta" | "parquet" | "csv";
         /** @enum {string} */
         ProjectIdSubtype: "integer" | "string";
         /** @description `{"period": int | string}`: a literal period, as opposed to a column ref. */
