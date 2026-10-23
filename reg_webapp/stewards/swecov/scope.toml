@@ -2085,20 +2085,49 @@ variant_slug = "_default"
 variant_name = "SÄBO-adresser"
 panel_entity_key = "personnr"
 
-# Row key: `personnr`, held by the SÄBO stay deliveries (MalmoStad,
-# SthlmKom_SBF_VOB). GU_ss_fr (facility × year, cfarnr) and LansstyrelsenVG_LOK01
-# (rent-support cases) are other grains with no person id, so they carry no key
-# until the variant is split by grain.
+# Four unrelated deliveries, split by grain (maintainer, 2026-10-23): resident stays,
+# facility × year, and Länsstyrelsen VG rent-support decisions.
 [[flavor]]
 holding = "SÄBO/Patients"
 provider = "sabo"
 provider_name = "Kommunala SÄBO-leveranser"
 register = "patienter"
 register_name = "SÄBO-patienter"
-variant = "_default"
-variant_slug = "_default"
-variant_name = "SÄBO-patienter"
+variant = "vistelser"
+variant_slug = "vistelser"
+variant_name = "SÄBO-vistelser"
+tables = ["MalmoStad", "SthlmKom_SBF_VOB"]
 panel_entity_key = "personnr"
+
+[[flavor]]
+holding = "SÄBO/Patients"
+provider = "sabo"
+provider_name = "Kommunala SÄBO-leveranser"
+register = "patienter"
+register_name = "SÄBO-patienter"
+variant = "enheter"
+variant_slug = "enheter"
+variant_name = "SÄBO-enheter"
+tables = ["GU_ss_fr"]
+panel_entity_key = "cfarnr"
+panel_time_key = "year"
+panel_time_grain = "row"
+
+# No case id: the applicant and tenant (each a person or an organisation) and the
+# decision date are the closest key; an amended decision for one pair repeats it.
+[[flavor]]
+holding = "SÄBO/Patients"
+provider = "sabo"
+provider_name = "Kommunala SÄBO-leveranser"
+register = "patienter"
+register_name = "SÄBO-patienter"
+variant = "hyresstod"
+variant_slug = "hyresstod"
+variant_name = "Hyresstöd, Länsstyrelsen Västra Götaland"
+tables = ["LansstyrelsenVG_LOK01"]
+panel_entity_key = ["sokandes-personnr", "sokandes-peorgnr", "hyresgast-personnr", "hyresgast-peorgnr"]
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Dalarna"
