@@ -247,12 +247,14 @@ The code is the category; the rule locates the finding. Both are stable.
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
 `paths_overlap` means staging and output are the same folder or one is inside the other;
 an existing output is resolved on disk first, so another spelling of staging (case,
-Unicode form, a link, a Windows short name) cannot pass as a different folder and be
-cleared. Before any check the gate removes its previous export from the output folder,
-so a refused run never leaves an old export looking current. A previous export is an
-output folder holding a `receipt.json` whose `format` is `reg-export-gate/receipt` and,
-beside it, only files that receipt lists (no folders); the gate deletes exactly those
-files and then the empty folder. An empty folder is removed too. Anything else is
+Unicode form, a symlink, a Windows short name) cannot pass as a different folder and be
+cleared. A Windows junction or a mapped drive versus its UNC path may still pass; then
+`clear_output()` can delete only files a gate receipt lists, in a folder holding nothing
+else. Before any check the gate removes its previous export from the output folder, so a
+refused run never leaves an old export looking current. A previous export is an output
+folder holding a `receipt.json` whose `format` is `reg-export-gate/receipt` and, beside
+it, only files that receipt lists (no folders); the gate deletes exactly those files and
+then the empty folder. An empty folder is removed too. Anything else is
 `output_not_gate_export`, with nothing deleted: the gate leaves it for the user.
 `export_not_writable` means the gate could not create its new folder beside the output
 folder; `move_failed` that it could not rename that folder to the output folder (on
