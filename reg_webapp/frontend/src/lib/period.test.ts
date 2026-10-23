@@ -21,7 +21,7 @@ import {
 
 // DESIGN.md → Time: data ∪ study window, rounded out to the 5-year grid.
 // Fails if the axis goes back to the catalog span, drops the window, or stops
-// rounding.
+// rounding, or widens a one-year axis past the catalog's last year.
 describe("dataAxis", () => {
   it.each([
     ["data inside the window's grid", [1964, 2024], null, [1960, 2025]],
@@ -33,6 +33,7 @@ describe("dataAxis", () => {
     ],
     ["nothing drawn falls back to the catalog", [], null, [1945, 2025]],
     ["one grid year keeps a step", [2020], null, [2020, 2025]],
+    ["the catalog's last year steps backward", [2025], null, [2020, 2025]],
   ] as const)("%s", (_, years, window, expected) => {
     expect(dataAxis(years, window, [1947, 2025])).toEqual(expected);
   });

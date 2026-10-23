@@ -31,7 +31,7 @@ import {
   periodWireValid,
   yearWindowFromWire,
 } from "./period";
-import type { PickerBand } from "./picker_lanes";
+import { bandAxisYears, type PickerBand } from "./picker_lanes";
 import { RepresentationPicker } from "./RepresentationPicker";
 import { studyWindowInterval } from "./reg_core";
 import { router } from "./router";
@@ -353,30 +353,31 @@ export function ConceptGroupView({
     ),
     windowMaxYear,
   );
-  // One axis for the Timeline and the lanes (DESIGN.md → Time): every
-  // member's years with the study window, rounded out.
-  const axis = dataAxis(
-    deliveredYears(
-      bands.flatMap((band) => band.rows.flatMap((row) => row.windows ?? [])),
-      windowMaxYear,
-    ),
-    projectWindow,
-    [windowMinYear, windowMaxYear],
-  );
   // The band is the active window: a `?period` narrowing (a member link
   // carries one), else the project window.
   const periodYears = yearWindowFromWire(activePeriod);
   const band = periodYears ?? projectWindow;
-  // A `?period` that is not the project window: with a window it differs
-  // from it (a warning), without one it is only a narrowing (information).
-  // Judged inside the group's coverage, as the variable page judges its
-  // period: a member link carrying window ∩ availability is no deviation.
+  // Coverage as drawn: an unknown start at the catalog's first year, an open
+  // end at its last (DESIGN.md → Time).
   const covered = coverageBandEdges(
     coverage,
     windowMinYear,
     windowMaxYear,
     windowMaxYear,
   );
+  // One axis for the Timeline and the lanes (DESIGN.md → Time): every
+  // member's columns as the lanes draw them, the coverage, the active window
+  // and the study window, rounded out. The lanes get it as drawn years, so
+  // they round to the same axis.
+  const drawn = bandAxisYears(bands, windowMinYear, vintageYear);
+  if (covered) drawn.push(covered.from, covered.to);
+  if (band) drawn.push(band.from, band.to);
+  if (pickerWindow) drawn.push(...pickerWindow);
+  const axis = dataAxis(drawn, projectWindow, [windowMinYear, windowMaxYear]);
+  // A `?period` that is not the project window: with a window it differs
+  // from it (a warning), without one it is only a narrowing (information).
+  // Judged inside the group's coverage, as the variable page judges its
+  // period: a member link carrying window ∩ availability is no deviation.
   const coveredDays = covered && studyWindowInterval(covered);
   const periodNarrows =
     activePeriod !== null &&
@@ -455,7 +456,7 @@ export function ConceptGroupView({
         axis={{ from: axis[0], to: axis[1] }}
         window={band}
         windowKind={periodYears === null ? "study" : "source"}
-        coverage={coverage}
+        coverage={covered}
         years={coverageYears}
         vintageYear={windowMaxYear}
       />
@@ -523,12 +524,15 @@ function unionCoverage(
   let from: number | null = null;
   let to: number | null = null;
   let open = false;
+  // An unknown start is earlier than any dated one: the union's is unknown.
+  let unknownStart = false;
   for (const band of bands) {
     for (const row of band.rows) {
       if (row.selectable === false || row.from === null || row.to === null) {
         continue;
       }
-      if (row.from !== "0001-01-01") {
+      if (row.from === "0001-01-01") unknownStart = true;
+      else {
         const lo = Number(row.from.slice(0, 4));
         from = from === null ? lo : Math.min(from, lo);
       }
@@ -539,5 +543,6 @@ function unionCoverage(
       }
     }
   }
-  return from === null && to === null ? null : { from, to: open ? null : to };
+  if (from === null && to === null) return null;
+  return { from: unknownStart ? null : from, to: open ? null : to };
 }

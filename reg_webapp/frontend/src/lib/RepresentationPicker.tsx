@@ -62,7 +62,8 @@ interface Props {
   vintageYear: number;
   /** Years the page draws above the lanes, so both share one axis. */
   drawnYears?: readonly number[];
-  /** The catalog's first and last year: the axis when nothing is dated. */
+  /** The catalog's first and last year: where an unknown start is drawn, and
+   * the axis when nothing is dated. */
   catalogSpan: readonly [number, number];
   /** Commit the diff; false keeps the staging (a refused or abandoned add). */
   onApply: (payload: StagedApplyPayload) => Promise<boolean>;

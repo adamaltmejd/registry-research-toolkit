@@ -12,7 +12,6 @@ import {
   clampYearWindow,
   coverageBandEdges,
   coverageMarks,
-  dataAxis,
   intersectCoverageWindow,
   periodWindowRelation,
   sameYearWindow,
@@ -321,7 +320,8 @@ interface VariableTimelineProps extends PickerProps {
   coverage: Coverage | null;
   /** The subject's delivered years, or null to draw coverage solid. */
   years: readonly number[] | null;
-  /** The catalog's first year: the steward floor and the axis fallback. */
+  /** The catalog's first year: the steward floor, where an unknown coverage
+   * start is drawn, and the axis fallback. */
   windowMinYear: number;
   /** The catalog's last year: the steward ceiling and the open-ended coverage
    * end. */
@@ -412,32 +412,37 @@ export function VariableTimeline({
       ? boundedPeriod
       : null;
 
-  // The axis (DESIGN.md → Time): the coverage row's years with the study
-  // window, rounded out. The lanes widen it to the columns and the variables a
-  // succession reaches; the slider takes the axis the graph draws.
-  const drawn: number[] = [];
-  if (boundedCoverage) {
-    if (boundedCoverage.from !== null) drawn.push(boundedCoverage.from);
-    drawn.push(boundedCoverage.to ?? ceiling);
-  }
-  const [min, max] = dataAxis(drawn, boundedWindow, [windowMinYear, ceiling]);
-  // An unknown start is drawn from the axis start, but the thumbs and the
-  // seed stop at the catalog's first year, which the rounded axis can pass.
-  const floor = Math.max(min, windowMinYear);
-
+  // Coverage as drawn: an unknown start at the catalog's first year, an open
+  // end at its last (DESIGN.md → Time).
+  const covered = coverageBandEdges(
+    boundedCoverage,
+    windowMinYear,
+    ceiling,
+    ceiling,
+  );
   // Seed (#671): explicit year `?period` > window∩coverage > coverage > window.
   const seeded =
     boundedPeriodWindow ??
-    intersectCoverageWindow(boundedCoverage, boundedWindow, floor, ceiling);
-  const covered = coverageBandEdges(boundedCoverage, min, max, ceiling);
+    intersectCoverageWindow(
+      boundedCoverage,
+      boundedWindow,
+      windowMinYear,
+      ceiling,
+    );
   // The one legal span for the thumbs: the selection never leaves
   // availability.
-  const lo =
-    covered !== null && boundedCoverage?.from != null ? covered.from : floor;
-  const hi = covered?.to ?? Math.min(max, ceiling);
+  const lo = covered?.from ?? windowMinYear;
+  const hi = covered?.to ?? ceiling;
 
   // The selection shown: the thumbs mid-drag, else the seed.
-  const selection = clampYearWindow(dragging ?? seeded, min, max);
+  const selection = dragging ?? seeded;
+
+  // What the coverage row draws (DESIGN.md → Time): the coverage and the
+  // selection. The lanes join it with the columns, the variables a succession
+  // reaches and the study window into the page's one axis, which the slider
+  // takes; a drag stays on that axis.
+  const drawn = [seeded.from, seeded.to];
+  if (covered) drawn.push(covered.from, covered.to);
   const userChosen = periodWindow !== null || dragging !== null;
 
   /** The thumbs' next position: only the thumb that moved is clamped into

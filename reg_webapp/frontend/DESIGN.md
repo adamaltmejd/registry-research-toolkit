@@ -452,9 +452,13 @@ Time is the axis every relation is drawn on.
   year of that data, joined with the study window when one is set, rounded out to
   multiples of 5 (#1831). A register page's data is its variants' deliveries, a concept
   group's its members', a variable page's its columns and the lanes a succession
-  reaches. Data still delivered ends at the catalog's last year; an unknown start is not
-  data. A page's drawings share its one axis, so a register's `VariableRow`s line up
-  with its `Timeline`, and a page with several sources draws them on one axis.
+  reaches. Anything else drawn on the axis counts too: the active window, a source
+  period as well as the study window. Data still delivered ends at the catalog's last
+  year, and data whose start is unknown begins at its first, where that data is drawn; a
+  span with no start at all (year-independent) begins at the axis start. A one-year axis
+  widens by one step of 5, backward where forward would pass the catalog's last year. A
+  page's drawings share its one axis, so a register's `VariableRow`s line up with its
+  `Timeline`, and a page with several sources draws them on one axis.
 - A **`Timeline`** is drawn on the page's axis, under a `label` header that says what
   the band is and states the covered years (years only: no edition count). Coverage is
   an ink bar with `viz-edition` ticks per delivered year, a `warn-hatch` hatch for a

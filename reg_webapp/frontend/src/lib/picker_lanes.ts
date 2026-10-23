@@ -77,7 +77,8 @@ export interface PickerLaneInput {
   /** Years the page draws above the lanes (the coverage row, a group's
    * Timeline), so the lanes share their axis. */
   drawnYears: readonly number[];
-  /** The catalog's first and last year: the axis when nothing is dated. */
+  /** The catalog's first and last year: where an unknown start is drawn, and
+   * the axis when nothing is dated. */
   catalogSpan: readonly [number, number];
   committed: ReadonlyMap<string, PickerCommittedRow>;
   stagedAdds: ReadonlySet<string>;
@@ -136,6 +137,38 @@ function rowYears(row: PickerRepresentation): Years | null {
     to: row.to === OPEN_ENDED_VALID_TO ? null : yearOf(row.to),
     openEnd: row.to === OPEN_ENDED_VALID_TO,
   };
+}
+
+/** Where a span is drawn (DESIGN.md → Time): an unknown start at the
+ * catalog's first year, as a still-delivered end at the catalog vintage. A
+ * span undated at both ends (year-independent) has no start of its own: null,
+ * drawn from the axis start. */
+function spanEnds(
+  years: Years,
+  catalogFirst: number,
+  vintageYear: number,
+): { from: number | null; to: number | null } {
+  const from = years.from ?? (years.to !== null ? catalogFirst : null);
+  const to =
+    years.to ?? (years.openEnd ? Math.max(from ?? 0, vintageYear) : null);
+  return { from, to };
+}
+
+/** The years the bands' columns draw on the axis (`spanEnds`), so a page that
+ * draws a Timeline over the lanes computes their one axis. */
+export function bandAxisYears(
+  bands: readonly PickerBand[],
+  catalogFirst: number,
+  vintageYear: number,
+): number[] {
+  return bands.flatMap((band) =>
+    band.rows.flatMap((row) => {
+      const years = rowYears(row);
+      if (years === null) return [];
+      const { from, to } = spanEnds(years, catalogFirst, vintageYear);
+      return [from, to].filter((v): v is number => v !== null);
+    }),
+  );
 }
 
 function yearsLabel(row: PickerRepresentation, years: Years): string {
@@ -369,22 +402,24 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
   }
 
   // The axis (DESIGN.md → Time): the years drawn here and above the lanes,
-  // with the study window, rounded out. A still-delivered column ends at the
-  // catalog vintage, never at the rounded axis end.
+  // with the active window and the study window, rounded out. A
+  // still-delivered column ends at the catalog vintage, never at the rounded
+  // axis end.
+  const [catalogFirst] = input.catalogSpan;
   const dated = [
     ...input.drawnYears,
-    ...placedYears.flatMap((y) =>
-      [y.from, y.to].filter((v): v is number => v !== null),
-    ),
+    ...placedYears.flatMap((y) => {
+      const { from, to } = spanEnds(y, catalogFirst, input.vintageYear);
+      return [from, to].filter((v): v is number => v !== null);
+    }),
   ];
-  if (placedYears.some((y) => y.openEnd)) dated.push(input.vintageYear);
+  if (input.window) dated.push(...input.window);
   const axis = dataAxis(dated, input.studyWindow, input.catalogSpan);
 
   for (const { span, years, parts } of pending) {
-    span.from = years.from ?? axis[0];
-    span.to =
-      years.to ??
-      (years.openEnd ? Math.max(span.from, input.vintageYear) : axis[1]);
+    const at = spanEnds(years, catalogFirst, input.vintageYear);
+    span.from = at.from ?? axis[0];
+    span.to = at.to ?? axis[1];
     span.segments = parts?.map((era) => ({
       name: era.name,
       from:
