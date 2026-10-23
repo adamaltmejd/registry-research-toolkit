@@ -40,7 +40,7 @@ import type { BreadcrumbItem } from "./ui/types";
  * `/catalog` (#675). Below the narrow breakpoint it is the way back to the
  * register list, so every page's trail leads with it; above it the list is on
  * screen and the crumb is hidden (DESIGN.md → Layout). */
-export const DATA_BROWSER_LABEL = "Data";
+export const DATA_BROWSER_LABEL = "Browse registers";
 
 /** The variable children of a register node, in order. `[]` for any other node
  * kind. */

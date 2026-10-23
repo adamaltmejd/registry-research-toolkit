@@ -10,6 +10,7 @@ import {
   keyVariablesFirst,
   leafSlug,
   matchesFilter,
+  nodeLabel,
   rankFilter,
 } from "./catalog";
 import { registerRead } from "./catalog_names";
@@ -206,6 +207,8 @@ export function VariableList({
   return (
     <ColumnList
       label="Variables"
+      // A group's members are listed under the group's name (#1825).
+      subject={group?.label ?? (node ? nodeLabel(node) : undefined)}
       className={className}
       sections={read.loading ? null : sections}
       selectedId={selectedId}
@@ -214,7 +217,7 @@ export function VariableList({
       empty={
         needle.trim() === ""
           ? "This register lists no variables."
-          : `No variables match “${needle.trim()}”. Press Escape in the search bar to clear it.`
+          : `No variables match “${needle.trim()}”. Press Escape to clear the search.`
       }
       error={
         !read.loading && node === null

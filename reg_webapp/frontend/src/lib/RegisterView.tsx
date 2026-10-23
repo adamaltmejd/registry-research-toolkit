@@ -5,11 +5,6 @@ import type {
   VariableChild,
   VariableDeliveryModel,
 } from "./api";
-import {
-  browseFilter,
-  useBrowseFilter,
-  useRegisterMatches,
-} from "./browse_filter";
 import type { PeriodProps } from "./CatalogNodeView";
 import styles from "./CatalogNodeView.module.css";
 import {
@@ -23,17 +18,13 @@ import {
   distinctMemberCount,
   foldGroupedRows,
   type GroupedRow,
-  groupFilterKeys,
   groupHref,
   keyVariablesFirst,
-  leafSlug,
-  matchesFilter,
   narrowGroupsToMembers,
   nodeLabel,
   OPEN_ENDED_VALID_TO,
   type PickerRepresentation,
   pickerWindowYears,
-  rankFilter,
   registerPrefixOf,
   rowCoversColumn,
   variantLabel,
@@ -289,7 +280,6 @@ export function RegisterView({
   ...period
 }: PeriodProps & { node: RegisterShow }) {
   const { regMetaVersion, steward } = period;
-  const filter = useBrowseFilter();
   // The variant chips (Y-82): OR within the selection, a lens on the list only.
   const [selectedVariants, setSelectedVariants] = useState<Set<string>>(
     () => new Set(),
@@ -301,7 +291,7 @@ export function RegisterView({
   const addBarRef = useRef<HTMLDivElement>(null);
 
   // Everything derived from the node and the lens, computed once per change of
-  // either rather than on every keystroke of the filter (740 variables on LISA).
+  // either rather than on every render (740 variables on LISA).
   const derived = useMemo(() => {
     const children = bindingChildren(node);
     // The chip set: variants that deliver something here, so a chip can never
@@ -350,79 +340,17 @@ export function RegisterView({
   const variantNames = new Map(
     node.variants.map((v) => [v.slug, variantLabel(v)]),
   );
-  const columnNames = (fqid: string) =>
-    (columnsByFqid.get(fqid) ?? []).map((column) => column.name);
-  // Y-82: the filter matches delivery column names too, so `ForvErs` finds its
-  // variable.
-  const leafKeys = (item: VariableChild) => [
-    leafSlug(item.fqid),
-    item.fqid,
-    item.name,
-    ...columnNames(item.fqid),
-  ];
-  // While the filter holds a settled query, the server's match decides which
-  // variables show (#1788): it reads definitions the page never loads, and it
-  // is what the browse tree counts, so the tree's "N matching variables" is
-  // what this list shows. A group narrows to its matched members. Until the
-  // answer lands, the names on the page filter.
-  const serverMatches = useRegisterMatches(node.fqid);
-  // The filter narrows a group to its matching members, as the variant lens
-  // does, so a group row counts only the variables that matched. A group
-  // whose own label or key matches keeps every member: the server counts
-  // variables only, so a group-label hit is admitted here, deliberately.
-  const filterGroups = lensGroups.map((group) =>
-    matchesFilter(filter, group.label, group.key)
-      ? group
-      : serverMatches
-        ? {
-            ...group,
-            members: group.members.filter((m) => serverMatches.has(m.fqid)),
-          }
-        : {
-            ...group,
-            members: group.members.filter((member) =>
-              matchesFilter(
-                filter,
-                ...groupFilterKeys(
-                  { ...group, members: [member] },
-                  columnNames,
-                ),
-              ),
-            ),
-          },
-  );
-  const memberFqids = new Set(
-    filterGroups.flatMap((group) => group.members.map((m) => m.fqid)),
-  );
-  const filteredItems = lensed.filter(
-    (item) =>
-      memberFqids.has(item.fqid) ||
-      (serverMatches
-        ? serverMatches.has(item.fqid)
-        : matchesFilter(filter, ...leafKeys(item))),
-  );
-  // A group the filter leaves with one member gives way to that member's row.
-  const narrowedRows = keyVariablesFirst(
+  // The whole register, under the variant lens only: the top-bar search
+  // filters the browse columns, never the open page (#1829). A group the lens
+  // leaves with one member gives way to that member's row.
+  const listedRows = keyVariablesFirst(
     foldGroupedRows(
-      filteredItems,
-      filterGroups.filter((group) => distinctMemberCount(group.members) > 1),
+      lensed,
+      lensGroups.filter((group) => distinctMemberCount(group.members) > 1),
     ),
     lensed,
     node.variants,
   );
-  // Every row here matched; ranking only orders them. A member that matched
-  // through a key its own leaf row does not carry (a facet label) and stands
-  // alone keeps its place after the ranked rows.
-  const ranked = rankFilter(narrowedRows, filter, (row) =>
-    row.kind === "group"
-      ? groupFilterKeys(row.group, columnNames)
-      : leafKeys(row.item),
-  );
-  const rankedSet = new Set(ranked);
-  const filteredRows = [
-    ...ranked,
-    ...narrowedRows.filter((row) => !rankedSet.has(row)),
-  ];
 
   // ── Y-83: add delivery columns straight from the list ────────────────────
   const studyWindow = useStudyWindow();
@@ -632,9 +560,8 @@ export function RegisterView({
   );
 
   const total = countFoldedMembers(allRows);
-  const shown = countFoldedMembers(filteredRows);
-  const filtering = filter.trim() !== "";
-  const narrowed = filtering || selectedVariants.size > 0;
+  const shown = countFoldedMembers(listedRows);
+  const narrowed = selectedVariants.size > 0;
   const childrenByFqid = new Map(lensed.map((child) => [child.fqid, child]));
   const axis: YearSpan = [period.windowMinYear, period.windowMaxYear];
   // The register's delivered years, every variable's windows together: the
@@ -654,7 +581,7 @@ export function RegisterView({
   const inProject = new Set(
     [...committed.keys()].map((key) => key.slice(0, key.indexOf("::"))),
   );
-  const listRows: ListRow[] = filteredRows.map(
+  const listRows: ListRow[] = listedRows.map(
     (row: GroupedRow<VariableChild>) =>
       row.kind === "group"
         ? {
@@ -747,78 +674,58 @@ export function RegisterView({
               )}
             </div>
           )}
-          {listRows.length > 0 ? (
-            <VariableRowList label="Variables">
-              {listRows.map((row) =>
-                row.kind === "group" ? (
-                  <VariableRow
-                    key={row.id}
-                    name={row.label}
-                    href={groupHref(node.fqid, row.group.key)}
-                    inProject={row.group.members.some((m) =>
-                      inProject.has(m.fqid),
-                    )}
-                    coverage={coverageYears(
-                      row.group.members.flatMap(
-                        (m) => childrenByFqid.get(m.fqid)?.deliveries ?? [],
-                      ),
-                      period.vintageYear,
-                    )}
-                    axis={axis}
-                    window={windowSpan}
-                  />
-                ) : (
-                  <VariableRow
-                    key={row.id}
-                    name={row.label}
-                    href={catalogHref(row.fqid)}
-                    inProject={inProject.has(row.fqid)}
-                    coverage={coverageYears(
-                      childrenByFqid.get(row.fqid)?.deliveries ?? [],
-                      period.vintageYear,
-                    )}
-                    axis={axis}
-                    window={windowSpan}
-                  >
-                    {row.columns.map((column) => (
-                      <DeliveryColumnTick
-                        key={column.name}
-                        column={column}
-                        offered={columnOffered(column)}
-                        ticked={stagedKeys.has(
-                          columnKey(row.fqid, column.name),
-                        )}
-                        marker={committed.get(columnKey(row.fqid, column.name))}
-                        isDisabled={applying}
-                        windowYears={add.years}
-                        onToggle={() => toggleColumn(row.fqid, column)}
-                      />
-                    ))}
-                  </VariableRow>
-                ),
-              )}
-            </VariableRowList>
-          ) : (
-            // Only the text filter can empty the list: every chip is a
-            // variant that delivers something.
-            <EmptyState
-              title={`No variables match “${filter}”`}
-              description={
-                selectedVariants.size > 0
-                  ? "The variant filter above is also narrowing this list."
-                  : "Nothing in this register contains that text."
-              }
-              action={
-                <Button onPress={() => browseFilter.set("")}>
-                  Clear filter
-                </Button>
-              }
-            />
-          )}
-          {/* Only while something is ticked (DESIGN.md → VariableRow); it
-              stays through a filter that empties the list, so ticks made
-              across several searches are still addable. Sticky against the
-              viewport (Y-97). */}
+          {/* Never empty: the register has variables and every variant chip
+              delivers something. */}
+          <VariableRowList label="Variables">
+            {listRows.map((row) =>
+              row.kind === "group" ? (
+                <VariableRow
+                  key={row.id}
+                  name={row.label}
+                  href={groupHref(node.fqid, row.group.key)}
+                  inProject={row.group.members.some((m) =>
+                    inProject.has(m.fqid),
+                  )}
+                  coverage={coverageYears(
+                    row.group.members.flatMap(
+                      (m) => childrenByFqid.get(m.fqid)?.deliveries ?? [],
+                    ),
+                    period.vintageYear,
+                  )}
+                  axis={axis}
+                  window={windowSpan}
+                />
+              ) : (
+                <VariableRow
+                  key={row.id}
+                  name={row.label}
+                  href={catalogHref(row.fqid)}
+                  inProject={inProject.has(row.fqid)}
+                  coverage={coverageYears(
+                    childrenByFqid.get(row.fqid)?.deliveries ?? [],
+                    period.vintageYear,
+                  )}
+                  axis={axis}
+                  window={windowSpan}
+                >
+                  {row.columns.map((column) => (
+                    <DeliveryColumnTick
+                      key={column.name}
+                      column={column}
+                      offered={columnOffered(column)}
+                      ticked={stagedKeys.has(columnKey(row.fqid, column.name))}
+                      marker={committed.get(columnKey(row.fqid, column.name))}
+                      isDisabled={applying}
+                      windowYears={add.years}
+                      onToggle={() => toggleColumn(row.fqid, column)}
+                    />
+                  ))}
+                </VariableRow>
+              ),
+            )}
+          </VariableRowList>
+          {/* Only while something is ticked (DESIGN.md → VariableRow).
+              Sticky against the viewport (Y-97). */}
           {(stagedKeys.size > 0 || applying) && (
             <div ref={addBarRef} className={viewStyles.addBar}>
               <Button

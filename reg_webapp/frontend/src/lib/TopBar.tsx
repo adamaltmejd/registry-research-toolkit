@@ -73,6 +73,29 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Escape clears the filter from anywhere on the page (#1827), not only in the
+  // field. Whatever takes Escape itself handles it first and stops it or marks
+  // it handled: the field's own clear, a dialog, a popover, the palette.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (
+        event.key !== "Escape" ||
+        event.defaultPrevented ||
+        event.isComposing ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        browseFilter.value === ""
+      ) {
+        return;
+      }
+      browseFilter.set("");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <header ref={ref} className={styles.topBar}>
       {/* The row is the shell's width, so on a wide screen the banner stays
@@ -81,8 +104,9 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
         <a href="/" className={styles.brand}>
           {steward?.long_name ?? "Registry Research Toolkit"}
         </a>
-        {/* Text here filters both browse columns in place; Escape clears it and
-          gives back the collapse state. Enter opens the palette with the text,
+        {/* Text here filters both browse columns in place, never the open
+          page; Escape, here or anywhere on the page, clears it and gives back
+          the collapse state. Enter opens the palette with the text,
           the way to codes, classifications and the rest of the catalog. */}
         <SearchField
           ref={field}

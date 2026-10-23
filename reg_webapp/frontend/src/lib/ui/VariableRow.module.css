@@ -7,7 +7,7 @@
   list-style: none;
 }
 
-/* Dot | name and FQID | coverage bar; the delivery columns under the name. */
+/* Dot | name | coverage bar; the delivery columns under the name. */
 .row {
   display: grid;
   grid-template-columns: 6px minmax(0, 1fr) minmax(6rem, 10rem);
@@ -96,12 +96,26 @@
   min-width: 0;
 }
 
+/* Narrow, one column (#1826): the coverage bar on top, then the name with its
+   dot, then the delivery columns, all on the name's edge. */
 @media (max-width: 48rem) {
   .row {
     grid-template-columns: 6px minmax(0, 1fr);
   }
-  .bar,
+  .bar {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .dot {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .head {
+    grid-row: 2;
+    grid-column: 2;
+  }
   .columns {
+    grid-row: 3;
     grid-column: 2;
   }
 }

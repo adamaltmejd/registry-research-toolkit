@@ -41,6 +41,21 @@
   }
 }
 
+/* "Browse registers", the way back to the register list where the columns
+   stack: a default button, so it reads as an action rather than a path segment
+   (#1824). It takes its own line, so the trail after it needs no separator. */
+.back {
+  flex-basis: 100%;
+  margin-bottom: var(--space-1);
+}
+.back + .crumb::before {
+  content: none;
+}
+.backLink {
+  composes: button default from "./Button.module.css";
+  text-decoration: none;
+}
+
 .link {
   border-radius: var(--radius-sm);
   color: var(--text-muted);

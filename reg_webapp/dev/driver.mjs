@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: ten scenarios (three /project
-// error+retry, two /project period, four catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: eleven scenarios (three /project
+// error+retry, two /project period, five catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// ten.
+// eleven.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,14 +148,14 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
-// Ten scenarios × four viewports = 40 cases, each in a FRESH context against
+// Eleven scenarios × four viewports = 44 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
-// exactly one failing request and the other seven inject none: everything else
+// exactly one failing request and the other eight inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 68 PNGs. A bare `<out-dir>` runs all ten scenarios;
+// These write 72 PNGs. A bare `<out-dir>` runs all eleven scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -750,6 +750,48 @@ async function browseTreeStaysTabbable(page) {
   );
 }
 
+/** The browse search (DESIGN.md → Search filters in place). On LISA's page, a
+ * search for another register ("midas") narrows the register column to the
+ * provider that holds it, while the open page keeps every LISA variable: the
+ * search filters the columns, never the page (#1829, #1830). Escape pressed
+ * with focus on the page, not in the field, clears it and brings the hidden
+ * providers back (#1827). Below the breakpoint the columns stack, and the
+ * "Browse registers" button at the head of the trail opens the register list
+ * (#1824). Each check fails on the behavior it names: a page filtered with the
+ * columns loses Forsamling, a kept non-matching provider leaves its row, and an
+ * Escape heard only by the field leaves the text in place. */
+async function browseSearchCase(page, _counts, shoot) {
+  const search = page.getByRole("searchbox", { name: /^Search registers/ });
+  const scb = page.getByRole("row", { name: "Statistiska Centralbyrån", exact: true });
+  const treeShown = await page.getByRole("button", { name: "Collapse all" }).isVisible();
+
+  await search.fill("midas");
+  if (treeShown) {
+    await page.getByRole("row", { name: "MiDAS", exact: true }).waitFor();
+    await scb.waitFor({ state: "detached" });
+  }
+  await settled(page);
+  check(
+    (await columnCheckbox(page, "Forsamling").count()) === 1,
+    "the search for another register filtered LISA's own page",
+  );
+  await shoot("browse-search");
+
+  // Focus off the field: the page's heading, then Escape.
+  await page.getByRole("heading", { level: 1, name: "LISA" }).click();
+  await page.keyboard.press("Escape");
+  check(
+    (await search.inputValue()) === "",
+    "Escape with focus on the page left the search text in place",
+  );
+  if (treeShown) {
+    await scb.waitFor();
+  } else {
+    await page.getByRole("link", { name: "Browse registers" }).click();
+    await page.getByRole("row", { name: "LISA", exact: true }).waitFor();
+  }
+}
+
 /** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81), one
  * From/To row per segment for a #307 list period (Y-101). A researcher whose
  * study window is 2018..2020 wants ONE source to reach back to 2015, without
@@ -1270,6 +1312,13 @@ try {
       shots: 2,
       route: "/catalog/scb/lisa/kon",
       run: catalogPeriodRequiredCase,
+    },
+    // The browse search on a register page, and the narrow way back to the
+    // register list.
+    "browse-search": {
+      shots: 1,
+      route: "/catalog/scb/lisa",
+      run: browseSearchCase,
     },
     // Opens the SAME synthetic project as the recovery cases — the file whose
     // arrival has to wait for the researcher's answer.
