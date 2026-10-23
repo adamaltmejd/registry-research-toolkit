@@ -7,7 +7,7 @@ is the `reg_export_gate/` folder of the toolkit repository
 and the design in `DESIGN.md`. There is one copy of the check, there; a project holds a
 pinned copy of its bytes and never a variant.
 
-**Pinned version: `EXPORT_GATE_VERSION <- "0.1.0"`.** Copy `export_gate.R` from the
+**Pinned version: `EXPORT_GATE_VERSION <- "0.2.0"`.** Copy `export_gate.R` from the
 toolkit revision that carries this line, and check the line in the copy. A newer gate
 version is a deliberate update of this pin, not something to pick up silently.
 
@@ -101,12 +101,12 @@ whole-number part of a double (`backstop`, `identifier_pattern`).
 
 ## Preflight
 
-The gate needs R 4.2 or newer with `arrow` 9.0.0 or newer (older refuses as `setup`,
-`arrow_too_old`) and `jsonlite`, plus SHA-256: base `tools::sha256sum` on R 4.5 or
-newer, else the `digest` package. Without either it refuses every run as `setup`
-(`sha256_missing`). Check this once per machine before the first real run, with the
-commands in step 3 of the gate README, and check that `Rscript` is on the path where
-`run.py` runs.
+The gate needs R 4.2 or newer with `arrow` 9.0.0 or newer and `jsonlite`, plus SHA-256:
+base `tools::sha256sum` on R 4.5 or newer, else the `digest` package. Each call installs
+whichever is missing or too old into R's default library from the configured repository;
+one it cannot install refuses as `setup` (`arrow_missing`, `arrow_too_old`,
+`jsonlite_missing`, `sha256_missing`). Step 3 of the gate README says what to do then.
+Check that `Rscript` is on the path where `run.py` runs.
 
 ## Locally, on mocks
 

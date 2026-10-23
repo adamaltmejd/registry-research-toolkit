@@ -275,7 +275,7 @@ like a changed data file. Its format is fixed by the toolkit, not by the schema:
 {
   "format": "reg-export-gate/receipt",
   "format_version": 1,
-  "gate": { "implementation": "R", "version": "0.1.0" },
+  "gate": { "implementation": "R", "version": "0.2.0" },
   "schema": { "name": "trial", "version": 1, "sha256": "…" },
   "policy": { "name": "trial-min5", "version": 1, "sha256": "…" },
   "files": [{ "name": "persons_by_year_group.parquet", "sha256": "…" }]
@@ -319,10 +319,33 @@ R file version will be pinned to a binary release once the binary ships; until t
 
 ### The R file
 
-- **Base R (>= 4.2), jsonlite and arrow (>= 9.0.0)**, all on MONA; an older arrow
-  refuses `arrow_too_old`. SHA-256 comes from `tools::sha256sum` (R >= 4.5) or else the
-  `digest` package; with neither the check refuses `sha256_missing` before reading
-  anything. Both hash the bytes in memory.
+- **Base R (>= 4.2), jsonlite and arrow (>= 9.0.0).** SHA-256 comes from
+  `tools::sha256sum` (R >= 4.5) or else the `digest` package. Both hash the bytes in
+  memory.
+- **It installs its own packages.** MONA has its own CRAN mirror and library path in R's
+  options, and a batch server can lack the packages the user has elsewhere. So
+  `export_gate()` first installs whichever of jsonlite, arrow (missing or below 9.0.0)
+  and, without `tools::sha256sum`, digest is missing, with plain
+  `install.packages(pkg)`: R's default library (`.libPaths()[1]`) and the configured
+  repository. It never adds a library path (a project folder is likely NFS and does not
+  belong on it), and installs only when the default library is writable and a CRAN
+  mirror is set: otherwise `install.packages` would prompt for a personal library (which
+  it prepends to `.libPaths()`) or a mirror, pausing the gate on a dialog. Without both,
+  the researcher installs the package. Then it checks again, and a package still missing
+  or too old refuses `setup` with the rule that names it (`jsonlite_missing`,
+  `arrow_missing`, `arrow_too_old`, `sha256_missing`), before reading or deleting
+  anything. No new rule: after an attempted install, these rules already mean "could not
+  be installed", and a generic rule would lose the package's name, which a finding has
+  no other slot for. Install warnings and errors are caught, so a failed install reports
+  that rule rather than `internal_warning` or `internal_error`. A namespace already
+  loaded below the floor cannot be replaced in the session (on Windows the DLL copy
+  fails), so the gate does not try and refuses `arrow_too_old` at once. The researcher
+  restarts R, runs `install.packages("arrow")` before anything loads arrow, and reruns
+  the pipeline. The install runs in the call, after the path checks and before the prior
+  export is cleared, not when the file is sourced: sourcing stays free of side effects,
+  and a mistyped path refuses at once without a slow install. The extract runner
+  (`reg_mona_runner/swecov_extract.R`) carries the same helper, since each file is
+  uploaded to MONA alone.
 - **Two names.** Sourcing defines `EXPORT_GATE_VERSION` and `export_gate()`; the helpers
   live in the function's closure, so the file does not clutter the pipeline's
   environment.
