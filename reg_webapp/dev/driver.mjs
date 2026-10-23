@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: twelve scenarios (three /project
-// error+retry, two /project period, six catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: thirteen scenarios (three /project
+// error+retry, two /project period, one /project column removal, six catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// twelve.
+// thirteen.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,14 +148,14 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
-// Twelve scenarios × four viewports = 48 cases, each in a FRESH context against
+// Thirteen scenarios × four viewports = 52 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
-// exactly one failing request and the other nine inject none: everything else
+// exactly one failing request and the other ten inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 76 PNGs. A bare `<out-dir>` runs all twelve scenarios;
+// These write 76 PNGs. A bare `<out-dir>` runs all thirteen scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -1138,6 +1138,87 @@ async function replaceConfirmCase(page, shoot, project) {
   await shoot("replace-opened");
 }
 
+/** Scenario 11 — one column leaves ONE source from its lane on the source
+ * timeline. Source 1 carries Kon and a variable the catalog does not know;
+ * Source 2, on the same variant, carries Kon too under a token period, which
+ * draws no lanes, so its Kon leaves from a plain row. Fails if a lane's Remove
+ * takes the column from every source of the family (what unticking on the
+ * variable page does), from none, or is missing for the unknown FQID, whose
+ * catalog page has nothing to untick and whose only other way out was removing
+ * the whole source, or for a source with no lanes. */
+async function columnRemoveCase(page, _counts, shoot, project) {
+  await openProjectFile(page, project);
+  await settled(page);
+  await page.getByRole("heading", { name: project.name }).waitFor();
+  const variables = (s) => [s.name, s.bindings.map((b) => b.variable)];
+  await draftSaved(
+    page,
+    [
+      ["kon-unknown", ["scb/lisa/kon", "scb/lisa/doesnotexist"]],
+      ["kon-too", ["scb/lisa/kon"]],
+    ],
+    variables,
+  );
+  const card = page.getByRole("region", { name: "Source 1" });
+  const remove = (column) =>
+    card.getByRole("button", { name: `Remove ${column} from kon-unknown` });
+  await shoot("project-column-remove");
+
+  // (1) The unknown FQID leaves Source 1 alone; focus lands on the lane
+  //     before it, never on <body>.
+  await remove("scb/lisa/doesnotexist").click();
+  await page.getByRole("button", { name: "Remove column" }).click();
+  await draftSaved(
+    page,
+    [
+      ["kon-unknown", ["scb/lisa/kon"]],
+      ["kon-too", ["scb/lisa/kon"]],
+    ],
+    variables,
+  );
+  await page.waitForFunction(
+    () =>
+      document.activeElement
+        ?.getAttribute("aria-label")
+        ?.startsWith("Remove Kon from kon-unknown"),
+    null,
+    { timeout: 5_000 },
+  );
+
+  // (2) Kon leaves Source 1 and stays on Source 2.
+  await remove("Kon").click();
+  await page.getByRole("button", { name: "Remove column" }).click();
+  await draftSaved(
+    page,
+    [
+      ["kon-unknown", []],
+      ["kon-too", ["scb/lisa/kon"]],
+    ],
+    variables,
+  );
+
+  // (3) Source 2's token period draws no lanes: Kon leaves it from its plain
+  //     row, and focus falls back to that source's heading.
+  await page
+    .getByRole("region", { name: "Source 2" })
+    .getByRole("button", { name: "Remove Kon from kon-too" })
+    .click();
+  await page.getByRole("button", { name: "Remove column" }).click();
+  await draftSaved(
+    page,
+    [
+      ["kon-unknown", []],
+      ["kon-too", []],
+    ],
+    variables,
+  );
+  await page.waitForFunction(
+    () => document.activeElement?.tagName === "H3",
+    null,
+    { timeout: 5_000 },
+  );
+}
+
 /** Run one case in its own context: fresh storage, its own request ledger, its
  * own page-error ledger — and close the context whatever happens. `route` is
  * where the case starts (the /project scenarios' default; the catalog-authored
@@ -1318,6 +1399,44 @@ try {
     "replace-confirm": {
       shots: 2,
       run: (p, _c, shoot) => replaceConfirmCase(p, shoot, project),
+    },
+    // Two sources on one variant both carry Kon, and the first also a variable
+    // the catalog does not know: each lane's Remove takes its column from its
+    // own source only.
+    "project-column-remove": {
+      shots: 1,
+      run: (p, c, shoot) =>
+        columnRemoveCase(p, c, shoot, {
+          ...project,
+          name: "Synthetic column removal",
+          sources: [
+            {
+              name: "kon-unknown",
+              register_variant: "scb/lisa/individer-15plus",
+              period: { from: 2018, to: 2020 },
+              bindings: [
+                {
+                  variable: "scb/lisa/kon",
+                  type: "categorical",
+                  representation: "Kon",
+                },
+                { variable: "scb/lisa/doesnotexist", type: "categorical" },
+              ],
+            },
+            {
+              name: "kon-too",
+              register_variant: "scb/lisa/individer-15plus",
+              period: "_default",
+              bindings: [
+                {
+                  variable: "scb/lisa/kon",
+                  type: "categorical",
+                  representation: "Kon",
+                },
+              ],
+            },
+          ],
+        }),
     },
     // Opens the TWO-SOURCE project and edits one named source's period on its
     // own /project card — the only surface that shows a source whole.

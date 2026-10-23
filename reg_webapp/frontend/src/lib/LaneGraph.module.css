@@ -86,10 +86,16 @@
 /* ── Lanes and spans (HTML over the marks) ──────────────────────────────── */
 
 .lanes,
-.spans {
+.spans,
+.laneList {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* LaneList: the lanes' rows in flow, ruled like the drawn lanes. */
+.laneList > li + li {
+  border-top: 1px solid var(--border);
 }
 
 .lane {
@@ -106,6 +112,30 @@
   min-height: var(--lane-height);
   padding: var(--space-1) 0;
   overflow: hidden;
+}
+
+/* A name with a lane action: the text block takes the room, the action
+   keeps its own width at the row's end. */
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  min-height: var(--lane-height);
+}
+
+.nameRow > .name {
+  flex: 1;
+  min-width: 0;
+}
+
+.action {
+  flex: none;
+}
+
+.graph[data-stacked] .nameRow {
+  min-height: 0;
+  align-items: flex-start;
 }
 
 .graph[data-stacked] .name {

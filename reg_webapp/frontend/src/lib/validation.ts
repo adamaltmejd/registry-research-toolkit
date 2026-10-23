@@ -285,14 +285,6 @@ export function sourceAnchorId(sourceIndex: number): string {
   return `loc-source-${sourceIndex}`;
 }
 
-/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor`. */
-export function bindingAnchorId(
-  sourceIndex: number,
-  bindingIndex: number,
-): string {
-  return `loc-source-${sourceIndex}-binding-${bindingIndex}`;
-}
-
 /** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
  * draft's sources — the summary list speaks "Source 'lisa_main', column
  * scb/lisa/adeldag" instead of leaking the raw pointer, carries the DOM-anchor id so
@@ -300,8 +292,8 @@ export function bindingAnchorId(
  * happen in the catalog browser (#991) — an outbound `catalogHref` to the subject
  * page where the offending binding/source can actually be re-picked.
  *
- * `anchorId` is the deepest card the path reaches (binding card if the path dives
- * into `/bindings/{j}`, else the source card). `label` names the source by its
+ * `anchorId` is the source card the path reaches: a column draws as a lane of
+ * its source's timeline, so a `/bindings/{j}` path locates its source. `label` names the source by its
  * authored `name` (falling back to the index when unnamed / out of range) and, for
  * a binding path, appends the binding's `variable` FQID. `catalogHref`/`catalogLabel`
  * point at the catalog subject page: the binding's `variable` FQID for a binding
@@ -391,7 +383,7 @@ export function findingLocation(
           : {};
       return {
         label: `${sourceLabel}, ${columnLabel}`,
-        anchorId: bindingAnchorId(sIdx, bIdx),
+        anchorId: sourceAnchorId(sIdx),
         ...catalog,
       };
     }

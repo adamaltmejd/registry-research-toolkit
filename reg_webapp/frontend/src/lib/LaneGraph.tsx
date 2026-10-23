@@ -29,6 +29,9 @@ export interface LaneModel {
   /** Columns the catalog knows but that were never delivered: no years to
    * place, so they sit under the name. */
   undelivered?: string[];
+  /** A control beside the name that acts on this lane alone (the /project
+   * source timeline's per-column remove). */
+  action?: ReactNode;
 }
 
 export interface LaneSpanModel extends LaneSpanGeometryInput {
@@ -441,9 +444,46 @@ function Marks({
   );
 }
 
-function LaneName({ lane, width }: { lane: LaneModel; width: number }) {
+/**
+ * The lanes' names and actions without the drawing, one plain row each: for a
+ * /project source whose period draws no lanes (a token period), so its columns
+ * keep their per-column action.
+ */
+export function LaneList({
+  label,
+  lanes,
+}: {
+  label: string;
+  lanes: LaneModel[];
+}) {
   return (
-    <div className={styles.name} style={{ width }}>
+    <ol className={styles.laneList} aria-label={label}>
+      {lanes.map((lane) => (
+        <li key={lane.id}>
+          <LaneName lane={lane} />
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function LaneName({ lane, width }: { lane: LaneModel; width?: number }) {
+  // The action is a sibling of the text block, not inside it: the block's
+  // `overflow: hidden` (the ellipsis) would clip the action's focus ring.
+  if (lane.action) {
+    return (
+      <div className={styles.nameRow} style={width ? { width } : undefined}>
+        <LaneText lane={lane} />
+        <span className={styles.action}>{lane.action}</span>
+      </div>
+    );
+  }
+  return <LaneText lane={lane} width={width} />;
+}
+
+function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
+  return (
+    <div className={styles.name} style={width ? { width } : undefined}>
       {lane.href ? (
         <a className={`link ${styles.nameText}`} href={lane.href}>
           {lane.name}

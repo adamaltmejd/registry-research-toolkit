@@ -310,6 +310,12 @@ const CROSS_FILE: Record<string, string> = {
     "set inline by DataTable.tsx on its table, read by DataTable.module.css",
   "--code-depth":
     "set inline by CodeList.tsx on each levelled row, read by CodeList.module.css",
+  "--thumb-span":
+    "set inline by PeriodThumbs.tsx on its slider, read by PeriodThumbs.module.css",
+  "--thumb-before":
+    "set inline by PeriodThumbs.tsx on its slider, read by PeriodThumbs.module.css",
+  "--thumb-after":
+    "set inline by PeriodThumbs.tsx on its slider, read by PeriodThumbs.module.css",
 };
 
 const VAR_REFERENCE = /var\(\s*(--[\w-]+)/g;

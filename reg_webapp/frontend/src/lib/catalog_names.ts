@@ -30,13 +30,7 @@ import {
   type RootChild,
   type ShowNode,
 } from "./api";
-import {
-  deliveryColumnNamesFromStates,
-  familyStates,
-  fqidSegments,
-  registerPrefixOf,
-  variantCardName,
-} from "./catalog";
+import { fqidSegments, registerPrefixOf, variantCardName } from "./catalog";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -324,29 +318,4 @@ export function sourceNames(registerVariant: string): SourceNames {
     variant: named ? variantName || null : null,
     loading,
   };
-}
-
-/** The delivery column NAMES a binding's variable resolves to at its source's
- * period over the variants it reaches (its succession family, #1840, or its one
- * variant), newest era first (see `deliveryColumnNamesFromStates`) — null while
- * the read is in flight, when it failed, and when nothing there names one column.
- *
- * The same states read the picker runs on a pick (`familyStates`), cached per
- * `(fqid, period, variants)` so two columns of one source, and every re-render of
- * either, share the one request. A source with no period cannot be resolved at all
- * (the resolve needs one) and issues none — nor can one with no VARIANT (a
- * `register_variant` of fewer than 3 segments, which only a malformed draft
- * carries): resolving the variable across every variant would name a column this
- * source does not deliver. */
-export function columnNames(
-  fqid: string,
-  period: string | null,
-  variants: readonly string[],
-): Read<string[]> {
-  if (!fqid || !period || variants.length === 0 || variants.some((v) => !v)) {
-    return UNASKED;
-  }
-  return read(`resolve:${fqid}?${period}&${variants.join(",")}`, async () =>
-    deliveryColumnNamesFromStates(await familyStates(fqid, period, variants)),
-  );
 }

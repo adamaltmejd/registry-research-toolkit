@@ -1,5 +1,4 @@
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { BindingEditor } from "./BindingEditor";
 import {
   catalogHref,
   fqidSegments,
@@ -8,7 +7,12 @@ import {
 } from "./catalog";
 import { registerRead, sourceNames, UNASKED } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
-import { LaneGraph, type LaneModel, type LaneSpanModel } from "./LaneGraph";
+import {
+  LaneGraph,
+  LaneList,
+  type LaneModel,
+  type LaneSpanModel,
+} from "./LaneGraph";
 import { PeriodThumbs } from "./PeriodThumbs";
 import {
   intersectCoverageWindow,
@@ -100,6 +104,23 @@ function focusAfterSourceRemoval(index: number): void {
     () => heading(index),
     () => (index > 0 ? heading(index - 1) : null),
     () => document.getElementById(PROJECT_HEADING_ID),
+  ]);
+}
+
+/** After one column leaves a source, focus moves to the lane remove action
+ * that took its place, else the one before it, else the source's heading:
+ * never to `<body>`. */
+function focusAfterColumnRemoval(
+  sourceIndex: number,
+  bindingIndex: number,
+): void {
+  const card = () => document.getElementById(sourceAnchorId(sourceIndex));
+  const action = (i: number) =>
+    card()?.querySelectorAll<HTMLElement>("[data-lane-remove] button")[i];
+  focusAfterRemoval([
+    () => action(bindingIndex),
+    () => (bindingIndex > 0 ? action(bindingIndex - 1) : null),
+    () => card()?.querySelector("h3"),
   ]);
 }
 
@@ -208,6 +229,13 @@ export function SourceEditor({
 
   /** The thumbs mid-drag (and through the write that follows); null at rest. */
   const [dragging, setDragging] = useState<ProjectStudyWindow | null>(null);
+  /** The column a lane's Remove asks about. It outlives the dialog's close,
+   * so the closing dialog keeps its words. */
+  const [removingColumn, setRemovingColumn] = useState({
+    index: -1,
+    label: "",
+  });
+  const [columnRemoveOpen, setColumnRemoveOpen] = useState(false);
   /** The last write was refused because the SOURCE moved under the edit. */
   const [writeRefused, setWriteRefused] = useState(false);
   /** A write is in flight — from the rest that found something to write until
@@ -315,18 +343,41 @@ export function SourceEditor({
       register.value?.children
         .find((child) => child.fqid === variable)
         ?.name?.trim() || variable;
+    const columns = register.value
+      ? bindingSpans(register.value, binding, familyVariants, vintageYear)
+      : [];
+    // What the remove action calls this column: the name the file gives it,
+    // else the delivered one, else its FQID. A variable the catalog does not
+    // know has no delivered name, and must still be removable (it blocks the
+    // order, and nothing on its catalog page can untick it).
+    const fileColumn =
+      (typeof binding.display_name === "string" && binding.display_name) ||
+      (typeof binding.representation === "string" && binding.representation);
+    const columnLabel =
+      fileColumn || columns[0]?.column || variable || "this column";
     lanes.push({
       id,
       name: variableName || "(no variable)",
       href: variable ? catalogHref(variable) : null,
+      // Removes this binding from THIS source only: a same-family source that
+      // carries the column keeps it. Never disabled: a register read that
+      // failed must not trap a column in the project.
+      action: (
+        <span data-lane-remove="">
+          <Button
+            variant="ghost"
+            aria-label={`Remove ${columnLabel} from ${sourceName}`}
+            onPress={() => {
+              setRemovingColumn({ index: j, label: columnLabel });
+              setColumnRemoveOpen(true);
+            }}
+          >
+            Remove
+          </Button>
+        </span>
+      ),
     });
-    if (!register.value) return;
-    for (const column of bindingSpans(
-      register.value,
-      binding,
-      familyVariants,
-      vintageYear,
-    )) {
+    for (const column of columns) {
       const years = yearWindowLabel(column);
       const outside =
         periodRuns.length > 0 &&
@@ -358,8 +409,7 @@ export function SourceEditor({
     ? `Remove the source ${identifiedName} and its ${columnCount}?`
     : `Remove this source and its ${columnCount}?`;
 
-  // Removing a source takes its whole column list with it, so it ASKS first.
-  // Removing one column asks too, from its quiet row action (#1837).
+  // Removing a source takes all its columns with it, so it ASKS first.
   const [removeOpen, setRemoveOpen] = useState(false);
 
   // A fresh object per render is fine: the island assigns it onto the live
@@ -457,6 +507,31 @@ export function SourceEditor({
         again in the catalog to bring them back.
       </ConfirmDialog>
 
+      <ConfirmDialog
+        isOpen={columnRemoveOpen}
+        onOpenChange={setColumnRemoveOpen}
+        title={`Remove the column ${removingColumn.label} from ${sourceName}?`}
+        actions={
+          <>
+            <Button onPress={() => setColumnRemoveOpen(false)}>Cancel</Button>
+            <Button
+              variant="danger"
+              onPress={() => {
+                const { index } = removingColumn;
+                setColumnRemoveOpen(false);
+                projectStore.removeBinding(sourceIndex, index);
+                focusAfterColumnRemoval(sourceIndex, index);
+              }}
+            >
+              Remove column
+            </Button>
+          </>
+        }
+      >
+        The column leaves this source only. Pick it again in the catalog to
+        bring it back.
+      </ConfirmDialog>
+
       {sourceMalformed ? (
         // A null/non-object slot: a degraded card that still occupies its index
         // so validation addressing lines up.
@@ -507,14 +582,26 @@ export function SourceEditor({
                 onToggle={() => {}}
               />
             ) : (
-              // A token period: the thumbs cannot express it.
-              <p className={styles.fixed}>
-                <span className={styles.wire}>{periodWire}</span>
-                <span className={styles.fixedNote}>
-                  The year thumbs can't express this period — change it in{" "}
-                  <code>project_data.json</code> and open the file again.
-                </span>
-              </p>
+              // A token period: the thumbs cannot express it, and no lanes
+              // are drawn, so the columns are listed plainly with the same
+              // per-column Remove.
+              <>
+                <p className={styles.fixed}>
+                  <span className={styles.wire}>{periodWire}</span>
+                  <span className={styles.fixedNote}>
+                    The year thumbs can't express this period — change it in{" "}
+                    <code>project_data.json</code> and open the file again.
+                  </span>
+                </p>
+                {!bindingsMalformed && lanes.length > 0 && (
+                  <LaneList
+                    label={
+                      identified ? `Columns of ${identifiedName}` : "Columns"
+                    }
+                    lanes={lanes}
+                  />
+                )}
+              </>
             )}
             {storedSegments !== null && storedSegments.length > 1 && (
               <p className={styles.fixedNote}>
@@ -545,48 +632,27 @@ export function SourceEditor({
             ) : null}
           </section>
 
-          {/* The cart says COLUMNS: a binding is one delivery column of the
-              order. */}
-          <div className={styles.bindings}>
-            <h4>Columns</h4>
-            {bindingsMalformed ? (
-              <StatusRow tone="error" live="alert">
-                This source's <code>bindings</code> are malformed. Download the
-                project again, or fix them in <code>project_data.json</code>.
-              </StatusRow>
-            ) : bindings.length === 0 ? (
-              <EmptyState
-                title="No columns yet"
-                description="Browse the catalog to add columns from this register."
-                action={
-                  <Button onPress={() => router.navigate("/catalog")}>
-                    Browse registers
-                  </Button>
-                }
-              />
-            ) : (
-              <>
-                <ScopedDataWarnings {...warningProps} />
-                <ul className={styles.bindingList}>
-                  {bindings.map((binding, j) => (
-                    // Keyed by the store-owned STABLE id (issue #200), so a middle
-                    // remove remounts the right row.
-                    <li key={projectStore.bindingId(sourceIndex, j)}>
-                      <BindingEditor
-                        sourceIndex={sourceIndex}
-                        bindingIndex={j}
-                        binding={binding}
-                        variant={variantSlug}
-                        familyVariants={familyVariants}
-                        period={periodWire}
-                        studyWindow={studyWindow}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
+          {/* The columns are the timeline's lanes: no list repeats them
+              (maintainer ruling 2026-10-23). Only a source with no lanes
+              lists them, above. */}
+          {bindingsMalformed ? (
+            <StatusRow tone="error" live="alert">
+              This source's <code>bindings</code> are malformed. Download the
+              project again, or fix them in <code>project_data.json</code>.
+            </StatusRow>
+          ) : bindings.length === 0 ? (
+            <EmptyState
+              title="No columns yet"
+              description="Browse the catalog to add columns from this register."
+              action={
+                <Button onPress={() => router.navigate("/catalog")}>
+                  Browse registers
+                </Button>
+              }
+            />
+          ) : (
+            <ScopedDataWarnings {...warningProps} />
+          )}
         </>
       )}
     </section>

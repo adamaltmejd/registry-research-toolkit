@@ -427,7 +427,11 @@ Time is the axis every relation is drawn on.
   the period is set (the banner's study window, a variable page's add window, a source's
   period on `/project`) the band is dragged by slim `accent` thumbs on its bounds; all
   compose the same classes (`ui/WindowBand.module.css`), and a new period selector does
-  too.
+  too. On a coverage row (the add window, a source period) the two thumbs never sit
+  closer than 16 px: a short window on a long axis pushes their faces apart to that
+  distance, all of it inward at an end of the axis so both faces stay on the row, so a
+  one-year window keeps both visible and grabbable, while the window's years and its
+  band stay where they are (maintainer ruling 2026-10-23).
 - The **add window** is a variable page's band: the years the columns ticked there are
   added for (#1838). On a variable page the `Timeline`'s band is a selection, two thumbs
   on the coverage row bounded by the variable's availability. The thumbs move live while
@@ -450,7 +454,13 @@ Time is the axis every relation is drawn on.
   years ("16 år och äldre until 2009, 15 år och äldre from 2010") is that header's
   tooltip, never a lane, so variants stay out of sight. A comma-list period rests the
   thumbs on its outer years and a line under the drawing says a move makes it one span;
-  a term period is shown as text. Every source card shares the page's one axis.
+  a term period is shown as text. Every source card shares the page's one axis. The
+  lanes are the card's columns: no list repeats them under the drawing (maintainer
+  ruling 2026-10-23). Each lane's name carries a quiet ghost "Remove", named "Remove
+  <column> from <source>", that asks first in a `Dialog` whose answer is the `danger`
+  button and takes the column out of that one source. A term period draws no lanes, so
+  its card lists the columns as plain ruled rows (`LaneList`): the lane's name and the
+  same Remove, nothing else.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those
@@ -599,11 +609,7 @@ not grow new visual language meanwhile.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
-  signal). The same shape as a lane span, so the two read as one object. The project's
-  column list chips every column, its superseded names too, beside the variable's name
-  in the text face; the FQID stays out of that list (it is in the findings' "Fix in
-  catalog" links and the downloaded files). Each row's remove action is a quiet ghost
-  "Remove" that asks first in a `Dialog`, whose answer is the `danger` button.
+  signal). The same shape as a lane span, so the two read as one object.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
   register's or a variable's page title, where it leads with a glyph in its ink (a table
   for a register, one filled column of it for a variable). The label is fixed per type

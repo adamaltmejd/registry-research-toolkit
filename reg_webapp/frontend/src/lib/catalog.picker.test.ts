@@ -4,7 +4,6 @@ import type { PickerRepresentation } from "./catalog";
 import {
   addWindowBounds,
   coexistingColumns,
-  deliveryColumnNamesFromStates,
   narrowStatesByModifier,
   pickerRepresentations,
   rowAddPeriod,
@@ -374,51 +373,6 @@ describe("coexistingColumns (#902 shared overlap leaf)", () => {
       },
     ]);
     expect([...set].sort()).toEqual(["A", "B"]);
-  });
-});
-
-describe("deliveryColumnNamesFromStates (the cart's unpinned column name)", () => {
-  it("leads a rename within the period with the CURRENT column, superseded ones after", () => {
-    // DINF → DINF83 → DINF86 over non-overlapping eras is ONE column renamed, the
-    // same fold the picker's own rows present.
-    expect(
-      deliveryColumnNamesFromStates([
-        state({
-          delivery_column_name: "DINF83",
-          valid_from: "1984-01-01",
-          valid_to: "1985-12-31",
-        }),
-        state({
-          delivery_column_name: "DINF",
-          valid_from: "1981-01-01",
-          valid_to: "1983-12-31",
-        }),
-        state({
-          delivery_column_name: "DINF86",
-          valid_from: "1990-01-01",
-          valid_to: "9999-12-31",
-        }),
-      ]),
-    ).toEqual(["DINF86", "DINF83", "DINF"]);
-  });
-
-  it("names nothing when co-existing columns leave a choice the file must pin", () => {
-    // Two columns valid at the same instant: the cart may not pick one of them for
-    // the researcher, so the row falls back to its FQID.
-    expect(
-      deliveryColumnNamesFromStates([
-        state({
-          delivery_column_name: "Ssyk3",
-          valid_from: "2010-01-01",
-          valid_to: "2020-12-31",
-        }),
-        state({
-          delivery_column_name: "Ssyk4",
-          valid_from: "2012-01-01",
-          valid_to: "2020-12-31",
-        }),
-      ]),
-    ).toEqual([]);
   });
 });
 
