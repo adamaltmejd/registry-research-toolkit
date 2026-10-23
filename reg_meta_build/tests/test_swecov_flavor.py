@@ -404,17 +404,7 @@ def test_flavor_keys_reach_the_slug_toml_and_its_pins_survive_regeneration(
     # The spec dir's name is the steward id, which names the slug dir.
     spec = tmp_path / "spec" / "swecov"
     shutil.copytree(SPEC_DIR, spec)
-    scope = (spec / "scope.toml").read_text(encoding="utf-8")
-    entry = 'variant_name = "Beställda prover"\n'
-    assert scope.count(entry) == 1
-    (spec / "scope.toml").write_text(
-        scope.replace(
-            entry,
-            entry + 'panel_entity_key = "personnr"\n'
-            'panel_time_key = "ordercreateddatetime"\npanel_time_grain = "row"\n',
-        ),
-        encoding="utf-8",
-    )
+    # The committed Inera "Beställda prover" entry authors these keys.
     slug_dir = tmp_path / "reg_meta_build" / "fqid_slugs" / "swecov"
     slug_dir.mkdir(parents=True)
     (slug_dir / "inera.toml").write_text(
