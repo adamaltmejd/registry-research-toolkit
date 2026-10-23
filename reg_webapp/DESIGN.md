@@ -951,12 +951,14 @@ control does a different job per kind:
   coverage row, with a RAC two-thumb `Slider` laid over that row and Clear in the
   header. The variable's columns and the variables a succession reaches are the lanes
   below it, on the same axis. `VariableTimeline` owns the drag, so the band and the
-  columns' in/out follow the thumbs live. It drives resolution: a thumb coming to rest
-  (on release, or on each key press) writes `?period` (precedence `?period` > project
-  window > full history), which **refetches** the `resolve_at` subset and narrows the
-  visible states. There are no exact-year fields and no Apply (maintainer ruling
-  2026-10-22): a drag is one URL change, not one per year crossed. Richer
-  server-supported `?period` wires (terms, comma lists, `_default`) remain valid
+  columns' in/out follow the thumbs live. The thumbs are the shared `PeriodThumbs`, the
+  same control the `/project` source card lays over its coverage row. The band is the
+  add window: the years the columns ticked here are added for. It drives resolution: a
+  thumb coming to rest (on release, or on each key press) writes `?period` (precedence
+  `?period` > project window > full history), which **refetches** the `resolve_at`
+  subset and narrows the visible states. There are no exact-year fields and no Apply
+  (maintainer ruling 2026-10-22): a drag is one URL change, not one per year crossed.
+  Richer server-supported `?period` wires (terms, comma lists, `_default`) remain valid
   deep-link state; one that is not a span of whole years is reported in a warning row,
   the drawing shows the project window, Clear drops it, and it is not rewritten unless
   the user moves a thumb.
@@ -1547,30 +1549,34 @@ catalog→project mutation path. `updateField` (the project's own `name` / `wind
 the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
-**period** is the one field the cart edits (Y-81), one From/To row per segment for a
-#307 list period (Y-101 — a single range is the one-row form of this). It is a field of
-the SOURCE rather than of any single pick — a study window of 2005..2020 with one
-register reaching back to 1990 is an ordinary order — and the `/project` source card is
-the only surface that shows a source WHOLE: its full coordinate, its stored period and
-every column it carries, including columns no one catalog page lists. That is what a
+**period** is the one field the cart edits (Y-81), on the source timeline (#1838). It is
+a field of the SOURCE rather than of any single pick — a study window of 2005..2020 with
+one register reaching back to 1990 is an ordinary order — and the `/project` source card
+is the only surface that shows a source WHOLE: its full coordinate, its stored period
+and every column it carries, including columns no one catalog page lists. That is what a
 source-wide rewrite has to be looked at against, so that is where it is made. The card
-authors it in the catalog's own period vocabulary — exact-year fields and one Apply,
-plus "Add years" and a per-row Remove (hidden at one row) — and writes back through the
-same wire shaping a pick uses. Applying sorts and merges the rows into the disjoint
-ascending wire `periodCoverageUnion` would produce, refusing a within-row disorder or a
-genuine cross-row overlap in the same status line rather than silently collapsing one; a
-token period (`HT2018`) is a different vocabulary the rows do not author, and is shown
-as it stands. Where the years the period covers differ from the project's `window`
-(narrower, wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs from
-study window 2005–2020"). Like the variable page's period card, it judges the two inside
-the years the source's columns are delivered in (the register read the card already
-makes for its name; period ruling 2026-10-22), so a period of window ∩ availability,
-what an add writes, is no divergence, and while that read is out the card marks nothing.
-The window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`,
-never on `window`), so divergence is shown. Two divergences are more than shown: a
-period narrower than what its columns deliver in the window is the server's
-`source_period_narrower_than_available` warning, and a period with no years inside the
-window at all blocks the order (see "Common study window").
+draws the source as the variable page draws a variable: a `LaneGraph` headed by the
+coverage row of its succession family (every member's deliveries, from the register read
+the card already makes for its name; `source_timeline.ts`), with the period as the
+window band and the shared `PeriodThumbs` laid over that row, and one lane per column,
+each column a span of the years the family delivers it. Every source card shares the
+page's one axis (`dataAxis` over every source's family years and period, with the study
+window, computed in `ProjectEditor`), so periods line up across sources. The thumbs are
+bounded by the family's coverage; a thumb coming to rest (on release, or on each key
+press) writes the span they frame as the period. A #307 comma-list period rests the
+thumbs on its outer years, and a move replaces it with one span, which the card says
+under the drawing; a token period (`HT2018`) is a vocabulary the thumbs do not author,
+and is shown as it stands. Where the years the period covers differ from the project's
+`window` (narrower, wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs
+from study window 2005–2020"). Like the variable page's period card, it judges the two
+inside the years the source's columns are delivered in (the register read the card
+already makes for its name; period ruling 2026-10-22), so a period of window ∩
+availability, what an add writes, is no divergence, and while that read is out the card
+marks nothing. The window is an authoring seed, not an inheritance (reg-core puts
+`period` on `Source`, never on `window`), so divergence is shown. Two divergences are
+more than shown: a period narrower than what its columns deliver in the window is the
+server's `source_period_narrower_than_available` warning, and a period with no years
+inside the window at all blocks the order (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -1581,12 +1587,14 @@ re-checked through one store-internal predicate immediately before the write: a 
 that moved, or a project that was replaced, under an open edit refuses the write instead
 of overwriting it, and the card says so. Ordinary browsing still stages nothing —
 changing years, filtering rows or following a `?period` link leaves the draft alone, and
-`RepresentationPicker` has no period-change path at all: a partial leaf/group cannot
-infer a source-wide rewrite from the columns it happens to show, so that rewrite happens
-on the `/project` card only. Coverage and type drift after the edit stay the server
-validator's job, as above. Do not move period correction back onto catalog pages: a
-catalog page would have to re-state a source the cart already shows whole, and an
-earlier per-page "Project sources on this page" box went unused.
+`RepresentationPicker` has no period-change path at all: a catalog page's `?period` is
+the add window for the columns ticked there (an add widens its source to the union and
+never narrows it), and a partial leaf/group cannot infer a source-wide rewrite from the
+columns it happens to show, so a narrowing happens on the `/project` card only. Coverage
+and type drift after the edit stay the server validator's job, as above. Do not move
+period correction back onto catalog pages: a catalog page would have to re-state a
+source the cart already shows whole, and an earlier per-page "Project sources on this
+page" box went unused.
 
 ## Browser storage + project-file persistence (the SPA store)
 
@@ -1689,12 +1697,10 @@ coverage > full bounds when neither — so a variable's true data coverage shows
 instead of the whole axis reading as available (M11). The part of the window outside
 coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
 hard-clamped to the coverage span (#671). A local change writes `?period` only (never
-the global window). A window wider than coverage is information, not a warning: the
-differs-from-window warning compares the selection and the window inside coverage, so
-neither the coverage-clamped default nor that default applied raises it (maintainer
-ruling 2026-10-22). It fires for a selection that differs within coverage, or, against a
-window wholly outside coverage, for any selection but the window itself; Reset writes
-the window clipped to coverage's finite edges.
+the global window). That selection is the add window (#1838): an add widens its source
+to the union and never narrows it, so it raises no warning, and a window wider than
+coverage is information (maintainer ruling 2026-10-22). The band names the add window
+only where it differs from the study window inside coverage.
 
 The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
 (`coverage.to === null`, "still delivered") projects to — the catalog only knows

@@ -5,7 +5,7 @@ import {
   useId,
   useState,
 } from "react";
-import { Slider, SliderThumb, SliderTrack } from "react-aria-components";
+import { PeriodThumbs } from "./PeriodThumbs";
 import {
   type Coverage,
   clampYearPeriodWire,
@@ -41,7 +41,7 @@ const AXIS_STEPS = [5, 10, 20, 25, 50];
 interface DrawingProps {
   /** The axis, inclusive years: the page's data span (`dataAxis`). */
   axis: Years;
-  /** The active window: the source period when one is set, else the project
+  /** The active window: the add window when one is set, else the project
    * window; null draws no band. */
   band: Years | null;
   /** The subject's coverage edges, open ends resolved; null when unknown. */
@@ -178,11 +178,11 @@ function Drawing({ axis, band, covered, years }: DrawingProps) {
 }
 
 /** What the drawing is against. */
-function headLabel(hasBand: boolean, source: boolean): string {
+function headLabel(hasBand: boolean, add: boolean): string {
   return !hasBand
     ? "Coverage"
-    : source
-      ? "Coverage against your source period"
+    : add
+      ? "Coverage against your add window"
       : "Coverage against your study window";
 }
 
@@ -193,7 +193,7 @@ interface HeadProps {
   /** The band's years outside coverage. The drawing shows them in `info-bg`;
    * the header names them for a screen reader only (#1833). */
   outside: readonly Years[];
-  /** Clear, while a source period is applied (variable page). */
+  /** Clear, while an add window is applied (variable page). */
   action?: ReactNode;
 }
 
@@ -241,11 +241,11 @@ function Legend({ band }: { band: string | null }) {
 interface TimelineProps {
   /** The page's axis (`dataAxis`, DESIGN.md → Time). */
   axis: Years;
-  /** The active window, or null with no project window and no source period:
+  /** The active window, or null with no project window and no add window:
    * then there is no band. */
   window: Years | null;
-  /** Says what the band is: the project's study window or a source period. */
-  windowKind?: "study" | "source";
+  /** Says what the band is: the project's study window or an add window. */
+  windowKind?: "study" | "add";
   /** The subject's coverage (`coverageFromStates`, a union), or null. */
   coverage: Coverage | null;
   /** Delivered years (`deliveredYears`), or null to draw coverage solid. */
@@ -273,15 +273,11 @@ export function Timeline({
   const band = window ? clampYearWindow(window, axis.from, axis.to) : null;
   const outside = band ? uncoveredYears(band, covered) : [];
   const bandName =
-    band === null
-      ? null
-      : windowKind === "source"
-        ? "Source period"
-        : "Study window";
+    band === null ? null : windowKind === "add" ? "Add window" : "Study window";
   return (
     <section className={styles.timeline} aria-label="Coverage">
       <Head
-        label={headLabel(band !== null, windowKind === "source")}
+        label={headLabel(band !== null, windowKind === "add")}
         covered={covered}
         outside={outside}
       />
@@ -325,17 +321,16 @@ interface VariableTimelineProps extends PickerProps {
 /**
  * The variable page's one Timeline (#615, #1833; DESIGN.md → Time): coverage,
  * the variable's columns and the variables a succession reaches, drawn as one
- * LaneGraph on one axis. The band is the source period, a selection whose two
- * thumbs over the coverage row stop at the variable's availability. The thumbs
+ * LaneGraph on one axis. The band is the add window (Q4, #1838): the years the
+ * columns ticked here are added for, a selection whose two thumbs over the
+ * coverage row stop at the variable's availability. An add widens its source
+ * to the union and never narrows it; a source's period is edited on /project. The thumbs
  * move live while dragged (the band and the columns' in/out follow them) and
  * the period is applied when they come to rest (on release, or on each
  * committed key press), so a drag is one URL change; there are no year fields
  * and no Apply (maintainer ruling 2026-10-22).
  *
- * A source period that differs from the project window inside the variable's
- * availability says so in a `warn` row with Reset; a window wider than the
- * availability is the `info-bg` part of the band, not a warning, and a period
- * narrowed only to that availability is no deviation.
+ * A window wider than the availability is the `info-bg` part of the band.
  *
  * A non-year `?period` (a term, a list, `_default`) is valid URL state this UI
  * does not author: it reads as text with Clear and is never rewritten.
@@ -433,25 +428,11 @@ export function VariableTimeline({
   if (covered) drawn.push(covered.from, covered.to);
   const userChosen = periodWindow !== null || dragging !== null;
 
-  /** The thumbs' next position: only the thumb that moved is clamped into
-   * availability, and never past the other end, so a selection seeded
-   * outside it does not drag or swap its other end. */
-  function moved(next: number[]): ProjectStudyWindow {
-    const [a = selection.from, b = selection.to] = next;
-    const clamp = (y: number) => Math.min(hi, Math.max(lo, y));
-    return {
-      from: a === selection.from ? a : Math.min(clamp(a), b),
-      to: b === selection.to ? b : Math.max(clamp(b), a),
-    };
-  }
-
-  // Periods are compared inside the variable's availability
-  // (`periodWindowRelation`, the rule /project judges sources by): years it has
-  // no data for are the data's narrowing, not the user's, and show as the
-  // band's `info-bg` part, never the ▲ row. So the default seed
-  // (window∩coverage), that seed applied, and the window itself all match the
-  // window. A window wholly outside availability has no part to match: any
-  // selection other than the window itself differs.
+  // The band names the add window only where it differs from the study
+  // window inside the variable's availability (`periodWindowRelation`): years
+  // it has no data for are the data's narrowing, not the user's, and show as
+  // the band's `info-bg` part. So the default seed (window∩coverage), that
+  // seed applied, and the window itself all read as the study window.
   const coveredDays = covered && studyWindowInterval(covered);
   const matchesWindow =
     boundedWindow !== null &&
@@ -460,56 +441,26 @@ export function VariableTimeline({
       boundedWindow,
       coveredDays ? [coveredDays] : null,
     ) === "same";
-  const sourceKind = userChosen && !matchesWindow;
-  const differs =
-    boundedWindow !== null && subAnnualPeriod === null && !matchesWindow;
-  const windowHeld =
-    boundedWindow !== null &&
-    (covered === null ||
-      (boundedWindow.to >= covered.from && boundedWindow.from <= covered.to));
-  // What Reset writes: the window as this variable can hold it. Clipped only
-  // at FINITE coverage edges: a "still delivered" variable keeps the window's
-  // years past the vintage, which it will get.
-  const resetWindow =
-    !windowHeld || boundedWindow === null
-      ? boundedWindow
-      : {
-          from: Math.max(
-            boundedWindow.from,
-            boundedCoverage?.from ?? boundedWindow.from,
-          ),
-          to: Math.min(
-            boundedWindow.to,
-            boundedCoverage?.to ?? boundedWindow.to,
-          ),
-        };
-  // The band is the active window: a source period that differs, else the
+  const addKind = userChosen && !matchesWindow;
+  // The band is the active window: an add window that differs, else the
   // project window (the thumbs may sit on the narrower seed), so the uncovered
   // years show for as long as the period only follows availability.
   const showBand =
     subAnnualPeriod === null && (userChosen || boundedWindow !== null);
-  const band = showBand ? (sourceKind ? selection : boundedWindow) : null;
+  const band = showBand ? (addKind ? selection : boundedWindow) : null;
   const outside = band ? uncoveredYears(band, covered) : [];
 
   function slider(axis: [number, number]): ReactNode {
-    // RAC places a thumb at (value − min) / (max − min) of its track; inset by
-    // half a year cell each side, each thumb sits on the centre of its year.
-    const trackInset = `${(0.5 / (axis[1] - axis[0] + 1)) * 100}%`;
     return (
-      <Slider
-        className={styles.slider}
-        aria-label="Period window (years)"
-        minValue={axis[0]}
-        maxValue={axis[1]}
-        value={[selection.from, selection.to]}
-        formatOptions={{ useGrouping: false }}
-        style={{ left: trackInset, right: trackInset }}
-        onChange={(next) => {
-          const at = moved(next);
+      <PeriodThumbs
+        axis={axis}
+        selection={selection}
+        bounds={{ from: lo, to: hi }}
+        label="Add window (years)"
+        onMove={(at) => {
           if (!sameYearWindow(at, selection)) setDragging(at);
         }}
-        onChangeEnd={(next) => {
-          const at = moved(next);
+        onRest={(at) => {
           setDragging(null);
           // A rest where the period already is applies nothing: a click
           // on a thumb must not turn the seed into a URL period.
@@ -520,20 +471,7 @@ export function VariableTimeline({
             onSubmit(yearWindowToWire(at));
           }
         }}
-      >
-        <SliderTrack className={styles.track}>
-          <SliderThumb
-            index={0}
-            aria-label="From year"
-            className={styles.thumb}
-          />
-          <SliderThumb
-            index={1}
-            aria-label="To year"
-            className={styles.thumb}
-          />
-        </SliderTrack>
-      </Slider>
+      />
     );
   }
 
@@ -550,7 +488,7 @@ export function VariableTimeline({
           head: (
             <Head
               id={labelId}
-              label={headLabel(band !== null, sourceKind)}
+              label={headLabel(band !== null, addKind)}
               covered={covered}
               outside={outside}
               action={
@@ -568,51 +506,23 @@ export function VariableTimeline({
             years,
             outside,
             bandName:
-              band === null
-                ? null
-                : sourceKind
-                  ? "Source period"
-                  : "Study window",
+              band === null ? null : addKind ? "Add window" : "Study window",
           },
           overlay: subAnnualPeriod === null ? slider : undefined,
           foot: (
             <>
-              {/* One standing live region for the period's warning, so a row
-                  that appears after a move is announced. */}
+              {/* One standing live region, so a row that appears after a
+                  move is announced. */}
               <StatusRow
                 live="status"
-                tone={
-                  subAnnualPeriod !== null || (differs && boundedWindow)
-                    ? "warn"
-                    : null
-                }
-                action={
-                  subAnnualPeriod === null &&
-                  differs &&
-                  resetWindow && (
-                    <Button
-                      variant="ghost"
-                      onPress={() => onSubmit(yearWindowToWire(resetWindow))}
-                    >
-                      Reset
-                    </Button>
-                  )
-                }
+                tone={subAnnualPeriod !== null ? "warn" : null}
               >
-                {subAnnualPeriod !== null ? (
+                {subAnnualPeriod !== null && (
                   <>
                     The active period <code>{subAnnualPeriod}</code> is not a
                     span of whole years, so the Timeline shows the project
                     window.
                   </>
-                ) : (
-                  differs &&
-                  boundedWindow && (
-                    <>
-                      Differs from the project window ({boundedWindow.from}–
-                      {boundedWindow.to}).
-                    </>
-                  )
                 )}
               </StatusRow>
             </>

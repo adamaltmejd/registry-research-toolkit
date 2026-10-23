@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   Button as AriaButton,
   Label,
@@ -12,19 +12,23 @@ import {
 import { fqidSegments, registerPrefixOf } from "./catalog";
 import { registerRead, UNASKED } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
+import { dataAxis, yearSegmentsFromWire } from "./period";
 import {
   type ProjectData,
   type ProjectStudyWindow,
   type RawDraft,
   regMetaReleaseTag,
+  safeSourcePeriod,
   safeSourceRegisterVariant,
   safeSourceSlots,
   safeStudyWindow,
 } from "./project_data";
 import { projectStore } from "./project_store";
+import { sourcePeriodToWire } from "./reg_core";
 import { router } from "./router";
 import { SourceEditor } from "./SourceEditor";
 import { StudyWindowSummary } from "./StudyWindowSummary";
+import { familyYears, sourceFamily, yearsHull } from "./source_timeline";
 import { sourceWindowRelation } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
@@ -37,6 +41,7 @@ import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
 import { PROJECT_HEADING_ID, windowDisjointFindings } from "./validation";
+import type { WindowBounds } from "./window_bounds";
 
 // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
 // Under #991 the project IS the cart: it SHOWS what the researcher picked while
@@ -56,6 +61,9 @@ interface Props {
   steward: string;
   /** The study window a New project starts with (`defaultStudyWindow`). */
   defaultWindow: ProjectStudyWindow;
+  /** The catalog's span and vintage (`windowBounds`): the sources' shared axis
+   * falls back to the span, and a delivery still running ends at the vintage. */
+  bounds: WindowBounds;
   /** The steward's order hand-off (`steward.json` → `order_instructions`): how a
    * researcher sends the project in. Null where the deployment takes no orders. */
   orderInstructions: string | null;
@@ -85,6 +93,39 @@ function windowRelationsOf(draft: RawDraft | null) {
       read.value ?? null,
       read.loading,
     );
+  });
+}
+
+/** The years every source card draws, for the page's one axis (DESIGN.md →
+ * Time): each source's family coverage and its period's outer years. Read from
+ * the same register reads as `windowRelationsOf`. */
+function sourceYearsOf({
+  draft,
+  vintageYear,
+}: {
+  draft: RawDraft | null;
+  vintageYear: number;
+}): number[] {
+  if (draft == null) {
+    return [];
+  }
+  return safeSourceSlots(draft.sources).flatMap((source) => {
+    const rv = safeSourceRegisterVariant(source);
+    const wire = sourcePeriodToWire(safeSourcePeriod(source));
+    const segments = yearSegmentsFromWire(wire);
+    const drawn = segments?.flatMap((w) => [w.from, w.to]) ?? [];
+    const [, , variant] = fqidSegments(rv);
+    if (!variant) {
+      return drawn;
+    }
+    const register = registerRead(registerPrefixOf(rv)).value;
+    if (!register) {
+      return drawn;
+    }
+    const hull = yearsHull(
+      familyYears(register, sourceFamily(register, variant, wire), vintageYear),
+    );
+    return hull === null ? drawn : [...drawn, hull.from, hull.to];
   });
 }
 
@@ -150,6 +191,7 @@ export function ProjectEditor({
   regMetaVersion,
   steward,
   defaultWindow,
+  bounds,
   orderInstructions,
   providerQualified,
 }: Props) {
@@ -172,6 +214,15 @@ export function ProjectEditor({
   // once here and threaded to every reader.
   const sources = safeSourceSlots(draft?.sources);
   const studyWindow = draft == null ? null : safeStudyWindow(draft.window);
+  const sourceYears = useCatalogRead(
+    sourceYearsOf,
+    useMemo(
+      () => ({ draft, vintageYear: bounds.vintageYear }),
+      [draft, bounds.vintageYear],
+    ),
+  );
+  // One axis for every source card, so their periods line up (Q9).
+  const axis = dataAxis(sourceYears, studyWindow, [bounds.min, bounds.max]);
 
   // A hidden <input type=file> driven by the toolbar "Open" button.
   const fileInput = useRef<HTMLInputElement>(null);
@@ -429,6 +480,8 @@ export function ProjectEditor({
                         providerQualified={providerQualified}
                         studyWindow={studyWindow}
                         windowRelation={windowRelations[i] ?? null}
+                        axis={axis}
+                        vintageYear={bounds.vintageYear}
                       />
                     ))}
                   </div>

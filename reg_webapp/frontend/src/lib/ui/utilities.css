@@ -32,34 +32,6 @@
   border: 0;
 }
 
-/* Shared exact-year entry (Y-100/A-220): the /project cart's per-source period
-   editor (`SourceEditor`, Y-81) holds two `<input class="year">` fields
-   resolved by the shared `resolveYearEntry` (period.ts) and a `role="status"`
-   line reporting what they resolve to. The shared visual form lives here; layout-owned spacing (each host's own
-   `.problem` margin) and states only one host has (`SourceEditor`'s
-   `.year:read-only`) stay local to it. */
-.year {
-  box-sizing: border-box;
-  width: 5rem;
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text);
-  /* A year is a machine identifier (DESIGN.md → Typography): mono, tabular. */
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-}
-.year:focus-visible {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: var(--focus-ring);
-}
-.year[aria-invalid="true"] {
-  border-color: var(--err);
-}
-
 /* `.cbox` — the app's checkbox face. Every tick in the app is a real native
    <input type="checkbox"> (so it keeps the role, the keyboard control and the
    :checked/:indeterminate states); this strips the OS chrome and repaints the box

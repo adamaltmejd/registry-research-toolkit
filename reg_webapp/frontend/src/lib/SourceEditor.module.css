@@ -45,58 +45,32 @@
   overflow-wrap: anywhere;
 }
 
-/* The period control, on the SAME two columns `KeyValue` lays its rows on, so the
-   card keeps ONE term column; everything after the label stacks in the value
-   column. */
+/* The period: the source timeline (DESIGN.md → Time), full width under its
+   `label` header, so the lanes share the page's axis at every width. */
 .period {
-  display: grid;
-  grid-template-columns: minmax(8rem, max-content) 1fr;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.periodHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
   gap: var(--space-1) var(--space-3);
 }
-.period > :not(:global(.micro-label)) {
-  grid-column: 2;
+.periodHead h4 {
+  margin: 0;
 }
-/* Narrow: the label goes back above a full-width control, at the shell's own
-   breakpoint. */
-@media (max-width: 48rem) {
-  .period {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-}
-.entry {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.yearRows {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.yearRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-}
-.yearRow label {
-  white-space: nowrap;
-}
-/* An Apply in flight: the fields are read-only (still in the tab order), dimmed
-   the way a disabled control is. */
-.yearRow :global(.year):read-only {
-  opacity: var(--opacity-disabled);
-}
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
+/* The period's years: an identifier, so mono and tabular, closing the line. */
+.periodYears {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
-/* A period the year fields cannot author: the wire (mono) with the reason. */
+/* A period the thumbs cannot author: the wire (mono) with the reason. */
 .fixed {
   display: flex;
   flex-wrap: wrap;

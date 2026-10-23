@@ -465,15 +465,6 @@ async function orderRetryCase(page, counts, shoot, project, expected) {
     "the synthetic project must validate clean before the order is attempted",
   );
 
-  // Y-98: an Apply with nothing to change says so rather than doing nothing
-  // silently. Captured here because this scenario already opens `lisa-2018`, the
-  // one project-flows fixture with a SourceEditor card in frame — the notice
-  // outlives the rest of this scenario, so it is still on screen for the shots
-  // below.
-  const card = page.getByRole("region", { name: "Source 1" });
-  await card.getByRole("button", { name: /^Apply period/ }).click();
-  await card.getByText("Period unchanged.").waitFor();
-
   const restoreOrder = await failInTransport(page, ORDER_PATH, counts);
   await ui.download.click();
   await ui.banner.waitFor();
@@ -829,21 +820,17 @@ async function browseSearchCase(page, _counts, shoot) {
   }
 }
 
-/** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81), one
- * From/To row per segment for a #307 list period (Y-101). A researcher whose
- * study window is 2018..2020 wants ONE source to reach back to 2015, without
- * deleting and rebuilding it. The project opened here carries two differently
- * named sources on the SAME register variant — the shape the catalog's add path
- * cannot author (it finds-or-creates by variant), and the one only a source NAME
- * tells apart — so the edit must move exactly the card it was made on, keeping
- * that name and every column, Forsamling included. `lisa-lonfink`'s period is a
- * two-segment list (`2015..2017,2019..2020`) purely to give the first shot a
- * two-row card to render alongside the single-range card being edited — nothing
- * here edits it. The card is where this lives because it is the only surface that
- * shows a source WHOLE, which is what a source-wide rewrite has to be looked at
- * against. Rendered because the card, its refusal and the deviation it then
- * carries are the surface the operator judges.
- */
+/** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81) with the
+ * source timeline's thumbs (#1838). A researcher whose study window is 2018..2020
+ * wants ONE source to reach back to 2015, without deleting and rebuilding it. The
+ * project opened here carries two differently named sources on the SAME register
+ * variant — the shape the catalog's add path cannot author (it finds-or-creates
+ * by variant), and the one only a source NAME tells apart — so the edit must move
+ * exactly the card it was made on, keeping that name and every column, Forsamling
+ * included. `lisa-lonfink`'s period is a two-segment list
+ * (`2015..2017,2019..2020`), which nothing here edits: it must come through
+ * untouched. Fails if a thumb's rest writes the wrong source, drops a binding, or
+ * rewrites the sibling. */
 async function sourcePeriodCase(page, counts, shoot, project) {
   // (1) Open the two-source project, and let the autosave hold it.
   const green = validated(page);
@@ -858,43 +845,30 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   // variant and therefore a heading, so the card's own region is what tells them
   // apart — the same thing the source name does in the draft.
   const card = page.getByRole("region", { name: "Source 1" });
-  const from = card.getByRole("textbox", { name: "From" });
-  const to = card.getByRole("textbox", { name: "To" });
-  const apply = card.getByRole("button", { name: /^Apply period/ });
+  const fromThumb = card.getByRole("slider", { name: "From year" });
 
-  // (2) The card shows the source WHOLE: its name, its stored period armed in the
-  //     year fields, and every column on it — Forsamling included, which no single
+  // (2) The card shows the source WHOLE: its name, its stored period on the
+  //     thumbs, and every column on it — Forsamling included, which no single
   //     catalog page lists beside Kon.
   await card.getByText("lisa-core").waitFor();
   //     The column list names a variable, not its FQID (#1839): the row is
   //     found by the link to its catalog page.
-  await card.locator('a[href="/catalog/scb/lisa/forsamling"]').waitFor();
-  const armed = `${await from.inputValue()}..${await to.inputValue()}`;
-  check(armed === "2018..2020", `the card armed its year fields at ${armed}`);
-  // The sibling card (Y-101): a two-segment list period renders one row per
-  // segment rather than the read-only note Y-81 shipped it with.
-  const sibling = page.getByRole("region", { name: "Source 2" });
-  const siblingFrom = sibling.getByRole("textbox", { name: "From" });
-  check(
-    (await siblingFrom.count()) === 2,
-    `the two-segment sibling card rendered ${await siblingFrom.count()} From row(s)`,
-  );
+  await card.locator('a[href="/catalog/scb/lisa/forsamling"]').first().waitFor();
+  const armed = await fromThumb.inputValue();
+  check(armed === "2018", `the card's From thumb rests at ${armed}`);
   await shoot("project-source-period-card");
 
-  // (3) Years that name no range are refused, with the field at fault marked and
-  //     nothing written. Apply stays LIVE so the click explains itself, rather than
-  //     leaving a dead button and no reason.
-  await from.fill("2030");
-  await apply.click();
-  await card.getByText(/From 2030 is after To 2020/).waitFor();
-  check(await apply.isEnabled(), "the refused entry left Apply dead");
-  await shoot("project-source-period-refused");
-
-  // (4) The edit: ONE period-only diff, applied explicitly, revalidated at once.
-  const revalidated = validated(page);
-  await from.fill("2015");
-  await apply.click();
-  await revalidated;
+  // (3) The edit: each key press on the From thumb is one period-only diff,
+  //     revalidated at once. Three presses reach 2015.
+  await fromThumb.focus();
+  for (let i = 0; i < 3; i += 1) {
+    await page.keyboard.press("ArrowLeft");
+  }
+  await draftSaved(
+    page,
+    [{ from: 2015, to: 2020 }, null],
+    (s) => (s.name === "lisa-core" ? s.period : null),
+  );
   await settled(page);
   // The source now reaches past the study window, and the card says so in a ▲
   // StatusRow: the line is a heads-up, not a refusal, and it does not block the
@@ -902,7 +876,7 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   await card.getByText("Differs from study window 2018–2020").waitFor();
   await shoot("project-source-period-applied");
 
-  // (5) What the browser's own IndexedDB holds: the edited source moved, keeping
+  // (4) What the browser's own IndexedDB holds: the edited source moved, keeping
   //     its name and BOTH bindings, and the sibling on the same variant is exactly
   //     as it was opened.
   await draftSaved(
@@ -933,12 +907,9 @@ async function sourcePeriodCase(page, counts, shoot, project) {
 
 /** Scenario 9 — a variable whose availability is NARROWER than the project
  * window (maintainer ruling 2026-10-22). The project window is 2015..2020 and
- * `scb/lisa/kon` is delivered from 2018, so the variable's own period card seeds
- * at 2018..2020 and says what the window asks for that the data lacks in an "i"
- * note. That narrowing is the data's, not the researcher's: applying the seed
- * must not raise the ▲ "Differs from the project window" row, which it did when
- * the comparison ignored availability. A period the researcher narrows past the
- * data (2019..2020) is a real deviation and must still raise it. */
+ * `scb/lisa/kon` is delivered from 2018, so the variable's add window seeds at
+ * 2018..2020 and the years the window asks for that the data lacks are named as
+ * information. Fails if the seed ignores availability. */
 async function periodAvailabilityCase(page, _counts, shoot, project) {
   // (1) A project with the wide window, opened through the editor and autosaved,
   //     so the cold leaf below restores it.
@@ -950,40 +921,14 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
   await open(page, "/catalog/scb/lisa/kon");
   await settled(page);
 
-  const card = page.locator(".period-picker");
-  const differs = card.getByText(/Differs from the project window/);
   // (2) The seed: availability narrows the window, said as information.
+  const card = page.locator(".period-picker");
   await card.getByText("Not covered 2015–2017").waitFor();
-  check((await differs.count()) === 0, "the unapplied seed raised the ▲ row");
-
-  // (3) Narrowing past the data is the researcher's choice: the ▲ row shows.
-  const fromThumb = card.getByRole("slider", { name: "From year" });
-  await fromThumb.focus();
-  await page.keyboard.press("ArrowRight");
-  await periodApplied(page, "2019..2020");
-  await differs.waitFor();
-
-  // (4) Moving back onto the seed applies it, and that is still no deviation.
-  await page.keyboard.press("ArrowLeft");
-  await periodApplied(page, "2018..2020");
-  await settled(page);
-  check(
-    (await differs.count()) === 0,
-    "applying the availability-narrowed seed raised the ▲ row",
-  );
-  // The band is still the project window, so the "i" note still names the gap.
-  await card.getByText("Not covered 2015–2017").waitFor();
+  const seeded = await card
+    .getByRole("slider", { name: "From year" })
+    .inputValue();
+  check(seeded === "2018", `the add window seeded at ${seeded}, not 2018`);
   await shoot("catalog-period-availability");
-  await page.keyboard.press("ArrowRight");
-  await periodApplied(page, "2019..2020");
-  await differs.waitFor();
-
-  // (5) Reset writes the window as Kon can hold it (2018..2020, not the raw
-  //     2015..2020), and the ▲ row goes.
-  await card.getByRole("button", { name: "Reset" }).click();
-  await periodApplied(page, "2018..2020");
-  await settled(page);
-  check((await differs.count()) === 0, "Reset left the ▲ row up");
 }
 
 /** Scenario 10 — the /project cart judges a source's period against the study
@@ -1377,7 +1322,7 @@ try {
     // Opens the TWO-SOURCE project and edits one named source's period on its
     // own /project card — the only surface that shows a source whole.
     "project-source-period": {
-      shots: 3,
+      shots: 2,
       run: (p, c, shoot) => sourcePeriodCase(p, c, shoot, twoSourceProject),
     },
     // The SAME leaf the reported focus loss was found on, entered the way a
