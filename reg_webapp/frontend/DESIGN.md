@@ -413,25 +413,34 @@ Time is the axis every relation is drawn on.
   by slim `accent` thumbs on its bounds; both compose the same classes
   (`ui/WindowBand.module.css`), and a new period selector does too.
 - A **source period** narrows the window for one variable. It stays allowed but is the
-  exception: on a variable page the `Timeline`'s band is a selection, two thumbs bounded
-  by the variable's availability. The thumbs move live while dragged and the period is
-  applied when they come to rest (on release, or on each key press); there are no year
-  fields and no Apply, and a "Clear period" ghost action drops it (maintainer ruling
+  exception: on a variable page the `Timeline`'s band is a selection, two thumbs on the
+  coverage row bounded by the variable's availability. The thumbs move live while
+  dragged (the band and the columns' in/out follow them) and the period is applied when
+  they come to rest (on release, or on each key press); there are no year fields and no
+  Apply, and a "Clear period" ghost action in the header drops it (maintainer ruling
   2026-10-22). The band always shows the active window: the source period when it
   differs, else the project window. A source period that differs from the project window
   within the variable's availability says so in a `warn` `StatusRow`, "▲ Differs from
   the project window", with a "Reset" ghost action; a period narrowed only by
-  availability does not. A register or group pane draws the `Timeline` read-only.
+  availability does not. That row is the one place the difference is said: a column
+  already in the project does not repeat it (#1833). A register or group pane draws the
+  `Timeline` read-only.
 - A variable whose **availability is narrower** than the window is information, not a
-  warning: an `info` "i" note in the `Timeline` header names the uncovered years, and
-  the uncovered part of the window is an `info-bg` band. `warn-hatch` stays for a
-  delivery gap inside coverage.
+  warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
+  picture says it, so there is no note or legend entry for it; the header names those
+  years to a screen reader only (#1833). `warn-hatch` stays for a delivery gap inside
+  coverage.
 - A **`Timeline`** is one axis from the catalog's first year to its last, under a
   `label` header that says what the band is and states the covered years (years only: no
   edition count). Coverage is an ink bar with `viz-edition` ticks per delivered year, a
-  `warn-hatch` hatch for a gap, and a `label` legend of the marks it shows. Labelled
-  spans for columns, with a definition change under the same column name as two spans
-  and a `warn` mark, belong to it too (not drawn yet).
+  `warn-hatch` hatch for a gap, and a `label` legend of the marks it shows. On a
+  variable page it is one drawing with the columns (#1833, maintainer ruling
+  2026-10-23): it is drawn as a `LaneGraph` headed by a coverage row (axis, then
+  coverage with the period thumbs, then lanes), so the band runs through every lane. The
+  variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
+  coding change as a `warn` mark; the variables a succession reaches are further lanes
+  in time order, with their arrows. A line under the drawing says plainly that clicking
+  a column ticks it, and there is no second graph on the page.
 - A **`VariableRow`** repeats the same axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
@@ -446,8 +455,10 @@ Time is the axis every relation is drawn on.
   rename. A lane's title joins its facet values with a comma, and its name opens the
   variable; a span is a checkbox for the add bar, and hovering it highlights its edges.
   Its axis is the catalog's first year to its last, like the `Timeline`'s. The band is
-  the active window: the source period when one is set, else the study window. Don't
-  draw free-form node graphs; the time axis is the information.
+  the active window: the source period when one is set, else the study window. Its add
+  bar, like the register's, shows only while a change is staged. On a variable page the
+  `LaneGraph` is the `Timeline` (above). Don't draw free-form node graphs; the time axis
+  is the information.
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
 

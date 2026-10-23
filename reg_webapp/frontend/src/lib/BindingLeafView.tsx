@@ -49,7 +49,7 @@ import {
   type StagedApplyPayload,
   stagedApplyRefusal,
 } from "./staged_picker";
-import { PeriodTimeline } from "./Timeline";
+import { VariableTimeline } from "./Timeline";
 import { ColumnChip } from "./ui/ColumnChip";
 import type { Definition, MemberOf } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
@@ -297,21 +297,13 @@ export function BindingLeafView({
     (signal) => getRelatedDocuments(registerPrefix, { signal }),
   );
 
-  // One `/graph` read (#761/#792) feeds the picker's graph mode and the #670
-  // header identity. Its own failure domain: an error leaves the picker on
-  // its list and the header on `node.name`.
+  // One `/graph` read (#761/#792) feeds the Timeline's related-variable lanes
+  // and the #670 header identity. Its own failure domain: an error leaves the
+  // Timeline on this variable's lane and the header on `node.name`.
   const graphResource = useAsyncResource(node.fqid, (signal) =>
     getGraph(node.fqid, { signal }),
   );
   const graph = graphResource.data;
-  const graphHasDrawableContext =
-    graph !== null &&
-    (graph.edges.length > 0 ||
-      graph.nodes.some(
-        (n) =>
-          n.kind === "variable" &&
-          (n.same_as.length > 0 || n.states.length > 0),
-      ));
   const focus = graph?.nodes.find((n) => n.id === graph.focus_id);
   const focusNode = focus?.kind === "variable" ? focus : null;
   const qualifier = qualifierFromFocus(focusNode, node.fqid);
@@ -531,29 +523,43 @@ export function BindingLeafView({
         <ScopedDataWarnings {...registerWarnings} />
       </div>
       {yearIndependent ? (
-        <p className="muted">
-          Year-independent delivery. An annual availability period does not
-          apply.
-        </p>
+        <>
+          <p className="muted">
+            Year-independent delivery. An annual availability period does not
+            apply.
+          </p>
+          {pickerBands[0].rows.length > 0 && (
+            <RepresentationPicker
+              bands={pickerBands}
+              window={pickerWindow}
+              canAdd={seedReady}
+              committedRows={committedRows}
+              studyWindow={projectWindow}
+              focusKey={node.fqid}
+              graph={graph}
+              neighbours
+              vintageYear={vintageYear}
+              catalogYears={[windowMinYear, windowMaxYear]}
+              onApply={onApply}
+              onStageChange={onStageChange}
+            />
+          )}
+        </>
       ) : (
-        <PeriodTimeline
+        <VariableTimeline
           period={boundedPeriod}
           window={projectWindow}
+          pickerWindow={pickerWindow}
           coverage={coverage}
           years={coverageYears}
           windowMinYear={windowMinYear}
-          vintageYear={windowMaxYear}
+          windowMaxYear={windowMaxYear}
           enforcePeriodBounds={enforcePeriodBounds}
-          // The slider commits on each key step: replace, so Back leaves the page
-          // rather than walking the steps back.
+          // The slider commits on each key step: replace, so Back leaves the
+          // page rather than walking the steps back.
           onSubmit={(next) => setResolution({ period: next }, true)}
           onClear={() => setResolution({ period: null })}
-        />
-      )}
-      {(pickerBands[0].rows.length > 0 || graphHasDrawableContext) && (
-        <RepresentationPicker
           bands={pickerBands}
-          window={pickerWindow}
           canAdd={seedReady}
           committedRows={committedRows}
           studyWindow={projectWindow}
@@ -561,7 +567,6 @@ export function BindingLeafView({
           graph={graph}
           neighbours
           vintageYear={vintageYear}
-          catalogYears={[windowMinYear, windowMaxYear]}
           onApply={onApply}
           onStageChange={onStageChange}
         />

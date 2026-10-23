@@ -334,3 +334,75 @@ a.nameText {
     transition: none;
   }
 }
+
+/* ── The coverage row (the variable page's Timeline, #1833) ─────────────── */
+
+/* The coverage row's name, where the lanes have theirs. */
+.coverageCaption {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  font-weight: 500;
+}
+
+/* The period slider's box over the coverage row's track. */
+.overlay {
+  position: absolute;
+}
+
+/* The band's years the variable does not deliver: information, not a
+   warning. */
+.uncovered {
+  fill: var(--info-bg);
+}
+
+/* Coverage: an ink bar, cut by an edition tick at every year boundary. */
+.coverage {
+  fill: var(--text);
+}
+
+.edition {
+  stroke: var(--viz-edition);
+}
+
+/* A delivery gap inside coverage. */
+.hatch {
+  fill: var(--warn-hatch);
+}
+
+.hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.keyBand,
+.keyCoverage,
+.keyGap {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+}
+
+.keyBand {
+  border: 1px solid var(--accent);
+  background: var(--accent-bg);
+}
+
+.keyCoverage {
+  background: var(--text);
+}
+
+.keyGap {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn-hatch) 0,
+    var(--warn-hatch) 2px,
+    var(--surface) 2px,
+    var(--surface) 4px
+  );
+}
