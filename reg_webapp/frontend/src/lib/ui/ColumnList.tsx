@@ -2,6 +2,7 @@ import {
   type ComponentProps,
   type KeyboardEvent,
   type ReactNode,
+  useEffect,
   useId,
   useRef,
 } from "react";
@@ -29,13 +30,19 @@ export interface ColumnItem {
   href: string;
   /** Columns of this item in the open project; 0 shows no mark. */
   inProject: number;
+  /** Opens a page outside the list's register (another register's match,
+   * #1828): on click or Enter only, never as the arrow keys pass, so walking
+   * the list does not re-root it under the reader. */
+  leaves?: boolean;
 }
 
 /** A run of items under a facet header (a group's members, DESIGN.md →
- * ColumnList). A flat list is one section with no label. */
+ * ColumnList), or under another register's header while the search bar holds
+ * text (`register`, #1828). A flat list is one section with no label. */
 export interface ColumnSection {
   id: string;
   label: string | null;
+  register?: boolean;
   items: readonly ColumnItem[];
 }
 
@@ -44,6 +51,8 @@ interface Props {
   /** Whose items these are (a register's or a group's name): the header reads
    * "<label> in <subject>", truncated, with the whole of it as hover text. */
   subject?: string;
+  /** Whose list it is (the open register's FQID): a change re-roots it. */
+  root?: string;
   /** Null while the items load. */
   sections: readonly ColumnSection[] | null;
   /** The item whose page is open, or null. */
@@ -54,10 +63,17 @@ interface Props {
   renderName: (item: ColumnItem) => ReactNode;
   /** Shown in place of the list when there are no items. */
   empty: string;
+  /** Shown above the list when the first run is empty but later ones are not
+   * (other registers' matches, #1828). */
+  notice?: string | null;
   /** Shown in place of the list when the items did not load. */
   error: string | null;
   className?: string;
 }
+
+/** The keys that open the focused row; any other key (the arrows, a
+ * type-ahead letter) moves focus, and selection with it. */
+const OPEN_KEYS = new Set(["Enter", " "]);
 
 /**
  * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
@@ -70,11 +86,13 @@ interface Props {
 export function ColumnList({
   label,
   subject,
+  root,
   sections,
   selectedId,
   selectedExact,
   renderName,
   empty,
+  notice = null,
   error,
   className,
 }: Props) {
@@ -83,14 +101,54 @@ export function ColumnList({
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
   const items = sections?.flatMap((s) => s.items) ?? null;
+  // Set while a key that walks the list is down: a leaving row opens on a
+  // click, Enter or Space, not as the arrows or type-ahead pass it.
+  const walking = useRef(false);
+  // Set to the list's root when a leaving row opens its page: the list
+  // re-roots under another register and its rows render in steps (a row
+  // focused early can unmount, the register's own rows can come last), so
+  // while nothing, or another register's row, has focus, focus goes to the
+  // selected row or the first own one, until the reader next presses a key
+  // or the pointer.
+  const refocus = useRef<string | null>(null);
+  useEffect(() => {
+    if (refocus.current === null || refocus.current === root) return;
+    const target = selectedId ?? items?.find((i) => !i.leaves)?.id;
+    const active = document.activeElement;
+    const box = boxRef.current;
+    if (target === undefined || !box) return;
+    const leavingFocused =
+      active instanceof HTMLElement &&
+      box.contains(active) &&
+      items?.some((i) => i.leaves && i.id === active.dataset.key);
+    if (active !== document.body && !leavingFocused) return;
+    box
+      .querySelector<HTMLElement>(
+        `[role="option"][data-key="${CSS.escape(target)}"]`,
+      )
+      ?.focus();
+  });
+  useEffect(() => {
+    const done = () => {
+      refocus.current = null;
+    };
+    document.addEventListener("keydown", done, true);
+    document.addEventListener("pointerdown", done, true);
+    return () => {
+      document.removeEventListener("keydown", done, true);
+      document.removeEventListener("pointerdown", done, true);
+    };
+  }, []);
 
   function onSelectionChange(keys: Selection): void {
     if (keys === "all") return;
     const [key] = keys;
     const item = items?.find((i) => i.id === key);
     const current = items?.find((i) => i.id === selectedId);
+    if (item?.leaves && walking.current) return;
     // Two rows can open one page (a variable that is several group members).
     if (item !== undefined && item.href !== current?.href) {
+      refocus.current = item.leaves ? (root ?? null) : null;
       router.navigate(item.href);
     }
   }
@@ -98,6 +156,7 @@ export function ColumnList({
   // ← in the list returns to the register column; captured, so the ListBox
   // (which ignores ← in a vertical list) never sees it.
   function onKeyDownCapture(event: KeyboardEvent): void {
+    walking.current = !OPEN_KEYS.has(event.key);
     if (
       event.key === "ArrowLeft" &&
       !event.altKey &&
@@ -139,6 +198,14 @@ export function ColumnList({
       aria-labelledby={labelId}
       data-browse-column="variables"
       onKeyDownCapture={onKeyDownCapture}
+      // RAC selects inside the keydown, so the key's release ends the walk:
+      // a later activation without keys (a screen reader's) opens the row.
+      onKeyUpCapture={() => {
+        walking.current = false;
+      }}
+      onPointerDownCapture={() => {
+        walking.current = false;
+      }}
     >
       <div className={styles.header}>
         <span
@@ -160,42 +227,52 @@ export function ColumnList({
             Loading {label.toLowerCase()}…
           </p>
         ) : (
-          <ListBox
-            aria-labelledby={labelId}
-            className={styles.list}
-            selectionMode="single"
-            selectionBehavior="replace"
-            disallowEmptySelection
-            selectedKeys={selectedId === null ? [] : [selectedId]}
-            onSelectionChange={onSelectionChange}
-            renderEmptyState={() => <p className={styles.note}>{empty}</p>}
-          >
-            {/* A flat list is plain options; only labelled runs get a section
+          <>
+            {notice !== null && <p className={styles.note}>{notice}</p>}
+            <ListBox
+              aria-labelledby={labelId}
+              className={styles.list}
+              selectionMode="single"
+              selectionBehavior="replace"
+              disallowEmptySelection
+              selectedKeys={selectedId === null ? [] : [selectedId]}
+              onSelectionChange={onSelectionChange}
+              renderEmptyState={() => <p className={styles.note}>{empty}</p>}
+            >
+              {/* A flat list is plain options; only labelled runs get a section
               (an unnamed group would be noise to a screen reader). */}
-            {sections.map((section) =>
-              section.label === null ? (
-                <Collection
-                  key={section.id}
-                  items={section.items}
-                  dependencies={[renderName, selectedId, selectedExact]}
-                >
-                  {option}
-                </Collection>
-              ) : (
-                section.items.length > 0 && (
-                  <ListBoxSection key={section.id} id={section.id}>
-                    <Header className={styles.facet}>{section.label}</Header>
-                    <Collection
-                      items={section.items}
-                      dependencies={[renderName, selectedId, selectedExact]}
-                    >
-                      {option}
-                    </Collection>
-                  </ListBoxSection>
-                )
-              ),
-            )}
-          </ListBox>
+              {sections.map((section) =>
+                section.label === null ? (
+                  <Collection
+                    key={section.id}
+                    items={section.items}
+                    dependencies={[renderName, selectedId, selectedExact]}
+                  >
+                    {option}
+                  </Collection>
+                ) : (
+                  section.items.length > 0 && (
+                    <ListBoxSection key={section.id} id={section.id}>
+                      <Header
+                        className={
+                          section.register ? styles.register : styles.facet
+                        }
+                        title={section.register ? section.label : undefined}
+                      >
+                        {section.label}
+                      </Header>
+                      <Collection
+                        items={section.items}
+                        dependencies={[renderName, selectedId, selectedExact]}
+                      >
+                        {option}
+                      </Collection>
+                    </ListBoxSection>
+                  )
+                ),
+              )}
+            </ListBox>
+          </>
         )}
         <span
           ref={barRef}

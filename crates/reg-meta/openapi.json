@@ -1362,7 +1362,7 @@
     },
     "/api/search/facets": {
       "get": {
-        "description": "Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with its matched variables' FQIDs.",
+        "description": "Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with all its matched variables; without it, `limit` lists each register's first `limit` matched variables, `variable_matches` still counting them all.",
         "operationId": "search_facets",
         "parameters": [
           {
@@ -1379,6 +1379,16 @@
             "required": false,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
             }
           },
           {
@@ -3442,6 +3452,24 @@
           }
         }
       },
+      "MatchedVariable": {
+        "type": "object",
+        "description": "A matched variable as the browse column names it.",
+        "required": [
+          "fqid"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Member": {
         "type": "object",
         "description": "A group member; two members of one variable differ by `delivery_column`.",
@@ -4581,6 +4609,13 @@
               "null"
             ]
           },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The register's name, beside a list (a header over it); absent with counts."
+          },
           "variable_matches": {
             "type": "integer",
             "format": "int64"
@@ -4591,9 +4626,9 @@
               "null"
             ],
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/MatchedVariable"
             },
-            "description": "With `register`, the matched variables' FQIDs in FQID order, so the register\npage narrows by the same admission it counts; absent without it."
+            "description": "With `register`, every matched variable; with `limit`, each register's first\n`limit` (`variable_matches` stays the whole count); in FQID order, so a list\nnarrows by the same admission it counts. Absent without either."
           }
         }
       },

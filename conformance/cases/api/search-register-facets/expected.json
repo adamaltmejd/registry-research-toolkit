@@ -28,8 +28,35 @@
       "/data/registers": [
         {
           "fqid": "scb/example",
+          "name": "Example",
           "variable_matches": 3,
-          "variables": ["scb/example/reference", "scb/example/second", "scb/example/value"]
+          "variables": [
+            {"fqid": "scb/example/reference", "name": "Value reference"},
+            {"fqid": "scb/example/second", "name": "Value two"},
+            {"fqid": "scb/example/value", "name": "Value"}
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers": [
+        {
+          "fqid": "scb/example",
+          "name": "Example",
+          "variable_matches": 3,
+          "variables": [
+            {"fqid": "scb/example/reference", "name": "Value reference"},
+            {"fqid": "scb/example/second", "name": "Value two"}
+          ]
+        },
+        {
+          "fqid": "sos/unheld",
+          "name": "Unheld",
+          "variable_matches": 1,
+          "variables": [{"fqid": "sos/unheld/unheld", "name": "Unheld value"}]
         }
       ]
     }

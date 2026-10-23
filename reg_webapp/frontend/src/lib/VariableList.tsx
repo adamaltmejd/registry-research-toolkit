@@ -1,6 +1,10 @@
 import { useCallback } from "react";
-import type { RegisterShow } from "./api";
-import { useBrowseFilter, useRegisterMatches } from "./browse_filter";
+import type { RegisterFacet, RegisterShow } from "./api";
+import {
+  useBrowseFilter,
+  useOtherRegisterMatches,
+  useRegisterMatches,
+} from "./browse_filter";
 import {
   catalogHref,
   facetLabelJoin,
@@ -104,6 +108,42 @@ function memberSections(
   return [...sections.values()];
 }
 
+const MORE = "more:";
+
+/** Other registers' matches below the open register's (#1828): one section
+ * per register under its name, its first matches, then a row for the rest
+ * that opens the register, where the whole list is. */
+function otherRegisterSections(
+  facets: readonly RegisterFacet[] | null,
+  counts: Record<string, number>,
+): ColumnSection[] {
+  return (facets ?? []).flatMap((facet) => {
+    if (!facet.fqid || !facet.variables) return [];
+    const name = facet.name ?? facet.fqid;
+    const items: ColumnItem[] = facet.variables.map((variable) => ({
+      id: variable.fqid,
+      name: variable.name ?? leafSlug(variable.fqid),
+      label: `${variable.name ?? leafSlug(variable.fqid)}, in ${name}`,
+      href: catalogHref(variable.fqid),
+      inProject: counts[variable.fqid] ?? 0,
+      leaves: true,
+    }));
+    const rest = facet.variable_matches - facet.variables.length;
+    if (rest > 0) {
+      items.push({
+        id: `${MORE}${facet.fqid}`,
+        name: `${rest} more in ${name}`,
+        href: catalogHref(facet.fqid),
+        inProject: 0,
+        leaves: true,
+      });
+    }
+    return [
+      { id: `register:${facet.fqid}`, label: name, register: true, items },
+    ];
+  });
+}
+
 /**
  * The second browse column (DESIGN.md → Layout): the selected register's
  * variables, a concept group folded to one item that opens the group's page
@@ -125,8 +165,15 @@ export function VariableList({
   const counts = useProjectRead(readVariableCounts, undefined);
   const needle = useBrowseFilter();
   const serverMatches = useRegisterMatches(registerFqid);
+  const otherMatches = useOtherRegisterMatches(registerFqid);
   const renderName = useCallback(
-    (item: ColumnItem) => <Highlight text={item.name} needle={needle} />,
+    // A "N more in <register>" row names a register, not a match: unmarked.
+    (item: ColumnItem) =>
+      item.id.startsWith(MORE) ? (
+        item.name
+      ) : (
+        <Highlight text={item.name} needle={needle} />
+      ),
     [needle],
   );
 
@@ -187,10 +234,14 @@ export function VariableList({
       : focus?.kind === "variable"
         ? node?.groups.find((g) => g.members.some((m) => m.fqid === focus.fqid))
         : undefined;
-  const sections: ColumnSection[] = group
+  const own: ColumnSection[] = group
     ? memberSections(group, needle, serverMatches, counts)
     : [{ id: "variables", label: null, items }];
-
+  const others = otherRegisterSections(otherMatches, counts);
+  const sections = [...own, ...others];
+  const ownItems = own.reduce((n, section) => n + section.items.length, 0);
+  // Other registers match but this one does not: say so above their runs.
+  const ownEmpty = others.length > 0 && ownItems === 0;
   // A variable's page selects its row (its first, where it is several
   // members); the group's own page selects nothing in its member list.
   const variableHref =
@@ -209,8 +260,15 @@ export function VariableList({
       label="Variables"
       // A group's members are listed under the group's name (#1825).
       subject={group?.label ?? (node ? nodeLabel(node) : undefined)}
+      root={registerFqid}
       className={className}
-      sections={read.loading ? null : sections}
+      // With nothing of its own to show, the column waits for the other
+      // registers' answer rather than saying nothing matches.
+      sections={
+        read.loading || (otherMatches === null && ownItems === 0)
+          ? null
+          : sections
+      }
       selectedId={selectedId}
       selectedExact={selectedId !== null}
       renderName={renderName}
@@ -218,6 +276,11 @@ export function VariableList({
         needle.trim() === ""
           ? "This register lists no variables."
           : `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      }
+      notice={
+        ownEmpty
+          ? `No variables in ${group?.label ?? (node ? nodeLabel(node) : "this register")} match “${needle.trim()}”.`
+          : null
       }
       error={
         !read.loading && node === null
