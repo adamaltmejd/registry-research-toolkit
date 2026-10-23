@@ -1,0 +1,11 @@
+{
+  "note": "A carried key (an auxiliary table's join key) rides along with its table's whole edition and serves no cell, so it takes no member, window or data_warning.",
+  "fails_if": "a carried mapping with a window is admitted: the compiled holding_key has no window, so the key would silently ride along over the whole edition",
+  "error": {
+    "code": "inventory_carried_key_invalid",
+    "locators": ["table['Aux'].column['Id'].mapping[0]"],
+    "message_contains": [
+      "carried key scb/example/annual scb/example/id takes no member, window or data_warning"
+    ]
+  }
+}

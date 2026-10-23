@@ -593,8 +593,11 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    union inside its own period and is left out where the union does not reach it, as an
    ordered member is; a year-independent file's keys request `_default`. Key entries
    follow every ordered entry, by table, variant, edition, member index and column. An
-   ordered key stays an ordered entry, unmarked. The global fallback has no physical
-   table and adds none.
+   ordered key stays an ordered entry, unmarked. An auxiliary table's carried key
+   (`holding_key`: a panel key the table holds but does not serve,
+   [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Carried keys") is added
+   the same way; it never matches an ordered binding, so the main tables alone serve a
+   key order. The global fallback has no physical table and adds none.
 6. **Row filter.** A file's requested period is the union of its entries'
    `requested_period`, held keys included. When the file's table declares a period
    column (`holding_table.period_column` and `period_encoding`, from the steward spec)

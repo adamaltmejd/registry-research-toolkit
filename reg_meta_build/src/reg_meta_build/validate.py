@@ -281,6 +281,7 @@ def validate_built_db(
             "holding_period",
             "holding_column",
             "holding_mapping",
+            "holding_key",
         } <= tables:
             try:
                 validate_compiled_holdings(conn)
@@ -323,6 +324,7 @@ def _check_schema_shape(
         "holding_period",
         "holding_column",
         "holding_mapping",
+        "holding_key",
         "expanded_state",
         "browse_delivery",
         "delivery_window",

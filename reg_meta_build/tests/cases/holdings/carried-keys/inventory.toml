@@ -1,0 +1,39 @@
+version = 1
+steward = "swecov"
+
+# `Aux` is an auxiliary delivery of the variant over a wider edition than `Main`,
+# with no single parent to project: its `Id` is the variant's row key, carried in
+# its files, while `Main` alone serves the `Id` cell. Without `carried` the two
+# `Id` columns are an `inventory_cell_conflict` over 2015..2019.
+[[table]]
+id = "Aux"
+edition = { from = 2012, to = 2024 }
+[[table.column]]
+name = "Extra"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/extra"
+representation = "Extra"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+carried = true
+
+[[table]]
+id = "Main"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Amount"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/amount"
+representation = "Amount"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"

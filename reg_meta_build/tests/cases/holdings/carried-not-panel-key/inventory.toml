@@ -1,0 +1,39 @@
+version = 1
+steward = "swecov"
+
+# `Extra` is no panel key of the annual variant (its key is `id`), so carrying
+# it is refused: the order would never carry it.
+
+[[table]]
+id = "Aux"
+edition = { from = 2012, to = 2024 }
+[[table.column]]
+name = "Extra"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/extra"
+representation = "Extra"
+carried = true
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+carried = true
+
+[[table]]
+id = "Main"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Amount"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/amount"
+representation = "Amount"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"

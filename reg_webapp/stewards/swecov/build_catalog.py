@@ -2631,6 +2631,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                         else _raw_window(mapping.window),
                     )
                     declared = [{**r, "data_warning": line} for r in declared]
+                if mapping.carried:
+                    declared = [{**r, "carried": True} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
                 # select_owner drops every other owner of the representation and
                 # of the physical name on this variant. Every record on the
@@ -2769,6 +2771,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     lines.append(f"window = {_toml_edition(window)}")
                 if (warning := r.get("data_warning")) is not None:
                     lines.append(warning)
+                if r.get("carried"):
+                    lines.append("carried = true")
 
     dest = steward_dir / "inventory.toml"
     wl_path = args.out / "derived" / "inventory_worklist.json"

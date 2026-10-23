@@ -1,0 +1,8 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "scope": "scope.toml",
+  "observe_keys": true,
+  "fails_if": "a carried key conflicts with the table that serves its cell (the exemption is lost), it is stored as a served holding_mapping (a key order would then reach Aux), it is not stored in holding_key, or the artifact validator rebuilds Aux without it and refuses the build"
+}
