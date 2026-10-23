@@ -15,7 +15,7 @@
   min-width: 0;
 }
 /* The delivery column leads the row as a ColumnChip, with what qualifies it
-   (a rename, its own years, the window) beside it. */
+   (a rename, the window) beside it. */
 .columns {
   display: flex;
   flex-wrap: wrap;
@@ -33,14 +33,10 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
-/* The column's own years, when narrower than the source's, and the window note:
-   text-muted, never faint. */
-.bindingPeriod {
+/* The window note: text-muted, never faint. */
+.rowNote {
   color: var(--text-muted);
   font-size: var(--text-sm);
-}
-.years {
-  font-variant-numeric: tabular-nums;
 }
 /* The variable: its name in the text face, breaking in place at 375px. */
 .variableLine {

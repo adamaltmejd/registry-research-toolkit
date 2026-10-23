@@ -54,12 +54,9 @@ export interface PickerCommittedRow {
   variable: string;
   representation: string | null;
   sourceName: string;
-  /** The committed binding's period: its own (#1462), else its source's. What
-   * a delivery name's eras are checked against. */
+  /** The source's period, every column's (#1838): what a delivery name's eras
+   * and the study-window marker are checked against. */
   period: ProjectSourcePeriod;
-  /** The source's period: what the study-window marker reads, since blocking is
-   * source-level (reg_webapp/DESIGN.md). */
-  sourcePeriod: ProjectSourcePeriod;
   removals?: StagedRemove[];
 }
 
@@ -114,12 +111,6 @@ function bindingVariable(binding: unknown): string {
 function bindingRepresentation(binding: unknown): string | null {
   return isPlainObject(binding) && typeof binding.representation === "string"
     ? binding.representation
-    : null;
-}
-
-function bindingPeriod(binding: unknown): ProjectSourcePeriod | null {
-  return isPlainObject(binding) && binding.period != null
-    ? (binding.period as ProjectSourcePeriod)
     : null;
 }
 
@@ -350,12 +341,11 @@ export function committedPickerRows(
           continue;
         }
         const period = sourcePeriod(source);
-        // An unpinned binding matches the rows of its own years (#1462): its
-        // `period` when set, else the source's.
+        // A binding without a representation matches the rows of its source's years.
         const binding = safeSourceBindings(source).find(
           (b) =>
             bindingVariable(b) === band.key &&
-            rowMatchesBinding(b, row, bindingPeriod(b) ?? period),
+            rowMatchesBinding(b, row, period),
         );
         if (!binding) {
           continue;
@@ -366,8 +356,7 @@ export function committedPickerRows(
           variable: band.key,
           representation: bindingRepresentation(binding),
           sourceName: safeSourceName(source),
-          period: bindingPeriod(binding) ?? period,
-          sourcePeriod: period,
+          period,
         });
       }
       if (matched.length !== segments.length) {
@@ -528,8 +517,9 @@ function finalAddPeriodWires(
   const periods = finalSourcePeriodsForStagedAdds(sources, adds);
   const wires: string[] = [];
   for (const add of adds) {
-    // An add resolves at its own period, the binding's years (#1462); a
-    // period-less one inherits its source's period, as the batch leaves it.
+    // An add resolves its binding fields (type, value set) at its own period,
+    // the years picked, not every year its source orders; a period-less one at
+    // its source's period, as the batch leaves it.
     // That final source period must be one reg-core accepts too (`2099` and
     // `LA2099` union to overlapping members), or the commit would author it.
     const scope = sourcePeriodToWire(
@@ -875,8 +865,6 @@ export async function applyStagedPicks(
   const removes = payload.removes.flatMap((r) =>
     stagedRemoveForCommitted(r.committed),
   );
-  // A re-add whose merged binding period reg-core rejects refuses the batch
-  // without touching the draft (#1462).
   if (!projectStore.applyStagedDiff({ adds, removes })) {
     return { kind: "period-required" };
   }

@@ -19,7 +19,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "global",
         "reg_meta_version": "5.1.0",
         "sources": [
@@ -42,7 +42,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "lkf",
         "reg_meta_version": "5.1.0",
         "name": "Elsewhere",
@@ -54,7 +54,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "global",
         "reg_meta_version": "5.1.0",
         "name": "Draft",
@@ -66,7 +66,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "global",
         "reg_meta_version": "5.1.0",
         "name": "Blocked",
@@ -111,7 +111,7 @@
       "method": "POST",
       "path": "/api/project/order/manifest",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "global",
         "reg_meta_version": "5.1.0",
         "name": "Blocked",
@@ -156,7 +156,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "global",
         "reg_meta_version": "5.1.0",
         "name": "Year-independent",
@@ -179,13 +179,13 @@
       "operation": "order",
       "method": "POST",
       "path": "/api/project/order",
-      "content": "{\"schema_version\": \"3.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
+      "content": "{\"schema_version\": \"4.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
     },
     {
       "operation": "order",
       "method": "POST",
       "path": "/api/project/order/manifest",
-      "content": "{\"schema_version\": \"3.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
+      "content": "{\"schema_version\": \"4.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
     },
     {
       "operation": "order",
@@ -198,7 +198,7 @@
       "method": "POST",
       "path": "/api/project/order/manifest",
       "body": {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": "global",
         "reg_meta_version": "5.1.0",
         "name": "  ",

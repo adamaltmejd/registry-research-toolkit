@@ -303,7 +303,7 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
           : null;
       const inWindow = representationInWindow(row, input.window);
       const marker = committed
-        ? committedMarker(committed.sourcePeriod, input.studyWindow)
+        ? committedMarker(committed.period, input.studyWindow)
         : null;
       const label = yearsLabel(row, years);
       const changes = codingChanges(nodes.get(band.key), row);

@@ -395,7 +395,7 @@ export function RegisterView({
           column.rows.every((row) => {
             const match = committedRows.get(pickerRowKey(band, row));
             if (match === undefined) return false;
-            markers.push(committedMarker(match.sourcePeriod, add.bounded));
+            markers.push(committedMarker(match.period, add.bounded));
             // THIS variant's eras for the name must be inside what was
             // committed, not just the row's (a rename chain spans the chain).
             return windowsOverlapPeriod(

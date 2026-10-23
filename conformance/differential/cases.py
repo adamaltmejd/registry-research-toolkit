@@ -202,7 +202,7 @@ def _write_catalog_projects(
                 binding = {"variable": fqid, "type": "opaque"}
             bindings[fqid] = binding
         project = {
-            "schema_version": "3.0.0",
+            "schema_version": "4.0.0",
             "steward": catalog,
             "reg_meta_version": tag,
             "name": f"G1 {coordinate}",

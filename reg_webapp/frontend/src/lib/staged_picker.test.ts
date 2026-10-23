@@ -107,67 +107,6 @@ describe("committedPickerRows", () => {
     );
   });
 
-  it("matches an unpinned binding only to the rows of its own period (#1462)", () => {
-    // A rename across one source's years: the binding is ordered for 2019..2020
-    // only, so only the column delivered then is in the project. Fails if the
-    // match reads the source's 2014..2020 (both rows marked committed).
-    const older = row({
-      key: "ind::Old",
-      column: "Old",
-      from: "2014-01-01",
-      to: "2018-12-31",
-      windows: [{ from: "2014-01-01", to: "2018-12-31" }],
-      renamedColumns: [],
-    });
-    const newer = row({
-      key: "ind::New",
-      column: "New",
-      from: "2019-01-01",
-      to: "2020-12-31",
-      windows: [{ from: "2019-01-01", to: "2020-12-31" }],
-      renamedColumns: [],
-    });
-    const b = band([older, newer]);
-    const draft: RawDraft = {
-      schema_version: "3.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        {
-          name: "LISA",
-          register_variant: "scb/lisa/ind",
-          period: { from: 2014, to: 2020 },
-          bindings: [
-            { variable: "scb/lisa/kon", type: "categorical" },
-            {
-              variable: "scb/lisa/dinf",
-              type: "numeric",
-              period: { from: 2019, to: 2020 },
-            },
-          ],
-        },
-      ],
-    };
-
-    const committed = committedPickerRows(draft, [b]);
-    expect([...committed.keys()]).toEqual([pickerRowKey(b, newer)]);
-    // The row carries the binding's own period, which the catalog page checks a
-    // delivery name's eras against. Fails if it carries the source's 2014..2020
-    // (a retired name from 2014..2018 would read "In project").
-    expect(committed.get(pickerRowKey(b, newer))?.period).toEqual({
-      from: 2019,
-      to: 2020,
-    });
-    // The study-window marker reads the source's period: blocking is
-    // source-level, so a binding narrower than the window is not marked
-    // outside it. Fails if the marker is fed the binding's period.
-    expect(committed.get(pickerRowKey(b, newer))?.sourcePeriod).toEqual({
-      from: 2014,
-      to: 2020,
-    });
-  });
-
   it("keys family rows by variant family and removes every concrete source", () => {
     const r = row({
       key: "individer-15plus::Kon",

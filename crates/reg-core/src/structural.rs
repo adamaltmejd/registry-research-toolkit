@@ -27,8 +27,7 @@
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken, is_slug};
-use crate::interval::{Interval, gaps, render};
-use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype, SourcePeriod};
+use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 5] = [
@@ -40,7 +39,7 @@ const PROJECT_REQUIRED: [&str; 5] = [
 ];
 const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "extract_format"];
 const SOURCE_KEYS: [&str; 4] = ["name", "register_variant", "period", "bindings"];
-const BINDING_KEYS: [&str; 10] = [
+const BINDING_KEYS: [&str; 9] = [
     "variable",
     "type",
     "display_name",
@@ -50,7 +49,6 @@ const BINDING_KEYS: [&str; 10] = [
     "datetime_format",
     "value_set",
     "representation",
-    "period",
 ];
 const PANEL_KEYS: [&str; 5] = ["panel_id", "members", "entity_key", "time_key", "comment"];
 const PANEL_MEMBER_KEYS: [&str; 3] = ["source", "entity_key", "time_key"];
@@ -607,12 +605,6 @@ fn check_source<'a>(
         return;
     }
     let prefix = variant.as_ref().map(|v| &v[..2]);
-    // The days a binding period must lie within: `None` when the source period is
-    // refused or not orderable (an inverted range, the semantic layer's to report),
-    // `Some(None)` when it is `"_default"`.
-    let scope = period
-        .and_then(|p| SourcePeriod::from_value(p).ok())
-        .and_then(|p| p.intervals().ok());
     let mut display_names: Vec<(&str, String)> = Vec::new();
     for (j, binding) in bindings.iter().enumerate() {
         let binding_base = format!("{base}/bindings/{j}");
@@ -625,10 +617,6 @@ fn check_source<'a>(
             continue;
         };
         check_binding(binding, &binding_base, prefix, issues);
-        if let Some(period) = get(binding, "period") {
-            let path = format!("{binding_base}/period");
-            check_binding_period(period, &path, scope.as_ref(), issues);
-        }
         let Some(dn) = binding.get("display_name").and_then(Value::as_str) else {
             continue;
         };
@@ -729,51 +717,6 @@ fn check_binding(
             "value_set must be a string".into(),
         ),
     }
-}
-
-/// A binding period: a dated source period (`"_default"` is spelled by omitting
-/// it) whose days lie within its source's period (`scope`, as [`check_source`]
-/// computes it).
-fn check_binding_period(
-    period: &Value,
-    path: &str,
-    scope: Option<&Option<Vec<Interval>>>,
-    issues: &mut Issues,
-) {
-    if period == "_default" {
-        issues.error(
-            "invalid_period",
-            path.to_owned(),
-            "a binding period must be dated; omit it to inherit the source period".into(),
-        );
-        return;
-    }
-    check_period(period, path.to_owned(), issues);
-    let Ok(own) = SourcePeriod::from_value(period) else {
-        return;
-    };
-    // An inverted range is not orderable: the semantic layer reports it.
-    let (Some(scope), Ok(Some(days))) = (scope, own.intervals()) else {
-        return;
-    };
-    let message = match scope {
-        None => format!(
-            "binding period {own} needs a dated source period; the source period is \
-             year-independent ('_default')"
-        ),
-        Some(scope) => {
-            let outside = gaps(&days, scope.clone());
-            if outside.is_empty() {
-                return;
-            }
-            format!(
-                "binding period {own} reaches {} outside the source period {}",
-                render(&outside),
-                render(scope)
-            )
-        }
-    };
-    issues.error("binding_period_outside_source", path.to_owned(), message);
 }
 
 /// The subtype and format fields: each only on its column type, a string, and the

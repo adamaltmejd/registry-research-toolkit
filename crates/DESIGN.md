@@ -516,15 +516,14 @@ The project's `steward` must equal the artifact's name (`global` or its steward 
 the only check that a steward exists. Retargeting is not a feature, and a user who means
 another deployment edits the JSON and uploads it again.
 
-Per binding, in declaration order, over the binding's own period (`Binding.period`, else
-the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
+Per binding, in declaration order, over its source's period
+([reg-core/DESIGN.md](reg-core/DESIGN.md)):
 
 1. **Availability clip.** A source period means "these columns, wherever each is
-   available inside this window", and a binding period narrows one column to its own
-   years inside it. Each binding is clipped to the union of its states at the source's
-   variant, so a column first delivered in 2019 under a 2018–2020 source does not widen
-   the order into a cross-product. Every clip is reported, never silent and never an
-   error, and is recorded before the ambiguity gate can stop.
+   available inside this window". Each binding is clipped to the union of its states at
+   the source's variant, so a column first delivered in 2019 under a 2018–2020 source
+   does not widen the order into a cross-product. Every clip is reported, never silent
+   and never an error, and is recorded before the ambiguity gate can stop.
 2. **Representation slicing.** The clipped request splits into slices of constant
    canonical representation. A sequential rename makes two slices; two columns valid at
    the same instant without a `representation` pin is ambiguity and blocks. Resolution

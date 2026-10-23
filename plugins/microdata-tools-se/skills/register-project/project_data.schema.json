@@ -92,17 +92,6 @@
             }
           ]
         },
-        "period": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/ProjectSourcePeriod",
-              "description": "The years this column is ordered for, inside the source period; absent\ninherits the source period. Never `\"_default\"`."
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "representation": {
           "type": [
             "string",
@@ -340,7 +329,7 @@
           "$ref": "#/$defs/ProjectPeriodSegment"
         }
       ],
-      "description": "`Source.period` (and a `Binding.period` inside it): one segment, or a sorted,\ndisjoint list of them (an interrupted series)."
+      "description": "`Source.period`: one segment, or a sorted, disjoint list of them (an interrupted\nseries)."
     },
     "ProjectStudyWindow": {
       "type": "object",

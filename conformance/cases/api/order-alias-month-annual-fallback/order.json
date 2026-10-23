@@ -25,10 +25,10 @@
     "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
     "catalog_schema_version": "12.3.0",
     "mode": "global_fallback",
-    "project_hash": "82a86951ad3ebee2da9b469639c37bb8fa852914360714496906d9a3127ba603",
+    "project_hash": "eb6aea2eb0b0f0ea8782d7f5698fb5ee0b90f5fee615720b62b0b5d86baca634",
     "project_name": "Synthetic semantic",
     "project_reg_meta_version": "5.1.0",
-    "project_schema_version": "3.0.0",
+    "project_schema_version": "4.0.0",
     "steward": "global"
   },
   "version": 2

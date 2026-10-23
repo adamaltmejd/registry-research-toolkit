@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a schema_version other than 3.0.0 stops being answered by `unsupported_schema_version` alone: here the document also lacks `sources`, which the structural layer would report.",
+  "note": "Fails if a schema_version other than 4.0.0 stops being answered by `unsupported_schema_version` alone: here the document also lacks `sources`, which the structural layer would report.",
   "fixture": "semantic",
   "kind": "catalog",
   "requests": [

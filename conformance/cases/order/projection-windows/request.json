@@ -3,7 +3,7 @@
   "fixture": "projection-windows",
   "artifact": "steward",
   "project": {
-    "schema_version": "3.0.0",
+    "schema_version": "4.0.0",
     "steward": "swecov",
     "reg_meta_version": "reg_meta/v0.40.1",
     "name": "Reader case",

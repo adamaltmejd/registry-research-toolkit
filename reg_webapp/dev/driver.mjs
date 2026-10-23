@@ -1224,7 +1224,7 @@ try {
   // The Rust server's `context`: `{data, meta}`, the generation in `meta`.
   const { data: deployment, meta } = JSON.parse(contextBody);
   const project = {
-    schema_version: "3.0.0",
+    schema_version: "4.0.0",
     steward: deployment.steward.id,
     reg_meta_version: `reg_meta/v${deployment.reg_meta_version}`,
     name: "Synthetic order flow",

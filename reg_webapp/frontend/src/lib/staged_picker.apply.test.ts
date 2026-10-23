@@ -284,7 +284,7 @@ describe("applyStagedPicks", () => {
   // The final period gate, through the Apply that owns it. Each refusal sits beside
   // its allowed twin, so a gate that refuses everything fails as surely as one that
   // lets the bad case through.
-  it("commits a dated add at its own period and refuses a final source period reg-core rejects (#1462)", async () => {
+  it("resolves a dated add at its own period and refuses a final source period reg-core rejects", async () => {
     // Alder is an identifier through 2019 and a categorical column from 2020, so the
     // binding's type says which years it was resolved at.
     const alder = [
@@ -308,8 +308,9 @@ describe("applyStagedPicks", () => {
     const alderPicks = picksOf(pickerRepresentations(alder), "scb/lisa/alder");
     const konPicks = picksOf(pickerRepresentations(kon), konBandKey);
 
-    // A dated add on a 2018 source resolves at 2020, its own years. Fails if it
-    // resolves at the source's widened 2018..2020 (the identifier era).
+    // A dated add on a 2018 source resolves its fields at 2020, the years picked,
+    // though the widened source orders it for 2018..2020. Fails if it resolves at
+    // the source's widened 2018..2020 (the identifier era).
     newProject();
     await applyStagedPicks({ adds: konPicks, removes: [] }, at("2018"));
     await applyStagedPicks({ adds: alderPicks, removes: [] }, at("2020"));
