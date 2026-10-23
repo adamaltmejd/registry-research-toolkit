@@ -1,5 +1,5 @@
 import type { RegisterShow, VariantModel } from "./api";
-import { deliveredYears, variantLabel } from "./catalog";
+import { deliveredYears, variantFamilyMembers, variantLabel } from "./catalog";
 import { coverageMarks } from "./period";
 import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 
@@ -8,6 +8,26 @@ import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 // already shares, so the drawing issues no request of its own.
 
 type Years = ProjectStudyWindow;
+
+/** The first and last of ascending `years`, or null when there are none. */
+export function yearsHull(years: readonly number[]): Years | null {
+  return years.length === 0
+    ? null
+    : { from: years[0], to: years.at(-1) ?? years[0] };
+}
+
+/** The variants a source reaches: a `_default` source names its variant
+ * exactly, a dated one its whole succession family (#1840). One rule for the
+ * card and the page's axis, so the drawing never leaves the axis. */
+export function sourceFamily(
+  register: RegisterShow | null,
+  variant: string,
+  wire: string | null,
+): string[] {
+  return wire === "_default" || register === null
+    ? [variant]
+    : variantFamilyMembers(register.variants, variant);
+}
 
 /** The family's delivered years, every variable's deliveries under any member
  * together: the coverage row, and the span the period thumbs may reach. */
@@ -107,14 +127,12 @@ export function bindingSpans(
   const spans: ColumnSpan[] = [];
   for (const [column, windows] of byColumn) {
     const years = deliveredYears(windows, vintageYear);
-    if (years.length === 0) continue;
-    const from = years[0];
-    const to = years.at(-1) ?? from;
+    const hull = yearsHull(years);
+    if (hull === null) continue;
     spans.push({
       column,
-      from,
-      to,
-      runs: coverageMarks({ from, to }, years).delivered,
+      ...hull,
+      runs: coverageMarks(hull, years).delivered,
     });
   }
   return spans.sort((a, b) => a.from - b.from);

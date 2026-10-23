@@ -1061,8 +1061,8 @@ export const projectStore = {
   },
 
   /**
-   * Commit ONE confirmed source-period edit — the cart card's "Apply period"
-   * action — as its OWN period-only `applyStagedDiff`: an edit has no staged adds
+   * Commit ONE source-period edit — the cart card's thumbs coming to rest — as
+   * its OWN period-only `applyStagedDiff`: an edit has no staged adds
    * beside it, so what the researcher confirmed is exactly what lands.
    *
    * Returns false WITHOUT mutating when the draft has been replaced since the edit

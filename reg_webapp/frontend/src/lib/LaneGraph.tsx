@@ -673,7 +673,8 @@ function Legend({
       )}
       {window && (
         <li>
-          <ColumnChip name="COL" state="out" /> outside the window
+          <ColumnChip name="COL" state="out" /> outside the{" "}
+          {coverage?.bandName?.toLowerCase() ?? "window"}
         </li>
       )}
     </ul>

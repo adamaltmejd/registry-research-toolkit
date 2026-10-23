@@ -1696,12 +1696,10 @@ coverage > full bounds when neither — so a variable's true data coverage shows
 instead of the whole axis reading as available (M11). The part of the window outside
 coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
 hard-clamped to the coverage span (#671). A local change writes `?period` only (never
-the global window). A window wider than coverage is information, not a warning: the
-differs-from-window warning compares the selection and the window inside coverage, so
-neither the coverage-clamped default nor that default applied raises it (maintainer
-ruling 2026-10-22). It fires for a selection that differs within coverage, or, against a
-window wholly outside coverage, for any selection but the window itself; Reset writes
-the window clipped to coverage's finite edges.
+the global window). That selection is the add window (#1838): an add widens its source
+to the union and never narrows it, so it raises no warning, and a window wider than
+coverage is information (maintainer ruling 2026-10-22). The band names the add window
+only where it differs from the study window inside coverage.
 
 The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
 (`coverage.to === null`, "still delivered") projects to — the catalog only knows

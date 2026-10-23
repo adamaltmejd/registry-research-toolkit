@@ -5,7 +5,6 @@ import {
   fqidSegments,
   registerPrefixOf,
   sourceCardHeading,
-  variantFamilyMembers,
 } from "./catalog";
 import { registerRead, sourceNames, UNASKED } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
@@ -37,7 +36,13 @@ import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 import { router } from "./router";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import styles from "./SourceEditor.module.css";
-import { bindingSpans, familyYears, memberNote } from "./source_timeline";
+import {
+  bindingSpans,
+  familyYears,
+  memberNote,
+  sourceFamily,
+  yearsHull,
+} from "./source_timeline";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
@@ -161,10 +166,11 @@ export function SourceEditor({
     registerFqid ? registerRead : readUnasked,
     registerFqid,
   );
-  const familyVariants =
-    periodWire === "_default"
-      ? [variantSlug]
-      : variantFamilyMembers(register.value?.variants ?? [], variantSlug);
+  const familyVariants = sourceFamily(
+    register.value ?? null,
+    variantSlug,
+    periodWire,
+  );
 
   const metaRows: KeyValueRow[] = [
     ...(providerName ? [{ label: "Provider", value: providerName }] : []),
@@ -186,25 +192,16 @@ export function SourceEditor({
   const storedSegments =
     periodWire === null ? null : yearSegmentsFromWire(periodWire);
   const storedHull: ProjectStudyWindow | null =
-    storedSegments === null || storedSegments.length === 0
+    storedSegments === null
       ? null
-      : {
-          from: storedSegments[0].from,
-          to: storedSegments.at(-1)?.to ?? storedSegments[0].from,
-        };
+      : yearsHull(storedSegments.flatMap((w) => [w.from, w.to]));
   /** Whether the thumbs can author THIS source's period. */
   const yearsEditable = periodWire === null || storedSegments !== null;
 
   const familyDelivered = register.value
     ? familyYears(register.value, familyVariants, vintageYear)
     : [];
-  const covered: ProjectStudyWindow | null =
-    familyDelivered.length === 0
-      ? null
-      : {
-          from: familyDelivered[0],
-          to: familyDelivered.at(-1) ?? familyDelivered[0],
-        };
+  const covered = yearsHull(familyDelivered);
   const members = register.value
     ? memberNote(register.value, familyVariants, vintageYear)
     : null;
@@ -214,8 +211,10 @@ export function SourceEditor({
   /** The last write was refused because the SOURCE moved under the edit. */
   const [writeRefused, setWriteRefused] = useState(false);
   /** A write is in flight — from the rest that found something to write until
-   * the store's write returns, i.e. the restore-gate wait. */
-  const [applying, setApplying] = useState(false);
+   * the store's write returns, i.e. the restore-gate wait. A ref, not a
+   * disabled slider: disabling the thumb a key press just moved would drop its
+   * focus on every step. */
+  const applying = useRef(false);
   /** The source as it stood when this drag began, which the store re-checks the
    * write against. Nothing renders from it. */
   const editedFrom = useRef<SourcePeriodEditTarget | null>(null);
@@ -258,14 +257,19 @@ export function SourceEditor({
   /** The thumbs came to rest: ONE period-only diff through the store's guarded
    * `applySourcePeriodEdit`, replacing the period with the span they frame. */
   async function applyPeriod(at: ProjectStudyWindow): Promise<void> {
+    if (applying.current) {
+      // Held on the SAME gate as an earlier rest: that write lands first.
+      return;
+    }
     const target = editedFrom.current;
-    const wire = yearWindowToWire(at);
-    if (target === null || wire === periodWire) {
+    // A rest where the thumbs started writes nothing: a drag away and back
+    // must not collapse a comma list into its outer years.
+    if (target === null || sameYearWindow(at, resting)) {
       editedFrom.current = null;
       setDragging(null);
       return;
     }
-    setApplying(true);
+    applying.current = true;
     try {
       // The draft lifecycle's restore is ASYNCHRONOUS, so this waits for it
       // exactly as the catalog's Add path does: the store's re-check is only
@@ -278,17 +282,23 @@ export function SourceEditor({
       setWriteRefused(
         !projectStore.applySourcePeriodEdit({
           ...target,
-          period: sourcePeriodFromWire(wire),
+          period: sourcePeriodFromWire(yearWindowToWire(at)),
         }),
       );
     } finally {
+      applying.current = false;
       editedFrom.current = null;
       if (mounted.current) {
         setDragging(null);
-        setApplying(false);
       }
     }
   }
+
+  // The years the period requests, a comma list segment by segment, so a
+  // column delivered only in a list's gap reads as outside it.
+  const periodRuns: ProjectStudyWindow[] = dragging
+    ? [dragging]
+    : (storedSegments ?? []);
 
   // The columns as lanes under the coverage row, one per binding: each column a
   // span of the years the family delivers it.
@@ -316,7 +326,8 @@ export function SourceEditor({
     )) {
       const years = yearWindowLabel(column);
       const outside =
-        band !== null && (column.to < band.from || column.from > band.to);
+        periodRuns.length > 0 &&
+        !periodRuns.some((r) => column.to >= r.from && column.from <= r.to);
       spans.push({
         id: `${id}:${column.column}`,
         lane: id,
@@ -367,7 +378,8 @@ export function SourceEditor({
         label={
           identified ? `Period for ${identifiedName} (years)` : "Period (years)"
         }
-        isDisabled={applying}
+        // Until the family's coverage lands there is nothing to bound them by.
+        isDisabled={register.loading}
         onMove={(at) => {
           if (sameYearWindow(at, selection)) return;
           if (editedFrom.current === null) beginEdit();
@@ -462,12 +474,13 @@ export function SourceEditor({
               </h4>
               <span
                 className={styles.periodYears}
+                // Announces each period that lands; the thumbs say the years
+                // while they move.
+                aria-live="polite"
                 title={members ?? undefined}
                 aria-busy={register.loading ? "true" : undefined}
               >
-                {dragging
-                  ? yearWindowLabel(dragging)
-                  : (periodLabel(period) ?? "No period")}
+                {periodLabel(period) ?? "No period"}
                 {members && (
                   <span className="visually-hidden">. {members}</span>
                 )}

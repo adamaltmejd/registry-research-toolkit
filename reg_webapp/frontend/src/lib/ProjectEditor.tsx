@@ -9,11 +9,7 @@ import {
   SelectValue,
   Text,
 } from "react-aria-components";
-import {
-  fqidSegments,
-  registerPrefixOf,
-  variantFamilyMembers,
-} from "./catalog";
+import { fqidSegments, registerPrefixOf } from "./catalog";
 import { registerRead, UNASKED } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import { dataAxis, yearSegmentsFromWire } from "./period";
@@ -32,7 +28,7 @@ import { sourcePeriodToWire } from "./reg_core";
 import { router } from "./router";
 import { SourceEditor } from "./SourceEditor";
 import { StudyWindowSummary } from "./StudyWindowSummary";
-import { familyYears } from "./source_timeline";
+import { familyYears, sourceFamily, yearsHull } from "./source_timeline";
 import { sourceWindowRelation } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
@@ -126,16 +122,10 @@ function sourceYearsOf({
     if (!register) {
       return drawn;
     }
-    // A `_default` source names its variant exactly; a dated one reaches the
-    // whole succession family (#1840), as its card draws it.
-    const family =
-      wire === "_default"
-        ? [variant]
-        : variantFamilyMembers(register.variants, variant);
-    const years = familyYears(register, family, vintageYear);
-    return years.length === 0
-      ? drawn
-      : [...drawn, years[0], years.at(-1) ?? years[0]];
+    const hull = yearsHull(
+      familyYears(register, sourceFamily(register, variant, wire), vintageYear),
+    );
+    return hull === null ? drawn : [...drawn, hull.from, hull.to];
   });
 }
 
