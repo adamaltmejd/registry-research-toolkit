@@ -45,13 +45,15 @@ In R on MONA:
 
 ```r
 R.version.string                              # 4.2 or newer
-packageVersion("arrow"); packageVersion("jsonlite")
+packageVersion("arrow")                       # 9.0.0 or newer
+packageVersion("jsonlite")
 exists("sha256sum", asNamespace("tools")) ||  # TRUE on R >= 4.5
   requireNamespace("digest", quietly = TRUE)  # else digest must be installed
 ```
 
 If the last line is `FALSE`, the gate cannot hash files and refuses every run with
-`setup` (`sha256_missing`): stop the trial there and report it.
+`setup` (`sha256_missing`): stop the trial there and report it. The same holds for an
+arrow older than 9.0.0 (`arrow_too_old`).
 
 ## 4. The pipeline's last step
 
@@ -143,9 +145,9 @@ findings. Fix the pipeline and run it again from a fresh staging folder.
 
 A finding names a file or column of the schema. A file or column the schema does not
 declare is never named, since its name could be data; it is shown by position instead:
-`extra_file position=1` is the first entry of `staging\` sorted by name (capitals before
-lowercase), `extra_column file=summary_by_year.parquet position=3` the file's third
-column.
+`extra_file position=1` is the first entry of `staging\` sorted by bytes (dots and
+digits, then capitals, then lowercase),
+`extra_column file=summary_by_year.parquet position=3` the file's third column.
 
   | Code         | Meaning and what to do                                                                                                     |
   | ------------ | -------------------------------------------------------------------------------------------------------------------------- |
@@ -162,8 +164,8 @@ nothing: move the other files away yourself. Windows can add a hidden `desktop.i
 
 `move_failed` (or `output_not_removable`) on Windows usually means a program holds the
 folder open: close any Explorer window showing `export\` or the project folder, and any
-file open from `export\`, then rerun. A failed run removes the hidden `.export-gate-...`
-folder it was writing; if one is ever left beside `export\`, delete it.
+file open from `export\`, then rerun. A failed run removes the `.export-gate-...` folder
+it was writing; if one is ever left beside `export\`, delete it.
 
 ## 7. Trial drills
 

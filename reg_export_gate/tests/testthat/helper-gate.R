@@ -22,7 +22,7 @@ json_values <- function(col) {
   unlist(lapply(col$values, function(v) {
     if (is.null(v)) {
       NA
-    } else if (identical(v, "NaN")) {
+    } else if (col$type == "double" && identical(v, "NaN")) {
       NaN
     } else {
       v

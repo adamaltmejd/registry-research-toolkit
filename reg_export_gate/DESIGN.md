@@ -201,7 +201,7 @@ written. Links in staging are refused where R can see them (`Sys.readlink()` doe
 Windows); the rewrite is what guarantees that only checked data leaves.
 
 Every write option that affects bytes is pinned (no compression, no dictionary, no
-statistics, Parquet 2.6, one row group per million rows), so the same data writes the
+statistics, Parquet 2.4, one row group per 1,048,576 rows), so the same data writes the
 same bytes under one arrow release, whatever file it came from. Two entries remain that
 arrow always writes and the gate cannot turn off: `ARROW:schema`, the Arrow schema the
 gate built, and the `created_by` string naming the arrow version. Neither holds anything
@@ -219,11 +219,12 @@ are policy work for later versions; until then the human review covers them.
 The code is the category; the rule locates the finding. Both are stable.
 
 - `setup`: `staging_missing`, `output_parent_missing`, `paths_overlap`,
-  `jsonlite_missing`, `arrow_missing`, `sha256_missing`, `output_not_gate_export`,
-  `output_not_removable`, `schema_unreadable`, `schema_invalid`, `schema_version`,
-  `schema_reserved_name`, `policy_missing`, `policy_unreadable`, `policy_invalid`,
-  `policy_version`, `policy_schema_mismatch`, `export_not_writable`, `move_failed`,
-  `internal_warning`, `internal_error:<R condition class>`.
+  `jsonlite_missing`, `arrow_missing`, `arrow_too_old`, `sha256_missing`,
+  `output_not_gate_export`, `output_not_removable`, `schema_unreadable`,
+  `schema_invalid`, `schema_version`, `schema_reserved_name`, `policy_missing`,
+  `policy_unreadable`, `policy_invalid`, `policy_version`, `policy_schema_mismatch`,
+  `export_not_writable`, `move_failed`, `internal_warning`,
+  `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
 - `structure`: `unreadable`, `missing_column`, `extra_column`, `column_order`,
@@ -301,9 +302,10 @@ R file version will be pinned to a binary release once the binary ships; until t
 
 ### The R file
 
-- **Base R (>= 4.2), jsonlite and arrow**, all on MONA. SHA-256 comes from
-  `tools::sha256sum` (R >= 4.5) or else the `digest` package; with neither the check
-  refuses `sha256_missing` before reading anything. Both hash the bytes in memory.
+- **Base R (>= 4.2), jsonlite and arrow (>= 9.0.0)**, all on MONA; an older arrow
+  refuses `arrow_too_old`. SHA-256 comes from `tools::sha256sum` (R >= 4.5) or else the
+  `digest` package; with neither the check refuses `sha256_missing` before reading
+  anything. Both hash the bytes in memory.
 - **Two names.** Sourcing defines `EXPORT_GATE_VERSION` and `export_gate()`; the helpers
   live in the function's closure, so the file does not clutter the pipeline's
   environment.
@@ -314,10 +316,10 @@ R file version will be pinned to a binary release once the binary ships; until t
 - **Each file is read once,** into memory, and parsed from that raw vector, so no file
   handle stays open in staging.
 - **The export is written, then renamed.** The checked tables and the receipt go into a
-  hidden folder `.export-gate-<random>` the gate creates beside `output`, which one
-  `file.rename()` turns into `output`; so only the output folder's parent must be
-  writable, and the new folder is on its volume. On any failure the gate removes its own
-  new folder whole. Staging is never moved or changed.
+  folder `.export-gate-<random>` (hidden on Unix only) the gate creates beside `output`,
+  which one `file.rename()` turns into `output`; so only the output folder's parent must
+  be writable, and the new folder is on its volume. On any failure the gate removes its
+  own new folder whole. Staging is never moved or changed.
 - **No values in output.** Rules, schema file and column names and positions only. An
   unexpected R error is reported by its condition class, and an R warning refuses
   (`internal_warning`) rather than printing, since R and Arrow messages can quote a

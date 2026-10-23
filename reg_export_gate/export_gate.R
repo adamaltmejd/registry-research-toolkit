@@ -17,7 +17,7 @@
 # beside `output`, never into it.
 #
 # Rationale, the schema and policy formats and the refusal codes:
-# reg_export_gate/DESIGN.md. Packages: base R (>= 4.2), jsonlite and arrow,
+# reg_export_gate/DESIGN.md. Packages: base R (>= 4.2), jsonlite and arrow (>= 9),
 # plus SHA-256 from tools::sha256sum (R >= 4.5) or else the digest package.
 #
 # Fixed toolkit code: copy it unchanged. Its version is in every receipt.
@@ -26,6 +26,7 @@ EXPORT_GATE_VERSION <- "0.1.0"
 
 export_gate <- local({
   RECEIPT <- "receipt.json"
+  ARROW_FLOOR <- "9.0.0"
   REPORT <- "export_gate_report.json"
   # Schema type -> the Arrow types a Parquet column of that type may have.
   TYPES <- list(
@@ -479,7 +480,7 @@ export_gate <- local({
       do.call(arrow::Table$create, columns),
       path,
       chunk_size = 1048576L,
-      version = "2.6",
+      version = "2.4",
       compression = "uncompressed",
       use_dictionary = FALSE,
       write_statistics = FALSE
@@ -617,7 +618,12 @@ export_gate <- local({
   check_packages <- function() {
     missing <- c(
       if (!requireNamespace("jsonlite", quietly = TRUE)) "jsonlite_missing",
-      if (!requireNamespace("arrow", quietly = TRUE)) "arrow_missing",
+      if (!requireNamespace("arrow", quietly = TRUE)) {
+        "arrow_missing"
+      } else if (utils::packageVersion("arrow") < ARROW_FLOOR) {
+        # concat_arrays() and write_parquet(version = "2.4") arrived in 8 and 9.
+        "arrow_too_old"
+      },
       if (!has_sha256()) "sha256_missing"
     )
     if (length(missing)) {
