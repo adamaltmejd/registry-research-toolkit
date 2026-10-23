@@ -13,12 +13,45 @@ panel_entity_key = "personnr"
 [register."7527281300795836648"]
 slug = "patienter"
 
-[register_variant."7527281300795836648.7449213485224484681"]
-slug = "_default"
+[register_variant."7527281300795836648.7690446637112916004"]
+slug = "vistelser"
 panel_entity_key = "personnr"
+
+[register_variant."7527281300795836648.8944227299400260420"]
+slug = "enheter"
+panel_entity_key = "cfarnr"
+panel_time_key = "year"
+panel_time_grain = "row"
+
+[register_variant."7527281300795836648.7091843853603248508"]
+slug = "hyresstod"
+panel_entity_key = ["sokandes-personnr", "sokandes-peorgnr", "hyresgast-personnr", "hyresgast-peorgnr"]
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+[variable."7527281300795836648.beslutsdatum"]
+slug = "beslutsdatum"
+
+[variable."7527281300795836648.cfarnr"]
+slug = "cfarnr"
+
+[variable."7527281300795836648.hyresgast-peorgnr"]
+slug = "hyresgast-peorgnr"
+
+[variable."7527281300795836648.hyresgast-personnr"]
+slug = "hyresgast-personnr"
 
 [variable."7527281300795836648.personnr"]
 slug = "personnr"
+
+[variable."7527281300795836648.sokandes-peorgnr"]
+slug = "sokandes-peorgnr"
+
+[variable."7527281300795836648.sokandes-personnr"]
+slug = "sokandes-personnr"
+
+[variable."7527281300795836648.year"]
+slug = "year"
 
 [variable."8557485593514819994.personnr"]
 slug = "personnr"
