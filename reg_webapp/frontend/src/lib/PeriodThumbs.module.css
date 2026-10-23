@@ -1,0 +1,20 @@
+/* The slider lies over a coverage row; its inline inset puts each thumb on the
+   centre of its year cell. */
+.slider {
+  position: absolute;
+  top: 0;
+  height: 40px;
+}
+.track {
+  position: relative;
+  height: 100%;
+}
+/* The band's bounds as thumbs (ui/WindowBand), centred on the coverage bar. */
+.thumb {
+  composes: thumb from "./ui/WindowBand.module.css";
+  top: 12px;
+}
+.slider[data-disabled] .thumb {
+  opacity: var(--opacity-disabled);
+  cursor: default;
+}

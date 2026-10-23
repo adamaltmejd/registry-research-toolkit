@@ -455,7 +455,7 @@ export function ConceptGroupView({
       <Timeline
         axis={{ from: axis[0], to: axis[1] }}
         window={band}
-        windowKind={periodYears === null ? "study" : "source"}
+        windowKind={periodYears === null ? "study" : "add"}
         coverage={covered}
         years={coverageYears}
         vintageYear={windowMaxYear}

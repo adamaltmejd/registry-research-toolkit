@@ -243,6 +243,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
           regMetaVersion={regMetaVersion}
           steward={steward}
           defaultWindow={defaultStudyWindow(bounds)}
+          bounds={bounds}
           orderInstructions={context?.steward.order_instructions ?? null}
           providerQualified={qualified}
         />

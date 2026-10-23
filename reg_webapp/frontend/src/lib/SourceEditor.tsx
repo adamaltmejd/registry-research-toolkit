@@ -1,6 +1,7 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { BindingEditor } from "./BindingEditor";
 import {
+  catalogHref,
   fqidSegments,
   registerPrefixOf,
   sourceCardHeading,
@@ -8,12 +9,17 @@ import {
 } from "./catalog";
 import { registerRead, sourceNames, UNASKED } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
+import { LaneGraph, type LaneModel, type LaneSpanModel } from "./LaneGraph";
+import { PeriodThumbs } from "./PeriodThumbs";
 import {
-  normalizePeriodRows,
-  resolveYearEntry,
+  intersectCoverageWindow,
+  periodLabel,
+  sameYearWindow,
+  uncoveredYears,
   type WindowRelation,
   yearSegmentsFromWire,
   yearWindowLabel,
+  yearWindowToWire,
 } from "./period";
 import {
   type ProjectSourcePeriod,
@@ -31,6 +37,7 @@ import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 import { router } from "./router";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import styles from "./SourceEditor.module.css";
+import { bindingSpans, familyYears, memberNote } from "./source_timeline";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
@@ -73,24 +80,11 @@ interface Props {
    * columns' availability (`sourceWindowRelation`) — what the card MARKS.
    * `pending` while that availability is still being read. */
   windowRelation: WindowRelation | "pending" | null;
+  /** The page's one axis, shared by every source card (DESIGN.md → Time). */
+  axis: [number, number];
+  /** The catalog vintage: where a delivery still running ends. */
+  vintageYear: number;
 }
-
-/** One period row's two fields, as TEXT — kept as typed rather than parsed, so a
- * refused entry stays on screen as it was typed instead of being rewritten. */
-interface YearRow {
-  from: string;
-  to: string;
-}
-
-/** A refusal about one or more rows: the message, and which row(s)/field(s) it
- * marks — a within-row grammar problem highlights its own field, a cross-row
- * overlap both rows whole. */
-interface RowsProblem {
-  problem: string;
-  rows: { index: number; from: boolean; to: boolean }[];
-}
-
-const BLANK_ROW: YearRow = { from: "", to: "" };
 
 /** Where focus lands after a source is removed: the next source's heading,
  * else the previous one's, else the project heading. */
@@ -113,10 +107,10 @@ export function SourceEditor({
   providerQualified,
   studyWindow,
   windowRelation,
+  axis,
+  vintageYear,
 }: Props) {
-  // Instance-scoped ids, so every card's period fields keep real `<label for>`
-  // pairs on a page that renders one card per source.
-  const uid = useId();
+  const periodLabelId = useId();
 
   const rolledUp = issuesUnderPointer(
     [...issues],
@@ -180,45 +174,52 @@ export function SourceEditor({
     { label: "Source name", value: sourceName, mono: true },
   ];
 
-  // ── The source's period (Y-81, list segments Y-101) ───────────────────────
+  // ── The source's period (Y-81; #1838) ─────────────────────────────────────
   //
-  // Authored in the catalog's own period vocabulary: a YEAR RANGE per row, one row
-  // for a plain period and one per segment of a #307 comma list. A TOKEN period
-  // (`HT2018`) is a vocabulary nothing here authors; it is shown as it stands.
+  // Drawn as the source timeline (DESIGN.md → Time): the family's coverage row
+  // with the period as the window band, dragged by its thumbs, and one lane per
+  // column. A TOKEN period (`HT2018`, `_default`) is a vocabulary the thumbs do
+  // not author; it is shown as it stands.
 
-  /** The stored period's segments as year windows — null for a token/mixed period
-   * as well as for an unset one. */
+  /** The stored period's year segments — null for a token/mixed period as well
+   * as for an unset one. A comma list (`2015..2017,2019..2020`) is several. */
   const storedSegments =
     periodWire === null ? null : yearSegmentsFromWire(periodWire);
-  const storedRows: YearRow[] =
-    storedSegments === null
-      ? [BLANK_ROW]
-      : storedSegments.map((w) => ({ from: String(w.from), to: String(w.to) }));
-  /** Whether the rows can author THIS source's period. */
+  const storedHull: ProjectStudyWindow | null =
+    storedSegments === null || storedSegments.length === 0
+      ? null
+      : {
+          from: storedSegments[0].from,
+          to: storedSegments.at(-1)?.to ?? storedSegments[0].from,
+        };
+  /** Whether the thumbs can author THIS source's period. */
   const yearsEditable = periodWire === null || storedSegments !== null;
 
-  /** The rows as EDITED, or null while they mirror the stored segments. */
-  const [rows, setRows] = useState<YearRow[] | null>(null);
-  /** Committed (blur or Apply): a half-typed year must not announce a refusal on
-   * every keystroke. */
-  const [entryCommitted, setEntryCommitted] = useState(false);
-  /** The last Apply was refused because the SOURCE moved under the edit. */
+  const familyDelivered = register.value
+    ? familyYears(register.value, familyVariants, vintageYear)
+    : [];
+  const covered: ProjectStudyWindow | null =
+    familyDelivered.length === 0
+      ? null
+      : {
+          from: familyDelivered[0],
+          to: familyDelivered.at(-1) ?? familyDelivered[0],
+        };
+  const members = register.value
+    ? memberNote(register.value, familyVariants, vintageYear)
+    : null;
+
+  /** The thumbs mid-drag (and through the write that follows); null at rest. */
+  const [dragging, setDragging] = useState<ProjectStudyWindow | null>(null);
+  /** The last write was refused because the SOURCE moved under the edit. */
   const [writeRefused, setWriteRefused] = useState(false);
-  /** The windows a landed write set, until the next keystroke retires them. */
-  const [appliedWindows, setAppliedWindows] = useState<
-    ProjectStudyWindow[] | null
-  >(null);
-  /** The last Apply had nothing to write. */
-  const [unchangedNotice, setUnchangedNotice] = useState(false);
-  /** An Apply is in flight — from the press that found something to write until
-   * the store's write returns, i.e. the restore-gate wait. The fields, Add, Remove
-   * and Apply freeze for it, so a second press can't queue a write of its own. */
+  /** A write is in flight — from the rest that found something to write until
+   * the store's write returns, i.e. the restore-gate wait. */
   const [applying, setApplying] = useState(false);
-  const applyingNow = useRef(false);
-  /** The source as it stood when this edit began, which the store re-checks the
+  /** The source as it stood when this drag began, which the store re-checks the
    * write against. Nothing renders from it. */
   const editedFrom = useRef<SourcePeriodEditTarget | null>(null);
-  /** So an Apply still waiting on the restore gate is abandoned when the card
+  /** So a write still waiting on the restore gate is abandoned when the card
    * goes away, rather than written behind the researcher's back. */
   const mounted = useRef(true);
   useEffect(() => {
@@ -228,56 +229,22 @@ export function SourceEditor({
     };
   }, []);
 
-  const displayRows = rows ?? storedRows;
-  const rowResolutions = displayRows.map((row) =>
-    rows === null ? null : resolveYearEntry(row.from, row.to),
-  );
+  // Where the thumbs rest: the stored period (a list at its outer years), else
+  // the study window inside the family's coverage, else that coverage.
+  const resting =
+    storedHull ??
+    intersectCoverageWindow(
+      covered,
+      studyWindow,
+      axis[0],
+      covered?.to ?? axis[1],
+    );
+  const selection = dragging ?? resting;
+  const band = dragging ?? storedHull;
+  const bounds = covered ?? { from: axis[0], to: axis[1] };
 
-  let rowProblem: RowsProblem | null = null;
-  for (let i = 0; i < rowResolutions.length; i++) {
-    const r = rowResolutions[i];
-    if (r !== null && "problem" in r) {
-      rowProblem = { problem: r.problem, rows: [{ index: i, ...r.at }] };
-      break;
-    }
-  }
-  const rowWindows: ProjectStudyWindow[] | null =
-    rows === null || rowProblem !== null
-      ? null
-      : rowResolutions.map((r) => (r as { years: ProjectStudyWindow }).years);
-  const normalized =
-    rowWindows === null ? null : normalizePeriodRows(rowWindows);
-  /** Two rows sharing a year: coalescing would erase which row was meant. */
-  const overlapProblem: RowsProblem | null =
-    rowWindows === null || normalized === null || "period" in normalized
-      ? null
-      : {
-          problem: `${yearWindowLabel(rowWindows[normalized.a])} and ${yearWindowLabel(rowWindows[normalized.b])} overlap — a year can only be in one segment.`,
-          rows: [
-            { index: normalized.a, from: true, to: true },
-            { index: normalized.b, from: true, to: true },
-          ],
-        };
-  const entryProblem = rowProblem ?? overlapProblem;
-  const entryRefusal = entryCommitted ? entryProblem : null;
-  const problemId = `${uid}-problem`;
-  const rowInvalid = (index: number, side: "from" | "to") =>
-    entryRefusal?.rows.some((r) => r.index === index && r[side]) ?? false;
-
-  /** The wire the rows would write, or null when they name no valid list / no
-   * change from what is stored. */
-  let proposedWire: string | null = null;
-  if (normalized !== null && "period" in normalized) {
-    const wire = sourcePeriodToWire(normalized.period);
-    proposedWire = wire === periodWire ? null : wire;
-  }
-  const appliedLabel =
-    appliedWindows === null
-      ? null
-      : `Period set to ${appliedWindows.map(yearWindowLabel).join(", ")}.`;
-
-  /** The edit starts HERE: capture the source as it is, so a write onto a source
-   * that has moved since is refused. */
+  /** The drag starts HERE: capture the source as it is, so a write onto a
+   * source that has moved since is refused. */
   function beginEdit(): void {
     editedFrom.current = {
       sourceName: safeSourceName(source),
@@ -286,42 +253,20 @@ export function SourceEditor({
       replacementGeneration: projectStore.replacementGeneration,
     };
     setWriteRefused(false);
-    setAppliedWindows(null);
-    setUnchangedNotice(false);
   }
 
-  function editRows(change: (base: YearRow[]) => YearRow[]): void {
-    if (rows === null) {
-      beginEdit();
-    }
-    setRows(change(rows ?? storedRows));
-  }
-
-  /** Commit the edited period: ONE period-only diff through the store's guarded
-   * `applySourcePeriodEdit`. Either way the fields re-arm on the source as it NOW
-   * stands. */
-  async function applyPeriod(): Promise<void> {
-    if (applyingNow.current) {
-      // Held on the SAME gate as an earlier press: nothing new to contribute.
-      return;
-    }
-    // Committing FIRST is what makes a refused Apply say why.
-    setEntryCommitted(true);
+  /** The thumbs came to rest: ONE period-only diff through the store's guarded
+   * `applySourcePeriodEdit`, replacing the period with the span they frame. */
+  async function applyPeriod(at: ProjectStudyWindow): Promise<void> {
     const target = editedFrom.current;
-    const wire = proposedWire;
-    if (target === null || wire === null) {
-      // Nothing to write: the refusal explains why, or the rows name exactly the
-      // stored period — say so rather than look like nothing happened.
-      setUnchangedNotice(entryProblem === null);
-      setWriteRefused(false);
-      setAppliedWindows(null);
+    const wire = yearWindowToWire(at);
+    if (target === null || wire === periodWire) {
+      editedFrom.current = null;
+      setDragging(null);
       return;
     }
-    setUnchangedNotice(false);
-    applyingNow.current = true;
     setApplying(true);
     try {
-      const written = yearSegmentsFromWire(wire);
       // The draft lifecycle's restore is ASYNCHRONOUS, so this waits for it
       // exactly as the catalog's Add path does: the store's re-check is only
       // worth anything against the SETTLED draft. A card gone by then abandons
@@ -330,22 +275,62 @@ export function SourceEditor({
       if (!mounted.current) {
         return;
       }
-      const refused = !projectStore.applySourcePeriodEdit({
-        ...target,
-        period: sourcePeriodFromWire(wire),
-      });
-      setWriteRefused(refused);
-      setAppliedWindows(refused ? null : written);
-      setRows(null);
-      setEntryCommitted(false);
-      editedFrom.current = null;
+      setWriteRefused(
+        !projectStore.applySourcePeriodEdit({
+          ...target,
+          period: sourcePeriodFromWire(wire),
+        }),
+      );
     } finally {
-      applyingNow.current = false;
+      editedFrom.current = null;
       if (mounted.current) {
+        setDragging(null);
         setApplying(false);
       }
     }
   }
+
+  // The columns as lanes under the coverage row, one per binding: each column a
+  // span of the years the family delivers it.
+  const lanes: LaneModel[] = [];
+  const spans: LaneSpanModel[] = [];
+  bindings.forEach((binding, j) => {
+    const id = projectStore.bindingId(sourceIndex, j);
+    const variable =
+      typeof binding.variable === "string" ? binding.variable : "";
+    const variableName =
+      register.value?.children
+        .find((child) => child.fqid === variable)
+        ?.name?.trim() || variable;
+    lanes.push({
+      id,
+      name: variableName || "(no variable)",
+      href: variable ? catalogHref(variable) : null,
+    });
+    if (!register.value) return;
+    for (const column of bindingSpans(
+      register.value,
+      binding,
+      familyVariants,
+      vintageYear,
+    )) {
+      const years = yearWindowLabel(column);
+      const outside =
+        band !== null && (column.to < band.from || column.from > band.to);
+      spans.push({
+        id: `${id}:${column.column}`,
+        lane: id,
+        name: column.column,
+        from: column.from,
+        to: column.to,
+        segments: column.runs.map((r) => ({ name: null, ...r })),
+        years,
+        state: outside ? "out" : "default",
+        selectable: false,
+        accessibleName: `${column.column}, ${variableName}, delivered ${column.runs.map(yearWindowLabel).join(", ")}${outside ? ", outside the period" : ""}`,
+      });
+    }
+  });
 
   // The removal question and the controls' accessible names are SENTENCES naming
   // this source in words. A malformed slot, or a source with no coordinate, says
@@ -372,15 +357,26 @@ export function SourceEditor({
     framed: false,
   };
 
-  const statusTone = applying
-    ? "info"
-    : entryRefusal !== null
-      ? "error"
-      : appliedLabel !== null
-        ? "ok"
-        : unchangedNotice
-          ? "info"
-          : null;
+  /** The period's thumbs over the coverage row, on the drawing's axis. */
+  function thumbs(drawn: [number, number]): ReactNode {
+    return (
+      <PeriodThumbs
+        axis={drawn}
+        selection={selection}
+        bounds={bounds}
+        label={
+          identified ? `Period for ${identifiedName} (years)` : "Period (years)"
+        }
+        isDisabled={applying}
+        onMove={(at) => {
+          if (sameYearWindow(at, selection)) return;
+          if (editedFrom.current === null) beginEdit();
+          setDragging(at);
+        }}
+        onRest={(at) => void applyPeriod(at)}
+      />
+    );
+  }
 
   return (
     // `id` is the click-to-locate anchor the ValidationPanel scrolls to.
@@ -457,150 +453,64 @@ export function SourceEditor({
         <>
           <KeyValue rows={metaRows} />
 
-          {/* The PERIOD: the one field the cart edits (Y-81), one From/To row per
-              segment (Y-101). */}
-          <div className={styles.period}>
-            <span className="micro-label">Period</span>
-            {yearsEditable ? (
-              // A form, so Enter in a year field applies the period.
-              <form
-                className={styles.entry}
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  void applyPeriod();
-                }}
+          {/* The PERIOD: the one field the cart edits (Y-81), on the source
+              timeline (#1838). */}
+          <section className={styles.period} aria-labelledby={periodLabelId}>
+            <div className={styles.periodHead}>
+              <h4 id={periodLabelId} className="micro-label">
+                Period
+              </h4>
+              <span
+                className={styles.periodYears}
+                title={members ?? undefined}
+                aria-busy={register.loading ? "true" : undefined}
               >
-                <fieldset
-                  className={styles.yearRows}
-                  aria-label={
-                    identified ? `Period for ${identifiedName}` : "Period"
-                  }
-                >
-                  {displayRows.map((row, i) => (
-                    // Rows are positional: an edit names a row by its place.
-                    // oxlint-disable-next-line react/no-array-index-key
-                    <div key={i} className={styles.yearRow}>
-                      <label
-                        className="micro-label"
-                        htmlFor={`${uid}-from-${i}`}
-                      >
-                        From
-                      </label>
-                      <input
-                        id={`${uid}-from-${i}`}
-                        className="year"
-                        type="text"
-                        inputMode="numeric"
-                        autoComplete="off"
-                        value={row.from}
-                        placeholder="yyyy"
-                        readOnly={applying}
-                        aria-invalid={rowInvalid(i, "from")}
-                        aria-describedby={
-                          entryRefusal === null ? undefined : problemId
-                        }
-                        onChange={(event) => {
-                          const from = event.currentTarget.value;
-                          editRows((base) =>
-                            base.map((r, j) => (j === i ? { ...r, from } : r)),
-                          );
-                        }}
-                        onBlur={() => {
-                          if (rows !== null) setEntryCommitted(true);
-                        }}
-                      />
-                      <label className="micro-label" htmlFor={`${uid}-to-${i}`}>
-                        To
-                      </label>
-                      <input
-                        id={`${uid}-to-${i}`}
-                        className="year"
-                        type="text"
-                        inputMode="numeric"
-                        autoComplete="off"
-                        value={row.to}
-                        placeholder="yyyy"
-                        readOnly={applying}
-                        aria-invalid={rowInvalid(i, "to")}
-                        aria-describedby={
-                          entryRefusal === null ? undefined : problemId
-                        }
-                        onChange={(event) => {
-                          const to = event.currentTarget.value;
-                          editRows((base) =>
-                            base.map((r, j) => (j === i ? { ...r, to } : r)),
-                          );
-                        }}
-                        onBlur={() => {
-                          if (rows !== null) setEntryCommitted(true);
-                        }}
-                      />
-                      {displayRows.length > 1 && (
-                        <Button
-                          isInert={applying}
-                          onPress={() =>
-                            editRows((base) => base.filter((_, j) => j !== i))
-                          }
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                </fieldset>
-                <div className={styles.actions}>
-                  <Button
-                    isInert={applying}
-                    onPress={() => editRows((base) => [...base, BLANK_ROW])}
-                  >
-                    Add years
-                  </Button>
-                  {/* Named per source. NEVER truly disabled: a refused entry
-                      explains itself on click, and an Apply in flight is inert
-                      (the handler's own guard) without leaving the tab order. */}
-                  <Button
-                    type="submit"
-                    isInert={applying}
-                    aria-label={
-                      identified
-                        ? `Apply period for ${identifiedName}`
-                        : undefined
-                    }
-                  >
-                    Apply period
-                  </Button>
-                </div>
-              </form>
+                {dragging
+                  ? yearWindowLabel(dragging)
+                  : (periodLabel(period) ?? "No period")}
+                {members && (
+                  <span className="visually-hidden">. {members}</span>
+                )}
+              </span>
+            </div>
+            {yearsEditable ? (
+              <LaneGraph
+                label={identified ? `Columns of ${identifiedName}` : "Columns"}
+                lanes={lanes}
+                spans={spans}
+                edges={[]}
+                axis={axis}
+                window={band && [band.from, band.to]}
+                coverage={{
+                  covered,
+                  years: familyDelivered,
+                  outside: band ? uncoveredYears(band, covered) : [],
+                  bandName: band ? "Source period" : null,
+                }}
+                overlay={thumbs}
+                onToggle={() => {}}
+              />
             ) : (
-              // A token period: the year fields cannot express it.
+              // A token period: the thumbs cannot express it.
               <p className={styles.fixed}>
                 <span className={styles.wire}>{periodWire}</span>
                 <span className={styles.fixedNote}>
-                  The From and To fields can't express this period — change it
-                  in <code>project_data.json</code> and open the file again.
+                  The year thumbs can't express this period — change it in{" "}
+                  <code>project_data.json</code> and open the file again.
                 </span>
               </p>
             )}
-
-            {/* Rendered ALWAYS, so a refusal lands in a live region that already
-                existed. It carries the CONFIRMATION too. */}
-            <StatusRow id={problemId} live="status" tone={statusTone}>
-              {applying
-                ? "Waiting for the project to load…"
-                : entryRefusal !== null
-                  ? entryRefusal.problem
-                  : appliedLabel !== null
-                    ? appliedLabel
-                    : unchangedNotice
-                      ? "Period unchanged."
-                      : null}
-            </StatusRow>
+            {storedSegments !== null && storedSegments.length > 1 && (
+              <p className={styles.fixedNote}>
+                Moving a thumb replaces these years with one span.
+              </p>
+            )}
 
             {writeRefused && (
               <StatusRow tone="warn" live="alert">
                 This source changed while you were editing, so its period was
-                not changed. The years now show what the source holds — enter
-                them again and apply.
+                not changed. The thumbs now show what the source holds — move
+                them again.
               </StatusRow>
             )}
 
@@ -613,11 +523,11 @@ export function SourceEditor({
               // "Common study window").
               <StatusRow tone="error">
                 No years inside the study window {yearWindowLabel(studyWindow)},
-                so the order is blocked. Change the period to overlap the
-                window, or remove the source.
+                so the order is blocked. Move the thumbs to overlap the window,
+                or remove the source.
               </StatusRow>
             ) : null}
-          </div>
+          </section>
 
           {/* The cart says COLUMNS: a binding is one delivery column of the
               order. */}
