@@ -1329,6 +1329,31 @@ fn logical(source: &Source, binding: &Binding, representation: &str) -> Logical 
     }
 }
 
+/// The days of `slices` (a resolution's `(lo, hi, column)` windows) the steward
+/// holds: what `Order::dated` serves rather than blocks as a `coverage_gap`
+/// or `mapping_missing`. `validate` measures a source's delivered days by it.
+pub(super) fn held_days(
+    conn: &Connection,
+    id: i64,
+    variant: i64,
+    slices: &[(String, String, String)],
+) -> Result<Vec<Interval>, Error> {
+    let held = held_representations(conn, id, variant)?;
+    let mut days = Vec::new();
+    for (lo, hi, column) in slices {
+        let canonical = canonical(conn, id, variant, column)?;
+        if !held.contains(&canonical) {
+            continue;
+        }
+        let slice = (lo.clone(), hi.clone());
+        let bounds = Some((lo.as_str(), hi.as_str()));
+        for m in matches(conn, id, variant, Some(&canonical), "intervals", bounds)? {
+            days.extend(m.served().iter().filter_map(|b| intersect(b, &slice)));
+        }
+    }
+    Ok(merge(days))
+}
+
 /// `column`'s one spelling at the variable and variant (today's
 /// `Catalog.canonical_delivery_column`): the canonical column of a state or window
 /// of its `fold_identity` fold, else `column` itself.

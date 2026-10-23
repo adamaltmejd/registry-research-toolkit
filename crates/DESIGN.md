@@ -767,9 +767,9 @@ Per source variant and binding:
   `fqid_unresolved`.
 - Availability is the order's shared pass (steps 1 and 2 above); this layer only
   translates its facts. Narrower availability (a leading or trailing shortfall, an
-  internal gap, a pinned representation covering only part) is one informational
-  `range_period_partially_covered` per binding. A list period (`2005..2010,2015..2020`)
-  is one request with holes: a column delivered or co-existing only inside a hole is
+  internal gap, a pinned representation covering only part) is no finding: the order's
+  `clips` and the timeline state it (#1836). A list period (`2005..2010,2015..2020`) is
+  one request with holes: a column delivered or co-existing only inside a hole is
   neither availability nor ambiguity. Empty availability across the whole request
   blocks. The pass's findings take this surface's names: `binding_unavailable` →
   `period_outside_state_validity`, `representation_unknown` →
@@ -777,6 +777,13 @@ Per source variant and binding:
   `binding_value_set_version_ambiguous`, `representation_unresolved` unchanged.
   `binding_state_drifts_within_period` (info) reports a sequential state transition
   inside the request.
+- `source_period_narrower_than_available` (warning, at `/sources/<i>/period`) is the one
+  period finding, the reverse of a clip: the days at least one of the source's bindings
+  delivers inside the study window (the same pass asked for the whole window; on a
+  steward artifact, only the days a holding serves) minus the source period's days, when
+  not empty. Day grain, so a monthly or half-year period is well defined. No window, a
+  `"_default"` source or a source with no resolved binding warns nothing. A list period
+  narrower than the data warns on purpose, as do per-year panel members of one variant.
 - `deprecated_traversal` (info) and `variable_replaced` (info, with `successor_fqid`
   when the successor is a binding) are hints; the binding stays valid.
 - `variable_sensitive` (warning) marks a binding whose variable is `is_sensitive`. It is

@@ -14,8 +14,8 @@
  * provider shares the single read that names its registers. The root read is the
  * one the shell's rail facets already make, so the cart's provider word costs no
  * extra request. The register read that names a source's variant also carries its
- * columns' deliveries, which the cart's study-window coverage hint reads
- * (`registerChildren`) without a request of its own.
+ * columns' deliveries, which the source card's window relation reads without a
+ * request of its own.
  *
  * A read that has not landed, or that failed, reads as `null`/`[]`: the caller
  * shows the coordinate it already holds. Failure is deliberately NOT an error
@@ -30,7 +30,6 @@ import {
   type RegisterShow,
   type RootChild,
   type ShowNode,
-  type VariableChild,
 } from "./api";
 import {
   deliveryColumnNamesFromStates,
@@ -225,7 +224,7 @@ function providersOf(root: Read<RootChild[]>): RootChild[] {
 }
 
 /** One register's node — its variants (for a source card's name) and its binding
- * children with their deliveries (for the cart's coverage hint) — read once per
+ * children with their deliveries (for a source card's window relation) — read once per
  * register and shared by every source on it and by the browse list of its
  * variables. Null when the ref is not a register. */
 export function registerRead(registerFqid: string): Read<RegisterShow | null> {
@@ -233,15 +232,6 @@ export function registerRead(registerFqid: string): Read<RegisterShow | null> {
     const node = await sharedShow(registerFqid);
     return node.kind === "register" ? node : null;
   });
-}
-
-/** A register's binding children with their delivery windows, STARTING the shared
- * register read on first ask — null while it is in flight, or for good when it
- * failed. */
-export function registerChildren(
-  registerFqid: string,
-): readonly VariableChild[] | null {
-  return registerRead(registerFqid).value?.children ?? null;
 }
 
 /** The display names of one source's `register_variant` coordinate — all null until

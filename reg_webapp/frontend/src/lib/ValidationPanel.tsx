@@ -12,7 +12,6 @@ import {
   findingLocation,
   orderFindingPointer,
   type ValidationIssue,
-  type WindowCoverageHint,
   type WindowDisjointFinding,
 } from "./validation";
 
@@ -38,7 +37,6 @@ interface Props {
   /** A blocked order's findings (`/order`'s 422), rendered in the SAME
    * per-finding shape as a validation issue — they are findings, not a message. */
   orderFindings: readonly OrderBlocking[];
-  windowHints: readonly WindowCoverageHint[];
   /** Sources the common study window has left with no years inside it — the SPA's
    * own blocking authoring finding (`windowDisjointFindings`), rendered like a
    * blocked order's findings because it blocks the order the same way. */
@@ -161,7 +159,6 @@ export function ValidationPanel({
   requestError,
   requestErrorSource,
   orderFindings,
-  windowHints,
   windowFindings,
   sources,
   onRetry,
@@ -344,33 +341,6 @@ export function ValidationPanel({
             </p>
           )}
         </>
-      )}
-
-      {/* Neutral, not a warning: a source narrower than the study window is
-          usually deliberate. The catalog link appears only when the catalog
-          delivers the missing years (#1463). */}
-      {windowHints.length > 0 && (
-        <div className={styles.group}>
-          <h4 className="micro-label">
-            Study window coverage ({windowHints.length})
-          </h4>
-          <ul>
-            {keyed(windowHints, (h) => h.message).map(([key, hint]) => (
-              <li key={key}>
-                <p className={styles.message}>{hint.message}</p>
-                <div className={styles.locators}>
-                  {hint.catalogHref ? (
-                    <a className={styles.catalogLink} href={hint.catalogHref}>
-                      Extend in catalog: <code>{hint.catalogLabel}</code>
-                    </a>
-                  ) : (
-                    <span className={styles.path}>{hint.label}</span>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
       )}
     </section>
   );

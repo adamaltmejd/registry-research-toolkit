@@ -108,8 +108,8 @@ export function safeSourceSlots(sources: unknown): SafeSource[] {
 /** The draft's study window when it is a usable year pair, else null — an opened
  * spec is held verbatim, so `window` can be absent or malformed. The read side's
  * one coercion of it, done once at the `/project` boundary (beside
- * `safeSourceSlots`) and threaded to both readers: the coverage hints and the
- * source card's deviation marker. */
+ * `safeSourceSlots`) and threaded to its readers: the disjoint-window finding and
+ * the source card's deviation marker. */
 export function safeStudyWindow(window: unknown): ProjectStudyWindow | null {
   const safe = isPlainObject(window) ? window : null;
   return safe != null &&

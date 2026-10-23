@@ -17,7 +17,8 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   three-part `register_variant` coordinate (`provider/register/variant`) and a required
   `period`; each binding names a three-segment binding FQID in `variable`. The optional
   top-level `window: {"from": <year>, "to": <year>}` is the study period the SPA uses as
-  an authoring default; absent means the full history.
+  an authoring default, and the semantic layer measures a source period against it;
+  absent means the full history.
 - **`Source.period`** is an int year, a period token, a `{"from", "to"}` range, or a
   finite list of those segments. A list is an interrupted series
   (`[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]`, wire form
@@ -192,15 +193,16 @@ key" can only be checked once inheritance is materialized. That check is deferre
 MONA rebuild. The structural layer never materializes defaults; it only checks shapes.
 
 **Codes other layers emit.** The semantic layer adds `fqid_unresolved`,
-`value_set_missing`, `period_outside_state_validity`, `range_period_partially_covered`,
-`binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`,
-`binding_representation_unknown`, `deprecated_traversal`, `variable_replaced`,
-`variable_sensitive`, `fqid_outside_steward_catalog` and
-`representation_outside_steward_catalog`, plus three order codes under their own names,
-`steward_mismatch` (at `/steward`: a document of another steward would validate against
-the wrong holdings), `representation_unresolved` and `period_not_orderable`
-([../DESIGN.md](../DESIGN.md), "Project semantic validation"). The version decision adds
-`unsupported_schema_version`. All belong to the same stable registry.
+`value_set_missing`, `period_outside_state_validity`,
+`source_period_narrower_than_available`, `binding_state_drifts_within_period`,
+`binding_value_set_version_ambiguous`, `binding_representation_unknown`,
+`deprecated_traversal`, `variable_replaced`, `variable_sensitive`,
+`fqid_outside_steward_catalog` and `representation_outside_steward_catalog`, plus three
+order codes under their own names, `steward_mismatch` (at `/steward`: a document of
+another steward would validate against the wrong holdings), `representation_unresolved`
+and `period_not_orderable` ([../DESIGN.md](../DESIGN.md), "Project semantic
+validation"). The version decision adds `unsupported_schema_version`. All belong to the
+same stable registry.
 
 ## One grammar
 

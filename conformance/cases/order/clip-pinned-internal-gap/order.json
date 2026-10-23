@@ -1,0 +1,82 @@
+{
+  "clips": [
+    {
+      "ordered_period": "2010..2012,2018..2020",
+      "requested_period": "2010..2020",
+      "source": "range",
+      "variable": "scb/example/lucka"
+    },
+    {
+      "ordered_period": "2010..2012,2018..2020,2022",
+      "requested_period": "2010..2020,2022",
+      "source": "list",
+      "variable": "scb/example/lucka"
+    }
+  ],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Lucka",
+        "variable": "scb/example/lucka",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Lucka",
+        "edition": "2010..2012,2018..2020",
+        "file": "scb_example_annual",
+        "table": ""
+      },
+      "requested_period": "2010..2012,2018..2020",
+      "source": "range"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Lucka",
+        "variable": "scb/example/lucka",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Lucka",
+        "edition": "2010..2012,2018..2020,2022",
+        "file": "scb_example_annual",
+        "table": ""
+      },
+      "requested_period": "2010..2012,2018..2020,2022",
+      "source": "list"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "LuckaDetalj",
+        "variable": "scb/example/lucka",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "LuckaDetalj",
+        "edition": "2013..2017",
+        "file": "scb_example_annual",
+        "table": ""
+      },
+      "requested_period": "2013..2017",
+      "source": "sibling"
+    }
+  ],
+  "extract_format": "dta",
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
+    "mode": "global_fallback",
+    "project_hash": "803bce9c563cf8af2169777174352d35cd25a8f5a00337035ded117502cec451",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "5.1.0",
+    "project_schema_version": "4.0.0",
+    "steward": "global"
+  },
+  "version": 2
+}

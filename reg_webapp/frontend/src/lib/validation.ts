@@ -20,14 +20,8 @@
  *    code + level).
  */
 
-import type { VariableChild } from "./api";
 import type { components as RustComponents } from "./api-types-rust";
-import {
-  catalogHref,
-  deliveryWindows,
-  registerPrefixOf,
-  YEARLESS_VALID_FROM,
-} from "./catalog";
+import { catalogHref, registerPrefixOf } from "./catalog";
 import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
   type ProjectStudyWindow,
@@ -37,13 +31,6 @@ import {
   safeSourcePeriod,
   safeSourceRegisterVariant,
 } from "./project_data";
-import {
-  type Interval,
-  overlapIntervals,
-  sourcePeriodYears,
-  studyWindowInterval,
-} from "./reg_core";
-import { sourceDeliveryEras } from "./study_window";
 
 export type ValidationIssue = RustComponents["schemas"]["ValidationIssue"];
 export type ValidationResult = RustComponents["schemas"]["Validation"];
@@ -242,12 +229,12 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The period crosses a state transition (per-state subsets returned)",
     hint: "info",
   },
-  range_period_partially_covered: {
-    // Intersection semantics: the clipped part IS ordered, so this reports
-    // what is available rather than a fault. It also covers a #307 list period's
-    // uncovered segment, so the label must not read as "one continuous range".
-    label: "The column is available for only part of the requested period",
-    hint: "info",
+  source_period_narrower_than_available: {
+    // The one period finding (#1836): availability narrower than a period is the
+    // order's clip, not a finding; this is the reverse.
+    label:
+      "The source's period is narrower than what its columns deliver in the study window",
+    hint: "warning",
   },
   deprecated_traversal: {
     label: "The column resolves through deprecated catalog metadata",
@@ -333,147 +320,6 @@ export interface FindingLocation {
   catalogLabel?: string;
 }
 
-export interface WindowCoverageHint {
-  label: string;
-  message: string;
-  catalogHref?: string;
-  catalogLabel?: string;
-}
-
-/** The source's own years inside the window, said as a fact rather than a
- * shortfall: a period narrower than the study window is usually deliberate. */
-function windowCoverageMessage(
-  label: string,
-  spans: readonly [number, number][],
-  window: ProjectStudyWindow,
-): string {
-  const covered = spans
-    .map(([from, to]) => ({
-      from: Math.max(from, window.from),
-      to: Math.min(to, window.to),
-    }))
-    .filter((w) => w.from <= w.to)
-    .map(formatYearRange)
-    .join(", ");
-  return `${label} covers ${covered} of your study window ${window.from}..${window.to}.`;
-}
-
-function formatYearRange(window: ProjectStudyWindow): string {
-  return window.from === window.to
-    ? String(window.from)
-    : `${window.from}..${window.to}`;
-}
-
-/** The window's years that none of `spans` (reg-core's merged year spans,
- * ascending) covers. Year-integer arithmetic: the hint is year grain by design,
- * so reg-core exports no day-grain gaps for it. */
-function uncoveredStudyWindowYears(
-  spans: readonly [number, number][],
-  window: ProjectStudyWindow,
-): ProjectStudyWindow[] {
-  let cursor = window.from;
-  const gaps: ProjectStudyWindow[] = [];
-  for (const [from, to] of spans) {
-    if (to < cursor) {
-      continue;
-    }
-    if (from > window.to) {
-      break;
-    }
-    if (from > cursor) {
-      gaps.push({ from: cursor, to: Math.min(from - 1, window.to) });
-    }
-    cursor = Math.max(cursor, to + 1);
-    if (cursor > window.to) {
-      break;
-    }
-  }
-  if (cursor <= window.to) {
-    gaps.push({ from: cursor, to: window.to });
-  }
-  return gaps;
-}
-
-/** Client-side project-window hint for the read-only cart (#994). This is NOT a
- * synthetic ValidationIssue: it compares two values already in the draft and says
- * which years of the window a source covers. Year grain: a period with any
- * non-year endpoint (reg-core's year spans are null) is skipped, because
- * mixed-grain coverage is not safely comparable.
- *
- * The hint offers the register page to extend the source only when the catalog
- * delivers its columns, at its variant, in some uncovered year (#1463).
- * `deliveriesOf` answers a register's binding children (the register read), or
- * null while that read is in flight or failed — the hint then stays without the
- * offer rather than promising data nobody has seen. */
-export function windowCoverageHints(
-  window: ProjectStudyWindow | null,
-  sources: readonly SafeSource[],
-  deliveriesOf: (register: string) => readonly VariableChild[] | null = () =>
-    null,
-): WindowCoverageHint[] {
-  if (window === null) {
-    return [];
-  }
-  const hints: WindowCoverageHint[] = [];
-  for (const [index, source] of sources.entries()) {
-    const period = safeSourcePeriod(source);
-    // A source with NO years in the window is not a coverage gap but a blocked
-    // order, and `windowDisjointFindings` says so at error level — said once.
-    if (periodWindowRelation(period, window) === "disjoint") {
-      continue;
-    }
-    const spans = sourcePeriodYears(period);
-    if (spans == null) {
-      continue;
-    }
-    const gaps = uncoveredStudyWindowYears(spans, window);
-    if (gaps.length === 0) {
-      continue;
-    }
-    const rawName = safeSourceName(source);
-    const label =
-      rawName.length > 0 ? `Source '${rawName}'` : `Source ${index + 1}`;
-    const rv = safeSourceRegisterVariant(source);
-    const registerPrefix = rv.length > 0 ? registerPrefixOf(rv) : "";
-    const message = windowCoverageMessage(label, spans, window);
-    const children =
-      registerPrefix.length > 0 ? deliveriesOf(registerPrefix) : null;
-    if (children === null || !deliveredInGaps(source, children, gaps)) {
-      hints.push({ label, message });
-      continue;
-    }
-    hints.push({
-      label,
-      message: `${message} The catalog has deliveries for some of the other years.`,
-      catalogHref: catalogHref(registerPrefix),
-      catalogLabel: registerPrefix,
-    });
-  }
-  return hints;
-}
-
-/** Whether the source's columns are delivered at its variant in any day of the
- * uncovered years. Columns the read does not list contribute nothing; the others'
- * eras still count, since extending the source gains their years. */
-function deliveredInGaps(
-  source: SafeSource,
-  children: readonly VariableChild[],
-  gaps: readonly ProjectStudyWindow[],
-): boolean {
-  // An era with an unknown start (`0001-01-01`) is no evidence of data in any
-  // particular year, so it never earns the offer; an open-ended end
-  // (`9999-12-31`, still delivered) is a known fact and does.
-  const delivered: Interval[] = deliveryWindows(
-    sourceDeliveryEras(source, children).eras.filter(
-      (era) => era.from !== YEARLESS_VALID_FROM,
-    ),
-  ).map((w) => [w.from, w.to]);
-  const missing = gaps
-    .map(studyWindowInterval)
-    .filter((i): i is Interval => i !== null);
-  return overlapIntervals(missing, delivered).length > 0;
-}
-
 /** One source whose period has NO years inside the study window: the project's
  * blocking authoring finding (reg_webapp/DESIGN.md → "Common study window"). */
 export interface WindowDisjointFinding {
@@ -483,9 +329,9 @@ export interface WindowDisjointFinding {
 
 /** Every source left disjoint from the common study window — what blocks the
  * order download while the source keeps its explicit period. An SPA authoring
- * rule, not a re-implementation of a server one: the backend reads no `window`
- * (reg-core documents it as an authoring seed), so this is the one place it is
- * enforced. Located through `findingLocation`, so the panel renders it with the
+ * rule, not a re-implementation of a server one: the backend reads `window` only
+ * for `source_period_narrower_than_available`, so this is the one place a disjoint
+ * period is enforced. Located through `findingLocation`, so the panel renders it with the
  * same locate + catalog links a validation issue gets. */
 export function windowDisjointFindings(
   window: ProjectStudyWindow | null,

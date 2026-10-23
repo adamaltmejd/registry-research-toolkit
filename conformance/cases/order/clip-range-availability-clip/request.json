@@ -1,0 +1,52 @@
+{
+  "note": "kon is delivered from 2018. A range reaching earlier is clipped to 2018..2020; a range and a year inside availability are ordered whole. Moved from `api/validate-range-availability-clip` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
+  "fixture": "semantic",
+  "artifact": "catalog",
+  "project": {
+    "schema_version": "4.0.0",
+    "steward": "global",
+    "reg_meta_version": "5.1.0",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "inside",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2019,
+          "to": 2021
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/kon",
+            "type": "categorical"
+          }
+        ]
+      },
+      {
+        "name": "partial",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2010,
+          "to": 2020
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/kon",
+            "type": "categorical"
+          }
+        ]
+      },
+      {
+        "name": "point",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/kon",
+            "type": "categorical"
+          }
+        ]
+      }
+    ]
+  }
+}

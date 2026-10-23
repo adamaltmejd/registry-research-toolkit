@@ -8,19 +8,21 @@
 //! Availability is decided once, by [`resolve_binding`] (which the order materializer
 //! shares): a binding
 //! is requested wherever it is available inside the source's period, so availability
-//! narrower than the request is an informational clip and only availability empty
-//! everywhere in it blocks.
+//! narrower than the request is no finding (the order's clip states it) and only
+//! availability empty everywhere in it blocks. The one period finding is the reverse:
+//! a source period narrower than what its columns deliver in the study window.
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::project::{Binding, ProjectData, Source, check};
+use reg_core::project::{Binding, ProjectData, Source, StudyWindow, check};
 use reg_core::{
-    Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, intersect, merge, overlap,
+    Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, gaps, intersect, merge, overlap,
     quote, quoted_list, render,
 };
 use rusqlite::{Connection, OptionalExtension, params};
 use serde_json::Value;
 
+use super::order::held_days;
 use super::refs;
 use super::states::{Emitted, emitted, value_set, variant_id};
 use super::{Params, Server};
@@ -41,7 +43,7 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
             // would come from the wrong holdings.
             if project.steward == server.catalog.name() {
                 for (i, source) in project.sources.iter().enumerate() {
-                    semantic.source(&format!("/sources/{i}"), source)?;
+                    semantic.source(&format!("/sources/{i}"), source, project.window.as_ref())?;
                 }
             } else {
                 semantic.push(
@@ -99,6 +101,14 @@ pub(super) fn held_representations(
         .collect::<rusqlite::Result<_>>()?)
 }
 
+/// What a binding is resolved against: the source's period (`None`:
+/// year-independent) and the study window's days, when the project has a window.
+#[derive(Clone, Copy)]
+struct Availability<'a> {
+    requested: Option<&'a [Interval]>,
+    window: Option<&'a Interval>,
+}
+
 struct Semantic<'a> {
     conn: &'a Connection,
     steward: bool,
@@ -116,7 +126,12 @@ impl Semantic<'_> {
         });
     }
 
-    fn source(&mut self, base: &str, source: &Source) -> Result<(), Error> {
+    fn source(
+        &mut self,
+        base: &str,
+        source: &Source,
+        window: Option<&StudyWindow>,
+    ) -> Result<(), Error> {
         let variant_ok = self.register_variant(base, &source.register_variant)?;
         let requested = match source.period.intervals() {
             Ok(requested) => requested,
@@ -133,9 +148,37 @@ impl Semantic<'_> {
                 return Ok(());
             }
         };
+        // A year-independent source has no days to compare with the window.
+        let window = window
+            .and_then(StudyWindow::interval)
+            .filter(|_| requested.is_some());
+        let mut delivered = Vec::new();
         for (i, binding) in source.bindings.iter().enumerate() {
             let base = format!("{base}/bindings/{i}");
-            self.binding(&base, source, binding, variant_ok, requested.as_deref())?;
+            let at = Availability {
+                requested: requested.as_deref(),
+                window: window.as_ref(),
+            };
+            delivered.extend(self.binding(&base, source, binding, variant_ok, at)?);
+        }
+        let (Some(window), Some(requested)) = (window, requested) else {
+            return Ok(());
+        };
+        let missed = gaps(&merge(delivered), requested.clone());
+        if !missed.is_empty() {
+            self.push(
+                IssueLevel::Warning,
+                "source_period_narrower_than_available",
+                format!("{base}/period"),
+                format!(
+                    "source {} orders {}, narrower than its columns deliver in the study \
+                     window {}: {} also delivered",
+                    quote(&source.name),
+                    render(&requested),
+                    render(&[window]),
+                    render(&missed)
+                ),
+            );
         }
         Ok(())
     }
@@ -174,14 +217,17 @@ impl Semantic<'_> {
         Ok(false)
     }
 
+    /// Resolve one binding and report its issues; the days it delivers inside the
+    /// study window, none without a window or a resolved variant.
     fn binding(
         &mut self,
         base: &str,
         source: &Source,
         binding: &Binding,
         variant_ok: bool,
-        requested: Option<&[Interval]>,
-    ) -> Result<(), Error> {
+        at: Availability<'_>,
+    ) -> Result<Vec<Interval>, Error> {
+        let Availability { requested, window } = at;
         let path = format!("{base}/variable");
         let Ok(Fqid::Variable {
             provider,
@@ -194,7 +240,7 @@ impl Semantic<'_> {
                 quote(&binding.variable)
             );
             self.push(IssueLevel::Error, "fqid_unresolved", path, message);
-            return Ok(());
+            return Ok(Vec::new());
         };
         let slugs = [provider, register, variable];
         // A direct hit only: a replaced variable's successor is the
@@ -205,7 +251,8 @@ impl Semantic<'_> {
                 quote(&binding.variable)
             );
             self.push(IssueLevel::Error, "fqid_unresolved", path, message);
-            return self.value_set(base, binding);
+            self.value_set(base, binding)?;
+            return Ok(Vec::new());
         };
         self.hints(&path, binding, id, &slugs, requested)?;
         // The structural validator matches the binding's register to the source's.
@@ -215,13 +262,40 @@ impl Semantic<'_> {
         } else {
             None
         };
+        let mut delivered = Vec::new();
         if let Some(variant) = variant {
             let columns = self.period(&path, source, binding, id, variant, requested)?;
             if self.steward {
                 self.admission(&path, source, binding, id, variant, columns.as_ref())?;
             }
+            if let Some(window) = window {
+                // The same pass the order clips by, asked for the whole window, and on
+                // a steward artifact only the days it holds: a period widened to these
+                // days is ordered for exactly them.
+                // simplify: a second resolution per binding on every validate with a
+                // window; fold it into the period's resolution if validate latency on
+                // the live catalog grows noticeably.
+                let pin = binding.representation.as_deref();
+                let window = std::slice::from_ref(window);
+                let slices = resolve_binding(
+                    self.conn,
+                    source,
+                    binding,
+                    pin,
+                    id,
+                    Some(variant),
+                    Some(window),
+                )?
+                .slices;
+                if self.steward {
+                    delivered.extend(held_days(self.conn, id, variant, &slices)?);
+                } else {
+                    delivered.extend(slices.into_iter().map(|(lo, hi, _)| (lo, hi)));
+                }
+            }
         }
-        self.value_set(base, binding)
+        self.value_set(base, binding)?;
+        Ok(delivered)
     }
 
     /// The non-blocking hints: a deprecated variable, a sensitive one, and each
@@ -336,17 +410,6 @@ impl Semantic<'_> {
         let variable = quote(&binding.variable);
         let at = &source.register_variant;
         let period = &resolution.requested_period;
-        if let Some(ordered) = &resolution.clip {
-            self.push(
-                IssueLevel::Info,
-                "range_period_partially_covered",
-                path.to_owned(),
-                format!(
-                    "column {variable} is available for only part of requested period \
-                     {period} at {at}; it is ordered for {ordered}"
-                ),
-            );
-        }
         if let Some(Finding { code, message, .. }) = resolution.finding {
             let code = match code {
                 "binding_unavailable" => "period_outside_state_validity",

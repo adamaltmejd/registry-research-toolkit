@@ -1,0 +1,50 @@
+{
+  "note": "annual-series: the catalog delivers value 2017..2021 and the steward holds it for 2018 and 2019 only (order/annual-series, order/outside-period). In the study window 2017..2021, a 2018 source warns that 2019 is also delivered; a 2018..2019 source warns nothing, though the catalog describes 2017 and 2020..2021, because a steward artifact counts only the days it holds. Fails if a source period narrower than its held columns stops warning, if the warning counts catalog days the steward does not hold, or if a source covering every held day warns.",
+  "fixture": "annual-series",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "4.0.0",
+        "steward": "swecov",
+        "reg_meta_version": "reg_meta/v0.40.1",
+        "name": "Reader case",
+        "window": {
+          "from": 2017,
+          "to": 2021
+        },
+        "sources": [
+          {
+            "name": "Narrower",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              }
+            ]
+          },
+          {
+            "name": "Held",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2018,
+              "to": 2019
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
