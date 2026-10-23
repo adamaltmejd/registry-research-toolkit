@@ -836,7 +836,9 @@ async function sourcePeriodCase(page, counts, shoot, project) {
   //     year fields, and every column on it — Forsamling included, which no single
   //     catalog page lists beside Kon.
   await card.getByText("lisa-core").waitFor();
-  await card.getByText("scb/lisa/forsamling").waitFor();
+  //     The column list names a variable, not its FQID (#1839): the row is
+  //     found by the link to its catalog page.
+  await card.locator('a[href="/catalog/scb/lisa/forsamling"]').waitFor();
   const armed = `${await from.inputValue()}..${await to.inputValue()}`;
   check(armed === "2018..2020", `the card armed its year fields at ${armed}`);
   // The sibling card (Y-101): a two-segment list period renders one row per
