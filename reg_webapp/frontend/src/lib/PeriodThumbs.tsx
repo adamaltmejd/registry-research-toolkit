@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Slider, SliderThumb, SliderTrack } from "react-aria-components";
 import styles from "./PeriodThumbs.module.css";
 import type { ProjectStudyWindow } from "./project_data";
@@ -49,6 +50,11 @@ export function PeriodThumbs({
   // RAC places a thumb at (value − min) / (max − min) of its track; inset by
   // half a year cell each side, each thumb sits on the centre of its year.
   const trackInset = `${(0.5 / (axis[1] - axis[0] + 1)) * 100}%`;
+  // The window's share of the track, which the thumbs' minimum offset reads.
+  const span =
+    axis[1] > axis[0]
+      ? (selection.to - selection.from) / (axis[1] - axis[0])
+      : 0;
   return (
     <Slider
       className={styles.slider}
@@ -58,7 +64,13 @@ export function PeriodThumbs({
       value={[selection.from, selection.to]}
       formatOptions={{ useGrouping: false }}
       isDisabled={isDisabled}
-      style={{ left: trackInset, right: trackInset }}
+      style={
+        {
+          left: trackInset,
+          right: trackInset,
+          "--thumb-span": span,
+        } as CSSProperties
+      }
       onChange={(next) => onMove(moved(next))}
       onChangeEnd={(next) => onRest(moved(next))}
     >
@@ -66,9 +78,13 @@ export function PeriodThumbs({
         <SliderThumb
           index={0}
           aria-label="From year"
-          className={styles.thumb}
+          className={`${styles.thumb} ${styles.from}`}
         />
-        <SliderThumb index={1} aria-label="To year" className={styles.thumb} />
+        <SliderThumb
+          index={1}
+          aria-label="To year"
+          className={`${styles.thumb} ${styles.to}`}
+        />
       </SliderTrack>
     </Slider>
   );

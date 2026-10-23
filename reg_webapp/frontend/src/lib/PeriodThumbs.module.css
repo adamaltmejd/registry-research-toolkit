@@ -9,10 +9,23 @@
   position: relative;
   height: 100%;
 }
-/* The band's bounds as thumbs (ui/WindowBand), centred on the coverage bar. */
+/* The band's bounds as thumbs (ui/WindowBand), centred on the coverage bar.
+   Two thumbs closer than 16px (a short window on a long axis) are pushed apart
+   symmetrically to that distance, so both stay visible and the From thumb's
+   face stays outside the To thumb's 24px target (maintainer ruling
+   2026-10-23). Only the faces move: the values, and the band drawn from them,
+   stay put. `--thumb-span` is the window's share of the track; a margin %
+   reads the track's width. */
 .thumb {
   composes: thumb from "./ui/WindowBand.module.css";
+  --thumb-push: max(0px, (16px - var(--thumb-span) * 100%) / 2);
   top: 12px;
+}
+.from {
+  margin-inline-start: calc(-1 * var(--thumb-push));
+}
+.to {
+  margin-inline-start: var(--thumb-push);
 }
 .slider[data-disabled] .thumb {
   opacity: var(--opacity-disabled);

@@ -42,7 +42,6 @@ import {
   type ProjectSource,
   type ProjectSourcePeriod,
   type RawDraft,
-  removeBinding,
   removeSource,
   safeSourceBindings,
   safeSourceName,
@@ -876,7 +875,7 @@ export const projectStore = {
   // STRUCTURAL edits to `sources`/`bindings` MUST keep the stable-id mirror
   // (`sourceIds`) in lockstep (issue #200) — a bypass desyncs it and resurrects the
   // wrong-instance bug class. `updateField` rebuilds the mirror when handed
-  // `sources`; `removeSource`/`removeBinding` patch it positionally; `applyStagedDiff`
+  // `sources`; `removeSource` patches it positionally; `applyStagedDiff`
   // rebuilds it once for the whole batch — and only when that batch is structural.
 
   updateField<K extends keyof ProjectData>(
@@ -899,17 +898,6 @@ export const projectStore = {
     if (draft != null) {
       replaceDraft(removeSource(draft, index));
       sourceIds = sourceIds.filter((_, i) => i !== index);
-      notify();
-    }
-  },
-  removeBinding(sourceIndex: number, bindingIndex: number): void {
-    if (draft != null) {
-      replaceDraft(removeBinding(draft, sourceIndex, bindingIndex));
-      sourceIds = sourceIds.map((s, i) =>
-        i === sourceIndex
-          ? { ...s, bindings: s.bindings.filter((_, j) => j !== bindingIndex) }
-          : s,
-      );
       notify();
     }
   },

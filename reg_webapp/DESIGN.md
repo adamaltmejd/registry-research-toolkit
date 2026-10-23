@@ -1415,16 +1415,18 @@ same two origin-side guards; GET reads are not limited (they have the cheaper ed
 The project editor was rebuilt around one rule: **the catalog is the only authoring
 surface**. `/project` is a **cart** — it shows what has been picked and authors nothing
 of its own but a source's **period** (Y-81, below; set directly or by the window-overlap
-action) and the project's name. `ProjectEditor` / `SourceEditor` / `BindingEditor`
-display each source's variant coordinate, period, and bindings (variable, pinned
-representation) and offer only delete-per-row, that period, the project's own name, and
-the New/Open/Download project_data.json/Download order actions — validation runs
-automatically on every edit, with no separate Validate action. A wrong variable, variant
-or representation gets fixed by picking again from the catalog subject page, not by
-editing the cart row; there is no general in-cart editing UI. A blank name closes
-Download order (`projectStore.nameBlocked`), with a visible reason under the toolbar
-that points to the name field: the server refuses an unnamed project's order as
-`project_unnamed`, and the SPA gate only spares the round trip.
+action) and the project's name. `ProjectEditor` / `SourceEditor` display each source's
+variant coordinate, period, and its bindings as the lanes of its source timeline, and
+offer only removing a source, that period, the project's own name, and the
+New/Open/Download project_data.json/Download order actions. The columns are not listed
+again under the lanes (maintainer ruling 2026-10-23), so a single column leaves the
+project by unticking it on its variable page — validation runs automatically on every
+edit, with no separate Validate action. A wrong variable, variant or representation gets
+fixed by picking again from the catalog subject page, not by editing the cart row; there
+is no general in-cart editing UI. A blank name closes Download order
+(`projectStore.nameBlocked`), with a visible reason under the toolbar that points to the
+name field: the server refuses an unnamed project's order as `project_unnamed`, and the
+SPA gate only spares the round trip.
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
 a `representation` only where a pick had to choose between co-existing columns — so the
@@ -1443,19 +1445,14 @@ the deployment serves more than one provider: a fact `App.tsx` reads ONCE and th
 down like `steward`. The removal dialog and the delete button's accessible name say the
 same thing as SENTENCES ("Remove the LISA source (Individer, 16 år och äldre) and its 2
 columns?") rather than reciting the heading block. The coordinate itself stays on the
-card, in small mono. A column row leads with the delivery column it orders: an explicit
-`display_name` first (reg-core makes it the binding's OUTPUT column name, so it wins
-even over a pinned `representation`), then the pinned `representation`, otherwise the
-name resolved from the catalog at THAT source's `(variant family, period)` — where a
-column was renamed inside the period the current name leads and the superseded ones
-trail it in mono. Every such read goes through `catalog_names.ts`, a module-singleton
+card, in small mono. Every such read goes through `catalog_names.ts`, a module-singleton
 cache keyed per read (the catalog root; one per provider, which names every register it
-owns; one per register's variant list; one per `(fqid, period, variants)`), so a
-hundred-column cart issues each request once and a re-render issues none; the browse
-tree reads the root through it too. A read in flight or a failed one — the root among
-them, since it is what says whether a register name needs its provider — leaves the row
-showing the coordinate it already holds: a machine coordinate is honest where an
-invented name is not. Nothing read is ever written back into the draft.
+owns; one per register's variant list; one per register), so a hundred-column cart
+issues each request once and a re-render issues none; the browse tree reads the root
+through it too. A read in flight or a failed one — the root among them, since it is what
+says whether a register name needs its provider — leaves the card showing the coordinate
+it already holds: a machine coordinate is honest where an invented name is not. Nothing
+read is ever written back into the draft.
 
 Every field is **written once, at pick time**: the subject-page picker stages concrete
 `(period, variant, representation)` rows with final `type` / `representation`, then
@@ -1545,8 +1542,8 @@ merged), and the window relation its delivery eras, over the same family
 (`variantFamilyMembers` on the register read). A source period edit (`periodChange`)
 replaces the period and touches no binding. `applyStagedDiff` is the SOLE
 catalog→project mutation path. `updateField` (the project's own `name` / `window`),
-`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
-the cart UI calls — a source's own generated `name` is not editable anywhere.
+`removeSource` and `applySourcePeriodEdit` are the only other mutators the cart UI calls
+— a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81), on the source timeline (#1838). It is

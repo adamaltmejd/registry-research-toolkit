@@ -1,5 +1,4 @@
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { BindingEditor } from "./BindingEditor";
 import {
   catalogHref,
   fqidSegments,
@@ -358,8 +357,7 @@ export function SourceEditor({
     ? `Remove the source ${identifiedName} and its ${columnCount}?`
     : `Remove this source and its ${columnCount}?`;
 
-  // Removing a source takes its whole column list with it, so it ASKS first.
-  // Removing one column asks too, from its quiet row action (#1837).
+  // Removing a source takes all its columns with it, so it ASKS first.
   const [removeOpen, setRemoveOpen] = useState(false);
 
   // A fresh object per render is fine: the island assigns it onto the live
@@ -545,48 +543,26 @@ export function SourceEditor({
             ) : null}
           </section>
 
-          {/* The cart says COLUMNS: a binding is one delivery column of the
-              order. */}
-          <div className={styles.bindings}>
-            <h4>Columns</h4>
-            {bindingsMalformed ? (
-              <StatusRow tone="error" live="alert">
-                This source's <code>bindings</code> are malformed. Download the
-                project again, or fix them in <code>project_data.json</code>.
-              </StatusRow>
-            ) : bindings.length === 0 ? (
-              <EmptyState
-                title="No columns yet"
-                description="Browse the catalog to add columns from this register."
-                action={
-                  <Button onPress={() => router.navigate("/catalog")}>
-                    Browse registers
-                  </Button>
-                }
-              />
-            ) : (
-              <>
-                <ScopedDataWarnings {...warningProps} />
-                <ul className={styles.bindingList}>
-                  {bindings.map((binding, j) => (
-                    // Keyed by the store-owned STABLE id (issue #200), so a middle
-                    // remove remounts the right row.
-                    <li key={projectStore.bindingId(sourceIndex, j)}>
-                      <BindingEditor
-                        sourceIndex={sourceIndex}
-                        bindingIndex={j}
-                        binding={binding}
-                        variant={variantSlug}
-                        familyVariants={familyVariants}
-                        period={periodWire}
-                        studyWindow={studyWindow}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
+          {/* The columns are the timeline's lanes: no list repeats them
+              (maintainer ruling 2026-10-23). */}
+          {bindingsMalformed ? (
+            <StatusRow tone="error" live="alert">
+              This source's <code>bindings</code> are malformed. Download the
+              project again, or fix them in <code>project_data.json</code>.
+            </StatusRow>
+          ) : bindings.length === 0 ? (
+            <EmptyState
+              title="No columns yet"
+              description="Browse the catalog to add columns from this register."
+              action={
+                <Button onPress={() => router.navigate("/catalog")}>
+                  Browse registers
+                </Button>
+              }
+            />
+          ) : (
+            <ScopedDataWarnings {...warningProps} />
+          )}
         </>
       )}
     </section>

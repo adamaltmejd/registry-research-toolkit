@@ -709,54 +709,6 @@ export function variantLabel(variant: VariantModel): string {
   return variant.name ?? variant.display_group ?? variant.slug;
 }
 
-/** The delivery column NAMES a variable resolves to over a source's own period,
- * NEWEST era first — the name a cart row leads with when the file itself names no
- * column, which is the ORDINARY case (a pick writes `representation: null` when the
- * variable resolves to one column, issue #992, and writes no `display_name` at all).
- *
- * One column covering the period → that one name. A column RENAMED within the
- * period (distinct columns over non-overlapping eras) → the CURRENT name first and
- * the superseded ones after it, the same progression `pickerRow` folds for the
- * picker's own rows. Genuinely CO-EXISTING columns (`coexistingColumns`) are a
- * choice the file has to pin, not a name this row may lead with, so they resolve to
- * `[]` — the row falls back to its FQID rather than picking one of them for the
- * researcher. Pure — unit-tested. */
-export function deliveryColumnNamesFromStates(
-  states: readonly VariableStateModel[],
-): string[] {
-  if (coexistingColumns(states).size >= 2) {
-    return [];
-  }
-  return [...latestEraByColumn(states).entries()]
-    .sort(
-      ([aColumn, aEra], [bColumn, bEra]) =>
-        bEra.localeCompare(aEra) || aColumn.localeCompare(bColumn),
-    )
-    .map(([column]) => column);
-}
-
-/** Each delivery column's LATEST era among `states`: `max(valid_to)` over the
- * column's own states, columns with no delivery name skipped. The ranking key of
- * `deliveryColumnNamesFromStates` (the cart row): a later state can extend a column
- * past the window of the first one seen, so reading one state per column would
- * misjudge which column is current. */
-function latestEraByColumn(
-  states: readonly VariableStateModel[],
-): Map<string, string> {
-  const eraByColumn = new Map<string, string>();
-  for (const s of states) {
-    const column = s.delivery_column_name;
-    if (!column) {
-      continue;
-    }
-    const era = eraByColumn.get(column);
-    if (s.valid_to !== null && (era === undefined || s.valid_to > era)) {
-      eraByColumn.set(column, s.valid_to);
-    }
-  }
-  return eraByColumn;
-}
-
 // ── Variable-state derivation (the CatalogPicker derive-on-pick) ─────────────
 
 // A LIGHT, advisory storage-token → ColumnType prefill for derive-on-pick
@@ -799,8 +751,8 @@ const ID_TOKENS = new Set(["identifierare", "uniqueidentifier"]);
 
 /** Advisory storage-type → ColumnType prefill for the binding type
  * derive-on-pick. A state carrying a value set is categorical; otherwise the
- * leading `data_type` token decides; unrecognized → "opaque". ALWAYS overridable
- * via the BindingEditor's `<select>` — the backend stays canonical. */
+ * leading `data_type` token decides; unrecognized → "opaque". The backend stays
+ * canonical. */
 interface TypeDerivationState {
   data_type?: string | null;
   is_identifier?: boolean;
