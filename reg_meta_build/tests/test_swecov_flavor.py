@@ -414,9 +414,7 @@ def test_flavor_keys_reach_the_slug_toml_and_its_pins_survive_regeneration(
     root = run_flavor(tmp_path, _synthetic_enriched(), spec)
 
     pins = tomllib.loads((flavor_slug_dir(root) / "inera.toml").read_text("utf-8"))
-    variant = next(
-        v for v in pins["register_variant"].values() if "panel_entity_key" in v
-    )
+    variant = pins["register_variant"]["6317385603952063941.8236764302972034467"]
     assert variant == {
         "slug": "_default",
         "panel_entity_key": "personnr",

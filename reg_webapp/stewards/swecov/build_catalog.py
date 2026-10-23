@@ -2184,7 +2184,8 @@ def _inventory_mapping_records(
     admitted when its warning, clipped to the table, states exactly those days
     (`inventory_coverage.warning_gap_problem`, the rule extend-db refuses by);
     the owner must then cover the rest. A mismatch is
-    `inventory_coverage_warning_invalid`. An unwarned gap stays stale."""
+    `inventory_coverage_warning_invalid`. An unwarned gap stays stale. A carried
+    key's owner need only deliver inside the reach (it serves no cell)."""
     from reg_core_py import gaps, merge
     from reg_meta_build.inventory_coverage import warning_gap_problem
 
@@ -2198,8 +2199,11 @@ def _inventory_mapping_records(
     ]
     if mapping.carried:
         # A carried key serves no cell (#1844), so its owner owes no coverage of
-        # the edition: an annual parent's point states never cover a range table.
-        owned = [r for r in selected if r["vslug"] == owner]
+        # the edition, only delivery inside it: an annual parent's point states
+        # never cover a range table.
+        owned = [
+            r for r in selected if r["vslug"] == owner and _overlaps_edition(r, edition)
+        ]
         return owned, None if owned else "stale_declared_mapping_target"
     licensed: tuple[tuple[str, str], ...] = ()
     warning = mapping.data_warning

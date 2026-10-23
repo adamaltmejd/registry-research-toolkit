@@ -129,6 +129,15 @@ def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
     assert (entry["column"], entry["code"]) == ("Column", issue)
 
 
+_CARRIED = (
+    '[[column]]\ncolumn = "Column"\n'
+    'mappings = [{ register_variant = "inera/bestallda-prover/_default", '
+    'variable = "inera/bestallda-prover/one", representation = "Column", '
+    "carried = true }]\n"
+    'reason = "the row key, carried"\n'
+)
+
+
 def test_inventory_maps_a_carried_key_whose_owner_covers_part_of_the_edition(
     tmp_path: Path, flavored_db: Path
 ) -> None:
@@ -137,23 +146,36 @@ def test_inventory_maps_a_carried_key_whose_owner_covers_part_of_the_edition(
     Fails if the generator applies served-cell coverage to a carried key, which
     refused Fodelseuppg's person key against RTB's annual states."""
     db = _owner_db(tmp_path, flavored_db, {"one": [("2019-01-01", "2019-06-30")]})
-    decisions = (
-        '[[column]]\ncolumn = "Column"\n'
-        'mappings = [{ register_variant = "inera/bestallda-prover/_default", '
-        'variable = "inera/bestallda-prover/one", representation = "Column", '
-        "carried = true }]\n"
-        'reason = "the row key, carried"\n'
-    )
 
     # T_kolumn is the served cell the carried key rides along with.
     steward = _run_inventory(
-        tmp_path, db, "T2019", ["Column", "T_kolumn"], decisions=decisions
+        tmp_path, db, "T2019", ["Column", "T_kolumn"], decisions=_CARRIED
     )
 
     column = load_delivery_inventory(steward / "inventory.toml").tables[0].columns[0]
     assert [(str(m.variable), m.carried) for m in column.mappings] == [
         ("inera/bestallda-prover/one", True)
     ]
+
+
+def test_inventory_refuses_a_carried_key_whose_owner_misses_the_edition(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """The carried twin's refusal: an owner delivering only outside the edition
+    (2018 against T2019) is stale. Fails if a carried key admits any record of
+    its owner, whatever its period."""
+    db = _owner_db(tmp_path, flavored_db, {"one": [("2018-01-01", "2018-12-31")]})
+
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(
+            tmp_path, db, "T2019", ["Column", "T_kolumn"], decisions=_CARRIED
+        )
+
+    (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+    assert (entry["column"], entry["code"]) == (
+        "Column",
+        "stale_declared_mapping_target",
+    )
 
 
 def test_inventory_accepts_abutting_delivery_windows_of_the_same_owner(

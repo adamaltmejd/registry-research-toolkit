@@ -8,7 +8,9 @@ slug = "beslut"
 
 [register_variant."6380677290004829937.6819222840650739396"]
 slug = "_default"
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "beslutsnr"]
+panel_time_key = "beslutgallerfrom"
+panel_time_grain = "row"
 
 [register."8429965090575066561"]
 slug = "deltidsveckor"
@@ -24,7 +26,9 @@ slug = "diverse"
 
 [register_variant."5463459234688537358.4782891582528319418"]
 slug = "_default"
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "beslutsnr"]
+panel_time_key = "beslutgallerfrom"
+panel_time_grain = "row"
 
 [register."8792950097854096867"]
 slug = "ersattningsperiod"
@@ -73,8 +77,20 @@ slug = "personnr"
 [variable."4948082774563754536.utbetdatum"]
 slug = "utbetdatum"
 
+[variable."5463459234688537358.beslutgallerfrom"]
+slug = "beslutgallerfrom"
+
+[variable."5463459234688537358.beslutsnr"]
+slug = "beslutsnr"
+
 [variable."5463459234688537358.personnr"]
 slug = "personnr"
+
+[variable."6380677290004829937.beslutgallerfrom"]
+slug = "beslutgallerfrom"
+
+[variable."6380677290004829937.beslutsnr"]
+slug = "beslutsnr"
 
 [variable."6380677290004829937.personnr"]
 slug = "personnr"

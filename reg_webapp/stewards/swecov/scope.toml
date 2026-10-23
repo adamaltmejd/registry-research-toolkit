@@ -2536,7 +2536,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Aktivitet och sökandekategori (AKTSO)"
 tables = ["AMS_HIST_AKTSO", "AMS_HIST_AKTSO_2021_20230726"]
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "aktso-lnr"]
+panel_time_key = "akt-dat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Arbetsförmedlingen"
@@ -2548,7 +2550,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Inskrivningsperioder (INSPER)"
 tables = ["AMS_INSPER", "AMS_INSPER_2021_20230726"]
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "inlnr"]
+panel_time_key = "intr-dat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Arbetsförmedlingen"
@@ -2560,7 +2564,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Sökandekategoriperioder (SOKATPER)"
 tables = ["AMS_SOKATPER", "AMS_SOKATPER_2021_20230726"]
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "sokatlnr"]
+panel_time_key = "inska-dat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2572,7 +2578,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Beslut"
 tables = ["IFA_Beslut", "IFA_Beslut_From2018_Lev2", "IFA_Beslut_Lev3", "IFA_Beslut_Tom2017_Lev2"]
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "beslutsnr"]
+panel_time_key = "beslutgallerfrom"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2584,7 +2592,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Diverse beslut"
 tables = ["IFA_Diverse_Lev2", "IFA_Diverse_Lev3"]
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "beslutsnr"]
+panel_time_key = "beslutgallerfrom"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
