@@ -86,10 +86,16 @@
 /* ── Lanes and spans (HTML over the marks) ──────────────────────────────── */
 
 .lanes,
-.spans {
+.spans,
+.laneList {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* LaneList: the lanes' rows in flow, ruled like the drawn lanes. */
+.laneList > li + li {
+  border-top: 1px solid var(--border);
 }
 
 .lane {

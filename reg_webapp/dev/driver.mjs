@@ -1138,17 +1138,14 @@ async function replaceConfirmCase(page, shoot, project) {
   await shoot("replace-opened");
 }
 
-/** Run one case in its own context: fresh storage, its own request ledger, its
- * own page-error ledger — and close the context whatever happens. `route` is
- * where the case starts (the /project scenarios' default; the catalog-authored
- * draft starts on a catalog leaf, which is the whole point of it). */
 /** Scenario 11 — one column leaves ONE source from its lane on the source
  * timeline. Source 1 carries Kon and a variable the catalog does not know;
- * Source 2, on the same variant, carries Kon too. Fails if a lane's Remove
+ * Source 2, on the same variant, carries Kon too under a token period, which
+ * draws no lanes, so its Kon leaves from a plain row. Fails if a lane's Remove
  * takes the column from every source of the family (what unticking on the
  * variable page does), from none, or is missing for the unknown FQID, whose
  * catalog page has nothing to untick and whose only other way out was removing
- * the whole source. */
+ * the whole source, or for a source with no lanes. */
 async function columnRemoveCase(page, _counts, shoot, project) {
   await openProjectFile(page, project);
   await settled(page);
@@ -1199,8 +1196,33 @@ async function columnRemoveCase(page, _counts, shoot, project) {
     ],
     variables,
   );
+
+  // (3) Source 2's token period draws no lanes: Kon leaves it from its plain
+  //     row, and focus falls back to that source's heading.
+  await page
+    .getByRole("region", { name: "Source 2" })
+    .getByRole("button", { name: "Remove Kon from kon-too" })
+    .click();
+  await page.getByRole("button", { name: "Remove column" }).click();
+  await draftSaved(
+    page,
+    [
+      ["kon-unknown", []],
+      ["kon-too", []],
+    ],
+    variables,
+  );
+  await page.waitForFunction(
+    () => document.activeElement?.tagName === "H3",
+    null,
+    { timeout: 5_000 },
+  );
 }
 
+/** Run one case in its own context: fresh storage, its own request ledger, its
+ * own page-error ledger — and close the context whatever happens. `route` is
+ * where the case starts (the /project scenarios' default; the catalog-authored
+ * draft starts on a catalog leaf, which is the whole point of it). */
 async function runCase(viewport, name, body, route = "/project") {
   const label = `${viewport.width}x${viewport.height}`;
   const context = await browser.newContext({ viewport });
@@ -1404,7 +1426,7 @@ try {
             {
               name: "kon-too",
               register_variant: "scb/lisa/individer-15plus",
-              period: { from: 2018, to: 2020 },
+              period: "_default",
               bindings: [
                 {
                   variable: "scb/lisa/kon",

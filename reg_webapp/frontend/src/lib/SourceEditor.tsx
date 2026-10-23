@@ -7,7 +7,12 @@ import {
 } from "./catalog";
 import { registerRead, sourceNames, UNASKED } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
-import { LaneGraph, type LaneModel, type LaneSpanModel } from "./LaneGraph";
+import {
+  LaneGraph,
+  LaneList,
+  type LaneModel,
+  type LaneSpanModel,
+} from "./LaneGraph";
 import { PeriodThumbs } from "./PeriodThumbs";
 import {
   intersectCoverageWindow,
@@ -577,14 +582,26 @@ export function SourceEditor({
                 onToggle={() => {}}
               />
             ) : (
-              // A token period: the thumbs cannot express it.
-              <p className={styles.fixed}>
-                <span className={styles.wire}>{periodWire}</span>
-                <span className={styles.fixedNote}>
-                  The year thumbs can't express this period — change it in{" "}
-                  <code>project_data.json</code> and open the file again.
-                </span>
-              </p>
+              // A token period: the thumbs cannot express it, and no lanes
+              // are drawn, so the columns are listed plainly with the same
+              // per-column Remove.
+              <>
+                <p className={styles.fixed}>
+                  <span className={styles.wire}>{periodWire}</span>
+                  <span className={styles.fixedNote}>
+                    The year thumbs can't express this period — change it in{" "}
+                    <code>project_data.json</code> and open the file again.
+                  </span>
+                </p>
+                {!bindingsMalformed && lanes.length > 0 && (
+                  <LaneList
+                    label={
+                      identified ? `Columns of ${identifiedName}` : "Columns"
+                    }
+                    lanes={lanes}
+                  />
+                )}
+              </>
             )}
             {storedSegments !== null && storedSegments.length > 1 && (
               <p className={styles.fixedNote}>
@@ -616,7 +633,8 @@ export function SourceEditor({
           </section>
 
           {/* The columns are the timeline's lanes: no list repeats them
-              (maintainer ruling 2026-10-23). */}
+              (maintainer ruling 2026-10-23). Only a source with no lanes
+              lists them, above. */}
           {bindingsMalformed ? (
             <StatusRow tone="error" live="alert">
               This source's <code>bindings</code> are malformed. Download the

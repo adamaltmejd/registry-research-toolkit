@@ -458,7 +458,9 @@ Time is the axis every relation is drawn on.
   lanes are the card's columns: no list repeats them under the drawing (maintainer
   ruling 2026-10-23). Each lane's name carries a quiet ghost "Remove", named "Remove
   <column> from <source>", that asks first in a `Dialog` whose answer is the `danger`
-  button and takes the column out of that one source.
+  button and takes the column out of that one source. A term period draws no lanes, so
+  its card lists the columns as plain ruled rows (`LaneList`): the lane's name and the
+  same Remove, nothing else.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those

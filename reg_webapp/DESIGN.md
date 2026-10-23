@@ -1567,11 +1567,12 @@ bounded by the family's coverage; a thumb coming to rest (on release, or on each
 press) writes the span they frame as the period. A #307 comma-list period rests the
 thumbs on its outer years, and a move replaces it with one span, which the card says
 under the drawing; a token period (`HT2018`) is a vocabulary the thumbs do not author,
-and is shown as it stands. Where the years the period covers differ from the project's
-`window` (narrower, wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs
-from study window 2005–2020"). Like the variable page's period card, it judges the two
-inside the years the source's columns are delivered in (the register read the card
-already makes for its name; period ruling 2026-10-22), so a period of window ∩
+and is shown as it stands; with no lanes drawn, its columns are listed as plain rows
+carrying the same per-column Remove. Where the years the period covers differ from the
+project's `window` (narrower, wider, or holed; `periodWindowRelation`) the card MARKS it
+("Differs from study window 2005–2020"). Like the variable page's period card, it judges
+the two inside the years the source's columns are delivered in (the register read the
+card already makes for its name; period ruling 2026-10-22), so a period of window ∩
 availability, what an add writes, is no divergence, and while that read is out the card
 marks nothing. The window is an authoring seed, not an inheritance (reg-core puts
 `period` on `Source`, never on `window`), so divergence is shown. Two divergences are
