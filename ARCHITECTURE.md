@@ -94,7 +94,7 @@ registry-research-toolkit/
   reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
-  plugins/          # the microdata-tools-se agent plugin (hosted MCP)
+  plugins/          # the microdata-tools-se agent plugin (hosted MCP, skills incl. the scaffold)
   reg_webapp/
     frontend/       # React 19 + React Aria Components + Vite (bun)
     edge/           # edge workers: global is MCP-only, swecov also serves the SPA

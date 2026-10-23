@@ -11,7 +11,7 @@
     {
       "name": "microdata-tools-se",
       "source": "./plugins/microdata-tools-se",
-      "description": "Swedish register metadata search through the hosted catalog MCP server.",
+      "description": "Swedish register metadata search through the hosted catalog MCP server, register data order drafting, and a research-project scaffold wired to the toolkit export gate.",
       "category": "research",
       "tags": ["sweden", "microdata", "registry", "scb", "mona"]
     }

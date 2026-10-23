@@ -2,15 +2,17 @@
 
 Agent plugin for working with Swedish administrative register microdata (SCB,
 Socialstyrelsen, and other holders). It declares the hosted catalog MCP server and
-bundles two skills:
+bundles three skills:
 
-  | Component                  | Purpose                                                                                                                        |
-  | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-  | `catalog` MCP server       | The hosted register metadata catalog: `https://reg-meta.vqv.uk/mcp` (every register) by default, or SWECOV's holdings (below). |
-  | `register-metadata-search` | Skill: how to query variables, value codes and schemas with the catalog tools.                                                 |
-  | `register-project`         | Skill, loaded on demand: drafting a `project_data.json`, and answering questions about a project.                              |
+  | Component                    | Purpose                                                                                                                                                   |
+  | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `catalog` MCP server         | The hosted register metadata catalog: `https://reg-meta.vqv.uk/mcp` (every register) by default, or SWECOV's holdings (below).                            |
+  | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                            |
+  | `register-project`           | Skill, loaded on demand: drafting a `project_data.json`, and answering questions about a project.                                                         |
+  | `register-research-scaffold` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution and the toolkit's export gate as its release stage. |
 
-Nothing to install beyond the plugin: the tools run on the hosted server.
+Nothing to install beyond the plugin: the tools run on the hosted server. The scaffold's
+evaluation records are in `trials/register-research-scaffold/`.
 
 ## Install
 
