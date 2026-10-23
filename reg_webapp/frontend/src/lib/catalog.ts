@@ -41,6 +41,8 @@ import type { BreadcrumbItem } from "./ui/types";
  * register list, so every page's trail leads with it; above it the list is on
  * screen and the crumb is hidden (DESIGN.md → Layout). */
 export const BROWSE_REGISTERS_LABEL = "Browse registers";
+/** The same crumb while the search holds text: the matches are in that list. */
+export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
 
 /** The variable children of a register node, in order. `[]` for any other node
  * kind. */

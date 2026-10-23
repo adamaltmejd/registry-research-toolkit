@@ -50,6 +50,14 @@ export function useBrowseFilter(): string {
   return useSyncExternalStore(browseFilter.subscribe, read);
 }
 
+const readFiltering = () => value.trim() !== "";
+
+/** Whether the filter holds text: for a reader that needs only that, so it
+ * does not re-render on every keystroke. */
+export function useBrowseFiltering(): boolean {
+  return useSyncExternalStore(browseFilter.subscribe, readFiltering);
+}
+
 /** How long the filter text rests before a server request goes out. */
 const SETTLE_MS = 200;
 

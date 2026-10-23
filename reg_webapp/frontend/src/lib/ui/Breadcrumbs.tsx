@@ -4,7 +4,7 @@ import {
   Link,
 } from "react-aria-components";
 import styles from "./Breadcrumbs.module.css";
-import type { BreadcrumbItem } from "./types";
+import { type BreadcrumbItem, isBackCrumb } from "./types";
 
 /**
  * The detail pane's path (DESIGN.md → Detail pane): `mono`, over the `h1`. The
@@ -34,14 +34,12 @@ export function Breadcrumbs({
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             id={i}
-            className={`${styles.crumb} ${item.word ? styles.word : ""} ${item.narrowOnly ? styles.narrowOnly : ""} ${item.narrowOnly && item.href ? styles.back : ""}`}
+            className={`${styles.crumb} ${item.word ? styles.word : ""} ${item.narrowOnly ? styles.narrowOnly : ""} ${isBackCrumb(item) ? styles.back : ""}`}
           >
             {item.href || i === items.length - 1 ? (
               <Link
                 href={item.href}
-                className={
-                  item.narrowOnly && item.href ? styles.backLink : styles.link
-                }
+                className={isBackCrumb(item) ? styles.backLink : styles.link}
               >
                 {item.label}
               </Link>
