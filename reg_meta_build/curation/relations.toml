@@ -669,18 +669,14 @@ note = "Individbaserad ekvivalerad disponibel inkomst exkl. kapitalvinst (växel
 #    the early `familjer-1990-1997` variant (1990–1997) and as `PersonNr` from the
 #    `familjer-fran-1998` successor variant onward. The two headers NEVER co-occur
 #    (verified against the raw SCB Registerinformation.csv: `PNR` appears only in
-#    the 1990–1997 family variant, `PersonNr` in every other RTB variant). With the
-#    RTB `column_merge` entry retired (#846), removing the by-fiat union splits
-#    the subject key into the sparse legacy `pnr` sibling + the dense `personnr`;
-#    this edge records the rename as overlay navigation. The `panel_entity_key`
-#    pin needs no edge-walk: the dense `personnr` sibling keeps the `personnr` slug
-#    every RTB variant already pins, so the pin lands on the materialized successor
-#    directly. The
-#    co-delivered relation columns of var 57 (`PersonNrMor`/`PersonNrAnkn`/
+#    the 1990–1997 family variant, `PersonNr` in every other RTB variant). Both
+#    headers are one variable, `personnr` (rtb.toml 2.57 partition; row-key
+#    follow-up to #1849), so this edge records only the column rename within it.
+#    The co-delivered relation columns of var 57 (`PersonNrMor`/`PersonNrAnkn`/
 #    `PersonNrSamh`) are different ROLES and correctly stay split, untouched here.
 [[edge]]
 type = "replaced_by"
-from = "scb/rtb/pnr"
+from = "scb/rtb/personnr"
 to = "scb/rtb/personnr"
 from_column = "PNR"
 to_column = "PersonNr"
@@ -716,6 +712,20 @@ to_column = "borgnr"
 variant = "punktskatter-for-energi"
 effective_year = 2018
 note = "FRIDA firm key resumes delivery as borgnr from 2018 in the punktskatter-for-energi variant (end of the 2014–2017 PERSORGNR gap-fill)"
+
+# ── CIS firm key: SCB re-mints the organisation number under a new VarId (2020) ──
+#    CIS 2002–2018 deliver the firm key as VarId 3578 "Organisationsnummer 12
+#    siffror" (CFAR företagsenhet, column PeorgNr); the 2020–2022 wave delivers it
+#    as VarId 1839 "Organisationsnummer" (myndighetens eller företagets, column
+#    Peorgnr). Never co-delivered. A re-minted VarId with its own definition is a
+#    different variable, so the continuation is a variable-grain edge; the CIS
+#    variant keys on both (row-key follow-up to #1849, 2026-10-23).
+[[edge]]
+type = "replaced_by"
+from = "scb/innovation-foretag/orgnr-12"
+to = "scb/innovation-foretag/orgnr"
+effective_year = 2020
+note = "CIS firm key re-minted by SCB: Organisationsnummer 12 siffror (VarId 3578, CFAR företagsenhet) to Organisationsnummer (VarId 1839) from the 2020–2022 wave"
 
 # ── Shared-column succession worklist, high-confidence rows (2026-10-21) ──
 #    Maintainer-approved batch: the high-confidence `replaced_by` rows of the

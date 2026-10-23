@@ -2689,6 +2689,8 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Kassakortsveckor"
 tables = ["IFA_KKvecka_Lev2", "IFA_KKvecka_Lev3"]
+period_scope = "year_independent"
+# A week calendar keyed by week, not person data: no panel time key.
 panel_entity_key = "kassakortsvecka"
 
 [[flavor]]

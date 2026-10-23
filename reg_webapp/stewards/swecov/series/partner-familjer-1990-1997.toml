@@ -1,4 +1,4 @@
-# Series boundary at 1998, a documented SCB break: SCB variant 2.1524 'Familjer 1990-1997' is succeeded by 2.54 'Familjer från 1998-'; the subject key header changes PNR -> PersonNr (relations.toml, RTB representation edge).
+# Series boundary at 1998, a documented SCB break: SCB variant 2.1524 'Familjer 1990-1997' is succeeded by 2.54 'Familjer från 1998-'; the subject key header changes PNR -> PersonNr within scb/rtb/personnr (relations.toml, RTB representation edge).
 id = "partner-familjer-1990-1997"
 register = "scb/rtb"
 variants = ["scb/rtb/familjer-1990-1997"]
@@ -37,8 +37,8 @@ edition = "1997-12-31"
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
-mappings = [{ register_variant = "scb/rtb/familjer-1990-1997", variable = "scb/rtb/pnr", representation = "PNR" }]
-reason = "SWECOV storage spelling of the person key SCB documents on Familjer 1990-1997 under the delivery column PNR (scb/rtb/pnr); the header becomes PersonNr from 1998 (relations.toml RTB representation edge). #1603 batch-e; Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+mappings = [{ register_variant = "scb/rtb/familjer-1990-1997", variable = "scb/rtb/personnr", representation = "PNR" }]
+reason = "SWECOV storage spelling of the person key SCB documents on Familjer 1990-1997 under the delivery column PNR, one variable with PersonNr (scb/rtb/personnr); the header becomes PersonNr from 1998 (relations.toml RTB representation edge). #1603 batch-e; Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
 
 [[column]]
 column = "P1105_Lopnr_PersonNr_Partner"

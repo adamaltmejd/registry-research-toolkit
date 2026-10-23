@@ -45,6 +45,12 @@ table = "CIS2020"
 edition = 2020
 
 [[column]]
+column = "P1105_LopNr_PeOrgNrHe"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/orgnr-12", representation = "PeorgNr" }]
+reason = "The firm key of CIS2004, the 2002 - 2004 wave. SCB documents it on this variant as PeorgNr, VarId 3578 Organisationsnummer 12 siffror (scb/innovation-foretag/orgnr-12); SWECOV delivers it under the pseudonymised PeOrgNrHe header. Replaces the steward-minted peorgnrhe variable, so the wave keys on the same variable as 2002 - 2018 (row-key follow-up to #1849, 2026-10-23)."
+
+[[column]]
 column = "CLIM_CUST"
 tables = ["CIS2020"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/clim-cust-medvetenhet", representation = "CLIM_CUST" }]

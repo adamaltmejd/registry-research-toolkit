@@ -6733,19 +6733,6 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "Text storage is assumed from the field meaning and related source identifiers; the historical storage type and length are not independently documented."
-variant = "_default"
-column = "PeOrgNrHe"
-data_type = "text"
-name = "PeOrgNrHe"
-definition = "PeOrgNrHe"
-is_identifier = true
-holdings_period = "2004-2004"
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. SWECOV holds every CIS round from CIS2002 to CIS2020 (every second year) and ordered the same variables in each; the column is delivered only in CIS2004, so holdings are 2004 only (2026-10-13 maintainer decision, replacing the pooled 2002-2020 range from Y-213). Text type: SCB documents PeorgNrHe as a 12-digit organisation number stored as text (ISEN). SWECOV storage carries only the masked delivery key P1105_LopNr_PeOrgNrHe (int), one round; a pseudonymised key is weak evidence about the variable's own type, so the 2026-10-01 text assumption stands. Do not infer length, alter the identifier meaning or change any original source record."
-noted = "2026-06-14"
-
-[[errata.column]]
 variant = "_default"
 column = "pmos_o"
 data_type = "text"
@@ -7880,9 +7867,11 @@ members = [{ variable = "cis2016-cooperation-group-enterprises-sweden", coords =
 native_id = "257.553"
 slug = "_default"
 display_group = "Innovation i företagssektorn"
-# simplify: one firm id under three slugs, as alternatives (each wave holds one);
-# folding them into one variable replaces this list.
-panel_entity_key = ["orgnr", "orgnr-12", "peorgnrhe"]
+# simplify: the firm id under two SCB var_ids, as alternatives (each wave holds one):
+# 3578 orgnr-12 (CFAR företagsenhet, 2002-2018) and 1839 orgnr (myndighet eller
+# företag, 2020-2022), linked by a replaced_by edge. SCB defines them differently,
+# so they stay two variables; one slug needs a cross-var_id identity surface.
+panel_entity_key = ["orgnr-12", "orgnr"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
