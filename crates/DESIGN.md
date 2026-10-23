@@ -520,10 +520,26 @@ Per binding, in declaration order, over its source's period
 ([reg-core/DESIGN.md](reg-core/DESIGN.md)):
 
 1. **Availability clip.** A source period means "these columns, wherever each is
-   available inside this window". Each binding is clipped to the union of its states at
-   the source's variant, so a column first delivered in 2019 under a 2018–2020 source
-   does not widen the order into a cross-product. Every clip is reported, never silent
-   and never an error, and is recorded before the ambiguity gate can stop.
+   available inside this window". A dated period reaches the source variant's succession
+   family (#1840, [reg-core/DESIGN.md](reg-core/DESIGN.md)): the `variant_replaced_by`
+   component `show` reports as `variant_family`, or the variant alone. The request is
+   split at member boundaries and each day goes to one member: the member a steward
+   holds it under (a dated table mapping a column under that variant), else the member
+   whose states deliver it, else the named variant, where the clip removes it, so no
+   variant is invented. The build guarantees a family is a chain whose members share no
+   day by either measure (`validate_built_db`), so the split needs no tie-break. A day
+   no member holds keeps its catalog member, so it blocks as a coverage gap whichever
+   member the source names. `_default` resolves the named variant exactly. Each binding
+   is then resolved once over the members' shares and clipped to the union of its states
+   there, so a column first delivered in 2019 under a 2018–2020 source does not widen
+   the order into a cross-product, and a column only one member delivers (LISA's
+   16+-only columns) gets one clip, not a block for the other member's years. Every clip
+   is reported, one per binding (requested: the source period; ordered: the union across
+   members), never silent and never an error, and is recorded before the ambiguity gate
+   can stop. Each slice keeps its member through matching, coverage, emission and held
+   keys, so a family source yields entries under each member's `logical.variant` and its
+   files are each member's own tables (conformance `order/variant-family`,
+   `order/variant-family-global`); the manifest shape does not change.
 2. **Representation slicing.** The clipped request splits into slices of constant
    canonical representation. A sequential rename makes two slices; two columns valid at
    the same instant without a `representation` pin is ambiguity and blocks. Resolution
@@ -761,7 +777,8 @@ document whose `steward` is not the serving catalog's is one `steward_mismatch` 
 `/steward` and nothing else, as `order` refuses it: every other issue would come from
 another steward's holdings.
 
-Per source variant and binding:
+Per source family (the source variant's succession family under a dated period, the
+variant itself under `_default`; "Order manifest", step 1) and binding:
 
 - The variant must resolve, and the binding's variable must resolve, else
   `fqid_unresolved`.
@@ -774,20 +791,25 @@ Per source variant and binding:
   blocks. The pass's findings take this surface's names: `binding_unavailable` →
   `period_outside_state_validity`, `representation_unknown` →
   `binding_representation_unknown`, `representation_ambiguous` →
-  `binding_value_set_version_ambiguous`, `representation_unresolved` unchanged.
+  `binding_value_set_version_ambiguous`, `representation_unresolved` unchanged. The pass
+  runs once over the family, never per member with a merge: a member that does not
+  deliver a column would otherwise block it for that member's years.
   `binding_state_drifts_within_period` (info) reports a sequential state transition
-  inside the request.
+  inside the request. A member boundary is a transition only where the representation or
+  value set changes across it (LISA's `SyssStat` → `SyssStat11`), not where one column
+  simply continues in the next member.
 - `source_period_narrower_than_available` (warning, at `/sources/<i>/period`) is the one
   period finding, the reverse of a clip. It names the days inside the study window a
-  period widened into them would order, minus the source period's days, when not empty.
-  A day counts when some binding serves it (the same pass asked for the whole window; on
-  a steward artifact, only the days a holding serves) and no binding would block on it:
-  available but not held, or a finding such as co-existing representations. So following
-  the warning never blocks the order on availability. A binding whose own period misses
-  all its data still counts, so its `period_outside_state_validity` comes with where the
-  data is. Day grain, so a monthly or half-year period is well defined. No window, a
-  `"_default"` source or a source with no resolved binding warns nothing. A list period
-  narrower than the data warns on purpose, as do per-year panel members of one variant.
+  period widened into them would order, across the whole family, minus the source
+  period's days, when not empty. A day counts when some binding serves it (the same pass
+  asked for the whole window; on a steward artifact, only the days a holding serves) and
+  no binding would block on it: available but not held, or a finding such as co-existing
+  representations. So following the warning never blocks the order on availability. A
+  binding whose own period misses all its data still counts, so its
+  `period_outside_state_validity` comes with where the data is. Day grain, so a monthly
+  or half-year period is well defined. No window, a `"_default"` source or a source with
+  no resolved binding warns nothing. A list period narrower than the data warns on
+  purpose, as do per-year panel members of one variant.
 - `deprecated_traversal` (info) and `variable_replaced` (info, with `successor_fqid`
   when the successor is a binding) are hints; the binding stays valid.
 - `variable_sensitive` (warning) marks a binding whose variable is `is_sensitive`. It is
@@ -818,8 +840,9 @@ variables, revisit the skip.
 is `fqid_outside_steward_catalog`, and a held concept whose resolved column is not held
 is `representation_outside_steward_catalog`, naming what is held. Both are warnings, so
 an uploaded project can be inspected; ordering blocks the same conditions with its own
-findings. Membership uses the literal authored FQID at the source's exact variant; a
-`same_as` edge grants nothing. Catalog artifacts emit neither.
+findings. Membership uses the literal authored FQID at any family member the period
+reaches (the named variant under `_default`), and a resolved column must be held under
+its own member; a `same_as` edge grants nothing. Catalog artifacts emit neither.
 
 New variables, registers and classifications onboard through slug-TOML changes to the
 build; a steward publishes a new compiled generation. Data without an FQID cannot be

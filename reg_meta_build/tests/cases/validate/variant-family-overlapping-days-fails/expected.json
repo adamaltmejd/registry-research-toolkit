@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variant succession family scb/testreg {individer, individer-aldre}: individer and individer-aldre both deliver days from 2020-01-01 to 2020-12-31"
+  ]
+}

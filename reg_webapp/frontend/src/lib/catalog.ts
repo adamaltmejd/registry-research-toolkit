@@ -663,11 +663,11 @@ export function sourceCardHeading(
  * read exactly like a `_default` one, and two variants of a register would title
  * identically.
  *
- * A variant in a succession FAMILY needs no separate family word: reg_meta derives
- * `variant_family_label` as the common leading stem of the members' own labels
- * ("Individer" out of "Individer, 15 år och äldre" / "Individer, 16 år och äldre"),
- * so each member's name already reads family first and population second — two
- * sources from one family read as one family with a changed frame on their own. */
+ * A variant in a succession FAMILY is named by the family, never by the member: a
+ * dated source reaches every member of its family (#1840), so the card says
+ * "Individer" (reg_meta's `variant_family_label`, the common leading stem of
+ * "Individer, 15 år och äldre" and "Individer, 16 år och äldre"), whichever member
+ * the file names. */
 export function variantCardName(
   variants: readonly VariantModel[],
   variant: string,
@@ -676,7 +676,28 @@ export function variantCardName(
     return "";
   }
   const summary = variants.find((v) => v.slug === variant);
-  return summary ? variantLabel(summary) : null;
+  if (!summary) {
+    return null;
+  }
+  return (
+    (summary.variant_family && summary.variant_family_label) ||
+    variantLabel(summary)
+  );
+}
+
+/** The slugs of `variant`'s succession family among a register's `variants`
+ * (#1840): every variant sharing its `variant_family` (the family's head slug),
+ * else the variant alone. A dated source reaches all of them; a `_default` source
+ * reaches only the variant it names, so callers pass that one alone. */
+export function variantFamilyMembers(
+  variants: readonly VariantModel[],
+  variant: string,
+): string[] {
+  const family = variants.find((v) => v.slug === variant)?.variant_family;
+  if (!family) {
+    return [variant];
+  }
+  return variants.filter((v) => v.variant_family === family).map((v) => v.slug);
 }
 
 /** How a register variant is SPELLED, wherever the app shows one: its curated
@@ -933,23 +954,24 @@ export function coexistingColumns(
 // ── The per-concrete-segment invariant (#376) ────────────────────────────────
 // A picker row can FOLD a sequential variant FAMILY: one displayed row stands for
 // N concrete `register_variant`s (e.g. LISA `individer-16plus` for the older era +
-// `individer-15plus` for the newer). The fold is browse/display only — every
-// concrete segment still extracts and validates as its own real delivery variant.
+// `individer-15plus` for the newer). Since #1840 the family is also the COMMIT
+// unit: a dated source reaches every member of its family, so a folded row is ONE
+// add, written at the family head (`variantFamily`) over all its segments' years,
+// and the order resolves each year to the member that delivers it.
 //
-// INVARIANT: `row.variant` is ONLY the HEAD (latest-era) concrete variant. It is a
-// legitimate coordinate for exactly two things — the row's DISPLAY head, and the
-// single-segment fallback when the row is NOT folded (`variantSegments` is absent or
-// length 1). Everything that ATTRIBUTES to a concrete segment — staging identity,
-// the register-variant coordinate an add/remove/commit targets, and a graph-cell or
-// coding deep-link — MUST use the correct concrete variant instead:
-//   - a whole-row Apply/commit fans out over `variantSegments[i].variant`
-//     (see `rowAddSegments` / `committedPickerRows` in staged_picker.ts — the ONE
-//     home for the segment fan-out; do not re-derive it per view);
+// INVARIANT: `row.variant` is ONLY the latest-era concrete variant that delivers the
+// column. It is a legitimate coordinate for exactly two things — the row's DISPLAY
+// head, and the single-segment fallback when the row is NOT folded
+// (`variantSegments` is absent or length 1). It is NOT the family head (a column
+// only an older member delivers has that member here), so:
+//   - an add/remove/commit targets the family (`rowAdd` / `committedPickerRows` in
+//     staged_picker.ts — the ONE home for row → source; do not re-derive it per
+//     view), and resolves its binding at `variantSegments[i].variant`, the members
+//     that deliver the column;
 //   - a graph cell attributes to the matched `cell.variant` (the concrete era the
 //     cell was delivered under), NOT `row.variant`.
-// Collapsing a folded family to `row.variant` silently leaks state/actions to the
-// wrong concrete segment — the whack-a-mole class of #376 bugs. When you reach for
-// `row.variant`, confirm you mean the HEAD/fallback, not "the segment".
+// When you reach for `row.variant`, confirm you mean the display head/fallback, not
+// "the family" or "the segment".
 export interface PickerRepresentation {
   /** Render/reset identity for this displayed row. Project staging/commit identity is
    * `pickerRowKey`; folded variant-family rows include their concrete segment variants
@@ -965,8 +987,9 @@ export interface PickerRepresentation {
    * THIS wherever the variant is the row identity; `variant` (the slug) stays the
    * selection key and the add coordinate. */
   variantLabel: string;
-  /** Stable family key for display/selection when concrete variants form one
-   * browse family (#376). Falls back to `variant` for ordinary rows. */
+  /** The succession family's head variant slug (#376), reg_meta's
+   * `variant_family`: the display/selection key and, since #1840, the variant a
+   * dated add writes its source at. Falls back to `variant` for ordinary rows. */
   variantFamily?: string;
   /** Display label for `variantFamily`, falling back to `variantLabel`. */
   variantFamilyLabel?: string;
@@ -1003,8 +1026,9 @@ export interface PickerRepresentation {
    * carry the same eras. */
   windows: { from: string; to: string }[];
   /** Concrete variant segments that back this displayed row. Ordinary rows have
-   * exactly one segment; folded variant-family rows have one per concrete variant,
-   * so Apply can stage era-clipped sources while the picker shows one row. */
+   * exactly one segment; folded variant-family rows have one per concrete variant:
+   * the members the add resolves its binding at, and the ones it may find its
+   * family's source under. */
   variantSegments?: PickerVariantSegment[];
   period: string | null;
   wirePeriod: string | null;
@@ -1529,14 +1553,34 @@ function pickerVariantSegments(
  * the list only had the MIN/MAX span, which cannot express an interruption, and an Add
  * paid a GET per ticked variable to rebuild these rows from the states.
  *
- * Two fields the register response does not carry, neither of which a commit reads: the
- * curated variant FAMILY (#376), so rows here group by CONCRETE variant and come back
- * single-segment where the leaf may fold a family into one row; and the value-set
- * identity, so the label/coding fields go in empty — nothing on the register page
- * renders either. A delivery under no column name is skipped by `pickerRepresentations`
- * (no column, nothing to select), and one with no windows contributes no state and so
- * no row: there is nothing this page could commit it over. */
+ * The deliveries carry no variant FAMILY (#376), so rows here group by CONCRETE
+ * variant and come back single-segment where the leaf folds a family into one row.
+ * The commit reads the family, though (#1840: a dated add lands in the family's
+ * source, written at its head), so each dated row is tagged with its variant's
+ * family from the register's own `variants`, without folding: the register list's
+ * ticks stay per (variant, name). The value-set identity is absent too, so the
+ * label/coding fields go in empty — nothing on the register page renders them. A
+ * delivery under no column name is skipped by `pickerRepresentations` (no column,
+ * nothing to select), and one with no windows contributes no state and so no row:
+ * there is nothing this page could commit it over. */
 export function deliveryColumnRows(
+  deliveries: readonly VariableDeliveryModel[],
+  variants: readonly VariantModel[] = [],
+): PickerRepresentation[] {
+  return deliveryRowsByVariant(deliveries).map((row) => {
+    const summary = variants.find((v) => v.slug === row.variant);
+    if (row.period_scope === "year_independent" || !summary?.variant_family) {
+      return row;
+    }
+    return {
+      ...row,
+      variantFamily: summary.variant_family,
+      variantFamilyLabel: summary.variant_family_label ?? row.variantLabel,
+    };
+  });
+}
+
+function deliveryRowsByVariant(
   deliveries: readonly VariableDeliveryModel[],
 ): PickerRepresentation[] {
   let stateId = 0;
@@ -2614,36 +2658,81 @@ export interface BindingFieldOptions {
 }
 
 /**
- * Resolve `fqid` at the source's (`period`, `variant`) through `states` with a
- * `period` — the SINGLE source of truth for pick-time binding-field derivation. A
- * null/blank period is `unresolved` ("period-unset") WITHOUT a fetch (the resolve
- * needs a period). A variable that yields no covering state is `no-states`. >1
- * co-existing representation is `ambiguous` (deferred to the picker chooser);
- * exactly one is `derived` with the resolved type. A network error or a refusal
- * (a non-variable ref, a malformed modifier) throws — the caller owns the error
- * surface. */
+ * Resolve `fqid` at the source's `period` under `variants` — the members of the
+ * source's succession family that deliver the column, or its one variant
+ * (`familyStates`) — the SINGLE source of truth for pick-time binding-field
+ * derivation. A null/blank period is `unresolved` ("period-unset") WITHOUT a fetch
+ * (the resolve needs a period). A variable that yields no covering state is
+ * `no-states`. >1 co-existing representation is `ambiguous` (deferred to the
+ * picker chooser); exactly one is `derived`, typed from the head-most member that
+ * delivers it (`familyTypeState`). A network error or a refusal (a non-variable
+ * ref, a malformed modifier) throws — the caller owns the error surface. */
 export async function resolveBindingAt(
   fqid: string,
   period: string | null,
-  variant: string,
+  variants: readonly string[],
 ): Promise<BindingResolution> {
   if (!period) {
     return { kind: "unresolved", reason: "period-unset" };
   }
-  const states = await getStates(fqid, {
-    period,
-    variant: variant || undefined,
-  });
-  const [first] = states;
-  if (first === undefined) {
+  const states = await familyStates(fqid, period, variants);
+  const typed = familyTypeState(states);
+  if (typed === undefined) {
     return { kind: "unresolved", reason: "no-states" };
   }
   // >1 co-existing (overlapping-window) column is a genuine choice; a sequential
-  // column rename within the period is drift and resolves like one column.
+  // column rename within the period — or one column handed from a family member
+  // to its successor — is drift and resolves like one column.
   if (coexistingColumns(states).size >= 2) {
     return { kind: "ambiguous", fqid, states };
   }
-  return { kind: "derived", type: deriveType(first) };
+  return { kind: "derived", type: deriveType(typed) };
+}
+
+/** A variable's states at `period` under the variants one source reaches
+ * (#1840): the members of its succession family that deliver it, or one variant.
+ * One variant is the server's own `variant` filter; several are one unfiltered
+ * read kept to those members, so a column only an older member delivers still
+ * resolves under a source written at the family head, with no route of its own. */
+export async function familyStates(
+  fqid: string,
+  period: string,
+  variants: readonly string[],
+): Promise<VariableStateModel[]> {
+  if (variants.length <= 1) {
+    return getStates(fqid, { period, variant: variants[0] || undefined });
+  }
+  const members = new Set(variants);
+  return (await getStates(fqid, { period })).filter((s) =>
+    members.has(s.variant),
+  );
+}
+
+/** The state a family binding takes its type from: the first one, in the
+ * server's chronological order, of the HEAD-MOST member that delivers the column
+ * in the period — the member whose delivery reaches latest. Members' delivery
+ * days are disjoint (the build refuses an overlap), so that is the member the
+ * source's newest years order from; an older member whose type differs is the
+ * server's `binding_state_drifts_within_period`, as any drift is. With one
+ * variant this is simply the first state. */
+function familyTypeState(
+  states: readonly VariableStateModel[],
+): VariableStateModel | undefined {
+  const reach = new Map<string, string>();
+  for (const s of states) {
+    const end = s.valid_to ?? OPEN_ENDED_VALID_TO;
+    const to = reach.get(s.variant);
+    if (to === undefined || end > to) reach.set(s.variant, end);
+  }
+  let head: string | undefined;
+  let headReach = "";
+  for (const [variant, to] of reach) {
+    if (head === undefined || to > headReach) {
+      head = variant;
+      headReach = to;
+    }
+  }
+  return states.find((s) => s.variant === head);
 }
 
 /** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once

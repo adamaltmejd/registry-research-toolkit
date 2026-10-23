@@ -39,6 +39,37 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(storedProject()?.sources[0].name).toBe("LISA_V1");
   });
 
+  it("keys adds and removes by variant family, whichever member a source names (#1840)", () => {
+    // A source an agent wrote at the predecessor (16+) is the family's source: an
+    // add at the head (15+) widens it rather than minting a second source, and a
+    // remove keyed by the family empties and prunes it. Fails if any step goes
+    // back to the exact `register_variant`.
+    projectStore.newProject(SEED);
+    const members = ["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"];
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/individer-16plus", "scb/lisa/kon", 2008)],
+    });
+    projectStore.applyStagedDiff({
+      adds: [
+        { ...add("scb/lisa/individer-15plus", "scb/lisa/kon", 2012), members },
+      ],
+    });
+    expect(
+      storedProject()?.sources.map((s) => [s.register_variant, s.period]),
+    ).toEqual([["scb/lisa/individer-16plus", [2008, 2012]]]);
+
+    projectStore.applyStagedDiff({
+      removes: [
+        {
+          registerVariant: "scb/lisa/individer-15plus",
+          members,
+          variable: "scb/lisa/kon",
+        },
+      ],
+    });
+    expect(storedProject()?.sources).toEqual([]);
+  });
+
   it("commits two disjoint-era picks of ONE physical column with nothing to collide (Y-76)", () => {
     // `scb/lisa/forvink-ers-aktiv` (ForvErs, 1990..2021) and `scb/lisa/forvink-ers`
     // (ForvErs, 2022..2023) are the same LISA column across editions, added to ONE

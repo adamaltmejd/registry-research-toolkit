@@ -27,9 +27,9 @@ use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
 
+use super::family::{VariantFamily, variant_family};
 use super::refs;
-use super::states::variant_id;
-use super::validate::{self, Finding, held_representations, resolve_binding};
+use super::validate::{self, Finding, Slice, held_representations, resolve_binding};
 use super::{Params, Raw, Server};
 use crate::{Catalog, Code, Error, Scope};
 
@@ -819,13 +819,6 @@ struct Order<'a> {
     findings: Vec<Blocking>,
 }
 
-/// A binding's resolved identity: the variable and the source's variant of its
-/// register, when the source names one.
-struct Ids {
-    variable: i64,
-    variant: Option<i64>,
-}
-
 impl Order<'_> {
     fn source(&mut self, source: &Source) -> Result<(), Error> {
         let requested = match source.period.intervals() {
@@ -844,10 +837,12 @@ impl Order<'_> {
                 return Ok(());
             }
         };
-        // The source period is the extraction scope and every column's request;
-        // the availability clip narrows each column to its own years inside it.
+        // The source period is the extraction scope and every column's request,
+        // over the family of the source's variant; the availability clip narrows
+        // each column to its own years inside it.
+        let family = variant_family(self.conn, &source.register_variant)?;
         for binding in &source.bindings {
-            self.binding(source, binding, requested.as_deref())?;
+            self.binding(source, binding, requested.as_deref(), family.as_ref())?;
         }
         Ok(())
     }
@@ -869,15 +864,15 @@ impl Order<'_> {
         });
     }
 
-    /// The binding's variable and variant, or its `variable_unresolved` finding, which
-    /// names the period `_default` for a year-independent request (`requested` none)
-    /// and no period for a dated one, as today's.
-    fn ids(
+    /// The binding's variable, or its `variable_unresolved` finding, which names the
+    /// period `_default` for a year-independent request (`requested` none) and no
+    /// period for a dated one, as today's.
+    fn variable(
         &mut self,
         source: &Source,
         binding: &Binding,
         requested: Option<&[Interval]>,
-    ) -> Result<Option<Ids>, Error> {
+    ) -> Result<Option<i64>, Error> {
         let detail = match binding.variable.parse() {
             Ok(Fqid::Variable {
                 provider,
@@ -886,11 +881,7 @@ impl Order<'_> {
             }) => {
                 let slugs = [provider, register, variable];
                 if let Some(id) = refs::variable_id(self.conn, Scope::Reference, &slugs)? {
-                    let slug = source.register_variant.rsplit('/').next().expect("a slug");
-                    return Ok(Some(Ids {
-                        variable: id,
-                        variant: variant_id(self.conn, id, slug)?,
-                    }));
+                    return Ok(Some(id));
                 }
                 // Today's message carries an empty detail here (the frozen reader
                 // formats an error whose str() is empty): a Rust-only fix.
@@ -914,20 +905,13 @@ impl Order<'_> {
         source: &Source,
         binding: &Binding,
         requested: Option<&[Interval]>,
+        family: Option<&VariantFamily>,
     ) -> Result<(), Error> {
-        let Some(ids) = self.ids(source, binding, requested)? else {
+        let Some(id) = self.variable(source, binding, requested)? else {
             return Ok(());
         };
         let pin = binding.representation.as_deref();
-        let resolution = resolve_binding(
-            self.conn,
-            source,
-            binding,
-            pin,
-            ids.variable,
-            ids.variant,
-            requested,
-        )?;
+        let resolution = resolve_binding(self.conn, source, binding, pin, id, family, requested)?;
         if let Some(ordered) = &resolution.clip {
             self.clips.push(Clip {
                 source: source.name.clone(),
@@ -944,15 +928,8 @@ impl Order<'_> {
         {
             self.finding(source, binding, code, message.clone(), period.clone());
         }
-        if let (true, Some(requested), Some(variant)) = (self.steward, requested, ids.variant)
-            && self.windows_block(
-                source,
-                binding,
-                &resolution,
-                ids.variable,
-                variant,
-                requested,
-            )?
+        if let (true, Some(requested), Some(family)) = (self.steward, requested, family)
+            && self.windows_block(source, binding, &resolution, id, family, requested)?
         {
             return Ok(());
         }
@@ -960,25 +937,25 @@ impl Order<'_> {
             return Ok(());
         }
         // An unblocked resolution reached states, so the variant exists.
-        let variant = ids.variant.expect("a resolved binding has a variant");
-        let ids = (ids.variable, variant);
+        let family = family.expect("a resolved binding has a variant");
         match requested {
-            None => self.year_independent(source, binding, &resolution, ids),
-            Some(_) => self.dated(source, binding, &resolution.slices, ids),
+            None => self.year_independent(source, binding, &resolution, (id, family.named)),
+            Some(_) => self.dated(source, binding, &resolution.slices, id, family),
         }
     }
 
-    /// On a steward artifact, each held physical edition the request reaches must
-    /// overlap a state window the binding is applicable in, for each representation
-    /// its column maps; every one that does not is a `column_window_unavailable`
-    /// finding, even where the availability clip removes it from the request.
+    /// On a steward artifact, each held physical edition a family member's share of
+    /// the request reaches must overlap a state window of that member the binding
+    /// is applicable in, for each representation its column maps; every one that
+    /// does not is a `column_window_unavailable` finding, even where the
+    /// availability clip removes it from the request.
     fn windows_block(
         &mut self,
         source: &Source,
         binding: &Binding,
         resolution: &validate::Resolution,
         id: i64,
-        variant: i64,
+        family: &VariantFamily,
         requested: &[Interval],
     ) -> Result<bool, Error> {
         let pin = binding.representation.as_deref();
@@ -992,13 +969,32 @@ impl Order<'_> {
                 binding,
                 None,
                 id,
-                Some(variant),
+                Some(family),
                 Some(requested),
             )?;
             &unpinned
         } else {
             resolution
         };
+        let mut blocked = false;
+        for (variant, requested) in family.split(requested) {
+            blocked |=
+                self.member_windows_block(source, binding, applicability, id, variant, &requested)?;
+        }
+        Ok(blocked)
+    }
+
+    /// [`Self::windows_block`] at one member, over its share of the request.
+    fn member_windows_block(
+        &mut self,
+        source: &Source,
+        binding: &Binding,
+        applicability: &validate::Resolution,
+        id: i64,
+        variant: i64,
+        requested: &[Interval],
+    ) -> Result<bool, Error> {
+        let pin = binding.representation.as_deref();
         let pinned = pin
             .map(|pin| canonical(self.conn, id, variant, pin))
             .transpose()?;
@@ -1022,7 +1018,9 @@ impl Order<'_> {
                     let e = &s.emitted;
                     match (&e.canonical_column, &e.valid_from, &e.valid_to) {
                         (Some(c), Some(from), Some(to))
-                            if c == column && e.period_scope == "intervals" =>
+                            if c == column
+                                && e.register_variant_id == variant
+                                && e.period_scope == "intervals" =>
                         {
                             Some((from.clone(), to.clone()))
                         }
@@ -1071,6 +1069,8 @@ impl Order<'_> {
             .filter_map(|s| s.emitted.delivery_column_name.clone())
             .min()
             .expect("an unblocked year-independent resolution has a column");
+        // `_default` resolves the named variant exactly.
+        let named = source.register_variant.rsplit('/').next().expect("a slug");
         let mut located: Vec<Located> = if self.steward {
             let canonical = canonical(self.conn, id, variant, &column)?;
             matches(
@@ -1113,7 +1113,7 @@ impl Order<'_> {
         {
             self.entries.push(Entry {
                 source: source.name.clone(),
-                logical: logical(source, binding, &column),
+                logical: logical(source, binding, named, &column),
                 requested_period: "_default".into(),
                 physical: Physical {
                     file: String::new(),
@@ -1134,32 +1134,32 @@ impl Order<'_> {
         Ok(())
     }
 
-    /// A dated request: each slice matched against the steward's holdings (or served
-    /// by its canonical column in the global fallback), gated on full coverage.
+    /// A dated request: each slice matched at its family member against the
+    /// steward's holdings (or served by its canonical column in the global
+    /// fallback), gated on full coverage.
     fn dated(
         &mut self,
         source: &Source,
         binding: &Binding,
-        slices: &[(String, String, String)],
-        (id, variant): (i64, i64),
+        slices: &[Slice],
+        id: i64,
+        family: &VariantFamily,
     ) -> Result<(), Error> {
         let variable = quote(&binding.variable);
-        let at = &source.register_variant;
-        // Per (table, physical column, representation), in first-contribution order:
-        // its edition, partition and the requested days it serves.
+        // Per (table, physical column, representation, member), in
+        // first-contribution order: its edition, partition and the requested days it
+        // serves.
         let mut contributions: Vec<Contribution> = Vec::new();
         let mut blocked = false;
-        let held = if self.steward {
-            held_representations(self.conn, id, variant)?
-        } else {
-            BTreeSet::new()
-        };
-        for (lo, hi, column) in slices {
-            let slice = (lo.clone(), hi.clone());
+        let mut held: BTreeMap<i64, BTreeSet<String>> = BTreeMap::new();
+        for s in slices {
+            let (lo, hi, column, variant) = (&s.lo, &s.hi, &s.column, s.variant);
+            let at = coordinate(source, family.slug(variant));
+            let slice = s.days();
             let mut covered = Vec::new();
             if self.steward {
                 let canonical = canonical(self.conn, id, variant, column)?;
-                if !held.contains(&canonical) {
+                if !held_at(&mut held, self.conn, id, variant)?.contains(&canonical) {
                     blocked = true;
                     let message = format!(
                         "no steward table maps {at} {variable} representation {}; a missing \
@@ -1188,7 +1188,7 @@ impl Order<'_> {
                         continue;
                     }
                     covered.extend(overlaps.iter().cloned());
-                    let key = (m.table, m.column, column.clone());
+                    let key = (m.table, m.column, column.clone(), variant);
                     contribute(&mut contributions, key, overlaps, (m.periods, m.placement));
                 }
             } else {
@@ -1197,7 +1197,7 @@ impl Order<'_> {
                 covered.push(slice.clone());
                 contribute(
                     &mut contributions,
-                    (String::new(), column.clone(), column.clone()),
+                    (String::new(), column.clone(), column.clone(), variant),
                     vec![slice.clone()],
                     Held::default(),
                 );
@@ -1227,11 +1227,11 @@ impl Order<'_> {
         // member orders by its index, not its column name.
         contributions.sort_by(|a, b| a.order().cmp(&b.order()));
         for c in contributions {
-            let (table, physical, column) = c.key;
+            let (table, physical, column, variant) = c.key;
             let days = merge(c.days);
             self.entries.push(Entry {
                 source: source.name.clone(),
-                logical: logical(source, binding, &column),
+                logical: logical(source, binding, family.slug(variant), &column),
                 requested_period: render(&days),
                 physical: Physical {
                     file: String::new(),
@@ -1253,10 +1253,10 @@ impl Order<'_> {
     }
 }
 
-/// One entry in the making: `(table, physical column, representation)`, the table's
-/// edition, the column's placement, and the requested days it serves.
+/// One entry in the making: `(table, physical column, representation, member)`, the
+/// table's edition, the column's placement, and the requested days it serves.
 struct Contribution {
-    key: (String, String, String),
+    key: (String, String, String, i64),
     edition: Vec<Interval>,
     placement: Placement,
     days: Vec<Interval>,
@@ -1298,7 +1298,7 @@ type Held = (Vec<Interval>, Placement);
 
 fn contribute(
     contributions: &mut Vec<Contribution>,
-    key: (String, String, String),
+    key: (String, String, String, i64),
     days: Vec<Interval>,
     (edition, placement): Held,
 ) {
@@ -1317,41 +1317,67 @@ fn contribute(
     }
 }
 
-fn logical(source: &Source, binding: &Binding, representation: &str) -> Logical {
-    let mut parts = source.register_variant.split('/').map(str::to_owned);
-    let mut next = || parts.next().expect("a 3-part register variant");
+/// The logical coordinate of an entry at family member `variant` of its source.
+fn logical(source: &Source, binding: &Binding, variant: &str, representation: &str) -> Logical {
+    let parts: Vec<&str> = source.register_variant.split('/').collect();
+    let [provider, register, _] = parts[..] else {
+        unreachable!("the structural validator admits only 3-part register variants")
+    };
     Logical {
-        provider: next(),
-        register: next(),
-        variant: next(),
+        provider: provider.to_owned(),
+        register: register.to_owned(),
+        variant: variant.to_owned(),
         variable: binding.variable.clone(),
         representation: representation.to_owned(),
     }
 }
 
-/// The days of `slices` (a resolution's `(lo, hi, column)` windows) the steward
+/// `<provider>/<register>/<variant>` of family member `variant` of the source.
+fn coordinate(source: &Source, variant: &str) -> String {
+    let (register, _) = source
+        .register_variant
+        .rsplit_once('/')
+        .expect("a 3-part register variant");
+    format!("{register}/{variant}")
+}
+
+/// The days of `slices` (a resolution's windows, each at its member) the steward
 /// holds: what `Order::dated` serves rather than blocks as a `coverage_gap`
 /// or `mapping_missing`. `validate` measures a source's delivered days by it.
 pub(super) fn held_days(
     conn: &Connection,
     id: i64,
-    variant: i64,
-    slices: &[(String, String, String)],
+    slices: &[Slice],
 ) -> Result<Vec<Interval>, Error> {
-    let held = held_representations(conn, id, variant)?;
+    let mut held: BTreeMap<i64, BTreeSet<String>> = BTreeMap::new();
     let mut days = Vec::new();
-    for (lo, hi, column) in slices {
-        let canonical = canonical(conn, id, variant, column)?;
-        if !held.contains(&canonical) {
+    for slice in slices {
+        let variant = slice.variant;
+        let canonical = canonical(conn, id, variant, &slice.column)?;
+        if !held_at(&mut held, conn, id, variant)?.contains(&canonical) {
             continue;
         }
-        let slice = (lo.clone(), hi.clone());
-        let bounds = Some((lo.as_str(), hi.as_str()));
+        let (lo, hi) = (slice.lo.as_str(), slice.hi.as_str());
+        let slice = slice.days();
+        let bounds = Some((lo, hi));
         for m in matches(conn, id, variant, Some(&canonical), "intervals", bounds)? {
             days.extend(m.served().iter().filter_map(|b| intersect(b, &slice)));
         }
     }
     Ok(merge(days))
+}
+
+/// The held representations of variable `id` at `variant`, read once per member.
+fn held_at<'a>(
+    held: &'a mut BTreeMap<i64, BTreeSet<String>>,
+    conn: &Connection,
+    id: i64,
+    variant: i64,
+) -> Result<&'a BTreeSet<String>, Error> {
+    if let std::collections::btree_map::Entry::Vacant(e) = held.entry(variant) {
+        e.insert(held_representations(conn, id, variant)?);
+    }
+    Ok(&held[&variant])
 }
 
 /// `column`'s one spelling at the variable and variant (today's

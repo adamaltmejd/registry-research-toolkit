@@ -19,6 +19,18 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   top-level `window: {"from": <year>, "to": <year>}` is the study period the SPA uses as
   an authoring default, and the semantic layer measures a source period against it;
   absent means the full history.
+- **`Source.register_variant` reaches a family under a dated period** (#1840). The
+  coordinate names a variant; a dated period reaches every member of that variant's
+  succession family (the catalog's `variant_replaced_by` component, such as LISA's
+  `individer-16plus` → `individer-15plus`), and each day is ordered from the one member
+  that delivers it ([../DESIGN.md](../DESIGN.md), "Order manifest", step 1). A
+  `"_default"` period resolves the named variant exactly. The SPA writes the family head
+  (the member with no successor); any member is accepted, so a project still resolves
+  after a later edge is curated and the head moves. Concurrent variants are never a
+  family, so they stay separate sources. A family has no stable id of its own, since its
+  key moves when an edge is added, so the field keeps naming a variant. This crate knows
+  no catalog: the structural shape and rules do not change, only the meaning the
+  semantic layer and the order give it.
 - **`Source.period`** is an int year, a period token, a `{"from", "to"}` range, or a
   finite list of those segments. A list is an interrupted series
   (`[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]`, wire form

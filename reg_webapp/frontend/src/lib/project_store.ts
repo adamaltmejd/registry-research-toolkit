@@ -467,9 +467,11 @@ function bindingMatches(
 //
 // The browse-and-stage flow accumulates a user's picks/removes as a diff, then
 // commits them in ONE synchronous store mutation (`applyStagedDiff`) so autosave
-// + the stable-id mirror fire/rebuild a single time. Find-or-create keys on
-// `register_variant` ALONE (a new disjoint window EXTENDS the source's period to
-// the #307 list form rather than minting a second source).
+// + the stable-id mirror fire/rebuild a single time. Every step keys on the
+// variant FAMILY (#1840): a source matches when its `register_variant` is one of the
+// family's members, so a new disjoint window EXTENDS the family's source to the #307
+// list form rather than minting a second source, and an add in a successor's years
+// lands in the source a predecessor's add authored.
 
 /** A binding to add (already-resolved final fields — the #991 write-once model). */
 export interface StagedBinding {
@@ -479,21 +481,41 @@ export interface StagedBinding {
   representation?: string | null;
 }
 
-/** Add a binding to a source found-or-created by `registerVariant`, extending the
- * found source's period to cover `period`. */
+/** Add a binding to the source of a variant family, found among `members` or
+ * created at `registerVariant` (the family head), extending the found source's
+ * period to cover `period`. */
 export interface StagedAdd {
   registerVariant: string;
+  /** Every `register_variant` of the family a found source may name (#1840);
+   * absent or empty is `registerVariant` alone — a `_default` add, or a variant in
+   * no family. */
+  members?: readonly string[];
   period: ProjectSourcePeriod;
   binding: StagedBinding;
 }
 
-/** Drop a binding of `variable` from the source at `registerVariant`. A null
+/** Drop a binding of `variable` from the sources of a variant family. A null
  * `representation` matches the variable's binding regardless of stored column
  * (the same null-either-side rule as the duplicate guard, via `bindingMatches`). */
 export interface StagedRemove {
   registerVariant: string;
+  /** As `StagedAdd.members`. */
+  members?: readonly string[];
   variable: string;
   representation?: string | null;
+}
+
+/** The `register_variant`s a staged add or remove reaches: its family's members,
+ * else its own coordinate. */
+function familyOf(edit: {
+  registerVariant: string;
+  members?: readonly string[];
+}): ReadonlySet<string> {
+  return new Set(
+    edit.members && edit.members.length > 0
+      ? [edit.registerVariant, ...edit.members]
+      : [edit.registerVariant],
+  );
 }
 
 /** Replace ONE NAMED source's period wholesale. Keyed by the draft source `name`
@@ -897,16 +919,18 @@ export const projectStore = {
    * flow accumulates the user's picks/removes/period-changes as a diff, then commits
    * them here so autosave + the stable-id mirror fire/rebuild a SINGLE time. A null
    * draft is a no-op (the home screen). The batch is applied in order:
-   *   (a) removes  — drop matching bindings (`bindingMatches` null-either-side rule);
-   *   (b) adds     — find-or-create the source by `register_variant` ALONE, extend the
-   *                  source period to cover the add's period, append the binding
+   *   (a) removes  — drop matching bindings (`bindingMatches` null-either-side rule)
+   *                  from every source in the remove's variant family;
+   *   (b) adds     — find-or-create the source by variant FAMILY (#1840: the first
+   *                  source naming any member, else a new one at the family head),
+   *                  extend its period to cover the add's period, append the binding
    *                  unless the duplicate guard says it is already present;
    *   (c) periodChanges — replace the NAMED source's `period` wholesale (keyed on
    *                  `name` + `register_variant`, so a duplicate-variant sibling
    *                  source keeps its own period);
-   *   (d) prune    — drop a source only when this batch removed from it AND it is now
-   *                  empty. Deferred to LAST (not folded into removes) so a remove+add
-   *                  of the SAME register_variant in one batch preserves the source's
+   *   (d) prune    — drop a source only when this batch removed from its family AND
+   *                  it is now empty. Deferred to LAST (not folded into removes) so a
+   *                  remove+add in the SAME family in one batch preserves the source's
    *                  name/period/metadata instead of minting a fresh source.
    * The next draft + rebuilt id mirror are computed BEFORE assigning either, so the
    * replacement is atomic (like open/new) and `dirty`/autosave recompute once.
@@ -933,9 +957,10 @@ export const projectStore = {
     //     source; a removed-then-readded source is preserved by its non-zero count).
     const removedVariants = new Set<string>();
     for (const remove of diff.removes ?? []) {
-      removedVariants.add(remove.registerVariant);
+      const family = familyOf(remove);
+      for (const member of family) removedVariants.add(member);
       sources = sources.map((s) =>
-        safeSourceRegisterVariant(s) === remove.registerVariant
+        family.has(safeSourceRegisterVariant(s))
           ? {
               ...s,
               bindings: safeSourceBindings(s).filter(
@@ -951,13 +976,15 @@ export const projectStore = {
       );
     }
 
-    // (b) adds → find-or-create by register_variant ALONE. A source is one variant's
-    //     extraction scope and every column is ordered for its period (#1838): an
-    //     add reaching beyond it widens the source to the union, and an add inside
-    //     it changes no period. A re-add of a binding the source holds keeps it.
+    // (b) adds → find-or-create by variant FAMILY. A dated source reaches its
+    //     variant's whole succession family (#1840) and every column is ordered for
+    //     its period (#1838): an add reaching beyond it widens the source to the
+    //     union, and an add inside it changes no period. A re-add of a binding the
+    //     source holds keeps it. A new source is written at the family head.
     for (const add of diff.adds ?? []) {
-      const idx = sources.findIndex(
-        (s) => safeSourceRegisterVariant(s) === add.registerVariant,
+      const family = familyOf(add);
+      const idx = sources.findIndex((s) =>
+        family.has(safeSourceRegisterVariant(s)),
       );
       const binding = stagedToBinding(add.binding);
       if (idx < 0) {
@@ -988,8 +1015,9 @@ export const projectStore = {
     }
 
     // (c) period changes → replace the NAMED source's period wholesale. Keyed on
-    //     name AND coordinate: two differently named sources can share one
-    //     register_variant, and a period edit moves only the source it names.
+    //     name AND that source's own coordinate: two differently named sources can
+    //     share one family, and a period edit moves only the source it names (names
+    //     are unique, so the family adds nothing here).
     for (const change of diff.periodChange ?? []) {
       sources = sources.map((s) =>
         safeSourceName(s) === change.sourceName &&
@@ -999,9 +1027,9 @@ export const projectStore = {
       );
     }
 
-    // (d) prune → drop a source ONLY when this batch removed a binding from it AND it
-    //     is now empty. Scoping to `removedVariants` means a remove+add of the same
-    //     register_variant keeps the source (the add refilled it), while a remove-only
+    // (d) prune → drop a source ONLY when this batch removed a binding from its family
+    //     AND it is now empty. Scoping to `removedVariants` means a remove+add in the
+    //     same family keeps the source (the add refilled it), while a remove-only
     //     batch that empties a source still prunes it; a pre-existing empty source an
     //     adds-only batch never touched is left alone.
     sources = sources.filter(

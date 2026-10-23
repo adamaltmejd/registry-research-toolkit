@@ -175,9 +175,9 @@ describe("catalog reads over a period list or `_default`", () => {
     const listed = await resolveBindingAt(
       "scb/lisa/kon",
       "2005..2010,2015..2020",
-      "v",
+      ["v"],
     );
-    const whole = await resolveBindingAt("scb/lisa/kon", "_default", "v");
+    const whole = await resolveBindingAt("scb/lisa/kon", "_default", ["v"]);
     expect(listed).toEqual({ kind: "derived", type: "numeric" });
     expect(whole).toEqual({ kind: "derived", type: "numeric" });
     expect(seen).toEqual([

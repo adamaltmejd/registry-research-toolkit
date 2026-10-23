@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  getShow,
   getStates,
+  type ShowNode,
   type VariableDeliveryModel,
   type VariableStateModel,
 } from "./api";
@@ -9,12 +11,12 @@ import {
   type PickerRepresentation,
   pickerRepresentations,
 } from "./catalog";
+import { resetCatalogNames } from "./catalog_names";
 import { state } from "./catalog-test-helpers";
 import { projectStore } from "./project_store";
 import { storedProject } from "./project-store-test-helpers";
 import {
   applyStagedPicks,
-  committedPickerRows,
   type StagedPick,
   type StagedPickerBand,
 } from "./staged_picker";
@@ -22,11 +24,16 @@ import {
 // Split from staged_picker.test.ts by contract surface: the shared staged add →
 // resolve → commit stack. Sibling: staged_picker.test.ts (row enumeration).
 
-// Only the ONE call the staging stack makes on its own — `resolveBindingAt`'s
-// `period` states read, one per staged add. Everything else in ./api stays real.
+// Only the TWO reads the staging stack makes on its own — `resolveBindingAt`'s
+// `period` states read, one per staged add, and the register read that names a
+// family's members (#1840; unstubbed, it fails and leaves each row's own).
+// Everything else in ./api stays real.
 vi.mock("./api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api")>()),
   getStates: vi.fn(),
+  getShow: vi.fn(async () => {
+    throw new Error("no register read in this case");
+  }),
 }));
 
 // ── The shared staged add → resolve → commit stack (Y-83) ────────────────────
@@ -448,10 +455,9 @@ function bindingOf(variable: string): { type?: string } | undefined {
     .find((b) => b.variable === variable);
 }
 
-describe("applyStagedPicks against the study window", () => {
+describe("applyStagedPicks over a variant family (#1840)", () => {
   // DispInkFam04 as LISA delivers it: 16+ for 2004–2009, 15+ from 2010, one folded
-  // family row. A 2004–2012 page period fans the pick out per variant; the 15+ share
-  // (2010–2012) misses a 1980–2005 study window while the 16+ share overlaps it.
+  // family row whose head is 15+.
   const key = "scb/lisa/dispinkfam04";
   const family = { variant_family: "individer-15plus" };
   const dispInk = [
@@ -484,31 +490,8 @@ describe("applyStagedPicks against the study window", () => {
       },
     );
 
-  it("adds a pick whose period overlaps the window, dropping the variant share outside it (#1834)", async () => {
-    // Fails if the refusal is judged per variant share instead of per pick.
-    stubResolve(dispInk);
-    newProject();
-
-    const result = await apply("2004..2012");
-
-    expect(result.kind).toBe("applied");
-    expect(
-      storedProject()?.sources.map((s) => [s.register_variant, s.period]),
-    ).toEqual([["scb/lisa/individer-16plus", { from: 2004, to: 2009 }]]);
-    // …and the picker reads the row back as in the project, so it is not offered
-    // for a second add (fails if the marker still expects the 15+ share).
-    const committed = committedPickerRows(
-      projectStore.draft,
-      [bandOf(key, pickerRepresentations(dispInk))],
-      { period: "2004..2012", window: [1980, 2005], studyWindow },
-    );
-    expect([...committed.values()].map((c) => c.registerVariant)).toEqual([
-      "scb/lisa/individer-16plus",
-    ]);
-  });
-
   it("still refuses a pick with no years inside the window", async () => {
-    // Fails if the #1834 relaxation lets a wholly outside pick through.
+    // Fails if a family add lets a pick wholly outside the window through.
     stubResolve(dispInk);
     newProject();
     const before = JSON.stringify(projectStore.draft);
@@ -521,5 +504,49 @@ describe("applyStagedPicks against the study window", () => {
       studyWindow,
     });
     expect(JSON.stringify(projectStore.draft)).toBe(before);
+  });
+
+  it("lands in a family source at a member that does not deliver the column", async () => {
+    // A source an agent wrote at 16+ holds Kon; DispInkFam04's 2012 pick knows
+    // only 15+ (the one member delivering 2012), so the register read must name
+    // 16+ as family. Fails if the add path matches by the delivering members
+    // alone and mints a second source of the family over overlapping years.
+    resetCatalogNames();
+    vi.mocked(getShow).mockResolvedValue({
+      kind: "register",
+      fqid: "scb/lisa",
+      children: [],
+      variants: [
+        { slug: "individer-16plus", variant_family: "individer-15plus" },
+        { slug: "individer-15plus", variant_family: "individer-15plus" },
+      ],
+    } as unknown as ShowNode);
+    const only15 = dispInk.filter((s) => s.variant === "individer-15plus");
+    stubResolve(only15);
+    newProject();
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/individer-16plus",
+          period: 2008,
+          binding: { variable: "scb/lisa/kon", type: "categorical" },
+        },
+      ],
+    });
+
+    const result = await applyStagedPicks(
+      { adds: picksOf(pickerRepresentations(only15), key), removes: [] },
+      { scope: { period: "2012" }, seed: SEED, cancelled: () => false },
+    );
+
+    expect(result.kind).toBe("applied");
+    expect(
+      storedProject()?.sources.map((s) => [
+        s.register_variant,
+        s.period,
+        s.bindings.length,
+      ]),
+    ).toEqual([["scb/lisa/individer-16plus", [2008, 2012], 2]]);
+    resetCatalogNames();
   });
 });

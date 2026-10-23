@@ -1,0 +1,33 @@
+{
+  "note": "One LISA-shaped source names the family head individer-15plus over 2008..2011; individer-16plus (2005..2009) is its predecessor, and the steward holds one table per year, LISA2007..2009 under 16+ and LISA2010..2012 under 15+. Each year is ordered from the member holding it: DispInk04 from LISA2008..2009 under 16+ and LISA2010..2011 under 15+; Sun2000niva_Old, delivered by 16+ alone, from LISA2008..2009 with one clip 2008..2011 -> 2008..2009 and no finding. Each file carries its own member's LopNr key. Fails if a dated source resolves only its named variant (Sun2000niva_Old blocks, 2008..2009 is clipped), if an entry carries the named variant instead of its member, or if a member-only column gets a clip per member.",
+  "fixture": "variant-family",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "4.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "lisa",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {
+          "from": 2008,
+          "to": 2011
+        },
+        "bindings": [
+          {
+            "variable": "scb/lisa/dispink",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/lisa/sun2000niva-old",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  }
+}

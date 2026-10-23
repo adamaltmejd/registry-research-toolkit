@@ -312,7 +312,10 @@ export function RegisterView({
     // (Y-104): the unit an Add commits in. The columns point at these same
     // objects, and a #902 rename is one row both its names lead to.
     const rowsByFqid = new Map(
-      lensed.map((child) => [child.fqid, deliveryColumnRows(child.deliveries)]),
+      lensed.map((child) => [
+        child.fqid,
+        deliveryColumnRows(child.deliveries, node.variants),
+      ]),
     );
     const columnsByFqid = new Map(
       lensed.map((child) => [
@@ -321,7 +324,8 @@ export function RegisterView({
       ]),
     );
     // One band per listed variable, its rows the variable's own picker rows:
-    // a tick stages one add per (variable, variant, representation).
+    // a tick stages one add per (variable, variant, representation), each
+    // landing in its variant family's source (#1840).
     const bands: StagedPickerBand[] = lensed.map((child) => ({
       key: child.fqid,
       registerPrefix: registerPrefixOf(child.fqid),
@@ -385,7 +389,7 @@ export function RegisterView({
   // each with its marker against the study window (the most severe across the
   // variants that deliver it). Partial cover reads as not added.
   const committed = new Map<string, CommittedMarker>();
-  const committedRows = committedPickerRows(draft, bands, add.scope);
+  const committedRows = committedPickerRows(draft, bands);
   if (committedRows.size > 0) {
     for (const band of bands) {
       for (const column of columnsByFqid.get(band.key) ?? []) {

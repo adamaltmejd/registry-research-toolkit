@@ -1,3 +1,4 @@
+import type { VariantModel } from "./api";
 import {
   addWindowBounds,
   type BindingResolution,
@@ -8,9 +9,10 @@ import {
   resolveBindingAt,
   rowAddPeriod,
   rowCoversColumn,
-  windowsAddPeriod,
+  variantFamilyMembers,
   windowsOverlapWindow,
 } from "./catalog";
+import { settledRegisterRead } from "./catalog_names";
 import {
   datedIntervals,
   periodCoverageUnion,
@@ -36,11 +38,7 @@ import {
   type StagedAdd,
   type StagedRemove,
 } from "./project_store";
-import {
-  sourcePeriodFromWire,
-  sourcePeriodToWire,
-  studyWindowInterval,
-} from "./reg_core";
+import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 
 export interface StagedPickerBand {
   key: string;
@@ -50,18 +48,23 @@ export interface StagedPickerBand {
 
 export interface PickerCommittedRow {
   key: string;
+  /** The coordinate of the source the row was found in. */
   registerVariant: string;
+  /** Every `register_variant` of the row's variant family (#1840): what a remove
+   * of this row reaches. */
+  members: string[];
   variable: string;
   representation: string | null;
   sourceName: string;
   /** The source's period, every column's (#1838): what a delivery name's eras
    * and the study-window marker are checked against. */
   period: ProjectSourcePeriod;
-  removals?: StagedRemove[];
 }
 
 export interface PickerAddPeriod {
   registerVariant: string;
+  /** As `StagedAdd.members`: the family a found source may name. */
+  members?: readonly string[];
   period: ProjectSourcePeriod;
 }
 
@@ -73,9 +76,6 @@ export interface PickerSourcePeriod {
 export interface PickerCommitScope {
   period?: string | null | undefined;
   window?: [number, number] | null;
-  /** The project's study window, when the page's own `?period` sets the add
-   * window: a folded row's variant share outside it is left out (#1834). */
-  studyWindow?: ProjectStudyWindow | null;
 }
 
 type CommitVariantSegment = Pick<PickerVariantSegment, "variant" | "windows">;
@@ -157,66 +157,38 @@ function rowOverlapsPeriod(
 
 /** The concrete `register_variant` segments a folded picker row spans (#376): its
  * `variantSegments` when folded, else the single-segment fallback on `row.variant`
- * (the unfolded HEAD — see the per-concrete-segment invariant in catalog.ts). The
- * ONE place the row → concrete-segment fan-out is derived. */
+ * (see the invariant in catalog.ts) — the members of its family that deliver the
+ * column. */
 function rowVariantSegments(row: PickerRepresentation): CommitVariantSegment[] {
   return row.variantSegments && row.variantSegments.length > 0
     ? row.variantSegments
     : [{ variant: row.variant, windows: row.windows }];
 }
 
-/** The concrete segments a row commits under `scope`, plus the scope machinery each
- * consumer needs. Shared by `rowRelevantSegments` (staging-match) and `rowAddSegments`
- * (Apply fan-out) so the two can't drift on WHICH segments a period-scoped add touches
- * (the #376 whack-a-mole seam). A single-segment (unfolded) row is always fully
- * relevant; a folded family narrows to the segments whose delivery windows overlap the
- * active add window, falling back to ALL segments when none do (an explicitly-selected
- * out-of-window row is never silently dropped: its staging match still finds it, and
- * its Apply is refused by name rather than skipped). */
-function relevantSegments(
+/** The `register_variant` a row's add writes its source at, and every one of its
+ * family a found source may name (#1840). A dated row's family is its
+ * `variantFamily` head plus the members that deliver it, plus — given the
+ * register's `variants` — every other member, including one that does not
+ * deliver this column. A year-independent row reaches its own variant only (a
+ * `_default` source names one variant exactly). */
+function rowFamily(
+  band: StagedPickerBand,
   row: PickerRepresentation,
-  scope: PickerCommitScope,
-): {
-  segments: CommitVariantSegment[];
-  addWindow: { from: string; to: string } | null;
-  folded: boolean;
-} {
-  const addWindow = addWindowBounds(scope.period, scope.window ?? null);
-  const segments = rowVariantSegments(row);
-  if (segments.length === 1) {
-    return { segments, addWindow, folded: false };
+  variants: readonly VariantModel[] = [],
+): { registerVariant: string; members: string[] } {
+  if (row.period_scope === "year_independent") {
+    const own = rowRegisterVariantForVariant(band, row.variant);
+    return { registerVariant: own, members: [own] };
   }
-  const overlapping = segments.filter((segment) =>
-    windowsOverlapWindow(segment.windows, addWindow),
-  );
-  const relevant = overlapping.length > 0 ? overlapping : segments;
-  // A page `?period` can reach past the study window, and the variant share it
-  // reaches only there (LISA 15+ from 2010 under a 1980–2005 window) would be a
-  // source outside the window, which the Apply refuses (#1834). Leave such a share
-  // out while another overlaps the window; a row with none keeps them all, so the
-  // Apply still names it. simplify: deleted when a source spans its variant
-  // family (#1840) and a folded row is one add.
-  const study = scope.studyWindow
-    ? studyWindowInterval(scope.studyWindow)
-    : null;
-  const inStudy =
-    study && addWindow
-      ? {
-          from: addWindow.from > study[0] ? addWindow.from : study[0],
-          to: addWindow.to < study[1] ? addWindow.to : study[1],
-        }
-      : null;
-  const inside =
-    inStudy && inStudy.from <= inStudy.to
-      ? relevant.filter((segment) =>
-          windowsOverlapWindow(segment.windows, inStudy),
-        )
-      : [];
-  return {
-    segments: inside.length > 0 ? inside : relevant,
-    addWindow,
-    folded: true,
-  };
+  const head = pickerRowVariantFamily(row);
+  const members = [
+    ...new Set([
+      head,
+      ...variantFamilyMembers(variants, head),
+      ...rowVariantSegments(row).map((s) => s.variant),
+    ]),
+  ].map((variant) => rowRegisterVariantForVariant(band, variant));
+  return { registerVariant: members[0], members };
 }
 
 /** Whether a picker row has a delivery era inside `scope`'s add window — the gate
@@ -225,8 +197,8 @@ function relevantSegments(
  * selectable and lets `applyStagedPicks` refuse the Add (`outside-scope`): a row
  * the window clips to nothing has no period to commit, and inventing one from the
  * row's own span is what the common-study-window decision rules out. Reads the add
- * window through the SAME `addWindowBounds` derivation `relevantSegments` does (#678:
- * a sub-annual `?period` wins over the year window), so a gate and the commit it
+ * window through the SAME `addWindowBounds` derivation `rowAdd` does (#678: a
+ * sub-annual `?period` wins over the year window), so a gate and the commit it
  * gates can never disagree about which window a row was judged against. With
  * no window nothing is clipped, every row passes, and `finalAddPeriodWires` is the one
  * that asks for a period. */
@@ -245,58 +217,44 @@ export function rowDeliversInScope(
   );
 }
 
-function rowRelevantSegments(
-  row: PickerRepresentation,
-  scope: PickerCommitScope,
-): CommitVariantSegment[] {
-  return relevantSegments(row, scope).segments;
-}
-
-/** One concrete `register_variant` an Apply must stage for a (folded or plain) picker
- * row, with its scope-clipped add period. `outsideScope` marks a dated segment the
- * active add window clips to NOTHING — its `periodWire` is then null, and the Apply
- * is refused rather than given a period nobody asked for. */
-export interface RowAddSegment {
-  variant: string;
+/** The one add an Apply stages for a (folded or plain) picker row (#1840): its
+ * family's source, written at the family head, over the row's delivery windows —
+ * every member's — clipped to the add window. `resolveVariants` are the members
+ * that deliver the column, where its binding fields are resolved. `outsideScope`
+ * marks a dated row the active add window clips to NOTHING — its `periodWire` is
+ * then null, and the Apply is refused rather than given a period nobody asked
+ * for. */
+export interface RowAdd {
   registerVariant: string;
+  members: string[];
+  resolveVariants: string[];
   periodWire: string | null;
   outsideScope: boolean;
 }
 
-/** The per-concrete-segment Apply plan for a picker row (#376): ONE source per concrete
- * `register_variant` the row's active scope touches, each with its own era-clipped wire
- * period. The single home for the picker-row → staged-add fan-out, consumed by every
- * view's `stagedAddCandidates` so the per-concrete-segment invariant (catalog.ts) is
- * enforced once, not re-derived per view.
- *   - An UNFOLDED row stages its one variant with `rowAddPeriod` (the whole-row
- *     windows clipped to the add window).
- *   - A FOLDED family stages each relevant concrete segment with its OWN delivery
- *     windows clipped to the add window (era-precise, so a partial-family add can't
- *     leak coverage into the other era).
- * Either way the clip keeps EVERY disjoint era the window reaches — the full
- * available intersection the common study window defaults an add to — and a
- * segment it reaches none of is `outsideScope` (`relevantSegments` still hands
- * back a family's every segment then, so the refusal can name the row). */
-export function rowAddSegments(
+/** The Apply plan for a picker row: ONE add per row, however many family members
+ * deliver it (the earlier per-member fan-out is what refused a LISA pick reaching
+ * into 15+ years past the study window, #1834). The clip keeps EVERY disjoint era
+ * the window reaches — the full available intersection the common study window
+ * defaults an add to. The single home for the picker-row → staged-add mapping,
+ * consumed through `stagedAddCandidate`, never re-derived per view. */
+export function rowAdd(
   band: StagedPickerBand,
   row: PickerRepresentation,
   scope: PickerCommitScope,
-): RowAddSegment[] {
-  const { segments, addWindow, folded } = relevantSegments(row, scope);
-  return segments.map((segment) => {
-    const periodWire = folded
-      ? windowsAddPeriod(segment.windows, addWindow)
-      : rowAddPeriod(row, addWindow);
-    return {
-      variant: segment.variant,
-      registerVariant: rowRegisterVariantForVariant(band, segment.variant),
-      periodWire,
-      outsideScope:
-        addWindow !== null &&
-        row.period_scope !== "year_independent" &&
-        periodWire === null,
-    };
-  });
+  variants: readonly VariantModel[] = [],
+): RowAdd {
+  const addWindow = addWindowBounds(scope.period, scope.window ?? null);
+  const periodWire = rowAddPeriod(row, addWindow);
+  return {
+    ...rowFamily(band, row, variants),
+    resolveVariants: rowVariantSegments(row).map((s) => s.variant),
+    periodWire,
+    outsideScope:
+      addWindow !== null &&
+      row.period_scope !== "year_independent" &&
+      periodWire === null,
+  };
 }
 
 function rowMatchesBinding(
@@ -311,72 +269,49 @@ function rowMatchesBinding(
   return rowOverlapsPeriod(row, sourcePeriod);
 }
 
+/** The picker rows the draft already holds, by `pickerRowKey`: a row is committed
+ * when a source of its variant FAMILY (#1840) carries a binding of its variable
+ * that the row is — its pinned column, or, unpinned, a row delivered within the
+ * source's period. */
 export function committedPickerRows(
   draft: RawDraft | null,
   bands: readonly StagedPickerBand[],
-  scope: PickerCommitScope = {},
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
   const sources = safeSourceSlots(draft?.sources);
   if (sources.length === 0) {
     // Nothing is committed anywhere, so no row can be — and the ordinary
     // catalog-browsing state (no draft) should not pay for a whole register list
-    // of key + segment work to discover that.
+    // of key + family work to discover that.
     return committed;
   }
   for (const band of bands) {
     for (const row of band.rows) {
-      const rowKey = pickerRowKey(band, row);
-      const segments = rowRelevantSegments(row, scope);
-      const matched: PickerCommittedRow[] = [];
-      for (const segment of segments) {
-        const registerVariant = rowRegisterVariantForVariant(
-          band,
-          segment.variant,
-        );
-        const source = sources.find(
-          (s) => safeSourceRegisterVariant(s) === registerVariant,
-        );
-        if (!source) {
+      const { members } = rowFamily(band, row);
+      for (const source of sources) {
+        const registerVariant = safeSourceRegisterVariant(source);
+        if (!members.includes(registerVariant)) {
           continue;
         }
         const period = sourcePeriod(source);
-        // A binding without a representation matches the rows of its source's years.
         const binding = safeSourceBindings(source).find(
           (b) =>
             bindingVariable(b) === band.key &&
             rowMatchesBinding(b, row, period),
         );
-        if (!binding) {
-          continue;
+        if (binding) {
+          committed.set(pickerRowKey(band, row), {
+            key: pickerRowKey(band, row),
+            registerVariant,
+            members,
+            variable: band.key,
+            representation: bindingRepresentation(binding),
+            sourceName: safeSourceName(source),
+            period,
+          });
+          break;
         }
-        matched.push({
-          key: rowKey,
-          registerVariant,
-          variable: band.key,
-          representation: bindingRepresentation(binding),
-          sourceName: safeSourceName(source),
-          period,
-        });
       }
-      if (matched.length !== segments.length) {
-        continue;
-      }
-      const first = matched[0];
-      if (!first) {
-        continue;
-      }
-      committed.set(rowKey, {
-        ...first,
-        removals:
-          matched.length > 1
-            ? matched.map((match) => ({
-                registerVariant: match.registerVariant,
-                variable: match.variable,
-                representation: match.representation,
-              }))
-            : undefined,
-      });
     }
   }
   return committed;
@@ -437,18 +372,13 @@ export function sourcePeriodsFromDraft(
   return out;
 }
 
-function stagedRemoveForCommitted(
-  committed: PickerCommittedRow,
-): StagedRemove[] {
-  return committed.removals && committed.removals.length > 0
-    ? committed.removals
-    : [
-        {
-          registerVariant: committed.registerVariant,
-          variable: committed.variable,
-          representation: committed.representation,
-        },
-      ];
+function stagedRemoveForCommitted(committed: PickerCommittedRow): StagedRemove {
+  return {
+    registerVariant: committed.registerVariant,
+    members: committed.members,
+    variable: committed.variable,
+    representation: committed.representation,
+  };
 }
 
 export function nullBindingCommittedRowKeys(
@@ -497,34 +427,33 @@ function finalAddPeriodWires(
   adds: readonly PickerAddPeriod[],
 ): string[] | null {
   const sources = [...existing];
+  const keyOf = familySourceKeys(sources, adds);
   const scopes = new Map(
     sources.map((source) => [
       source.registerVariant,
       sourcePeriodToWire(source.period),
     ]),
   );
-  for (const add of adds) {
+  for (const [i, add] of adds.entries()) {
     const incoming = sourcePeriodToWire(add.period);
-    const current = scopes.get(add.registerVariant);
+    const current = scopes.get(keyOf[i]);
     if (
       incoming &&
       current &&
       (incoming === "_default") !== (current === "_default")
     )
       return null;
-    if (incoming) scopes.set(add.registerVariant, incoming);
+    if (incoming) scopes.set(keyOf[i], incoming);
   }
-  const periods = finalSourcePeriodsForStagedAdds(sources, adds);
+  const periods = finalSourcePeriods(sources, adds, keyOf);
   const wires: string[] = [];
-  for (const add of adds) {
+  for (const [i, add] of adds.entries()) {
     // An add resolves its binding fields (type, value set) at its own period,
     // the years picked, not every year its source orders; a period-less one at
     // its source's period, as the batch leaves it.
     // That final source period must be one reg-core accepts too (`2099` and
     // `LA2099` union to overlapping members), or the commit would author it.
-    const scope = sourcePeriodToWire(
-      periods.get(add.registerVariant) ?? add.period,
-    );
+    const scope = sourcePeriodToWire(periods.get(keyOf[i]) ?? add.period);
     if (scope === null || !periodWireValid(scope)) {
       return null;
     }
@@ -543,9 +472,30 @@ function finalAddPeriodWires(
   return wires;
 }
 
-export function finalSourcePeriodsForStagedAdds(
+/** For each add, in order, the `register_variant` of the source the store's
+ * find-or-create will land it in (#1840): the first source — existing, or minted
+ * by an earlier add of the batch — that names a member of its family, else its
+ * own coordinate (the family head). */
+function familySourceKeys(
+  existing: readonly PickerSourcePeriod[],
+  adds: readonly PickerAddPeriod[],
+): string[] {
+  const keys = existing.map((source) => source.registerVariant);
+  return adds.map((add) => {
+    const family = new Set([add.registerVariant, ...(add.members ?? [])]);
+    const found = keys.find((key) => family.has(key));
+    if (found !== undefined) return found;
+    keys.push(add.registerVariant);
+    return add.registerVariant;
+  });
+}
+
+/** Each family source's period once the batch is applied, by the source key
+ * `familySourceKeys` gave its adds: the union of what it holds and every add. */
+function finalSourcePeriods(
   existing: Iterable<PickerSourcePeriod>,
   adds: readonly PickerAddPeriod[],
+  keyOf: readonly string[],
 ): Map<string, ProjectSourcePeriod> {
   const periods = new Map<string, ProjectSourcePeriod>();
   for (const source of existing) {
@@ -553,10 +503,10 @@ export function finalSourcePeriodsForStagedAdds(
       periods.set(source.registerVariant, source.period);
     }
   }
-  for (const add of adds) {
-    const current = periods.get(add.registerVariant);
+  for (const [i, add] of adds.entries()) {
+    const current = periods.get(keyOf[i]);
     periods.set(
-      add.registerVariant,
+      keyOf[i],
       current === undefined
         ? add.period
         : periodCoverageUnion(current, add.period),
@@ -567,8 +517,8 @@ export function finalSourcePeriodsForStagedAdds(
 
 // ── The staged add → resolve → commit stack (Y-83) ───────────────────────────
 // ONE home for what the binding leaf, the concept group and the register page all
-// do with a set of picked rows: fan each row out to its concrete register
-// variants, resolve every add's binding fields at the period it commits under, and
+// do with a set of picked rows: map each row to its family's source, resolve every
+// add's binding fields at the period it commits under, and
 // write the whole batch through `projectStore.applyStagedDiff`. It was three
 // copies of the same forty lines; the hosts now own only their own React state
 // (the confirmation / refusal lines) and their scope.
@@ -690,32 +640,22 @@ export function stagedApplyRefusal(
   return null;
 }
 
-/** One staged add, resolved down to a concrete `register_variant` + period. */
-export interface StagedAddCandidate {
+/** One staged add: a picked row's `rowAdd`, with its period parsed. */
+export interface StagedAddCandidate extends RowAdd {
   pick: StagedPick;
-  variant: string;
-  registerVariant: string;
-  periodWire: string | null;
   period: ProjectSourcePeriod;
-  outsideScope: boolean;
 }
 
-/** Fan ONE picked row out to a staged add per concrete `register_variant` its
- * active scope touches (#376) — the per-concrete-segment invariant lives in
- * `rowAddSegments`, never re-derived per host (see catalog.ts's
- * `PickerRepresentation` seam note). */
-export function stagedAddCandidates(
+/** The ONE staged add a picked row makes (#1840) — `rowAdd`, never re-derived per
+ * host (see catalog.ts's `PickerRepresentation` seam note). `variants` is the
+ * register's, for the family's full membership. */
+export function stagedAddCandidate(
   pick: StagedPick,
   scope: PickerCommitScope,
-): StagedAddCandidate[] {
-  return rowAddSegments(pick.band, pick.row, scope).map((segment) => ({
-    pick,
-    variant: segment.variant,
-    registerVariant: segment.registerVariant,
-    periodWire: segment.periodWire,
-    period: sourcePeriodFromWire(segment.periodWire),
-    outsideScope: segment.outsideScope,
-  }));
+  variants: readonly VariantModel[] = [],
+): StagedAddCandidate {
+  const add = rowAdd(pick.band, pick.row, scope, variants);
+  return { ...add, pick, period: sourcePeriodFromWire(add.periodWire) };
 }
 
 /** Resolve ONE candidate's binding fields at the period it commits under. A failed
@@ -734,13 +674,14 @@ async function stagedAdd(
     resolution = await resolveBindingAt(
       band.key,
       resolvePeriodWire,
-      candidate.variant,
+      candidate.resolveVariants,
     );
   } catch {
     resolution = { kind: "unresolved" as const, reason: "no-states" as const };
   }
   return {
     registerVariant: candidate.registerVariant,
+    members: candidate.members,
     period: candidate.period,
     binding: bindingFieldsFromResolution(
       band.key,
@@ -756,9 +697,9 @@ async function stagedAdd(
  * so what an add commits under is what the page showed. `cancelled` reports that the
  * batch no longer describes that page — the host is gone (its unmount), or
  * a control the host left usable has moved `scope` out from under it. It is asked at
- * BOTH of the awaits below (the restore gate, then the binding resolves), because a
- * pick that waits is a pick the researcher can walk away from mid-wait, and neither
- * wait may end in a commit into a page they have left behind.
+ * EACH of the awaits below (the restore gate, the register reads, then the binding
+ * resolves), because a pick that waits is a pick the researcher can walk away from
+ * mid-wait, and no wait may end in a commit into a page they have left behind.
  *
  * The replacement guard below starts HERE, when this call does. A host that reads
  * anything asynchronously between the press and this call has a window this guard
@@ -796,11 +737,32 @@ export async function applyStagedPicks(
   // project window to clip it to, has none: applying it would author `period: ""`
   // and an underivable `type: ""` onto a draft that autosaves before /project is
   // ever opened. Refuse BEFORE any mutation (a null draft is not even minted).
-  const candidates = payload.adds.flatMap((pick) =>
-    stagedAddCandidates(pick, {
-      ...ctx.scope,
-      studyWindow: ctx.studyWindow ?? null,
-    }),
+  // A dated add must find its family's source at ANY member, including one
+  // that does not deliver the column (#1840): a row knows only the members that
+  // do, so the register read names the rest. One read per register per session
+  // (`registerRead`'s cache, which every source card and register page shares);
+  // a cold one is awaited, never guessed past. A failed read leaves the row's own
+  // members.
+  const registers = [
+    ...new Set(
+      payload.adds
+        .filter((pick) => pick.row.period_scope !== "year_independent")
+        .map((pick) => pick.band.registerPrefix),
+    ),
+  ];
+  const reads = await Promise.all(registers.map(settledRegisterRead));
+  if (ctx.cancelled() || projectStore.replacementGeneration !== stagedAgainst) {
+    return { kind: "abandoned" };
+  }
+  const variantsOf = new Map(
+    registers.map((register, i) => [register, reads[i]?.variants ?? []]),
+  );
+  const candidates = payload.adds.map((pick) =>
+    stagedAddCandidate(
+      pick,
+      ctx.scope,
+      variantsOf.get(pick.band.registerPrefix),
+    ),
   );
   // A column with NO years inside the add window has no overlap to persist: the
   // common study window blocks it rather than inventing a period (reg_webapp/
@@ -862,7 +824,7 @@ export async function applyStagedPicks(
       steward: ctx.seed.steward,
     });
   }
-  const removes = payload.removes.flatMap((r) =>
+  const removes = payload.removes.map((r) =>
     stagedRemoveForCommitted(r.committed),
   );
   if (!projectStore.applyStagedDiff({ adds, removes })) {

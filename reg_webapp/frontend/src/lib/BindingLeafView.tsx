@@ -381,13 +381,8 @@ export function BindingLeafView({
   );
   const draft = useProject((store) => store.draft);
   const committedRows = useMemo(
-    () =>
-      committedPickerRows(draft, pickerBands, {
-        period: activePeriod,
-        window: pickerWindow,
-        studyWindow: projectWindow,
-      }),
-    [draft, pickerBands, activePeriod, pickerWindow, projectWindow],
+    () => committedPickerRows(draft, pickerBands),
+    [draft, pickerBands],
   );
 
   // The last Apply's outcome and refusal, each tagged with what it was made

@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: eleven scenarios (three /project
-// error+retry, two /project period, five catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: twelve scenarios (three /project
+// error+retry, two /project period, six catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// eleven.
+// twelve.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,14 +148,14 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
-// Eleven scenarios × four viewports = 44 cases, each in a FRESH context against
+// Twelve scenarios × four viewports = 48 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
-// exactly one failing request and the other eight inject none: everything else
+// exactly one failing request and the other nine inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 72 PNGs. A bare `<out-dir>` runs all eleven scenarios;
+// These write 76 PNGs. A bare `<out-dir>` runs all twelve scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -657,6 +657,36 @@ async function catalogDraftCase(page, counts, shoot) {
   await checkValid(projectUi(page), "the recovered project must validate clean");
   check(counts.order === 0, `the draft flow POSTed /order ${counts.order} time(s)`);
   await shoot("project-restored");
+}
+
+/** A pick across a succession boundary (#1840). `scb/lisa/dispinkfam04` is
+ * delivered by `familj-16plus` to 2009 and by its successor `familj-15plus` from
+ * 2010 (the webapp-dev fixture's one curated variant edge, on variants of their own
+ * so the members' days stay disjoint), so a pick over 2008–2012 reaches a year of
+ * each. It must land as ONE source at the
+ * family head over 2008–2012, with a resolved type — not a 16+ source and a 15+
+ * source — and /project must show it as one block. */
+async function catalogVariantFamilyCase(page, _counts, shoot) {
+  const green = validated(page);
+  await addColumn(page, "DispInkFam04");
+  await green;
+  await settled(page);
+  await page.getByRole("status").filter({ hasText: "Applied +1 column" }).waitFor();
+  const stored = await draftSaved(
+    page,
+    ['scb/lisa/familj-15plus {"from":2008,"to":2012}'],
+    (s) => `${s.register_variant} ${JSON.stringify(s.period)}`,
+  );
+  const type = stored.sources[0].bindings[0]?.type;
+  check(type !== "" && type !== undefined, `the family pick wrote type ${JSON.stringify(type)}`);
+
+  await open(page, "/project");
+  await settled(page);
+  await sourceCards(page, 1);
+  // Headed by the register and the FAMILY's label, never a member's.
+  await page.getByText("Familjer", { exact: true }).first().waitFor();
+  await checkValid(projectUi(page), "the family source must validate clean");
+  await shoot("project-variant-family");
 }
 
 /** Scenario 5 — the pick with NO period. Ordinary browsing reaches a leaf without a
@@ -1323,6 +1353,13 @@ try {
       shots: 2,
       route: "/catalog/scb/lisa/kon",
       run: catalogPeriodRequiredCase,
+    },
+    // A pick across a variant succession boundary, on the leaf at a period that
+    // reaches both members.
+    "catalog-variant-family": {
+      shots: 1,
+      route: "/catalog/scb/lisa/dispinkfam04?period=2008..2012",
+      run: catalogVariantFamilyCase,
     },
     // The browse search on a register page, and the narrow way back to the
     // register list.

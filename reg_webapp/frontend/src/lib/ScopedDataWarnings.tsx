@@ -9,6 +9,9 @@ interface Props {
   fqid: string;
   period?: string | null;
   variant?: string | null;
+  /** Several variants in place of `variant`: a family source's members (#1840),
+   * whose warnings are read per member and merged, each once. */
+  variants?: readonly string[];
   representation?: string | null;
   registerOnly?: boolean;
   framed?: boolean;
@@ -26,22 +29,38 @@ export function ScopedDataWarnings({
   fqid,
   period = null,
   variant = null,
+  variants,
   representation = null,
   registerOnly = false,
   framed = true,
   collapsed = false,
 }: Props) {
+  const scoped = variants && variants.length > 0 ? variants : [variant];
   const resource = useAsyncResource(
     fqid
-      ? JSON.stringify([fqid, period, variant, representation, registerOnly])
+      ? JSON.stringify([fqid, period, scoped, representation, registerOnly])
       : null,
-    () =>
-      getWarnings(fqid, {
-        period,
-        variant,
-        representation,
-        unassigned_only: registerOnly,
-      }),
+    async () => {
+      const read = (v: string | null) =>
+        getWarnings(fqid, {
+          period,
+          variant: v,
+          representation,
+          unassigned_only: registerOnly,
+        });
+      if (scoped.length === 1) return read(scoped[0]);
+      // simplify: one read per member; families have two members today. Give
+      // `warnings` a variant list if a family ever grows past a handful.
+      const merged = new Map(
+        (await Promise.all(scoped.map(read)))
+          .flat()
+          .map((w) => [w.warning_id, w]),
+      );
+      // Code-point order, as one read orders them.
+      return [...merged.values()].sort((a, b) =>
+        a.warning_id < b.warning_id ? -1 : a.warning_id > b.warning_id ? 1 : 0,
+      );
+    },
   );
   if (!fqid) return null;
   if (resource.loading) {

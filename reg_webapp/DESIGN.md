@@ -362,28 +362,30 @@ variable pages to add one column each.
 - **The tick grain is the column NAME the list shows** (`catalog.ts`
   `deliveryColumnRows`); the COMMIT grain is the variable's own picker row. A tick names
   a column, an Add maps that name onto the rows the variable's own page builds
-  (`deliveryColumnRows` → `rowCoversColumn`), and `rowAddSegments` fans each of those
-  out to ONE staged add per *(variable, concrete `register_variant`, column)* — the same
-  per-concrete-segment fan-out (#376) the variable page performs. So the file a tick
-  authors is the file that page authors. The chip lens rides along, and it is CAPTURED
-  WHEN THE COLUMN IS TICKED: a tick stores the concrete variants the list showed that
-  column under, and an Add stages the intersection of those with the variants on screen
-  when it is pressed, staging only the rows those variants deliver — the part a
-  `?variant` modifier plays on the variable's own page (`narrowStatesByModifier`). The
-  capture is the load-bearing half. The lens is live and a tick is not, so reading the
-  lens at Add time instead would let a lens lifted in between widen the tick to a
-  variant the researcher never saw, and a lens moved to another variant swap the tick
-  silently onto that one. Bounded by both pages, a tick can never author a variant the
-  researcher filtered away, in either direction: one the lens has moved off reads as
-  UNTICKED and adds nothing until the lens that made it comes back — or until it is
-  ticked again, which re-captures under what is on screen now. The capture is PER COLUMN
-  and stays that way through the commit: ONE sweep (`stagedBatch`) meets each ticked
-  name with the rows that deliver it, and a row joins a tick only where that tick's own
-  captured variants cover it. Two columns of one variable ticked under different lenses
-  must not pool their variants, because rows are matched to columns by NAME
-  (`rowCoversColumn`) and both names usually exist in both variants — a pooled set would
-  stage each column under the other's variants and quietly author four adds where the
-  researcher made two.
+  (`deliveryColumnRows` → `rowCoversColumn`), and `rowAdd` turns each of those into ONE
+  staged add that lands in its variant family's source (#1840), as the variable page's
+  adds do. The list's rows stay one per concrete variant (its deliveries carry no
+  family), so `deliveryColumnRows` tags each dated row with its family head from the
+  register's own `variants`; two variants of one family delivering a name are two adds
+  into one source. So the file a tick authors is the file that page authors. The chip
+  lens rides along, and it is CAPTURED WHEN THE COLUMN IS TICKED: a tick stores the
+  concrete variants the list showed that column under, and an Add stages the
+  intersection of those with the variants on screen when it is pressed, staging only the
+  rows those variants deliver — the part a `?variant` modifier plays on the variable's
+  own page (`narrowStatesByModifier`). The capture is the load-bearing half. The lens is
+  live and a tick is not, so reading the lens at Add time instead would let a lens
+  lifted in between widen the tick to a variant the researcher never saw, and a lens
+  moved to another variant swap the tick silently onto that one. Bounded by both pages,
+  a tick can never author a variant the researcher filtered away, in either direction:
+  one the lens has moved off reads as UNTICKED and adds nothing until the lens that made
+  it comes back — or until it is ticked again, which re-captures under what is on screen
+  now. The capture is PER COLUMN and stays that way through the commit: ONE sweep
+  (`stagedBatch`) meets each ticked name with the rows that deliver it, and a row joins
+  a tick only where that tick's own captured variants cover it. Two columns of one
+  variable ticked under different lenses must not pool their variants, because rows are
+  matched to columns by NAME (`rowCoversColumn`) and both names usually exist in both
+  variants — a pooled set would stage each column under the other's variants and quietly
+  author four adds where the researcher made two.
 - **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
   committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.tsx` is the
@@ -888,8 +890,8 @@ kind:
   subject-page picker lists concrete variant + delivery-column rows over the full state
   history and stages row adds/removes until the footer applies one project diff (#995).
   A pure time-sequential succession (one variant retiring into the next) is NOT a choice
-  — it auto-splits into one source per segment — so the selector is invisible for an
-  unambiguous variable.
+  — the family folds into one row and one source (#1840) — so the selector is invisible
+  for an unambiguous variable.
 
 - **Classification** — editions (`sun1996` → `sun2000` → …) are the slice. The
   `ClassificationEditionGraph` (#906) renders the `/graph` succession chain as a compact
@@ -1421,29 +1423,31 @@ a `representation` only where a pick had to choose between co-existing columns �
 words a researcher recognizes are READ from the catalog (Y-80). A source card is HEADED
 by its register in the catalog's own spelling ("LISA", "MiDAS" — never the slug
 uppercased), with the variant that names the population on its own line under the
-heading: the title is COMPOSED in markup, never strung into one `A · B · C` line, which
-frontend/DESIGN.md rules out. A `_default` variant names no population, so the register
-heads the card alone. The owning PROVIDER is not part of that title — it is an attribute
-of the register rather than something the researcher picked, and a second unlabelled
-line under the heading could not be told from the variant — so it heads the card's
-`KeyValue` metadata rows, labelled, and only where the deployment serves more than one
-provider: a fact `App.tsx` reads ONCE and threads down like `steward`. The removal
-dialog and the delete button's accessible name say the same thing as SENTENCES ("Remove
-the LISA source (Individer, 16 år och äldre) and its 2 columns?") rather than reciting
-the heading block. The coordinate itself stays on the card, in small mono. A column row
-leads with the delivery column it orders: an explicit `display_name` first (reg-core
-makes it the binding's OUTPUT column name, so it wins even over a pinned
-`representation`), then the pinned `representation`, otherwise the name resolved from
-the catalog at THAT source's `(variant, period)` — where a column was renamed inside the
-period the current name leads and the superseded ones trail it in mono. Every such read
-goes through `catalog_names.ts`, a module-singleton cache keyed per read (the catalog
-root; one per provider, which names every register it owns; one per register's variant
-list; one per `(fqid, period, variant)`), so a hundred-column cart issues each request
-once and a re-render issues none; the browse tree reads the root through it too. A read
-in flight or a failed one — the root among them, since it is what says whether a
-register name needs its provider — leaves the row showing the coordinate it already
-holds: a machine coordinate is honest where an invented name is not. Nothing read is
-ever written back into the draft.
+heading — for a variant in a succession family, the FAMILY's label ("Individer",
+`variant_family_label`), never a member's, since a dated source reaches every member
+(#1840) and the members stay invisible: the title is COMPOSED in markup, never strung
+into one `A · B · C` line, which frontend/DESIGN.md rules out. A `_default` variant
+names no population, so the register heads the card alone. The owning PROVIDER is not
+part of that title — it is an attribute of the register rather than something the
+researcher picked, and a second unlabelled line under the heading could not be told from
+the variant — so it heads the card's `KeyValue` metadata rows, labelled, and only where
+the deployment serves more than one provider: a fact `App.tsx` reads ONCE and threads
+down like `steward`. The removal dialog and the delete button's accessible name say the
+same thing as SENTENCES ("Remove the LISA source (Individer, 16 år och äldre) and its 2
+columns?") rather than reciting the heading block. The coordinate itself stays on the
+card, in small mono. A column row leads with the delivery column it orders: an explicit
+`display_name` first (reg-core makes it the binding's OUTPUT column name, so it wins
+even over a pinned `representation`), then the pinned `representation`, otherwise the
+name resolved from the catalog at THAT source's `(variant family, period)` — where a
+column was renamed inside the period the current name leads and the superseded ones
+trail it in mono. Every such read goes through `catalog_names.ts`, a module-singleton
+cache keyed per read (the catalog root; one per provider, which names every register it
+owns; one per register's variant list; one per `(fqid, period, variants)`), so a
+hundred-column cart issues each request once and a re-render issues none; the browse
+tree reads the root through it too. A read in flight or a failed one — the root among
+them, since it is what says whether a register name needs its provider — leaves the row
+showing the coordinate it already holds: a machine coordinate is honest where an
+invented name is not. Nothing read is ever written back into the draft.
 
 Every field is **written once, at pick time**: the subject-page picker stages concrete
 `(period, variant, representation)` rows with final `type` / `representation`, then
@@ -1487,30 +1491,52 @@ The commit primitive is `applyStagedDiff({adds, removes, periodChange})` — the
 browse-and-stage flow accumulates a user's picks/removes as a diff and commits it in
 **one atomic synchronous store mutation**, so autosave and the stable-id mirror fire/
 rebuild once per commit rather than once per pick (this is the write path the #995
-multi-select consumer commits through). Find-or-create for a staged add keys on
-`register_variant` **alone** — not `(register_variant, period)` — so two picks against
-the same variant land in the same source regardless of period; a disjoint window is
-folded into the existing source's period via `periodCoverageUnion` (`period.ts`) rather
-than minting a second source: the union of the days both periods request, through
-reg-core (WASM) — merged (overlapping and day-adjacent days join) into the sorted,
-disjoint #307 list form. Two year-only periods are rendered whole
-(`2005..2010,2015..2020`). Otherwise a segment whose days the merge leaves untouched
-keeps the spelling it was written in (`2020-H1` plus `2022` is `2020-H1,2022`), and only
-an interval the merge created or changed is rendered (`2019-Q1` plus `2019-Q2` is
-`VT2019`; a span no token covers is a range like `2019..2020-06-30`). When either side
-has no days to place (`_default`, or a period reg-core refuses) the incoming period
-replaces it.
+multi-select consumer commits through). Every step keys on the variant **family**
+(#1840), never on `(register_variant, period)`: a staged add or remove carries its
+family's `register_variant`s (`members`), and a source matches when its coordinate is
+any of them — any member is accepted, so a source an agent wrote at a predecessor, or
+one the head moved past after a new edge was curated, is still found. An add's members
+are the WHOLE family, a member that does not deliver the column included (else a second
+source of one family would order overlapping years): a picker row knows only the members
+that deliver it, so `applyStagedPicks` awaits the register read (`settledRegisterRead`,
+the session-cached `registerRead` every source card and register page shares) for each
+register a dated add touches. That is one register read per register per session —
+LISA's carries its whole variable list — paid on the first add from a variable page when
+no register page or source card has read it yet; a failed read falls back to the row's
+own members. A remove reaches the members of the row it removes. A new source is written
+at the family head (reg_meta's `variant_family`). A year-independent (`_default`) add
+names its variant exactly. So two picks against one family land in the same source
+regardless of period or member; a disjoint window is folded into the existing source's
+period via `periodCoverageUnion` (`period.ts`) rather than minting a second source: the
+union of the days both periods request, through reg-core (WASM) — merged (overlapping
+and day-adjacent days join) into the sorted, disjoint #307 list form. Two year-only
+periods are rendered whole (`2005..2010,2015..2020`). Otherwise a segment whose days the
+merge leaves untouched keeps the spelling it was written in (`2020-H1` plus `2022` is
+`2020-H1,2022`), and only an interval the merge created or changed is rendered
+(`2019-Q1` plus `2019-Q2` is `VT2019`; a span no token covers is a range like
+`2019..2020-06-30`). When either side has no days to place (`_default`, or a period
+reg-core refuses) the incoming period replaces it.
 
 The source period is the variant's extraction scope and every column's period (#1838):
 the order clips each column to its own years inside it, so a column is never pinned to
 years of its own. An add reaching beyond the source widens it to the union; an add
 inside it keeps the period as written. The add resolves its binding fields (type, value
 set) at its own period, the years picked (`finalAddPeriodWires`), not at every year the
-source orders. A source period edit (`periodChange`) replaces the period and touches no
-binding. `applyStagedDiff` is the SOLE catalog→project mutation path. `updateField` (the
-project's own `name` / `window`), `removeSource`/`removeBinding` and
-`applySourcePeriodEdit` are the only other mutators the cart UI calls — a source's own
-generated `name` is not editable anywhere.
+source orders, and over the family members that deliver the column (the row's
+`variantSegments`): a column only 16+ delivers has no state at the 15+ head. The runtime
+has no family flag on `states`, so `familyStates` reads the period unfiltered and keeps
+those members' states; one member is the server's own `variant` filter. Co-existing
+columns stay ambiguous across members as within one. The type comes from the HEAD-MOST
+member that delivers the column — the one whose delivery reaches latest, so the member
+the source's newest years order from (`familyTypeState`); an older member typed
+differently is the server's `binding_state_drifts_within_period`, like any drift. The
+cart resolves a column's name, its data warnings (one `warnings` read per member,
+merged), and the window relation its delivery eras, over the same family
+(`variantFamilyMembers` on the register read). A source period edit (`periodChange`)
+replaces the period and touches no binding. `applyStagedDiff` is the SOLE
+catalog→project mutation path. `updateField` (the project's own `name` / `window`),
+`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
+the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81), one From/To row per segment for a
@@ -1732,11 +1758,10 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   names the columns and the window in the picker's status row. A subject page's own
   `?period` overrides the add window, so the study window is checked as well: an add the
   page period resolves wholly outside it would author a source that blocks the order,
-  and is refused the same way (`outside-study-window`), naming the study window. A
-  folded row's variant share wholly outside the study window is left out while another
-  share overlaps it (#1834): a LISA column picked over 2004–2012 under a 1980–2005
-  window adds its 16+ years and leaves the 15+ ones out. That goes when a source spans
-  its variant family (#1840).
+  and is refused the same way (`outside-study-window`), naming the study window. A pick
+  is one add however many variants of its family deliver it (#1840), so a LISA column
+  picked over 2004–2012 under a 1980–2005 window is one source over 2004–2012, judged
+  whole (#1834).
 - **A window edit never rewrites a source period.** The slider writes `window` and
   nothing else. A source the new window leaves with no years inside it keeps its period
   and blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder`
