@@ -4,7 +4,7 @@ variants = ["iaf/kassakortsvecka/kalender"]
 
 [[table]]
 table = "IFA_KKvecka_Lev3"
-# A week calendar (kassakortsvecka -> dates, about 9,265 rows), not person data: one
+# A week calendar (kassakortsvecka -> dates), not person data: one
 # lookup with no calendar coverage, so it is year-independent (row-key follow-up to
 # #1849, 2026-10-23).
 period_scope = "year_independent"

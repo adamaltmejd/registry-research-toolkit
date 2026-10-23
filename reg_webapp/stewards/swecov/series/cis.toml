@@ -47,8 +47,8 @@ edition = 2020
 [[column]]
 column = "P1105_LopNr_PeOrgNrHe"
 tables = ["CIS2004"]
-mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/orgnr-12", representation = "PeorgNr" }]
-reason = "The firm key of CIS2004, the 2002 - 2004 wave. SCB documents it on this variant as PeorgNr, VarId 3578 Organisationsnummer 12 siffror (scb/innovation-foretag/orgnr-12); SWECOV delivers it under the pseudonymised PeOrgNrHe header. Replaces the steward-minted peorgnrhe variable, so the wave keys on the same variable as 2002 - 2018 (row-key follow-up to #1849, 2026-10-23)."
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/orgnr-12", representation = "PeorgNr", data_warning = { summary = "CIS2004 delivers its firm key as PeOrgNrHe; that it is the same unit and pseudonymisation key as PeorgNr in the other waves is inferred, not documented.", detail = "SCB documents the 2002 - 2004 wave's firm key as PeorgNr (VarId 3578, CFAR företagsenhet), but SWECOV's CIS2004 holds only P1105_LopNr_PeOrgNrHe, which SCB's delivery report lists separately from P1105_Lopnr_PeOrgNr. Elsewhere SCB uses PeOrgNrHe for the reporting unit (ISEN redovisningsenheten). Whether CIS2004's values are the same unit and masked with the same key as the PeorgNr of 2002 and 2006 - 2018 is not established, so joins across waves on this key are unverified.", window = { from = 2004, to = 2004 } } }]
+reason = "Inferred, not documented: the only firm key in CIS2004, the 2002 - 2004 wave, for which SCB documents the firm key as PeorgNr (VarId 3578, Organisationsnummer 12 siffror, scb/innovation-foretag/orgnr-12). SCB's delivery report lists the delivered P1105_LopNr_PeOrgNrHe separately from P1105_Lopnr_PeOrgNr, so the mapping carries a data warning; the FEK fold of PeOrgNr and PeorgnrHe (fek.toml 168.56) is the precedent. Replaces the steward-minted peorgnrhe variable, so the wave keys on the same variable as 2002 - 2018 (row-key follow-up to #1849, 2026-10-23)."
 
 [[column]]
 column = "CLIM_CUST"

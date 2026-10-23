@@ -717,9 +717,10 @@ note = "FRIDA firm key resumes delivery as borgnr from 2018 in the punktskatter-
 #    CIS 2002–2018 deliver the firm key as VarId 3578 "Organisationsnummer 12
 #    siffror" (CFAR företagsenhet, column PeorgNr); the 2020–2022 wave delivers it
 #    as VarId 1839 "Organisationsnummer" (myndighetens eller företagets, column
-#    Peorgnr). Never co-delivered. A re-minted VarId with its own definition is a
-#    different variable, so the continuation is a variable-grain edge; the CIS
-#    variant keys on both (row-key follow-up to #1849, 2026-10-23).
+#    Peorgnr). Never co-delivered. A concept SCB re-mints under a new VarId, here
+#    with its own definition, is a different variable, so the continuation is a
+#    variable-grain edge; the CIS variant keys on both (row-key follow-up to #1849,
+#    2026-10-23).
 [[edge]]
 type = "replaced_by"
 from = "scb/innovation-foretag/orgnr-12"
