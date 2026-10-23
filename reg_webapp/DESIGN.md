@@ -1333,19 +1333,23 @@ artifact's own identity, and a `scope` parameter is `invalid_parameter`.
   REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`), which the SPA
   banners apart from the issue list.
 - **`POST /api/project/order`** answers `{data: manifest, meta}`;
-  **`POST /api/project/order/manifest`** serves the same manifest as the exact
-  `order.json` bytes, `attachment; filename="order.json"`. The SPA's Download order.json
-  uses the download. Anything that is NOT an order is a 422 on both routes, never a
-  partial manifest: `project_invalid` for a document `validate` rejects structurally
-  (its issues in `fields.issues`), `order_blocked` when any finding leaves part of the
-  request undeliverable (every finding in `fields.findings`, each with its stable `code`
-  and its `source` / `variable` / `period` coordinates). Fail-closed is a contract, so
-  the findings ship as data: `orderFindingsFromError` narrows them at the HTTP boundary,
-  and the SPA renders each through the SAME per-finding path as a validation issue
-  (`ValidationPanel`; `validation.orderFindingPointer` resolves the materializer's
-  by-VALUE coordinates to the by-POSITION pointer `findingLocation` already locates a
-  card by). The finding shape is declared in `api.ts` (the error catalog types `fields`
-  as an open object) and pinned by `conformance/cases/api/order-errors`.
+  **`POST /api/project/order/manifest`** serves the same manifest as the exact manifest
+  bytes, an attachment named `order_<slug>_<YYYY-MM-DD>.json`: the project name folded
+  to ASCII lowercase (å→a, é→e), other runs `-`, at most 60 characters, then the
+  server's UTC date. The server owns the name (the SPA saves under the
+  `Content-Disposition` filename), so a file emailed to the coordinator says which
+  project and day. The SPA's Download order uses the download. Anything that is NOT an
+  order is a 422 on both routes, never a partial manifest: `project_invalid` for a
+  document `validate` rejects structurally (its issues in `fields.issues`),
+  `order_blocked` when any finding leaves part of the request undeliverable (every
+  finding in `fields.findings`, each with its stable `code` and its `source` /
+  `variable` / `period` coordinates). Fail-closed is a contract, so the findings ship as
+  data: `orderFindingsFromError` narrows them at the HTTP boundary, and the SPA renders
+  each through the SAME per-finding path as a validation issue (`ValidationPanel`;
+  `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
+  the by-POSITION pointer `findingLocation` already locates a card by). The finding
+  shape is declared in `api.ts` (the error catalog types `fields` as an open object) and
+  pinned by `conformance/cases/api/order-errors`.
 
 The order pipeline and its findings are `ops/order.rs` (see `crates/DESIGN.md` → Order
 manifest): steward holdings on a steward artifact, canonical columns on the global one.
@@ -1390,12 +1394,12 @@ of its own but a source's **period** (Y-81, below; set directly or by the window
 action) and the project's name. `ProjectEditor` / `SourceEditor` / `BindingEditor`
 display each source's variant coordinate, period, and bindings (variable, pinned
 representation) and offer only delete-per-row, that period, the project's own name, and
-the New/Open/Download project_data.json/Download order.json actions — validation runs
+the New/Open/Download project_data.json/Download order actions — validation runs
 automatically on every edit, with no separate Validate action. A wrong variable, variant
 or representation gets fixed by picking again from the catalog subject page, not by
 editing the cart row; there is no general in-cart editing UI. A blank name closes
-Download order.json (`projectStore.nameBlocked`), with a visible reason under the
-toolbar that points to the name field: the server refuses an unnamed project's order as
+Download order (`projectStore.nameBlocked`), with a visible reason under the toolbar
+that points to the name field: the server refuses an unnamed project's order as
 `project_unnamed`, and the SPA gate only spares the round trip.
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
@@ -1779,7 +1783,7 @@ orientation map. Read GETs are edge-cacheable, write POSTs are not.
   | GET    | `/api/docs/file/{ref}/{filename}`    | Rust   | One rehosted source PDF's bytes.                                                                                          |
   | POST   | `/api/project/validate`              | Rust   | `validate`: 200 + `ok` + issues, an invalid project included.                                                             |
   | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
-  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact `order.json` bytes, an attachment (the SPA's download).                                    |
+  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact bytes, an attachment named `order_<slug>_<date>.json` (the SPA's download).                |
 
 ## Input-validation gates (security boundary)
 

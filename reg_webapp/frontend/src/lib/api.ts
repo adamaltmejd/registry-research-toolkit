@@ -160,8 +160,8 @@ export async function apiPostForBlob(
 
 /** Parse the `filename="..."` out of a `Content-Disposition` header, or `null`
  * when absent/unparseable. Only the simple quoted form the backend emits
- * (`attachment; filename="order.json"`) is handled — that's all the contract
- * produces. */
+ * (`attachment; filename="order_<slug>_<date>.json"`, ASCII) is handled — that's all the contract
+ * produces; the server alone names the file. */
 function filenameFromContentDisposition(header: string | null): string | null {
   if (!header) {
     return null;
@@ -583,7 +583,7 @@ export async function validateProject(
 export type OrderBlocking = RustSchemas["OrderBlocking"];
 
 /** POST a draft to `/api/project/order/manifest` and download the order
- * manifest: the exact `order.json` bytes, the same document `order` answers.
+ * manifest: the exact manifest bytes, the same document `order` answers.
  * Anything that is NOT an order is an `ApiError`: `order_blocked` carrying its
  * findings, or `project_invalid` for a document `validate` rejects structurally
  * — never a partial download. */

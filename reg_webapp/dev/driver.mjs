@@ -380,7 +380,7 @@ function projectUi(page) {
       .locator(':scope > span:not([aria-hidden="true"])'),
     // The CTA's accessible name IS "Downloading…" while the order POST is in
     // flight, so this locator resolving is itself the cleared-busy wait.
-    download: page.getByRole("button", { name: "Download order.json" }),
+    download: page.getByRole("button", { name: "Download order" }),
     retryDownload: panel.getByRole("button", { name: "Retry download" }),
     retryValidation: panel.getByRole("button", { name: "Retry validation" }),
   };
@@ -404,7 +404,7 @@ async function blockedOrderCase(page, counts, shoot) {
   // the button's description, before any order POST. Fails if the gate ignores
   // the name or the reason lives only in a tooltip.
   check(await ui.download.isDisabled(), "an unnamed project must not offer the download");
-  const reason = page.getByText("Name the project to download order.json.");
+  const reason = page.getByText("Name the project to download the order.");
   check(await reason.isVisible(), "the unnamed-project reason must be visible text");
   const describedBy = await ui.download.getAttribute("aria-describedby");
   check(
@@ -503,8 +503,8 @@ async function orderRetryCase(page, counts, shoot, project, expected) {
   ]);
   check(response.status() === 200, `retried order answered ${response.status()}`);
   check(
-    download.suggestedFilename() === "order.json",
-    `downloaded ${download.suggestedFilename()}, wanted order.json`,
+    /^order_[a-z0-9-]+_\d{4}-\d{2}-\d{2}\.json$/.test(download.suggestedFilename()),
+    `downloaded ${download.suggestedFilename()}, wanted order_<slug>_<date>.json`,
   );
   const manifest = JSON.parse(readFileSync(await download.path(), "utf8"));
   check(

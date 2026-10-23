@@ -38,7 +38,7 @@ pub const OPERATIONS: &[Operation] = &[
 
 pub const DOWNLOADS: &[Download] = &[Download {
     path: "/api/project/order/manifest",
-    description: "`order`'s manifest as the exact `order.json` bytes, an attachment.",
+    description: "`order`'s manifest as the exact manifest bytes, an attachment named `order_<project slug>_<UTC date>.json`.",
     media_type: "application/json",
     params: &[Param::required("project", Type::Project)],
     // simplify: unused, a body download is answered uncached, as a body operation.

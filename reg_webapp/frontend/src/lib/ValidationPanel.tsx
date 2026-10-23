@@ -328,7 +328,7 @@ export function ValidationPanel({
               already something to read, outside the live region. */}
           {status === "warnings" && (
             <p className="muted">
-              Generating <code>order.json</code> runs its own order checks.
+              Generating the order runs its own order checks.
             </p>
           )}
         </>

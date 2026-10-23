@@ -270,7 +270,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description `order`'s manifest as the exact `order.json` bytes, an attachment. */
+        /** @description `order`'s manifest as the exact manifest bytes, an attachment named `order_<project slug>_<UTC date>.json`. */
         post: {
             parameters: {
                 query?: never;
