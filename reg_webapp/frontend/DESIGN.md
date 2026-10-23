@@ -429,7 +429,7 @@ Time is the axis every relation is drawn on.
   compose the same classes (`ui/WindowBand.module.css`), and a new period selector does
   too. On a coverage row (the add window, a source period) the two thumbs never sit
   closer than 16 px: a short window on a long axis pushes their faces apart to that
-  distance, so a one-year window keeps both visible and grabbable, while the window's
+  distance, all of it inward at an end of the axis so both faces stay on the row, so a one-year window keeps both visible and grabbable, while the window's
   years and its band stay where they are (maintainer ruling 2026-10-23).
 - The **add window** is a variable page's band: the years the columns ticked there are
   added for (#1838). On a variable page the `Timeline`'s band is a selection, two thumbs
@@ -454,8 +454,10 @@ Time is the axis every relation is drawn on.
   tooltip, never a lane, so variants stay out of sight. A comma-list period rests the
   thumbs on its outer years and a line under the drawing says a move makes it one span;
   a term period is shown as text. Every source card shares the page's one axis. The
-  lanes are the card's columns: no list repeats them under the drawing, and a column
-  leaves the project from its variable page (maintainer ruling 2026-10-23).
+  lanes are the card's columns: no list repeats them under the drawing (maintainer
+  ruling 2026-10-23). Each lane's name carries a quiet ghost "Remove", named "Remove
+  <column> from <source>", that asks first in a `Dialog` whose answer is the `danger`
+  button and takes the column out of that one source.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those

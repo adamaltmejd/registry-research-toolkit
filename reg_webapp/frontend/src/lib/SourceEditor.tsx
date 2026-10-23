@@ -102,6 +102,23 @@ function focusAfterSourceRemoval(index: number): void {
   ]);
 }
 
+/** After one column leaves a source, focus moves to the lane remove action
+ * that took its place, else the one before it, else the source's heading:
+ * never to `<body>`. */
+function focusAfterColumnRemoval(
+  sourceIndex: number,
+  bindingIndex: number,
+): void {
+  const card = () => document.getElementById(sourceAnchorId(sourceIndex));
+  const action = (i: number) =>
+    card()?.querySelectorAll<HTMLElement>("[data-lane-remove] button")[i];
+  focusAfterRemoval([
+    () => action(bindingIndex),
+    () => (bindingIndex > 0 ? action(bindingIndex - 1) : null),
+    () => card()?.querySelector("h3"),
+  ]);
+}
+
 const readUnasked = () => UNASKED;
 
 export function SourceEditor({
@@ -207,6 +224,13 @@ export function SourceEditor({
 
   /** The thumbs mid-drag (and through the write that follows); null at rest. */
   const [dragging, setDragging] = useState<ProjectStudyWindow | null>(null);
+  /** The column a lane's Remove asks about. It outlives the dialog's close,
+   * so the closing dialog keeps its words. */
+  const [removingColumn, setRemovingColumn] = useState({
+    index: -1,
+    label: "",
+  });
+  const [columnRemoveOpen, setColumnRemoveOpen] = useState(false);
   /** The last write was refused because the SOURCE moved under the edit. */
   const [writeRefused, setWriteRefused] = useState(false);
   /** A write is in flight — from the rest that found something to write until
@@ -314,18 +338,41 @@ export function SourceEditor({
       register.value?.children
         .find((child) => child.fqid === variable)
         ?.name?.trim() || variable;
+    const columns = register.value
+      ? bindingSpans(register.value, binding, familyVariants, vintageYear)
+      : [];
+    // What the remove action calls this column: the name the file gives it,
+    // else the delivered one, else its FQID. A variable the catalog does not
+    // know has no delivered name, and must still be removable (it blocks the
+    // order, and nothing on its catalog page can untick it).
+    const fileColumn =
+      (typeof binding.display_name === "string" && binding.display_name) ||
+      (typeof binding.representation === "string" && binding.representation);
+    const columnLabel =
+      fileColumn || columns[0]?.column || variable || "this column";
     lanes.push({
       id,
       name: variableName || "(no variable)",
       href: variable ? catalogHref(variable) : null,
+      // Removes this binding from THIS source only: a same-family source that
+      // carries the column keeps it. Never disabled: a register read that
+      // failed must not trap a column in the project.
+      action: (
+        <span data-lane-remove="">
+          <Button
+            variant="ghost"
+            aria-label={`Remove ${columnLabel} from ${sourceName}`}
+            onPress={() => {
+              setRemovingColumn({ index: j, label: columnLabel });
+              setColumnRemoveOpen(true);
+            }}
+          >
+            Remove
+          </Button>
+        </span>
+      ),
     });
-    if (!register.value) return;
-    for (const column of bindingSpans(
-      register.value,
-      binding,
-      familyVariants,
-      vintageYear,
-    )) {
+    for (const column of columns) {
       const years = yearWindowLabel(column);
       const outside =
         periodRuns.length > 0 &&
@@ -453,6 +500,31 @@ export function SourceEditor({
       >
         The source leaves this project with every column it carries. Pick them
         again in the catalog to bring them back.
+      </ConfirmDialog>
+
+      <ConfirmDialog
+        isOpen={columnRemoveOpen}
+        onOpenChange={setColumnRemoveOpen}
+        title={`Remove the column ${removingColumn.label} from ${sourceName}?`}
+        actions={
+          <>
+            <Button onPress={() => setColumnRemoveOpen(false)}>Cancel</Button>
+            <Button
+              variant="danger"
+              onPress={() => {
+                const { index } = removingColumn;
+                setColumnRemoveOpen(false);
+                projectStore.removeBinding(sourceIndex, index);
+                focusAfterColumnRemoval(sourceIndex, index);
+              }}
+            >
+              Remove column
+            </Button>
+          </>
+        }
+      >
+        The column leaves this source only. Pick it again in the catalog to
+        bring it back.
       </ConfirmDialog>
 
       {sourceMalformed ? (

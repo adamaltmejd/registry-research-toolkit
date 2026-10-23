@@ -1417,11 +1417,15 @@ surface**. `/project` is a **cart** — it shows what has been picked and author
 of its own but a source's **period** (Y-81, below; set directly or by the window-overlap
 action) and the project's name. `ProjectEditor` / `SourceEditor` display each source's
 variant coordinate, period, and its bindings as the lanes of its source timeline, and
-offer only removing a source, that period, the project's own name, and the
-New/Open/Download project_data.json/Download order actions. The columns are not listed
-again under the lanes (maintainer ruling 2026-10-23), so a single column leaves the
-project by unticking it on its variable page — validation runs automatically on every
-edit, with no separate Validate action. A wrong variable, variant or representation gets
+offer only removing a source, removing one column from one source, that period, the
+project's own name, and the New/Open/Download project_data.json/Download order actions.
+The columns are not listed again under the lanes (maintainer ruling 2026-10-23); each
+lane carries a quiet Remove that takes that binding out of that source alone, after a
+confirm. It is the only way out for a column whose FQID the catalog does not know (its
+variable page has nothing to untick), and the only per-source one where two sources of
+one variant family carry the same column (unticking on the variable page removes it from
+every source of the family) — validation runs automatically on every edit, with no
+separate Validate action. A wrong variable, variant or representation gets
 fixed by picking again from the catalog subject page, not by editing the cart row; there
 is no general in-cart editing UI. A blank name closes Download order
 (`projectStore.nameBlocked`), with a visible reason under the toolbar that points to the
@@ -1542,8 +1546,8 @@ merged), and the window relation its delivery eras, over the same family
 (`variantFamilyMembers` on the register read). A source period edit (`periodChange`)
 replaces the period and touches no binding. `applyStagedDiff` is the SOLE
 catalog→project mutation path. `updateField` (the project's own `name` / `window`),
-`removeSource` and `applySourcePeriodEdit` are the only other mutators the cart UI calls
-— a source's own generated `name` is not editable anywhere.
+`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
+the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81), on the source timeline (#1838). It is

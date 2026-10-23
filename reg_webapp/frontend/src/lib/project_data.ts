@@ -240,6 +240,39 @@ export function removeSource(draft: RawDraft, index: number): RawDraft {
   };
 }
 
+// ── Immutable binding edits ─────────────────────────────────────────────────
+
+/** Remove the binding at `bindingIndex` from the source at `sourceIndex`. */
+export function removeBinding(
+  draft: RawDraft,
+  sourceIndex: number,
+  bindingIndex: number,
+): RawDraft {
+  return updateSourceBindings(draft, sourceIndex, (bindings) =>
+    bindings.filter((_, i) => i !== bindingIndex),
+  );
+}
+
+/** Internal: apply a transform to one source's `bindings` immutably. Coerces a
+ * non-array `sources` / `bindings` to [] (the editors' doctrine) so a structural
+ * binding edit never spreads a string or throws on `.map`. */
+function updateSourceBindings(
+  draft: RawDraft,
+  sourceIndex: number,
+  fn: (bindings: ProjectBinding[]) => ProjectBinding[],
+): RawDraft {
+  return {
+    ...draft,
+    sources: sourcesArray(draft).map((s, i) => {
+      const safe = asSafeSource(s);
+      if (i !== sourceIndex || safe == null) {
+        return s;
+      }
+      return { ...safe, bindings: fn(safeSourceBindings(safe)) };
+    }),
+  };
+}
+
 /**
  * Serialize a draft to the wire JSON text the SPA posts / downloads. A stable,
  * pretty (2-space) JSON. Raw invalid keys are carried by `JSON.stringify` so an

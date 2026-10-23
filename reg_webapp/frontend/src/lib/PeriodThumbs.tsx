@@ -50,11 +50,16 @@ export function PeriodThumbs({
   // RAC places a thumb at (value − min) / (max − min) of its track; inset by
   // half a year cell each side, each thumb sits on the centre of its year.
   const trackInset = `${(0.5 / (axis[1] - axis[0] + 1)) * 100}%`;
-  // The window's share of the track, which the thumbs' minimum offset reads.
-  const span =
-    axis[1] > axis[0]
-      ? (selection.to - selection.from) / (axis[1] - axis[0])
-      : 0;
+  // The thumbs' minimum offset reads track shares: the window's, and each
+  // thumb's distance to its own end of the coverage row, which reaches half a
+  // year cell past the track.
+  const years = axis[1] - axis[0];
+  const share = (n: number) => (years > 0 ? n / years : 0);
+  const thumbVars = {
+    "--thumb-span": share(selection.to - selection.from),
+    "--thumb-before": share(selection.from - axis[0] + 0.5),
+    "--thumb-after": share(axis[1] - selection.to + 0.5),
+  };
   return (
     <Slider
       className={styles.slider}
@@ -68,7 +73,7 @@ export function PeriodThumbs({
         {
           left: trackInset,
           right: trackInset,
-          "--thumb-span": span,
+          ...thumbVars,
         } as CSSProperties
       }
       onChange={(next) => onMove(moved(next))}
