@@ -1,6 +1,7 @@
 //! `validate`: every issue of a `project_data.json` document. The supported-version decision and the
 //! structural validator (`reg-core`) run first, without the catalog; the semantic
-//! layer then resolves each source's variant and each binding in reference scope over
+//! layer then resolves each source's variant (and its succession family, for a dated
+//! period) and each binding in reference scope over
 //! the compiled states ([`emitted`]), and on a steward artifact checks each binding
 //! against the steward's holdings. An invalid project is a result (`ok: false`),
 //! never an error.
@@ -16,15 +17,16 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::project::{Binding, ProjectData, Source, StudyWindow, check};
 use reg_core::{
-    Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, gaps, intersect, merge, overlap,
-    quote, quoted_list, render,
+    Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, fold_identity, gaps, intersect,
+    merge, overlap, quote, quoted_list, render,
 };
 use rusqlite::{Connection, OptionalExtension, params};
 use serde_json::Value;
 
+use super::family::{Part, VariantFamily, variant_family};
 use super::order::held_days;
 use super::refs;
-use super::states::{Emitted, emitted, value_set, variant_id};
+use super::states::{Emitted, emitted, value_set};
 use super::{Params, Server};
 use crate::{Error, Scope};
 
@@ -101,6 +103,10 @@ pub(super) fn held_representations(
         .collect::<rusqlite::Result<_>>()?)
 }
 
+/// A resolved column of a binding: its family member, delivered spelling and
+/// canonical spelling.
+type Column = (i64, String, String);
+
 /// What a binding is resolved against: the source's period (`None`:
 /// year-independent) and the study window's days, when the project has a window.
 #[derive(Clone, Copy)]
@@ -140,7 +146,11 @@ impl Semantic<'_> {
         source: &Source,
         window: Option<&StudyWindow>,
     ) -> Result<(), Error> {
-        let variant_ok = self.register_variant(base, &source.register_variant)?;
+        let family = if self.register_variant(base, &source.register_variant)? {
+            variant_family(self.conn, &source.register_variant)?
+        } else {
+            None
+        };
         let requested = match source.period.intervals() {
             Ok(requested) => requested,
             Err(reason) => {
@@ -167,7 +177,7 @@ impl Semantic<'_> {
                 requested: requested.as_deref(),
                 window: window.as_ref(),
             };
-            let reach = self.binding(&base, source, binding, variant_ok, at)?;
+            let reach = self.binding(&base, source, binding, family.as_ref(), at)?;
             served.extend(reach.served);
             blocking.extend(reach.blocking);
         }
@@ -230,14 +240,14 @@ impl Semantic<'_> {
         Ok(false)
     }
 
-    /// Resolve one binding and report its issues; what it does inside the study
-    /// window, nothing without a window or a resolved variant.
+    /// Resolve one binding over its source's family and report its issues; what it
+    /// does inside the study window, nothing without a window or a resolved variant.
     fn binding(
         &mut self,
         base: &str,
         source: &Source,
         binding: &Binding,
-        variant_ok: bool,
+        family: Option<&VariantFamily>,
         at: Availability<'_>,
     ) -> Result<WindowReach, Error> {
         let Availability { requested, window } = at;
@@ -268,24 +278,23 @@ impl Semantic<'_> {
             return Ok(WindowReach::default());
         };
         self.hints(&path, binding, id, &slugs, requested)?;
-        // The structural validator matches the binding's register to the source's.
-        let variant = if variant_ok {
-            let slug = source.register_variant.rsplit('/').next().expect("a slug");
-            variant_id(self.conn, id, slug)?
-        } else {
-            None
-        };
+        // The structural validator matches the binding's register to the source's,
+        // so the source's family is a family of the variable's register.
         let mut reach = WindowReach::default();
-        if let Some(variant) = variant {
-            let columns = self.period(&path, source, binding, id, variant, requested)?;
+        if let Some(family) = family {
+            let columns = self.period(&path, source, binding, id, family, requested)?;
             if self.steward {
-                self.admission(&path, source, binding, id, variant, columns.as_ref())?;
+                let members = match requested {
+                    Some(requested) => family.split(requested).into_iter().map(|p| p.0).collect(),
+                    None => vec![family.named],
+                };
+                self.admission(&path, source, binding, id, &members, columns.as_deref())?;
             }
             if let Some(window) = window {
                 // simplify: a second resolution per binding on every validate with a
                 // window; fold it into the period's resolution if validate latency on
                 // the live catalog grows noticeably.
-                reach = self.window_reach(source, binding, id, variant, window)?;
+                reach = self.window_reach(source, binding, id, family, window)?;
             }
         }
         self.value_set(base, binding)?;
@@ -301,7 +310,7 @@ impl Semantic<'_> {
         source: &Source,
         binding: &Binding,
         id: i64,
-        variant: i64,
+        family: &VariantFamily,
         window: &Interval,
     ) -> Result<WindowReach, Error> {
         let pin = binding.representation.as_deref();
@@ -312,14 +321,10 @@ impl Semantic<'_> {
             binding,
             pin,
             id,
-            Some(variant),
+            Some(family),
             Some(window),
         )?;
-        let available: Vec<Interval> = resolution
-            .slices
-            .iter()
-            .map(|(lo, hi, _)| (lo.clone(), hi.clone()))
-            .collect();
+        let available: Vec<Interval> = resolution.slices.iter().map(Slice::days).collect();
         if let Some(finding) = &resolution.finding {
             // A finding that names no slices (an unresolved or unknown
             // representation) does not say which days it blocks: all of them may.
@@ -340,7 +345,7 @@ impl Semantic<'_> {
                 blocking: Vec::new(),
             });
         }
-        let held = held_days(self.conn, id, variant, &resolution.slices)?;
+        let held = held_days(self.conn, id, &resolution.slices)?;
         Ok(WindowReach {
             blocking: gaps(&merge(available), held.clone()),
             served: held,
@@ -435,27 +440,20 @@ impl Semantic<'_> {
     }
 
     /// The availability findings of [`resolve_binding`], under the validation codes;
-    /// the binding's columns (delivered spelling to canonical) unless a finding
-    /// blocks it.
+    /// the binding's columns (member, delivered spelling and canonical) unless a
+    /// finding blocks it.
     fn period(
         &mut self,
         path: &str,
         source: &Source,
         binding: &Binding,
         id: i64,
-        variant: i64,
+        family: &VariantFamily,
         requested: Option<&[Interval]>,
-    ) -> Result<Option<BTreeMap<String, String>>, Error> {
+    ) -> Result<Option<Vec<Column>>, Error> {
         let pin = binding.representation.as_deref();
-        let resolution = resolve_binding(
-            self.conn,
-            source,
-            binding,
-            pin,
-            id,
-            Some(variant),
-            requested,
-        )?;
+        let resolution =
+            resolve_binding(self.conn, source, binding, pin, id, Some(family), requested)?;
         let variable = quote(&binding.variable);
         let at = &source.register_variant;
         let period = &resolution.requested_period;
@@ -470,14 +468,17 @@ impl Semantic<'_> {
             return Ok(None);
         }
         let states = &resolution.states;
-        let columns = states
+        let mut columns: Vec<Column> = states
             .iter()
             .filter_map(|s| {
                 let column = s.emitted.delivery_column_name.clone()?;
                 let canonical = s.emitted.canonical_column.clone();
-                Some((column.clone(), canonical.unwrap_or(column)))
+                let member = s.emitted.register_variant_id;
+                Some((member, column.clone(), canonical.unwrap_or(column)))
             })
             .collect();
+        columns.sort_unstable();
+        columns.dedup();
         // A backstop the build's co-delivery curation should make unreachable: two
         // value sets delivered at one requested instant.
         let codelivered = states.iter().enumerate().any(|(i, a)| {
@@ -503,7 +504,7 @@ impl Semantic<'_> {
                     quoted_list(labels)
                 ),
             );
-        } else if states.len() > 1 {
+        } else if drifts(states) > 1 {
             self.push(
                 IssueLevel::Info,
                 "binding_state_drifts_within_period",
@@ -511,7 +512,7 @@ impl Semantic<'_> {
                 format!(
                     "column {variable} spans {} states across a transition within period \
                      {period}",
-                    states.len()
+                    drifts(states)
                 ),
             );
         }
@@ -519,18 +520,23 @@ impl Semantic<'_> {
     }
 
     /// On a steward artifact, warn when the steward holds the binding in no
-    /// representation under the source's variant, or not in one it resolves to.
-    /// Unresolved `columns` (a blocked binding) skip the representation check.
+    /// representation under any family member the period reaches (`members`), or a
+    /// column it resolves to is not held under its own member. Unresolved `columns`
+    /// (a blocked binding) skip the representation check.
     fn admission(
         &mut self,
         path: &str,
         source: &Source,
         binding: &Binding,
         id: i64,
-        variant: i64,
-        columns: Option<&BTreeMap<String, String>>,
+        members: &[i64],
+        columns: Option<&[Column]>,
     ) -> Result<(), Error> {
-        let held = held_representations(self.conn, id, variant)?;
+        let mut by_member = BTreeMap::new();
+        for &member in members {
+            by_member.insert(member, held_representations(self.conn, id, member)?);
+        }
+        let held: BTreeSet<&String> = by_member.values().flatten().collect();
         let (variable, at) = (quote(&binding.variable), &source.register_variant);
         if held.is_empty() {
             let message = format!(
@@ -541,12 +547,18 @@ impl Semantic<'_> {
             self.push(IssueLevel::Warning, code, path.to_owned(), message);
             return Ok(());
         }
-        let missing: Vec<&String> = columns
+        let mut missing: Vec<&String> = columns
             .into_iter()
             .flatten()
-            .filter(|(_, canonical)| !held.contains(*canonical))
-            .map(|(column, _)| column)
+            .filter(|(member, _, canonical)| {
+                by_member
+                    .get(member)
+                    .is_none_or(|held| !held.contains(canonical))
+            })
+            .map(|(_, column, _)| column)
             .collect();
+        missing.sort_unstable();
+        missing.dedup();
         if !missing.is_empty() {
             let listed = |columns: Vec<&String>| {
                 columns
@@ -559,7 +571,7 @@ impl Semantic<'_> {
                 "column {variable} resolves to representation {}, which this steward does \
                  not supply under {at} — available there as {} only",
                 listed(missing),
-                listed(held.iter().collect())
+                listed(held.into_iter().collect())
             );
             let code = "representation_outside_steward_catalog";
             self.push(IssueLevel::Warning, code, path.to_owned(), message);
@@ -604,6 +616,48 @@ pub(super) struct Kept {
     value_set: (Option<i64>, String),
 }
 
+/// How many states a binding spans for `binding_state_drifts_within_period`. `states`
+/// is member-contiguous ([`reach`] walks the family split member by member), and each
+/// state is compared with the one before it: within one member it always counts; the
+/// first state of the next member counts only where its canonical column (by
+/// `fold_identity`, as the order matches it) or value set differs from the previous
+/// member's last state. A member boundary is a transition only where the
+/// representation or coding changes there; a difference in any other fact (the data
+/// type) across it is not counted.
+fn drifts(states: &[Kept]) -> usize {
+    let carried = |before: &Kept, s: &Kept| {
+        before.emitted.register_variant_id != s.emitted.register_variant_id
+            && before
+                .emitted
+                .canonical_column
+                .as_deref()
+                .map(fold_identity)
+                == s.emitted.canonical_column.as_deref().map(fold_identity)
+            && before.value_set == s.value_set
+    };
+    states
+        .iter()
+        .enumerate()
+        .filter(|(i, s)| *i == 0 || !carried(&states[i - 1], s))
+        .count()
+}
+
+/// A window of constant representation: its days, its delivery column and the
+/// family member delivering it.
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub(super) struct Slice {
+    pub(super) lo: String,
+    pub(super) hi: String,
+    pub(super) column: String,
+    pub(super) variant: i64,
+}
+
+impl Slice {
+    pub(super) fn days(&self) -> Interval {
+        (self.lo.clone(), self.hi.clone())
+    }
+}
+
 /// A blocking finding of [`resolve_binding`]: today's order finding code, its
 /// message and the period it names.
 pub(super) struct Finding {
@@ -620,25 +674,27 @@ pub(super) struct Resolution {
     /// The states the request reaches, narrowed to a pinned representation, in the
     /// resolver's order.
     pub(super) states: Vec<Kept>,
-    /// The available request partitioned into `(lo, hi, delivery column)` windows of
-    /// constant representation, sorted; none when year-independent or blocked.
-    pub(super) slices: Vec<(String, String, String)>,
+    /// The available request partitioned into windows of constant representation
+    /// and member, sorted; none when year-independent or blocked.
+    pub(super) slices: Vec<Slice>,
     /// Where the binding is available, rendered, when that is less than the request.
     pub(super) clip: Option<String>,
     pub(super) finding: Option<Finding>,
 }
 
-/// Resolve `binding` (the variable `id`, at the source's register variant
-/// `variant`, none when the source names no variant of the register) inside
-/// `requested` (`None`: year-independent), narrowed to `pin`, the representation
-/// the binding pins.
+/// Resolve `binding` (the variable `id`, over the source's variant `family`, none
+/// when the source names no variant of the register) inside `requested` (`None`:
+/// year-independent, at the named variant exactly), narrowed to `pin`, the
+/// representation the binding pins. A dated request is resolved once over every
+/// member's share ([`VariantFamily::split`]): one availability clip against the
+/// whole request, and only a request no member serves blocks.
 pub(super) fn resolve_binding(
     conn: &Connection,
     source: &Source,
     binding: &Binding,
     pin: Option<&str>,
     id: i64,
-    variant: Option<i64>,
+    family: Option<&VariantFamily>,
     requested: Option<&[Interval]>,
 ) -> Result<Resolution, Error> {
     let requested_period = requested.map_or_else(|| "_default".to_owned(), render);
@@ -655,15 +711,16 @@ pub(super) fn resolve_binding(
     };
     let (variable, at) = (quote(&binding.variable), &source.register_variant);
     let Some(requested) = requested else {
-        return year_independent(conn, id, variant, pin, |code, message| {
+        return year_independent(conn, id, family.map(|f| f.named), pin, |code, message| {
             blocked(code, message, Some("_default".into()))
         });
     };
     let mut states = Vec::new();
-    let mut by_column: BTreeMap<String, Vec<Interval>> = BTreeMap::new();
+    let mut by_column: BTreeMap<(String, i64), Vec<Interval>> = BTreeMap::new();
     // What the binding is delivered as somewhere the request reaches.
     let mut offered = BTreeSet::new();
-    for (e, overlaps) in reach(conn, id, variant, requested)? {
+    let parts = family.map(|f| f.split(requested)).unwrap_or_default();
+    for (e, overlaps) in reach(conn, id, &parts)? {
         let Some(column) = e.delivery_column_name.clone() else {
             return Ok(blocked(
                 "representation_unresolved",
@@ -679,7 +736,7 @@ pub(super) fn resolve_binding(
             continue;
         }
         by_column
-            .entry(column)
+            .entry((column, e.register_variant_id))
             .or_default()
             .extend(overlaps.iter().cloned());
         let value_set = value_set(conn, id, &e)?;
@@ -709,21 +766,21 @@ pub(super) fn resolve_binding(
             ),
         });
     }
-    let mut slices: Vec<(String, String, String)> = by_column
+    let mut slices: Vec<Slice> = by_column
         .iter()
-        .flat_map(|(column, intervals)| {
+        .flat_map(|((column, variant), intervals)| {
             merge(intervals.clone())
                 .into_iter()
-                .map(move |(lo, hi)| (lo, hi, column.clone()))
+                .map(move |(lo, hi)| Slice {
+                    lo,
+                    hi,
+                    column: column.clone(),
+                    variant: *variant,
+                })
         })
         .collect();
     slices.sort_unstable();
-    let availability = merge(
-        slices
-            .iter()
-            .map(|(lo, hi, _)| (lo.clone(), hi.clone()))
-            .collect(),
-    );
+    let availability = merge(slices.iter().map(Slice::days).collect());
     let coexisting = coexisting(&slices);
     let finding = (!coexisting.is_empty()).then(|| Finding {
         code: "representation_ambiguous",
@@ -746,12 +803,12 @@ pub(super) fn resolve_binding(
 
 /// The columns whose slices overlap in time: parallel representations the binding
 /// must choose between. Distinct columns in disjoint windows are a sequential rename.
-fn coexisting(slices: &[(String, String, String)]) -> BTreeSet<&str> {
+fn coexisting(slices: &[Slice]) -> BTreeSet<&str> {
     let mut coexisting = BTreeSet::new();
-    for (i, (a_lo, a_hi, a)) in slices.iter().enumerate() {
-        for (b_lo, b_hi, b) in &slices[i + 1..] {
-            if a != b && a_lo <= b_hi && b_lo <= a_hi {
-                coexisting.extend([a.as_str(), b.as_str()]);
+    for (i, a) in slices.iter().enumerate() {
+        for b in &slices[i + 1..] {
+            if a.column != b.column && a.lo <= b.hi && b.lo <= a.hi {
+                coexisting.extend([a.column.as_str(), b.column.as_str()]);
             }
         }
     }
@@ -765,14 +822,13 @@ fn coexisting(slices: &[(String, String, String)]) -> BTreeSet<&str> {
 fn reach(
     conn: &Connection,
     id: i64,
-    variant: Option<i64>,
-    requested: &[Interval],
+    parts: &[Part],
 ) -> Result<Vec<(Emitted, Vec<Interval>)>, Error> {
     let mut reached: Vec<(Emitted, Vec<Interval>)> = Vec::new();
-    let Some(variant) = variant else {
-        return Ok(reached);
-    };
-    for segment in requested {
+    for (variant, segment) in parts
+        .iter()
+        .flat_map(|(variant, days)| days.iter().map(move |d| (*variant, d)))
+    {
         let bounds = (segment.0.as_str(), segment.1.as_str());
         for e in emitted(conn, Scope::Reference, id, Some(variant), Some(bounds))? {
             let window = (

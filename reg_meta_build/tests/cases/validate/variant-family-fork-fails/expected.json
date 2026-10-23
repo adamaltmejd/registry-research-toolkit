@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variant succession family scb/testreg {individer, individer-aldre, individer-urval} is not a chain: individer has more than one successor or predecessor"
+  ]
+}

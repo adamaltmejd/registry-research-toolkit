@@ -771,5 +771,49 @@
         "provenance": null
       }
     ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "dispinkfam04",
+    "provider_key": "993",
+    "name": "Disponibel inkomst för familjen",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "familj-16plus",
+          "name": "Familjer, 16 år och äldre"
+        },
+        "valid_from": "2004-01-01",
+        "valid_to": "2009-12-31",
+        "delivery_column_name": "DispInkFam04",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "familj-15plus",
+          "name": "Familjer, 15 år och äldre"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2023-12-31",
+        "delivery_column_name": "DispInkFam04",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
   }
 ]

@@ -32,12 +32,56 @@ describe("resolveBindingAt", () => {
         ? { items: states, next_cursor: null }
         : undefined,
     );
-    const r = await resolveBindingAt("scb/lisa/yrke", "2015", "v1");
+    const r = await resolveBindingAt("scb/lisa/yrke", "2015", ["v1"]);
     expect(r.kind).toBe("ambiguous");
     if (r.kind === "ambiguous") {
       expect(r.fqid).toBe("scb/lisa/yrke");
       expect(r.states).toHaveLength(2);
     }
+  });
+
+  it("resolves a family source over its members, typed by the head-most member (#1840)", async () => {
+    // LISA-shaped: one column handed from 16+ (to 2009) to its successor 15+, and a
+    // concurrent variant's co-existing column the source does not reach.
+    const states = [
+      state({
+        variant: "individer-16plus",
+        delivery_column_name: "DispInk",
+        data_type: "char",
+        valid_from: "2004-01-01",
+        valid_to: "2009-12-31",
+      }),
+      state({
+        variant: "individer-15plus",
+        delivery_column_name: "DispInk",
+        data_type: "int",
+        valid_from: "2010-01-01",
+        valid_to: "2012-12-31",
+      }),
+      state({
+        variant: "foretag",
+        delivery_column_name: "DispInkF",
+        data_type: "char",
+        valid_from: "2004-01-01",
+        valid_to: "2012-12-31",
+      }),
+    ];
+    // Fails if the resolve keeps the per-variant filter (the 16+ years go
+    // unresolved under a head-written source), lets the concurrent variant in
+    // (ambiguous), or types the binding from the older member.
+    stubApi((url) =>
+      url.pathname === "/api/states/scb/lisa/dispink" &&
+      url.searchParams.get("period") === "2008..2012" &&
+      !url.searchParams.has("variant")
+        ? { items: states, next_cursor: null }
+        : undefined,
+    );
+    expect(
+      await resolveBindingAt("scb/lisa/dispink", "2008..2012", [
+        "individer-16plus",
+        "individer-15plus",
+      ]),
+    ).toEqual({ kind: "derived", type: "numeric" });
   });
 });
 

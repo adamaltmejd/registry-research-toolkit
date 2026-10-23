@@ -291,6 +291,8 @@ def validate_built_db(
                 result.ok("physical holdings and generation identity valid")
         else:
             result.fail("compiled holding relations missing")
+        if {"variant_replaced_by", "holding_table", "holding_mapping"} <= tables:
+            _check_variant_families(conn, result)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -3223,6 +3225,108 @@ def _check_representation_replaced_by(
         "SELECT COUNT(*) FROM representation_replaced_by"
     ).fetchone()[0]
     result.info(f"{n_edges} representation succession edge(s)")
+
+
+def _check_variant_families(conn: sqlite3.Connection, result: ValidationResult) -> None:
+    """#1840: a variant succession family is a chain whose members deliver disjoint
+    days, by their dated states and, on a steward artifact, by the editions held
+    under them. A dated source period reaches its variant's whole family and the
+    order resolves each day to the one member delivering it (crates/DESIGN.md,
+    "Order manifest"), so a shared day would make that choice a guess.
+
+    A family is a connected component of `variant_replaced_by` edges inside one
+    register, as the reader derives it (`show.rs` `variant_families`)."""
+    result.section("[variant succession families]")
+    edges = conn.execute(
+        "SELECT predecessor_provider, predecessor_register, predecessor_variant, "
+        "successor_variant FROM variant_replaced_by "
+        "WHERE predecessor_provider = successor_provider "
+        "AND predecessor_register = successor_register ORDER BY 1, 2, 3, 4"
+    ).fetchall()
+    ids = {
+        (provider, register, variant): variant_id
+        for provider, register, variant, variant_id in conn.execute(
+            "SELECT p.slug, r.slug, rv.slug, rv.register_variant_id "
+            "FROM register_variant rv JOIN register r USING(register_id) "
+            "JOIN provider p USING(provider_id) WHERE rv.slug IS NOT NULL"
+        )
+    }
+    neighbors: dict[tuple[str, str, str], set[tuple[str, str, str]]] = {}
+    outgoing: dict[tuple[str, str, str], int] = {}
+    incoming: dict[tuple[str, str, str], int] = {}
+    for provider, register, before, after in edges:
+        a, b = (provider, register, before), (provider, register, after)
+        if a not in ids or b not in ids:
+            continue
+        neighbors.setdefault(a, set()).add(b)
+        neighbors.setdefault(b, set()).add(a)
+        outgoing[a] = outgoing.get(a, 0) + 1
+        incoming[b] = incoming.get(b, 0) + 1
+    days = {
+        "deliver": (
+            "SELECT DISTINCT valid_from, valid_to FROM variable_state "
+            "WHERE register_variant_id = ? AND period_scope = 'intervals' "
+            "AND valid_from IS NOT NULL AND valid_to IS NOT NULL"
+        ),
+        "are held under": (
+            "SELECT DISTINCT hp.lo, hp.hi FROM holding_period hp "
+            "JOIN holding_table ht USING(table_id) WHERE ht.scope = 'intervals' "
+            "AND EXISTS (SELECT 1 FROM holding_column hc JOIN holding_mapping hm "
+            "USING(column_id) WHERE hc.table_id = ht.table_id AND hm.variant_id = ?)"
+        ),
+    }
+    failures = []
+    seen: set[tuple[str, str, str]] = set()
+    for start in sorted(neighbors):
+        if start in seen:
+            continue
+        component, stack = set(), [start]
+        while stack:
+            node = stack.pop()
+            if node not in component:
+                component.add(node)
+                stack.extend(neighbors[node])
+        seen |= component
+        members = sorted(component)
+        family = f"{start[0]}/{start[1]} {{{', '.join(m[2] for m in members)}}}"
+        forks = [
+            m[2] for m in members if outgoing.get(m, 0) > 1 or incoming.get(m, 0) > 1
+        ]
+        if forks:
+            failures.append(
+                f"variant succession family {family} is not a chain: "
+                f"{', '.join(forks)} has more than one successor or predecessor"
+            )
+        for verb, sql in days.items():
+            spans = {
+                m: [tuple(r) for r in conn.execute(sql, (ids[m],))] for m in members
+            }
+            for i, a in enumerate(members):
+                for b in members[i + 1 :]:
+                    shared = sorted(
+                        (max(x[0], y[0]), min(x[1], y[1]))
+                        for x in spans[a]
+                        for y in spans[b]
+                        if max(x[0], y[0]) <= min(x[1], y[1])
+                    )
+                    if shared:
+                        lo, hi = shared[0]
+                        failures.append(
+                            f"variant succession family {family}: {a[2]} and {b[2]} "
+                            f"both {verb} days from {lo} to {hi}"
+                        )
+    for failure in failures:
+        result.fail(
+            f"{failure}; a family's members must deliver disjoint days in a chain, "
+            "so an order resolves each day to one member: correct or remove the "
+            "variant [[edge]] in curation/relations.toml (or the steward inventory "
+            "that holds the shared edition)"
+        )
+    if not failures:
+        result.ok(
+            f"{len(seen)} variant(s) in succession families form chains with "
+            "disjoint days"
+        )
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

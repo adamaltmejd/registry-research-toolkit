@@ -1,0 +1,151 @@
+version = 1
+steward = "swecov"
+
+# variant-family with its 2010 holding moved: no 15+ table for 2010, and
+# EXTRA2010 maps LopNr and Sun2000niva_Old under 16+, which delivers nothing in
+# 2010. So 2010 is held only under a member that does not deliver it, and
+# delivered only by 15+, where DispInk04 has no holding.
+
+[[table]]
+id = "LISA2007"
+edition = 2007
+[[table.column]]
+name = "LopNr"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/lopnr"
+representation = "LopNr"
+[[table.column]]
+name = "DispInk04"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/dispink"
+representation = "DispInk04"
+[[table.column]]
+name = "Sun2000niva_Old"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/sun2000niva-old"
+representation = "Sun2000niva_Old"
+[[table.column]]
+name = "SyssStat"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/syssstat"
+representation = "SyssStat"
+
+[[table]]
+id = "LISA2008"
+edition = 2008
+[[table.column]]
+name = "LopNr"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/lopnr"
+representation = "LopNr"
+[[table.column]]
+name = "DispInk04"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/dispink"
+representation = "DispInk04"
+[[table.column]]
+name = "Sun2000niva_Old"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/sun2000niva-old"
+representation = "Sun2000niva_Old"
+[[table.column]]
+name = "SyssStat"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/syssstat"
+representation = "SyssStat"
+
+[[table]]
+id = "LISA2009"
+edition = 2009
+[[table.column]]
+name = "LopNr"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/lopnr"
+representation = "LopNr"
+[[table.column]]
+name = "DispInk04"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/dispink"
+representation = "DispInk04"
+[[table.column]]
+name = "Sun2000niva_Old"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/sun2000niva-old"
+representation = "Sun2000niva_Old"
+[[table.column]]
+name = "SyssStat"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/syssstat"
+representation = "SyssStat"
+
+[[table]]
+id = "EXTRA2010"
+edition = 2010
+[[table.column]]
+name = "LopNr"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/lopnr"
+representation = "LopNr"
+[[table.column]]
+name = "Sun2000niva_Old"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/sun2000niva-old"
+representation = "Sun2000niva_Old"
+
+[[table]]
+id = "LISA2011"
+edition = 2011
+[[table.column]]
+name = "LopNr"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/lopnr"
+representation = "LopNr"
+[[table.column]]
+name = "DispInk04"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/dispink"
+representation = "DispInk04"
+[[table.column]]
+name = "SyssStat11"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/syssstat"
+representation = "SyssStat11"
+
+[[table]]
+id = "LISA2012"
+edition = 2012
+[[table.column]]
+name = "LopNr"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/lopnr"
+representation = "LopNr"
+[[table.column]]
+name = "DispInk04"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/dispink"
+representation = "DispInk04"
+[[table.column]]
+name = "SyssStat11"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/syssstat"
+representation = "SyssStat11"

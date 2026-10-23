@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
+import type { VariantModel } from "./api";
 import type { PickerRepresentation } from "./catalog";
 import type { RawDraft } from "./project_data";
 import {
   committedPickerRows,
   pickerRowKey,
-  rowAddSegments,
+  rowAdd,
   type StagedPickerBand,
   windowsOverlapPeriod,
 } from "./staged_picker";
@@ -24,10 +25,8 @@ function foldedFamilyRow(): PickerRepresentation {
     renamedColumns: [],
     from: "1990-01-01",
     to: "2023-12-31",
-    windows: [
-      { from: "1990-01-01", to: "2009-12-31" },
-      { from: "2010-01-01", to: "2023-12-31" },
-    ],
+    // The members' day-adjacent eras fused, as `pickerRow` builds them.
+    windows: [{ from: "1990-01-01", to: "2023-12-31" }],
     variantSegments: [
       {
         variant: "individer-16plus",
@@ -41,7 +40,7 @@ function foldedFamilyRow(): PickerRepresentation {
       },
     ],
     period: "1990 – 2023",
-    wirePeriod: "1990..2009,2010..2023",
+    wirePeriod: "1990..2023",
   });
 }
 
@@ -97,7 +96,7 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    const committed = committedPickerRows(draft, [b]);
+    const committed = committedPickerRows(draft, [b], []);
 
     expect(committed.get(pickerRowKey(b, r))).toEqual(
       expect.objectContaining({
@@ -107,200 +106,57 @@ describe("committedPickerRows", () => {
     );
   });
 
-  it("keys family rows by variant family and removes every concrete source", () => {
+  it("finds a family row in a source written at a member that does not deliver it (#1840)", () => {
+    // Any member is accepted as a family's coordinate: a source an agent wrote at
+    // 16+ holds a row only 15+ delivers, so the row reads as in the project and a
+    // remove of it reaches the source. The register's variants name 16+. Fails if
+    // the members come from the row's own segments alone (or matching goes back to
+    // the exact `register_variant`).
     const r = row({
-      key: "individer-15plus::Kon",
-      variant: "individer-15plus",
-      variantLabel: "Individer, 15 år och äldre",
-      variantFamily: "individer-15plus",
-      variantFamilyLabel: "Individer",
-      column: "Kon",
-      representation: "Kon",
-      renamedColumns: [],
-      windows: [
-        { from: "1990-01-01", to: "2009-12-31" },
-        { from: "2010-01-01", to: "2023-12-31" },
-      ],
-      variantSegments: [
-        {
-          variant: "individer-16plus",
-          variantLabel: "Individer, 16 år och äldre",
-          windows: [{ from: "1990-01-01", to: "2009-12-31" }],
-        },
-        {
-          variant: "individer-15plus",
-          variantLabel: "Individer, 15 år och äldre",
-          windows: [{ from: "2010-01-01", to: "2023-12-31" }],
-        },
-      ],
+      ...foldedFamilyRow(),
+      from: "2010-01-01",
+      windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+      variantSegments: foldedFamilyRow().variantSegments?.slice(1),
+      period: "2010 – 2023",
+      wirePeriod: "2010..2023",
     });
     const b = band([r]);
+    const variants = [
+      { slug: "individer-16plus", variant_family: "individer-15plus" },
+      { slug: "individer-15plus", variant_family: "individer-15plus" },
+    ] as unknown as VariantModel[];
     const draft: RawDraft = {
-      schema_version: "2.0.0",
+      schema_version: "4.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
       name: "",
       sources: [
         {
-          name: "LISA 1990-2009",
+          name: "lisa",
           register_variant: "scb/lisa/individer-16plus",
-          period: { from: 1990, to: 2009 },
+          period: { from: 2004, to: 2012 },
           bindings: [
             {
               variable: "scb/lisa/dinf",
-              type: "integer",
-              representation: "Kon",
-            },
-          ],
-        },
-        {
-          name: "LISA 2010-2023",
-          register_variant: "scb/lisa/individer-15plus",
-          period: { from: 2010, to: 2023 },
-          bindings: [
-            {
-              variable: "scb/lisa/dinf",
-              type: "integer",
-              representation: "Kon",
+              type: "categorical",
+              representation: null,
             },
           ],
         },
       ],
     };
 
-    expect(pickerRowKey(b, r)).toBe(
-      "scb/lisa/individer-15plus::scb/lisa/dinf::Kon",
-    );
-    const committed = committedPickerRows(draft, [b]).get(pickerRowKey(b, r));
-    expect(committed?.removals).toEqual([
-      {
-        registerVariant: "scb/lisa/individer-16plus",
-        variable: "scb/lisa/dinf",
-        representation: "Kon",
-      },
-      {
-        registerVariant: "scb/lisa/individer-15plus",
-        variable: "scb/lisa/dinf",
-        representation: "Kon",
-      },
-    ]);
-  });
-
-  it("marks a period-scoped family row committed for the matching concrete segment", () => {
-    const r = row({
-      key: "individer-15plus::Kon",
-      variant: "individer-15plus",
-      variantLabel: "Individer, 15 år och äldre",
-      variantFamily: "individer-15plus",
-      variantFamilyLabel: "Individer",
-      column: "Kon",
-      representation: "Kon",
-      renamedColumns: [],
-      windows: [
-        { from: "1990-01-01", to: "2009-12-31" },
-        { from: "2010-01-01", to: "2023-12-31" },
-      ],
-      variantSegments: [
-        {
-          variant: "individer-16plus",
-          variantLabel: "Individer, 16 år och äldre",
-          windows: [{ from: "1990-01-01", to: "2009-12-31" }],
-        },
-        {
-          variant: "individer-15plus",
-          variantLabel: "Individer, 15 år och äldre",
-          windows: [{ from: "2010-01-01", to: "2023-12-31" }],
-        },
-      ],
+    expect(
+      committedPickerRows(draft, [b], variants).get(pickerRowKey(b, r)),
+    ).toEqual({
+      key: "scb/lisa/individer-15plus::scb/lisa/dinf::Kon",
+      registerVariant: "scb/lisa/individer-16plus",
+      members: ["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"],
+      variable: "scb/lisa/dinf",
+      representation: null,
+      sourceName: "lisa",
+      period: { from: 2004, to: 2012 },
     });
-    const b = band([r]);
-    const draft: RawDraft = {
-      schema_version: "2.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        {
-          name: "LISA 1990-2009",
-          register_variant: "scb/lisa/individer-16plus",
-          period: { from: 1990, to: 2009 },
-          bindings: [
-            {
-              variable: "scb/lisa/dinf",
-              type: "integer",
-              representation: "Kon",
-            },
-          ],
-        },
-      ],
-    };
-
-    const committed = committedPickerRows(draft, [b], {
-      period: "1990..2009",
-      window: [1990, 2009],
-    }).get(pickerRowKey(b, r));
-
-    expect(committed).toEqual(
-      expect.objectContaining({
-        registerVariant: "scb/lisa/individer-16plus",
-        variable: "scb/lisa/dinf",
-        representation: "Kon",
-      }),
-    );
-  });
-
-  it("requires every family segment when no picker period scope is active", () => {
-    const r = row({
-      key: "individer-15plus::Kon",
-      variant: "individer-15plus",
-      variantLabel: "Individer, 15 år och äldre",
-      variantFamily: "individer-15plus",
-      variantFamilyLabel: "Individer",
-      column: "Kon",
-      representation: "Kon",
-      renamedColumns: [],
-      windows: [
-        { from: "1990-01-01", to: "2009-12-31" },
-        { from: "2010-01-01", to: "2023-12-31" },
-      ],
-      variantSegments: [
-        {
-          variant: "individer-16plus",
-          variantLabel: "Individer, 16 år och äldre",
-          windows: [{ from: "1990-01-01", to: "2009-12-31" }],
-        },
-        {
-          variant: "individer-15plus",
-          variantLabel: "Individer, 15 år och äldre",
-          windows: [{ from: "2010-01-01", to: "2023-12-31" }],
-        },
-      ],
-    });
-    const b = band([r]);
-    const draft: RawDraft = {
-      schema_version: "2.0.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-      steward: "global",
-      name: "",
-      sources: [
-        {
-          name: "LISA 1990-2009",
-          register_variant: "scb/lisa/individer-16plus",
-          period: { from: 1990, to: 2009 },
-          bindings: [
-            {
-              variable: "scb/lisa/dinf",
-              type: "integer",
-              representation: "Kon",
-            },
-          ],
-        },
-      ],
-    };
-
-    const committed = committedPickerRows(draft, [b]);
-
-    expect(committed.has(pickerRowKey(b, r))).toBe(false);
   });
 
   it("scopes a null stored representation to rows overlapping the source period", () => {
@@ -350,7 +206,7 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    const committed = committedPickerRows(draft, [b]);
+    const committed = committedPickerRows(draft, [b], []);
 
     expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
       expect.objectContaining({ representation: null }),
@@ -409,7 +265,7 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    const committed = committedPickerRows(draft, [b]);
+    const committed = committedPickerRows(draft, [b], []);
 
     expect(committed.size).toBe(0);
   });
@@ -436,36 +292,26 @@ describe("windowsOverlapPeriod", () => {
   });
 });
 
-describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
-  it("narrows a period-scoped family add to the concrete era it overlaps, clipped", () => {
+describe("rowAdd (#1840: one add per family row)", () => {
+  it("adds a folded family row once, at the head, over every member's years", () => {
+    // 2008–2012 reaches 16+ (to 2009) and 15+ (from 2010): ONE add at the family
+    // head over the whole clip, resolved at both members — not a 16+ and a 15+
+    // source (#1834's cause).
     const r = foldedFamilyRow();
-    const b = band([r]);
-    // A 1995–2000 scope touches only the 16plus era → ONE staged add, for that concrete
-    // segment, clipped to the scope; the 15plus-era source is never created (partial
-    // family add) and the coordinate is the predecessor variant, not the head (#376).
-    expect(rowAddSegments(b, r, { period: "1995..2000" })).toEqual([
-      {
-        variant: "individer-16plus",
-        registerVariant: "scb/lisa/individer-16plus",
-        periodWire: "1995..2000",
-        outsideScope: false,
-      },
-    ]);
+    expect(rowAdd(band([r]), r, { period: "2008..2012" })).toEqual({
+      registerVariant: "scb/lisa/individer-15plus",
+      members: ["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"],
+      resolveVariants: ["individer-16plus", "individer-15plus"],
+      periodWire: "2008..2012",
+      outsideScope: false,
+    });
   });
 
-  it("marks every segment outside a scope that misses each era, with no period", () => {
+  it("marks a row outside a scope that misses each era, with no period", () => {
     const r = foldedFamilyRow();
-    const b = band([r]);
     // No era reaches 1970–1980: nothing to commit, and nothing invented from the
     // eras' own spans — the Apply is refused by name.
-    expect(
-      rowAddSegments(b, r, { window: [1970, 1980] }).map((s) => [
-        s.periodWire,
-        s.outsideScope,
-      ]),
-    ).toEqual([
-      [null, true],
-      [null, true],
-    ]);
+    const add = rowAdd(band([r]), r, { window: [1970, 1980] });
+    expect([add.periodWire, add.outsideScope]).toEqual([null, true]);
   });
 });

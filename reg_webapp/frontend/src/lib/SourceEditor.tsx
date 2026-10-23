@@ -1,7 +1,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { BindingEditor } from "./BindingEditor";
-import { fqidSegments, sourceCardHeading } from "./catalog";
-import { sourceNames } from "./catalog_names";
+import {
+  fqidSegments,
+  registerPrefixOf,
+  sourceCardHeading,
+  variantFamilyMembers,
+} from "./catalog";
+import { registerRead, sourceNames, UNASKED } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
 import {
   normalizePeriodRows,
@@ -99,6 +104,8 @@ function focusAfterSourceRemoval(index: number): void {
   ]);
 }
 
+const readUnasked = () => UNASKED;
+
 export function SourceEditor({
   sourceIndex,
   source,
@@ -149,6 +156,21 @@ export function SourceEditor({
   // The stored period as its WIRE string (list-period aware); null when the source
   // carries none or an unshapeable one.
   const periodWire = sourcePeriodToWire(period);
+  // A dated source reaches its variant's whole succession family (#1840), so its
+  // columns resolve over the members (from the register read the heading already
+  // makes); a `_default` source names its variant exactly.
+  const registerFqid =
+    fqidSegments(registerVariant).length === 3
+      ? registerPrefixOf(registerVariant)
+      : "";
+  const register = useCatalogRead(
+    registerFqid ? registerRead : readUnasked,
+    registerFqid,
+  );
+  const familyVariants =
+    periodWire === "_default"
+      ? [variantSlug]
+      : variantFamilyMembers(register.value?.variants ?? [], variantSlug);
 
   const metaRows: KeyValueRow[] = [
     ...(providerName ? [{ label: "Provider", value: providerName }] : []),
@@ -629,6 +651,7 @@ export function SourceEditor({
                         bindingIndex={j}
                         binding={binding}
                         variant={variantSlug}
+                        familyVariants={familyVariants}
                         period={periodWire}
                         studyWindow={studyWindow}
                       />

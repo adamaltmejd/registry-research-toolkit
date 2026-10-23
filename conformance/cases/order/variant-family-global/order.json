@@ -1,0 +1,76 @@
+{
+  "clips": [
+    {
+      "ordered_period": "2008..2009",
+      "requested_period": "2008..2011",
+      "source": "lisa",
+      "variable": "scb/lisa/sun2000niva-old"
+    }
+  ],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "lisa",
+        "representation": "DispInk04",
+        "variable": "scb/lisa/dispink",
+        "variant": "individer-16plus"
+      },
+      "physical": {
+        "column": "DispInk04",
+        "edition": "2008..2009",
+        "file": "scb_lisa_individer-16plus",
+        "table": ""
+      },
+      "requested_period": "2008..2009",
+      "source": "lisa"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "lisa",
+        "representation": "DispInk04",
+        "variable": "scb/lisa/dispink",
+        "variant": "individer-15plus"
+      },
+      "physical": {
+        "column": "DispInk04",
+        "edition": "2010..2011",
+        "file": "scb_lisa_individer-15plus",
+        "table": ""
+      },
+      "requested_period": "2010..2011",
+      "source": "lisa"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "lisa",
+        "representation": "Sun2000niva_Old",
+        "variable": "scb/lisa/sun2000niva-old",
+        "variant": "individer-16plus"
+      },
+      "physical": {
+        "column": "Sun2000niva_Old",
+        "edition": "2008..2009",
+        "file": "scb_lisa_individer-16plus",
+        "table": ""
+      },
+      "requested_period": "2008..2009",
+      "source": "lisa"
+    }
+  ],
+  "extract_format": "dta",
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
+    "mode": "global_fallback",
+    "project_hash": "7522e2ecf8ebb68f50fb5b113d0a97d6282153c55080c6084ed28ab2a7691aa2",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "4.0.0",
+    "steward": "global"
+  },
+  "version": 2
+}

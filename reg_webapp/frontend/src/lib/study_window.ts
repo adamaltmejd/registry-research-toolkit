@@ -11,12 +11,13 @@
  * plan judges a source by the same eras the picker offered its columns under.
  */
 
-import type { VariableChild } from "./api";
+import type { RegisterShow } from "./api";
 import {
   addWindowBounds,
   deliveryWindows,
   fqidSegments,
   registerPrefixOf,
+  variantFamilyMembers,
   windowsAddPeriod,
 } from "./catalog";
 import { periodWindowRelation, type WindowRelation } from "./period";
@@ -76,15 +77,22 @@ export function overlapRegisters(
   return [...registers].sort();
 }
 
-/** The dated delivery windows of a source's columns at its own variant, from its
- * register's binding children (the register read). A binding pinned to a delivery
- * column (`representation`) contributes that column's eras only. `unknown` when any
- * one of its columns has no dated delivery at that variant in the read. */
+/** What the plan reads of a register: its binding children's deliveries and its
+ * variants' succession families. */
+export type RegisterAvailability = Pick<RegisterShow, "children" | "variants">;
+
+/** The dated delivery windows of a source's columns over the variants its period
+ * reaches — its variant's succession family (#1840) — from its register's read. A
+ * binding pinned to a delivery column (`representation`) contributes that column's
+ * eras only. `unknown` when any one of its columns has no dated delivery in the
+ * family in the read. */
 function sourceDeliveryEras(
   source: SafeSource,
-  children: readonly VariableChild[],
+  register: RegisterAvailability,
 ): { eras: { from: string; to: string }[]; unknown: boolean } {
-  const variant = fqidSegments(safeSourceRegisterVariant(source))[2];
+  const variant = fqidSegments(safeSourceRegisterVariant(source))[2] ?? "";
+  const family = new Set(variantFamilyMembers(register.variants, variant));
+  const children = register.children;
   const eras: { from: string; to: string }[] = [];
   let unknown = false;
   for (const binding of safeSourceBindings(source)) {
@@ -96,7 +104,7 @@ function sourceDeliveryEras(
         : null;
     for (const delivery of child?.deliveries ?? []) {
       if (
-        delivery.variant === variant &&
+        family.has(delivery.variant) &&
         delivery.period_scope !== "year_independent" &&
         (pinned === null || delivery.column === pinned)
       ) {
@@ -121,7 +129,7 @@ function sourceDeliveryEras(
 export function sourceWindowRelation(
   source: SafeSource,
   window: ProjectStudyWindow | null,
-  children: readonly VariableChild[] | null,
+  register: RegisterAvailability | null,
   loading: boolean,
 ): WindowRelation | "pending" | null {
   const period = safeSourcePeriod(source);
@@ -132,10 +140,10 @@ export function sourceWindowRelation(
   if (loading) {
     return "pending";
   }
-  if (children === null) {
+  if (register === null) {
     return plain;
   }
-  const { eras, unknown } = sourceDeliveryEras(source, children);
+  const { eras, unknown } = sourceDeliveryEras(source, register);
   if (unknown || eras.length === 0) {
     return plain;
   }
@@ -146,15 +154,15 @@ export function sourceWindowRelation(
   );
 }
 
-/** Plan the rewrite. `childrenByRegister` holds each `overlapRegisters` register's
- * binding children (the register read). A source is CHANGED when its columns'
- * delivery windows at its own variant reach the study window and the overlap
- * differs from its period; MISSED when they reach none of it, or when any one of
- * its columns has no delivery at that variant in the read (`sourceDeliveryEras`). */
+/** Plan the rewrite. `registers` holds each `overlapRegisters` register's read. A
+ * source is CHANGED when its columns' delivery windows in its variant family reach
+ * the study window and the overlap differs from its period; MISSED when they reach
+ * none of it, or when any one of its columns has no delivery in the family in the
+ * read (`sourceDeliveryEras`). */
 export function planWindowOverlap(
   sources: readonly SafeSource[],
   window: ProjectStudyWindow,
-  childrenByRegister: ReadonlyMap<string, readonly VariableChild[]>,
+  registers: ReadonlyMap<string, RegisterAvailability>,
 ): OverlapPlan {
   const bounds = addWindowBounds(null, [window.from, window.to]);
   const plan: OverlapPlan = { changes: [], misses: [] };
@@ -171,7 +179,10 @@ export function planWindowOverlap(
     }
     const { eras, unknown } = sourceDeliveryEras(
       source,
-      childrenByRegister.get(registerPrefixOf(registerVariant)) ?? [],
+      registers.get(registerPrefixOf(registerVariant)) ?? {
+        children: [],
+        variants: [],
+      },
     );
     const sourceName = safeSourceName(source);
     if (unknown || eras.length === 0) {

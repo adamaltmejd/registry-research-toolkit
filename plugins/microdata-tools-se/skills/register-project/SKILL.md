@@ -23,9 +23,12 @@ the `register-metadata-search` skill.
    `project_schema_version`. Never write these from memory.
 2. Find each variable with `search` and `show`, then `states` for the register variant
    that delivers it over the study period. A source's `register_variant` is the
-   three-part `<provider>/<register>/<variant>`; a binding's `variable` is the
-   variable's FQID; its `type` is one of `id`, `categorical`, `numeric`, `date`,
-   `datetime`, `opaque`.
+   three-part `<provider>/<register>/<variant>`. For a dated period it reaches the
+   variant's whole succession family (`variant_family` in `states`): name the family's
+   newest variant, and each year is ordered from the member that delivers it, so one
+   source covers e.g. LISA 16+ and 15+ years. `"_default"` reaches the named variant
+   only. A binding's `variable` is the variable's FQID; its `type` is one of `id`,
+   `categorical`, `numeric`, `date`, `datetime`, `opaque`.
 3. Write periods in the document's own grammar, which is not the `period` argument of
    the read tools: `{"from": 2015, "to": 2019}` is a range, `[2015, 2019]` is two
    separate years, `2019` is one year. A range string such as `"2015..2019"` is refused

@@ -10,6 +10,7 @@ mod coded;
 mod coverage;
 mod cursor;
 mod docs;
+mod family;
 mod graph;
 mod lineage;
 mod order;

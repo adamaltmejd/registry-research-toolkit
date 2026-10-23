@@ -159,13 +159,16 @@ export function StudyWindowSummary({ sources, studyWindow, relations }: Props) {
         report({ kind: "stale" });
         return;
       }
-      const children = new Map(
+      const nodes = new Map(
         registers.map((register, i) => {
           const node = reads[i];
-          return [register, node.kind === "register" ? node.children : []];
+          return [
+            register,
+            node.kind === "register" ? node : { children: [], variants: [] },
+          ];
         }),
       );
-      const plan = planWindowOverlap(sources, window, children);
+      const plan = planWindowOverlap(sources, window, nodes);
       if (plan.changes.length === 0) {
         report({ kind: "unchanged", plan });
         setSettledKey(contentKey(sources));

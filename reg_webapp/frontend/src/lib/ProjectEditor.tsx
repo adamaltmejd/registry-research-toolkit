@@ -82,7 +82,7 @@ function windowRelationsOf(draft: RawDraft | null) {
     return sourceWindowRelation(
       source,
       window,
-      read.value?.children ?? null,
+      read.value ?? null,
       read.loading,
     );
   });

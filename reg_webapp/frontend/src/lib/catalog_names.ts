@@ -26,13 +26,13 @@
 
 import {
   getShow,
-  getStates,
   type RegisterShow,
   type RootChild,
   type ShowNode,
 } from "./api";
 import {
   deliveryColumnNamesFromStates,
+  familyStates,
   fqidSegments,
   registerPrefixOf,
   variantCardName,
@@ -234,6 +234,28 @@ export function registerRead(registerFqid: string): Read<RegisterShow | null> {
   });
 }
 
+/** `registerRead` once it has settled: the cached value at once when it has
+ * landed, else the same read awaited (one read per register per session, shared
+ * with every source card and register page). Null when the read failed or the ref
+ * is not a register. */
+export function settledRegisterRead(
+  registerFqid: string,
+): Promise<RegisterShow | null> {
+  const now = registerRead(registerFqid);
+  if (!now.loading) {
+    return Promise.resolve(now.value);
+  }
+  return new Promise((resolve) => {
+    const stop = subscribeCatalogNames(() => {
+      const next = registerRead(registerFqid);
+      if (!next.loading) {
+        stop();
+        resolve(next.value);
+      }
+    });
+  });
+}
+
 /** The display names of one source's `register_variant` coordinate — all null until
  * EVERY read behind them has landed with an answer, and null for good when any of
  * them cannot be answered. All-or-nothing on purpose: the caller shows the
@@ -305,26 +327,26 @@ export function sourceNames(registerVariant: string): SourceNames {
 }
 
 /** The delivery column NAMES a binding's variable resolves to at its source's
- * `(register_variant, period)`, newest era first (see
- * `deliveryColumnNamesFromStates`) — null while the read is in flight, when it
- * failed, and when nothing there names one column.
+ * period over the variants it reaches (its succession family, #1840, or its one
+ * variant), newest era first (see `deliveryColumnNamesFromStates`) — null while
+ * the read is in flight, when it failed, and when nothing there names one column.
  *
- * The same `period`+`variant` states read the picker runs on a pick
- * (`resolveBindingAt`), cached per `(fqid, period, variant)` so two columns of one
- * source, and every re-render of either, share the one request. A source with no
- * period cannot be resolved at all (the resolve needs one) and issues none — nor
- * can one with no VARIANT (a `register_variant` of fewer than 3 segments, which
- * only a malformed draft carries): resolving the variable across every variant
- * would name a column this source does not deliver. */
+ * The same states read the picker runs on a pick (`familyStates`), cached per
+ * `(fqid, period, variants)` so two columns of one source, and every re-render of
+ * either, share the one request. A source with no period cannot be resolved at all
+ * (the resolve needs one) and issues none — nor can one with no VARIANT (a
+ * `register_variant` of fewer than 3 segments, which only a malformed draft
+ * carries): resolving the variable across every variant would name a column this
+ * source does not deliver. */
 export function columnNames(
   fqid: string,
   period: string | null,
-  variant: string,
+  variants: readonly string[],
 ): Read<string[]> {
-  if (!fqid || !period || !variant) {
+  if (!fqid || !period || variants.length === 0 || variants.some((v) => !v)) {
     return UNASKED;
   }
-  return read(`resolve:${fqid}?${period}&${variant}`, async () =>
-    deliveryColumnNamesFromStates(await getStates(fqid, { period, variant })),
+  return read(`resolve:${fqid}?${period}&${variants.join(",")}`, async () =>
+    deliveryColumnNamesFromStates(await familyStates(fqid, period, variants)),
   );
 }

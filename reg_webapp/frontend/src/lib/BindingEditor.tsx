@@ -23,9 +23,11 @@ interface Props {
   sourceIndex: number;
   bindingIndex: number;
   binding: DraftBinding;
-  /** The owning source's concrete variant slug and its stored period (wire form,
-   * null when it has none) — where this column's default name is resolved. */
+  /** The owning source's concrete variant slug, the variants its period reaches
+   * (its succession family, #1840) and its stored period (wire form, null when it
+   * has none) — where this column's default name is resolved. */
   variant: string;
+  familyVariants: readonly string[];
   period: string | null;
   /** The project's study window, null when none is set: a column with no year
    * inside it is drawn out of the window. */
@@ -34,12 +36,12 @@ interface Props {
 
 /** `columnNames` behind one string argument, for `useCatalogRead`. */
 function readColumnNames(key: string) {
-  const [fqid, period, variant] = JSON.parse(key) as [
+  const [fqid, period, variants] = JSON.parse(key) as [
     string,
     string | null,
-    string,
+    string[],
   ];
-  return columnNames(fqid, period, variant);
+  return columnNames(fqid, period, variants);
 }
 const readUnasked = () => UNASKED;
 
@@ -66,6 +68,7 @@ export function BindingEditor({
   bindingIndex,
   binding,
   variant,
+  familyVariants,
   period: sourcePeriod,
   studyWindow,
 }: Props) {
@@ -104,7 +107,7 @@ export function BindingEditor({
   const fileColumn = strField("display_name") || strField("representation");
   const resolved = useCatalogRead(
     fileColumn ? readUnasked : readColumnNames,
-    JSON.stringify([variable, sourcePeriod, variant]),
+    JSON.stringify([variable, sourcePeriod, familyVariants]),
   );
   const resolvedNames = resolved.value ?? [];
   const columnName = fileColumn || resolvedNames[0] || "";
@@ -121,6 +124,8 @@ export function BindingEditor({
     fqid: variable,
     period: sourcePeriod,
     variant,
+    // A family source's column carries every member's warnings (#1840).
+    variants: familyVariants,
     representation,
     framed: false,
   };

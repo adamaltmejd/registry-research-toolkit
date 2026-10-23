@@ -22,6 +22,7 @@ import {
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
+import { registerRead } from "./catalog_names";
 import {
   matrixAnswerSource,
   pagesLabel,
@@ -58,6 +59,7 @@ import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
+import { useCatalogRead } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
 
 interface Props extends PeriodProps {
@@ -380,14 +382,13 @@ export function BindingLeafView({
     [activePeriod, projectWindow],
   );
   const draft = useProject((store) => store.draft);
+  // The register's variants name the family members that do not deliver this
+  // column (#1840); until the read lands, the rows' own members stand in.
+  const registerVariants = useCatalogRead(registerRead, registerPrefix).value
+    ?.variants;
   const committedRows = useMemo(
-    () =>
-      committedPickerRows(draft, pickerBands, {
-        period: activePeriod,
-        window: pickerWindow,
-        studyWindow: projectWindow,
-      }),
-    [draft, pickerBands, activePeriod, pickerWindow, projectWindow],
+    () => committedPickerRows(draft, pickerBands, registerVariants ?? []),
+    [draft, pickerBands, registerVariants],
   );
 
   // The last Apply's outcome and refusal, each tagged with what it was made

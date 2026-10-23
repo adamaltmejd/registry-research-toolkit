@@ -1,0 +1,33 @@
+{
+  "note": "The variant-family project on the catalog artifact (global fallback): with no holdings, each year goes to the member whose states deliver it, so DispInk04 is two entries, 16+ for 2008..2009 and 15+ for 2010..2011, each named by its own variant, and Sun2000niva_Old one 16+ entry with one clip. Fails if the fallback merges both members' DispInk04 into one entry or resolves only the named variant.",
+  "fixture": "variant-family",
+  "artifact": "catalog",
+  "project": {
+    "schema_version": "4.0.0",
+    "steward": "global",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "lisa",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {
+          "from": 2008,
+          "to": 2011
+        },
+        "bindings": [
+          {
+            "variable": "scb/lisa/dispink",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/lisa/sun2000niva-old",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  }
+}
