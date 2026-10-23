@@ -17,3 +17,12 @@ slug = "transaktioner"
 panel_entity_key = "arendeid-kta"
 panel_time_key = "delperiod-start-datum"
 panel_time_grain = "row"
+
+[variable."7254798838673795039.arendeid-kta"]
+slug = "arendeid-kta"
+
+[variable."7254798838673795039.delperiod-start-datum"]
+slug = "delperiod-start-datum"
+
+[variable."7254798838673795039.personnr"]
+slug = "personnr"

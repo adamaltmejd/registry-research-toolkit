@@ -11,3 +11,9 @@ slug = "_default"
 panel_entity_key = "hashed-data"
 panel_time_key = "date"
 panel_time_grain = "row"
+
+[variable."7283031863910989078.date"]
+slug = "date"
+
+[variable."7283031863910989078.hashed-data"]
+slug = "hashed-data"

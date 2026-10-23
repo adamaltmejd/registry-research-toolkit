@@ -9,3 +9,9 @@ slug = "intensivvardsregistret"
 [register_variant."6729416288765700351.7724441868028708000"]
 slug = "_default"
 panel_entity_key = ["lopnr", "lopnrsiri"]
+
+[variable."6729416288765700351.lopnr"]
+slug = "lopnr"
+
+[variable."6729416288765700351.lopnrsiri"]
+slug = "lopnrsiri"

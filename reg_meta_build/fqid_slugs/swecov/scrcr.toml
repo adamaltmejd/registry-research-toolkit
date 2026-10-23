@@ -11,3 +11,12 @@ slug = "_default"
 panel_entity_key = ["personnr", "tum-id"]
 panel_time_key = "a1-diagnosdatum"
 panel_time_grain = "row"
+
+[variable."6455491312378045353.a1-diagnosdatum"]
+slug = "a1-diagnosdatum"
+
+[variable."6455491312378045353.personnr"]
+slug = "personnr"
+
+[variable."6455491312378045353.tum-id"]
+slug = "tum-id"

@@ -66,3 +66,39 @@ slug = "_default"
 panel_entity_key = "personnr"
 panel_time_key = "utbetdatum"
 panel_time_grain = "row"
+
+[variable."4948082774563754536.personnr"]
+slug = "personnr"
+
+[variable."4948082774563754536.utbetdatum"]
+slug = "utbetdatum"
+
+[variable."5463459234688537358.personnr"]
+slug = "personnr"
+
+[variable."6380677290004829937.personnr"]
+slug = "personnr"
+
+[variable."7553107867301677954.kassakortsvecka"]
+slug = "kassakortsvecka"
+
+[variable."7967342864767953313.kassanr"]
+slug = "kassanr"
+
+[variable."8429965090575066561.dvecka"]
+slug = "dvecka"
+
+[variable."8429965090575066561.personnr"]
+slug = "personnr"
+
+[variable."8792950097854096867.ersperiodfrom"]
+slug = "ersperiodfrom"
+
+[variable."8792950097854096867.personnr"]
+slug = "personnr"
+
+[variable."8830696829911089636.medlemfrom"]
+slug = "medlemfrom"
+
+[variable."8830696829911089636.personnr"]
+slug = "personnr"

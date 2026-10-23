@@ -18,3 +18,18 @@ slug = "primarvard-diagnoser"
 [register_variant."5811838022219520366.6907829843402575293"]
 slug = "_default"
 panel_entity_key = ["personnr", "vegavardkontakt"]
+
+[variable."5547649789677434053.kontaktdatum"]
+slug = "kontaktdatum"
+
+[variable."5547649789677434053.personnr"]
+slug = "personnr"
+
+[variable."5547649789677434053.vegavardkontakt"]
+slug = "vegavardkontakt"
+
+[variable."5811838022219520366.personnr"]
+slug = "personnr"
+
+[variable."5811838022219520366.vegavardkontakt"]
+slug = "vegavardkontakt"

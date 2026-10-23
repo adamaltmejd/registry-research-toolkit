@@ -11,3 +11,9 @@ slug = "_default"
 panel_entity_key = "personnr"
 panel_time_key = "rcvdate"
 panel_time_grain = "row"
+
+[variable."9035886268370358419.personnr"]
+slug = "personnr"
+
+[variable."9035886268370358419.rcvdate"]
+slug = "rcvdate"

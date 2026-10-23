@@ -9,3 +9,12 @@ slug = "graviditetsregistret"
 [register_variant."6753140582814814983.7132226338935522278"]
 slug = "_default"
 panel_entity_key = ["glopnr", "bordnr", "personnr-barn"]
+
+[variable."6753140582814814983.bordnr"]
+slug = "bordnr"
+
+[variable."6753140582814814983.glopnr"]
+slug = "glopnr"
+
+[variable."6753140582814814983.personnr-barn"]
+slug = "personnr-barn"

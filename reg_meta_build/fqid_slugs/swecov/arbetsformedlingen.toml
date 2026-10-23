@@ -23,3 +23,12 @@ slug = "sokatper"
 [register_variant."6836886662768913181.6079528674839531666"]
 slug = "_default"
 panel_entity_key = "personnr"
+
+[variable."5676533489969519273.personnr"]
+slug = "personnr"
+
+[variable."6836886662768913181.personnr"]
+slug = "personnr"
+
+[variable."7013475094423914435.personnr"]
+slug = "personnr"

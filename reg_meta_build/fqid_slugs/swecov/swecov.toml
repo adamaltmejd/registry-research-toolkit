@@ -22,3 +22,9 @@ panel_entity_key = "personnr"
 [register_variant."4969117928487263745.5502852864433693833"]
 slug = "fodelseland-grupperat"
 panel_entity_key = "personnr"
+
+[variable."4969117928487263745.personnr"]
+slug = "personnr"
+
+[variable."7381462670892327153.personnr"]
+slug = "personnr"

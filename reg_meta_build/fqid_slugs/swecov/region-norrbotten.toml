@@ -11,3 +11,9 @@ slug = "_default"
 panel_entity_key = "personnr"
 panel_time_key = "datum"
 panel_time_grain = "row"
+
+[variable."5316606699258187720.datum"]
+slug = "datum"
+
+[variable."5316606699258187720.personnr"]
+slug = "personnr"

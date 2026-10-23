@@ -11,3 +11,9 @@ slug = "_default"
 panel_entity_key = "personnr"
 panel_time_key = "bdat"
 panel_time_grain = "row"
+
+[variable."7985435421452182571.bdat"]
+slug = "bdat"
+
+[variable."7985435421452182571.personnr"]
+slug = "personnr"

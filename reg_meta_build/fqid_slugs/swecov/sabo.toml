@@ -16,3 +16,9 @@ slug = "patienter"
 [register_variant."7527281300795836648.7449213485224484681"]
 slug = "_default"
 panel_entity_key = "personnr"
+
+[variable."7527281300795836648.personnr"]
+slug = "personnr"
+
+[variable."8557485593514819994.personnr"]
+slug = "personnr"

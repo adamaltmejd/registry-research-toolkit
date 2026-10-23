@@ -20,3 +20,15 @@ slug = "_default"
 panel_entity_key = "personnr"
 panel_time_key = "documentcreatedtime"
 panel_time_grain = "row"
+
+[variable."6317385603952063941.ordercreateddatetime"]
+slug = "ordercreateddatetime"
+
+[variable."6317385603952063941.personnr"]
+slug = "personnr"
+
+[variable."8588501459400996670.documentcreatedtime"]
+slug = "documentcreatedtime"
+
+[variable."8588501459400996670.personnr"]
+slug = "personnr"

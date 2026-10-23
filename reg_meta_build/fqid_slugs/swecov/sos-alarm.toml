@@ -11,3 +11,9 @@ slug = "_default"
 panel_entity_key = "handelseid"
 panel_time_key = "samtalbesvarat"
 panel_time_grain = "row"
+
+[variable."5180066060621645771.handelseid"]
+slug = "handelseid"
+
+[variable."5180066060621645771.samtalbesvarat"]
+slug = "samtalbesvarat"

@@ -9,3 +9,6 @@ slug = "pandemrix-vaccinationer"
 [register_variant."8080145751237408251.8001471421109233864"]
 slug = "_default"
 panel_entity_key = "personnr"
+
+[variable."8080145751237408251.personnr"]
+slug = "personnr"

@@ -11,3 +11,9 @@ slug = "_default"
 panel_entity_key = "personnr"
 panel_time_key = "vaccinationsdatum"
 panel_time_grain = "row"
+
+[variable."4731669795611928045.personnr"]
+slug = "personnr"
+
+[variable."4731669795611928045.vaccinationsdatum"]
+slug = "vaccinationsdatum"
