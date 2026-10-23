@@ -5,8 +5,8 @@
 //! variant exactly.
 //!
 //! The build refuses a family whose members deliver, or a steward holds under them, a
-//! shared day (`validate_built_db`), so each day has at most one member by either
-//! measure and the split needs no tie-break.
+//! shared day (`validate_built_db`), so each day has at most one delivering member and
+//! the split needs no tie-break.
 
 use std::collections::BTreeMap;
 
@@ -26,45 +26,30 @@ pub(super) struct VariantFamily {
     members: Vec<Member>,
 }
 
-/// A family member: its id, slug, the days a steward holds under it and the days its
-/// states deliver.
+/// A family member: its id, slug and the days its states deliver.
 struct Member {
     id: i64,
     slug: String,
-    held: Vec<Interval>,
     delivered: Vec<Interval>,
 }
 
 impl VariantFamily {
     /// Each member's share of `requested`, ordered by first day. A day goes to the
-    /// member a steward holds it under and whose states deliver it, else to the
     /// member whose states deliver it, else to the named variant, where availability
-    /// then clips it: no variant is invented. Holdings come first so a served day is
-    /// resolved where it is held; a day no delivering member holds keeps its catalog
-    /// member, so it blocks as a coverage gap whichever member the source names, even
-    /// where another member holds some table that day. On a catalog artifact nothing
-    /// is held.
+    /// then clips it: no variant is invented. A day the delivering member holds no
+    /// table for stays with it and blocks as a coverage gap, even where another
+    /// member holds some table that day.
     pub(super) fn split(&self, requested: &[Interval]) -> Vec<Part> {
         if self.members.len() == 1 {
             return vec![(self.named, requested.to_vec())];
         }
         let mut rest = requested.to_vec();
         let mut shares: BTreeMap<i64, Vec<Interval>> = BTreeMap::new();
-        for by_holdings in [true, false] {
-            for member in &self.members {
-                // A held day the member does not deliver is not its: holding any
-                // column there would otherwise take the day from the member that
-                // delivers it and clip away what must block as a coverage gap.
-                let days = if by_holdings {
-                    overlap(&member.held, &member.delivered)
-                } else {
-                    member.delivered.clone()
-                };
-                let share = overlap(&rest, &days);
-                if !share.is_empty() {
-                    rest = gaps(&rest, share.clone());
-                    shares.entry(member.id).or_default().extend(share);
-                }
+        for member in &self.members {
+            let share = overlap(&rest, &member.delivered);
+            if !share.is_empty() {
+                rest = gaps(&rest, share.clone());
+                shares.entry(member.id).or_default().extend(share);
             }
         }
         shares.entry(self.named).or_default().extend(rest);
@@ -115,7 +100,6 @@ pub(super) fn variant_family(
         let members = vec![Member {
             id: named,
             slug: variant.to_owned(),
-            held: Vec::new(),
             delivered: Vec::new(),
         }];
         return Ok(Some(VariantFamily { named, members }));
@@ -131,24 +115,10 @@ pub(super) fn variant_family(
         members.push(Member {
             id,
             slug: slug.clone(),
-            held: held(conn, id)?,
             delivered: delivered(conn, id)?,
         });
     }
     Ok(Some(VariantFamily { named, members }))
-}
-
-/// The editions of the dated steward tables that map a column under `variant`.
-pub(super) fn held(conn: &Connection, variant: i64) -> Result<Vec<Interval>, Error> {
-    Ok(merge(rows(
-        conn,
-        "SELECT DISTINCT hp.lo, hp.hi FROM holding_period hp \
-         JOIN holding_table ht USING(table_id) WHERE ht.scope = 'intervals' \
-         AND EXISTS (SELECT 1 FROM holding_column hc JOIN holding_mapping hm \
-         USING(column_id) WHERE hc.table_id = ht.table_id AND hm.variant_id = ?)",
-        [variant],
-        |row| Ok((row.get(0)?, row.get(1)?)),
-    )?))
 }
 
 /// The windows of `variant`'s dated states.
