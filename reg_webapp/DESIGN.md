@@ -1452,8 +1452,8 @@ there is no provenance state to track and no decision about whether a re-derived
 may overwrite an author's edit; do not reintroduce a client-side re-derivation engine. A
 source's bindings can go stale relative to its period after the fact (e.g. the author
 widens the period); that drift is the **server validator's job** to surface
-(`range_period_partially_covered` for a widening past availability,
-`period_outside_state_validity` when nothing is left,
+(`source_period_narrower_than_available` for a period narrower than the data in the
+study window, `period_outside_state_validity` when nothing is left,
 `binding_state_drifts_within_period` across a transition — see `crates/DESIGN.md` →
 Project semantic validation), and auto-validation surfaces it on every edit (§ "Browser
 storage + project-file persistence" below). `ValidationPanel` carries a "Fix in catalog"
@@ -1532,10 +1532,11 @@ study window 2005–2020"). Like the variable page's period card, it judges the 
 the years the source's columns are delivered in (the register read the card already
 makes for its name; period ruling 2026-10-22), so a period of window ∩ availability,
 what an add writes, is no divergence, and while that read is out the card marks nothing.
-The window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`
-and, narrowed, on `Binding`; never on `window`), so divergence is shown rather than
-warned about. The one divergence that is more than shown is a period with no years
-inside the window at all, which blocks the order (see "Common study window").
+The window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`,
+never on `window`), so divergence is shown. Two divergences are more than shown: a
+period narrower than what its columns deliver in the window is the server's
+`source_period_narrower_than_available` warning, and a period with no years inside the
+window at all blocks the order (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -1603,10 +1604,9 @@ holding one draft per session.
   the same module: the period grammar and project periods (a source period's days, a
   study window's days) are reg-core's, never parsed or bounded in the SPA (`period.ts`
   composes reg-core's answers, and `catalog.ts` fuses delivery windows and value-set
-  spans with reg-core's interval merge). The study-window coverage hint stays at year
-  grain (a period with a non-year endpoint gets none); the disjointness finding compares
-  days. The type-to-filter fold is the server search's `fold_search` through the same
-  module, not a TS copy.
+  spans with reg-core's interval merge). The disjointness finding compares days. The
+  type-to-filter fold is the server search's `fold_search` through the same module, not
+  a TS copy.
 - **Project-file versions.** Any JSON object opens (the shape is the only ingress
   check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
   the single `unsupported_schema_version` issue, which the browser now shows on open. No
@@ -1751,12 +1751,11 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   source's years differ from the window, or that it is outside it (`committedMarker`,
   shared by the subject-page picker and the register list); the subject page's own
   `?period` deviation keeps the period picker's existing hint.
-- **A narrower source is a fact, not a warning (#1463).** The validation panel's
-  study-window coverage hint says which years of the window a source covers, at neutral
-  tone: a narrower period is usually deliberate. It offers "Extend in catalog" only when
-  the source's register read (shared with the card's name read) shows its columns
-  delivered at its variant in an uncovered year (an era with an unknown start is no such
-  evidence); while that read is out or failed, the hint stays without the offer.
+- **A source narrower than its data warns once, from the server (#1836).** The SPA
+  computes no coverage of its own: `validate`'s `source_period_narrower_than_available`
+  names the days in the window the source's columns deliver and its period leaves out,
+  located on the source like any finding. A period narrower than the window where the
+  data is too says nothing.
 - **"Apply window overlap" is the one rewrite.** It reads each dated source's register
   (the register list's `VariableDelivery.windows`), plans each source's overlap from its
   own columns at its own variant (`planWindowOverlap`), and asks before writing: the

@@ -1,0 +1,28 @@
+{
+  "note": "The pin LonFinkMars names the March column of a merged monthly family. A 2018-01..2018-03 request is ordered for 2018-03 alone, with one clip. Moved from `api/validate-merged-monthly-family` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
+  "fixture": "semantic",
+  "artifact": "catalog",
+  "project": {
+    "schema_version": "4.0.0",
+    "steward": "global",
+    "reg_meta_version": "5.1.0",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "source",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": "2018-01",
+          "to": "2018-03"
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/lonfink",
+            "type": "categorical",
+            "representation": "LonFinkMars"
+          }
+        ]
+      }
+    ]
+  }
+}

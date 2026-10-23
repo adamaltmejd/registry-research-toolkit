@@ -1,5 +1,5 @@
 {
-  "note": "Twin of `validate/pinned-middle-segment`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
+  "note": "The pin Mitten has a state at 2010 and another at 2020 and misses 2015. A list period 2010,2015,2020 reports one `binding_state_drifts_within_period` naming the whole requested list. The clip itself is `order/clip-pinned-middle-segment`'s. Fails if drift stops being reported across a missed list segment or names another period.",
   "kind": "catalog",
   "fixture": "semantic",
   "requests": [

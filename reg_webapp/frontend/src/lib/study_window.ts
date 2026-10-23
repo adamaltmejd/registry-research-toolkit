@@ -80,7 +80,7 @@ export function overlapRegisters(
  * register's binding children (the register read). A binding pinned to a delivery
  * column (`representation`) contributes that column's eras only. `unknown` when any
  * one of its columns has no dated delivery at that variant in the read. */
-export function sourceDeliveryEras(
+function sourceDeliveryEras(
   source: SafeSource,
   children: readonly VariableChild[],
 ): { eras: { from: string; to: string }[]; unknown: boolean } {

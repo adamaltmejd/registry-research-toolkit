@@ -1,0 +1,72 @@
+{
+  "note": "held-unevenly: the catalog delivers value and other 2010..2025; the steward holds value for 2018..2019 and other for 2017..2021. In the study window 2017..2021 a day counts as delivered only where some binding is held and no binding would block a widened order (available, not held). Both (value and other, 2018) warns 2019 only: widening into 2017 or 2020..2021 would block on value's coverage_gap. Served (value and other, 2018..2019) warns nothing. Value (2018) warns 2019, not the catalog's other window years: a steward artifact counts held days. Fails if the warning stops firing for a period narrower than its held columns, counts catalog days the steward does not hold, or names days another binding would block on.",
+  "fixture": "held-unevenly",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "4.0.0",
+        "steward": "swecov",
+        "reg_meta_version": "reg_meta/v0.40.1",
+        "name": "Reader case",
+        "window": {
+          "from": 2017,
+          "to": 2021
+        },
+        "sources": [
+          {
+            "name": "Both",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              },
+              {
+                "variable": "scb/example/other",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              }
+            ]
+          },
+          {
+            "name": "Served",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2018,
+              "to": 2019
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              },
+              {
+                "variable": "scb/example/other",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              }
+            ]
+          },
+          {
+            "name": "Value",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "clips": [
+    {
+      "ordered_period": "2018-03",
+      "requested_period": "2018-Q1",
+      "source": "source",
+      "variable": "scb/example/lonfink"
+    }
+  ],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "LonFinkMars",
+        "variable": "scb/example/lonfink",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "LonFinkMars",
+        "edition": "2018-03",
+        "file": "scb_example_annual_2018-03",
+        "table": ""
+      },
+      "requested_period": "2018-03",
+      "source": "source"
+    }
+  ],
+  "extract_format": "dta",
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
+    "mode": "global_fallback",
+    "project_hash": "57b1d0452bdb6538dd6804cbbf87bee62ca6c98057c0a3a10e883c0dfc4aca32",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "5.1.0",
+    "project_schema_version": "4.0.0",
+    "steward": "global"
+  },
+  "version": 2
+}

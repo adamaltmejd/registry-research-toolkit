@@ -1,0 +1,42 @@
+{
+  "clips": [
+    {
+      "ordered_period": "2019-02",
+      "requested_period": "2019",
+      "source": "source",
+      "variable": "scb/example/februari"
+    }
+  ],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Februari",
+        "variable": "scb/example/februari",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Februari",
+        "edition": "2019-02",
+        "file": "scb_example_annual_2019-02",
+        "table": ""
+      },
+      "requested_period": "2019-02",
+      "source": "source"
+    }
+  ],
+  "extract_format": "dta",
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
+    "mode": "global_fallback",
+    "project_hash": "d718f8b6256bf04721e1de0a1fb301c82d044d6d21b1797c24ddc39463faca13",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "5.1.0",
+    "project_schema_version": "4.0.0",
+    "steward": "global"
+  },
+  "version": 2
+}

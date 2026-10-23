@@ -1,0 +1,65 @@
+{
+  "note": "kon is delivered from 2018. A list period is one request: each binding gets one clip over the whole list, naming every delivered segment (2018; 2018..2019,2021..2022), and a segment kon misses entirely is dropped from it. Moved from `api/validate-list-period-one-clip` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
+  "fixture": "semantic",
+  "artifact": "catalog",
+  "project": {
+    "schema_version": "4.0.0",
+    "steward": "global",
+    "reg_meta_version": "5.1.0",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "segment",
+        "register_variant": "scb/example/annual",
+        "period": [
+          {
+            "from": 2010,
+            "to": 2012
+          },
+          2018
+        ],
+        "bindings": [
+          {
+            "variable": "scb/example/kon",
+            "type": "categorical"
+          }
+        ]
+      },
+      {
+        "name": "adjacent",
+        "register_variant": "scb/example/annual",
+        "period": [
+          2015,
+          2016,
+          2018
+        ],
+        "bindings": [
+          {
+            "variable": "scb/example/kon",
+            "type": "categorical"
+          }
+        ]
+      },
+      {
+        "name": "partial",
+        "register_variant": "scb/example/annual",
+        "period": [
+          {
+            "from": 2017,
+            "to": 2019
+          },
+          {
+            "from": 2021,
+            "to": 2022
+          }
+        ],
+        "bindings": [
+          {
+            "variable": "scb/example/kon",
+            "type": "categorical"
+          }
+        ]
+      }
+    ]
+  }
+}

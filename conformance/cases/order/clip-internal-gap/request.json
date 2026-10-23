@@ -1,0 +1,61 @@
+{
+  "note": "avbrott is delivered 2010..2012 and 2016..2018. A range over the gap is ordered for both runs with one clip; a range inside one run and a list period that skips the gap are ordered whole, with no clip. Moved from `api/validate-internal-gap` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
+  "fixture": "semantic",
+  "artifact": "catalog",
+  "project": {
+    "schema_version": "4.0.0",
+    "steward": "global",
+    "reg_meta_version": "5.1.0",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "range",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2010,
+          "to": 2018
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/avbrott",
+            "type": "categorical"
+          }
+        ]
+      },
+      {
+        "name": "tail",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2016,
+          "to": 2018
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/avbrott",
+            "type": "categorical"
+          }
+        ]
+      },
+      {
+        "name": "list",
+        "register_variant": "scb/example/annual",
+        "period": [
+          {
+            "from": 2010,
+            "to": 2012
+          },
+          {
+            "from": 2016,
+            "to": 2018
+          }
+        ],
+        "bindings": [
+          {
+            "variable": "scb/example/avbrott",
+            "type": "categorical"
+          }
+        ]
+      }
+    ]
+  }
+}

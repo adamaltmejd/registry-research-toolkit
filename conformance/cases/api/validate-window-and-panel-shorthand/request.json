@@ -1,5 +1,5 @@
 {
-  "note": "Twin of `validate/window-and-panel-shorthand`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
+  "note": "Twin of `validate/window-and-panel-shorthand`: a study window and a panel's string member shorthand are accepted. Each per-year panel member is a source narrower than the data its column delivers in the window, so each warns `source_period_narrower_than_available` with the other year (#1836). Fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
   "kind": "catalog",
   "fixture": "semantic",
   "requests": [

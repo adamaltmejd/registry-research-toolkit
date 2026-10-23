@@ -1,0 +1,42 @@
+{
+  "clips": [
+    {
+      "ordered_period": "2018..2019-02-28",
+      "requested_period": "2017..2019-02-28",
+      "source": "source",
+      "variable": "scb/example/kon"
+    }
+  ],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Kon",
+        "variable": "scb/example/kon",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Kon",
+        "edition": "2018..2019-02-28",
+        "file": "scb_example_annual",
+        "table": ""
+      },
+      "requested_period": "2018..2019-02-28",
+      "source": "source"
+    }
+  ],
+  "extract_format": "dta",
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
+    "mode": "global_fallback",
+    "project_hash": "81239bc341fef120a6496950581ccdb90838e74eb9cd9cab6964bc31f5f7e1eb",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "5.1.0",
+    "project_schema_version": "4.0.0",
+    "steward": "global"
+  },
+  "version": 2
+}

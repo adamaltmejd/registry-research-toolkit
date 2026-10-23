@@ -10,7 +10,7 @@ import {
   Text,
 } from "react-aria-components";
 import { fqidSegments, registerPrefixOf } from "./catalog";
-import { registerChildren, registerRead, UNASKED } from "./catalog_names";
+import { registerRead, UNASKED } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import {
   type ProjectData,
@@ -35,11 +35,7 @@ import { TreeChevron } from "./ui/TreeChevron";
 import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
-import {
-  PROJECT_HEADING_ID,
-  windowCoverageHints,
-  windowDisjointFindings,
-} from "./validation";
+import { PROJECT_HEADING_ID, windowDisjointFindings } from "./validation";
 
 // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
 // Under #991 the project IS the cart: it SHOWS what the researcher picked while
@@ -63,18 +59,6 @@ interface Props {
   /** Whether this deployment serves more than one provider, so a source card's
    * title carries its provider. Read once at the app root. */
   providerQualified: boolean;
-}
-
-/** The study-window coverage hints, for `useCatalogRead`: they read the catalog's cached
- * register reads, so they re-run when one lands. */
-function coverageHintsOf(draft: RawDraft | null) {
-  return draft == null
-    ? []
-    : windowCoverageHints(
-        safeStudyWindow(draft.window),
-        safeSourceSlots(draft.sources),
-        registerChildren,
-      );
 }
 
 /** Each source's period against the study window, judged inside its columns'
@@ -178,7 +162,6 @@ export function ProjectEditor({
   const windowBlocked = useProject((s) => s.windowBlocked);
   const nameBlocked = useProject((s) => s.nameBlocked);
   const orderBusy = useProject((s) => s.orderBusy);
-  const coverageHints = useCatalogRead(coverageHintsOf, draft);
   const windowRelations = useCatalogRead(windowRelationsOf, draft);
   // Read-side safe source slots preserve array positions for degraded cards while
   // the draft itself stays verbatim for serialize/validate. The window is coerced
@@ -455,7 +438,6 @@ export function ProjectEditor({
             requestError={requestError}
             requestErrorSource={requestErrorSource}
             orderFindings={orderFindings}
-            windowHints={coverageHints}
             windowFindings={windowDisjointFindings(studyWindow, sources)}
             sources={sources}
             onRetry={() => void projectStore.validate()}
