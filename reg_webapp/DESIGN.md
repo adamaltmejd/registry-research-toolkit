@@ -1504,10 +1504,11 @@ replaces it.
 The source period is the variant's extraction scope and every column's period (#1838):
 the order clips each column to its own years inside it, so a column is never pinned to
 years of its own. An add reaching beyond the source widens it to the union; an add
-inside it changes nothing. The add resolves its binding fields at its own period
-(`finalAddPeriodWires`). A source period edit (`periodChange`) replaces the period and
-touches no binding. `applyStagedDiff` is the SOLE catalog→project mutation path.
-`updateField` (the project's own `name` / `window`), `removeSource`/`removeBinding` and
+inside it keeps the period as written. The add resolves its binding fields (type, value
+set) at its own period, the years picked (`finalAddPeriodWires`), not at every year the
+source orders. A source period edit (`periodChange`) replaces the period and touches no
+binding. `applyStagedDiff` is the SOLE catalog→project mutation path. `updateField` (the
+project's own `name` / `window`), `removeSource`/`removeBinding` and
 `applySourcePeriodEdit` are the only other mutators the cart UI calls — a source's own
 generated `name` is not editable anywhere.
 

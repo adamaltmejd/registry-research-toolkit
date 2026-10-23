@@ -30,7 +30,7 @@ import {
   type ValidationResultModel,
   validateProject,
 } from "./api";
-import { periodCoverageUnion } from "./period";
+import { periodCoverageUnion, samePeriod } from "./period";
 import {
   type DraftBinding,
   defaultSourceName,
@@ -968,10 +968,11 @@ export const projectStore = {
         continue;
       }
       const found = sources[idx];
-      const period = periodCoverageUnion(
-        found.period as ProjectSourcePeriod,
-        add.period,
-      );
+      const current = found.period as ProjectSourcePeriod;
+      const union = periodCoverageUnion(current, add.period);
+      // An add inside the source keeps its period as written ("2018" is not
+      // respelled 2018), so the project and its hash do not move.
+      const period = samePeriod(union, current) ? current : union;
       const existing = safeSourceBindings(found);
       const held = existing.some((b) =>
         bindingMatches(

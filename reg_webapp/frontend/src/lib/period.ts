@@ -119,6 +119,20 @@ export function normalizePeriodRows(
   };
 }
 
+/** Whether two periods request the same days (`2018`, `"2018"` and
+ * `{from: 2018, to: 2018}` do); periods without placeable days compare as
+ * written. */
+export function samePeriod(
+  a: ProjectSourcePeriod,
+  b: ProjectSourcePeriod,
+): boolean {
+  const da = datedIntervals(a);
+  const db = datedIntervals(b);
+  return da !== null && db !== null
+    ? sameIntervals(da, db)
+    : JSON.stringify(a) === JSON.stringify(b);
+}
+
 /** Whether a period is the UNSET/empty value — the fresh-source no-period marker
  * (`""`, what `sourcePeriodFromWire(null)` yields) or an empty segment list
  * (`[]`). Blank `{from,to}` endpoints ride the string/number arms, so this only

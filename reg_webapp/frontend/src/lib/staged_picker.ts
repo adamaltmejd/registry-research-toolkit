@@ -341,7 +341,7 @@ export function committedPickerRows(
           continue;
         }
         const period = sourcePeriod(source);
-        // An unpinned binding matches the rows of its source's years.
+        // A binding without a representation matches the rows of its source's years.
         const binding = safeSourceBindings(source).find(
           (b) =>
             bindingVariable(b) === band.key &&
@@ -517,8 +517,9 @@ function finalAddPeriodWires(
   const periods = finalSourcePeriodsForStagedAdds(sources, adds);
   const wires: string[] = [];
   for (const add of adds) {
-    // An add resolves its binding fields at its own period; a period-less one
-    // at its source's period, as the batch leaves it.
+    // An add resolves its binding fields (type, value set) at its own period,
+    // the years picked, not every year its source orders; a period-less one at
+    // its source's period, as the batch leaves it.
     // That final source period must be one reg-core accepts too (`2099` and
     // `LA2099` union to overlapping members), or the commit would author it.
     const scope = sourcePeriodToWire(
