@@ -98,8 +98,8 @@
   "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
-    "catalog_generation_id": "335c0bc91163525b32ec4246ea35db40e8fd4c2188ddbafc95a8c919be6e605f",
-    "catalog_schema_version": "12.2.0",
+    "catalog_generation_id": "4a781a7c8446ae97a2ca5bdad103c107345fbeaaf03fa7e5b43d2e2f6b025cca",
+    "catalog_schema_version": "12.3.0",
     "mode": "steward_holdings",
     "project_hash": "c54321b808396d864679a7d794e98cba55d482008decad665087a09f04f73974",
     "project_name": "Reader case",

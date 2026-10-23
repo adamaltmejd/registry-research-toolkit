@@ -67,6 +67,7 @@ _CELL_CONFLICT = "inventory_cell_conflict"
 _MEMBER = "inventory_member_invalid"
 _PROJECTION = "inventory_projection_invalid"
 _PERIOD_COLUMN = "inventory_period_column_invalid"
+_CARRIED = "inventory_carried_key_invalid"
 # Public: the steward spec refuses a mapping warning that misses every table
 # under the same code (#1684).
 WINDOW_INVALID = "inventory_window_invalid"
@@ -343,7 +344,15 @@ class ColumnMapping(_InventoryModel):
     edition (#1645): the column serves this coordinate only there.
     `data_warning` attaches a steward-scoped caveat to part or all of what the
     mapping serves (#1684). `_check_windows` owns the rules of both windows,
-    which need the whole table."""
+    which need the whole table.
+
+    `carried` marks an auxiliary table's join key: the column is the variant's row
+    key, so every file of the table carries it, but it serves no ordered cell. Another
+    table of the variant serves that key, so a carried mapping is outside the
+    one-to-one rule, and a key order never reaches the auxiliary table. It serves its
+    table's whole edition, so it takes no member or window, and carries no warning.
+    Compile refuses one that is not a panel key of its variant
+    (`holdings_validation`)."""
 
     register_variant: str
     variable: str
@@ -351,6 +360,7 @@ class ColumnMapping(_InventoryModel):
     member: ColumnMember | None = None
     window: EditionSegment | None = None
     data_warning: MappingWarning | None = None
+    carried: bool = False
 
     @field_validator("window", mode="before")
     @classmethod
@@ -390,6 +400,21 @@ class ColumnMapping(_InventoryModel):
                 f"<provider>/<register>/<variable>; got {value} ({kind})"
             )
         return value
+
+    @model_validator(mode="after")
+    def _check_carried(self) -> ColumnMapping:
+        if self.carried and (
+            self.member is not None
+            or self.window is not None
+            or self.data_warning is not None
+        ):
+            raise _InventoryGuardError(
+                _CARRIED,
+                f"carried key {self.register_variant} {self.variable} takes no "
+                "member, window or data_warning: it rides along with its table's "
+                "whole edition and serves no cell",
+            )
+        return self
 
     @model_validator(mode="after")
     def _check_prefix_match(self) -> ColumnMapping:
@@ -655,6 +680,34 @@ class InventoryTable(_InventoryModel):
                     "column once and list all of its mappings under it",
                 )
             seen.add(column.name)
+        return self
+
+    @model_validator(mode="after")
+    def _check_carried_rides_along(self) -> InventoryTable:
+        """A carried key rides along only in a file of its own table and variant,
+        and a file is emitted only for a served cell, so a table must serve some
+        cell of each variant it carries a key of; otherwise the key never rides
+        along and the build would not say so."""
+        served = {
+            mapping.register_variant
+            for column in self.columns
+            for mapping in column.mappings
+            if not mapping.carried
+        }
+        if dead := sorted(
+            {
+                mapping.register_variant
+                for column in self.columns
+                for mapping in column.mappings
+                if mapping.carried
+            }
+            - served
+        ):
+            raise _InventoryGuardError(
+                _CARRIED,
+                f"carries a key of {', '.join(dead)} but serves no cell of it, so "
+                "no file of this table and variant is ever ordered to carry it",
+            )
         return self
 
 
@@ -925,6 +978,10 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     the overlap check compares the window, as for a year or month member.
     `_check_windows` holds the window's own rules first.
 
+    A carried key (`ColumnMapping.carried`) serves no cell, so it is no location:
+    the table that serves the key is the one location, and the carried column only
+    rides along in its own table's files.
+
     Cost: group by `(register_variant, variable, period_scope)` and compare
     pairwise only within each group. An inventory with many variables avoids a
     global quadratic scan; the usual largest group is one variable's annual
@@ -938,6 +995,8 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
         bounds = _edition_intervals(table)
         for column in table.columns:
             for mapping in column.mappings:
+                if mapping.carried:
+                    continue
                 key = (
                     mapping.register_variant,
                     mapping.variable,

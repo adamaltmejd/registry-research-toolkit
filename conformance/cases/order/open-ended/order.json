@@ -22,8 +22,8 @@
   "extract_format": "dta",
   "provenance": {
     "artifact_kind": "catalog",
-    "catalog_generation_id": "d0acd1f776df4d2a743970476ca6e6d5ea9d9b55542de2a9d3576f46369be757",
-    "catalog_schema_version": "12.2.0",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
     "mode": "global_fallback",
     "project_hash": "e7e345ef8aed2c3dd57f167dc9839b6e8f0ae5d3b25644cd7ac0b290b1a43f1c",
     "project_name": "Reader case",

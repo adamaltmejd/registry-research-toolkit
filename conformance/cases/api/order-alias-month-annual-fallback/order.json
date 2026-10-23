@@ -22,8 +22,8 @@
   "extract_format": "dta",
   "provenance": {
     "artifact_kind": "catalog",
-    "catalog_generation_id": "d0acd1f776df4d2a743970476ca6e6d5ea9d9b55542de2a9d3576f46369be757",
-    "catalog_schema_version": "12.2.0",
+    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
+    "catalog_schema_version": "12.3.0",
     "mode": "global_fallback",
     "project_hash": "82a86951ad3ebee2da9b469639c37bb8fa852914360714496906d9a3127ba603",
     "project_name": "Synthetic semantic",

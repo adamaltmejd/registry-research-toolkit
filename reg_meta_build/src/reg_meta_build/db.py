@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "12.2.0"
+SCHEMA_VERSION = "12.3.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -1848,6 +1848,19 @@ CREATE TABLE holding_mapping (
 -- Candidate logical-to-physical index; verify order with plan 02 EXPLAIN QUERY PLAN.
 CREATE INDEX idx_holding_mapping_variable_variant
     ON holding_mapping(variable_id, variant_id);
+
+-- An auxiliary table's carried join key (inventory `carried = true`): the column is a
+-- panel key of the variant, carried in every file of its table, and serves no ordered
+-- cell. Kept apart from holding_mapping so a reader that predates it never matches it
+-- as a served cell. It serves the table's whole edition, so it has no member or window.
+CREATE TABLE holding_key (
+    column_id INTEGER NOT NULL REFERENCES holding_column(column_id),
+    variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    representation_literal TEXT NOT NULL CHECK (length(representation_literal) > 0),
+    representation_canonical TEXT NOT NULL CHECK (length(representation_canonical) > 0),
+    PRIMARY KEY (column_id, variant_id, variable_id, representation_canonical)
+);
 
 """
     + DERIVED_DDL

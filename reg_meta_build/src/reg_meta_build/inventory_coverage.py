@@ -289,7 +289,7 @@ def coverage_misses(
         if table.period_scope == "year_independent":
             for column in table.columns:
                 placed = _placements(column, pair_ids, windows, ())
-                unresolved += len(column.mappings) - len(placed)
+                unresolved += sum(not m.carried for m in column.mappings) - len(placed)
                 if not placed:
                     continue
                 pairs += 1
@@ -317,7 +317,7 @@ def coverage_misses(
         bounds = edition_bounds(table.edition)
         for column in table.columns:
             placed = _placements(column, pair_ids, windows, bounds)
-            unresolved += len(column.mappings) - len(placed)
+            unresolved += sum(not m.carried for m in column.mappings) - len(placed)
             # An unmapped column admits nothing: it stays out of the
             # denominator because it is never ordered, so it cannot contradict the
             # catalog.
@@ -698,6 +698,9 @@ def _placements(
     ONCE: the edition loop then only compares."""
     placed = []
     for mapping in column.mappings:
+        if mapping.carried:
+            # A carried key serves no cell, so the catalog owes it no window.
+            continue
         pair = pair_ids.get((mapping.register_variant, mapping.variable))
         if pair is None:
             continue

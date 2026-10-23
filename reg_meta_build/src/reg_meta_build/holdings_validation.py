@@ -26,6 +26,7 @@ HOLDING_RELATIONS = (
     "holding_period",
     "holding_column",
     "holding_mapping",
+    "holding_key",
 )
 
 
@@ -155,6 +156,25 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
                     }
                 )
                 stored_canonical.append(mapping["representation_canonical"])
+            for key in conn.execute(
+                "SELECT hk.*, v.register_id AS variable_register, rv.register_id AS variant_register, v.slug AS variable_slug, rv.slug AS variant_slug, r.slug AS register_slug, p.slug AS provider_slug FROM holding_key hk JOIN variable v USING(variable_id) JOIN register_variant rv ON rv.register_variant_id=hk.variant_id JOIN register r ON r.register_id=v.register_id JOIN provider p USING(provider_id) WHERE hk.column_id=? ORDER BY hk.variant_id, hk.variable_id, hk.representation_canonical",
+                (column["column_id"],),
+            ):
+                prefix = f"{key['provider_slug']}/{key['register_slug']}"
+                variant = f"{prefix}/{key['variant_slug']}"
+                if key["variable_register"] != key["variant_register"]:
+                    raise ValueError(
+                        f"Holding key ownership mismatch at column {column['column_id']}"
+                    )
+                mappings.append(
+                    {
+                        "register_variant": variant,
+                        "variable": f"{prefix}/{key['variable_slug']}",
+                        "representation": key["representation_literal"],
+                        "carried": True,
+                    }
+                )
+                stored_canonical.append(key["representation_canonical"])
             if scope == "unknown" and mappings:
                 raise ValueError(
                     f"Unknown holding {table['physical_id']!r} has mappings"
