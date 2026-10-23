@@ -391,3 +391,46 @@ def test_flavor_rejects_stale_declared_table_before_writing(tmp_path: Path) -> N
     with pytest.raises(SystemExit, match=r"table\(s\) absent from holding"):
         run_flavor(tmp_path, enriched)
     assert not (tmp_path / "out" / "providers").exists()
+
+
+def test_flavor_keys_reach_the_slug_toml_and_its_pins_survive_regeneration(
+    tmp_path: Path,
+) -> None:
+    """A variant's panel keys are authored on its `[[flavor]]` entry and the
+    regenerated steward slug TOML carries them; the `[variable]` pins
+    `entity-key-pins` folded into that file survive the rewrite. Fails if flavor
+    drops the keys (orders from the variant lose their row key) or the pins (the
+    steward gate refuses the next build)."""
+    # The spec dir's name is the steward id, which names the slug dir.
+    spec = tmp_path / "spec" / "swecov"
+    shutil.copytree(SPEC_DIR, spec)
+    scope = (spec / "scope.toml").read_text(encoding="utf-8")
+    entry = 'variant_name = "Beställda prover"\n'
+    assert scope.count(entry) == 1
+    (spec / "scope.toml").write_text(
+        scope.replace(
+            entry,
+            entry + 'panel_entity_key = "personnr"\n'
+            'panel_time_key = "ordercreateddatetime"\npanel_time_grain = "row"\n',
+        ),
+        encoding="utf-8",
+    )
+    slug_dir = tmp_path / "reg_meta_build" / "fqid_slugs" / "swecov"
+    slug_dir.mkdir(parents=True)
+    (slug_dir / "inera.toml").write_text(
+        '[variable."6317385603952063941.42"]\nslug = "personnr"\n', encoding="utf-8"
+    )
+
+    root = run_flavor(tmp_path, _synthetic_enriched(), spec)
+
+    pins = tomllib.loads((flavor_slug_dir(root) / "inera.toml").read_text("utf-8"))
+    variant = next(
+        v for v in pins["register_variant"].values() if "panel_entity_key" in v
+    )
+    assert variant == {
+        "slug": "_default",
+        "panel_entity_key": "personnr",
+        "panel_time_key": "ordercreateddatetime",
+        "panel_time_grain": "row",
+    }
+    assert pins["variable"] == {"6317385603952063941.42": {"slug": "personnr"}}

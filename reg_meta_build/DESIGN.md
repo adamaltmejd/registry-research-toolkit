@@ -2546,9 +2546,12 @@ enforces this: every variable needs an authored `[variable]` pin, and a variable
 one is refused as `unresolved_catalog_identity`, entity key or not. A separate
 validation gate would add nothing there, so it was retired (#1222). extend-db auto-slugs
 overlay variables, so the steward path keeps the gate (`_check_entity_key_vars_curated`,
-#559). It requires a pin in the steward slug dir for every entity-key variable of the
-steward registers. `entity-key-pins --slug-dir <steward dir>` generates the missing
-pins.
+#559). It requires a pin in the steward slug dir for every panel-key variable of the
+steward registers: each entity-key element and a row-level `panel_time_key`, whose slug
+a reslug dangles the same way. `entity-key-pins --slug-dir <steward dir>` generates the
+missing pins. The steward slug TOMLs are generated (`build_catalog.py flavor` rewrites
+them), so a steward variant's panel keys are authored on its `[[flavor]]` entry in
+`scope.toml` and `flavor` writes them out; the rewrite carries the folded pins over.
 
 The published artifact is the sole runtime source of physical holdings; accepted
 inventory TOML is a builder input, never a second runtime catalog. Reference metadata

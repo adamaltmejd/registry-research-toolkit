@@ -1,0 +1,6 @@
+{
+  "note": "Fails if the steward panel-key gate stops covering a row-level panel_time_key: the unpinned sosdatum must be refused beside the pinned entity key sosvar.",
+  "failures_contain": [
+    "dors/sosdatum"
+  ]
+}

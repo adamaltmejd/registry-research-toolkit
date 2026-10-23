@@ -1757,11 +1757,13 @@ def iter_entity_key_variables(
     conn: sqlite3.Connection,
     register_native_ids: Mapping[tuple[str, str], str],
 ) -> Iterator[EntityKeyVariable]:
-    """Yield every panel entity-key variable of the registers
-    ``register_native_ids`` names on a built (flavored) DB.
+    """Yield every panel-key variable of the registers ``register_native_ids``
+    names on a built (flavored) DB: each entity-key element and a row-level
+    `panel_time_key` (never the delivery sentinel `period`), whose slug a reslug
+    can dangle the same way.
 
-    Enumerates `register_variant` rows carrying a `panel_entity_key`, decodes
-    each (bare slug or composite json-array) the same way
+    Enumerates `register_variant` rows carrying a panel key, decodes each (bare
+    slug or composite json-array) the same way
     `validate._check_panel_refs_resolve` does, and resolves each element to its
     `variable` in the variant's OWN register (slug is only register-unique).
     A ref that resolves to no variable is SKIPPED here (the resolution gate
@@ -1783,13 +1785,13 @@ def iter_entity_key_variables(
     global register's row must never reach it. Steward-overlay registers are
     all-new variables, so it is safe on them."""
     rows = conn.execute(
-        "SELECT rv.register_id, rv.panel_entity_key, "
+        "SELECT rv.register_id, rv.panel_entity_key, rv.panel_time_key, "
         "       r.slug AS register_slug, r.name AS register_name, "
         "       p.slug AS provider_slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE rv.panel_entity_key IS NOT NULL"
+        "WHERE rv.panel_entity_key IS NOT NULL OR rv.panel_time_key IS NOT NULL"
     ).fetchall()
     source_ids_by_register: dict[int, dict[int, str]] = {}
     seen: set[int] = set()
@@ -1800,7 +1802,12 @@ def iter_entity_key_variables(
         if native_id is None:
             continue  # not a steward register: skip before _variable_source_ids
         register_id = row["register_id"]
-        for slug in _decode_panel_entity_key_refs(row["panel_entity_key"]):
+        time_refs = _decode_panel_entity_key_refs(row["panel_time_key"])
+        for slug in (
+            *_decode_panel_entity_key_refs(row["panel_entity_key"]),
+            # `period` is the delivery-aligned sentinel, not a variable.
+            *(ref for ref in time_refs if ref != "period"),
+        ):
             hit = conn.execute(
                 "SELECT variable_id FROM variable "
                 "WHERE register_id = ? AND slug = ? LIMIT 1",
@@ -1914,7 +1921,7 @@ def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
     for p in pins:
         lines.append(
             f"[variable.{_toml_str(p.source_id)}]  "
-            f"# {p.register_slug}: panel_entity_key = {p.variable_slug!r}"
+            f"# {p.register_slug}: panel key {p.variable_slug!r}"
         )
         lines.append(f"slug = {_toml_str(p.slug)}")
         lines.append("")

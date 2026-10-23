@@ -1604,6 +1604,31 @@ def _flavor_provider_toml(
     return "\n".join(lines) + "\n"
 
 
+def _kept_variable_pins(path: Path) -> list[str]:
+    """The `[variable]` slug pins of the steward slug TOML `flavor` is about to
+    replace, re-emitted in source-id order: `entity-key-pins` folds them in, the
+    steward gate requires them (`_check_entity_key_vars_curated`), and no flavor
+    input states them."""
+    import tomllib
+
+    from reg_meta_build.fqid_slugs import _source_id_sort_key
+
+    if not path.exists():
+        return []
+    pins = tomllib.loads(path.read_text(encoding="utf-8")).get("variable", {})
+    lines: list[str] = []
+    for source_id in sorted(pins, key=_source_id_sort_key):
+        if set(pins[source_id]) != {"slug"}:
+            raise SystemExit(
+                f"{path}: [variable.{source_id!r}] carries more than a slug pin; "
+                "flavor keeps only pins. No slug output was written."
+            )
+        lines.append(f"[variable.{_toml_str(source_id)}]")
+        lines.append(f"slug = {_toml_str(pins[source_id]['slug'])}")
+        lines.append("")
+    return lines
+
+
 def cmd_flavor(args: argparse.Namespace) -> None:
     enriched_path = args.out / "derived" / "holdings_enriched.json"
     if not enriched_path.exists():
@@ -1649,6 +1674,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
                 "description": None,
                 "_variants": {},
                 "_variant_slugs": {},
+                "_variant_keys": {},
             },
         )
         if var_key in reg["_variants"]:
@@ -1709,6 +1735,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             "variables": variables,
         }
         reg["_variant_slugs"][var_key] = var_slug
+        reg["_variant_keys"][var_key] = flavor
     if ungrafted:
         raise SystemExit(
             "flavor holding columns carry a register Källa, so the flavor leaves "
@@ -1759,11 +1786,13 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             encoding="utf-8",
         )
 
-    # --- steward slug TOMLs (committed; register + register_variant only) ---
+    # --- steward slug TOMLs (committed; register + register_variant + pins) ---
     # Deterministic high-band ids via reg_meta_build.id.mint mirror what
     # extend_db mints, so the `[register."<id>"]` / `[register_variant."<id>.<id>"]`
     # source-IDs line up with the inserted rows. Variable slugs auto-derive at
-    # build time (not committed pre-v1), so they are not emitted here.
+    # build time (not committed pre-v1), so they are not emitted here, except the
+    # panel-key pins (`entity-key-pins`), which this rewrite carries over from the
+    # file it replaces. A variant's panel keys come from its [[flavor]] entry.
     from reg_meta_build.id import mint
 
     slug_root = REPO_ROOT / "reg_meta_build" / "fqid_slugs" / steward
@@ -1777,9 +1806,23 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         lines.append("")
         for var_key in reg["_variants"]:
             variant_id = mint("variant", prov_slug, reg_key, var_key)
+            flavor = reg["_variant_keys"][var_key]
             lines.append(f'[register_variant."{register_id}.{variant_id}"]')
             lines.append(f'slug = "{reg["_variant_slugs"][var_key]}"')
+            if (entity := flavor.panel_entity_key) is not None:
+                value = (
+                    _toml_str(entity)
+                    if isinstance(entity, str)
+                    else f"[{', '.join(_toml_str(e) for e in entity)}]"
+                )
+                lines.append(f"panel_entity_key = {value}")
+            if flavor.panel_time_key is not None:
+                lines.append(f"panel_time_key = {_toml_str(flavor.panel_time_key)}")
+            if flavor.panel_time_grain is not None:
+                lines.append(f"panel_time_grain = {_toml_str(flavor.panel_time_grain)}")
             lines.append("")
+    for prov_slug, lines in by_provider.items():
+        lines.extend(_kept_variable_pins(slug_root / f"{prov_slug}.toml"))
     n_reg = n_var = 0
     for prov_slug, lines in sorted(by_provider.items()):
         header = (

@@ -218,7 +218,10 @@ class FlavorDefinition(_SpecModel):
     the holdings still documents its columns. `keep_columns` are Källa-sourced
     columns the flavor keeps as the steward's own variables; `sensitive_columns`
     are flagged `is_sensitive`. A `year_independent` variant's states carry no
-    calendar window.
+    calendar window. `panel_entity_key`, `panel_time_key` and `panel_time_grain` are
+    the variant's row key, which `flavor` writes into the steward slug TOML it
+    regenerates (that file is generated, so a key authored there would be lost);
+    the slug build validates them as it does any variant's.
     """
 
     holding: str = Field(min_length=1)
@@ -233,6 +236,9 @@ class FlavorDefinition(_SpecModel):
     keep_columns: list[str] = Field(default_factory=list)
     sensitive_columns: list[str] = Field(default_factory=list)
     period_scope: Literal["intervals", "year_independent"] = "intervals"
+    panel_entity_key: str | list[str] | None = None
+    panel_time_key: str | None = None
+    panel_time_grain: Literal["delivery", "row"] | None = None
 
     @property
     def coordinate(self) -> str:
