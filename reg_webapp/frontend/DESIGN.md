@@ -410,8 +410,8 @@ Time is the axis every relation is drawn on.
   `accent` bounds and `accent-ink` years on the axis. With no project open there is no
   band. That **window band** is the one drawing of a period control: where the period is
   set (the banner's study window, a variable page's source period) the band is dragged
-  by slim `accent` thumbs on its bounds, and every period selector composes the same
-  classes (`ui/WindowBand.module.css`).
+  by slim `accent` thumbs on its bounds; both compose the same classes
+  (`ui/WindowBand.module.css`), and a new period selector does too.
 - A **source period** narrows the window for one variable. It stays allowed but is the
   exception: on a variable page the `Timeline`'s band is a selection, two thumbs bounded
   by the variable's availability. The thumbs move live while dragged and the period is

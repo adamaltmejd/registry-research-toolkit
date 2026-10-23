@@ -199,8 +199,8 @@ export function BindingEditor({
         isOpen={removeOpen}
         onOpenChange={setRemoveOpen}
         title={
-          columnName
-            ? `Remove the column ${columnName}?`
+          columnLabel
+            ? `Remove the column ${columnLabel}?`
             : "Remove this column?"
         }
         actions={

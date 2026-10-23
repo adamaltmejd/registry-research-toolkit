@@ -167,7 +167,9 @@ export function ProjectBanner({
                 aria-label={`${status.label}: show the findings`}
                 onPress={(e) => {
                   // A modified press opens another tab: nothing to reveal here.
-                  if (!(e.metaKey || e.ctrlKey || e.shiftKey)) revealFindings();
+                  if (!(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
+                    revealFindings();
+                  }
                 }}
               >
                 <span aria-hidden="true">{status.glyph} </span>
