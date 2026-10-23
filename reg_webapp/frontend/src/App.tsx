@@ -3,6 +3,7 @@ import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
 import { type Context, getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
+import { useBrowseFilter } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { ClassificationGroupView } from "./lib/ClassificationView";
 import { ConceptGroupView } from "./lib/ConceptGroupView";
@@ -104,7 +105,14 @@ export function App() {
   // reg_meta DB was built, the leading YYYY-MM-DD of `import_date`.
   const ctx = context.data;
   const listed = listedRegister(route);
-  const breadcrumbs = routeBreadcrumbs(route);
+  // Below the breakpoint the search filters a list that is off screen, so
+  // while it holds text the way back says where the matches are.
+  const searching = useBrowseFilter().trim() !== "";
+  const breadcrumbs = routeBreadcrumbs(route).map((crumb) =>
+    searching && crumb.narrowOnly && crumb.href
+      ? { ...crumb, label: "Show matching registers" }
+      : crumb,
+  );
 
   return (
     <RouterProvider navigate={router.navigate} useHref={useHref}>

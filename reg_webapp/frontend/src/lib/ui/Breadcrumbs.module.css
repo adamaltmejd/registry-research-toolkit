@@ -10,7 +10,7 @@
   font-size: var(--text-column);
 }
 
-/* The first crumb, "Data", and any `word` crumb ("Project") are words, not
+/* The first crumb, "Browse registers", and any `word` crumb ("Project") are words, not
    slugs: the UI face. */
 .crumb:first-child,
 .word {
@@ -29,7 +29,7 @@
   color: var(--text-faint);
 }
 
-/* "Data" is the way back to the register list where the columns stack; above
+/* "Browse registers" is the way back to the register list where the columns stack; above
    the breakpoint the list is on screen, so the crumb and the separator after it
    go. */
 @media (min-width: 48.0625rem) {
@@ -46,7 +46,6 @@
    (#1824). It takes its own line, so the trail after it needs no separator. */
 .back {
   flex-basis: 100%;
-  margin-bottom: var(--space-1);
 }
 .back + .crumb::before {
   content: none;

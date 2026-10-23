@@ -23,6 +23,28 @@ interface Props {
 
 const mac = isMacPlatform();
 
+/** Input types that take no typed text: Escape on them is not about them. */
+const NON_TEXT_INPUTS = new Set([
+  "checkbox",
+  "radio",
+  "range",
+  "button",
+  "submit",
+  "reset",
+]);
+
+/** A text-entry element other than the search field itself. */
+function isOtherTextEntry(
+  target: EventTarget | null,
+  search: HTMLInputElement | null,
+): boolean {
+  if (!(target instanceof HTMLElement) || target === search) return false;
+  if (target instanceof HTMLInputElement) {
+    return !NON_TEXT_INPUTS.has(target.type);
+  }
+  return target instanceof HTMLTextAreaElement || target.isContentEditable;
+}
+
 /** The top bar (DESIGN.md → Layout): the brand (the deployment's name), the
  * one search bar and the project banner. There are no "Search" or "Project" nav items; the bar and the
  * banner are those. It sticks to the top of the page, and publishes its height
@@ -75,11 +97,14 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
 
   // Escape clears the filter from anywhere on the page (#1827), not only in the
   // field. Whatever takes Escape itself handles it first and stops it or marks
-  // it handled: the field's own clear, a dialog, a popover, the palette.
+  // it handled: the field's own clear, a dialog, a popover, the palette. Escape
+  // typed in another text field (a period year, the project name) leaves the
+  // search alone: it is about that field, not the browse columns.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (
         event.key !== "Escape" ||
+        isOtherTextEntry(event.target, input.current) ||
         event.defaultPrevented ||
         event.isComposing ||
         event.altKey ||

@@ -246,10 +246,9 @@ export function BrowseTree({ className }: { className?: string }) {
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
   // The search field's "N matches": the registers the filter keeps. No count
-  // until the
-  // variable matches for this needle have arrived: the debounce has not
-  // elapsed (a long enough needle has no facet key yet) or the request is in
-  // flight, and a count from names alone would read low and announce "0".
+  // until the variable matches for this needle have arrived: the debounce has
+  // not elapsed (a long enough needle has no facet key yet) or the request is
+  // in flight, and a count from names alone would read low and announce "0".
   const facetsPending =
     facetResource.loading ||
     (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
@@ -444,12 +443,16 @@ export function BrowseTree({ className }: { className?: string }) {
               // place): the tree never clears its selection on it, so the key
               // reaches the page-wide handler in TopBar.
               escapeKeyBehavior="none"
-              renderEmptyState={() => (
-                <p className={styles.note}>
-                  No registers match “{needle.trim()}”. Press Escape to clear
-                  the search.
-                </p>
-              )}
+              // Device-neutral copy: below the breakpoint this column is
+              // the whole screen, often on a phone with no Escape key.
+              renderEmptyState={() =>
+                filtering && (
+                  <p className={styles.note}>
+                    No registers match “{needle.trim()}”. Clear the search to
+                    see them all.
+                  </p>
+                )
+              }
               dependencies={[
                 counts,
                 currentKey,

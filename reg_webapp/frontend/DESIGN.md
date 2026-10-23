@@ -362,7 +362,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   registers", drawn as a `default` button on its own line above the trail so it reads as
   an action, not a path segment (#1824). Every page's trail leads with it below the
   breakpoint (and only there: beside the columns it would repeat them), and it opens the
-  register list. Do not mint new breakpoints.
+  register list; while the search holds text it reads "Show matching registers", since
+  the list the search filters is off screen. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -371,11 +372,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   through its variables says so on its own line under it ("matched on 9 variables", the
   count in `accent-ink`), the column header states how many registers match, and the
   detail pane stays put. Escape clears the filter and restores the collapse state from
-  anywhere on the page, unless a dialog, popover or the palette has focus and takes
-  Escape itself (#1827). The command palette (RAC `Autocomplete`) opens from Enter in
-  the field or `⌘K`, seeded with the field's text (maintainer-decided 2026-10-22), for
-  codes, classifications and actions; its results are a mixed list and carry a
-  `TypeTag`.
+  anywhere on the page, unless a dialog, popover, the palette or another text field has
+  focus (#1827). The command palette (RAC `Autocomplete`) opens from Enter in the field
+  or `⌘K`, seeded with the field's text (maintainer-decided 2026-10-22), for codes,
+  classifications and actions; its results are a mixed list and carry a `TypeTag`.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the

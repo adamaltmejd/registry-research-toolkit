@@ -776,6 +776,13 @@ async function browseSearchCase(page, _counts, shoot) {
     "the search for another register filtered LISA's own page",
   );
   await shoot("browse-search");
+  if (!treeShown) {
+    // The list the search filters is off screen: the way back says so.
+    check(
+      (await page.getByRole("link", { name: "Show matching registers" }).count()) === 1,
+      "below the breakpoint the search left no way to its matches",
+    );
+  }
 
   // Focus off the field: the page's heading, then Escape.
   await page.getByRole("heading", { level: 1, name: "LISA" }).click();

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  BROWSE_REGISTERS_LABEL,
   catalogHref,
-  DATA_BROWSER_LABEL,
   deriveType,
   leafSlug,
   rankFilter,
@@ -78,7 +78,7 @@ describe("routeBreadcrumbs", () => {
   // Shown only where the columns stack (maintainer ruling 2026-10-22): above
   // the breakpoint the register list is on screen.
   const browserRoot = {
-    label: DATA_BROWSER_LABEL,
+    label: BROWSE_REGISTERS_LABEL,
     href: catalogHref(""),
     narrowOnly: true,
   };
