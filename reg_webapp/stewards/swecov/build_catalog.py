@@ -2196,6 +2196,11 @@ def _inventory_mapping_records(
         and r["col"] == mapping.representation
         and (not select_owner or r["vslug"] == owner)
     ]
+    if mapping.carried:
+        # A carried key serves no cell (#1844), so its owner owes no coverage of
+        # the edition: an annual parent's point states never cover a range table.
+        owned = [r for r in selected if r["vslug"] == owner]
+        return owned, None if owned else "stale_declared_mapping_target"
     licensed: tuple[tuple[str, str], ...] = ()
     warning = mapping.data_warning
     # A warning whose window misses this table is not emitted for it
@@ -2726,15 +2731,20 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
 
-            # Union records, windowed records and the plain records of a decision
-            # with a window cover only their own part, so they skip the
-            # whole-edition owner check. On their variants they decide over their
+            # Union records, windowed records, carried keys (they serve no cell)
+            # and the plain records of a decision with a window cover only their
+            # own part, so they skip the whole-edition owner check. On their variants they decide over their
             # reach, the window for a windowed record and the edition otherwise:
             # another owner active there competes with them (ambiguous, as for any
             # reviewed mapping without select_owner), and their owner's other
             # spellings drop. Other variants take the usual check.
             def decides(r: dict) -> bool:
-                return bool(r.get("union") or r.get("window") or r.get("decided"))
+                return bool(
+                    r.get("union")
+                    or r.get("window")
+                    or r.get("decided")
+                    or r.get("carried")
+                )
 
             union = [r for r in recs if decides(r)]
             owners = {(r["coord"], r["vslug"]) for r in union}
