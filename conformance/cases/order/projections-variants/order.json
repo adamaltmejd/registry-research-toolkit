@@ -12,6 +12,7 @@
       "physical": {
         "column": "Child",
         "edition": "2019",
+        "file": "scb_example_annual_2019",
         "table": "Combined"
       },
       "requested_period": "2019",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Child",
         "edition": "2019",
+        "file": "scb_example_annual_combined-narrow_2019",
         "projection": "combined-narrow",
         "table": "CombinedNarrow"
       },
@@ -45,6 +47,7 @@
       "physical": {
         "column": "Extra",
         "edition": "2019",
+        "file": "scb_example_annual_combined-narrow_2019",
         "projection": "combined-narrow",
         "table": "CombinedNarrow"
       },
@@ -62,7 +65,26 @@
       "physical": {
         "column": "Child",
         "edition": "2019",
+        "file": "scb_example_annual_2019",
         "table": "Combined"
+      },
+      "requested_period": "2019",
+      "source": "Monthly"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Child",
+        "variable": "scb/example/child",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Child",
+        "edition": "2019",
+        "file": "scb_example_annual_combined-narrow_2019",
+        "projection": "combined-narrow",
+        "table": "CombinedNarrow"
       },
       "requested_period": "2019",
       "source": "Monthly"

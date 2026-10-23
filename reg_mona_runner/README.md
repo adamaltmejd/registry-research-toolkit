@@ -40,11 +40,12 @@ library, no or unreachable mirror).
 
 A successful order writes `export_data\<nr>_<date>\`:
 
-- one file per output file in the order's format, named
-  `<register>_<variant>_<period>.dta` (or `.parquet`, `.csv`), or
-  `<register>_<variant>_<part>_<period>.dta` for a partition or projection table. A
-  `.dta` file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty
-  field for a missing value. [DESIGN.md](DESIGN.md), "Types per format", lists what each
+- one file per delivered table in the order's format, named after the table, such as
+  `scb_lisa_individer-16plus_2020.dta` (or `.parquet`, `.csv`), or
+  `scb_lisa_individer-16plus_<part>_2020.dta` for a partition or projection table; a
+  table that holds several years has no year in its name (`fohm_sminet.dta`). A `.dta`
+  file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty field
+  for a missing value. [DESIGN.md](DESIGN.md), "Types per format", lists what each
   column type becomes;
 - `run_log.csv`: each file's row count, column count and the period filter applied.
 

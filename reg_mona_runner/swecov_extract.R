@@ -108,10 +108,12 @@ MAPPED_TYPES <- c(
   TIME_TYPES,
   STRING_TYPES
 )
-# The largest value a Stata long holds (larger ones are its missing codes), and
-# the bound below which a double holds every integer exactly.
+# The largest value a Stata long holds (larger ones are its missing codes), the
+# bound below which a double holds every integer exactly, and the largest double
+# Stata holds (larger ones are its missing codes).
 STATA_LONG_MAX <- 2147483620L
 DOUBLE_EXACT <- 2^53
+STATA_DOUBLE_MAX <- 8.988465674311579e307
 # A decimal of at most this many digits is a Stata double; a wider one is text.
 DTA_DOUBLE_DIGITS <- 15L
 
@@ -282,9 +284,10 @@ check_entry <- function(e, where) {
   check_object(
     ph,
     paste0(where, ".physical"),
-    c("edition", "table", "column"),
+    c("file", "edition", "table", "column"),
     c("partition", "projection", "member")
   )
+  check_string(ph$file, paste0(where, ".physical.file"))
   check_string(ph$edition, paste0(where, ".physical.edition"))
   check_name(ph$table, paste0(where, ".physical.table"))
   check_name(ph$column, paste0(where, ".physical.column"))
@@ -393,53 +396,50 @@ check_manifest <- function(doc) {
 
 # ---- Output files -----------------------------------------------------------------
 
-# One file per variant, physical table and table edition, named in slug spelling
-# with the format's extension (crates/DESIGN.md, "Extraction keeps delivery
-# topology"). Columns are the distinct physical columns in entry order; every
-# entry of a file carries the same filter or none.
+# One file per physical table and table edition, whatever variant binds it, named
+# by the manifest's physical.file with the format's extension (crates/DESIGN.md,
+# "Extraction keeps delivery topology"). Columns are the distinct physical columns
+# in entry order; every entry of a file carries the same name and the same filter
+# or none.
 plan_files <- function(entries, format) {
   files <- list()
   for (i in seq_along(entries)) {
     e <- entries[[i]]
-    lg <- e$logical
     ph <- e$physical
-    placement <- c(ph$partition, ph$projection)
-    if (length(placement) > 1L) {
+    if (length(c(ph$partition, ph$projection)) > 1L) {
       refuse(
         "manifest",
         sprintf("entries[%d]", i - 1L),
         ".physical has both a partition and a projection"
       )
     }
-    name <- paste0(
-      paste(c(lg$register, lg$variant, placement, ph$edition), collapse = "_"),
-      ".",
-      format
-    )
-    # The placement is part of the file's identity, so two entries of one table
-    # with different placements never merge silently (the name clash check below
-    # refuses them instead).
-    id <- paste(
-      lg$provider,
-      lg$register,
-      lg$variant,
-      ph$table,
-      ph$edition,
-      paste(placement, collapse = ""),
-      sep = "\r"
-    )
+    id <- paste(ph$table, ph$edition, sep = "\r")
     f <- files[[id]]
     if (is.null(f)) {
       # Slug spelling only: no path separator, drive or parent reference.
-      if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", name)) {
-        refuse("manifest", "output file name ", name, " is not slug spelling")
+      if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", ph$file)) {
+        refuse(
+          "manifest",
+          "output file name ",
+          ph$file,
+          " is not slug spelling"
+        )
       }
       f <- list(
-        name = name,
+        name = paste0(ph$file, ".", format),
+        file = ph$file,
         table = ph$table,
         columns = character(),
         filter = e$filter,
         first = i
+      )
+    } else if (!identical(f$file, ph$file)) {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical.file differs from its table's (",
+        f$name,
+        ")"
       )
     } else if (!identical(f$filter, e$filter)) {
       refuse(
@@ -636,10 +636,12 @@ resolve_columns <- function(con, schema_id, table, columns) {
   )
 }
 
-# Whether `name` is a variable name a .dta file (format 118) can hold: ReadStat's
-# rule, which is_stata_name in crates/reg-catalog/src/ops/order.rs repeats so a
-# dta order blocks before it reaches MONA. 1 to 32 characters; a letter or _
-# first, then letters, ASCII digits and _; not a reserved word, nor str and a digit.
+# Whether `name` is a variable name a .dta file (format 118) can hold: Stata's
+# rule (stricter than ReadStat, which writes any non-ASCII name), which
+# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats so a dta order
+# blocks before it reaches MONA. 1 to 32 characters; a letter (\p{L}) or _
+# first, then letters, ASCII digits and _; not a reserved word, nor str and a
+# digit.
 stata_name_ok <- function(name) {
   reserved <- c(
     "_all",
@@ -962,18 +964,25 @@ parquet_writer <- function(path, columns, types) {
     columns
   ))
   sink <- arrow::FileOutputStream$create(path)
-  writer <- arrow::ParquetFileWriter$create(
-    schema,
-    sink,
-    properties = arrow::ParquetWriterProperties$create(columns)
+  writer <- tryCatch(
+    arrow::ParquetFileWriter$create(
+      schema,
+      sink,
+      properties = arrow::ParquetWriterProperties$create(columns)
+    ),
+    error = function(e) {
+      sink$close()
+      stop(e)
+    }
   )
   state <- new.env()
   state$open <- TRUE
+  # The sink closes even when the writer's close fails, so the failure path can
+  # remove a partial file (an open handle blocks that on Windows).
   close_all <- function() {
     if (state$open) {
       state$open <- FALSE
-      writer$Close()
-      sink$close()
+      tryCatch(writer$Close(), finally = sink$close())
     }
   }
   list(
@@ -1039,6 +1048,11 @@ dta_column <- function(x, type, precision, column, what) {
   if (type == "bit") {
     return(as.integer(x))
   }
+  if (
+    type %in% c("float", "real") && any(abs(x) > STATA_DOUBLE_MAX, na.rm = TRUE)
+  ) {
+    beyond("Stata's double range")
+  }
   if (is.character(x)) {
     # Stata has no missing string: NULL is "", as Stata itself reads it (haven
     # also fails mid-write on an NA in a long strL column).
@@ -1072,6 +1086,11 @@ dta_writer <- function(path, columns, types) {
     finish = function() {
       data <- lapply(seq_along(columns), function(j) {
         parts <- lapply(state$chunks, `[[`, j)
+        # Drop the chunks' copy as each column is combined: about one copy of
+        # the data is held at a time, not two.
+        for (k in seq_along(state$chunks)) {
+          state$chunks[[k]][j] <- list(NULL)
+        }
         x <- do.call(c, parts)
         # c() keeps neither the display format nor a POSIXct's time zone.
         attr(x, "format.stata") <- attr(parts[[1]], "format.stata")

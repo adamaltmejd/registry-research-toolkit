@@ -12,6 +12,7 @@
       "physical": {
         "column": "Extra",
         "edition": "2018",
+        "file": "scb_example_annual_narrow_2018",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -29,6 +30,7 @@
       "physical": {
         "column": "Payment",
         "edition": "2018",
+        "file": "scb_example_monthly_2018",
         "table": "VB"
       },
       "requested_period": "2018",
@@ -45,6 +47,7 @@
       "physical": {
         "column": "Benefit",
         "edition": "2018",
+        "file": "scb_example_monthly_barn_2018",
         "projection": "barn",
         "table": "VBBARN"
       },
@@ -63,6 +66,7 @@
       "physical": {
         "column": "Child",
         "edition": "2018",
+        "file": "scb_example_annual_narrow_2018",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -81,6 +85,7 @@
       "physical": {
         "column": "Id",
         "edition": "2018",
+        "file": "scb_example_annual_narrow_2018",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -99,6 +104,7 @@
       "physical": {
         "column": "Month",
         "edition": "2018",
+        "file": "scb_example_monthly_2018",
         "table": "VB"
       },
       "requested_period": "2018",
@@ -116,6 +122,7 @@
       "physical": {
         "column": "Recipient",
         "edition": "2018",
+        "file": "scb_example_monthly_2018",
         "table": "VB"
       },
       "requested_period": "2018",
@@ -133,6 +140,7 @@
       "physical": {
         "column": "Month",
         "edition": "2018",
+        "file": "scb_example_monthly_barn_2018",
         "projection": "barn",
         "table": "VBBARN"
       },
@@ -151,6 +159,7 @@
       "physical": {
         "column": "Recipient",
         "edition": "2018",
+        "file": "scb_example_monthly_barn_2018",
         "projection": "barn",
         "table": "VBBARN"
       },

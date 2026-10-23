@@ -12,6 +12,7 @@
       "physical": {
         "column": "Household",
         "edition": "2019",
+        "file": "scb_example_monthly_hushall_2019",
         "projection": "hushall",
         "table": "Hush"
       },
@@ -29,6 +30,7 @@
       "physical": {
         "column": "Household",
         "edition": "2019",
+        "file": "scb_example_monthly_2019",
         "table": "Pers"
       },
       "requested_period": "2019",
@@ -45,6 +47,7 @@
       "physical": {
         "column": "HhAmount",
         "edition": "2019",
+        "file": "scb_example_monthly_hushall_2019",
         "projection": "hushall",
         "table": "Hush"
       },
@@ -63,6 +66,7 @@
       "physical": {
         "column": "Month",
         "edition": "2019",
+        "file": "scb_example_monthly_hushall_2019",
         "projection": "hushall",
         "table": "Hush"
       },
@@ -81,6 +85,7 @@
       "physical": {
         "column": "Month",
         "edition": "2019",
+        "file": "scb_example_monthly_2019",
         "table": "Pers"
       },
       "requested_period": "2019",
@@ -98,6 +103,7 @@
       "physical": {
         "column": "Recipient",
         "edition": "2019",
+        "file": "scb_example_monthly_2019",
         "table": "Pers"
       },
       "requested_period": "2019",

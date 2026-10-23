@@ -1,3 +1,3 @@
 file,rows,columns,filter
-example_annual_2018.csv,3,1,""
-example_annual_narrow_2018.csv,3,3,""
+scb_example_annual_2018_wide.csv,3,1,""
+scb_example_annual_narrow_2018.csv,3,3,""

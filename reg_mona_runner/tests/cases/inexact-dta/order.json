@@ -1,0 +1,35 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "LopNr",
+        "variable": "scb/example/lopnr",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "LopNr",
+        "edition": "2019",
+        "file": "example_typed_2019",
+        "table": "Inexact"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    }
+  ],
+  "extract_format": "dta",
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+    "catalog_schema_version": "12.2.0",
+    "mode": "steward_holdings",
+    "project_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "project_name": "Runner case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 2
+}

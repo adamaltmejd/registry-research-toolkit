@@ -51,7 +51,8 @@ GO
 -- Typed: one value of each SQL type a .dta or .parquet file maps (a leading-zero
 -- code, a day before Stata's 1960 epoch, a 12-digit bigint id, an 18-digit
 -- decimal no double holds, a decimal with a scale), a row of NULLs and a row with
--- an empty string. Long: a column name over Stata's 32 characters.
+-- an empty string. Long: a column name over Stata's 32 characters. Inexact: a
+-- bigint id 2^53 + 1, which no double holds.
 CREATE TABLE dbo.Typed (
   LopNr bigint, Kod char(4), Datum date, Ref decimal(18, 0), Belopp decimal(9, 2),
   Antal int, Stamp datetime2, Flag bit, Namn nvarchar(50)
@@ -62,6 +63,8 @@ INSERT INTO dbo.Typed VALUES
   (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (201001011234, '0001', '2020-02-29', 1, -0.5, 7, '2020-02-29T23:59:59', 0, N'');
 CREATE TABLE dbo.Long (LopNrForSammanstalldaForetagsuppgifter bigint);
+CREATE TABLE dbo.Inexact (LopNr bigint);
+INSERT INTO dbo.Inexact VALUES (9007199254740993);
 GO
 -- Fails when read, not when resolved: the extraction-failure case.
 CREATE VIEW dbo.Broken AS SELECT CAST(1 AS int) / CAST(0 AS int) AS X;

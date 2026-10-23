@@ -46,13 +46,15 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    and steward, then shape. Each object is closed, so an unknown field anywhere is a
    refusal (the v2 freeze relies on this). `extract_format` is required: the runner has
    no default format.
-2. Plan the files: one per variant, physical table and table edition, named
-   `<register>_<variant>[_<partition>|_<projection>]_<edition>.<format>`. A file's
-   columns are its entries' distinct physical columns in manifest order (ordered entries
-   first, then held keys). Every entry of a file must carry the same filter. A name
-   outside slug spelling is refused, so a manifest cannot name a path, and so are two
-   files whose names differ only in case (MONA's file system would let one overwrite the
-   other). A table or column name is at most 128 UTF-16 units, SQL Server's `sysname`.
+2. Plan the files: one per physical table and table edition, whatever variants bind it,
+   named `<physical.file>.<format>` (the catalog names the file after the table,
+   [../crates/DESIGN.md](../crates/DESIGN.md), "Extraction keeps delivery topology"). A
+   file's columns are its entries' distinct physical columns in manifest order (ordered
+   entries first, then held keys). Every entry of a file must carry the same name and
+   the same filter. A name outside slug spelling is refused, so a manifest cannot name a
+   path, and so are two files whose names differ only in case (MONA's file system would
+   let one overwrite the other). A table or column name is at most 128 UTF-16 units, SQL
+   Server's `sysname`.
 3. Resolve every file before writing any: its table's schema from
    `INFORMATION_SCHEMA.TABLES` (exactly one hit; the holdings put 17 views in schema
    `P1105` and the rest in `dbo`, with no name in both), then each column and the period
@@ -121,7 +123,7 @@ losing a leading-zero code, a date or a large id. What each SQL type becomes:
   | `bigint`                                                   | text            | double `%20.0g`; at or above 2^53 refused | int64                  | digits                |
   | `decimal(p, s)`, `numeric(p, s)`, p <= 15                  | text            | double `%20.0g`                           | decimal128(p, s)       | the decimal as text   |
   | `decimal(p, s)`, `numeric(p, s)`, p > 15                   | text            | str (exact digits)                        | decimal128(p, s)       | the decimal as text   |
-  | `float`, `real`                                            | double          | double                                    | float64, float32       | 15 significant digits |
+  | `float`, `real`                                            | double          | double; beyond Stata's range refused      | float64, float32       | 15 significant digits |
   | `bit`                                                      | logical         | long 0/1                                  | bool                   | 0/1                   |
   | `date`                                                     | Date            | `%td` day                                 | date32                 | `YYYY-MM-DD`          |
   | `datetime`, `datetime2`, `smalldatetime`                   | POSIXct, UTC    | `%tc` (milliseconds)                      | timestamp(us, UTC)     | `YYYY-MM-DD HH:MM:SS` |
@@ -148,12 +150,15 @@ Choices behind the table:
   string as missing. CSV and Parquet keep NULL apart from `""`.
 - **Stata limits.** Format 118 (Stata 14 and later) is UTF-8 with 32-character names and
   strL for text over 2045 bytes. `%tc` holds milliseconds, so a `datetime2`'s finer
-  digits are dropped; CSV already writes whole seconds.
+  digits are dropped; Parquet keeps microseconds, dropping `datetime2(7)`'s 100 ns
+  digit; CSV already writes whole seconds.
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
   chunk). haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).
 
-The type table is pinned by one case per format in the SQL Server suite (below).
+The type table is pinned by one case per format in the SQL Server suite (below); the
+`.dta` oracle reads each column's Stata display format back, so a long (`%12.0g`) and a
+double (`%20.0g`) differ. A refusal case pins the 2^53 bound.
 
 ## No row values in logs
 

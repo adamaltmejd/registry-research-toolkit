@@ -2,7 +2,9 @@ version = 1
 steward = "swecov"
 
 # Accounts' row key is a column name over Stata's 32 characters, as 68 SWECOV
-# columns are: a dta order of Value gains it as a held key and blocks.
+# columns are: a dta order of Value gains it as a held key and blocks. Value's own
+# column starts with a circled letter (U+24B6), alphabetic to Rust but not a letter
+# (general category So), so it blocks too.
 [[table]]
 id = "Accounts"
 edition = 2018
@@ -13,8 +15,8 @@ register_variant = "scb/example/annual"
 variable = "scb/example/person"
 representation = "LopNrForSammanstalldaForetagsuppgifter"
 [[table.column]]
-name = "Value"
+name = "ⒶValue"
 [[table.column.mapping]]
 register_variant = "scb/example/annual"
 variable = "scb/example/value"
-representation = "Value"
+representation = "ⒶValue"

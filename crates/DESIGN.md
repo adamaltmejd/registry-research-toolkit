@@ -621,25 +621,25 @@ a researcher fixes the whole order in one edit. One finding follows that pass, b
 it reads the finished entries, held keys included: `stata_name_invalid`, once per
 physical column a `dta` order on a steward artifact would write under a name a `.dta`
 file cannot hold (more than 32 characters, a character other than a letter, ASCII digit
-or `_`, a leading digit, or a reserved word; ReadStat's rule, which the extract runner
-repeats). The runner would refuse the order on MONA; blocking here tells the researcher
-in the browser, where switching to `parquet` or `csv` is one edit. 68 SWECOV columns are
-over 32 characters (the financial-statement tables), and truncating them collides in at
-least one table, so the order never renames. An empty project is a valid draft that
-cannot become a header-only manifest; so is an unnamed one (a blank or whitespace-only
-`name`), which cannot fill `provenance.project_name`. Only `order` reports these two:
-`validate` judges the draft, which may be both.
+or `_`, a leading digit, or a reserved word; Stata's rule, stricter than what ReadStat
+writes, which the extract runner repeats). The runner would refuse the order on MONA;
+blocking here tells the researcher in the browser, where switching to `parquet` or `csv`
+is one edit. 68 SWECOV columns are over 32 characters (the financial-statement tables),
+and truncating them collides in at least one table, so the order never renames. An empty
+project is a valid draft that cannot become a header-only manifest; so is an unnamed one
+(a blank or whitespace-only `name`), which cannot fill `provenance.project_name`. Only
+`order` reports these two: `validate` judges the draft, which may be both.
 
 **The manifest is a versioned JSON contract.** It carries the extract format (the
 project's `extract_format`, resolved to `dta` when the project sets none, so the runner
 has no default of its own), provenance (mode, steward, artifact kind, project name,
 schema version, declared reg_meta version and SHA-256 of the project's canonical JSON,
 catalog schema version and `generation_id`), the entries (logical coordinate with the
-canonical representation, the clipped `requested_period`, the physical edition, table,
-column, optional partition, optional projection token and optional `member` index,
-`key: true` on a held key no binding ordered, and the file's optional row `filter`) and
-the clips. It is written here and read offline by the steward-side extract system, so it
-is self-contained. That system is the MONA extract runner
+canonical representation, the clipped `requested_period`, the physical output `file`
+name, edition, table, column, optional partition, optional projection token and optional
+`member` index, `key: true` on a held key no binding ordered, and the file's optional
+row `filter`) and the clips. It is written here and read offline by the steward-side
+extract system, so it is self-contained. That system is the MONA extract runner
 ([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md)): a data manager runs it
 inside MONA, it writes the files there, and nothing row-level leaves. Its bytes are
 sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across runs;
@@ -666,8 +666,8 @@ this is the whole field set:
 - entry: `source`, `logical`, `requested_period`, `physical`, optional `key` (only
   `true`) and optional `filter`;
 - `logical`: `provider`, `register`, `variant`, `variable`, `representation`;
-- `physical`: `edition`, `table`, `column`, optional `partition`, `projection` and
-  `member`; `member` holds exactly one of `position`, `year`, `month`;
+- `physical`: `file`, `edition`, `table`, `column`, optional `partition`, `projection`
+  and `member`; `member` holds exactly one of `position`, `year`, `month`;
 - `filter`: `column`, `encoding` (`date`, `year`, `yyyymm` or `yyyymmdd`), `ranges`
   (non-empty); a range has optional `from` and `to`, inclusive `YYYY-MM-DD` days;
 - clip: `source`, `variable`, `requested_period`, `ordered_period`.
@@ -684,10 +684,12 @@ order needs yet. The runner parses compact and pretty JSON alike (its tests run 
 compact order), so a compact download needs no runner change. `simplify:` pretty output;
 switch the download to compact when a real order passes 8 MB.
 
-**Extraction keeps delivery topology.** One output file per ordered variant, physical
-table and table edition (`physical.edition`, #1661). `physical.table` is the unique
-`physical_id`, and the partition and projection token are facts of the table, so the
-edition only names the file's period. An entry's `requested_period` keeps the clipped
+**Extraction keeps delivery topology.** One output file per physical table and table
+edition (`physical.edition`, #1661), whatever variants bind it. `physical.table` is the
+unique `physical_id`, and the partition and projection token are facts of the table, so
+the edition only names the file's period. A table several variants map is one delivery,
+so it is one file holding every ordered variant's columns, and its held keys are the
+keys of each variant its entries bind. An entry's `requested_period` keeps the clipped
 days it serves (availability, a column window, a year or month member) but never splits
 a file: a year or month member, a windowed column and the ordered key of one table land
 in the table's one file, whichever sources and years ordered them. A file's columns are
@@ -696,18 +698,34 @@ or two periods) are one extracted column. Since a file holds its table's rows fo
 requested period, a split by clipped period would only repeat the same rows and separate
 columns from their keys; the file's row filter (step 6) narrows its rows to the union of
 its entries' requested periods instead. In the global fallback the edition is the
-entry's merged requested period, so nothing changes there. The placement is the
-partition, the projection or neither, named in slug spelling with the extract format's
-extension (`lisa_individer-15plus_2019.dta`, `agi_individuppgifter-agi_arb_2021-03.dta`
-for a partition, `<register>_<variant>_<token>_<period>.dta` for a projection). What
-goes in as two tables comes out as two files: shard identity (reporter stream,
-municipality) may exist in no column, so a union would destroy information, and a
-projection may have a finer grain than its parent. Each file carries its own keys,
-ordered or added as held keys (step 5), so a researcher who orders one non-key column
-still gets a joinable file; the user joins a projection file to its parent's on the
-shared key. The extract runner writes a key entry's column like any other and may tell
-it apart by `key`. A multi-period range is one file, filtered to the requested ranges
-when its table declares a period column.
+entry's merged requested period, so nothing changes there.
+
+The file's name, `physical.file`, is a fact of the table, never of the order (a
+maintainer ruling, 2026-10-23):
+`<provider>_<register>_<variant>[_<placement>][_<period>]`, plus the extract format's
+extension. The variant is the table's own: the variant that maps the most of the table's
+columns, ties to the first by provider, register and variant slug, so a table several
+variants share keeps one name whatever the order binds; `_default` is left out. The
+placement is the partition or the projection token. The period is the edition when it is
+one period (a year, a month or a day); a multi-period table's file holds every period
+and its name has none (`scb_lisa_individer-16plus_2020.dta`,
+`scb_lisa_foretag_2020.dta`, `region-skane_primarvard.dta`). Two tables of one variant,
+placement and period would share that name (106 of the 1432 SWECOV tables in 0.60.0,
+such as `Partner_2005` and `RTBFamilj2005`), so a name more than one catalog table takes
+gains the table's `physical_id` in slug spelling
+(`scb_rtb_familjer-fran-1998_2005-12-31_partner-2005`). The order computes this from the
+catalog it reads, so the manifest carries the final name and the runner never derives
+one; adding a sibling table to the catalog can lengthen an existing table's name
+(accepted pre-v1). The runner still refuses two files of one order whose names differ
+only in case. In the global fallback there is no table: the name is the entry's own
+coordinate and requested period. What goes in as two tables comes out as two files:
+shard identity (reporter stream, municipality) may exist in no column, so a union would
+destroy information, and a projection may have a finer grain than its parent. Each file
+carries its own keys, ordered or added as held keys (step 5), so a researcher who orders
+one non-key column still gets a joinable file; the user joins a projection file to its
+parent's on the shared key. The extract runner writes a key entry's column like any
+other and may tell it apart by `key`. A multi-period range is one file, filtered to the
+requested ranges when its table declares a period column.
 
 Design limit: sibling projections cannot share a key the parent lacks. Two projections
 of one parent that both map a key the parent does not map (a child id two narrow

@@ -26,12 +26,15 @@ load_fixture <- function() {
 }
 
 # A binary extract as its oracle spells it: each column's storage type (the R
-# class haven reads a .dta column as, or the Parquet type) and each row's values
-# as text, "<NULL>" for a missing value. Rendered here, not by the runner.
+# class haven reads a .dta column as and its Stata display format, which tells a
+# long, %12.0g, from a double, or the Parquet type) and each row's values as
+# text, "<NULL>" for a missing value. Rendered here, not by the runner.
 read_binary <- function(path) {
   if (endsWith(path, ".dta")) {
     data <- as.data.frame(haven::read_dta(path))
-    types <- lapply(data, function(x) class(x)[1])
+    types <- lapply(data, function(x) {
+      paste(class(x)[1], attr(x, "format.stata"))
+    })
     text <- lapply(data, function(x) {
       if (inherits(x, "POSIXct")) {
         format(x, "%Y-%m-%d %H:%M:%S", tz = "UTC")
@@ -132,6 +135,8 @@ test_that("orders extract their files from SQL Server", {
     `ambiguous-table` = 7L,
     # A .dta order of a column whose name is over Stata's 32 characters.
     `stata-name` = 7L,
+    # A .dta order of a bigint id no double holds: refused, never rounded.
+    `inexact-dta` = 8L,
     `broken-view` = 8L
   )
   base <- export_root(stats::setNames(
@@ -158,4 +163,10 @@ test_that("orders extract their files from SQL Server", {
     broken$message,
     " failed \\(driver message withheld: it may quote row values\\)$"
   )
+  # The refusal names the column and the bound, never the value.
+  inexact <- readLines(file.path(
+    export_dir(base, "inexact-dta"),
+    "error_log.csv"
+  ))
+  expect_false(any(grepl("9007199254740993", inexact, fixed = TRUE)))
 })

@@ -12,6 +12,7 @@
       "physical": {
         "column": "Hushallsid",
         "edition": "2020",
+        "file": "scb_example_annual_2020",
         "table": "Hushall2020"
       },
       "requested_period": "2020",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Hushallsid_2019",
         "edition": "2018..2020",
+        "file": "scb_example_annual_panel",
         "member": {
           "year": 2019
         },

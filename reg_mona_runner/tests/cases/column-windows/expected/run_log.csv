@@ -1,4 +1,3 @@
 file,rows,columns,filter
-example_new_2015..2019.csv,2,2,""
-example_old_2015..2019.csv,2,2,""
-example_old_2017..2019.csv,1,2,""
+scb_example_old_combined.csv,2,3,""
+scb_example_old_later.csv,1,2,""

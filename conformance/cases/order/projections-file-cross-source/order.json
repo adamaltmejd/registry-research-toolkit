@@ -12,6 +12,7 @@
       "physical": {
         "column": "Person",
         "edition": "2018..2019",
+        "file": "scb_example_annual",
         "table": "Yearly"
       },
       "requested_period": "2018",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Person",
         "edition": "2018..2019",
+        "file": "scb_example_annual_yearly-narrow",
         "projection": "yearly-narrow",
         "table": "YearlyNarrow"
       },
@@ -45,6 +47,7 @@
       "physical": {
         "column": "Late_2019",
         "edition": "2018..2019",
+        "file": "scb_example_annual_yearly-narrow",
         "member": {
           "year": 2019
         },

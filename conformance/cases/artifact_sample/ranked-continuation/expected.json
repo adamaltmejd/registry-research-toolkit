@@ -13,7 +13,8 @@
       "physical": {
         "table": "",
         "column": "Value",
-        "edition": "2018-01-01"
+        "edition": "2018-01-01",
+        "file": "scb_example_annual_2018-01-01"
       }
     }
   ],

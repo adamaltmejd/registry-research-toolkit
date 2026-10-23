@@ -12,6 +12,7 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "file": "scb_example_annual_narrow",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -29,6 +30,7 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "file": "scb_example_annual",
         "table": "Wide"
       },
       "requested_period": "2015..2019",
@@ -45,6 +47,7 @@
       "physical": {
         "column": "FieldB",
         "edition": "2015..2019",
+        "file": "scb_example_annual_narrow",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -62,6 +65,7 @@
       "physical": {
         "column": "Field",
         "edition": "2015..2019",
+        "file": "scb_example_annual",
         "table": "Wide"
       },
       "requested_period": "2015..2016",

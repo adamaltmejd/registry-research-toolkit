@@ -59,7 +59,7 @@
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
-        "delivery_column_name": "Value",
+        "delivery_column_name": "ⒶValue",
         "data_type": "integer",
         "data_length": "8",
         "operational_definition": null,

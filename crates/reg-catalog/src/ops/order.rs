@@ -19,7 +19,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::project::{
     Binding, ExtractFormat, ProjectData, Source, project_hash, to_json_pretty,
 };
-use reg_core::{Fqid, Interval, ValidationResult, gaps, intersect, merge, quote, render};
+use reg_core::{
+    Fqid, Interval, ValidationResult, gaps, intersect, is_letter, merge, quote, render,
+};
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
 use serde_json::Value;
@@ -103,7 +105,7 @@ struct Entry {
     /// the projection contributes a cell of its own to the same file.
     #[serde(skip)]
     shared_key: bool,
-    /// The bound variant, which with the table finds the file's held keys.
+    /// The bound variant: the file's held keys are the keys of each variant its entries bind.
     #[serde(skip)]
     variant_id: i64,
     /// `requested_period`'s days, empty for `_default`.
@@ -129,9 +131,12 @@ struct Logical {
 #[derive(Clone, Serialize, ToSchema)]
 #[schema(as = PhysicalCoordinate)]
 struct Physical {
-    /// The table's edition, rendered as a period. With the table and the variant it
-    /// names the output file: one file per table edition, whatever periods its
-    /// entries request.
+    /// The output file's name without its extension, the same on every entry of the
+    /// file: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the
+    /// table's own variant (crates/DESIGN.md, "Extraction keeps delivery topology").
+    file: String,
+    /// The table's edition, rendered as a period: one file per table, whatever
+    /// periods and variants its entries request.
     edition: String,
     table: String,
     column: String,
@@ -337,10 +342,10 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
         return Err(blocked(order.findings));
     }
     // A projection's shared key cells ride along only with a cell of its own anywhere
-    // in the same output file (the table's edition under the variant, from any source
-    // or period): a projection file whose ordered cells its parent all serves is not
+    // in the same output file (the table's edition, under any variant, from any
+    // source or period): a projection file whose ordered cells its parent all serves is not
     // emitted, so no file holds only keys its parent's file also holds.
-    let own: BTreeSet<(String, String, String)> = order
+    let own: BTreeSet<(String, String)> = order
         .entries
         .iter()
         .filter(|e| e.physical.projection.is_some() && !e.shared_key)
@@ -356,6 +361,7 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
         order.entries.extend(keys);
         row_filters(&conn, &mut order.entries)?;
     }
+    file_names(&conn, order.steward, &mut order.entries)?;
     let extract_format = project.extract_format();
     // Checked on the whole order, held keys included: each is a column of a file.
     if extract_format == ExtractFormat::Dta && order.steward {
@@ -373,26 +379,133 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     })
 }
 
-/// The output file an entry lands in: the table under the variant, for the table's
-/// edition (crates/DESIGN.md, "Extraction keeps delivery topology"). `table` is the
-/// unique `physical_id`, so its partition and projection token are facts of it; the
-/// entry's clipped `requested_period` does not split the file.
-fn placement(entry: &Entry) -> (String, String, String) {
-    let l = &entry.logical;
-    (
-        entry.physical.table.clone(),
-        format!("{}/{}/{}", l.provider, l.register, l.variant),
-        entry.physical.edition.clone(),
-    )
+/// The output file an entry lands in: its table, for the table's edition
+/// (crates/DESIGN.md, "Extraction keeps delivery topology"). `table` is the unique
+/// `physical_id`, so its partition and projection token are facts of it; neither the
+/// entry's variant nor its clipped `requested_period` splits the file. Only a steward
+/// artifact groups by it: the global fallback has no table.
+fn placement(entry: &Entry) -> (String, String) {
+    (entry.physical.table.clone(), entry.physical.edition.clone())
+}
+
+/// Sets every entry's `physical.file` (crates/DESIGN.md, "Extraction keeps delivery
+/// topology"): `<provider>_<register>_<variant>`, the variant left out when it is
+/// `_default`, then the partition or projection token, then the edition when it is one
+/// period (a year, month or date; a multi-period table's file holds every period). On a
+/// steward artifact the coordinate is the table's own variant: the variant that maps
+/// the most of the table's columns, ties to the first by provider, register and
+/// variant slug, so a table several variants share has one name whatever the order
+/// asks for. A name more than one table of the catalog would take gains the table's
+/// `physical_id` in slug spelling, so the name stays a fact of the table, never of the
+/// order. In the global fallback the coordinate is the entry's own.
+fn file_names(conn: &Connection, steward: bool, entries: &mut [Entry]) -> Result<(), Error> {
+    let tables = if steward {
+        steward_file_names(conn)?
+    } else {
+        BTreeMap::new()
+    };
+    for e in entries.iter_mut() {
+        let p = &e.physical;
+        e.physical.file = if steward {
+            tables[&p.table].clone()
+        } else {
+            let l = &e.logical;
+            let one_period = !["..", ","].iter().any(|s| p.edition.contains(s));
+            file_stem(
+                &[&l.provider, &l.register, &l.variant],
+                p.partition.as_deref().or(p.projection.as_deref()),
+                one_period.then_some(p.edition.as_str()),
+            )
+        };
+    }
+    Ok(())
+}
+
+/// Every steward table's file name, by `physical_id` ([`file_names`]).
+fn steward_file_names(conn: &Connection) -> Result<BTreeMap<String, String>, Error> {
+    let mut stmt = conn.prepare_cached(
+        "WITH counts AS (SELECT hc.table_id, hm.variant_id, \
+         COUNT(DISTINCT hm.column_id) AS n FROM holding_mapping hm \
+         JOIN holding_column hc USING(column_id) GROUP BY hc.table_id, hm.variant_id), \
+         ranked AS (SELECT c.table_id, p.slug AS provider, r.slug AS register, \
+         rv.slug AS variant, ROW_NUMBER() OVER (PARTITION BY c.table_id \
+         ORDER BY c.n DESC, p.slug, r.slug, rv.slug) AS rank FROM counts c \
+         JOIN register_variant rv ON rv.register_variant_id = c.variant_id \
+         JOIN register r ON r.register_id = rv.register_id \
+         JOIN provider p ON p.provider_id = r.provider_id) \
+         SELECT ht.physical_id, k.provider, k.register, k.variant, \
+         coalesce(ht.partition, ht.projection), ht.edition_json FROM ranked k \
+         JOIN holding_table ht USING(table_id) WHERE k.rank = 1",
+    )?;
+    let rows = stmt.query_map([], |row| {
+        let edition: Option<String> = row.get(5)?;
+        // One period: a year (a JSON integer) or a month or date token, not `_default`
+        // and not a range or list.
+        let period = edition
+            .as_deref()
+            .and_then(|e| serde_json::from_str::<Value>(e).ok())
+            .and_then(|e| match e {
+                Value::Number(n) => Some(n.to_string()),
+                Value::String(s) if s != "_default" => Some(s),
+                _ => None,
+            });
+        let coordinate: [String; 3] = [row.get(1)?, row.get(2)?, row.get(3)?];
+        let placement: Option<String> = row.get(4)?;
+        let stem = file_stem(
+            &[&coordinate[0], &coordinate[1], &coordinate[2]],
+            placement.as_deref(),
+            period.as_deref(),
+        );
+        Ok((row.get::<_, String>(0)?, stem))
+    })?;
+    let stems = rows.collect::<Result<BTreeMap<_, _>, _>>()?;
+    // Case-insensitive, as the runner's clash check: MONA writes to a Windows file system.
+    let mut uses: BTreeMap<String, usize> = BTreeMap::new();
+    for stem in stems.values() {
+        *uses.entry(stem.to_lowercase()).or_default() += 1;
+    }
+    Ok(stems
+        .into_iter()
+        .map(|(table, stem)| {
+            let name = if uses[&stem.to_lowercase()] > 1 {
+                format!("{stem}_{}", slug(&table))
+            } else {
+                stem
+            };
+            (table, name)
+        })
+        .collect())
+}
+
+/// `<provider>_<register>[_<variant>][_<placement>][_<period>]`, `_default` left out.
+fn file_stem(coordinate: &[&str; 3], placement: Option<&str>, period: Option<&str>) -> String {
+    let [provider, register, variant] = *coordinate;
+    [Some(provider), Some(register)]
+        .into_iter()
+        .chain([(variant != "_default").then_some(variant), placement])
+        .chain([period.filter(|p| *p != "_default")])
+        .flatten()
+        .collect::<Vec<_>>()
+        .join("_")
+}
+
+/// A `physical_id` in slug spelling: lowercase, each run of other characters one `-`.
+fn slug(physical_id: &str) -> String {
+    physical_id
+        .to_lowercase()
+        .split(|c: char| !c.is_ascii_alphanumeric())
+        .filter(|s| !s.is_empty())
+        .collect::<Vec<_>>()
+        .join("-")
 }
 
 /// The held row keys each output file lacks (crates/DESIGN.md, "Order manifest"):
-/// every column of the file's table that maps a key of the file's variant ([`IS_KEY`])
-/// and that no entry of the file already extracts, whatever variable ordered it. A key
+/// every column of the file's table that maps a key of a variant the file's entries bind
+/// ([`IS_KEY`]) and that no entry of the file already extracts, whatever variable ordered it. A key
 /// entry takes the source of the file's first entry and the union of the file's
 /// requested days, narrowed to a year or month member's or a column window's own
 /// period (a member or window the union does not reach is not added); a
-/// year-independent file's keys request `_default`. Ordered by file (table, variant,
+/// year-independent file's keys request `_default`. Ordered by file (table,
 /// edition), then member index and column, after every ordered entry.
 fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> {
     let mut stmt = conn.prepare_cached(&format!(
@@ -409,60 +522,61 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
     ))?;
     let mut keys = Vec::new();
     for file in files(entries).into_values() {
-        let first = file.first;
-        let year_independent = first.requested_period == "_default";
+        let year_independent = file.variants[0].requested_period == "_default";
         let union = merge(file.days);
         let mut found: Vec<Entry> = Vec::new();
-        let rows = stmt.query_map(params![first.physical.table, first.variant_id], |row| {
-            let own: (Option<String>, Option<String>) = (row.get(6)?, row.get(7)?);
-            Ok((
-                row.get::<_, String>(0)?,
-                row.get::<_, String>(1)?,
-                row.get::<_, String>(2)?,
-                Member::from_columns(row.get(3)?, row.get(4)?, row.get(5)?),
-                own.0.zip(own.1),
-            ))
-        })?;
-        for row in rows {
-            let (column, variable, representation, member, own) = row?;
-            if file.columns.contains(column.as_str())
-                || found.iter().any(|k| k.physical.column == column)
-            {
-                continue;
+        for first in file.variants {
+            let rows = stmt.query_map(params![first.physical.table, first.variant_id], |row| {
+                let own: (Option<String>, Option<String>) = (row.get(6)?, row.get(7)?);
+                Ok((
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get::<_, String>(2)?,
+                    Member::from_columns(row.get(3)?, row.get(4)?, row.get(5)?),
+                    own.0.zip(own.1),
+                ))
+            })?;
+            for row in rows {
+                let (column, variable, representation, member, own) = row?;
+                if file.columns.contains(column.as_str())
+                    || found.iter().any(|k| k.physical.column == column)
+                {
+                    continue;
+                }
+                let days = match (&own, year_independent) {
+                    (_, true) => Vec::new(),
+                    // simplify: no golden has an identifier pivot member or windowed key
+                    // column; add an `order/` case when a steward holds one.
+                    (Some(own), false) => union.iter().filter_map(|d| intersect(d, own)).collect(),
+                    (None, false) => union.clone(),
+                };
+                if !year_independent && days.is_empty() {
+                    continue;
+                }
+                found.push(Entry {
+                    source: first.source.clone(),
+                    logical: Logical {
+                        variable,
+                        representation,
+                        ..first.logical.clone()
+                    },
+                    requested_period: if year_independent {
+                        "_default".into()
+                    } else {
+                        render(&days)
+                    },
+                    physical: Physical {
+                        column,
+                        member,
+                        ..first.physical.clone()
+                    },
+                    key: true,
+                    filter: None,
+                    shared_key: false,
+                    variant_id: first.variant_id,
+                    days,
+                });
             }
-            let days = match (&own, year_independent) {
-                (_, true) => Vec::new(),
-                // simplify: no golden has an identifier pivot member or windowed key
-                // column; add an `order/` case when a steward holds one.
-                (Some(own), false) => union.iter().filter_map(|d| intersect(d, own)).collect(),
-                (None, false) => union.clone(),
-            };
-            if !year_independent && days.is_empty() {
-                continue;
-            }
-            found.push(Entry {
-                source: first.source.clone(),
-                logical: Logical {
-                    variable,
-                    representation,
-                    ..first.logical.clone()
-                },
-                requested_period: if year_independent {
-                    "_default".into()
-                } else {
-                    render(&days)
-                },
-                physical: Physical {
-                    column,
-                    member,
-                    ..first.physical.clone()
-                },
-                key: true,
-                filter: None,
-                shared_key: false,
-                variant_id: first.variant_id,
-                days,
-            });
         }
         found.sort_by(|a, b| {
             (&a.physical.member, &a.physical.column).cmp(&(&b.physical.member, &b.physical.column))
@@ -472,23 +586,26 @@ fn held_keys(conn: &Connection, entries: &[Entry]) -> Result<Vec<Entry>, Error> 
     Ok(keys)
 }
 
-/// An output file: its first entry, its physical columns and every day its entries
-/// request.
+/// An output file: the first entry of each variant it holds, in entry order, its
+/// physical columns and every day its entries request.
 struct File<'a> {
-    first: &'a Entry,
+    variants: Vec<&'a Entry>,
     columns: BTreeSet<&'a str>,
     days: Vec<Interval>,
 }
 
 /// The entries grouped by output file ([`placement`]), in file order.
-fn files(entries: &[Entry]) -> BTreeMap<(String, String, String), File<'_>> {
-    let mut files: BTreeMap<(String, String, String), File> = BTreeMap::new();
+fn files(entries: &[Entry]) -> BTreeMap<(String, String), File<'_>> {
+    let mut files: BTreeMap<(String, String), File> = BTreeMap::new();
     for e in entries {
         let file = files.entry(placement(e)).or_insert_with(|| File {
-            first: e,
+            variants: Vec::new(),
             columns: BTreeSet::new(),
             days: Vec::new(),
         });
+        if !file.variants.iter().any(|v| v.variant_id == e.variant_id) {
+            file.variants.push(e);
+        }
         file.columns.insert(&e.physical.column);
         file.days.extend(e.days.iter().cloned());
     }
@@ -581,9 +698,10 @@ fn stata_names(entries: &[Entry]) -> Vec<Blocking> {
         .collect()
 }
 
-/// Whether `name` is a variable name a `.dta` file (format 118) can hold: `ReadStat`'s
-/// rule, which `stata_name_ok` in `reg_mona_runner/swecov_extract.R` repeats. 1 to 32
-/// characters; a letter or `_` first, then letters, ASCII digits and `_`; not one of
+/// Whether `name` is a variable name a `.dta` file (format 118) can hold: Stata's rule
+/// (stricter than `ReadStat`, which writes any non-ASCII name; keep it so, Stata reads
+/// the file), which `stata_name_ok` in `reg_mona_runner/swecov_extract.R` repeats. 1 to
+/// 32 characters; a letter (general category L*, PCRE `\p{L}`) or `_` first, then letters, ASCII digits and `_`; not one of
 /// Stata's reserved words, nor `str` followed by a digit.
 fn is_stata_name(name: &str) -> bool {
     const RESERVED: [&str; 20] = [
@@ -598,12 +716,6 @@ fn is_stata_name(name: &str) -> bool {
         && !name
             .strip_prefix("str")
             .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
-}
-
-/// A letter for [`is_stata_name`]: alphabetic and not a number, so no wider than the
-/// runner's PCRE `\p{L}` (Rust's `is_alphabetic` also admits letter numerals).
-fn is_letter(c: char) -> bool {
-    c.is_alphabetic() && !c.is_numeric()
 }
 
 /// `project_invalid`: validate's issues for a project rejected before the catalog.
@@ -1001,6 +1113,7 @@ impl Order<'_> {
                 logical: logical(source, binding, &column),
                 requested_period: "_default".into(),
                 physical: Physical {
+                    file: String::new(),
                     edition: "_default".into(),
                     table,
                     column: physical,
@@ -1079,10 +1192,9 @@ impl Order<'_> {
                 // The global fallback: canonical resolution is the topology, and a
                 // slice covers itself.
                 covered.push(slice.clone());
-                let key = (String::new(), column.clone(), column.clone());
                 contribute(
                     &mut contributions,
-                    key,
+                    (String::new(), column.clone(), column.clone()),
                     vec![slice.clone()],
                     Held::default(),
                 );
@@ -1119,6 +1231,7 @@ impl Order<'_> {
                 logical: logical(source, binding, &column),
                 requested_period: render(&days),
                 physical: Physical {
+                    file: String::new(),
                     edition: render(&c.edition),
                     table,
                     column: physical,

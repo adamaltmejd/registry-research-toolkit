@@ -5220,7 +5220,11 @@
               "type": "string"
             },
             "edition": {
-              "description": "The table's edition, rendered as a period. With the table and the variant it\nnames the output file: one file per table edition, whatever periods its\nentries request.",
+              "description": "The table's edition, rendered as a period: one file per table, whatever\nperiods and variants its entries request.",
+              "type": "string"
+            },
+            "file": {
+              "description": "The output file's name without its extension, the same on every entry of the\nfile: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the\ntable's own variant (crates/DESIGN.md, \"Extraction keeps delivery topology\").",
               "type": "string"
             },
             "member": {
@@ -5253,6 +5257,7 @@
             }
           },
           "required": [
+            "file",
             "edition",
             "table",
             "column"

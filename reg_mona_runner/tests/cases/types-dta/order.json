@@ -12,6 +12,7 @@
       "physical": {
         "column": "LopNr",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Kod",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -44,6 +46,7 @@
       "physical": {
         "column": "Datum",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -60,6 +63,7 @@
       "physical": {
         "column": "Ref",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -76,6 +80,7 @@
       "physical": {
         "column": "Belopp",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -92,6 +97,7 @@
       "physical": {
         "column": "Antal",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -108,6 +114,7 @@
       "physical": {
         "column": "Stamp",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -124,6 +131,7 @@
       "physical": {
         "column": "Flag",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",
@@ -140,6 +148,7 @@
       "physical": {
         "column": "Namn",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Typed"
       },
       "requested_period": "2019",

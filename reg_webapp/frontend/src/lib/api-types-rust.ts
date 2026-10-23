@@ -1097,11 +1097,16 @@ export interface components {
         PhysicalCoordinate: {
             column: string;
             /**
-             * @description The table's edition, rendered as a period. With the table and the variant it
-             *     names the output file: one file per table edition, whatever periods its
-             *     entries request.
+             * @description The table's edition, rendered as a period: one file per table, whatever
+             *     periods and variants its entries request.
              */
             edition: string;
+            /**
+             * @description The output file's name without its extension, the same on every entry of the
+             *     file: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the
+             *     table's own variant (crates/DESIGN.md, "Extraction keeps delivery topology").
+             */
+            file: string;
             member?: components["schemas"]["PivotMember"] | null;
             /** @description The table's disjoint-partition label; absent when it has none. */
             partition?: string | null;

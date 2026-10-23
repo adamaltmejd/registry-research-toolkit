@@ -12,12 +12,14 @@
       "physical": {
         "column": "Value",
         "edition": "2019",
+        "file": "example_annual_2019",
         "table": "Twin"
       },
       "requested_period": "2019",
       "source": "Annual"
     }
   ],
+  "extract_format": "csv",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -29,6 +31,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "extract_format": "csv",
   "version": 2
 }

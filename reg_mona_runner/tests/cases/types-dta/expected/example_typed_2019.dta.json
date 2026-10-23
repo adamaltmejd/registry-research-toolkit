@@ -1,14 +1,14 @@
 {
   "types": {
-    "LopNr": "numeric",
-    "Kod": "character",
-    "Datum": "Date",
-    "Ref": "character",
-    "Belopp": "numeric",
-    "Antal": "numeric",
-    "Stamp": "POSIXct",
-    "Flag": "numeric",
-    "Namn": "character"
+    "LopNr": "numeric %20.0g",
+    "Kod": "character %-9s",
+    "Datum": "Date %td",
+    "Ref": "character %-9s",
+    "Belopp": "numeric %20.0g",
+    "Antal": "numeric %12.0g",
+    "Stamp": "POSIXct %tc",
+    "Flag": "numeric %12.0g",
+    "Namn": "character %-9s"
   },
   "rows": [
     [

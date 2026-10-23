@@ -13,7 +13,8 @@
       "physical": {
         "table": "Catalogue",
         "column": "Observed",
-        "edition": "_default"
+        "edition": "_default",
+        "file": "scb_example_annual"
       }
     }
   ],

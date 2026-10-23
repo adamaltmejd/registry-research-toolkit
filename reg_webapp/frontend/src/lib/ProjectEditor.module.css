@@ -126,6 +126,7 @@
   background: var(--surface-sunken);
 }
 .selectItem[data-selected] {
+  background: var(--surface-sunken);
   box-shadow: inset 3px 0 0 var(--accent);
 }
 

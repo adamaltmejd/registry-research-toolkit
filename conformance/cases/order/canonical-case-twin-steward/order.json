@@ -12,6 +12,7 @@
       "physical": {
         "column": "Observed",
         "edition": "2019",
+        "file": "scb_example_annual_2019",
         "table": "Annual2019"
       },
       "requested_period": "2019",

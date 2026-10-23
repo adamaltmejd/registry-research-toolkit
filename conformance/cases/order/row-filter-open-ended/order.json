@@ -21,6 +21,7 @@
       "physical": {
         "column": "Observed",
         "edition": "2018..2020",
+        "file": "scb_example_annual",
         "table": "Range"
       },
       "requested_period": "2019..2020",

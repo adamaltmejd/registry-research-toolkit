@@ -13,7 +13,8 @@
       "physical": {
         "table": "UnicodeSeries",
         "column": "Observed",
-        "edition": "2018..2019"
+        "edition": "2018..2019",
+        "file": "scb_example_annual"
       }
     }
   ],

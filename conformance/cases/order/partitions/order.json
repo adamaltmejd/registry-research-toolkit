@@ -12,6 +12,7 @@
       "physical": {
         "column": "Observed",
         "edition": "2018",
+        "file": "scb_example_annual_north_2018",
         "partition": "north",
         "table": "ShardA"
       },
@@ -29,6 +30,7 @@
       "physical": {
         "column": "Observed",
         "edition": "2018",
+        "file": "scb_example_annual_south_2018",
         "partition": "south",
         "table": "ShardB"
       },

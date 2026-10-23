@@ -12,6 +12,7 @@
       "physical": {
         "column": "LopNrForSammanstalldaForetagsuppgifter",
         "edition": "2019",
+        "file": "example_typed_2019",
         "table": "Long"
       },
       "requested_period": "2019",

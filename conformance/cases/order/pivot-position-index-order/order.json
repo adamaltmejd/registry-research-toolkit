@@ -12,6 +12,7 @@
       "physical": {
         "column": "DIA1",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "member": {
           "position": 1
         },
@@ -31,6 +32,7 @@
       "physical": {
         "column": "DIA2",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "member": {
           "position": 2
         },
@@ -50,6 +52,7 @@
       "physical": {
         "column": "DIA10",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "member": {
           "position": 10
         },
