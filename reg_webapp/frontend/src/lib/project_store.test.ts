@@ -10,6 +10,7 @@ import {
 import {
   add,
   openFile,
+  openNamedProject,
   SEED,
   storedProject,
 } from "./project-store-test-helpers";
@@ -58,7 +59,7 @@ describe("dirty flag", () => {
       status: 200,
       json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
     }));
-    projectStore.newProject(SEED);
+    openNamedProject();
     // Establish a REAL green validation first — otherwise the assertion is
     // vacuous (newProject already nulls validation).
     await projectStore.validate();
@@ -144,7 +145,7 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
       },
     ];
     stubFetch(async () => responses.shift() ?? responses.at(-1));
-    projectStore.newProject(SEED);
+    openNamedProject();
 
     await projectStore.validate();
     expect(projectStore.validationStatus).toBe("ok");
@@ -345,6 +346,7 @@ describe("stable client-side ids (issue #200)", () => {
         };
       });
       seedThreeSources();
+      projectStore.updateField("name", "Named"); // an unnamed draft never POSTs
       await projectStore.downloadOrder();
       expect(bodies.length).toBeGreaterThanOrEqual(1);
       for (const body of bodies) {

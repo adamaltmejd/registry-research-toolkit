@@ -89,6 +89,9 @@ function windowRelationsOf(draft: RawDraft | null) {
   });
 }
 
+/** The visible reason a blank name closes the order download. */
+const ORDER_NAME_REASON_ID = "order-name-reason";
+
 const nameOf = (draft: RawDraft): string =>
   typeof draft.name === "string" ? draft.name : "";
 
@@ -109,6 +112,7 @@ export function ProjectEditor({
   const orderFindings = useProject((s) => s.orderFindings);
   const canDownloadOrder = useProject((s) => s.canDownloadOrder);
   const windowBlocked = useProject((s) => s.windowBlocked);
+  const nameBlocked = useProject((s) => s.nameBlocked);
   const orderBusy = useProject((s) => s.orderBusy);
   const coverageHints = useCatalogRead(coverageHintsOf, draft);
   const windowRelations = useCatalogRead(windowRelationsOf, draft);
@@ -120,6 +124,7 @@ export function ProjectEditor({
 
   // A hidden <input type=file> driven by the toolbar "Open" button.
   const fileInput = useRef<HTMLInputElement>(null);
+  const nameInput = useRef<HTMLInputElement>(null);
   // Reading a picked file is asynchronous, and anything the researcher does
   // meanwhile SUPERSEDES that read: a New or a newer Open makes it the wrong
   // answer, and this page's teardown leaves nobody to answer it.
@@ -277,18 +282,42 @@ export function ProjectEditor({
             <Button
               variant="primary"
               isInert={!canDownloadOrder}
+              aria-describedby={nameBlocked ? ORDER_NAME_REASON_ID : undefined}
               title={
                 canDownloadOrder
                   ? "Download the order manifest"
-                  : windowBlocked
-                    ? "Blocked — a source has no years inside the study window; see below"
-                    : "Not available yet — see the validation results below"
+                  : nameBlocked
+                    ? "Blocked — the project has no name; see below"
+                    : windowBlocked
+                      ? "Blocked — a source has no years inside the study window; see below"
+                      : "Not available yet — see the validation results below"
               }
               onPress={() => void projectStore.downloadOrder()}
             >
               {orderBusy ? "Downloading…" : "Download order.json"}
             </Button>
           </div>
+          {/* The order manifest carries the name as its provenance, so a blank
+              one closes the download (the server refuses it as
+              `project_unnamed`). Said visibly, beside the button it explains. */}
+          {nameBlocked && (
+            <StatusRow
+              tone="info"
+              className={styles.orderReason}
+              action={
+                <Button
+                  variant="ghost"
+                  onPress={() => nameInput.current?.focus()}
+                >
+                  Set name
+                </Button>
+              }
+            >
+              <span id={ORDER_NAME_REASON_ID}>
+                Name the project to download order.json.
+              </span>
+            </StatusRow>
+          )}
           {/* The two downloads hand over DIFFERENT artifacts, said visibly. */}
           <p className="muted">
             <code>project_data.json</code> is the editable project draft;{" "}
@@ -302,6 +331,7 @@ export function ProjectEditor({
           <label className={styles.field}>
             <span>Name</span>
             <input
+              ref={nameInput}
               type="text"
               value={nameOf(draft)}
               placeholder="Project name"

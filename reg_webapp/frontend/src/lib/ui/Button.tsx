@@ -17,6 +17,8 @@ type Props = {
    * source card is "Apply period"), or repeat down a list (label-in-name: it
    * starts with the visible text). */
   "aria-label"?: string;
+  /** The id of visible text that says why an inert button refuses. */
+  "aria-describedby"?: string;
   /** Hover text for a pointer; never the only place a reason is given. */
   title?: string;
   children: ReactNode;
@@ -39,6 +41,7 @@ export function Button({
   isInert = false,
   isBusy = false,
   "aria-label": ariaLabel,
+  "aria-describedby": ariaDescribedBy,
   title,
   children,
 }: Props) {
@@ -46,6 +49,7 @@ export function Button({
     <AriaButton
       type={type}
       aria-label={ariaLabel}
+      aria-describedby={ariaDescribedBy}
       className={`${styles.button} ${styles[variant]}`}
       onPress={isInert ? undefined : onPress}
       render={(props) => (

@@ -180,5 +180,23 @@
         "limit_bytes": 1048576
       }
     }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/message": "order blocked by 1 finding: project_unnamed: project has no name — set `name`: the order manifest carries it as provenance.project_name, which must not be blank",
+      "/error/fields": {
+        "findings": [
+          {
+            "code": "project_unnamed",
+            "message": "project has no name — set `name`: the order manifest carries it as provenance.project_name, which must not be blank",
+            "source": null,
+            "variable": null,
+            "period": null
+          }
+        ]
+      }
+    }
   }
 ]
