@@ -682,7 +682,9 @@ sharing their first 25 characters (up to nine in one table do) differ in the has
 Truncation with a counter would read better but makes a column's name depend on its
 table's other columns, so a new sibling could rename it under a researcher's do-file. A
 hash collision within one file is not handled here: the runner refuses a file that would
-hold two columns of one name. `parquet` and `csv` orders keep every name.
+hold two columns of one name. Nor is a name over 80 characters, a Stata label's limit
+(the longest held name is 65): the runner refuses it. `parquet` and `csv` orders keep
+every name.
 
 **Version 3 is frozen** (2026-10-23; version 2, frozen 2026-10-23, had no `stata_name`
 and refused `.dta` orders of long names; version 1, frozen 2026-10-22 with its first

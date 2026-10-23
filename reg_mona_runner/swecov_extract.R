@@ -462,6 +462,17 @@ plan_files <- function(entries, format) {
         " order"
       )
     }
+    # Only a name .dta cannot hold is renamed, so an alias never takes the name
+    # of a column written under its own.
+    if (!is.null(ph$stata_name) && stata_name_ok(ph$column)) {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical.stata_name renames column ",
+        ph$column,
+        ", which is a Stata variable name"
+      )
+    }
     j <- match(ph$column, f$columns)
     if (is.na(j)) {
       f$columns <- c(f$columns, ph$column)
@@ -695,8 +706,8 @@ resolve_columns <- function(con, schema_id, table, columns) {
 
 # Whether `name` is a variable name a .dta file (format 118) can hold: Stata's
 # rule (stricter than ReadStat, which writes any non-ASCII name), which
-# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats so a dta order
-# blocks before it reaches MONA. 1 to 32 characters; a letter (\p{L}) or _
+# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats, so every name a
+# dta order writes (a column's own, or its stata_name) passes this backstop. 1 to 32 characters; a letter (\p{L}) or _
 # first, then letters, ASCII digits and _; not a reserved word, nor str and a
 # digit.
 stata_name_ok <- function(name) {
@@ -763,12 +774,12 @@ check_format <- function(file, types, format) {
         "not starting with a digit, not a reserved word)"
       )
     }
-    # A renamed column's label is its full name; haven cuts a label past 320
-    # UTF-8 bytes without a word.
+    # A renamed column's label is its full name, and Stata shows at most 80
+    # characters of a label (haven cuts one past 320 UTF-8 bytes without a word).
     if (
       format == "dta" &&
         file$names[j] != column &&
-        nchar(column, type = "bytes") > 320L
+        nchar(column) > 80L
     ) {
       refuse(
         "resolve",
@@ -776,7 +787,7 @@ check_format <- function(file, types, format) {
         column,
         " of ",
         file$table,
-        " is longer than a Stata variable label holds (320 bytes)"
+        " is longer than a Stata variable label holds (80 characters)"
       )
     }
   }

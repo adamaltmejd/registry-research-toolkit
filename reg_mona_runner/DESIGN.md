@@ -64,7 +64,7 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    here, before any row is read: for `.dta` and `.parquet` a SQL type outside the
    mapping below, for `.dta` a name it is written under that is not a Stata variable
    name (the order gives every such column a `stata_name`, so this is a backstop) or a
-   full name longer than a variable label holds (320 bytes; haven would cut it).
+   full name longer than a variable label holds (80 characters).
 4. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
    order's one format (below), then write `run_log.csv` (file, rows, columns, filter;
    the file name's extension is the format).
@@ -154,10 +154,11 @@ Choices behind the table:
   strL for text over 2045 bytes. A column whose name is not a Stata variable name is
   written under the entry's `physical.stata_name`, the order's alias
   ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"), with its full name as
-  the variable label. Every entry of a file names a column under one alias, and no two
-  columns of a file share a name, or the order is refused (exit 6). `%tc` holds
-  milliseconds, so a `datetime2`'s finer digits are dropped; Parquet keeps microseconds,
-  dropping `datetime2(7)`'s 100 ns digit; CSV already writes whole seconds.
+  the variable label. Every entry of a file names a column under one alias, only a
+  column that is not a Stata variable name has one, and no two columns of a file share a
+  name, or the order is refused (exit 6). `%tc` holds milliseconds, so a `datetime2`'s
+  finer digits are dropped; Parquet keeps microseconds, dropping `datetime2(7)`'s 100 ns
+  digit; CSV already writes whole seconds.
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
   chunk). haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).
