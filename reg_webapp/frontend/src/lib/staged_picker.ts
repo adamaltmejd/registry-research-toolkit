@@ -272,10 +272,14 @@ function rowMatchesBinding(
 /** The picker rows the draft already holds, by `pickerRowKey`: a row is committed
  * when a source of its variant FAMILY (#1840) carries a binding of its variable
  * that the row is — its pinned column, or, unpinned, a row delivered within the
- * source's period. */
+ * source's period. `variants` are the bands' register's (`registerRead`), so a
+ * source at a member that does not deliver the row's column still holds it, as
+ * `applyStagedPicks` finds it; while that read is in flight, pass none and the
+ * row's own members stand in. */
 export function committedPickerRows(
   draft: RawDraft | null,
   bands: readonly StagedPickerBand[],
+  variants: readonly VariantModel[],
 ): Map<string, PickerCommittedRow> {
   const committed = new Map<string, PickerCommittedRow>();
   const sources = safeSourceSlots(draft?.sources);
@@ -287,7 +291,7 @@ export function committedPickerRows(
   }
   for (const band of bands) {
     for (const row of band.rows) {
-      const { members } = rowFamily(band, row);
+      const { members } = rowFamily(band, row, variants);
       for (const source of sources) {
         const registerVariant = safeSourceRegisterVariant(source);
         if (!members.includes(registerVariant)) {

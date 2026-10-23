@@ -37,11 +37,13 @@ struct Member {
 
 impl VariantFamily {
     /// Each member's share of `requested`, ordered by first day. A day goes to the
-    /// member a steward holds it under, else to the member whose states deliver it,
-    /// else to the named variant, where availability then clips it: no variant is
-    /// invented. Holdings come first so a served day is resolved where it is held; a
-    /// day no member holds keeps its catalog member, so it blocks as a coverage gap
-    /// whichever member the source names. On a catalog artifact nothing is held.
+    /// member a steward holds it under and whose states deliver it, else to the
+    /// member whose states deliver it, else to the named variant, where availability
+    /// then clips it: no variant is invented. Holdings come first so a served day is
+    /// resolved where it is held; a day no delivering member holds keeps its catalog
+    /// member, so it blocks as a coverage gap whichever member the source names, even
+    /// where another member holds some table that day. On a catalog artifact nothing
+    /// is held.
     pub(super) fn split(&self, requested: &[Interval]) -> Vec<Part> {
         if self.members.len() == 1 {
             return vec![(self.named, requested.to_vec())];
@@ -50,12 +52,15 @@ impl VariantFamily {
         let mut shares: BTreeMap<i64, Vec<Interval>> = BTreeMap::new();
         for by_holdings in [true, false] {
             for member in &self.members {
+                // A held day the member does not deliver is not its: holding any
+                // column there would otherwise take the day from the member that
+                // delivers it and clip away what must block as a coverage gap.
                 let days = if by_holdings {
-                    &member.held
+                    overlap(&member.held, &member.delivered)
                 } else {
-                    &member.delivered
+                    member.delivered.clone()
                 };
-                let share = overlap(&rest, days);
+                let share = overlap(&rest, &days);
                 if !share.is_empty() {
                     rest = gaps(&rest, share.clone());
                     shares.entry(member.id).or_default().extend(share);

@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "code": "coverage_gap",
+      "message": "no steward edition delivers scb/lisa/individer-15plus 'scb/lisa/dispink' representation 'DispInk04' for 2010; the whole order is blocked until every requested subperiod inside availability is covered",
+      "source": "lisa",
+      "variable": "scb/lisa/dispink",
+      "period": "2010"
+    }
+  ]
+}

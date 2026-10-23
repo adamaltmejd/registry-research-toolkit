@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { VariantModel } from "./api";
 import type { PickerRepresentation } from "./catalog";
 import type { RawDraft } from "./project_data";
 import {
@@ -95,7 +96,7 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    const committed = committedPickerRows(draft, [b]);
+    const committed = committedPickerRows(draft, [b], []);
 
     expect(committed.get(pickerRowKey(b, r))).toEqual(
       expect.objectContaining({
@@ -105,12 +106,25 @@ describe("committedPickerRows", () => {
     );
   });
 
-  it("finds a family row in a source written at a predecessor member (#1840)", () => {
+  it("finds a family row in a source written at a member that does not deliver it (#1840)", () => {
     // Any member is accepted as a family's coordinate: a source an agent wrote at
-    // 16+ holds the folded row, and a remove of it reaches the whole family.
-    // Fails if matching goes back to the exact `register_variant`.
-    const r = foldedFamilyRow();
+    // 16+ holds a row only 15+ delivers, so the row reads as in the project and a
+    // remove of it reaches the source. The register's variants name 16+. Fails if
+    // the members come from the row's own segments alone (or matching goes back to
+    // the exact `register_variant`).
+    const r = row({
+      ...foldedFamilyRow(),
+      from: "2010-01-01",
+      windows: [{ from: "2010-01-01", to: "2023-12-31" }],
+      variantSegments: foldedFamilyRow().variantSegments?.slice(1),
+      period: "2010 – 2023",
+      wirePeriod: "2010..2023",
+    });
     const b = band([r]);
+    const variants = [
+      { slug: "individer-16plus", variant_family: "individer-15plus" },
+      { slug: "individer-15plus", variant_family: "individer-15plus" },
+    ] as unknown as VariantModel[];
     const draft: RawDraft = {
       schema_version: "4.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
@@ -132,7 +146,9 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    expect(committedPickerRows(draft, [b]).get(pickerRowKey(b, r))).toEqual({
+    expect(
+      committedPickerRows(draft, [b], variants).get(pickerRowKey(b, r)),
+    ).toEqual({
       key: "scb/lisa/individer-15plus::scb/lisa/dinf::Kon",
       registerVariant: "scb/lisa/individer-16plus",
       members: ["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"],
@@ -190,7 +206,7 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    const committed = committedPickerRows(draft, [b]);
+    const committed = committedPickerRows(draft, [b], []);
 
     expect(committed.get(pickerRowKey(b, rows[0]))).toEqual(
       expect.objectContaining({ representation: null }),
@@ -249,7 +265,7 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    const committed = committedPickerRows(draft, [b]);
+    const committed = committedPickerRows(draft, [b], []);
 
     expect(committed.size).toBe(0);
   });

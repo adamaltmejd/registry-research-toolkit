@@ -524,22 +524,25 @@ Per binding, in declaration order, over its source's period
    family (#1840, [reg-core/DESIGN.md](reg-core/DESIGN.md)): the `variant_replaced_by`
    component `show` reports as `variant_family`, or the variant alone. The request is
    split at member boundaries and each day goes to one member: the member a steward
-   holds it under (a dated table mapping a column under that variant), else the member
-   whose states deliver it, else the named variant, where the clip removes it, so no
-   variant is invented. The build guarantees a family is a chain whose members share no
-   day by either measure (`validate_built_db`), so the split needs no tie-break. A day
-   no member holds keeps its catalog member, so it blocks as a coverage gap whichever
-   member the source names. `_default` resolves the named variant exactly. Each binding
-   is then resolved once over the members' shares and clipped to the union of its states
-   there, so a column first delivered in 2019 under a 2018–2020 source does not widen
-   the order into a cross-product, and a column only one member delivers (LISA's
-   16+-only columns) gets one clip, not a block for the other member's years. Every clip
-   is reported, one per binding (requested: the source period; ordered: the union across
-   members), never silent and never an error, and is recorded before the ambiguity gate
-   can stop. Each slice keeps its member through matching, coverage, emission and held
-   keys, so a family source yields entries under each member's `logical.variant` and its
-   files are each member's own tables (conformance `order/variant-family`,
-   `order/variant-family-global`); the manifest shape does not change.
+   holds it under (a dated table mapping a column under that variant) and whose states
+   deliver it, else the member whose states deliver it, else the named variant, where
+   the clip removes it, so no variant is invented. The build guarantees a family is a
+   chain whose members share no day by either measure (`validate_built_db`), so the
+   split needs no tie-break. A day no delivering member holds keeps its catalog member,
+   so it blocks as a coverage gap whichever member the source names; a holding under a
+   member that does not deliver the day never takes it (conformance
+   `order/variant-family-held-elsewhere`). `_default` resolves the named variant
+   exactly. Each binding is then resolved once over the members' shares and clipped to
+   the union of its states there, so a column first delivered in 2019 under a 2018–2020
+   source does not widen the order into a cross-product, and a column only one member
+   delivers (LISA's 16+-only columns) gets one clip, not a block for the other member's
+   years. Every clip is reported, one per binding (requested: the source period;
+   ordered: the union across members), never silent and never an error, and is recorded
+   before the ambiguity gate can stop. Each slice keeps its member through matching,
+   coverage, emission and held keys, so a family source yields entries under each
+   member's `logical.variant` and its files are each member's own tables (conformance
+   `order/variant-family`, `order/variant-family-global`); the manifest shape does not
+   change.
 2. **Representation slicing.** The clipped request splits into slices of constant
    canonical representation. A sequential rename makes two slices; two columns valid at
    the same instant without a `representation` pin is ambiguity and blocks. Resolution
@@ -795,9 +798,13 @@ variant itself under `_default`; "Order manifest", step 1) and binding:
   runs once over the family, never per member with a merge: a member that does not
   deliver a column would otherwise block it for that member's years.
   `binding_state_drifts_within_period` (info) reports a sequential state transition
-  inside the request. A member boundary is a transition only where the representation or
-  value set changes across it (LISA's `SyssStat` → `SyssStat11`), not where one column
-  simply continues in the next member.
+  inside the request. It counts the states the request reaches: every state of one
+  member, and the first state of the next member only where its canonical column (by
+  `fold_identity`) or value set differs from the previous member's last state. So a
+  member boundary is a transition only where the representation or value set changes
+  across it (LISA's `SyssStat` → `SyssStat11`), not where one column simply continues in
+  the next member; a difference in any other fact across the boundary, such as the data
+  type, is not reported, while the same difference between two states of one member is.
 - `source_period_narrower_than_available` (warning, at `/sources/<i>/period`) is the one
   period finding, the reverse of a clip. It names the days inside the study window a
   period widened into them would order, across the whole family, minus the source

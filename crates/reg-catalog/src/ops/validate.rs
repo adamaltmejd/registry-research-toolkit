@@ -17,8 +17,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::project::{Binding, ProjectData, Source, StudyWindow, check};
 use reg_core::{
-    Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, gaps, intersect, merge, overlap,
-    quote, quoted_list, render,
+    Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, fold_identity, gaps, intersect,
+    merge, overlap, quote, quoted_list, render,
 };
 use rusqlite::{Connection, OptionalExtension, params};
 use serde_json::Value;
@@ -616,20 +616,29 @@ pub(super) struct Kept {
     value_set: (Option<i64>, String),
 }
 
-/// How many states a binding spans for `binding_state_drifts_within_period`: each
-/// state of one member counts, and a state of another member counts only where its
-/// representation or value set differs from every earlier member's state. A member
-/// boundary is a transition only where the representation or coding changes there.
+/// How many states a binding spans for `binding_state_drifts_within_period`. `states`
+/// is member-contiguous ([`reach`] walks the family split member by member), and each
+/// state is compared with the one before it: within one member it always counts; the
+/// first state of the next member counts only where its canonical column (by
+/// `fold_identity`, as the order matches it) or value set differs from the previous
+/// member's last state. A member boundary is a transition only where the
+/// representation or coding changes there; a difference in any other fact (the data
+/// type) across it is not counted.
 fn drifts(states: &[Kept]) -> usize {
-    let same = |a: &Kept, b: &Kept| {
-        a.emitted.register_variant_id != b.emitted.register_variant_id
-            && a.emitted.canonical_column == b.emitted.canonical_column
-            && a.value_set == b.value_set
+    let carried = |before: &Kept, s: &Kept| {
+        before.emitted.register_variant_id != s.emitted.register_variant_id
+            && before
+                .emitted
+                .canonical_column
+                .as_deref()
+                .map(fold_identity)
+                == s.emitted.canonical_column.as_deref().map(fold_identity)
+            && before.value_set == s.value_set
     };
     states
         .iter()
         .enumerate()
-        .filter(|(i, s)| !states[..*i].iter().any(|t| same(s, t)))
+        .filter(|(i, s)| *i == 0 || !carried(&states[i - 1], s))
         .count()
 }
 

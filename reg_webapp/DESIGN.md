@@ -1528,8 +1528,10 @@ has no family flag on `states`, so `familyStates` reads the period unfiltered an
 those members' states; one member is the server's own `variant` filter. Co-existing
 columns stay ambiguous across members as within one. The type comes from the HEAD-MOST
 member that delivers the column — the one whose delivery reaches latest, so the member
-the source's newest years order from (`familyTypeState`); an older member typed
-differently is the server's `binding_state_drifts_within_period`, like any drift. The
+the source's newest years order from (`familyTypeState`). An older member typed
+differently is reported nowhere: the server's `binding_state_drifts_within_period`
+counts a member boundary only where the column or value set changes (`crates/DESIGN.md`
+→ Project semantic validation), so a type-only difference across it stays silent. The
 cart resolves a column's name, its data warnings (one `warnings` read per member,
 merged), and the window relation its delivery eras, over the same family
 (`variantFamilyMembers` on the register read). A source period edit (`periodChange`)

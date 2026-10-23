@@ -168,5 +168,65 @@
         "provenance": null
       }
     ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "kommun",
+    "provider_key": "5",
+    "name": "Kommun",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-16plus",
+          "name": "Individer, 16 år och äldre",
+          "panel_entity_key": "lopnr"
+        },
+        "valid_from": "2005-01-01",
+        "valid_to": "2009-12-31",
+        "delivery_column_name": "Kommun",
+        "data_type": "integer",
+        "data_length": "4",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer, 15 år och äldre",
+          "panel_entity_key": "lopnr"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2010-12-31",
+        "delivery_column_name": "Kommun",
+        "data_type": "integer",
+        "data_length": "4",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer, 15 år och äldre",
+          "panel_entity_key": "lopnr"
+        },
+        "valid_from": "2011-01-01",
+        "valid_to": "2013-12-31",
+        "delivery_column_name": "Kommun",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
   }
 ]

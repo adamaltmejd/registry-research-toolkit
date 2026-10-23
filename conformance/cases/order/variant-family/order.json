@@ -186,7 +186,7 @@
   "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
-    "catalog_generation_id": "ab849cc9f36ab26f3bde3b90d28b7c7470760fd18609d49ce68ebfd9d6823de1",
+    "catalog_generation_id": "29e10fcbcf0b49eba0ab3e2e0d5d3dccee0139f2ca0d6f0cb240d9b4efee4049",
     "catalog_schema_version": "12.3.0",
     "mode": "steward_holdings",
     "project_hash": "957feff6fd32254ff6609b0228c8280bb017128f7c3fc874230f03e7260e694a",

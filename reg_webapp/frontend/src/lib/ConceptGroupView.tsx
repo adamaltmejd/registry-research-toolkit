@@ -337,7 +337,11 @@ export function ConceptGroupView({
   const bands = groupBands(group, nodes, memberHref);
   const focusKey =
     bands.find((band) => leafSlug(band.key) === memberHint)?.key ?? null;
-  const committedRows = committedPickerRows(draft, bands);
+  const committedRows = committedPickerRows(
+    draft,
+    bands,
+    registerNode?.variants ?? [],
+  );
   // Where the group as a whole has data: the Timeline's coverage.
   const coverage = unionCoverage(bands);
   const coverageYears = deliveredYears(

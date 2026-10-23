@@ -4,6 +4,7 @@ steward = "swecov"
 # One table per year, as SWECOV holds LISA: 2007..2009 under 16+ (which alone
 # delivers Sun2000niva_Old and spells sysselsättningsstatus SyssStat), 2010..2012
 # under 15+ (SyssStat11). Neither member holds 2005..2006 or 2013.
+# Kommun is one column in every year; 15+ has two states of it (2010, 2011..).
 
 [[table]]
 id = "LISA2007"
@@ -32,6 +33,12 @@ name = "SyssStat"
 register_variant = "scb/lisa/individer-16plus"
 variable = "scb/lisa/syssstat"
 representation = "SyssStat"
+[[table.column]]
+name = "Kommun"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/kommun"
+representation = "Kommun"
 
 [[table]]
 id = "LISA2008"
@@ -60,6 +67,12 @@ name = "SyssStat"
 register_variant = "scb/lisa/individer-16plus"
 variable = "scb/lisa/syssstat"
 representation = "SyssStat"
+[[table.column]]
+name = "Kommun"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/kommun"
+representation = "Kommun"
 
 [[table]]
 id = "LISA2009"
@@ -88,6 +101,12 @@ name = "SyssStat"
 register_variant = "scb/lisa/individer-16plus"
 variable = "scb/lisa/syssstat"
 representation = "SyssStat"
+[[table.column]]
+name = "Kommun"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-16plus"
+variable = "scb/lisa/kommun"
+representation = "Kommun"
 
 [[table]]
 id = "LISA2010"
@@ -110,6 +129,12 @@ name = "SyssStat11"
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/syssstat"
 representation = "SyssStat11"
+[[table.column]]
+name = "Kommun"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kommun"
+representation = "Kommun"
 
 [[table]]
 id = "LISA2011"
@@ -132,6 +157,12 @@ name = "SyssStat11"
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/syssstat"
 representation = "SyssStat11"
+[[table.column]]
+name = "Kommun"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kommun"
+representation = "Kommun"
 
 [[table]]
 id = "LISA2012"
@@ -154,3 +185,9 @@ name = "SyssStat11"
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/syssstat"
 representation = "SyssStat11"
+[[table.column]]
+name = "Kommun"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kommun"
+representation = "Kommun"

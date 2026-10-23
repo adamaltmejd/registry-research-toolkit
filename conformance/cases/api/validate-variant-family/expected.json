@@ -12,6 +12,13 @@
           "successor_fqid": null
         },
         {
+          "code": "binding_state_drifts_within_period",
+          "level": "info",
+          "message": "column 'scb/lisa/kommun' spans 2 states across a transition within period 2008..2011",
+          "path": "/sources/0/bindings/3/variable",
+          "successor_fqid": null
+        },
+        {
           "code": "source_period_narrower_than_available",
           "level": "warning",
           "message": "source 'Family' orders 2008..2011, narrower than its columns deliver in the study window 2006..2013: 2007,2012 also delivered",

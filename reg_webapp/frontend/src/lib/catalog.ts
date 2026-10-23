@@ -2712,8 +2712,9 @@ export async function familyStates(
  * server's chronological order, of the HEAD-MOST member that delivers the column
  * in the period — the member whose delivery reaches latest. Members' delivery
  * days are disjoint (the build refuses an overlap), so that is the member the
- * source's newest years order from; an older member whose type differs is the
- * server's `binding_state_drifts_within_period`, as any drift is. With one
+ * source's newest years order from. An older member whose type alone differs
+ * is reported nowhere: the server's `binding_state_drifts_within_period` counts
+ * a member boundary only where the column or value set changes. With one
  * variant this is simply the first state. */
 function familyTypeState(
   states: readonly VariableStateModel[],

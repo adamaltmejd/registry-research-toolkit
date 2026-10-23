@@ -389,7 +389,7 @@ export function RegisterView({
   // each with its marker against the study window (the most severe across the
   // variants that deliver it). Partial cover reads as not added.
   const committed = new Map<string, CommittedMarker>();
-  const committedRows = committedPickerRows(draft, bands);
+  const committedRows = committedPickerRows(draft, bands, node.variants);
   if (committedRows.size > 0) {
     for (const band of bands) {
       for (const column of columnsByFqid.get(band.key) ?? []) {

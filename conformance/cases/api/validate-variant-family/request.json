@@ -1,5 +1,5 @@
 {
-  "note": "variant-family: individer-16plus (states 2005..2009, held 2007..2009) is succeeded by individer-15plus (states 2010..2013, held 2010..2012). Family names the head over 2008..2011: Sun2000niva_Old, delivered by 16+ alone, resolves over the family and is not blocked; DispInk04, one spelling and value set in both members, is no drift; sysselsattningsstatus, SyssStat in 16+ and SyssStat11 in 15+, drifts at the member boundary. The narrower warning counts held days across the family inside the window 2006..2013: 2007 (16+) and 2012 (15+); 2006 and 2013 are delivered but not held, so widening into them would block. Old names the predecessor over 2010..2011: any member reaches the family, so its 15+ years resolve. Fails if a dated source resolves only its named variant (period_outside_state_validity on Sun2000niva_Old and on Old), if the warning counts only the named variant's days (2012 alone), or if drift fires for a column unchanged across the member boundary.",
+  "note": "variant-family: individer-16plus (states 2005..2009, held 2007..2009) is succeeded by individer-15plus (states 2010..2013, held 2010..2012). Family names the head over 2008..2011: Sun2000niva_Old, delivered by 16+ alone, resolves over the family and is not blocked; DispInk04, one spelling and value set in both members, is no drift; sysselsattningsstatus, SyssStat in 16+ and SyssStat11 in 15+, drifts at the member boundary. Kommun continues across the boundary (no transition there) but 15+ has two states of it, 2010 and 2011.., so it drifts inside 15+: 2 states. The narrower warning counts held days across the family inside the window 2006..2013: 2007 (16+) and 2012 (15+); 2006 and 2013 are delivered but not held, so widening into them would block. Old names the predecessor over 2010..2011: any member reaches the family, so its 15+ years resolve. Fails if a dated source resolves only its named variant (period_outside_state_validity on Sun2000niva_Old and on Old), if the warning counts only the named variant's days (2012 alone), if drift fires for a column unchanged across the member boundary (DispInk04), or if a later member's own transition is hidden because an earlier member's state matches it (Kommun counts 1).",
   "fixture": "variant-family",
   "requests": [
     {
@@ -36,6 +36,11 @@
               },
               {
                 "variable": "scb/lisa/syssstat",
+                "type": "numeric",
+                "numeric_subtype": "integer"
+              },
+              {
+                "variable": "scb/lisa/kommun",
                 "type": "numeric",
                 "numeric_subtype": "integer"
               }

@@ -490,6 +490,23 @@ describe("applyStagedPicks over a variant family (#1840)", () => {
       },
     );
 
+  it("adds a pick whose period overlaps the window as one source at the head (#1834)", async () => {
+    // The 15+ share (2010–2012) misses the 1980–2005 window while the 16+ share
+    // overlaps it; the pick is one add over both. Fails if adds fan out per
+    // member again (the 15+ share is then refused as outside the window, or a
+    // second source is written).
+    stubResolve(dispInk);
+    newProject();
+
+    const result = await apply("2004..2012");
+
+    expect(result.kind).toBe("applied");
+    expect(
+      storedProject()?.sources.map((s) => [s.register_variant, s.period]),
+    ).toEqual([["scb/lisa/individer-15plus", { from: 2004, to: 2012 }]]);
+    expect(bindingOf(key)?.type).toBe("categorical");
+  });
+
   it("still refuses a pick with no years inside the window", async () => {
     // Fails if a family add lets a pick wholly outside the window through.
     stubResolve(dispInk);
