@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { BindingEditor } from "./BindingEditor";
 import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names";
+import { focusAfterRemoval } from "./focus_after_removal";
 import {
   normalizePeriodRows,
   resolveYearEntry,
@@ -86,20 +87,16 @@ interface RowsProblem {
 
 const BLANK_ROW: YearRow = { from: "", to: "" };
 
-/** After a confirmed removal, focus lands where the removed card was: the next
- * source's heading, else the previous one's, else the project heading. The card
- * (and the dialog's trigger with it) is gone, so RAC has nothing to restore to;
- * this runs after React has committed the shorter list. */
-function focusAfterRemoval(index: number): void {
-  requestAnimationFrame(() => {
-    const heading = (i: number) =>
-      document.getElementById(sourceAnchorId(i))?.querySelector("h3") ?? null;
-    const target =
-      heading(index) ??
-      (index > 0 ? heading(index - 1) : null) ??
-      document.getElementById(PROJECT_HEADING_ID);
-    target?.focus();
-  });
+/** Where focus lands after a source is removed: the next source's heading,
+ * else the previous one's, else the project heading. */
+function focusAfterSourceRemoval(index: number): void {
+  const heading = (i: number) =>
+    document.getElementById(sourceAnchorId(i))?.querySelector("h3");
+  focusAfterRemoval([
+    () => heading(index),
+    () => (index > 0 ? heading(index - 1) : null),
+    () => document.getElementById(PROJECT_HEADING_ID),
+  ]);
 }
 
 export function SourceEditor({
@@ -378,7 +375,7 @@ export function SourceEditor({
           className={styles.title}
           aria-busy={names.loading ? "true" : undefined}
         >
-          {/* A focus target (not a tab stop) for focusAfterRemoval. */}
+          {/* A focus target (not a tab stop) for focusAfterSourceRemoval. */}
           <h3
             className={titleIsCoordinate ? styles.mono : undefined}
             tabIndex={-1}
@@ -415,7 +412,7 @@ export function SourceEditor({
               onPress={() => {
                 setRemoveOpen(false);
                 projectStore.removeSource(sourceIndex);
-                focusAfterRemoval(sourceIndex);
+                focusAfterSourceRemoval(sourceIndex);
               }}
             >
               Remove source

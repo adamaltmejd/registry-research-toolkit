@@ -163,9 +163,12 @@ export function ProjectBanner({
             {status.findings ? (
               <Link
                 href="/project"
-                className={styles.verdict}
+                className={`link ${styles.verdict}`}
                 aria-label={`${status.label}: show the findings`}
-                onPress={revealFindings}
+                onPress={(e) => {
+                  // A modified press opens another tab: nothing to reveal here.
+                  if (!(e.metaKey || e.ctrlKey || e.shiftKey)) revealFindings();
+                }}
               >
                 <span aria-hidden="true">{status.glyph} </span>
                 {status.label}

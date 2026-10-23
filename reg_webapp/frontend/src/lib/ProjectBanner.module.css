@@ -93,19 +93,10 @@
 .sizer {
   visibility: hidden;
 }
-/* A verdict with findings links to them: the link look, in the verdict's hue. */
+/* A verdict with findings links to them: the shared `.link` look, in the
+   verdict's hue. */
 a.verdict {
   color: inherit;
-  border-bottom: 1.5px solid var(--accent);
-  text-decoration: none;
-}
-a.verdict[data-hovered] {
-  background: var(--surface-hover);
-}
-a.verdict[data-focus-visible] {
-  outline: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring);
 }
 .status[data-status="unchecked"] > .verdict,
 .status[data-status="checking"] > .verdict {

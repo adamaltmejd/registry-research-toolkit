@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./BindingEditor.module.css";
 import { catalogHref, registerPrefixOf } from "./catalog";
 import { columnNames, registerRead, UNASKED } from "./catalog_names";
+import { focusAfterRemoval } from "./focus_after_removal";
 import { periodLabel, periodWindowRelation } from "./period";
 import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
@@ -44,20 +45,20 @@ const readUnasked = () => UNASKED;
 
 /** After a column leaves, focus moves to the row that took its place, else the
  * one before it, else the source's heading: never to `<body>`. */
-function focusAfterRemoval(sourceIndex: number, bindingIndex: number): void {
-  requestAnimationFrame(() => {
-    const row = (i: number) =>
-      document
-        .getElementById(bindingAnchorId(sourceIndex, i))
-        ?.querySelector("button") ?? null;
-    const target =
-      row(bindingIndex) ??
-      (bindingIndex > 0 ? row(bindingIndex - 1) : null) ??
-      document
-        .getElementById(sourceAnchorId(sourceIndex))
-        ?.querySelector<HTMLElement>("h3");
-    target?.focus();
-  });
+function focusAfterColumnRemoval(
+  sourceIndex: number,
+  bindingIndex: number,
+): void {
+  const row = (i: number) =>
+    document
+      .getElementById(bindingAnchorId(sourceIndex, i))
+      ?.querySelector("button");
+  focusAfterRemoval([
+    () => row(bindingIndex),
+    () => (bindingIndex > 0 ? row(bindingIndex - 1) : null),
+    () =>
+      document.getElementById(sourceAnchorId(sourceIndex))?.querySelector("h3"),
+  ]);
 }
 
 export function BindingEditor({
@@ -210,7 +211,7 @@ export function BindingEditor({
               onPress={() => {
                 setRemoveOpen(false);
                 projectStore.removeBinding(sourceIndex, bindingIndex);
-                focusAfterRemoval(sourceIndex, bindingIndex);
+                focusAfterColumnRemoval(sourceIndex, bindingIndex);
               }}
             >
               Remove column
