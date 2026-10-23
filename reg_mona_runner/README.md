@@ -1,8 +1,9 @@
 # SWECOV extract runner
 
 `swecov_extract.R` extracts SWECOV orders inside MONA. Each order is an `order.json`
-that the catalog wrote for one sub-project; the script writes the ordered columns as CSV
-files into that sub-project's export folder. Run it by hand in MONA.
+that the catalog wrote for one sub-project; the script writes the ordered columns into
+that sub-project's export folder, in the format the researcher chose for the project:
+Stata `.dta` (the default), Parquet or CSV. Run it by hand in MONA.
 
 ## Folders
 
@@ -27,19 +28,24 @@ All under the export root, set at the top of the script:
 4. Read the console: each order ends with `done` or `FAILED (exit code N)`.
 
 The script first installs any of its R packages (DBI, odbc, jsonlite) that is missing,
-into R's default library from MONA's mirror, so the first run on a new server takes
-longer. It installs only when the default library is writable and a CRAN mirror is
-configured. If one cannot be installed, the run stops with exit code 2 before any order,
-and the console names the package. Install it yourself, or ask MONA support (unwritable
+and haven (for `.dta`) or arrow (for `.parquet`) when an order needs it, into R's
+default library from MONA's mirror, so the first run on a new server takes longer. It
+installs only when the default library is writable and a CRAN mirror is configured. If
+DBI, odbc or jsonlite cannot be installed, the run stops with exit code 2 before any
+order, and the console names the package; if haven or arrow cannot, only the orders that
+need it fail, with exit code 2. Install it yourself, or ask MONA support (unwritable
 library, no or unreachable mirror).
 
 ## Results
 
 A successful order writes `export_data\<nr>_<date>\`:
 
-- one CSV per output file, named `<register>_<variant>_<period>.csv`, or
-  `<register>_<variant>_<part>_<period>.csv` for a partition or projection table (UTF-8,
-  header row, empty field for a missing value);
+- one file per output file in the order's format, named
+  `<register>_<variant>_<period>.dta` (or `.parquet`, `.csv`), or
+  `<register>_<variant>_<part>_<period>.dta` for a partition or projection table. A
+  `.dta` file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty
+  field for a missing value. [DESIGN.md](DESIGN.md), "Types per format", lists what each
+  column type becomes;
 - `run_log.csv`: each file's row count, column count and the period filter applied.
 
 The order then moves to `orders\archive\`.
@@ -48,13 +54,13 @@ A failed order stays in `orders\`, and its export folder holds only `error_log.c
 the exit code and the reason. Fix the cause and run the script again: a rerun overwrites
 that day's export folder.
 
-  | Code    | What to do                                                                   |
-  | ------- | ---------------------------------------------------------------------------- |
-  | 2       | Check the export root, the R packages (DBI, odbc, jsonlite) and the database |
-  | 3, 4, 6 | The file is not a usable order: download it again from the catalog           |
-  | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view  |
-  | 7       | A table or column is not in the database: report it to the catalog team      |
-  | 8       | The query or the write failed: check disk space, then report it              |
+  | Code    | What to do                                                                                                                                                                                              |
+  | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 2       | Check the export root, the R packages (DBI, odbc, jsonlite, haven, arrow) and the database                                                                                                              |
+  | 3, 4, 6 | The file is not a usable order: download it again from the catalog                                                                                                                                      |
+  | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view                                                                                                                             |
+  | 7       | A table or column is not in the database: report it to the catalog team. Or the format cannot hold a column (its type, or a `.dta` name over 32 characters): the researcher orders it as Parquet or CSV |
+  | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV                          |
 
 ## Safety
 

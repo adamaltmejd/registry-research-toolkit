@@ -1,0 +1,162 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "LopNr",
+        "variable": "scb/example/lopnr",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "LopNr",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Kod",
+        "variable": "scb/example/kod",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Kod",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Datum",
+        "variable": "scb/example/datum",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Datum",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Ref",
+        "variable": "scb/example/ref",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Ref",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Belopp",
+        "variable": "scb/example/belopp",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Belopp",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Antal",
+        "variable": "scb/example/antal",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Antal",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Stamp",
+        "variable": "scb/example/stamp",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Stamp",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Flag",
+        "variable": "scb/example/flag",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Flag",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Namn",
+        "variable": "scb/example/namn",
+        "variant": "typed"
+      },
+      "physical": {
+        "column": "Namn",
+        "edition": "2019",
+        "table": "Typed"
+      },
+      "requested_period": "2019",
+      "source": "Typed"
+    }
+  ],
+  "extract_format": "parquet",
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "0000000000000000000000000000000000000000000000000000000000000000",
+    "catalog_schema_version": "12.2.0",
+    "mode": "steward_holdings",
+    "project_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "project_name": "Runner case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 2
+}

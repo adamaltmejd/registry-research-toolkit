@@ -155,9 +155,9 @@ jobs:
       SWECOV_TEST_CONNECTION: "Driver={ODBC Driver 18 for SQL Server};Server=localhost,1433;UID=sa;PWD=Runner-fixture-1;TrustServerCertificate=yes;"
     steps:
       - uses: actions/checkout@v7.0.1
-      # R with binary DBI, odbc, jsonlite and testthat from Posit's package manager
-      # (Ubuntu's archive has no r-cran-odbc), and Microsoft's ODBC driver unless the
-      # image ships it.
+      # R with binary DBI, odbc, jsonlite, haven, arrow and testthat from Posit's
+      # package manager (Ubuntu's archive has no r-cran-odbc), and Microsoft's ODBC
+      # driver unless the image ships it.
       - uses: r-lib/actions/setup-r@v2.14.0
         with:
           use-public-rspm: true
@@ -167,6 +167,8 @@ jobs:
             any::DBI
             any::odbc
             any::jsonlite
+            any::haven
+            any::arrow
             any::testthat
       - run: |
           if ! odbcinst -q -d -n "ODBC Driver 18 for SQL Server" >/dev/null 2>&1; then

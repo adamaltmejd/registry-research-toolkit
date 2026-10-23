@@ -29,5 +29,6 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "extract_format": "csv",
+  "version": 2
 }

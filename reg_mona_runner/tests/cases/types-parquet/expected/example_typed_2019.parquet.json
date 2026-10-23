@@ -1,0 +1,48 @@
+{
+  "types": {
+    "LopNr": "int64",
+    "Kod": "string",
+    "Datum": "date32[day]",
+    "Ref": "decimal128(18, 0)",
+    "Belopp": "decimal128(9, 2)",
+    "Antal": "int32",
+    "Stamp": "timestamp[us, tz=UTC]",
+    "Flag": "bool",
+    "Namn": "string"
+  },
+  "rows": [
+    [
+      "199001011234",
+      "0180",
+      "1959-12-31",
+      "123456789012345678",
+      "1234567.89",
+      "-5",
+      "2019-01-01 10:00:00.000000Z",
+      "true",
+      "Västerås"
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      "201001011234",
+      "0001",
+      "2020-02-29",
+      "1",
+      "-0.50",
+      "7",
+      "2020-02-29 23:59:59.000000Z",
+      "false",
+      ""
+    ]
+  ]
+}

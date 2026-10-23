@@ -25,13 +25,59 @@ load_fixture <- function() {
   db
 }
 
+# A binary extract as its oracle spells it: each column's storage type (the R
+# class haven reads a .dta column as, or the Parquet type) and each row's values
+# as text, "<NULL>" for a missing value. Rendered here, not by the runner.
+read_binary <- function(path) {
+  if (endsWith(path, ".dta")) {
+    data <- as.data.frame(haven::read_dta(path))
+    types <- lapply(data, function(x) class(x)[1])
+    text <- lapply(data, function(x) {
+      if (inherits(x, "POSIXct")) {
+        format(x, "%Y-%m-%d %H:%M:%S", tz = "UTC")
+      } else {
+        as.character(x)
+      }
+    })
+  } else {
+    table <- arrow::read_parquet(path, as_data_frame = FALSE)
+    types <- stats::setNames(
+      lapply(table$schema$fields, function(f) f$type$ToString()),
+      names(table)
+    )
+    text <- lapply(names(table), function(n) {
+      as.vector(table[[n]]$cast(arrow::utf8()))
+    })
+  }
+  text <- lapply(text, function(x) ifelse(is.na(x), "<NULL>", x))
+  list(types = types, rows = do.call(paste, c(text, sep = "\r")))
+}
+
 # Every expected file, byte for byte except row order (the extract has no
-# ORDER BY): the header line exactly, then the same multiset of rows.
+# ORDER BY): the header line exactly, then the same multiset of rows. A .dta or
+# .parquet file's oracle is <file>.json: its column types and rows, null for a
+# missing value (read_binary).
 expect_export <- function(base, case) {
   expected <- file.path(cases_dir, case, "expected")
   out <- export_dir(base, case)
-  expect_setequal(list.files(out), list.files(expected))
-  for (name in list.files(expected)) {
+  expect_setequal(list.files(out), sub("\\.json$", "", list.files(expected)))
+  for (name in list.files(expected, pattern = "\\.json$")) {
+    want <- jsonlite::read_json(file.path(expected, name))
+    got <- read_binary(file.path(out, sub("\\.json$", "", name)))
+    expect_identical(got$types, want$types, label = paste(case, name, "types"))
+    rows <- vapply(
+      want$rows,
+      function(r) {
+        paste(
+          vapply(r, function(v) if (is.null(v)) "<NULL>" else v, ""),
+          collapse = "\r"
+        )
+      },
+      ""
+    )
+    expect_identical(sort(got$rows), sort(rows), label = paste(case, name))
+  }
+  for (name in list.files(expected, pattern = "\\.csv$")) {
     got <- readLines(file.path(out, name), encoding = "UTF-8")
     want <- readLines(file.path(expected, name), encoding = "UTF-8")
     expect_identical(got[1], want[1], label = paste(case, name, "header"))
@@ -72,9 +118,22 @@ test_that("orders extract their files from SQL Server", {
     # non-ASCII names, year on varchar with an unparseable value, date on
     # datetime2 keeping the bound day's last second; bounds finer than the
     # encoding widen.
-    "encodings"
+    "encodings",
+    # One case per extract format over one table of every mapped SQL type: a
+    # leading-zero code, a pre-1960 day, a 12-digit bigint id, an 18-digit and a
+    # scaled decimal, a NULL row and an empty string keep their values and take
+    # the format's storage type.
+    "types-dta",
+    "types-parquet",
+    "types-csv"
   )
-  refused <- c(`missing-table` = 7L, `ambiguous-table` = 7L, `broken-view` = 8L)
+  refused <- c(
+    `missing-table` = 7L,
+    `ambiguous-table` = 7L,
+    # A .dta order of a column whose name is over Stata's 32 characters.
+    `stata-name` = 7L,
+    `broken-view` = 8L
+  )
   base <- export_root(stats::setNames(
     lapply(c(extracted, names(refused)), case_order),
     c(extracted, names(refused))
