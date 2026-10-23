@@ -3,5 +3,5 @@
   "inventory": "inventory.toml",
   "census": "census.csv",
   "scope": "scope.toml",
-  "fails_if": "a carried mapping of a variable that is no panel key of its variant compiles (the order would never carry it), the refusal is not located at the mapping, or the valid carried Id is refused beside it"
+  "fails_if": "a carried mapping of a variable that is no panel key of its variant compiles (the order would never carry it), the refusal is not located at the mapping"
 }

@@ -682,6 +682,34 @@ class InventoryTable(_InventoryModel):
             seen.add(column.name)
         return self
 
+    @model_validator(mode="after")
+    def _check_carried_rides_along(self) -> InventoryTable:
+        """A carried key rides along only in a file of its own table and variant,
+        and a file is emitted only for a served cell, so a table must serve some
+        cell of each variant it carries a key of; otherwise the key never rides
+        along and the build would not say so."""
+        served = {
+            mapping.register_variant
+            for column in self.columns
+            for mapping in column.mappings
+            if not mapping.carried
+        }
+        if dead := sorted(
+            {
+                mapping.register_variant
+                for column in self.columns
+                for mapping in column.mappings
+                if mapping.carried
+            }
+            - served
+        ):
+            raise _InventoryGuardError(
+                _CARRIED,
+                f"carries a key of {', '.join(dead)} but serves no cell of it, so "
+                "no file of this table and variant is ever ordered to carry it",
+            )
+        return self
+
 
 class _Placement(NamedTuple):
     """One mapping's physical placement, as `_check_one_to_one_resolution`

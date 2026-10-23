@@ -2,11 +2,11 @@ version = 1
 steward = "swecov"
 
 # `Extra` is no panel key of the annual variant (its key is `id`), so carrying
-# it is refused: the order would never carry it.
+# it is refused: the order would never carry it. Aux serves Id after Main's edition.
 
 [[table]]
 id = "Aux"
-edition = { from = 2012, to = 2024 }
+edition = { from = 2020, to = 2024 }
 [[table.column]]
 name = "Extra"
 [[table.column.mapping]]
@@ -20,7 +20,6 @@ name = "Id"
 register_variant = "scb/example/annual"
 variable = "scb/example/id"
 representation = "Id"
-carried = true
 
 [[table]]
 id = "Main"

@@ -3036,14 +3036,20 @@ only a same-edition delivery with one parent. The auxiliary key column instead m
 the table as a held key, and it serves no cell. The one-to-one rule skips it, so the key
 cell keeps its one location, and an order of the key alone never reaches the auxiliary
 table, as before. A carried mapping takes no member, window or warning (it rides along
-with its table's whole edition), refused as `inventory_carried_key_invalid`, and its
+with its table's whole edition), and a table serves some cell of each variant it carries
+a key of (a file of that table and variant is emitted only for a served cell, so the key
+would otherwise never ride along); both refuse as `inventory_carried_key_invalid`. Its
 variable must be a panel key (`panel_entity_key` or `panel_time_key`) of its variant,
 since the order carries nothing else; compilation refuses any other in the fold gate,
 located at the mapping. `holding_key` stores it, apart from `holding_mapping`, so a
 reader that predates it never matches it as a served cell: the bump is minor (12.3.0),
 and a 12.0 to 12.2 reader orders those files without the key, as it does today. The
 order's held keys read both relations ([../crates/DESIGN.md](../crates/DESIGN.md),
-"Order manifest", step 5), and the reader gate is 12.3.
+"Order manifest", step 5), and the reader gate is 12.3. `holding_key` is a base table,
+so a 12.2 base cannot be derived up to 12.3 (derive rebuilds only the derived tables,
+and `validate_built_db` refuses a missing table): the next steward build rebuilds the
+global base under 12.3.0, as for 12.1.0. Coverage diagnostics skip carried mappings,
+since the catalog owes a cell nothing serves no window.
 
 **Column windows** (#1645). A windowed mapping serves its coordinate only inside its
 window, so the overlap check compares the window, as for a year or month member, and the
