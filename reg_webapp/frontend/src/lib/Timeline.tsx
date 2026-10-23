@@ -6,12 +6,14 @@ import {
   clampYearWindow,
   coverageBandEdges,
   intersectCoverageWindow,
+  periodWindowRelation,
   sameYearWindow,
   yearWindowFromWire,
   yearWindowRepresentable,
   yearWindowToWire,
 } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
+import { studyWindowInterval } from "./reg_core";
 import styles from "./Timeline.module.css";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
@@ -96,18 +98,50 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
         );
   const outside = band ? uncovered(band, covered) : [];
 
-  const labels: { year: number; at: number; window: boolean }[] = [];
+  const labels: {
+    year: number;
+    at: number;
+    window: boolean;
+    text?: string;
+    edge?: "start" | "end";
+    /** The run the label's text covers, when wider than one year's label. */
+    reach?: [number, number];
+  }[] = [];
   const add = (year: number, at: number, window: boolean) => {
     // The window's own bounds always show; only the other ticks give way.
     // A year is labelled once (the axis end can be the window end).
     if (labels.some((l) => l.year === year)) return;
-    if (window || labels.every((l) => Math.abs(l.at - at) >= MIN_GAP_PCT)) {
+    const clear = (l: (typeof labels)[number]) =>
+      l.reach
+        ? at <= l.reach[0] - MIN_GAP_PCT || at >= l.reach[1] + MIN_GAP_PCT
+        : Math.abs(l.at - at) >= MIN_GAP_PCT;
+    if (window || labels.every(clear)) {
       labels.push({ year, at, window });
     }
   };
   if (band) {
-    add(band.from, pct(band.from), true);
-    add(band.to, pct(band.to + 1), true);
+    const from = pct(band.from);
+    const to = pct(band.to + 1);
+    if (band.from !== band.to && to - from < MIN_GAP_PCT) {
+      // Bounds too close to stand apart read as one "2018–2020" label, so
+      // the two years never run together ("20182020"). It is anchored at the
+      // band edge nearer the drawing's middle and runs toward the middle, so
+      // it never runs off either end; axis years keep a label gap clear of its
+      // whole run, taken as one gap wide (about the label's width at 375 px).
+      const late = from + to > 100;
+      const at = late ? to : from;
+      labels.push({
+        year: band.from,
+        at,
+        window: true,
+        text: span(band),
+        edge: late ? "end" : "start",
+        reach: late ? [at - MIN_GAP_PCT, at] : [at, at + MIN_GAP_PCT],
+      });
+    } else {
+      add(band.from, from, true);
+      add(band.to, to, true);
+    }
   }
   add(axis.from, 0, false);
   add(axis.to, 100, false);
@@ -167,10 +201,12 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
             className={
               l.window ? `${styles.year} ${styles.windowYear}` : styles.year
             }
-            data-edge={l.at <= 0 ? "start" : l.at >= 100 ? "end" : undefined}
+            data-edge={
+              l.edge ?? (l.at <= 0 ? "start" : l.at >= 100 ? "end" : undefined)
+            }
             style={{ left: `${l.at}%` }}
           >
-            {l.year}
+            {l.text ?? l.year}
           </span>
         ))}
       </div>
@@ -436,32 +472,33 @@ export function PeriodTimeline({
     };
   }
 
-  // Periods are compared inside the variable's availability: years it has no
-  // data for are the data's narrowing, not the user's, and say so in the "i"
+  // Periods are compared inside the variable's availability
+  // (`periodWindowRelation`, the rule /project judges sources by): years it has
+  // no data for are the data's narrowing, not the user's, and say so in the "i"
   // note, never the ▲ row. So the default seed (window∩coverage), that seed
   // applied, and the window itself all match the window. A window wholly
   // outside availability has no part to match: any selection other than the
   // window itself differs.
-  const inAvailability = (w: ProjectStudyWindow): ProjectStudyWindow | null =>
-    covered === null
-      ? w
-      : w.to < covered.from || w.from > covered.to
-        ? null
-        : clampYearWindow(w, covered.from, covered.to);
-  const heldWindow = boundedWindow && inAvailability(boundedWindow);
+  const coveredDays = covered && studyWindowInterval(covered);
   const matchesWindow =
     boundedWindow !== null &&
-    (heldWindow === null
-      ? sameYearWindow(selection, boundedWindow)
-      : sameYearWindow(inAvailability(selection), heldWindow));
+    periodWindowRelation(
+      selection,
+      boundedWindow,
+      coveredDays ? [coveredDays] : null,
+    ) === "same";
   const sourceKind = userChosen && !matchesWindow;
   const differs =
     boundedWindow !== null && subAnnualPeriod === null && !matchesWindow;
+  const windowHeld =
+    boundedWindow !== null &&
+    (covered === null ||
+      (boundedWindow.to >= covered.from && boundedWindow.from <= covered.to));
   // What Reset writes: the window as this variable can hold it. Clipped only
   // at FINITE coverage edges: a "still delivered" variable keeps the window's
   // years past the vintage, which it will get.
   const resetWindow =
-    heldWindow === null || boundedWindow === null
+    !windowHeld || boundedWindow === null
       ? boundedWindow
       : {
           from: Math.max(

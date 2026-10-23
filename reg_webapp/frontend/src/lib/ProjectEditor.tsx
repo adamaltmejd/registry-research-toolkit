@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
-import { registerChildren } from "./catalog_names";
+import { fqidSegments, registerPrefixOf } from "./catalog";
+import { registerChildren, registerRead, UNASKED } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import {
   type RawDraft,
   regMetaReleaseTag,
+  safeSourceRegisterVariant,
   safeSourceSlots,
   safeStudyWindow,
 } from "./project_data";
@@ -11,6 +13,7 @@ import { projectStore } from "./project_store";
 import { router } from "./router";
 import { SourceEditor } from "./SourceEditor";
 import { StudyWindowSummary } from "./StudyWindowSummary";
+import { sourceWindowRelation } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
@@ -62,6 +65,30 @@ function coverageHintsOf(draft: RawDraft | null) {
       );
 }
 
+/** Each source's period against the study window, judged inside its columns'
+ * availability (`sourceWindowRelation`), for `useCatalogRead`: the register
+ * reads are the ones every source card already makes for its name, so this
+ * issues no request of its own and re-runs when one lands. */
+function windowRelationsOf(draft: RawDraft | null) {
+  if (draft == null) {
+    return [];
+  }
+  const window = safeStudyWindow(draft.window);
+  return safeSourceSlots(draft.sources).map((source) => {
+    const rv = safeSourceRegisterVariant(source);
+    const read =
+      fqidSegments(rv).length === 3
+        ? registerRead(registerPrefixOf(rv))
+        : UNASKED;
+    return sourceWindowRelation(
+      source,
+      window,
+      read.value?.children ?? null,
+      read.loading,
+    );
+  });
+}
+
 const nameOf = (draft: RawDraft): string =>
   typeof draft.name === "string" ? draft.name : "";
 
@@ -84,6 +111,7 @@ export function ProjectEditor({
   const windowBlocked = useProject((s) => s.windowBlocked);
   const orderBusy = useProject((s) => s.orderBusy);
   const coverageHints = useCatalogRead(coverageHintsOf, draft);
+  const windowRelations = useCatalogRead(windowRelationsOf, draft);
   // Read-side safe source slots preserve array positions for degraded cards while
   // the draft itself stays verbatim for serialize/validate. The window is coerced
   // once here and threaded to every reader.
@@ -304,6 +332,7 @@ export function ProjectEditor({
                   <StudyWindowSummary
                     sources={sources}
                     studyWindow={studyWindow}
+                    relations={windowRelations}
                   />
                   <div className={styles.sourceList}>
                     {sources.map((source, i) => (
@@ -314,6 +343,7 @@ export function ProjectEditor({
                         issues={validation?.issues ?? []}
                         providerQualified={providerQualified}
                         studyWindow={studyWindow}
+                        windowRelation={windowRelations[i] ?? null}
                       />
                     ))}
                   </div>

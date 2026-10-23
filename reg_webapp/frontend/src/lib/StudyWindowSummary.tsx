@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { getShow } from "./api";
-import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
+import { periodLabel, type WindowRelation, yearWindowLabel } from "./period";
 import {
   type ProjectStudyWindow,
   type SafeSource,
-  safeSourcePeriod,
   safeSourceSlots,
 } from "./project_data";
 import { projectStore } from "./project_store";
@@ -29,6 +28,9 @@ interface Props {
   sources: readonly SafeSource[];
   /** The draft's coerced window (`safeStudyWindow`), null when none is set. */
   studyWindow: ProjectStudyWindow | null;
+  /** Each source's relation to the window, by index (`sourceWindowRelation`):
+   * judged inside its columns' availability, `pending` while that is read. */
+  relations: readonly (WindowRelation | "pending" | null)[];
 }
 
 /** The verdict of the last press, for the status line. */
@@ -71,7 +73,7 @@ function missNote(plan: OverlapPlan, window: ProjectStudyWindow): string {
 /** The divergence summary in words, null when there is nothing dated to judge. */
 function divergence(differing: number, disjoint: number): string {
   if (differing === 0 && disjoint === 0) {
-    return "Every source covers exactly these years.";
+    return "Every source matches the window where its columns are delivered.";
   }
   const parts: string[] = [];
   if (differing > 0) {
@@ -87,14 +89,13 @@ function divergence(differing: number, disjoint: number): string {
   return `${parts.join("; ")}.`;
 }
 
-export function StudyWindowSummary({ sources, studyWindow }: Props) {
-  const relations = sources.map((s) =>
-    periodWindowRelation(safeSourcePeriod(s), studyWindow),
-  );
+export function StudyWindowSummary({ sources, studyWindow, relations }: Props) {
   const differing = relations.filter((r) => r === "differs").length;
   const disjoint = relations.filter((r) => r === "disjoint").length;
   /** Dated sources the window can be compared with — what the action can touch. */
   const dated = relations.filter((r) => r !== null).length;
+  /** A source still being judged holds the verdict back, so it never flips. */
+  const judging = relations.includes("pending");
   const windowKey = windowKeyOf(studyWindow);
   const contentKey = (slots: readonly SafeSource[]) =>
     `${windowKey}|${JSON.stringify(slots)}`;
@@ -221,7 +222,7 @@ export function StudyWindowSummary({ sources, studyWindow }: Props) {
                   {yearWindowLabel(studyWindow)}
                 </span>
               </span>
-              {dated > 0 && (
+              {dated > 0 && !judging && (
                 <span className={styles.summary}>
                   {divergence(differing, disjoint)}
                 </span>

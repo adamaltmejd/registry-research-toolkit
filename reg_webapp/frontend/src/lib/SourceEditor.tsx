@@ -4,8 +4,8 @@ import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names";
 import {
   normalizePeriodRows,
-  periodWindowRelation,
   resolveYearEntry,
+  type WindowRelation,
   yearSegmentsFromWire,
   yearWindowLabel,
 } from "./period";
@@ -63,6 +63,10 @@ interface Props {
    * source's period is MARKED against when the two differ. An authoring seed,
    * never an inheritance (crates/reg-core/DESIGN.md). */
   studyWindow: ProjectStudyWindow | null;
+  /** How this source's period sits against the study window, judged inside its
+   * columns' availability (`sourceWindowRelation`) — what the card MARKS.
+   * `pending` while that availability is still being read. */
+  windowRelation: WindowRelation | "pending" | null;
 }
 
 /** One period row's two fields, as TEXT — kept as typed rather than parsed, so a
@@ -104,6 +108,7 @@ export function SourceEditor({
   issues,
   providerQualified,
   studyWindow,
+  windowRelation,
 }: Props) {
   // Instance-scoped ids, so every card's period fields keep real `<label for>`
   // pairs on a page that renders one card per source.
@@ -251,8 +256,6 @@ export function SourceEditor({
     appliedWindows === null
       ? null
       : `Period set to ${appliedWindows.map(yearWindowLabel).join(", ")}.`;
-  /** How this period sits against the study window — what the card MARKS. */
-  const windowRelation = periodWindowRelation(period, studyWindow);
 
   /** The edit starts HERE: capture the source as it is, so a write onto a source
    * that has moved since is refused. */

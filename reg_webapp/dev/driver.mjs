@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: nine scenarios (three /project
-// error+retry, five catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: ten scenarios (three /project
+// error+retry, two /project period, four catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// nine.
+// ten.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,14 +148,14 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
-// Nine scenarios × four viewports = 36 cases, each in a FRESH context against
+// Ten scenarios × four viewports = 40 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
-// exactly one failing request and the other five inject none: everything else
+// exactly one failing request and the other seven inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 68 PNGs. A bare `<out-dir>` runs all nine scenarios;
+// These write 68 PNGs. A bare `<out-dir>` runs all ten scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -884,6 +884,37 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
   check((await differs.count()) === 0, "Reset left the ▲ row up");
 }
 
+/** Scenario 10 — the /project cart judges a source's period against the study
+ * window inside the years its columns are delivered in (period ruling
+ * 2026-10-22), the rule the variable page's card uses. Under the window
+ * 2015..2020 both sources hold 2018..2020. `kon-only` carries Kon, delivered
+ * from 2018: its period is exactly what an add writes (window ∩ availability),
+ * so its card raises no ▲ row. `kon-forsamling` also carries Forsamling,
+ * delivered since 1952, so its columns could fill 2015..2017 and its period is a
+ * real deviation. Fails on the pre-fix code, which raised the ▲ row on both
+ * cards and counted "2 sources differ". */
+async function projectPeriodAvailabilityCase(page, _counts, shoot, project) {
+  const green = validated(page);
+  await openProjectFile(page, project);
+  await green;
+  await settled(page);
+  await page.getByRole("heading", { name: project.name }).waitFor();
+
+  const differs = (card) =>
+    card.getByText("Differs from study window 2015–2020");
+  const konOnly = page.getByRole("region", { name: "Source 1" });
+  const both = page.getByRole("region", { name: "Source 2" });
+  // The deviation shows first, so the register read both cards are judged by
+  // has landed before the absence below is asserted.
+  await differs(both).waitFor();
+  await page.getByText("1 source differs from it.").waitFor();
+  check(
+    (await differs(konOnly).count()) === 0,
+    "a source holding window ∩ availability raised the ▲ row",
+  );
+  await shoot("project-period-availability");
+}
+
 /** Scenario 8 — the period card KEEPS keyboard focus while each key press on
  * a thumb applies (Y-65). A keyboard researcher adjusting the catalog period
  * used to lose focus to the document body on every apply, because the applied
@@ -1248,6 +1279,48 @@ try {
           ...project,
           name: "Synthetic wide window",
           window: { from: 2015, to: 2020 },
+        }),
+    },
+    // Two sources on one variant under that wide window: one whose columns
+    // start in 2018, one whose columns reach back past the window.
+    "project-period-availability": {
+      shots: 1,
+      run: (p, c, shoot) =>
+        projectPeriodAvailabilityCase(p, c, shoot, {
+          ...project,
+          name: "Synthetic period availability",
+          window: { from: 2015, to: 2020 },
+          sources: [
+            {
+              name: "kon-only",
+              register_variant: "scb/lisa/individer-15plus",
+              period: { from: 2018, to: 2020 },
+              bindings: [
+                {
+                  variable: "scb/lisa/kon",
+                  type: "categorical",
+                  representation: "Kon",
+                },
+              ],
+            },
+            {
+              name: "kon-forsamling",
+              register_variant: "scb/lisa/individer-15plus",
+              period: { from: 2018, to: 2020 },
+              bindings: [
+                {
+                  variable: "scb/lisa/kon",
+                  type: "categorical",
+                  representation: "Kon",
+                },
+                {
+                  variable: "scb/lisa/forsamling",
+                  type: "categorical",
+                  representation: "Forsamling",
+                },
+              ],
+            },
+          ],
         }),
     },
   };

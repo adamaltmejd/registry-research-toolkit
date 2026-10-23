@@ -291,14 +291,15 @@ function Marks({
           y={geometry.axisY - 10}
           // A year at either end of the track is anchored inward, not clipped.
           textAnchor={
-            tick.x - geometry.trackX < 16
+            tick.anchor ??
+            (tick.x - geometry.trackX < 16
               ? "start"
               : width - tick.x < 16
                 ? "end"
-                : "middle"
+                : "middle")
           }
         >
-          {tick.year}
+          {tick.label ?? tick.year}
         </text>
       ))}
       {geometry.edges.map((edge) => (
