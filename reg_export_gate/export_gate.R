@@ -616,15 +616,17 @@ export_gate <- local({
       refuse("setup", list(finding("output_parent_missing")))
     }
     s <- normalizePath(staging, winslash = "/")
-    o <- file.path(
-      normalizePath(dirname(output), winslash = "/"),
-      basename(output)
-    )
-    # Windows and macOS file systems ignore case by default, so `STAGING` there
-    # is staging, and clear_output() could delete it.
-    if (Sys.info()[["sysname"]] %in% c("Windows", "Darwin")) {
-      s <- tolower(s)
-      o <- tolower(o)
+    # An existing output is resolved on disk, so another spelling of staging
+    # (case, Unicode form, a link, a Windows short name) cannot pass as a
+    # different folder and be emptied by clear_output(). An output that does
+    # not exist yet cannot be staging.
+    o <- if (dir.exists(output)) {
+      normalizePath(output, winslash = "/")
+    } else {
+      file.path(
+        normalizePath(dirname(output), winslash = "/"),
+        basename(output)
+      )
     }
     inside <- function(a, b) a == b || startsWith(a, paste0(b, "/"))
     if (inside(o, s) || inside(s, o)) {

@@ -246,17 +246,17 @@ The code is the category; the rule locates the finding. Both are stable.
 
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
 `paths_overlap` means staging and output are the same folder or one is inside the other;
-on Windows and macOS, whose file systems ignore case by default, paths are compared
-ignoring case, so `STAGING` as output cannot clear `staging`. Before any check the gate
-removes its previous export from the output folder, so a refused run never leaves an old
-export looking current. A previous export is an output folder holding a `receipt.json`
-whose `format` is `reg-export-gate/receipt` and, beside it, only files that receipt
-lists (no folders); the gate deletes exactly those files and then the empty folder. An
-empty folder is removed too. Anything else is `output_not_gate_export`, with nothing
-deleted: the gate leaves it for the user. `export_not_writable` means the gate could not
-create its new folder beside the output folder; `move_failed` that it could not rename
-that folder to the output folder (on Windows, an Explorer window or another program
-holding the folder open blocks it).
+an existing output is resolved on disk first, so another spelling of staging (case,
+Unicode form, a link, a Windows short name) cannot pass as a different folder and be
+cleared. Before any check the gate removes its previous export from the output folder,
+so a refused run never leaves an old export looking current. A previous export is an
+output folder holding a `receipt.json` whose `format` is `reg-export-gate/receipt` and,
+beside it, only files that receipt lists (no folders); the gate deletes exactly those
+files and then the empty folder. An empty folder is removed too. Anything else is
+`output_not_gate_export`, with nothing deleted: the gate leaves it for the user.
+`export_not_writable` means the gate could not create its new folder beside the output
+folder; `move_failed` that it could not rename that folder to the output folder (on
+Windows, an Explorer window or another program holding the folder open blocks it).
 
 ### Receipt
 
@@ -353,7 +353,8 @@ later by the Rust binary's tests. It is data: every expectation is in the JSON.
   `{"columns": [{"name", "type", "values", "metadata"}], "metadata": {...}, "inner_bytes": "..."}`
   with Arrow types `int32`, `int64`, `double`, `string`, `bool`, JSON `null` for a null
   cell and `"NaN"` for NaN in a `double` column. In a `double` column, `"0x"` and 16 hex
-  digits is the value with exactly those IEEE 754 bits (high byte first). The optional
+  digits is the value with exactly those IEEE 754 bits (high byte first), except
+  `0x8000000000000000` (-0), which is int64's NA and becomes a null. The optional
   `metadata` are the column's and the file's key-value metadata; `inner_bytes` is text
   spliced in just before the footer, where readers skip it. Other entries are
   `{"text": "..."}` (raw bytes) or `{"folder": true}`.
