@@ -331,13 +331,13 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   "Project" nav items; the bar and the banner are those. Its content shares the shell's
   `shell-max` and centring, so the banner sits over the detail pane rather than at the
   screen's edge. Where the row is tight the brand wraps and the search bar shrinks
-  before the banner leaves the row. From `breakpoint-narrow` to 60rem the name would
-  still push the banner off the row, so there the brand is the steward's logo, with the
-  full name as the link's accessible name (#1820, maintainer ruling 2026-10-23). Each
+  before the banner leaves the row. From 60rem down the name would push the banner off
+  the row, or take a row of its own, so there the brand is the steward's logo, with the
+  full name as the link's accessible name (#1820, maintainer rulings 2026-10-23). Each
   steward supplies a logo (`stewards/<id>/logo.svg`), used in the compact header and as
-  the favicon. This range is the top bar's own fit, not a layout breakpoint. It sticks
-  to the top of the page above `breakpoint-narrow`; below it the brand, the bar and the
-  banner take a row each and scroll away with the page.
+  the favicon. 60rem is the top bar's own fit, not a layout breakpoint. It sticks to the
+  top of the page above `breakpoint-narrow`; below it the logo and the search bar share
+  a row, the banner takes the next, and both scroll away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
   then the selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`

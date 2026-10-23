@@ -1,5 +1,5 @@
 /* Sticky above the narrow breakpoint (maintainer ruling 2026-10-22); below it
-   the bar wraps to three rows, too tall to pin, and scrolls away. */
+   the bar wraps to two rows, too tall to pin, and scrolls away. */
 .topBar {
   position: sticky;
   top: 0;
@@ -47,14 +47,14 @@
   display: none;
 }
 
-/* Between `breakpoint-narrow` and 60rem the brand gives up its name for the
-   mark, so the search bar and the banner keep one row (#1820, maintainer
-   ruling 2026-10-23). 60rem is where the full name fits on two lines beside a
+/* From 60rem down the brand gives up its name for the mark (#1820, maintainer
+   rulings 2026-10-23). 60rem is where the full name fits on two lines beside a
    search bar at its 8rem basis and the banner at its widest (about 33rem with
    a project open); below it the name pushes the banner to a second row or
-   squeezes the search bar to a sliver. The name stays the link's accessible
-   name. Revisit the width if the banner's widest state changes. */
-@media (min-width: 48.0625rem) and (max-width: 60rem) {
+   squeezes the search bar to a sliver. Below `breakpoint-narrow` the mark
+   saves the name's own row. The name stays the link's accessible name.
+   Revisit the width if the banner's widest state changes. */
+@media (max-width: 60rem) {
   .brand {
     flex: none;
   }
@@ -154,7 +154,8 @@ kbd.hint,
   white-space: nowrap;
 }
 
-/* Below the narrow breakpoint each of the three takes its own full-width row. */
+/* Below the narrow breakpoint the mark and the search bar share a row and the
+   banner takes the next. */
 @media (max-width: 48rem) {
   .topBar {
     position: static;
@@ -163,13 +164,13 @@ kbd.hint,
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2) var(--space-3);
   }
-  /* Three rows: the brand, the search bar, the banner. */
-  .brand,
+  /* Two rows: the mark and the search bar, then the banner. */
   .search {
-    flex-basis: 100%;
+    flex: 1 1 0;
     max-width: none;
   }
   .inner > :last-child {
+    flex-basis: 100%;
     margin-left: 0;
   }
   /* A touch device has no shortcut or Esc key to show. */
