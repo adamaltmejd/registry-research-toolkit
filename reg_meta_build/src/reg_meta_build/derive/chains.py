@@ -59,28 +59,29 @@ def _successors(
 
 
 def succession_terminals(conn: sqlite3.Connection) -> list[tuple[str, str]]:
-    """`(fqid, terminal_fqid)` for every register, variable or classification whose
-    active terminal is another node, in FQID order.
+    """`(fqid, terminal_fqid)` (`class/` FQIDs) for every classification whose
+    active terminal is another edition, in FQID order.
 
-    An edge is active when its `effective_year` is unset or at most the manifest's
-    `classification_succession_as_of_year`. The walk follows the sole active
-    successor until a node has none or several (a split, which is its own
-    terminal), as search's classification fold does. Unlike the frozen reader's
-    `resolve_terminal_successor`, it never picks one branch of a split and it
-    applies the policy year to registers and variables too. A cycle stops the walk
-    at its first repeat; `validate_built_db` refuses cycles.
+    Only classification search reads this table; register and variable succession
+    has no reader of its terminal. An edge is active when its `effective_year` is
+    unset or at most the manifest's `classification_succession_as_of_year`. The walk
+    follows the sole active successor until a node has none or several (a split,
+    which is its own terminal), as search's classification fold does. It never picks
+    one branch of a split. A cycle stops the walk at its first repeat;
+    `validate_built_db` refuses cycles.
     """
     year = classification_succession_as_of_year(conn)
+    table, prefix, keys = _SUCCESSION[-1]
+    assert table == "classification_replaced_by"
+    successors = _successors(conn, table, keys, active_year=year)
     rows: list[tuple[str, str]] = []
-    for table, prefix, keys in _SUCCESSION:
-        successors = _successors(conn, table, keys, active_year=year)
-        for start in successors:
-            seen, current = {start}, start
-            while len(nxt := successors.get(current, ())) == 1 and nxt[0] not in seen:
-                current = nxt[0]
-                seen.add(current)
-            if current != start:
-                rows.append((_fqid(prefix, start), _fqid(prefix, current)))
+    for start in successors:
+        seen, current = {start}, start
+        while len(nxt := successors.get(current, ())) == 1 and nxt[0] not in seen:
+            current = nxt[0]
+            seen.add(current)
+        if current != start:
+            rows.append((_fqid(prefix, start), _fqid(prefix, current)))
     return sorted(rows)
 
 
