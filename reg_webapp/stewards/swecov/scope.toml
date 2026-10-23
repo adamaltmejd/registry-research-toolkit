@@ -1995,8 +1995,10 @@ reason = "Unemployment fund code/name/validity lookup; no person observations."
 # columns that become each variant's catalog variables (catalog content, not
 # delivery membership: an excluded re-delivery still documents its columns).
 
-# No row key: anonymous data with no id that links to a person (maintainer, 2026-10-23,
-# relayed by the Operator in the row-key session). Its card hash names no P1105 unit.
+# Row key: card (`hashed-data`) × transaction date, the grain of the V01–V11 card
+# transactions (maintainer, 2026-10-23). Two same-day purchases abroad by one card
+# give identical rows, so no column set is unique. The zip × age aggregates
+# (V12–V17, *_20210520) hold no card id and carry no key.
 [[flavor]]
 holding = "Swedbank"
 provider = "swedbank"
@@ -2006,6 +2008,9 @@ register_name = "Konsumtionsstatistik"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Konsumtionsstatistik"
+panel_entity_key = "hashed-data"
+panel_time_key = "date"
+panel_time_grain = "row"
 
 # No row key: anonymous aggregates of trips between areas (maintainer, 2026-10-23,
 # relayed by the Operator in the row-key session).
