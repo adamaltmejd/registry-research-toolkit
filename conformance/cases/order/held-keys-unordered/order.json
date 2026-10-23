@@ -35,6 +35,23 @@
       "source": "Monthly"
     },
     {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Benefit",
+        "variable": "scb/example/benefit",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Benefit",
+        "edition": "2018",
+        "projection": "barn",
+        "table": "VBBARN"
+      },
+      "requested_period": "2018",
+      "source": "Monthly"
+    },
+    {
       "key": true,
       "logical": {
         "provider": "scb",
@@ -103,6 +120,42 @@
       },
       "requested_period": "2018",
       "source": "Monthly"
+    },
+    {
+      "key": true,
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Month",
+        "variable": "scb/example/month",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Month",
+        "edition": "2018",
+        "projection": "barn",
+        "table": "VBBARN"
+      },
+      "requested_period": "2018",
+      "source": "Monthly"
+    },
+    {
+      "key": true,
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Recipient",
+        "variable": "scb/example/recipient",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Recipient",
+        "edition": "2018",
+        "projection": "barn",
+        "table": "VBBARN"
+      },
+      "requested_period": "2018",
+      "source": "Monthly"
     }
   ],
   "provenance": {
@@ -110,7 +163,7 @@
     "catalog_generation_id": "e60245e564f3d85589b1ad6de49b76cd09a0e200d6083c693805dfbc241074c4",
     "catalog_schema_version": "12.2.0",
     "mode": "steward_holdings",
-    "project_hash": "9e38b3ae33973f948dadecd20805c8b3f3331e2c1861866c58ce34973445ccd9",
+    "project_hash": "686d9863b20dca932dbc381aca8778a466f9efd7d1a67c09d47becbdc9ad0103",
     "project_name": "Reader case",
     "project_reg_meta_version": "reg_meta/v0.40.1",
     "project_schema_version": "3.0.0",

@@ -558,9 +558,9 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Projections"), which
    refuses any other overlap, so the parent alone serves each shared cell and no
    projection cell is dropped without a parent cell in its place. A key mapping (the
-   variable `is_identifier`, or the bound variant's `panel_entity_key` or
-   `panel_time_key`, a bare slug or a JSON list) is never dropped: each file carries its
-   own row keys. Tables without the declaration are never filtered.
+   bound variant's `panel_entity_key` or `panel_time_key`, a bare slug or a JSON list;
+   any other identifier is a linking id, not a key) is never dropped: each file carries
+   its own row keys. Tables without the declaration are never filtered.
 4. **Emission.** Every matching table is emitted whole, every partition included. A
    projection's output file (its variant and table edition, below) is emitted when the
    projection contributes at least one cell its parent does not serve anywhere in that
@@ -572,20 +572,24 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    edition, member index and column, so members order by index (`DIA2` before `DIA10`),
    not by name.
 5. **Held keys.** On a steward artifact every emitted file then carries its table's held
-   row keys, whether or not the order binds them: each column of the file's table that
-   maps a key of the file's variant (the key test of step 3: the variant's panel keys
-   and every identifier, so a linking id such as a household or firm id comes along too)
-   and that no entry of the file already extracts, under whatever variable, gains an
-   entry marked `key: true`. A file is emitted only for an ordered entry, so keys never
-   make a file on their own, and only what the table holds is added: a key the table
-   does not map under the variant is not invented. A key entry takes the source of the
-   file's first entry and requests the union of the file's entries' `requested_period`,
-   so the file's row filter is not widened; a year or month member or a windowed key
-   column requests that union inside its own period and is left out where the union does
-   not reach it, as an ordered member is; a year-independent file's keys request
-   `_default`. Key entries follow every ordered entry, by table, variant, edition,
-   member index and column. An ordered key stays an ordered entry, unmarked. The global
-   fallback has no physical table and adds none.
+   row key, whether or not the order binds it: each column of the file's table that maps
+   a key of the file's variant (the key test of step 3: the variant's `panel_entity_key`
+   and `panel_time_key` only) and that no entry of the file already extracts, under
+   whatever variable, gains an entry marked `key: true`. A linking id (a family,
+   household or workplace id, an employer's org number, any other identifier) comes
+   along only when the order binds it (maintainer ruling 2026-10-23: a LISA year file
+   carries LopNr, not its two dozen identifiers), and a variant that declares no panel
+   key carries nothing extra: the fix is to declare its key, never to fall back to every
+   identifier. A file is emitted only for an ordered entry, so keys never make a file on
+   their own, and only what the table holds is added: a key the table does not map under
+   the variant is not invented. A key entry takes the source of the file's first entry
+   and requests the union of the file's entries' `requested_period`, so the file's row
+   filter is not widened; a year or month member or a windowed key column requests that
+   union inside its own period and is left out where the union does not reach it, as an
+   ordered member is; a year-independent file's keys request `_default`. Key entries
+   follow every ordered entry, by table, variant, edition, member index and column. An
+   ordered key stays an ordered entry, unmarked. The global fallback has no physical
+   table and adds none.
 6. **Row filter.** A file's requested period is the union of its entries'
    `requested_period`, held keys included. When the file's table declares a period
    column (`holding_table.period_column` and `period_encoding`, from the steward spec)

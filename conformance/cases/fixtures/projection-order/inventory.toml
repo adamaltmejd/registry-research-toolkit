@@ -2,7 +2,8 @@ version = 1
 steward = "swecov"
 
 # Narrow is Wide's delivery under other columns: it shares the key Id and the
-# non-key Region with Wide, and has its own key Child and non-key Extra.
+# non-key Region with Wide, and has its own key Child and non-key Extra (the
+# annual variant's panel_entity_key is the pair Id, Child).
 [[table]]
 id = "Narrow"
 edition = 2018
@@ -56,7 +57,8 @@ representation = "Region"
 
 # The finer-grain pair: VB is recipient x month, VBBARN recipient x child x
 # month. Recipient (the variant's panel_entity_key, a JSON list) and Month
-# (its panel_time_key, a bare slug) are keys though neither is an identifier.
+# (its panel_time_key, a bare slug) are keys though neither is an identifier;
+# Child, an identifier, is a linking id under monthly, never an auto-added key.
 [[table]]
 id = "VB"
 edition = 2018
@@ -170,8 +172,9 @@ register_variant = "scb/example/annual"
 variable = "scb/example/diagnos"
 representation = "DIA"
 
-# One physical column serving two variants: CombinedNarrow shares the key Child with
-# Combined under both, and has its own Extra under the annual variant only.
+# One physical column serving two variants: CombinedNarrow shares Child (the annual
+# key, a monthly linking id) with Combined under both, and has its own Extra under
+# the annual variant only.
 [[table]]
 id = "Combined"
 edition = 2019

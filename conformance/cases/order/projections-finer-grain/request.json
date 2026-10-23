@@ -1,5 +1,5 @@
 {
-  "note": "VBBARN (recipient x child x month) is a finer-grain projection of VB (recipient x month). Recipient is the variant's panel_entity_key (stored as a JSON list) and Month its panel_time_key (a bare slug), neither an identifier. Fails if VBBARN's file loses either shared key (the panel-key arms of the key test), loses its own key Child or own cell Benefit, or Payment (VB's alone) is emitted from VBBARN.",
+  "note": "VBBARN (recipient x child x month) is a finer-grain projection of VB (recipient x month). Recipient is the variant's panel_entity_key (stored as a JSON list) and Month its panel_time_key (a bare slug), neither an identifier. Fails if VBBARN's file loses either shared key (the key test), loses its own cells Child (an ordered linking id) or Benefit, or Payment (VB's alone) is emitted from VBBARN.",
   "fixture": "projection-order",
   "artifact": "steward",
   "project": {

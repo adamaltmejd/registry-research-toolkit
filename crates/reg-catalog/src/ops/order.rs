@@ -81,9 +81,9 @@ struct Entry {
     /// table's edition does.
     requested_period: String,
     physical: Physical,
-    /// A held key column of the output file that no binding ordered (the row key, or
-    /// any identifier, linking ids included: [`IS_KEY`]), carried so every file joins
-    /// on its keys; absent on an ordered entry.
+    /// A held row key column of the output file that no binding ordered (its
+    /// variant's panel entity or time key, [`IS_KEY`]; a linking id comes only when
+    /// ordered), carried so every file joins on its row key; absent on an ordered entry.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     #[schema(required = false)]
     key: bool,
@@ -1156,16 +1156,17 @@ const PARENT_SERVES: &str = "EXISTS (SELECT 1 FROM holding_table pt \
           AND COALESCE(pm.member_hi, pm.window_hi) >= COALESCE(hm.member_hi, hm.window_hi, \
               (SELECT MAX(p.hi) FROM holding_period p WHERE p.table_id = ht.table_id)))))";
 
-/// Whether mapping `hm` binds a row key of its variant: an identifier variable, or
-/// the bound variant's `panel_entity_key` or `panel_time_key`, each a bare slug or a
-/// JSON list of slugs (decoded as `show`'s `panel_key` does).
+/// Whether mapping `hm` binds a row key of its variant: the bound variant's
+/// `panel_entity_key` or `panel_time_key`, each a bare slug or a JSON list of slugs
+/// (decoded as `show`'s `panel_key` does). Any other identifier is a linking id,
+/// carried only when ordered (maintainer ruling 2026-10-23); a variant that declares no
+/// panel key has no row key here.
 // simplify: the `panel_time_key` sentinel `period` passes through as a slug, so a
 // variable slugged `period` would count as a time key; exclude the sentinel if such a
 // variable is ever bound as a panel key.
 const IS_KEY: &str = "EXISTS (SELECT 1 FROM variable v JOIN register_variant rv \
      ON rv.register_variant_id = hm.variant_id WHERE v.variable_id = hm.variable_id \
-     AND (v.is_identifier = 1 \
-          OR v.slug IN (SELECT value FROM json_each(CASE WHEN rv.panel_entity_key LIKE '[%' \
+     AND (v.slug IN (SELECT value FROM json_each(CASE WHEN rv.panel_entity_key LIKE '[%' \
               THEN rv.panel_entity_key ELSE json_array(rv.panel_entity_key) END)) \
           OR v.slug IN (SELECT value FROM json_each(CASE WHEN rv.panel_time_key LIKE '[%' \
               THEN rv.panel_time_key ELSE json_array(rv.panel_time_key) END))))";

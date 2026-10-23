@@ -1,5 +1,5 @@
 {
-  "note": "CombinedNarrow is a projection of Combined whose Child column serves the annual and the monthly variant; its own cell Extra is annual only. Fails if CombinedNarrow's shared key Child is emitted under the monthly variant, where it contributes no cell of its own (its monthly file would carry keys alone), or dropped under the annual one.",
+  "note": "CombinedNarrow is a projection of Combined whose Child column serves the annual and the monthly variant; its own cell Extra is annual only. Fails if CombinedNarrow's shared Child (the annual key, a monthly linking id) is emitted under the monthly variant, where it contributes no cell of its own (its monthly file would carry only what Combined serves), or dropped under the annual one.",
   "fixture": "projection-order",
   "artifact": "steward",
   "project": {
