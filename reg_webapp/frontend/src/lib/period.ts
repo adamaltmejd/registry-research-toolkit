@@ -419,14 +419,14 @@ export function coverageBandEdges(
 }
 
 /** What a coverage drawing marks (DESIGN.md → Time): the delivered runs inside
- * `covered` (one run when `years` is null), the gaps between them and an
- * edition tick at every year boundary inside a run. */
+ * `covered` (one run when `years` is null) and an edition tick at every year
+ * boundary inside a run. A year between runs is empty space, not a mark
+ * (#1832). */
 export function coverageMarks(
   covered: ProjectStudyWindow | null,
   years: readonly number[] | null,
 ): {
   delivered: ProjectStudyWindow[];
-  gaps: ProjectStudyWindow[];
   ticks: number[];
 } {
   const delivered: ProjectStudyWindow[] = [];
@@ -439,17 +439,13 @@ export function coverageMarks(
       else delivered.push({ from: y, to: y });
     }
   }
-  const gaps: ProjectStudyWindow[] = [];
-  for (let i = 1; i < delivered.length; i += 1) {
-    gaps.push({ from: delivered[i - 1].to + 1, to: delivered[i].from - 1 });
-  }
   const ticks =
     years === null
       ? []
       : delivered.flatMap((r) =>
           Array.from({ length: r.to - r.from }, (_, i) => r.from + i + 1),
         );
-  return { delivered, gaps, ticks };
+  return { delivered, ticks };
 }
 
 /** The years of `window` outside `covered`: what the window asks for that the

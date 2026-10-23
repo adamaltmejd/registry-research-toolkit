@@ -2602,8 +2602,8 @@ export function coverageFromStates(
   return { from, to };
 }
 
-/** The calendar years a set of ISO spans delivers: the Timeline's edition
- * ticks and the gaps inside coverage. An open end (`9999-12-31`) runs to
+/** The calendar years a set of ISO spans delivers: the Timeline's delivered
+ * runs and edition ticks. An open end (`9999-12-31`) runs to
  * `ceiling`, the catalog vintage; a yearless start (`0001-01-01`) and a
  * year-independent span (no bounds) count nothing. */
 export function deliveredYears(
