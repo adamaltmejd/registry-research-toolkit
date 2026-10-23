@@ -591,13 +591,19 @@ fn is_stata_name(name: &str) -> bool {
         "_N", "_pi", "_pred", "_rc", "_skip", "strL", "using", "with",
     ];
     let mut chars = name.chars();
-    chars.next().is_some_and(|c| c.is_alphabetic() || c == '_')
-        && chars.all(|c| c.is_alphabetic() || c.is_ascii_digit() || c == '_')
+    chars.next().is_some_and(|c| is_letter(c) || c == '_')
+        && chars.all(|c| is_letter(c) || c.is_ascii_digit() || c == '_')
         && name.chars().count() <= 32
         && !RESERVED.contains(&name)
         && !name
             .strip_prefix("str")
             .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
+}
+
+/// A letter for [`is_stata_name`]: alphabetic and not a number, so no wider than the
+/// runner's PCRE `\p{L}` (Rust's `is_alphabetic` also admits letter numerals).
+fn is_letter(c: char) -> bool {
+    c.is_alphabetic() && !c.is_numeric()
 }
 
 /// `project_invalid`: validate's issues for a project rejected before the catalog.

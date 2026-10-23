@@ -31,6 +31,7 @@ import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
+import { TreeChevron } from "./ui/TreeChevron";
 import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
@@ -134,9 +135,9 @@ function ExtractFormatField({ value }: { value: ExtractFormat }) {
       <Label>File format</Label>
       <AriaButton className={styles.selectButton}>
         <SelectValue />
-        <span aria-hidden="true">▾</span>
+        <TreeChevron />
       </AriaButton>
-      <Text slot="description" className="muted">
+      <Text slot="description" className={`muted ${styles.hint}`}>
         Every file of the order is written in this format.
       </Text>
       <Popover

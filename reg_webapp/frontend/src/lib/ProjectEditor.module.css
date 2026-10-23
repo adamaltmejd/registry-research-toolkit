@@ -52,7 +52,8 @@
   max-width: 28rem;
   margin-bottom: var(--space-4);
 }
-.field span {
+.field > span:first-child,
+.field > label {
   font-size: var(--text-sm);
   font-weight: 600;
 }
@@ -92,9 +93,12 @@
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
 }
-.field [slot="description"] {
+/* The chevron points down: the options open below. */
+.selectButton svg {
+  transform: rotate(90deg);
+}
+.hint {
   font-size: var(--text-sm);
-  font-weight: 400;
 }
 
 /* The options float at the popover layer (DESIGN.md → Elevation), as wide as the
