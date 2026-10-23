@@ -20,15 +20,15 @@
   padding: var(--space-3) var(--space-4);
 }
 
-/* The brand: the deployment's name at h3. At least as wide as the register
-   column, so the search bar starts over the variables column. */
+/* The brand: the deployment's name at h3. Where the row has room it is as
+   wide as the register column, so the search bar starts over the variables
+   column. Its small basis lets it wrap and the search bar shrink before the
+   banner leaves the row (#1820): a row breaks on its items' bases, not on
+   their widths after growing. */
 .brand {
   box-sizing: border-box;
-  flex: 0 1 auto;
-  min-width: min(
-    100%,
-    calc(var(--col-browse-fluid) - var(--space-4) - var(--space-5))
-  );
+  flex: 1 1 10rem;
+  max-width: calc(var(--col-browse-fluid) - var(--space-4) - var(--space-5));
   color: var(--text);
   font-size: var(--text-h3);
   font-weight: var(--heading-weight);
@@ -52,7 +52,7 @@
 .search {
   position: relative;
   display: flex;
-  flex: 1 1 16rem;
+  flex: 1 1 8rem;
   min-width: 0;
   max-width: 32rem;
 }
@@ -119,7 +119,7 @@ kbd.hint,
   white-space: nowrap;
 }
 
-/* Below the narrow breakpoint the banner drops to its own full-width row. */
+/* Below the narrow breakpoint each of the three takes its own full-width row. */
 @media (max-width: 48rem) {
   .topBar {
     position: static;
@@ -128,8 +128,10 @@ kbd.hint,
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2) var(--space-3);
   }
+  /* Three rows: the brand, the search bar, the banner. */
   .brand {
-    min-width: 0;
+    flex-basis: 100%;
+    max-width: none;
   }
   .inner > :last-child {
     margin-left: 0;

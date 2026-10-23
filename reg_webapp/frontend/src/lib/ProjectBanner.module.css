@@ -77,15 +77,44 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The verdict: a status foreground plus its glyph and words, never hue alone. */
+/* The verdict: a status foreground plus its glyph and words, never hue alone.
+   One grid cell holds the verdict over every verdict's words drawn hidden, so
+   the slot keeps the widest one's width in every state (#1819). */
 .status {
+  display: inline-grid;
+  justify-items: start;
   font-size: var(--text-sm);
   font-weight: var(--heading-weight);
+  white-space: nowrap;
+}
+.status > * {
+  grid-area: 1 / 1;
+}
+.sizer {
+  visibility: hidden;
+}
+/* A verdict with findings links to them: the link look, in the verdict's hue. */
+a.verdict {
+  color: inherit;
+  border-bottom: 1.5px solid var(--accent);
+  text-decoration: none;
+}
+a.verdict[data-hovered] {
+  background: var(--surface-hover);
+}
+a.verdict[data-focus-visible] {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+.status[data-status="unchecked"] > .verdict,
+.status[data-status="checking"] > .verdict {
+  color: var(--text-muted);
+  font-weight: var(--body-weight);
 }
 .status[data-status="unchecked"],
 .status[data-status="checking"] {
   color: var(--text-muted);
-  font-weight: var(--body-weight);
 }
 .status[data-status="ok"] {
   color: var(--ok);
@@ -111,11 +140,14 @@
 }
 
 /* ── The study window ─────────────────────────────────────────────────────── */
+/* Wide enough for the label, the widest readout and Clear on one line, so the
+   label never breaks and the box keeps its size when Clear comes and goes
+   (#1822, #1819). */
 .window {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  width: 13rem;
+  width: 14rem;
   max-width: 100%;
 }
 
@@ -123,6 +155,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
+  white-space: nowrap;
 }
 
 /* The window's years in accent-ink mono: pine as text for the study window. */
@@ -139,41 +172,25 @@
   margin-left: auto;
 }
 
-/* The track: a hairline with the window band over it and two thumbs. 20px tall
-   so the thumbs keep a usable hit area. */
+/* The track: the span the window can take, a `surface` strip over an axis
+   hairline, as the Timeline's band sits on the pane (the band's `accent-bg`
+   barely shows on the banner's `accent-soft`); the window band over it
+   (ui/WindowBand), its bounds the thumbs. 20px tall so the thumbs keep a
+   usable hit area. */
 .track {
   position: relative;
   height: 20px;
-}
-.track::before {
-  content: "";
-  position: absolute;
-  inset: 9px 0;
-  background: var(--border-strong);
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
 }
 .fill {
   position: absolute;
-  top: 6px;
-  height: 8px;
-  background: var(--accent-bg);
-  border-block: 1px solid var(--accent);
-  box-sizing: border-box;
+  top: 0;
+  bottom: 0;
 }
 .thumb {
-  top: 3px;
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--accent);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  box-sizing: border-box;
-  transition: background var(--duration-quick) var(--ease-standard);
-}
-.thumb[data-dragging] {
-  background: var(--accent);
-}
-.thumb[data-focus-visible] {
-  box-shadow: var(--focus-ring);
+  top: 2px;
 }
 
 @media (max-width: 48rem) {

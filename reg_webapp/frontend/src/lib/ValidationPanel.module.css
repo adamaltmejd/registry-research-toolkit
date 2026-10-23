@@ -23,6 +23,12 @@
 /* The h4 carries `.micro-label` (a label, not a heading level): no weight here. */
 .group h4 {
   margin: 0 0 var(--space-2);
+  /* The banner's verdict link scrolls here (#1835): clear of the sticky bar. */
+  scroll-margin-top: calc(var(--top-bar-height, 0px) + var(--space-4));
+}
+/* A focus target for that link, not a control: no ring. */
+.group h4:focus {
+  outline: none;
 }
 .group ul {
   display: flex;

@@ -341,7 +341,7 @@ export function SourceEditor({
     : `Remove this source and its ${columnCount}?`;
 
   // Removing a source takes its whole column list with it, so it ASKS first.
-  // Removing ONE column doesn't: that's a single row the researcher points at.
+  // Removing one column asks too, from its quiet row action (#1837).
   const [removeOpen, setRemoveOpen] = useState(false);
 
   // A fresh object per render is fine: the island assigns it onto the live
