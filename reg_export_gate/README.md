@@ -157,6 +157,12 @@ digits, then capitals, then lowercase),
   | `disclosure` | A count under the minimum (suppress it as `NA`), a statistic beside a suppressed count, or a NaN (use `NA`)                |
   | `backstop`   | A value, text or number, looks like a personnummer                                                                         |
 
+The `backstop` scan is a last check, not a control. MONA data carries pseudonymized
+`LopNr`, not personnummer, so it catches almost none of the real identifiers there, and
+a 10-digit personnummer of someone born 2000–2009 stored as an integer loses its leading
+zero and is not caught either. The real controls are the disclosure policy and the fixed
+schema.
+
 If `export\` holds anything but the gate's last export (its `receipt.json` and the files
 that receipt lists), the gate refuses `setup` (`output_not_gate_export`) and deletes
 nothing: move the other files away yourself. Windows can add a hidden `desktop.ini` or

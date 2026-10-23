@@ -30,6 +30,38 @@ json_values <- function(col) {
   }))
 }
 
+BITS <- "^0x[0-9A-Fa-f]{16}$"
+
+# A column's Arrow array. In a double column a string "0x" + 16 hex digits is
+# the double with exactly those IEEE 754 bits; such a column is built as int64
+# and viewed as double, since R's own conversion turns an NA bit pattern into
+# null.
+column_array <- function(col) {
+  type <- ARROW_TYPES[[col$type]]
+  bits <- col$type == "double" &&
+    any(vapply(col$values, function(v) is.character(v) && grepl(BITS, v), NA))
+  if (!bits) {
+    return(arrow::Array$create(json_values(col), type = type))
+  }
+  as_bits <- function(v) {
+    if (is.null(v)) {
+      return(NA_real_)
+    }
+    if (is.character(v) && grepl(BITS, v)) {
+      hex <- substring(v, seq(3L, 17L, 2L), seq(4L, 18L, 2L))
+      raw <- as.raw(strtoi(hex, 16L))
+      return(readBin(raw, "double", size = 8L, endian = "big"))
+    }
+    as.double(if (identical(v, "NaN")) NaN else v)
+  }
+  x <- vapply(col$values, as_bits, 0)
+  nulls <- vapply(col$values, is.null, NA)
+  # integer64 stores its int64 in a double's bits: relabel, don't convert.
+  class(x) <- "integer64"
+  x[nulls] <- bit64::NA_integer64_
+  arrow::Array$create(x, type = arrow::int64())$View(type)
+}
+
 # Splices `text` into a Parquet file just before its footer. The footer's
 # offsets are absolute and its length is unchanged, so readers still read the
 # file; the bytes ride along unread.
@@ -59,9 +91,7 @@ materialize <- function(dir, files) {
     } else if (!is.null(spec$text)) {
       writeBin(charToRaw(spec$text), path)
     } else {
-      arrays <- lapply(spec$columns, function(col) {
-        arrow::Array$create(json_values(col), type = ARROW_TYPES[[col$type]])
-      })
+      arrays <- lapply(spec$columns, column_array)
       names(arrays) <- vapply(spec$columns, function(col) col$name, "")
       table <- do.call(arrow::Table$create, arrays)
       for (key in names(spec$metadata)) {

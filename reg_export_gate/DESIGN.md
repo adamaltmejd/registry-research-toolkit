@@ -156,7 +156,14 @@ output. In order:
    a cell that looks suppressed could carry a value. A suppressed statistic is a true
    null. The rule covers every double rather than only statistics beside a suppressed
    count, because the channel is the same in a dimension or an unsuppressed row, and an
-   aggregate has no legitimate NaN to lose.
+   aggregate has no legitimate NaN to lose. Null-ness comes from Arrow's validity, which
+   is what the rewrite writes, not from R's conversion: R reads some valid Arrow values
+   as `NA` (a NaN whose low 32-bit word is 1954, which is R's `NA_real_` pattern with
+   room for 21 free payload bits; `int32` `INT_MIN`; the `int64` NA sentinel). A column
+   whose R `NA`s are not exactly its Arrow nulls is refused (`na_not_null`), so every
+   rule sees the same nulls the export holds, and a cell that passes as suppressed is
+   written as a true null. It is a disclosure rule, beside `nan_value`, because the harm
+   is the same: a value hidden in a cell that looks suppressed.
 4. **Backstop scan.** Every value is scanned for personnummer and samordningsnummer
    shapes (10 or 12 digits, optional `-` or `+`, a valid month and day or day + 60, not
    inside a longer digit run): strings as written, integers in full, dates as their day
@@ -200,6 +207,11 @@ after the check is not exported either, since only what the gate read and checke
 written. Links in staging are refused where R can see them (`Sys.readlink()` does not on
 Windows); the rewrite is what guarantees that only checked data leaves.
 
+Only checked data leaving is not only aggregates leaving. A double that is not
+suppressed carries 64 bits the check does not constrain, and row order and the values of
+a string dimension are open channels too. These are inherent to a threshold-only policy
+and outside what the gate checks; the human review covers them.
+
 Every write option that affects bytes is pinned (no compression, no dictionary, no
 statistics, Parquet 2.4, one row group per 1,048,576 rows), so the same data writes the
 same bytes under one arrow release, whatever file it came from. Two entries remain that
@@ -229,19 +241,22 @@ The code is the category; the rule locates the finding. Both are stable.
   `reserved_name`.
 - `structure`: `unreadable`, `missing_column`, `extra_column`, `column_order`,
   `column_type`.
-- `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`.
+- `disclosure`: `nan_value`, `na_not_null`, `min_cell_count`, `unsupported_statistic`.
 - `backstop`: `identifier_pattern`.
 
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
-Before any check the gate removes its previous export from the output folder, so a
-refused run never leaves an old export looking current. A previous export is an output
-folder holding a `receipt.json` whose `format` is `reg-export-gate/receipt` and, beside
-it, only files that receipt lists (no folders); the gate deletes exactly those files and
-then the empty folder. An empty folder is removed too. Anything else is
-`output_not_gate_export`, with nothing deleted: the gate leaves it for the user.
-`export_not_writable` means the gate could not create its new folder beside the output
-folder; `move_failed` that it could not rename that folder to the output folder (on
-Windows, an Explorer window or another program holding the folder open blocks it).
+`paths_overlap` means staging and output are the same folder or one is inside the other;
+on Windows and macOS, whose file systems ignore case by default, paths are compared
+ignoring case, so `STAGING` as output cannot clear `staging`. Before any check the gate
+removes its previous export from the output folder, so a refused run never leaves an old
+export looking current. A previous export is an output folder holding a `receipt.json`
+whose `format` is `reg-export-gate/receipt` and, beside it, only files that receipt
+lists (no folders); the gate deletes exactly those files and then the empty folder. An
+empty folder is removed too. Anything else is `output_not_gate_export`, with nothing
+deleted: the gate leaves it for the user. `export_not_writable` means the gate could not
+create its new folder beside the output folder; `move_failed` that it could not rename
+that folder to the output folder (on Windows, an Explorer window or another program
+holding the folder open blocks it).
 
 ### Receipt
 
@@ -337,10 +352,11 @@ later by the Rust binary's tests. It is data: every expectation is in the JSON.
 - `candidate`: the staging folder, by file name. A Parquet file is
   `{"columns": [{"name", "type", "values", "metadata"}], "metadata": {...}, "inner_bytes": "..."}`
   with Arrow types `int32`, `int64`, `double`, `string`, `bool`, JSON `null` for a null
-  cell and `"NaN"` for NaN in a `double` column. The optional `metadata` are the
-  column's and the file's key-value metadata; `inner_bytes` is text spliced in just
-  before the footer, where readers skip it. Other entries are `{"text": "..."}` (raw
-  bytes) or `{"folder": true}`.
+  cell and `"NaN"` for NaN in a `double` column. In a `double` column, `"0x"` and 16 hex
+  digits is the value with exactly those IEEE 754 bits (high byte first). The optional
+  `metadata` are the column's and the file's key-value metadata; `inner_bytes` is text
+  spliced in just before the footer, where readers skip it. Other entries are
+  `{"text": "..."}` (raw bytes) or `{"folder": true}`.
 - `output_before`: the output folder before the run, in the same form (optional).
 - `expect`: `{"result": "pass"}`, or
   `{"result": "refused", "code", "findings": [{"file", "column", "position", "rule"}]}`

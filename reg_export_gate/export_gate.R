@@ -367,14 +367,25 @@ export_gate <- local({
   # Every count is at least the policy's minimum or null (suppressed), a
   # statistic is null wherever the count it rests on is suppressed, and no
   # double is NaN: a NaN carries about 51 payload bits through Parquet and the
-  # rewrite, so a cell that looks suppressed could hold a value.
+  # rewrite, so a cell that looks suppressed could hold a value. R reads some
+  # valid Arrow values as NA (a NaN whose low word is 1954, int32 INT_MIN, the
+  # int64 NA sentinel), and the rewrite writes them as values: a column whose R
+  # NAs are not exactly its Arrow nulls is refused, so every rule here sees the
+  # same nulls the rewrite writes.
   check_disclosure <- function(candidates, policy) {
     findings <- list()
     for (cand in candidates) {
       file <- cand$spec$name
       table <- cand$table
       for (col in cand$spec$columns) {
-        if (col$type == "double" && any(is.nan(as.vector(table[[col$name]])))) {
+        column <- table[[col$name]]
+        values <- as.vector(column)
+        nan <- if (col$type == "double") is.nan(values) else FALSE
+        # R's is.na() is TRUE for NaN too, which has its own rule.
+        if (sum(is.na(values) & !nan) != column$null_count) {
+          findings <- c(findings, list(finding("na_not_null", file, col$name)))
+        }
+        if (any(nan)) {
           findings <- c(findings, list(finding("nan_value", file, col$name)))
         }
         if (col$role %in% COUNT_ROLES) {
@@ -609,6 +620,12 @@ export_gate <- local({
       normalizePath(dirname(output), winslash = "/"),
       basename(output)
     )
+    # Windows and macOS file systems ignore case by default, so `STAGING` there
+    # is staging, and clear_output() could delete it.
+    if (Sys.info()[["sysname"]] %in% c("Windows", "Darwin")) {
+      s <- tolower(s)
+      o <- tolower(o)
+    }
     inside <- function(a, b) a == b || startsWith(a, paste0(b, "/"))
     if (inside(o, s) || inside(s, o)) {
       refuse("setup", list(finding("paths_overlap")))
