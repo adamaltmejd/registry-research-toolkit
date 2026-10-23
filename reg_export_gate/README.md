@@ -45,22 +45,24 @@ The gate needs R 4.2 or newer, `arrow` 9.0.0 or newer and `jsonlite`, plus SHA-2
 `tools::sha256sum` on R 4.5 or newer, else the `digest` package. Each call of
 `export_gate()` first installs whichever of these is missing or too old with
 `install.packages()`, into R's default library (`.libPaths()[1]`) from the mirror R is
-already set up with on MONA. Sourcing the file installs nothing. On a batch server that
+already set up with on MONA. It installs only when the default library is writable and
+a CRAN mirror is configured; otherwise it refuses, naming the package, and you install
+it yourself. Sourcing the file installs nothing. On a batch server that
 lacks your packages, the first run installs them and takes longer.
 
 If an install fails, the gate refuses `setup` with the package's rule: `arrow_missing`,
 `arrow_too_old`, `jsonlite_missing` or `sha256_missing` (for `digest`); the console
 above the refusal shows R's install output. The usual causes:
 
-- **The default library is not writable.** Run `install.packages("arrow")` (or the
-  package named) once yourself in an interactive R session. If R offers a personal
-  library, accept it; it becomes the default library for later sessions. Otherwise ask
-  MONA support.
+- **The default library is not writable, or no CRAN mirror is set.** The gate does not
+  try to install. Ask MONA support to install the package named, or to make the library
+  writable.
 - **The mirror is unreachable.** Ask MONA support; the gate cannot run without the
   packages.
-- **`arrow_too_old` right after an install.** An older arrow was already loaded in the
-  session (the pipeline called `arrow::write_parquet()` first) and R cannot replace it
-  while it is loaded. Restart R and rerun.
+- **`arrow_too_old` with an older arrow already loaded.** The pipeline called
+  `arrow::write_parquet()` first, and R cannot replace a loaded package, so the gate
+  does not try. Restart R, run `install.packages("arrow")` before anything loads arrow,
+  then rerun the pipeline.
 
 ## 4. The pipeline's last step
 

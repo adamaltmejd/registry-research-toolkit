@@ -328,15 +328,19 @@ R file version will be pinned to a binary release once the binary ships; until t
   and, without `tools::sha256sum`, digest is missing, with plain
   `install.packages(pkg)`: R's default library (`.libPaths()[1]`) and the configured
   repository. It never adds a library path (a project folder is likely NFS and does not
-  belong on it). Then it checks again, and a package still missing or too old refuses
+  belong on it), and installs only when the default library is writable and a CRAN
+  mirror is set: otherwise `install.packages` would prompt for a personal library
+  (which it prepends to `.libPaths()`) or a mirror, pausing the gate on a dialog.
+  Without both, the researcher installs the package. Then it checks again, and a package still missing or too old refuses
   `setup` with the rule that names it (`jsonlite_missing`, `arrow_missing`,
   `arrow_too_old`, `sha256_missing`), before reading or deleting anything. No new rule:
   after an attempted install, these rules already mean "could not be installed", and a
   generic rule would lose the package's name, which a finding has no other slot for.
   Install warnings and errors are caught, so a failed install reports that rule rather
   than `internal_warning` or `internal_error`. A namespace already loaded below the
-  floor cannot be replaced in the session, so it stays `arrow_too_old` until R is
-  restarted. The install runs in the call, after the path checks and before the prior
+  floor cannot be replaced in the session (on Windows the DLL copy fails), so the gate
+  does not try and refuses `arrow_too_old` at once. The researcher restarts R, runs
+  `install.packages("arrow")` before anything loads arrow, and reruns the pipeline. The install runs in the call, after the path checks and before the prior
   export is cleared, not when the file is sourced: sourcing stays free of side effects,
   and a mistyped path refuses at once without a slow install. The extract runner
   (`reg_mona_runner/swecov_extract.R`) carries the same helper, since each file is

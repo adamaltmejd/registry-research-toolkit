@@ -102,11 +102,18 @@ PACKAGES <- c("DBI", "odbc", "jsonlite")
 # Same helper in reg_export_gate/export_gate.R: each script is uploaded to MONA
 # alone. Installs each package into R's default library (.libPaths()[1]) from
 # the repository R's options name (MONA's own mirror), so neither `lib` nor
-# `repos` is set. A failure is not reported here: the caller checks the
-# packages again and refuses, naming the package. Warnings and errors are
-# caught: a caller that turns any warning into a failure would otherwise
-# report a failed install without the package's name.
+# `repos` is set. It installs only when that library is writable and a mirror
+# is set: otherwise install.packages() would prompt (personal library, mirror
+# menu) or add a library path. A failure is not reported here: the caller
+# checks the packages again and refuses, naming the package. Warnings and
+# errors are caught: a caller that turns any warning into a failure would
+# otherwise report a failed install without the package's name.
 install_missing <- function(pkgs) {
+  lib <- .libPaths()[1]
+  repos <- getOption("repos")
+  if (file.access(lib, 2L) != 0L || !length(repos) || "@CRAN@" %in% repos) {
+    return(invisible())
+  }
   for (pkg in pkgs) {
     tryCatch(
       suppressWarnings(utils::install.packages(pkg)),

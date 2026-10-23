@@ -648,11 +648,19 @@ export_gate <- local({
   # Same helper in reg_mona_runner/swecov_extract.R: each script is uploaded to
   # MONA alone. Installs each package into R's default library (.libPaths()[1])
   # from the repository R's options name (MONA's own mirror), so neither `lib`
-  # nor `repos` is set. A failure is not reported here: the caller checks the
-  # packages again and refuses, naming the package. Warnings and errors are
-  # caught: run()'s handlers would otherwise report a failed install as
-  # internal_warning or internal_error, without the package's name.
+  # nor `repos` is set. It installs only when that library is writable and a
+  # mirror is set: otherwise install.packages() would prompt (personal library,
+  # mirror menu) or add a library path. A failure is not reported here: the
+  # caller checks the packages again and refuses, naming the package (one that
+  # loads with a warning is internal_warning). Errors and warnings are caught:
+  # run()'s handlers would otherwise report a failed install as internal_error
+  # or internal_warning, without the package's name.
   install_missing <- function(pkgs) {
+    lib <- .libPaths()[1]
+    repos <- getOption("repos")
+    if (file.access(lib, 2L) != 0L || !length(repos) || "@CRAN@" %in% repos) {
+      return(invisible())
+    }
     for (pkg in pkgs) {
       tryCatch(
         suppressWarnings(utils::install.packages(pkg)),
@@ -669,7 +677,8 @@ export_gate <- local({
     }
     install_missing(c(
       if (is.null(package_version_of("jsonlite"))) "jsonlite",
-      if (!arrow_ok()) "arrow",
+      # An arrow loaded below the floor cannot be replaced in this session.
+      if (!arrow_ok() && !isNamespaceLoaded("arrow")) "arrow",
       if (!has_sha256()) "digest"
     ))
     missing <- c(

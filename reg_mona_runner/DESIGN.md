@@ -14,7 +14,9 @@ file that gets uploaded with the orders. Run steps are in [README.md](README.md)
 - **It installs its own packages.** A batch server can lack them, and MONA's CRAN mirror
   and library path are already in R's options. So the run starts by installing whichever
   of the three is missing, with plain `install.packages(pkg)` into R's default library
-  (`.libPaths()[1]`); it never adds a library path. One still missing after that ends
+  (`.libPaths()[1]`); it never adds a library path, and installs only when that library
+  is writable and a CRAN mirror is set (otherwise `install.packages` would prompt for a
+  personal library or a mirror). One still missing after that ends
   the run with exit code 2 and a console line naming the package, before any order is
   read; there is no per-order `error_log.csv` for it, since no order ran. The install
   runs when the script runs, which for this script is when it is sourced: sourcing it is

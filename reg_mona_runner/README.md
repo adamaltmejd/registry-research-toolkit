@@ -27,10 +27,10 @@ All under the export root, set at the top of the script:
 
 The script first installs any of its R packages (DBI, odbc, jsonlite) that is missing,
 into R's default library from MONA's mirror, so the first run on a new server takes
-longer. If one cannot be installed, the run stops with exit code 2 before any order, and
-the console names the package. Install it once yourself in an interactive R session with
-`install.packages("<package>")`, accepting a personal library if R offers one, or ask
-MONA support if the mirror is unreachable.
+longer. It installs only when the default library is writable and a CRAN mirror is
+configured. If one cannot be installed, the run stops with exit code 2 before any
+order, and the console names the package. Install it yourself, or ask MONA support
+(unwritable library, no or unreachable mirror).
 
 ## Results
 
