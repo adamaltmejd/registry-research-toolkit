@@ -1,5 +1,5 @@
 {
-  "description": "A renamed column is one missing and one extra column.",
+  "description": "A renamed column is one missing and one extra column; the extra one is located by its position, never by its name.",
   "schema": "../../../schemas/trial.schema.json",
   "policy": "../../../schemas/trial.policy.json",
   "candidate": {
@@ -56,7 +56,7 @@
           ]
         },
         {
-          "name": "mean",
+          "name": "avg",
           "type": "double",
           "values": [
             312.5,
@@ -73,11 +73,13 @@
       {
         "file": "summary_by_year.parquet",
         "column": "mean_value",
+        "position": null,
         "rule": "missing_column"
       },
       {
         "file": "summary_by_year.parquet",
-        "column": "mean",
+        "column": null,
+        "position": 3,
         "rule": "extra_column"
       }
     ]

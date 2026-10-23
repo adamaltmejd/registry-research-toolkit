@@ -1,5 +1,5 @@
 {
-  "description": "A file the schema does not declare refuses.",
+  "description": "A file the schema does not declare refuses, located by its position in staging, never by its name (the author's, here an identifier).",
   "schema": "../../../schemas/trial.schema.json",
   "policy": "../../../schemas/trial.policy.json",
   "candidate": {
@@ -65,7 +65,7 @@
         }
       ]
     },
-    "Thumbs.db": {
+    "19121212-1212.csv": {
       "text": "x"
     }
   },
@@ -74,8 +74,9 @@
     "code": "inventory",
     "findings": [
       {
-        "file": "Thumbs.db",
+        "file": null,
         "column": null,
+        "position": 1,
         "rule": "extra_file"
       }
     ]

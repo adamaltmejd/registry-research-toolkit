@@ -2,9 +2,10 @@
 
 `export_gate.R` is the last step of an analysis pipeline on MONA. It checks the
 pipeline's complete output against a fixed schema and disclosure policy and, only if
-everything passes, moves the files and a `receipt.json` into an export folder. If
-anything fails, the export folder stays empty and a report says which file, column and
-rule failed, never a value. Rationale and formats: [DESIGN.md](DESIGN.md).
+everything passes, writes the checked data afresh, with a `receipt.json`, into an export
+folder. It never exports the pipeline's own files: only the values it checked leave. If
+anything fails, the export folder stays empty and a report says which rule failed and
+where, never a value. Rationale and formats: [DESIGN.md](DESIGN.md).
 
 These steps are the first MONA trial, with the trial schema in `schemas/`: two files of
 person counts (minimum 5, else suppressed) and a per-year mean.
@@ -26,16 +27,15 @@ pasting can change the bytes (line endings).
 
 ## 2. Folders on MONA
 
-Put everything in one project folder, so staging and the export are on the same drive
-(the gate moves the staging folder, it never copies):
+Put everything in one project folder:
 
 ```text
 export_gate_trial\
   export_gate.R
   trial.schema.json
   trial.policy.json
-  staging\          the pipeline writes its output here; the gate moves it away on a pass
-  export\           appears only when the check passes: the files plus receipt.json
+  staging\          the pipeline writes its output here; the gate only reads it
+  export\           appears only when the check passes: the gate's files plus receipt.json
   .diagnostics\     the gate's report; stays on MONA, never exported
 ```
 
@@ -89,6 +89,8 @@ summary <- data.frame(
 small <- summary$n_persons < 5L
 summary$n_persons[small] <- NA
 summary$mean_value[small] <- NA
+# A mean over no values is NaN in R; the gate refuses NaN, so make it NA.
+summary$mean_value[is.nan(summary$mean_value)] <- NA
 
 arrow::write_parquet(persons, file.path(staging, "persons_by_year_group.parquet"))
 arrow::write_parquet(summary, file.path(staging, "summary_by_year.parquet"))
@@ -111,16 +113,19 @@ The console shows
 
 ```text
 export gate 0.1.0: pass, 2 files
-  moved with receipt.json to \\micro.intra\...\export_gate_trial\export
+  written with receipt.json to \\micro.intra\...\export_gate_trial\export
 ```
 
 `export\` holds exactly `persons_by_year_group.parquet`, `summary_by_year.parquet` and
-`receipt.json`; `staging\` is gone (the next run creates it again). Review the two
-files, zip the `export` folder and send it out through MONA's export as usual. Never
-include `.diagnostics\` or `staging\`.
+`receipt.json`. The two files are the gate's own: the checked values only, written
+afresh, with no metadata or anything else the pipeline's files carried. `staging\` is
+left as it was. Review the two files in `export\`, zip the `export` folder and send it
+out through MONA's export as usual. Never include `.diagnostics\` or `staging\`.
 
 Outside MONA, check the files against the receipt: `shasum -a 256 *.parquet` (macOS,
-Linux) or `Get-FileHash *.parquet` (Windows) must print the receipt's `sha256` values.
+Linux) or `Get-FileHash *.parquet` (Windows) in the exported folder must print the
+receipt's `sha256` values. The files in `staging\` will not match: they are not what was
+exported.
 
 ## 6. Refusal
 
@@ -136,16 +141,29 @@ There is no `export` folder (a previous export there was removed when the run st
 `staging\` is left as it was, and `.diagnostics\export_gate_report.json` lists the same
 findings. Fix the pipeline and run it again from a fresh staging folder.
 
+A finding names a file or column of the schema. A file or column the schema does not
+declare is never named, since its name could be data; it is shown by position instead:
+`extra_file position=1` is the first entry of `staging\` sorted by name (capitals before
+lowercase), `extra_column file=summary_by_year.parquet position=3` the file's third
+column.
+
   | Code         | Meaning and what to do                                                                                                     |
   | ------------ | -------------------------------------------------------------------------------------------------------------------------- |
-  | `setup`      | A path, package, schema or policy problem, or the move failed (keep staging and export in one folder); see the rule        |
+  | `setup`      | A path, package, schema or policy problem, or writing the export failed; see the rule                                      |
   | `inventory`  | `staging` does not hold exactly the schema's files: one missing, an extra or hidden file, a folder, a stray `receipt.json` |
   | `structure`  | A file is not Parquet, or a column is missing, extra, out of order or of the wrong type                                    |
-  | `disclosure` | A count under the minimum (suppress it as `NA`), or a statistic beside a suppressed count                                  |
-  | `backstop`   | A text value or file metadata looks like a personnummer                                                                    |
+  | `disclosure` | A count under the minimum (suppress it as `NA`), a statistic beside a suppressed count, or a NaN (use `NA`)                |
+  | `backstop`   | A value, text or number, looks like a personnummer                                                                         |
 
-If `export\` holds files the gate did not write (no `receipt.json`), the gate refuses
-`setup` (`output_not_gate_export`) and leaves them: move them away yourself.
+If `export\` holds anything but the gate's last export (its `receipt.json` and the files
+that receipt lists), the gate refuses `setup` (`output_not_gate_export`) and deletes
+nothing: move the other files away yourself. Windows can add a hidden `desktop.ini` or
+`Thumbs.db` to a folder opened in Explorer; that counts too.
+
+`move_failed` (or `output_not_removable`) on Windows usually means a program holds the
+folder open: close any Explorer window showing `export\` or the project folder, and any
+file open from `export\`, then rerun. A failed run removes the hidden `.export-gate-...`
+folder it was writing; if one is ever left beside `export\`, delete it.
 
 ## 7. Trial drills
 
@@ -157,11 +175,13 @@ leaving no `export` folder:
 3. `persons$group[1] <- "19121212-1212"` (Skatteverket's published test number) →
    `backstop`.
 4. `summary$n_persons <- as.numeric(summary$n_persons)` → `structure`.
+5. `summary$mean_value[1] <- NaN` after the suppression lines → `disclosure`.
 
 Then run step 4 unchanged once more: it passes, and the new export replaces the old.
 
 ## Report back
 
 Note the R, arrow and jsonlite versions, which SHA-256 route the preflight found, how
-long the gate took, and anything that refused unexpectedly (the rule and file, not the
-data).
+long the gate took, whether two passing runs over the same staging wrote the same
+receipt, any `.export-gate-...` folder left beside `export\`, and anything that refused
+unexpectedly (the rule and file, not the data).

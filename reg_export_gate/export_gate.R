@@ -6,12 +6,15 @@
 #
 # over the complete candidate output in `staging`. It checks, in order: the
 # inventory, each file's structure, the disclosure rules and an identifier
-# backstop. Only if every file passes does it write receipt.json into staging
-# and rename staging to `output`, so the files and the receipt appear together.
-# On any refusal there is no `output` folder and the call signals an error of class
+# backstop. Only if every file passes does it write each checked table afresh
+# (the decoded data only, never the author's bytes) with receipt.json into a new
+# folder beside `output` and rename that folder to `output`, so the files and
+# the receipt appear together. Staging is left as it was. On any refusal there
+# is no `output` folder and the call signals an error of class
 # "export_gate_refusal" whose `code` is the refusal category. Findings name a
-# file, a column and a rule, never a value; they go to
-# .diagnostics/export_gate_report.json beside `output`, never into it.
+# schema file or column, or the position of one the schema does not declare,
+# and a rule, never a value; they go to .diagnostics/export_gate_report.json
+# beside `output`, never into it.
 #
 # Rationale, the schema and policy formats and the refusal codes:
 # reg_export_gate/DESIGN.md. Packages: base R (>= 4.2), jsonlite and arrow,
@@ -32,6 +35,15 @@ export_gate <- local({
     boolean = "bool",
     date = "date32[day]"
   )
+  # Schema type -> the one Arrow type the gate writes it as (functions: arrow
+  # is checked for at run time, not when the file is sourced).
+  EXPORT_TYPES <- list(
+    integer = function() arrow::int64(),
+    double = function() arrow::float64(),
+    string = function() arrow::utf8(),
+    boolean = function() arrow::boolean(),
+    date = function() arrow::date32()
+  )
   ROLES <- c("dimension", "count", "person_count", "statistic")
   COUNT_ROLES <- c("count", "person_count")
   SLUG <- "^[a-z0-9][a-z0-9_-]*$"
@@ -45,8 +57,16 @@ export_gate <- local({
     "(?:0[1-9]|[12][0-9]|3[01]|6[1-9]|[78][0-9]|9[01])[-+]?[0-9]{4}(?![0-9])"
   )
 
-  finding <- function(rule, file = NA_character_, column = NA_character_) {
-    list(file = file, column = column, rule = rule)
+  # `file` and `column` are names the schema declares (or receipt.json). A file
+  # or column it does not declare is located by `position` instead, since its
+  # name is the author's and can be a value.
+  finding <- function(
+    rule,
+    file = NA_character_,
+    column = NA_character_,
+    position = NA_integer_
+  ) {
+    list(file = file, column = column, position = position, rule = rule)
   }
 
   # Ends the check with a refusal; caught in export_gate() below.
@@ -250,17 +270,19 @@ export_gate <- local({
   # ---- The four checks --------------------------------------------------------
 
   # The staging folder holds exactly the schema's files: none missing, none
-  # extra, no hidden files, folders or links, no receipt of its own.
+  # extra, no hidden files, folders or links, no receipt of its own. A link is
+  # caught where Sys.readlink() sees one (not on Windows); the rewrite below is
+  # what guarantees only checked data leaves.
   check_inventory <- function(staging, schema) {
     expected <- vapply(schema$files, function(f) f$name, "")
-    present <- list.files(
-      staging,
-      all.files = TRUE,
-      no.. = TRUE,
-      include.dirs = TRUE
+    # Byte order, not the locale's, so a position means the same everywhere.
+    present <- sort(
+      list.files(staging, all.files = TRUE, no.. = TRUE, include.dirs = TRUE),
+      method = "radix"
     )
     findings <- list()
-    for (name in present) {
+    for (i in seq_along(present)) {
+      name <- present[[i]]
       path <- file.path(staging, name)
       rule <- if (startsWith(name, ".")) {
         "hidden_file"
@@ -272,7 +294,13 @@ export_gate <- local({
         "extra_file"
       }
       if (!is.null(rule)) {
-        findings[[length(findings) + 1L]] <- finding(rule, name)
+        findings[[length(findings) + 1L]] <- if (
+          name %in% c(expected, RECEIPT)
+        ) {
+          finding(rule, name)
+        } else {
+          finding(rule, position = i)
+        }
       }
     }
     for (name in setdiff(expected, present)) {
@@ -281,7 +309,7 @@ export_gate <- local({
     if (length(findings)) refuse("inventory", findings)
   }
 
-  # Reads each file once: the bytes it hashes are the bytes it checks.
+  # Parsed from the bytes in memory, so no file handle stays open in staging.
   read_candidates <- function(staging, schema) {
     lapply(schema$files, function(f) {
       bytes <- read_bytes(file.path(staging, f$name))
@@ -290,7 +318,7 @@ export_gate <- local({
         error = function(e) NULL,
         warning = function(w) NULL
       )
-      list(spec = f, sha256 = sha256(bytes), table = table)
+      list(spec = f, table = table)
     })
   }
 
@@ -307,8 +335,11 @@ export_gate <- local({
       for (col in setdiff(want, have)) {
         findings <- c(findings, list(finding("missing_column", file, col)))
       }
-      for (col in setdiff(have, want)) {
-        findings <- c(findings, list(finding("extra_column", file, col)))
+      for (i in which(!have %in% want)) {
+        findings <- c(
+          findings,
+          list(finding("extra_column", file, position = i))
+        )
       }
       if (setequal(want, have) && !identical(want, have)) {
         findings <- c(findings, list(finding("column_order", file)))
@@ -329,17 +360,22 @@ export_gate <- local({
   }
 
   # Base is.na() on the converted column, not an Arrow compute call, so the
-  # check runs on older arrow releases too. A NaN statistic counts as null.
+  # check runs on older arrow releases too. NaN is refused before it matters.
   is_null <- function(column) is.na(as.vector(column))
 
-  # Every count is at least the policy's minimum or null (suppressed), and a
-  # statistic is null wherever the count it rests on is suppressed.
+  # Every count is at least the policy's minimum or null (suppressed), a
+  # statistic is null wherever the count it rests on is suppressed, and no
+  # double is NaN: a NaN carries about 51 payload bits through Parquet and the
+  # rewrite, so a cell that looks suppressed could hold a value.
   check_disclosure <- function(candidates, policy) {
     findings <- list()
     for (cand in candidates) {
       file <- cand$spec$name
       table <- cand$table
       for (col in cand$spec$columns) {
+        if (col$type == "double" && any(is.nan(as.vector(table[[col$name]])))) {
+          findings <- c(findings, list(finding("nan_value", file, col$name)))
+        }
         if (col$role %in% COUNT_ROLES) {
           values <- as.vector(table[[col$name]]$cast(arrow::float64()))
           if (any(values[!is.na(values)] < policy$min_cell_count)) {
@@ -363,28 +399,38 @@ export_gate <- local({
     if (length(findings)) refuse("disclosure", findings)
   }
 
-  # String values, and the file's key-value metadata, hold no identifier.
+  # A column's values as the digits and text the identifier scan reads: strings
+  # as they are, integers and dates (as day numbers) in full, and doubles by
+  # their whole-number part, since an identifier stored as a number is whole
+  # and the digits of a fraction would match by chance.
+  scan_text <- function(column, type) {
+    switch(
+      type,
+      string = as.vector(column),
+      integer = as.vector(column$cast(arrow::utf8())),
+      date = as.vector(column$cast(arrow::int32())$cast(arrow::utf8())),
+      double = {
+        x <- as.vector(column)
+        format(trunc(x[is.finite(x)]), scientific = FALSE, trim = TRUE)
+      },
+      character()
+    )
+  }
+
+  # No value, text or number, has an identifier's shape. The files' key-value
+  # metadata is not scanned: the gate never exports it.
   check_backstop <- function(candidates) {
     findings <- list()
     for (cand in candidates) {
       file <- cand$spec$name
       for (col in cand$spec$columns) {
-        if (col$type == "string") {
-          values <- as.vector(cand$table[[col$name]])
-          if (any(grepl(IDENTIFIER, values[!is.na(values)], perl = TRUE))) {
-            findings <- c(
-              findings,
-              list(finding("identifier_pattern", file, col$name))
-            )
-          }
+        values <- scan_text(cand$table[[col$name]], col$type)
+        if (any(grepl(IDENTIFIER, values[!is.na(values)], perl = TRUE))) {
+          findings <- c(
+            findings,
+            list(finding("identifier_pattern", file, col$name))
+          )
         }
-      }
-      meta <- unlist(cand$table$metadata)
-      if (any(grepl(IDENTIFIER, c(names(meta), meta), perl = TRUE))) {
-        findings <- c(
-          findings,
-          list(finding("identifier_pattern_metadata", file))
-        )
       }
     }
     if (length(findings)) refuse("backstop", findings)
@@ -397,7 +443,7 @@ export_gate <- local({
     writeBin(charToRaw(paste0(enc2utf8(as.character(text)), "\n")), path)
   }
 
-  receipt <- function(schema, policy, candidates) {
+  receipt <- function(schema, policy, written) {
     list(
       format = "reg-export-gate/receipt",
       format_version = 1L,
@@ -412,10 +458,55 @@ export_gate <- local({
         version = policy$version,
         sha256 = policy$sha256
       ),
-      files = lapply(candidates, function(cand) {
-        list(name = cand$spec$name, sha256 = cand$sha256)
-      })
+      files = written
     )
+  }
+
+  # Writes a checked table afresh: new arrays of the schema's export types in
+  # the schema's column order, so no key-value metadata, padding or encoding
+  # choice of the author's file reaches the export. Every byte-affecting option
+  # is pinned, so the same data writes the same bytes under one arrow release.
+  # Arrow still adds its own ARROW:schema entry (derived from the schema built
+  # here) and a created_by string naming its version.
+  write_checked <- function(cand, path) {
+    columns <- lapply(cand$spec$columns, function(col) {
+      type <- EXPORT_TYPES[[col$type]]()
+      chunks <- cand$table[[col$name]]$cast(type)$chunks
+      do.call(arrow::concat_arrays, c(chunks, list(type = type)))
+    })
+    names(columns) <- vapply(cand$spec$columns, function(col) col$name, "")
+    arrow::write_parquet(
+      do.call(arrow::Table$create, columns),
+      path,
+      chunk_size = 1048576L,
+      version = "2.6",
+      compression = "uncompressed",
+      use_dictionary = FALSE,
+      write_statistics = FALSE
+    )
+    list(name = cand$spec$name, sha256 = sha256(read_bytes(path)))
+  }
+
+  # Writes the checked tables and the receipt into a new folder beside
+  # `output`, then renames it to `output`: the files and the receipt appear
+  # together or not at all. The folder is the gate's own, so on any failure it
+  # is removed whole.
+  export <- function(output, schema, policy, candidates) {
+    fresh <- tempfile(".export-gate-", tmpdir = dirname(output))
+    if (!dir.create(fresh, showWarnings = FALSE)) {
+      refuse("setup", list(finding("export_not_writable")))
+    }
+    done <- FALSE
+    on.exit(if (!done) unlink(fresh, recursive = TRUE), add = TRUE)
+    written <- lapply(candidates, function(cand) {
+      write_checked(cand, file.path(fresh, cand$spec$name))
+    })
+    write_json(receipt(schema, policy, written), file.path(fresh, RECEIPT))
+    # file.rename() warns on failure; the failure is the refusal.
+    if (!suppressWarnings(file.rename(fresh, output))) {
+      refuse("setup", list(finding("move_failed")))
+    }
+    done <- TRUE
   }
 
   # Best effort: a report that cannot be written does not change the result.
@@ -444,17 +535,61 @@ export_gate <- local({
     )
   }
 
-  # The prior export in `output` (receipt and files) or an empty folder is
-  # removed before anything is checked, so a refused run never leaves an old
-  # export looking current. Anything else there is not the gate's to delete.
+  # The data file names a gate receipt lists, or NULL if `path` is not one.
+  receipt_files <- function(path) {
+    r <- read_json_file(path)$doc
+    if (
+      !is_object(r) ||
+        !identical(r$format, "reg-export-gate/receipt") ||
+        !is_array(r$files)
+    ) {
+      return(NULL)
+    }
+    names <- vapply(
+      r$files,
+      function(f) {
+        ok <- is_object(f) && is_string(f$name) && grepl(FILE_NAME, f$name)
+        if (ok) f$name else NA_character_
+      },
+      ""
+    )
+    if (anyNA(names)) NULL else names
+  }
+
+  # The prior export in `output` or an empty folder is removed before anything
+  # is checked, so a refused run never leaves an old export looking current. A
+  # prior export is a gate receipt and only files it lists, no folders; the
+  # gate deletes exactly those. Anything else is not the gate's to delete.
   clear_output <- function(output) {
     if (!file.exists(output)) {
       return(invisible())
     }
-    present <- list.files(output, all.files = TRUE, no.. = TRUE)
-    if (!dir.exists(output) || (length(present) && !RECEIPT %in% present)) {
+    if (!dir.exists(output)) {
       refuse("setup", list(finding("output_not_gate_export")))
     }
+    listing <- function() {
+      list.files(output, all.files = TRUE, no.. = TRUE, include.dirs = TRUE)
+    }
+    present <- listing()
+    if (length(present)) {
+      listed <- receipt_files(file.path(output, RECEIPT))
+      paths <- file.path(output, present)
+      if (
+        is.null(listed) ||
+          !all(present %in% c(RECEIPT, listed)) ||
+          any(dir.exists(paths))
+      ) {
+        refuse("setup", list(finding("output_not_gate_export")))
+      }
+      # A file that will not go is caught by the listing below.
+      suppressWarnings(file.remove(paths))
+    }
+    if (length(listing())) {
+      refuse("setup", list(finding("output_not_removable")))
+    }
+    # The folder was just listed empty. R has no portable removal of an empty
+    # folder alone: unlink() skips folders unless recursive, and file.remove()
+    # refuses them on Windows.
     unlink(output, recursive = TRUE)
     if (file.exists(output)) {
       refuse("setup", list(finding("output_not_removable")))
@@ -492,8 +627,8 @@ export_gate <- local({
 
   run <- function(staging, output, schema_path, policy_path) {
     check_paths(staging, output)
-    clear_output(output)
     check_packages()
+    clear_output(output)
     schema <- load_schema(schema_path)
     policy <- load_policy(policy_path, schema)
     check_inventory(staging, schema)
@@ -501,15 +636,7 @@ export_gate <- local({
     check_structure(candidates)
     check_disclosure(candidates, policy)
     check_backstop(candidates)
-    receipt_path <- file.path(staging, RECEIPT)
-    write_json(receipt(schema, policy, candidates), receipt_path)
-    # One rename moves the files and the receipt together. Staging and output
-    # must be on the same volume; the gate never copies.
-    # file.rename() warns on failure; the failure is the refusal.
-    if (!suppressWarnings(file.rename(staging, output))) {
-      unlink(receipt_path)
-      refuse("setup", list(finding("move_failed")))
-    }
+    export(output, schema, policy, candidates)
     length(candidates)
   }
 
@@ -519,7 +646,7 @@ export_gate <- local({
     }
     outcome <- tryCatch(
       withCallingHandlers(
-        list(moved = run(staging, output, schema, policy)),
+        list(written = run(staging, output, schema, policy)),
         # An R warning can quote a value: it refuses instead of printing.
         warning = function(w) {
           refuse("setup", list(finding("internal_warning")))
@@ -534,12 +661,12 @@ export_gate <- local({
         )
       }
     )
-    stopped <- if (is.null(outcome$moved)) outcome
-    moved <- outcome$moved
+    stopped <- if (is.null(outcome$written)) outcome
+    written <- outcome$written
     if (is.null(stopped)) {
       write_report(diagnostics, "pass", NULL, list())
-      say("export gate ", EXPORT_GATE_VERSION, ": pass, ", moved, " files")
-      say("  moved with receipt.json to ", output)
+      say("export gate ", EXPORT_GATE_VERSION, ": pass, ", written, " files")
+      say("  written with receipt.json to ", output)
       return(invisible("pass"))
     }
     write_report(diagnostics, "refused", stopped$code, stopped$findings)
@@ -549,7 +676,8 @@ export_gate <- local({
         "  ",
         f$rule,
         if (!is.na(f$file)) paste0(" file=", f$file),
-        if (!is.na(f$column)) paste0(" column=", f$column)
+        if (!is.na(f$column)) paste0(" column=", f$column),
+        if (!is.na(f$position)) paste0(" position=", f$position)
       )
     }
     stop(structure(

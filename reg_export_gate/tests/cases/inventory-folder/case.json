@@ -74,8 +74,9 @@
     "code": "inventory",
     "findings": [
       {
-        "file": "extra",
+        "file": null,
         "column": null,
+        "position": 1,
         "rule": "not_a_file"
       }
     ]

@@ -1,5 +1,5 @@
 {
-  "description": "A rerun replaces the gate's previous export (a folder holding a receipt).",
+  "description": "A rerun replaces the gate's previous export: a gate receipt and the files it lists.",
   "schema": "../../../schemas/trial.schema.json",
   "policy": "../../../schemas/trial.policy.json",
   "candidate": {
@@ -68,7 +68,7 @@
   },
   "output_before": {
     "receipt.json": {
-      "text": "{}"
+      "text": "{\"format\": \"reg-export-gate/receipt\", \"format_version\": 1, \"files\": [{\"name\": \"old.parquet\", \"sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\"}]}"
     },
     "old.parquet": {
       "text": "old"

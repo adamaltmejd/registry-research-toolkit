@@ -1,0 +1,95 @@
+{
+  "description": "An output folder holding a gate receipt beside a file and a folder the receipt does not list refuses with nothing deleted: only the gate's own export is the gate's to clear.",
+  "schema": "../../../schemas/trial.schema.json",
+  "policy": "../../../schemas/trial.policy.json",
+  "candidate": {
+    "persons_by_year_group.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2019,
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "2019-2020 cohort",
+            "Stockholm",
+            "2019-2020 cohort"
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            5,
+            120,
+            null,
+            37
+          ]
+        }
+      ]
+    },
+    "summary_by_year.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2020
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int32",
+          "values": [
+            125,
+            null
+          ]
+        },
+        {
+          "name": "mean_value",
+          "type": "double",
+          "values": [
+            312.5,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "output_before": {
+    "receipt.json": {
+      "text": "{\"format\": \"reg-export-gate/receipt\", \"format_version\": 1, \"files\": [{\"name\": \"old.parquet\", \"sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\"}]}"
+    },
+    "old.parquet": {
+      "text": "old"
+    },
+    "draft.docx": {
+      "text": "mine"
+    },
+    "analysis": {
+      "folder": true
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "setup",
+    "findings": [
+      {
+        "file": null,
+        "column": null,
+        "rule": "output_not_gate_export"
+      }
+    ],
+    "output": "unchanged"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "description": "The shipped trial schema and policy pass a complete export: a count of exactly the minimum, suppressed (null) counts with their statistic null, int32 and int64 counts, and a period-like string that is not an identifier.",
+  "description": "The shipped trial schema and policy pass a complete export: a count of exactly the minimum, suppressed (null) counts with their statistic null, int32 and int64 counts, a period-like string and an identifier shape inside a 14-digit run, neither of which is an identifier.",
   "schema": "../../../schemas/trial.schema.json",
   "policy": "../../../schemas/trial.policy.json",
   "candidate": {
@@ -21,7 +21,7 @@
           "values": [
             "Stockholm",
             "2019-2020 cohort",
-            "Stockholm",
+            "batch 19121212121212",
             "2019-2020 cohort"
           ]
         },

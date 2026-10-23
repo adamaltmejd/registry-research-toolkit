@@ -1,5 +1,5 @@
 {
-  "description": "A personnummer in the Parquet file's key-value metadata refuses.",
+  "description": "Key-value metadata on a column (field) never reaches the export.",
   "schema": "../../../schemas/trial.schema.json",
   "policy": "../../../schemas/trial.policy.json",
   "candidate": {
@@ -23,7 +23,10 @@
             "2019-2020 cohort",
             "Stockholm",
             "2019-2020 cohort"
-          ]
+          ],
+          "metadata": {
+            "origin": "Anna Svensson 19121212-1212"
+          }
         },
         {
           "name": "n_persons",
@@ -63,21 +66,10 @@
             null
           ]
         }
-      ],
-      "metadata": {
-        "note": "19121212-1212"
-      }
+      ]
     }
   },
   "expect": {
-    "result": "refused",
-    "code": "backstop",
-    "findings": [
-      {
-        "file": "summary_by_year.parquet",
-        "column": null,
-        "rule": "identifier_pattern_metadata"
-      }
-    ]
+    "result": "pass"
   }
 }

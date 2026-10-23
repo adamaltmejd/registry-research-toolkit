@@ -74,8 +74,9 @@
     "code": "inventory",
     "findings": [
       {
-        "file": "Thumbs.db",
+        "file": null,
         "column": null,
+        "position": 1,
         "rule": "extra_file"
       }
     ]
