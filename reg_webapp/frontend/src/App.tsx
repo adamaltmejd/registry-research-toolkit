@@ -3,10 +3,11 @@ import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
 import { type Context, getContext } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
+import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
 import { ClassificationGroupView } from "./lib/ClassificationView";
 import { ConceptGroupView } from "./lib/ConceptGroupView";
-import { routeBreadcrumbs } from "./lib/catalog";
+import { routeBreadcrumbs, SHOW_MATCHING_REGISTERS_LABEL } from "./lib/catalog";
 import { providerQualified } from "./lib/catalog_names";
 import { DocView } from "./lib/DocView";
 import { Home } from "./lib/Home";
@@ -16,6 +17,7 @@ import { onNavClick, type Route, router } from "./lib/router";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { StatusRow } from "./lib/ui/StatusRow";
+import { isBackCrumb } from "./lib/ui/types";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useStudyWindow } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
@@ -104,7 +106,14 @@ export function App() {
   // reg_meta DB was built, the leading YYYY-MM-DD of `import_date`.
   const ctx = context.data;
   const listed = listedRegister(route);
-  const breadcrumbs = routeBreadcrumbs(route);
+  // Below the breakpoint the search filters a list that is off screen, so
+  // while it holds text the way back says where the matches are.
+  const searching = useBrowseFiltering();
+  const breadcrumbs = routeBreadcrumbs(route).map((crumb) =>
+    searching && isBackCrumb(crumb)
+      ? { ...crumb, label: SHOW_MATCHING_REGISTERS_LABEL }
+      : crumb,
+  );
 
   return (
     <RouterProvider navigate={router.navigate} useHref={useHref}>

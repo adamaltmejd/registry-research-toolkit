@@ -41,6 +41,9 @@ export interface ColumnSection {
 
 interface Props {
   label: string;
+  /** Whose items these are (a register's or a group's name): the header reads
+   * "<label> in <subject>", truncated, with the whole of it as hover text. */
+  subject?: string;
   /** Null while the items load. */
   sections: readonly ColumnSection[] | null;
   /** The item whose page is open, or null. */
@@ -66,6 +69,7 @@ interface Props {
  */
 export function ColumnList({
   label,
+  subject,
   sections,
   selectedId,
   selectedExact,
@@ -137,8 +141,12 @@ export function ColumnList({
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span id={labelId} className="micro-label">
-          {label}
+        <span
+          id={labelId}
+          className={`micro-label ${styles.label}`}
+          title={subject === undefined ? undefined : `${label} in ${subject}`}
+        >
+          {subject === undefined ? label : `${label} in ${subject}`}
         </span>
       </div>
       {/* The scroll box: the list and the column's one selection bar. */}

@@ -358,29 +358,34 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   the group's first axis. A browse column fills the viewport below the top bar and
   scrolls its own list. Every item and group carries its in-project mark on the right
   when it has one. Below the single narrow breakpoint (`breakpoint-narrow`) the columns
-  stack, one at a time; the back affordance is the breadcrumb's first crumb, "Data",
-  which every page's trail leads with below the breakpoint (and only there: beside the
-  columns it would repeat them) and which opens the register list. Do not mint new
-  breakpoints.
+  stack, one at a time; the way back is the breadcrumb's first crumb, "Browse
+  registers", drawn as a `default` button on its own line above the trail so it reads as
+  an action, not a path segment (#1824). Every page's trail leads with it below the
+  breakpoint (and only there: beside the columns it would repeat them), and it opens the
+  register list; while the search holds text it reads "Show matching registers", since
+  the list the search filters is off screen. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
-  than opening a results page: groups with no matches collapse (still openable), matched
-  text is underlined in `accent` at weight 600, a register that matched only through its
-  variables says so on its own line under it ("matched on 9 variables", the count in
-  `accent-ink`), the column header states how many registers match, and the detail pane
-  stays put. Escape clears the filter and restores the collapse state. The command
-  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, seeded with the
-  field's text (maintainer-decided 2026-10-22), for codes, classifications and actions;
-  its results are a mixed list and carry a `TypeTag`.
+  than opening a results page, and only them: the open register, provider or variable
+  page always shows its whole content (#1829). A provider with no matching register is
+  hidden until the filter clears (#1830); with none left at all the column says so.
+  Matched text is underlined in `accent` at weight 600, a register that matched only
+  through its variables says so on its own line under it ("matched on 9 variables", the
+  count in `accent-ink`), the column header states how many registers match, and the
+  detail pane stays put. Escape clears the filter and restores the collapse state from
+  anywhere on the page, unless a dialog, popover, the palette or another text field has
+  focus (#1827). The command palette (RAC `Autocomplete`) opens from Enter in the field
+  or `⌘K`, seeded with the field's text (maintainer-decided 2026-10-22), for codes,
+  classifications and actions; its results are a mixed list and carry a `TypeTag`.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
   data) in `text-muted`. The browse columns are beside it and the project box is in the
   top bar, so there is no link into either.
-- **Detail pane:** breadcrumb path ("Data" in the UI face below the breakpoint, then
-  `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark (its
-  `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the actions
-  row, then definitions, then the `Timeline`, then the list of variables or columns.
-  Padding `spacing.5`.
+- **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
+  then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
+  (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
+  actions row, then definitions, then the `Timeline`, then the list of variables or
+  columns. Padding `spacing.5`.
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -426,9 +431,11 @@ Time is the axis every relation is drawn on.
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
   face, the bar, and under them each delivery column as a `ColumnChip` with its tick (a
-  real checkbox; a column already in the project shows its `in` chip and no tick). While
-  anything is ticked, a sticky add bar reads "Add N columns to project" as the pane's
-  one `primary` button; with nothing ticked there is no bar.
+  real checkbox; a column already in the project shows its `in` chip and no tick). Below
+  `breakpoint-narrow` the row stacks into one column: the bar on top, then the name,
+  then the chips (#1826). While anything is ticked, a sticky add bar reads "Add N
+  columns to project" as the pane's one `primary` button; with nothing ticked there is
+  no bar.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A lane's title joins its facet values with a comma, and its name opens the
@@ -519,14 +526,16 @@ not grow new visual language meanwhile.
   is the same box, empty and untinted with a `border` leading bar, holding a `default`
   "Create a project" Button, which starts a project and opens it, and nothing in the
   catalog is tinted.
-- **ColumnList:** a `label` header, then items on `bg`, one selected (2 px `accent` bar
-  on `surface-sunken` at weight 600; the column's one bar translates between items); in
-  the first column, items grouped under sticky collapsible group headers. A row's focus
-  ring is drawn inward (`--focus-ring-inset`, the same accent line and halo) so the
-  scroll box and a sticky row never clip it. An item or group with something in the
-  project carries a 6 px `accent` dot and the count in `accent-ink` `mono` — the only
-  numbers in the list. While the search bar holds text, the list shows its filter state
-  (see Layout).
+- **ColumnList:** a `label` header that names whose items they are ("Variables in
+  Aktivitetsstöd", or the group's name on a group page; one line, truncated with an
+  ellipsis, the whole of it as hover text) (#1825), then items on `bg`, one selected (2
+  px `accent` bar on `surface-sunken` at weight 600; the column's one bar translates
+  between items); in the first column, items grouped under sticky collapsible group
+  headers. A row's focus ring is drawn inward (`--focus-ring-inset`, the same accent
+  line and halo) so the scroll box and a sticky row never clip it. An item or group with
+  something in the project carries a 6 px `accent` dot and the count in `accent-ink`
+  `mono` — the only numbers in the list. While the search bar holds text, the list shows
+  its filter state (see Layout).
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the

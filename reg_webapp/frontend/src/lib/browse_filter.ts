@@ -3,7 +3,8 @@ import { SEARCH_MIN_QUERY_LENGTH, searchFacets } from "./api";
 import { useAsyncResource } from "./use_async_resource";
 
 /** The text in the top bar's search field, which filters both browse columns in
- * place (DESIGN.md → Layout → Search filters in place). App state, not URL
+ * place and never the open page (DESIGN.md → Layout → Search filters in
+ * place). App state, not URL
  * state: it outlives every route and is not part of a shared link. */
 let value = "";
 const listeners = new Set<() => void>();
@@ -49,6 +50,14 @@ export function useBrowseFilter(): string {
   return useSyncExternalStore(browseFilter.subscribe, read);
 }
 
+const readFiltering = () => value.trim() !== "";
+
+/** Whether the filter holds text: for a reader that needs only that, so it
+ * does not re-render on every keystroke. */
+export function useBrowseFiltering(): boolean {
+  return useSyncExternalStore(browseFilter.subscribe, readFiltering);
+}
+
 /** How long the filter text rests before a server request goes out. */
 const SETTLE_MS = 200;
 
@@ -71,8 +80,8 @@ export function useSettledFilter(): string | null {
 }
 
 /** The register's variables the server matches for the filter (#1788): the
- * same admission the browse tree counts, so a register page lists exactly the
- * number its tree row says. Null while there is no settled query or no
+ * same admission the browse tree counts, so the variables column lists exactly
+ * the number its tree row says. Null while there is no settled query or no
  * answer yet, or when the request failed: the caller then filters on the
  * names it holds. */
 export function useRegisterMatches(

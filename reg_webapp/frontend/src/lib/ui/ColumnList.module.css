@@ -28,6 +28,15 @@
   margin-right: auto;
 }
 
+/* The header's one line: a long register name truncates rather than wrapping,
+   so the two columns' rules stay level; the whole name is the hover text. */
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .note {
   margin: 0;
   padding: var(--space-3);

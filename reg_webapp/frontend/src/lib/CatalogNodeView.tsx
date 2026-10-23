@@ -7,7 +7,6 @@ import {
   type VariableStateModel,
 } from "./api";
 import { BindingLeafView } from "./BindingLeafView";
-import { browseFilter, useBrowseFilter } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import {
   ClassificationGroupView,
@@ -19,14 +18,10 @@ import {
   classGroupHref,
   distinctMemberCount,
   foldGroupedRows,
-  leafSlug,
   nodeLabel,
-  rankFilter,
 } from "./catalog";
 import { sharedShow } from "./catalog_names";
-import { FilterCount } from "./FilterCount";
 import { RegisterView } from "./RegisterView";
-import { Button } from "./ui/Button";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
@@ -165,16 +160,9 @@ const registerColumns: Column<RegisterRow>[] = [
   { key: "purpose", label: "Description" },
 ];
 
-/** A provider's registers, narrowed by the top-bar filter, each linking to
- * its page. */
+/** A provider's registers, each linking to its page. The top-bar search
+ * filters the browse columns, never this page (#1829). */
 function ProviderView({ node }: { node: ProviderShow }) {
-  const filter = useBrowseFilter();
-  const registers = rankFilter(node.children, filter, (r) => [
-    leafSlug(r.fqid),
-    r.name,
-    r.fqid,
-    r.purpose,
-  ]);
   return (
     <article className={styles.page}>
       <h1 className={styles.title}>{nodeLabel(node)}</h1>
@@ -183,50 +171,28 @@ function ProviderView({ node }: { node: ProviderShow }) {
           <EmptyState title="This provider has no registers in the catalog." />
         </Panel>
       ) : (
-        <>
-          <FilterCount
-            filter={filter}
-            shown={registers.length}
-            total={node.children.length}
-            noun="registers"
-          />
-          {registers.length > 0 ? (
-            <DataTable
-              framed
-              rowNavigation
-              columns={registerColumns}
-              rows={registers}
-              getRowId={(r) => r.fqid}
-              renderCell={(register, column) =>
-                column.key === "name" ? (
-                  <a
-                    className={`link ${styles.rowLink}`}
-                    href={catalogHref(register.fqid)}
-                    title={register.fqid}
-                  >
-                    {register.name ?? register.fqid}
-                  </a>
-                ) : (
-                  register.purpose && (
-                    <span className={styles.clamp}>{register.purpose}</span>
-                  )
-                )
-              }
-            />
-          ) : (
-            <Panel title="Registers">
-              <EmptyState
-                title={`No registers match “${filter}”`}
-                description="Nothing in this provider contains that text."
-                action={
-                  <Button onPress={() => browseFilter.set("")}>
-                    Clear filter
-                  </Button>
-                }
-              />
-            </Panel>
-          )}
-        </>
+        <DataTable
+          framed
+          rowNavigation
+          columns={registerColumns}
+          rows={node.children}
+          getRowId={(r) => r.fqid}
+          renderCell={(register, column) =>
+            column.key === "name" ? (
+              <a
+                className={`link ${styles.rowLink}`}
+                href={catalogHref(register.fqid)}
+                title={register.fqid}
+              >
+                {register.name ?? register.fqid}
+              </a>
+            ) : (
+              register.purpose && (
+                <span className={styles.clamp}>{register.purpose}</span>
+              )
+            )
+          }
+        />
       )}
     </article>
   );

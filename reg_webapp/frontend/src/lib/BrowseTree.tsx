@@ -137,8 +137,10 @@ function currentRow(route: Route): CurrentRow | null {
 /** The browse filter applied to the tree. A group keeps the registers that
  * match by name or slug, then those that match only through their variables
  * (`facets`, per register FQID), each with its count; or all of them when its
- * own name matches. Those groups are `matched`. A group with no match keeps its
- * whole list, so it still shows and still opens, and starts closed. */
+ * own name matches. Those groups are `matched`. A group with no match is left
+ * out until the filter clears (#1830), and so is a leaf row (the
+ * classification root) whose own name does not match. A provider whose
+ * registers are still loading stays, as its loader row. */
 function filterNodes(
   nodes: BrowseNode[],
   needle: string,
@@ -147,20 +149,20 @@ function filterNodes(
   const matched = new Set<Key>();
   if (needle.trim() === "") return { nodes, matched };
   const named = (node: BrowseNode) => [node.name, leafSlug(node.id)];
-  const filtered = nodes.map((node) => {
-    if (node.children === null || node.children.length === 0) return node;
+  const filtered = nodes.flatMap((node) => {
+    if (node.children === null) return [node];
     if (rankFilter([node], needle, named).length > 0) {
-      matched.add(node.id);
-      return node;
+      if (node.children.length > 0) matched.add(node.id);
+      return [node];
     }
     const byName = rankFilter(node.children, needle, named);
     const byVariables = node.children
       .filter((child) => !byName.includes(child) && facets.has(child.id))
       .map((child) => ({ ...child, variableMatches: facets.get(child.id) }));
     const children = [...byName, ...byVariables];
-    if (children.length === 0) return node;
+    if (children.length === 0) return [];
     matched.add(node.id);
-    return { ...node, children };
+    return [{ ...node, children }];
   });
   return { nodes: filtered, matched };
 }
@@ -243,11 +245,10 @@ export function BrowseTree({ className }: { className?: string }) {
   const expandable = nodes
     .filter((node) => node.children === null || node.children.length > 0)
     .map((node) => node.id);
-  // The search field's "N matches": the registers the filter keeps (a group
-  // that did not match keeps its list but matches nothing). No count until the
-  // variable matches for this needle have arrived: the debounce has not
-  // elapsed (a long enough needle has no facet key yet) or the request is in
-  // flight, and a count from names alone would read low and announce "0".
+  // The search field's "N matches": the registers the filter keeps. No count
+  // until the variable matches for this needle have arrived: the debounce has
+  // not elapsed (a long enough needle has no facet key yet) or the request is
+  // in flight, and a count from names alone would read low and announce "0".
   const facetsPending =
     facetResource.loading ||
     (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
@@ -310,6 +311,23 @@ export function BrowseTree({ className }: { className?: string }) {
       );
     }
   }, [currentKey, treeShown]);
+
+  // The filter can take the focused row out of the tree (#1830), and a focused
+  // key with no row takes the whole tree out of the Tab order. Move focus to
+  // the current page's row when it shows, else clear it so Tab lands on the
+  // tree. Every render: the check is a map lookup.
+  useEffect(() => {
+    const state = treeState.current;
+    const focused = state?.selectionManager.focusedKey;
+    if (!state || focused == null || state.collection.getItem(focused)) return;
+    const target =
+      currentKey === null
+        ? null
+        : visibleKey(state, currentKey, state.expandedKeys);
+    state.selectionManager.setFocusedKey(
+      target !== null && state.collection.getItem(target) ? target : null,
+    );
+  });
 
   // Selection follows the arrow keys (DESIGN.md → BrowseTree) and a click, and
   // selecting a row opens its page. Type-ahead moves focus only: React Aria's
@@ -421,6 +439,20 @@ export function BrowseTree({ className }: { className?: string }) {
               onSelectionChange={onSelectionChange}
               expandedKeys={expandedKeys}
               onExpandedChange={onExpandedChange}
+              // Escape belongs to the search (DESIGN.md → Search filters in
+              // place): the tree never clears its selection on it, so the key
+              // reaches the page-wide handler in TopBar.
+              escapeKeyBehavior="none"
+              // Device-neutral copy: below the breakpoint this column is
+              // the whole screen, often on a phone with no Escape key.
+              renderEmptyState={() =>
+                filtering && (
+                  <p className={styles.note}>
+                    No registers match “{needle.trim()}”. Clear the search to
+                    see them all.
+                  </p>
+                )
+              }
               dependencies={[
                 counts,
                 currentKey,

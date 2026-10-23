@@ -69,10 +69,10 @@ job.
   edit, keyboard period focus, period within availability on the variable page and on
   /project) at four viewports, each in a fresh browser context against the real servers,
   and writes the PNGs into `<out-dir>`. Name scenarios to run a subset
-  (`blocked-order order-retry validation-retry catalog-draft catalog-period-required project-source-period catalog-period-focus catalog-period-availability project-period-availability replace-confirm`).
+  (`blocked-order order-retry validation-retry catalog-draft catalog-period-required project-source-period catalog-period-focus catalog-period-availability project-period-availability replace-confirm browse-search`).
   It asserts on the `--fixture-db` content (`scb/lisa/kon` at `individer-15plus`,
   `scb/rams/syss`, `scb/lisa/forsamling`), so run it with `--fixture-db`. The gate's
-  `flows` step (`uv run --no-project scripts/gate.py flows`) runs all ten that way.
+  `flows` step (`uv run --no-project scripts/gate.py flows`) runs all eleven that way.
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
   `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
 

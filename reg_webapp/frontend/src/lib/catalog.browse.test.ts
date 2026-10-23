@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  BROWSE_REGISTERS_LABEL,
   catalogHref,
-  DATA_BROWSER_LABEL,
   deriveType,
   leafSlug,
   rankFilter,
@@ -78,7 +78,7 @@ describe("routeBreadcrumbs", () => {
   // Shown only where the columns stack (maintainer ruling 2026-10-22): above
   // the breakpoint the register list is on screen.
   const browserRoot = {
-    label: DATA_BROWSER_LABEL,
+    label: BROWSE_REGISTERS_LABEL,
     href: catalogHref(""),
     narrowOnly: true,
   };
@@ -151,7 +151,7 @@ describe("routeBreadcrumbs", () => {
     for (const route of variants) {
       const trail = routeBreadcrumbs(route);
       expect(trail.at(-1)?.href).toBeUndefined();
-      // Every trail but the list's own leads with the linked "Data" crumb: below
+      // Every trail but the list's own leads with the linked "Browse registers" crumb: below
       // 48rem it is the only way back to the register list (maintainer ruling
       // 2026-10-22). Fails if a route's trail drops it.
       if (route.name !== "root") expect(trail[0]).toEqual(browserRoot);

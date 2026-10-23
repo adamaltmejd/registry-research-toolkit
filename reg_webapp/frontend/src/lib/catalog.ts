@@ -40,7 +40,9 @@ import type { BreadcrumbItem } from "./ui/types";
  * `/catalog` (#675). Below the narrow breakpoint it is the way back to the
  * register list, so every page's trail leads with it; above it the list is on
  * screen and the crumb is hidden (DESIGN.md → Layout). */
-export const DATA_BROWSER_LABEL = "Data";
+export const BROWSE_REGISTERS_LABEL = "Browse registers";
+/** The same crumb while the search holds text: the matches are in that list. */
+export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
 
 /** The variable children of a register node, in order. `[]` for any other node
  * kind. */
@@ -560,7 +562,7 @@ function registerTrail(
  * still descends from the data browser. */
 export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
   const browserRoot: BreadcrumbItem = {
-    label: DATA_BROWSER_LABEL,
+    label: BROWSE_REGISTERS_LABEL,
     href: catalogHref(""),
     narrowOnly: true,
   };
@@ -570,7 +572,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       return [browserRoot, { label: "Home", word: true, narrowOnly: true }];
     case "root":
       // The data browser IS the current page — a single un-linked crumb.
-      return [{ label: DATA_BROWSER_LABEL, narrowOnly: true }];
+      return [{ label: BROWSE_REGISTERS_LABEL, narrowOnly: true }];
     case "catalog-node": {
       // Each ancestor segment is a link to its cumulative `/catalog/...` path;
       // the leaf segment is the current page (no href).
