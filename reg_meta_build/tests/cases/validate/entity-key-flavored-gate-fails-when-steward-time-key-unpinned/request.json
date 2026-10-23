@@ -1,0 +1,5 @@
+{
+  "damage": "damage.sql",
+  "flavored": true,
+  "slug_dir": "slugs"
+}

@@ -1437,9 +1437,9 @@ def _check_entity_key_vars_curated(
     tables: set[str],
     slug_dir: Path | None,
 ) -> None:
-    """#546/#559: every steward panel entity-key variable must carry a curated
-    ``[variable]`` slug pin in the steward slug dir, so the slug its
-    ``panel_entity_key`` ref binds to can't drift.
+    """#546/#559: every steward panel-key variable (entity key, or a row-level
+    time key) must carry a curated ``[variable]`` slug pin in the steward slug
+    dir, so the slug its panel ref binds to can't drift.
 
     extend-db auto-slugs overlay variables (``populate_variable_slugs``): an
     auto-slug can change when a delivery column changes, and a reslug would
