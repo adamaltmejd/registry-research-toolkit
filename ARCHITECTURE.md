@@ -99,8 +99,8 @@ registry-research-toolkit/
     frontend/       # React 19 + React Aria Components + Vite (bun)
     edge/           # edge workers: global is MCP-only, swecov also serves the SPA
     stewards/
-      global/       # steward.json only (full universe)
-      swecov/       # steward.json (compiled holdings artifact)
+      global/       # steward.json + logo.svg only (full universe)
+      swecov/       # steward.json + logo.svg (compiled holdings artifact)
 ```
 
 Dependency graph (acyclic):

@@ -1560,6 +1560,51 @@
         }
       }
     },
+    "/api/steward/logo.svg": {
+      "get": {
+        "description": "The steward's logo: the compact top bar's mark and the SPA's favicon.",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The raw bytes",
+            "content": {
+              "image/svg+xml": {}
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/values/{ref}": {
       "get": {
         "description": "A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or name, case-insensitive (a slug only where it is also the name).",
