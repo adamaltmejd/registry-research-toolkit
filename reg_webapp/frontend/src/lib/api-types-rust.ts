@@ -1274,8 +1274,8 @@ export interface components {
             register_variant: string;
         };
         /**
-         * @description `Source.period`: one segment, or a sorted,
-         *     disjoint list of them (an interrupted series).
+         * @description `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
+         *     series).
          */
         ProjectSourcePeriod: components["schemas"]["ProjectPeriodSegment"][] | components["schemas"]["ProjectPeriodSegment"];
         /** @description The optional study window, in plain int years. */

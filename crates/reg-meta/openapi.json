@@ -4356,7 +4356,7 @@
             "$ref": "#/components/schemas/ProjectPeriodSegment"
           }
         ],
-        "description": "`Source.period`: one segment, or a sorted,\ndisjoint list of them (an interrupted series)."
+        "description": "`Source.period`: one segment, or a sorted, disjoint list of them (an interrupted\nseries)."
       },
       "ProjectStudyWindow": {
         "type": "object",
