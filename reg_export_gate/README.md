@@ -45,10 +45,10 @@ The gate needs R 4.2 or newer, `arrow` 9.0.0 or newer and `jsonlite`, plus SHA-2
 `tools::sha256sum` on R 4.5 or newer, else the `digest` package. Each call of
 `export_gate()` first installs whichever of these is missing or too old with
 `install.packages()`, into R's default library (`.libPaths()[1]`) from the mirror R is
-already set up with on MONA. It installs only when the default library is writable and
-a CRAN mirror is configured; otherwise it refuses, naming the package, and you install
-it yourself. Sourcing the file installs nothing. On a batch server that
-lacks your packages, the first run installs them and takes longer.
+already set up with on MONA. It installs only when the default library is writable and a
+CRAN mirror is configured; otherwise it refuses, naming the package, and you install it
+yourself. Sourcing the file installs nothing. On a batch server that lacks your
+packages, the first run installs them and takes longer.
 
 If an install fails, the gate refuses `setup` with the package's rule: `arrow_missing`,
 `arrow_too_old`, `jsonlite_missing` or `sha256_missing` (for `digest`); the console

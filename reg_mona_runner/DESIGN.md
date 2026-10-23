@@ -16,12 +16,12 @@ file that gets uploaded with the orders. Run steps are in [README.md](README.md)
   of the three is missing, with plain `install.packages(pkg)` into R's default library
   (`.libPaths()[1]`); it never adds a library path, and installs only when that library
   is writable and a CRAN mirror is set (otherwise `install.packages` would prompt for a
-  personal library or a mirror). One still missing after that ends
-  the run with exit code 2 and a console line naming the package, before any order is
-  read; there is no per-order `error_log.csv` for it, since no order ran. The install
-  runs when the script runs, which for this script is when it is sourced: sourcing it is
-  running it. The export gate carries the same helper (`reg_export_gate/DESIGN.md`, "The
-  R file"), since each file is uploaded alone.
+  personal library or a mirror). One still missing after that ends the run with exit
+  code 2 and a console line naming the package, before any order is read; there is no
+  per-order `error_log.csv` for it, since no order ran. The install runs when the script
+  runs, which for this script is when it is sourced: sourcing it is running it. The
+  export gate carries the same helper (`reg_export_gate/DESIGN.md`, "The R file"), since
+  each file is uploaded alone.
 - **One configuration block.** The steward id, the export root and the connection (DSN
   `P1105`) sit at the top of the script, so another steward copies the file and edits
   that block. Two environment variables (`SWECOV_EXTRACT_BASE` and
