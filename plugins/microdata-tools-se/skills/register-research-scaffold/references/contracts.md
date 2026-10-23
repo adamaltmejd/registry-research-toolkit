@@ -70,8 +70,9 @@ restricted compute without model access, applies the chosen toolkit schema and p
 and records its version, the schema's and policy's identity and the checked files'
 hashes in `receipt.json`. A missing schema or policy, an undeclared or malformed file, a
 gate error, a failed check or an incomplete analysis blocks publication; checking
-partial outputs must never turn a failed run into a releasable one. The checked bytes
-are frozen; any change requires rechecking. The gate's detailed report stays in
+partial outputs must never turn a failed run into a releasable one. The gate rewrites
+the checked tables itself and hashes what it wrote, so only checked data is exported;
+any change to the staged files requires rechecking. The gate's detailed report stays in
 `.diagnostics/` on the data side; only the files and the receipt are exported, and a
 refusal tells the agent only its category code. Exercise the same gate locally on mocks,
 with one rejection case in the small fixture suite. Schemas and policies are toolkit
