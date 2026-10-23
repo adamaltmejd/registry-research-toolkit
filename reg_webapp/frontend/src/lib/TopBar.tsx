@@ -50,18 +50,6 @@ function isOtherTextEntry(
  * banner are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
-/** The initials of the brand's capitalised words, at most two: "Swedish
- * Register Research Catalog" → "SR". */
-function monogram(name: string): string {
-  const initials = name
-    .split(/\s+/)
-    .filter((word) => /^\p{Lu}/u.test(word))
-    .map((word) => word.charAt(0));
-  return (initials.length > 0 ? initials : [name.charAt(0).toUpperCase()])
-    .slice(0, 2)
-    .join("");
-}
-
 export function TopBar({ steward, regMetaVersion, bounds }: Props) {
   const brand = steward?.long_name ?? "Registry Research Toolkit";
   const ref = useRef<HTMLElement>(null);
@@ -141,11 +129,17 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
       <div className={styles.inner}>
         <a href="/" className={styles.brand}>
           <span className={styles.brandName}>{brand}</span>
-          {/* Set in type, like the name (the brand has no logo): shown only
-              where the full name would push the banner off the row. */}
-          <span className={styles.brandMark} aria-hidden="true">
-            {monogram(brand)}
-          </span>
+          {/* The steward's logo (`stewards/<catalog>/logo.svg`, also the
+              favicon): shown only where the full name would push the banner
+              off the row. Sized here so the bar's measured height does not
+              jump when it loads. */}
+          <img
+            className={styles.brandMark}
+            src="/api/steward/logo.svg"
+            alt=""
+            width={28}
+            height={28}
+          />
         </a>
         {/* Text here filters both browse columns in place, never the open
           page; Escape, here or anywhere on the page, clears it and gives back

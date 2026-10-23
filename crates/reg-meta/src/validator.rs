@@ -69,8 +69,13 @@ impl Validators {
             files.finalize().to_vec()
         };
         let steward = serde_json::to_string(&server.steward).expect("Steward serializes");
+        // The logo is not in the steward's JSON but is a response of its own.
+        let logo = server
+            .steward
+            .as_ref()
+            .map_or(&[][..], |s| s.logo.as_slice());
         let mut token = Sha256::new();
-        for part in [content.as_slice(), steward.as_bytes()] {
+        for part in [content.as_slice(), steward.as_bytes(), logo] {
             token.update((part.len() as u64).to_le_bytes());
             token.update(part);
         }

@@ -41,9 +41,8 @@
   box-shadow: var(--focus-ring);
 }
 
-/* The compact brand: the name's initials, set in the brand's own type (the
-   brand has no logo), for the band where the full name would push the banner
-   off the row. */
+/* The compact brand: the steward's logo, for the band where the full name
+   would push the banner off the row. */
 .brandMark {
   display: none;
 }
@@ -73,7 +72,7 @@
     border: 0;
   }
   .brandMark {
-    display: inline;
+    display: block;
   }
 }
 

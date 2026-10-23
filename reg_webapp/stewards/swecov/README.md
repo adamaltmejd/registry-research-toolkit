@@ -1,12 +1,12 @@
 # SWECOV steward configuration
 
-`steward.json` supplies identity, branding, the landing page's description
-(`description`) and the order hand-off text (`order_instructions`) for the SWECOV
-deployment (JSON, so no runtime parses TOML). The webapp serves a compiled steward
-artifact whose manifest names `swecov`; boot checks that identity against `--catalog`
-(`reg-meta serve`). It does not load an inventory or reconstruct holdings at runtime.
-See `reg_webapp/DESIGN.md` → *Compiled artifact identity and read scope* and
-`reg_meta_build/DESIGN.md` for the compiler contract.
+`steward.json` supplies identity, branding (with `logo.svg`, the swecov.se brand icon
+and favicon), the landing page's description (`description`) and the order hand-off text
+(`order_instructions`) for the SWECOV deployment (JSON, so no runtime parses TOML). The
+webapp serves a compiled steward artifact whose manifest names `swecov`; boot checks
+that identity against `--catalog` (`reg-meta serve`). It does not load an inventory or
+reconstruct holdings at runtime. See `reg_webapp/DESIGN.md` → *Compiled artifact
+identity and read scope* and `reg_meta_build/DESIGN.md` for the compiler contract.
 
 The steward spec (`scope.toml` and `series/*.toml`, schema in
 `reg_meta_build/src/reg_meta_build/steward_spec.py`) is the only steward-authored input:

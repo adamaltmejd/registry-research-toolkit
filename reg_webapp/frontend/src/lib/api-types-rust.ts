@@ -415,6 +415,56 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/steward/logo.svg": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The steward's logo: the compact top bar's mark and the SPA's favicon. */
+        get: {
+            parameters: {
+                query?: {
+                    scope?: components["schemas"]["Scope"];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The raw bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "image/svg+xml": unknown;
+                    };
+                };
+                /** @description An error in `api/errors.toml` */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: components["schemas"]["Error"];
+                            meta: components["schemas"]["Meta"];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/values/{ref}": {
         parameters: {
             query?: never;

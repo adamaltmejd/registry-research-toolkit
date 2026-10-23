@@ -68,18 +68,23 @@ pub struct Steward {
     /// beside the downloads; absent when the deployment takes no orders.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub order_instructions: Option<String>,
+    /// The steward's logo, `stewards/<catalog>/logo.svg`: the compact top bar's mark
+    /// and the SPA's favicon, served as its own download, not in the JSON.
+    #[serde(skip)]
+    pub logo: Vec<u8>,
 }
 
 impl Steward {
-    /// Load the branding of catalog `name` from `stewards/<name>/steward.json`.
+    /// Load the branding of catalog `name` from `stewards/<name>/steward.json` and
+    /// its logo from `stewards/<name>/logo.svg`.
     ///
     /// # Errors
     ///
-    /// `invalid_parameter` (`stewards`) when the file is missing, malformed or names
-    /// another id.
+    /// `invalid_parameter` (`stewards`) when `steward.json` is missing, malformed or
+    /// names another id, or the logo is missing or empty.
     pub fn load(stewards: &Path, name: &str) -> Result<Self, Error> {
         let path = stewards.join(name).join("steward.json");
-        let steward: Self = std::fs::read(&path)
+        let mut steward: Self = std::fs::read(&path)
             .map_err(|err| err.to_string())
             .and_then(|bytes| serde_json::from_slice(&bytes).map_err(|err| err.to_string()))
             .map_err(|err| {
@@ -99,6 +104,23 @@ impl Steward {
                 vec!["stewards".into()],
             ));
         }
+        let logo = stewards.join(name).join("logo.svg");
+        steward.logo = std::fs::read(&logo)
+            .map_err(|err| err.to_string())
+            .and_then(|bytes| {
+                if bytes.is_empty() {
+                    Err("the file is empty".to_owned())
+                } else {
+                    Ok(bytes)
+                }
+            })
+            .map_err(|err| {
+                Error::new(
+                    Code::InvalidParameter,
+                    format!("No steward logo for {name:?} at {}: {err}", logo.display()),
+                    vec!["stewards".into()],
+                )
+            })?;
         Ok(steward)
     }
 }
@@ -293,7 +315,10 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
 
 /// Every registered download.
 pub fn downloads() -> impl Iterator<Item = &'static Download> {
-    slice_3b::DOWNLOADS.iter().chain(slice_3e::DOWNLOADS)
+    slice_3a::DOWNLOADS
+        .iter()
+        .chain(slice_3b::DOWNLOADS)
+        .chain(slice_3e::DOWNLOADS)
 }
 
 /// Every MCP tool with its operations, in registration order.

@@ -6,7 +6,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::search::{RegisterFacets, SearchPage, TYPES, facets, search};
-use super::{Cache, Operation, Param, Params, Server, Steward, Type, component};
+use super::{Cache, Download, Operation, Param, Params, Raw, Server, Steward, Type, component};
 use crate::held::{self, Narrow};
 use crate::{Code, Error, Scope};
 
@@ -63,6 +63,15 @@ pub const OPERATIONS: &[Operation] = &[
     },
 ];
 
+pub const DOWNLOADS: &[Download] = &[Download {
+    path: "/api/steward/logo.svg",
+    description: "The steward's logo: the compact top bar's mark and the SPA's favicon.",
+    media_type: "image/svg+xml",
+    params: &[Param::optional("scope", Type::Scope)],
+    cache: Cache::Day,
+    run: logo,
+}];
+
 /// `shape.Context`: branding, artifact identity and headline counts for the SPA.
 #[derive(Serialize, ToSchema)]
 pub struct Context {
@@ -88,6 +97,28 @@ pub struct Sizes {
     providers: i64,
     registers: i64,
     variables: i64,
+}
+
+/// The steward's `logo.svg` bytes. Opened directly, an SVG is a document that can
+/// run script, so it is served sandboxed.
+fn logo(server: &Server, _: Scope, _: &Params) -> Result<Raw, Error> {
+    let steward = server.steward.as_ref().ok_or_else(|| {
+        Error::new(
+            Code::NotFound,
+            "This server has no steward, so no logo.".to_owned(),
+            vec!["logo".into()],
+        )
+    })?;
+    Ok(Raw {
+        bytes: steward.logo.clone(),
+        headers: vec![
+            ("x-content-type-options", "nosniff".to_owned()),
+            (
+                "content-security-policy",
+                "default-src 'none'; style-src 'unsafe-inline'; sandbox".to_owned(),
+            ),
+        ],
+    })
 }
 
 fn context(server: &Server, scope: Scope, _: &Params) -> Result<Value, Error> {
