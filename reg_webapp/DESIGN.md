@@ -1421,13 +1421,13 @@ offer only removing a source, removing one column from one source, that period, 
 project's own name, and the New/Open/Download project_data.json/Download order actions.
 The columns are not listed again under the lanes (maintainer ruling 2026-10-23); each
 lane carries a quiet Remove that takes that binding out of that source alone, after a
-confirm. It is the only way out for a column whose FQID the catalog does not know (its
-variable page has nothing to untick), and the only per-source one where two sources of
-one variant family carry the same column (unticking on the variable page removes it from
-every source of the family) — validation runs automatically on every edit, with no
-separate Validate action. A wrong variable, variant or representation gets fixed by
-picking again from the catalog subject page, not by editing the cart row; there is no
-general in-cart editing UI. A blank name closes Download order
+confirm. It is the only per-column way out for a column whose FQID the catalog does not
+know (its variable page has nothing to untick), and the only per-source one where two
+sources of one variant family carry the same column (unticking on the variable page
+removes it from every source of the family) — validation runs automatically on every
+edit, with no separate Validate action. A wrong variable, variant or representation gets
+fixed by picking again from the catalog subject page, not by editing the cart row; there
+is no general in-cart editing UI. A blank name closes Download order
 (`projectStore.nameBlocked`), with a visible reason under the toolbar that points to the
 name field: the server refuses an unnamed project's order as `project_unnamed`, and the
 SPA gate only spares the round trip.
