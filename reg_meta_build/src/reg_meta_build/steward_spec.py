@@ -2,7 +2,7 @@
 
 ```
 stewards/<id>/
-  steward.json            branding, read by the Rust runtime
+  steward.json, logo.svg  branding, read by the Rust runtime
   scope.toml              census guard, table dispositions, census-holding
                           routing, flavor register definitions
   series/<series>.toml    one delivery series: its register, its tables and

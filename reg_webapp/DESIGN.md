@@ -35,14 +35,21 @@ reg_webapp/
   frontend/               # React 19 + React Aria Components + Vite (bun)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
-    global/steward.json    # identity only; no catalog → full universe
-    swecov/                # steward.json (branding) + the steward spec the builder
-                           # reads (scope.toml, series/); serve reads steward.json only
+    global/                # steward.json + logo.svg; no catalog → full universe
+    swecov/                # steward.json + logo.svg (branding) + the steward spec the
+                           # builder reads (scope.toml, series/); serve reads the
+                           # branding only
   DESIGN.md
 ```
 
 `stewards/` is deployment data, not server source: `reg-meta serve --stewards DIR` reads
-`DIR/<catalog>/steward.json` and nothing else.
+`DIR/<catalog>/steward.json` and `DIR/<catalog>/logo.svg`, and nothing else.
+
+Every steward supplies `logo.svg`; boot refuses without it. It is served as
+`GET /api/steward/logo.svg` (sandboxed, so opening it runs no script) and is both the
+favicon and the top bar's mark where the full name does not fit (frontend `DESIGN.md` →
+Layout). The global logo is the toolkit's own: three spans in `accent` (#1820,
+maintainer ruling 2026-10-23).
 
 `steward.json` holds `id`, `name`, `long_name`, an optional `description` (one or two
 plain sentences on what the deployment is for, the landing page's line under the name;
@@ -547,9 +554,9 @@ Boot opens the admitted reg_meta artifact and checks its manifest: schema compat
 publishability, completeness, artifact kind, and generation identity. A catalog artifact
 requires the `global` deployment; a steward artifact requires its exact manifest
 steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Only
-`stewards/<id>/steward.json` is loaded for branding. Runtime inventory loading,
-reconciliation, drift warnings, the in-memory index, and the runtime release gate are
-removed; builder publication validation owns those invariants.
+`stewards/<id>/steward.json` and `logo.svg` are loaded for branding. Runtime inventory
+loading, reconciliation, drift warnings, the in-memory index, and the runtime release
+gate are removed; builder publication validation owns those invariants.
 
 The Rust server's reads (the catalog pages' `show` and facets, `context`, `search`)
 accept `?scope=holdings|reference`. Catalog artifacts default to reference and reject

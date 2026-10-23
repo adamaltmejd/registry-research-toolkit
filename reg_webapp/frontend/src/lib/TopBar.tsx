@@ -45,12 +45,14 @@ function isOtherTextEntry(
   return target instanceof HTMLTextAreaElement || target.isContentEditable;
 }
 
-/** The top bar (DESIGN.md → Layout): the brand (the deployment's name), the
- * one search bar and the project banner. There are no "Search" or "Project" nav items; the bar and the
- * banner are those. It sticks to the top of the page, and publishes its height
+/** The top bar (DESIGN.md → Layout): the brand (the deployment's name, or its
+ * logo where the name does not fit), the one search bar and the project
+ * banner. There are no "Search" or "Project" nav items; the bar and the banner
+ * are those. It sticks to the top of the page, and publishes its height
  * as `--top-bar-height` so the browse columns can fill the viewport below it (the
  * bar wraps, so its height is measured, not fixed). */
 export function TopBar({ steward, regMetaVersion, bounds }: Props) {
+  const brand = steward?.long_name ?? "Registry Research Toolkit";
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
@@ -127,7 +129,18 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
           over the detail pane's edge instead of the screen's. */}
       <div className={styles.inner}>
         <a href="/" className={styles.brand}>
-          {steward?.long_name ?? "Registry Research Toolkit"}
+          <span className={styles.brandName}>{brand}</span>
+          {/* The steward's logo (`stewards/<catalog>/logo.svg`, also the
+              favicon): shown only where the full name would push the banner
+              off the row. Sized here so the bar's measured height does not
+              jump when it loads. */}
+          <img
+            className={styles.brandMark}
+            src="/api/steward/logo.svg"
+            alt=""
+            width={28}
+            height={28}
+          />
         </a>
         {/* Text here filters both browse columns in place, never the open
           page; Escape, here or anywhere on the page, clears it and gives back

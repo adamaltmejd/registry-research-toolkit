@@ -240,6 +240,12 @@ errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "scop
 note = "A register's related documents; the JSON metadata for the document download route."
 
 [[download]]
+route = "GET /api/steward/logo.svg"
+media_type = "image/svg+xml"
+operation = "context"
+note = "The steward's `logo.svg` (`reg_webapp/stewards/<catalog>/`): the compact top bar's mark and the SPA's favicon. Served sandboxed."
+
+[[download]]
 route = "POST /api/project/order/manifest"
 media_type = "application/json"
 operation = "order"
