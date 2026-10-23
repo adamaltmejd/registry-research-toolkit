@@ -523,14 +523,13 @@ Per binding, in declaration order, over its source's period
    available inside this window". A dated period reaches the source variant's succession
    family (#1840, [reg-core/DESIGN.md](reg-core/DESIGN.md)): the `variant_replaced_by`
    component `show` reports as `variant_family`, or the variant alone. The request is
-   split at member boundaries and each day goes to one member: the member a steward
-   holds it under (a dated table mapping a column under that variant) and whose states
-   deliver it, else the member whose states deliver it, else the named variant, where
-   the clip removes it, so no variant is invented. The build guarantees a family is a
-   chain whose members share no day by either measure (`validate_built_db`), so the
-   split needs no tie-break. A day no delivering member holds keeps its catalog member,
-   so it blocks as a coverage gap whichever member the source names; a holding under a
-   member that does not deliver the day never takes it (conformance
+   split at member boundaries and each day goes to one member: the member whose states
+   deliver it, else the named variant, where the clip removes it, so no variant is
+   invented. The build guarantees a family is a chain whose members share no delivered
+   day, nor a day a steward holds under them (`validate_built_db`), so the split needs
+   no tie-break and holdings never decide it. A day the delivering member holds no table
+   for stays with it and blocks as a coverage gap whichever member the source names; a
+   holding under a member that does not deliver the day never takes it (conformance
    `order/variant-family-held-elsewhere`). `_default` resolves the named variant
    exactly. Each binding is then resolved once over the members' shares and clipped to
    the union of its states there, so a column first delivered in 2019 under a 2018–2020
