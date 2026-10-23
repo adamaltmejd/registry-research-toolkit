@@ -1,0 +1,87 @@
+{
+  "description": "A renamed column is one missing and one extra column; the extra one is located by its position, never by its name.",
+  "schema": "../../../schemas/trial.schema.json",
+  "policy": "../../../schemas/trial.policy.json",
+  "candidate": {
+    "persons_by_year_group.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2019,
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "2019-2020 cohort",
+            "Stockholm",
+            "2019-2020 cohort"
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            5,
+            120,
+            null,
+            37
+          ]
+        }
+      ]
+    },
+    "summary_by_year.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2020
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int32",
+          "values": [
+            125,
+            null
+          ]
+        },
+        {
+          "name": "avg",
+          "type": "double",
+          "values": [
+            312.5,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "structure",
+    "findings": [
+      {
+        "file": "summary_by_year.parquet",
+        "column": "mean_value",
+        "position": null,
+        "rule": "missing_column"
+      },
+      {
+        "file": "summary_by_year.parquet",
+        "column": null,
+        "position": 3,
+        "rule": "extra_column"
+      }
+    ]
+  }
+}

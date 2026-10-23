@@ -6,11 +6,10 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release, flows, frontend and runner; `lint` and
-`crates` are g0's static checks and Rust part, for CI's `lint` and `rust` jobs; `regen`
-and `g1` run only when named. CI calls `lint`, `crates`, `rust`, `release`, `frontend`
-and `runner`;
-`flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
+first failure. `all` runs g0, rust, release, flows, frontend, runner and export_gate;
+`lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
+jobs; `regen` and `g1` run only when named. CI calls `lint`, `crates`, `rust`,
+`release`, `frontend`, `runner` and `export_gate`; `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
 of the workspace build.
 """
 
@@ -42,9 +41,9 @@ SERVER_CMD = (
     " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
-ALL = ("g0", "rust", "release", "flows", "frontend", "runner")
-# The R formatter and linter `runner` checks reg_mona_runner/ with; CI's `runner` job
-# installs these releases (bump both).
+ALL = ("g0", "rust", "release", "flows", "frontend", "runner", "export_gate")
+# The R formatter and linter `runner` and `export_gate` check their packages with; CI's
+# `runner` and `export-gate` jobs install these releases (bump all three).
 AIR = "0.12.0"
 JARL = "0.7.1"
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
@@ -149,23 +148,33 @@ def frontend() -> None:
     run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
 
 
-def runner() -> None:
-    # The MONA extract runner (reg_mona_runner/): air and jarl at their pins, then its
-    # testthat suite. The SQL Server cases run only where SWECOV_TEST_CONNECTION is
-    # set (CI's `runner` job); elsewhere they skip.
+def r_package(package: str) -> None:
+    """air and jarl at their pins over an R package, then its testthat suite."""
     for tool, pin in (("air", AIR), ("jarl", JARL)):
         version = run([tool, "--version"], stdout=subprocess.PIPE, text=True).stdout
         if version.split()[-1] != pin:
             sys.exit(f"gate: {tool} {pin} is pinned; found {version.strip()}")
-    run("air format --check reg_mona_runner")
-    run("jarl check reg_mona_runner")
+    run(f"air format --check {package}")
+    run(f"jarl check {package}")
     run(
         [
             "Rscript",
             "-e",
-            'testthat::test_dir("reg_mona_runner/tests/testthat", stop_on_failure = TRUE)',
+            f'testthat::test_dir("{package}/tests/testthat", stop_on_failure = TRUE)',
         ]
     )
+
+
+def runner() -> None:
+    # The MONA extract runner. The SQL Server cases run only where
+    # SWECOV_TEST_CONNECTION is set (CI's `runner` job); elsewhere they skip.
+    r_package("reg_mona_runner")
+
+
+def export_gate() -> None:
+    # The export gate's MONA check (reg_export_gate/): its case corpus, which needs
+    # R with jsonlite, arrow and testthat.
+    r_package("reg_export_gate")
 
 
 def regen() -> None:
@@ -208,7 +217,19 @@ def g1() -> None:
 
 STEPS = {
     f.__name__: f
-    for f in (lint, g0, crates, rust, release, flows, frontend, runner, regen, g1)
+    for f in (
+        lint,
+        g0,
+        crates,
+        rust,
+        release,
+        flows,
+        frontend,
+        runner,
+        export_gate,
+        regen,
+        g1,
+    )
 }
 
 
