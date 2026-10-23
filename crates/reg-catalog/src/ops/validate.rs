@@ -109,6 +109,14 @@ struct Availability<'a> {
     window: Option<&'a Interval>,
 }
 
+/// What a binding does inside the study window: the days a period widened into
+/// them would order, and the days it would block on.
+#[derive(Default)]
+struct WindowReach {
+    served: Vec<Interval>,
+    blocking: Vec<Interval>,
+}
+
 struct Semantic<'a> {
     conn: &'a Connection,
     steward: bool,
@@ -152,19 +160,24 @@ impl Semantic<'_> {
         let window = window
             .and_then(StudyWindow::interval)
             .filter(|_| requested.is_some());
-        let mut delivered = Vec::new();
+        let (mut served, mut blocking) = (Vec::new(), Vec::new());
         for (i, binding) in source.bindings.iter().enumerate() {
             let base = format!("{base}/bindings/{i}");
             let at = Availability {
                 requested: requested.as_deref(),
                 window: window.as_ref(),
             };
-            delivered.extend(self.binding(&base, source, binding, variant_ok, at)?);
+            let reach = self.binding(&base, source, binding, variant_ok, at)?;
+            served.extend(reach.served);
+            blocking.extend(reach.blocking);
         }
         let (Some(window), Some(requested)) = (window, requested) else {
             return Ok(());
         };
-        let missed = gaps(&merge(delivered), requested.clone());
+        // A day counts only where widening would order it: some binding serves it
+        // and none would block on it.
+        let delivered = gaps(&merge(served), blocking);
+        let missed = gaps(&delivered, requested.clone());
         if !missed.is_empty() {
             self.push(
                 IssueLevel::Warning,
@@ -217,8 +230,8 @@ impl Semantic<'_> {
         Ok(false)
     }
 
-    /// Resolve one binding and report its issues; the days it delivers inside the
-    /// study window, none without a window or a resolved variant.
+    /// Resolve one binding and report its issues; what it does inside the study
+    /// window, nothing without a window or a resolved variant.
     fn binding(
         &mut self,
         base: &str,
@@ -226,7 +239,7 @@ impl Semantic<'_> {
         binding: &Binding,
         variant_ok: bool,
         at: Availability<'_>,
-    ) -> Result<Vec<Interval>, Error> {
+    ) -> Result<WindowReach, Error> {
         let Availability { requested, window } = at;
         let path = format!("{base}/variable");
         let Ok(Fqid::Variable {
@@ -240,7 +253,7 @@ impl Semantic<'_> {
                 quote(&binding.variable)
             );
             self.push(IssueLevel::Error, "fqid_unresolved", path, message);
-            return Ok(Vec::new());
+            return Ok(WindowReach::default());
         };
         let slugs = [provider, register, variable];
         // A direct hit only: a replaced variable's successor is the
@@ -252,7 +265,7 @@ impl Semantic<'_> {
             );
             self.push(IssueLevel::Error, "fqid_unresolved", path, message);
             self.value_set(base, binding)?;
-            return Ok(Vec::new());
+            return Ok(WindowReach::default());
         };
         self.hints(&path, binding, id, &slugs, requested)?;
         // The structural validator matches the binding's register to the source's.
@@ -262,40 +275,68 @@ impl Semantic<'_> {
         } else {
             None
         };
-        let mut delivered = Vec::new();
+        let mut reach = WindowReach::default();
         if let Some(variant) = variant {
             let columns = self.period(&path, source, binding, id, variant, requested)?;
             if self.steward {
                 self.admission(&path, source, binding, id, variant, columns.as_ref())?;
             }
             if let Some(window) = window {
-                // The same pass the order clips by, asked for the whole window, and on
-                // a steward artifact only the days it holds: a period widened to these
-                // days is ordered for exactly them.
                 // simplify: a second resolution per binding on every validate with a
                 // window; fold it into the period's resolution if validate latency on
                 // the live catalog grows noticeably.
-                let pin = binding.representation.as_deref();
-                let window = std::slice::from_ref(window);
-                let slices = resolve_binding(
-                    self.conn,
-                    source,
-                    binding,
-                    pin,
-                    id,
-                    Some(variant),
-                    Some(window),
-                )?
-                .slices;
-                if self.steward {
-                    delivered.extend(held_days(self.conn, id, variant, &slices)?);
-                } else {
-                    delivered.extend(slices.into_iter().map(|(lo, hi, _)| (lo, hi)));
-                }
+                reach = self.window_reach(source, binding, id, variant, window)?;
             }
         }
         self.value_set(base, binding)?;
-        Ok(delivered)
+        Ok(reach)
+    }
+
+    /// The order's pass asked for the whole window: the days a period widened into
+    /// them would serve (on a steward artifact, only the held ones) and the days it
+    /// would block on (available but not held, or a finding such as co-existing
+    /// representations).
+    fn window_reach(
+        &self,
+        source: &Source,
+        binding: &Binding,
+        id: i64,
+        variant: i64,
+        window: &Interval,
+    ) -> Result<WindowReach, Error> {
+        let pin = binding.representation.as_deref();
+        let window = std::slice::from_ref(window);
+        let resolution = resolve_binding(
+            self.conn,
+            source,
+            binding,
+            pin,
+            id,
+            Some(variant),
+            Some(window),
+        )?;
+        let available: Vec<Interval> = resolution
+            .slices
+            .iter()
+            .map(|(lo, hi, _)| (lo.clone(), hi.clone()))
+            .collect();
+        if resolution.finding.is_some() {
+            return Ok(WindowReach {
+                served: Vec::new(),
+                blocking: available,
+            });
+        }
+        if !self.steward {
+            return Ok(WindowReach {
+                served: available,
+                blocking: Vec::new(),
+            });
+        }
+        let held = held_days(self.conn, id, variant, &resolution.slices)?;
+        Ok(WindowReach {
+            blocking: gaps(&merge(available), held.clone()),
+            served: held,
+        })
     }
 
     /// The non-blocking hints: a deprecated variable, a sensitive one, and each

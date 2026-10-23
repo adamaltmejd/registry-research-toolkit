@@ -7,8 +7,15 @@
         {
           "code": "source_period_narrower_than_available",
           "level": "warning",
-          "message": "source 'Narrower' orders 2018, narrower than its columns deliver in the study window 2017..2021: 2019 also delivered",
+          "message": "source 'Both' orders 2018, narrower than its columns deliver in the study window 2017..2021: 2019 also delivered",
           "path": "/sources/0/period",
+          "successor_fqid": null
+        },
+        {
+          "code": "source_period_narrower_than_available",
+          "level": "warning",
+          "message": "source 'Value' orders 2018, narrower than its columns deliver in the study window 2017..2021: 2019 also delivered",
+          "path": "/sources/2/period",
           "successor_fqid": null
         }
       ]

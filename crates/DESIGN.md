@@ -778,10 +778,14 @@ Per source variant and binding:
   `binding_state_drifts_within_period` (info) reports a sequential state transition
   inside the request.
 - `source_period_narrower_than_available` (warning, at `/sources/<i>/period`) is the one
-  period finding, the reverse of a clip: the days at least one of the source's bindings
-  delivers inside the study window (the same pass asked for the whole window; on a
-  steward artifact, only the days a holding serves) minus the source period's days, when
-  not empty. Day grain, so a monthly or half-year period is well defined. No window, a
+  period finding, the reverse of a clip. It names the days inside the study window a
+  period widened into them would order, minus the source period's days, when not empty.
+  A day counts when some binding serves it (the same pass asked for the whole window; on
+  a steward artifact, only the days a holding serves) and no binding would block on it:
+  available but not held, or a finding such as co-existing representations. So following
+  the warning never blocks the order on availability. A binding whose own period misses
+  all its data still counts, so its `period_outside_state_validity` comes with where the
+  data is. Day grain, so a monthly or half-year period is well defined. No window, a
   `"_default"` source or a source with no resolved binding warns nothing. A list period
   narrower than the data warns on purpose, as do per-year panel members of one variant.
 - `deprecated_traversal` (info) and `variable_replaced` (info, with `successor_fqid`

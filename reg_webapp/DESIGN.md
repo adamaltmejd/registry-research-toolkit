@@ -1753,7 +1753,7 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   `?period` deviation keeps the period picker's existing hint.
 - **A source narrower than its data warns once, from the server (#1836).** The SPA
   computes no coverage of its own: `validate`'s `source_period_narrower_than_available`
-  names the years in the window the source's columns deliver and its period leaves out,
+  names the days in the window the source's columns deliver and its period leaves out,
   located on the source like any finding. A period narrower than the window where the
   data is too says nothing.
 - **"Apply window overlap" is the one rewrite.** It reads each dated source's register
