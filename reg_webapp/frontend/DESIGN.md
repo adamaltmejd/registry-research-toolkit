@@ -429,8 +429,9 @@ Time is the axis every relation is drawn on.
   compose the same classes (`ui/WindowBand.module.css`), and a new period selector does
   too. On a coverage row (the add window, a source period) the two thumbs never sit
   closer than 16 px: a short window on a long axis pushes their faces apart to that
-  distance, all of it inward at an end of the axis so both faces stay on the row, so a one-year window keeps both visible and grabbable, while the window's
-  years and its band stay where they are (maintainer ruling 2026-10-23).
+  distance, all of it inward at an end of the axis so both faces stay on the row, so a
+  one-year window keeps both visible and grabbable, while the window's years and its
+  band stay where they are (maintainer ruling 2026-10-23).
 - The **add window** is a variable page's band: the years the columns ticked there are
   added for (#1838). On a variable page the `Timeline`'s band is a selection, two thumbs
   on the coverage row bounded by the variable's availability. The thumbs move live while

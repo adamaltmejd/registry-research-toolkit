@@ -1425,9 +1425,9 @@ confirm. It is the only way out for a column whose FQID the catalog does not kno
 variable page has nothing to untick), and the only per-source one where two sources of
 one variant family carry the same column (unticking on the variable page removes it from
 every source of the family) — validation runs automatically on every edit, with no
-separate Validate action. A wrong variable, variant or representation gets
-fixed by picking again from the catalog subject page, not by editing the cart row; there
-is no general in-cart editing UI. A blank name closes Download order
+separate Validate action. A wrong variable, variant or representation gets fixed by
+picking again from the catalog subject page, not by editing the cart row; there is no
+general in-cart editing UI. A blank name closes Download order
 (`projectStore.nameBlocked`), with a visible reason under the toolbar that points to the
 name field: the server refuses an unnamed project's order as `project_unnamed`, and the
 SPA gate only spares the round trip.
