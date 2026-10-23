@@ -302,6 +302,8 @@ for (const [token, specValue] of SPEC) {
 const CROSS_FILE: Record<string, string> = {
   "--tree-item-level":
     "set inline by React Aria's Tree on each row, read by BrowseTree",
+  "--trigger-width":
+    "set inline by React Aria's Popover under a Select, read by ProjectEditor's format select",
   "--top-bar-height":
     "measured by TopBar onto :root, read by the shell's browse column",
   "--data-table-columns":
