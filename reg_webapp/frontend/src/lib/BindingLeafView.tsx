@@ -528,22 +528,20 @@ export function BindingLeafView({
             Year-independent delivery. An annual availability period does not
             apply.
           </p>
-          {pickerBands[0].rows.length > 0 && (
-            <RepresentationPicker
-              bands={pickerBands}
-              window={pickerWindow}
-              canAdd={seedReady}
-              committedRows={committedRows}
-              studyWindow={projectWindow}
-              focusKey={node.fqid}
-              graph={graph}
-              neighbours
-              vintageYear={vintageYear}
-              catalogYears={[windowMinYear, windowMaxYear]}
-              onApply={onApply}
-              onStageChange={onStageChange}
-            />
-          )}
+          <RepresentationPicker
+            bands={pickerBands}
+            window={pickerWindow}
+            canAdd={seedReady}
+            committedRows={committedRows}
+            studyWindow={projectWindow}
+            focusKey={node.fqid}
+            graph={graph}
+            neighbours
+            vintageYear={vintageYear}
+            catalogYears={[windowMinYear, windowMaxYear]}
+            onApply={onApply}
+            onStageChange={onStageChange}
+          />
         </>
       ) : (
         <VariableTimeline

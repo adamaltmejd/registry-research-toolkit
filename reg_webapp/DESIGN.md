@@ -901,13 +901,15 @@ kind:
   `RepresentationPicker.tsx` (filters, staging, the sticky footer). One shared staged
   diff footer labels the action by diff shape ("Add to project", "Remove from project",
   or "Apply changes"); the register list's add bar uses the same words. A committed
-  column whose source and the study window disagree is listed in words under the graph.
-  A **per-dimension filter strip** narrows a large multi-axis group to one axis value
-  (#908, `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in
-  `catalog.ts`); a dimension surfaces only when it discriminates (≥2 distinct values).
-  Filtering is a presentation lens: a hidden-but-selected row still commits, and the
-  footer signals this. OR within a dimension, AND across. The binding leaf uses the same
-  picker, with read-only neighbour lanes for variables a succession edge reaches.
+  column whose source and the study window disagree is listed in words under the graph;
+  on the variable page only one outside the window is, since the Timeline's ▲ row speaks
+  for differing years there (#1833). A **per-dimension filter strip** narrows a large
+  multi-axis group to one axis value (#908, `pickerFilterDimensions` / `pickerRowPasses`
+  / `PickerDimension` in `catalog.ts`); a dimension surfaces only when it discriminates
+  (≥2 distinct values). Filtering is a presentation lens: a hidden-but-selected row
+  still commits, and the footer signals this. OR within a dimension, AND across. The
+  binding leaf uses the same picker, with read-only neighbour lanes for variables a
+  succession edge reaches.
 
   The **sequential-rename collapse** (#902) is client-side and purely presentational:
 

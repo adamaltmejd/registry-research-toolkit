@@ -422,9 +422,11 @@ Time is the axis every relation is drawn on.
   differs, else the project window. A source period that differs from the project window
   within the variable's availability says so in a `warn` `StatusRow`, "▲ Differs from
   the project window", with a "Reset" ghost action; a period narrowed only by
-  availability does not. That row is the one place the difference is said: a column
-  already in the project does not repeat it (#1833). A register or group pane draws the
-  `Timeline` read-only.
+  availability does not. On the variable page that row is the only line about years that
+  differ: a column already in the project whose source years differ from the study
+  window says so in its tooltip and accessible name, not in a line under the graph
+  (#1833); one outside the window is still named there at `err`. A register or group
+  pane draws the `Timeline` read-only.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those

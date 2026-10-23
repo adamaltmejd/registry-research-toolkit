@@ -1,4 +1,5 @@
 import { type ReactNode, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import type { GroupAxisModel, RelationshipGraph } from "./api";
 import {
   type PickerDimension,
@@ -153,17 +154,22 @@ export function RepresentationPicker({
   });
 
   /** The add bar unmounts once nothing is staged: focus it held goes to the
-   * graph's first column rather than to the document body. */
-  function keepFocus(): void {
-    if (footerRef.current?.contains(document.activeElement)) {
-      pickerRef.current
-        ?.querySelector<HTMLInputElement>("input[type=checkbox]")
-        ?.focus();
-    }
+   * graph's first column rather than to the document body. Call it while the
+   * columns are enabled (not mid-apply), or the focus is refused. */
+  function keepFocus(held: boolean): void {
+    if (!held) return;
+    pickerRef.current
+      ?.querySelector<HTMLInputElement>(
+        "ol input[type=checkbox]:not(:disabled)",
+      )
+      ?.focus();
   }
 
+  const barHasFocus = () =>
+    footerRef.current?.contains(document.activeElement) ?? false;
+
   function stage(next: Staging): void {
-    if (next.adds.size + next.removes.size === 0) keepFocus();
+    if (next.adds.size + next.removes.size === 0) keepFocus(barHasFocus());
     setStaging(next);
     onStageChange?.(next.adds.size + next.removes.size > 0);
   }
@@ -211,6 +217,10 @@ export function RepresentationPicker({
     added: adds.size,
     removed: removes.size,
   });
+  const summaryText =
+    summary === ""
+      ? ""
+      : `${summary}${hidden > 0 ? ` (${hidden} hidden by the filters)` : ""}`;
   const canApply = adds.size + removes.size > 0 && (adds.size === 0 || canAdd);
   const applyLabel =
     adds.size > 0 && removes.size > 0
@@ -234,8 +244,13 @@ export function RepresentationPicker({
     setApplying(true);
     try {
       if (await onApply(payload)) {
-        keepFocus();
-        setStaging(EMPTY);
+        const held = barHasFocus();
+        // Commit first, so the columns are enabled again when focus moves.
+        flushSync(() => {
+          setApplying(false);
+          setStaging(EMPTY);
+        });
+        keepFocus(held);
       }
     } finally {
       setApplying(false);
@@ -243,8 +258,13 @@ export function RepresentationPicker({
   }
 
   return (
-    <section ref={pickerRef} className={styles.picker} aria-label="Columns">
-      {timeline?.head}
+    <section
+      ref={pickerRef}
+      className={styles.picker}
+      // Under the Timeline the card around it names the region.
+      aria-label={timeline ? undefined : "Columns"}
+    >
+      {timeline && <div className={styles.timelineHead}>{timeline.head}</div>}
       {dimensions.length > 0 && (
         <div className={styles.filters}>
           {dimensions.map((dim) => (
@@ -289,7 +309,7 @@ export function RepresentationPicker({
           onToggle={toggle}
         />
       )}
-      {graphModel.lanes.length === 0 && (
+      {graphModel.lanes.length === 0 && filtering && (
         <p className="muted">
           No column matches these filters.{" "}
           <Button variant="ghost" onPress={() => setFilters({})}>
@@ -311,13 +331,18 @@ export function RepresentationPicker({
           ))}
         </ul>
       )}
+      {/* One standing live region, so the first tick is announced; the bar
+          that shows the same words mounts with it. */}
+      <output className="visually-hidden" aria-live="polite">
+        {summaryText}
+      </output>
       {/* Only while something is staged, like the register's add bar
           (DESIGN.md → VariableRow); the graph says how to tick. */}
       {(summary !== "" || applying) && (
         <div ref={footerRef} className={styles.footer}>
-          <output className={styles.summary} aria-live="polite">
-            {`${summary}${hidden > 0 ? ` (${hidden} hidden by the filters)` : ""}`}
-          </output>
+          <span className={styles.summary} aria-hidden="true">
+            {summaryText}
+          </span>
           <div className={styles.actions}>
             <Button isInert={applying} onPress={() => stage(EMPTY)}>
               Clear selection

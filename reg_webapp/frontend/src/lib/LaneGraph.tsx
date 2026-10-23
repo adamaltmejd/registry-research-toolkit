@@ -507,9 +507,17 @@ function Span({
     at.label === "inside" &&
     at.segments.length === 1 &&
     labelWidth(`${span.name} ${span.years}`) <= at.width;
+  // An unnamed series (an interrupted delivery) carries its name once, on its
+  // widest part, so a one-year first delivery does not clip it.
+  const widest = at.segments.reduce(
+    (best, segment, i) => (segment.width > at.segments[best].width ? i : best),
+    0,
+  );
   const faces = at.segments.map((segment, i) => {
     const name =
-      at.label !== "inside" ? "" : (segment.name ?? (i === 0 ? span.name : ""));
+      at.label !== "inside"
+        ? ""
+        : (segment.name ?? (i === widest ? span.name : ""));
     return (
       <ColumnChip
         // Positional: the segments are rebuilt whole from the span.

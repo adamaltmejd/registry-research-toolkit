@@ -48,15 +48,13 @@ interface DrawingProps {
   covered: Years | null;
   /** The delivered years, or null to draw coverage as one bar. */
   years: readonly number[] | null;
-  /** The selection's slider, laid over the drawing (variable page). */
-  overlay?: ReactNode;
 }
 
 /** The drawing: the band, coverage as an ink bar cut by edition ticks, a gap
  * inside coverage as a hatch, the uncovered part of the band in `info-bg`,
  * then the axis. A year is a cell, [year, year + 1). Hidden from assistive
  * technology: the header and the legend say the same in words. */
-function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
+function Drawing({ axis, band, covered, years }: DrawingProps) {
   const cells = axis.to - axis.from + 1;
   const pct = (year: number) => ((year - axis.from) / cells) * 100;
   const place = (r: Years): CSSProperties => ({
@@ -162,7 +160,6 @@ function Drawing({ axis, band, covered, years, overlay }: DrawingProps) {
           />
         ))}
       </div>
-      {overlay}
       <div className={styles.axis} aria-hidden="true">
         {labels.map((l) => (
           <span
@@ -230,9 +227,22 @@ function Head({ id, label, covered, outside, action }: HeadProps) {
 function Legend({ band, gaps }: { band: string | null; gaps: boolean }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
-      {band && <li className={styles.legendBand}>{band}</li>}
-      <li className={styles.legendCoverage}>Delivered years</li>
-      {gaps && <li className={styles.legendGap}>Gap inside coverage</li>}
+      {band && (
+        <li>
+          <i className={styles.keyBand} />
+          {band}
+        </li>
+      )}
+      <li>
+        <i className={styles.keyCoverage} />
+        Delivered years
+      </li>
+      {gaps && (
+        <li>
+          <i className={styles.keyGap} />
+          Gap inside coverage
+        </li>
+      )}
     </ul>
   );
 }

@@ -144,28 +144,18 @@
   color: var(--text-muted);
   font-size: var(--text-micro);
 }
-.legend li::before {
-  content: "";
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: var(--space-1);
-  box-sizing: border-box;
-  vertical-align: -1px;
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
 }
-.legendBand::before {
-  border: 1px solid var(--accent);
-  background: var(--accent-bg);
+/* The swatches are the LaneGraph's, so both legends draw the same marks. */
+.keyBand {
+  composes: keyBand from "./LaneGraph.module.css";
 }
-.legendCoverage::before {
-  background: var(--text);
+.keyCoverage {
+  composes: keyCoverage from "./LaneGraph.module.css";
 }
-.legendGap::before {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--warn-hatch) 0,
-    var(--warn-hatch) 2px,
-    var(--surface) 2px,
-    var(--surface) 4px
-  );
+.keyGap {
+  composes: keyGap from "./LaneGraph.module.css";
 }
