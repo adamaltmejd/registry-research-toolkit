@@ -9,6 +9,9 @@ native_id = "7376555732108864140"
 native_id = "7376555732108864140.8956613898378564678"
 slug = "fhm-covidwgs"
 display_group = "CovidWGS"
+panel_entity_key = "p1105-lopnr-personnr"
+panel_time_key = "provdatum"
+panel_time_grain = "row"
 
 [variable]
 "7376555732108864140.P1105_LopNr_PersonNr" = "p1105-lopnr-personnr"

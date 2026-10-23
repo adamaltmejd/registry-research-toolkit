@@ -16,7 +16,7 @@ panel_time_grain = "delivery"
 native_id = "5352018376318353790.5596904919895902135"
 slug = "ekb-manad"
 display_group = "EKB_MANAD"
-panel_entity_key = "personnr"
+panel_entity_key = ["personnr", "lopnr-hushall-ar"]
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 

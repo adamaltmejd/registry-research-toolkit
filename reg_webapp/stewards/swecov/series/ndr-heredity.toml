@@ -8,4 +8,5 @@ edition = { from = 2007, to = 2024 }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-unmap = "Person join key of the family-history holding; ndr/nationella-diabetesregistret/personnr is orderable from NDR_children_2007 and NDR_adults_2010, which overlap this edition (#1170)."
+mappings = [{ register_variant = "ndr/nationella-diabetesregistret/_default", variable = "ndr/nationella-diabetesregistret/personnr", representation = "PersonNr", carried = true }]
+reason = "Carried row key (#1844): the person id, the variant's row key, so every file of this table carries it; NDR_children_2007, NDR_adults_2010_under_70 and NDR_adults_2010_over_70 serve the ordered cell, so the one-source-per-cell rule holds."

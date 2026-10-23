@@ -8,4 +8,5 @@ edition = { from = 2020, to = 2022 }
 
 [[column]]
 column = "lopnrSiri"
-unmap = "Stay join key of the SIR aspect table; the SIR lopnrsiri is orderable from SoS_R_SIR_VTF_KLEV4, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "sir/intensivvardsregistret/_default", variable = "sir/intensivvardsregistret/lopnrsiri", representation = "lopnrSiri", carried = true }]
+reason = "Carried row key (#1844): the ICU-stay id, part of the variant's row key, so every file of this table carries it; SoS_R_SIR_VTF_KLEV4 serves the ordered cell, so the one-source-per-cell rule holds."

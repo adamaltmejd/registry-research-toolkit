@@ -8,4 +8,5 @@ edition = { from = 1990, to = 2024 }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-unmap = "Person join key of an auxiliary birth-information holding; scb/rtb/personnr on scb/rtb/folkbokforda-personer is orderable from the RTB tables. Withheld to keep one physical cell per ordered coordinate; the three birth-information fields stay mapped (#1170)."
+mappings = [{ register_variant = "scb/rtb/folkbokforda-personer", variable = "scb/rtb/personnr", representation = "PersonNr", carried = true }]
+reason = "Carried row key (#1844): the person id, the variant's row key, so every file of this table carries it; the annual RTB tables serve the ordered cell, so the one-source-per-cell rule holds."

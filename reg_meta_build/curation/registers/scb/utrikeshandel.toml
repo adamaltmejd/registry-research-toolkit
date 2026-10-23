@@ -28,6 +28,9 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 native_id = "188.258"
 slug = "varu-landfordelat-intrastat"
 display_group = "Varu- och landfördelad i löpande priser, Intrastat"
+panel_entity_key = "person-orgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 
 [[variant]]

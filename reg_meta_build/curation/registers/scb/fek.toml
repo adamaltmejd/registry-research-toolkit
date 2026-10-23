@@ -274,7 +274,9 @@ delivery_column = "Varulager"
 native_id = "168.241"
 slug = "fek-slutdata"
 display_group = "FEK Slutdata (företagsenhet)"
-panel_entity_key = "person-orgnr"
+# simplify: the two unit ids as alternatives (FE ≤2021 hold person-orgnr, 2022–23
+# fenr; no file holds both); an edition split at 2022 replaces this list if one is warranted.
+panel_entity_key = ["person-orgnr", "fenr"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
