@@ -399,6 +399,27 @@ async function blockedOrderCase(page, counts, shoot) {
     "the empty draft must validate clean before the order is attempted",
   );
 
+  // A new project has no name, and an order manifest needs one
+  // (`project_unnamed`): the download stays closed and says why, visibly and as
+  // the button's description, before any order POST. Fails if the gate ignores
+  // the name or the reason lives only in a tooltip.
+  check(await ui.download.isDisabled(), "an unnamed project must not offer the download");
+  const reason = page.getByText("Name the project to download order.json.");
+  check(await reason.isVisible(), "the unnamed-project reason must be visible text");
+  const describedBy = await ui.download.getAttribute("aria-describedby");
+  check(
+    describedBy != null &&
+      (await page.locator(`[id="${describedBy}"]`).innerText()).includes(
+        "Name the project",
+      ),
+    `the download must be described by the reason, got ${describedBy}`,
+  );
+  const named = validated(page);
+  await page.getByRole("textbox", { name: "Name" }).fill("Draft");
+  await named;
+  await settled(page);
+  check((await reason.count()) === 0,"naming the project must clear the reason");
+
   const blocked = page.waitForResponse((r) => posts(r.request(), ORDER_PATH));
   await ui.download.click();
   const response = await blocked;

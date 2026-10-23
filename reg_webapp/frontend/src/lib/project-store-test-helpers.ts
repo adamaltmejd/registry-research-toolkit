@@ -1,6 +1,6 @@
 // Shared fixtures for the project_store tests: the seed, a resolved staged add,
 // Open, and the draft read for assertions. Pure: import from any test.
-import type { ProjectData } from "./project_data";
+import { newProjectData, type ProjectData } from "./project_data";
 import { projectStore, type StagedAdd } from "./project_store";
 
 export const SEED = {
@@ -33,6 +33,12 @@ export function openFile(json: string): void {
   if (parsed != null) {
     projectStore.loadProject(parsed);
   }
+}
+
+/** A fresh draft from `SEED` with a name: the order gate stays closed on a blank
+ * name, so a test that expects it open starts from this, not `newProject`. */
+export function openNamedProject(): void {
+  projectStore.loadProject({ ...newProjectData(SEED), name: "Named" });
 }
 
 /** The draft read as the canonical document, for asserting what a write produced.

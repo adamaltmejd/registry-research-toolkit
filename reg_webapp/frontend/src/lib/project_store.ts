@@ -332,6 +332,17 @@ function windowBlocked(): boolean {
   );
 }
 
+/** A blank or whitespace-only name blocks the order: the server refuses it as
+ * `project_unnamed` (the manifest's `provenance.project_name` is never blank),
+ * so the page closes the download and says why before any request. The server
+ * stays the authority; this only spares a round trip. */
+function nameBlocked(): boolean {
+  return (
+    draft != null &&
+    (typeof draft.name === "string" ? draft.name : "").trim() === ""
+  );
+}
+
 // `requestError` closes the gate too: `/order` can fail-close a project that
 // VALIDATES clean (an uncovered period), and an
 // enabled accent CTA that can only repeat the same 422 reads as "ready". Any
@@ -339,6 +350,7 @@ function windowBlocked(): boolean {
 function canDownloadOrder(): boolean {
   return (
     validatedClean() &&
+    !nameBlocked() &&
     !windowBlocked() &&
     requestError == null &&
     !validationScheduled &&
@@ -583,6 +595,11 @@ export const projectStore = {
    * reasons `canDownloadOrder` is closed, read by the page to say which. */
   get windowBlocked() {
     return windowBlocked();
+  },
+  /** Whether the draft's name is blank — another reason `canDownloadOrder` is
+   * closed, which the page states beside the download. */
+  get nameBlocked() {
+    return nameBlocked();
   },
   /** Resolves once the load-at-init restore has settled. Catalog authoring
    * awaits it before creating or mutating a draft: a cold entry at /catalog

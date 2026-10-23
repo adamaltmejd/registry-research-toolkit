@@ -1393,7 +1393,10 @@ representation) and offer only delete-per-row, that period, the project's own na
 the New/Open/Download project_data.json/Download order.json actions — validation runs
 automatically on every edit, with no separate Validate action. A wrong variable, variant
 or representation gets fixed by picking again from the catalog subject page, not by
-editing the cart row; there is no general in-cart editing UI.
+editing the cart row; there is no general in-cart editing UI. A blank name closes
+Download order.json (`projectStore.nameBlocked`), with a visible reason under the
+toolbar that points to the name field: the server refuses an unnamed project's order as
+`project_unnamed`, and the SPA gate only spares the round trip.
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
 a `representation` only where a pick had to choose between co-existing columns — so the

@@ -5158,6 +5158,7 @@
               "type": "string"
             },
             "project_name": {
+              "description": "The project's `name`, never blank: a blank name blocks the order.",
               "type": "string"
             },
             "project_reg_meta_version": {

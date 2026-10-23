@@ -272,6 +272,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   // a line and adds nothing (the structural/semantic labels above lead rows
   // whose messages are far terser).
   steward_mismatch: { label: "Steward mismatch", hint: "error" },
+  project_unnamed: { label: "Unnamed project", hint: "error" },
   project_empty: { label: "Empty project", hint: "error" },
   period_not_orderable: { label: "Period not orderable", hint: "error" },
   variable_unresolved: { label: "Unresolved variable", hint: "error" },
@@ -584,7 +585,7 @@ export function findingLocation(
  * MODEL. This resolves those values back to positions against the current draft.
  *
  * `""` (the whole document) when nothing matches: a project-level finding
- * (`steward_mismatch`, `project_empty`) names no coordinate, and a source or
+ * (`steward_mismatch`, `project_unnamed`, `project_empty`) names no coordinate, and a source or
  * binding edited away since the request has no card left to locate. The panel's
  * existing no-location fallback then applies.
  */

@@ -1049,6 +1049,7 @@ export interface components {
             mode: string;
             /** @description SHA-256 of the project's canonical JSON. */
             project_hash: string;
+            /** @description The project's `name`, never blank: a blank name blocks the order. */
             project_name: string;
             project_reg_meta_version: string;
             project_schema_version: string;

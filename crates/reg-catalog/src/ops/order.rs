@@ -58,6 +58,7 @@ struct Provenance {
     /// `global_fallback` (canonical resolution alone, blank `table`).
     mode: &'static str,
     steward: String,
+    /// The project's `name`, never blank: a blank name blocks the order.
     project_name: String,
     project_schema_version: String,
     project_reg_meta_version: String,
@@ -252,13 +253,26 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
             validate::steward_mismatch(&project.steward, steward),
         )]));
     }
+    // An unnamed project is a valid editable draft too, but the manifest's
+    // `provenance.project_name` is never blank (the extract runner refuses a blank
+    // one), so it is the first finding of the one pass, not a refusal alone.
+    let mut findings = Vec::new();
+    if project.name.trim().is_empty() {
+        findings.push(Blocking::whole(
+            "project_unnamed",
+            "project has no name — set `name`: the order manifest carries it as \
+             provenance.project_name, which must not be blank"
+                .into(),
+        ));
+    }
     if project.sources.iter().all(|s| s.bindings.is_empty()) {
-        return Err(blocked(vec![Blocking::whole(
+        findings.push(Blocking::whole(
             "project_empty",
             "project binds no variables — an empty project is a valid editable draft but \
              cannot produce a header-only manifest"
                 .into(),
-        )]));
+        ));
+        return Err(blocked(findings));
     }
     let conn = catalog.connect()?;
     let mut order = Order {
@@ -266,7 +280,7 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
         steward: catalog.is_steward(),
         entries: Vec::new(),
         clips: Vec::new(),
-        findings: Vec::new(),
+        findings,
     };
     for source in &project.sources {
         order.source(source)?;

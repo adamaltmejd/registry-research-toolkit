@@ -40,6 +40,11 @@
   margin: 0 0 var(--space-4);
 }
 
+/* The download's blocking reason sits directly under the toolbar it explains. */
+.orderReason {
+  margin: 0 0 var(--space-4);
+}
+
 .field {
   display: flex;
   flex-direction: column;

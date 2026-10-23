@@ -604,12 +604,14 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    covers every held day, for a year-independent file, or in the global fallback.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
-(`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,
-`binding_unavailable`, `representation_unknown`, `representation_unresolved`,
-`representation_ambiguous`, `mapping_missing`, `coverage_gap`,
-`column_window_unavailable`) as structured fields of `order_blocked`, so a researcher
-fixes the whole order in one edit. An empty project is a valid draft that cannot become
-a header-only manifest.
+(`steward_mismatch`, `project_unnamed`, `project_empty`, `period_not_orderable`,
+`variable_unresolved`, `binding_unavailable`, `representation_unknown`,
+`representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
+`coverage_gap`, `column_window_unavailable`) as structured fields of `order_blocked`, so
+a researcher fixes the whole order in one edit. An empty project is a valid draft that
+cannot become a header-only manifest; so is an unnamed one (a blank or whitespace-only
+`name`), which cannot fill `provenance.project_name`. Only `order` reports these two:
+`validate` judges the draft, which may be both.
 
 **The manifest is a versioned JSON contract.** It carries provenance (mode, steward,
 artifact kind, project name, schema version, declared reg_meta version and SHA-256 of
@@ -638,7 +640,8 @@ object is closed; this is the whole field set:
 - root: `version` (the integer 1), `provenance`, `entries` (non-empty), `clips`;
 - `provenance`: `mode`, `steward`, `project_name`, `project_schema_version`,
   `project_reg_meta_version`, `project_hash`, `catalog_schema_version`,
-  `catalog_generation_id`, `artifact_kind`, all strings;
+  `catalog_generation_id`, `artifact_kind`, all strings, all non-empty (`project_name`
+  is never blank: an unnamed project blocks as `project_unnamed`);
 - entry: `source`, `logical`, `requested_period`, `physical`, optional `key` (only
   `true`) and optional `filter`;
 - `logical`: `provider`, `register`, `variant`, `variable`, `representation`;
