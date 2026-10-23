@@ -129,6 +129,42 @@ def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
     assert (entry["column"], entry["code"]) == ("Column", issue)
 
 
+_CARRIED = (
+    '[[column]]\ncolumn = "Column"\n'
+    'mappings = [{ register_variant = "inera/bestallda-prover/_default", '
+    'variable = "inera/bestallda-prover/one", representation = "Column", '
+    "carried = true }]\n"
+    'reason = "the row key, carried"\n'
+)
+
+
+def test_inventory_carries_a_key_only_from_an_owner_delivering_inside_the_edition(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A carried key serves no cell, so an owner covering half of 2019 still
+    yields it against T2019; an owner delivering only in 2018 is stale. Fails if
+    the generator applies served-cell coverage to a carried key (it refused
+    Fodelseuppg's person key against RTB's annual states), or if a carried key
+    admits its owner whatever the period. T_kolumn is the served cell."""
+    part, miss = tmp_path / "part", tmp_path / "miss"
+    part.mkdir()
+    miss.mkdir()
+    db = _owner_db(part, flavored_db, {"one": [("2019-01-01", "2019-06-30")]})
+    steward = _run_inventory(
+        part, db, "T2019", ["Column", "T_kolumn"], decisions=_CARRIED
+    )
+    column = load_delivery_inventory(steward / "inventory.toml").tables[0].columns[0]
+    assert [(str(m.variable), m.carried) for m in column.mappings] == [
+        ("inera/bestallda-prover/one", True)
+    ]
+
+    db = _owner_db(miss, flavored_db, {"one": [("2018-01-01", "2018-12-31")]})
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(miss, db, "T2019", ["Column", "T_kolumn"], decisions=_CARRIED)
+    (entry,) = _inventory_worklist(miss)["mapping_scope_needed"]
+    assert entry["code"] == "stale_declared_mapping_target"
+
+
 def test_inventory_accepts_abutting_delivery_windows_of_the_same_owner(
     tmp_path: Path, flavored_db: Path
 ) -> None:

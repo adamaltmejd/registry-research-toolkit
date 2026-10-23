@@ -263,21 +263,18 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
     }
   }
 
-  // Neighbours read in time: one that ends before the bands begin sits above.
+  // The bands first, directly under the Timeline's coverage row they share a
+  // variable with; then the neighbours in time, by their first year.
   const firstYear = (rowsOf: PickerRepresentation[]) =>
     Math.min(
       ...rowsOf.map((row) => rowYears(row)?.from ?? Number.MAX_SAFE_INTEGER),
     );
-  const bandStart = Math.min(
-    ...draft.filter((d) => d.selectable).map((d) => firstYear(d.rows)),
-  );
-  const above = draft.filter(
-    (d) => !d.selectable && firstYear(d.rows) < bandStart,
-  );
-  const below = draft.filter(
-    (d) => !d.selectable && firstYear(d.rows) >= bandStart,
-  );
-  const stack = [...above, ...draft.filter((d) => d.selectable), ...below];
+  const stack = [
+    ...draft.filter((d) => d.selectable),
+    ...draft
+      .filter((d) => !d.selectable)
+      .sort((a, b) => firstYear(a.rows) - firstYear(b.rows)),
+  ];
 
   const pending: {
     span: LaneSpanModel;

@@ -1995,6 +1995,10 @@ reason = "Unemployment fund code/name/validity lookup; no person observations."
 # columns that become each variant's catalog variables (catalog content, not
 # delivery membership: an excluded re-delivery still documents its columns).
 
+# Row key: card (`hashed-data`) × transaction date, the grain of the V01–V11 card
+# transactions (maintainer, 2026-10-23). Two same-day purchases abroad by one card
+# give identical rows, so no column set is unique. The zip × age aggregates
+# (V12–V17, *_20210520) hold no card id and carry no key.
 [[flavor]]
 holding = "Swedbank"
 provider = "swedbank"
@@ -2004,7 +2008,12 @@ register_name = "Konsumtionsstatistik"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Konsumtionsstatistik"
+panel_entity_key = "hashed-data"
+panel_time_key = "date"
+panel_time_grain = "row"
 
+# No row key: anonymous aggregates of trips between areas (maintainer, 2026-10-23,
+# relayed by the Operator in the row-key session).
 [[flavor]]
 holding = "Telia"
 provider = "telia"
@@ -2024,6 +2033,9 @@ register_name = "Primärvård"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Primärvård"
+panel_entity_key = "personnr"
+panel_time_key = "kontaktdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Primary care/Stockholm"
@@ -2034,6 +2046,9 @@ register_name = "Primärvård"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Primärvård"
+panel_entity_key = "personnr"
+panel_time_key = "bdat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Primary care/VGR - Primärvård"
@@ -2044,6 +2059,9 @@ register_name = "Primärvård"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Primärvård"
+panel_entity_key = ["personnr", "vegavardkontakt"]
+panel_time_key = "kontaktdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Primary care/VGR - Diagnoser"
@@ -2054,6 +2072,7 @@ register_name = "Primärvård – diagnoser"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Primärvård – diagnoser"
+panel_entity_key = ["personnr", "vegavardkontakt"]
 
 [[flavor]]
 holding = "SÄBO/Adresses"
@@ -2064,7 +2083,12 @@ register_name = "SÄBO-adresser"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "SÄBO-adresser"
+panel_entity_key = "personnr"
 
+# Row key: `personnr`, held by the SÄBO stay deliveries (MalmoStad,
+# SthlmKom_SBF_VOB). GU_ss_fr (facility × year, cfarnr) and LansstyrelsenVG_LOK01
+# (rent-support cases) are other grains with no person id, so they carry no key
+# until the variant is split by grain.
 [[flavor]]
 holding = "SÄBO/Patients"
 provider = "sabo"
@@ -2074,6 +2098,7 @@ register_name = "SÄBO-patienter"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "SÄBO-patienter"
+panel_entity_key = "personnr"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Dalarna"
@@ -2084,6 +2109,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "datum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Gävleborg"
@@ -2094,6 +2122,7 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Jönköping"
@@ -2104,6 +2133,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "vaccinationsdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Kalmar Län"
@@ -2114,6 +2146,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "vaccine-date"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Kronoberg"
@@ -2124,6 +2159,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "vaccinationsdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Norrbotten"
@@ -2134,6 +2172,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "datum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Uppsala"
@@ -2144,6 +2185,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "vaccinationsdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Värmland"
@@ -2154,6 +2198,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "vaccinationsdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Västerbotten"
@@ -2164,6 +2211,7 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
 
 [[flavor]]
 holding = "Pandemrix vaccinations/Region Östergötland"
@@ -2174,6 +2222,9 @@ register_name = "Pandemrix-vaccinationer"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Pandemrix-vaccinationer"
+panel_entity_key = "personnr"
+panel_time_key = "datumforvaccination"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Inera/1177/Calls to 1177"
@@ -2184,6 +2235,9 @@ register_name = "Samtal 1177"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Samtal 1177"
+panel_entity_key = "personnr"
+panel_time_key = "documentcreatedtime"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Inera/1177/Ordered tests"
@@ -2194,6 +2248,9 @@ register_name = "Beställda prover"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Beställda prover"
+panel_entity_key = "personnr"
+panel_time_key = "ordercreateddatetime"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Kolorektalcancer"
@@ -2204,7 +2261,14 @@ register_name = "Kolorektalcancerregistret"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Kolorektalcancerregistret"
+panel_entity_key = ["personnr", "tum-id"]
+panel_time_key = "a1-diagnosdatum"
+panel_time_grain = "row"
 
+# Row key: pregnancy (`glopnr`), child within it (`bordnr`) and the child's person
+# id. Each table holds the elements of its own grain: pregnancy tables `glopnr`,
+# child tables `glopnr` + `bordnr`, Pop (pregnancy × child) `glopnr` +
+# `personnr-barn`; aspect tables carry theirs (#1844).
 [[flavor]]
 holding = "Quality register/Graviditetsregistret"
 provider = "graviditetsregistret"
@@ -2214,6 +2278,7 @@ register_name = "Graviditetsregistret"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Graviditetsregistret"
+panel_entity_key = ["glopnr", "bordnr", "personnr-barn"]
 
 [[flavor]]
 holding = "Quality register/NDR"
@@ -2224,6 +2289,9 @@ register_name = "Nationella diabetesregistret"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Nationella diabetesregistret"
+panel_entity_key = "personnr"
+panel_time_key = "r-contactdate"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Socialstyrelsen/Intensivvårdsregistret"
@@ -2234,6 +2302,7 @@ register_name = "Svenska Intensivvårdsregistret"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Svenska Intensivvårdsregistret"
+panel_entity_key = ["lopnr", "lopnrsiri"]
 
 [[flavor]]
 holding = "SOS Alarm"
@@ -2244,6 +2313,9 @@ register_name = "Ambulanslarm"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Ambulanslarm"
+panel_entity_key = "handelseid"
+panel_time_key = "samtalbesvarat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "RTB/Population"
@@ -2263,6 +2335,7 @@ sensitive_columns = ["FodelseArMan", "FodelseArManDag"]
 # FodelseArManDag make persons easier to identify: share with caution, never by
 # default; FodelseArManDag stays unmapped in the overlay (maintainer 2026-10-13,
 # #1302).
+panel_entity_key = "personnr"
 
 [[flavor]]
 holding = "RTB/Adress särskilt boende"
@@ -2276,6 +2349,9 @@ variant_name = "Adress särskilt boende"
 keep_columns = ["UtdAdr1"]
 # UtdAdr1 is RTB's address continuation line as delivered in the SÄBO extract;
 # kept with UtdAdr2 so RTB_SaBo_Adress_* orders as one variant (#1302).
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [[flavor]]
 holding = "RTB/Födelseuppgifter"
@@ -2290,6 +2366,7 @@ tables = ["SWECOV_Fodelseland_grupperat"]
 period_scope = "year_independent"
 # A world-region grouping of birth country: one delivery with no calendar
 # coverage, so its states carry no window (maintainer decision 2026-10-12, #1538).
+panel_entity_key = "personnr"
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2301,6 +2378,7 @@ variant = "ansokt"
 variant_slug = "ansokt"
 variant_name = "Ansökt"
 tables = ["SKV_omststod_ansokt"]
+panel_entity_key = ["arendenummer", "persorgnr-personnr", "persorgnr-peorgnr"]
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2312,6 +2390,7 @@ variant = "beviljat"
 variant_slug = "beviljat"
 variant_name = "Beviljat"
 tables = ["SKV_omststod_beviljat"]
+panel_entity_key = ["arendenummer", "persorgnr-personnr", "persorgnr-peorgnr"]
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2323,6 +2402,7 @@ variant = "avslag"
 variant_slug = "avslag"
 variant_name = "Avslag"
 tables = ["SKV_omststod_avslag"]
+panel_entity_key = ["arendenummer", "persorgnr-personnr", "persorgnr-peorgnr"]
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2334,6 +2414,9 @@ variant = "ansokt"
 variant_slug = "ansokt"
 variant_name = "Ansökt"
 tables = ["SKV_anstand_tillf_ansokan"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
+panel_time_key = "dat-skapad-ref"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2345,6 +2428,9 @@ variant = "beviljat"
 variant_slug = "beviljat"
 variant_name = "Beviljat"
 tables = ["SKV_anstand_tillf_beviljat"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
+panel_time_key = "period-from"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2356,6 +2442,9 @@ variant = "upphort"
 variant_slug = "upphort"
 variant_name = "Upphört"
 tables = ["SKV_anstand_tillf_upphort"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
+panel_time_key = "period-from"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2367,6 +2456,9 @@ variant = "aterkallat"
 variant_slug = "aterkallat"
 variant_name = "Återkallat"
 tables = ["SKV_anstand_tillf_aterk"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
+panel_time_key = "period-from"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2378,6 +2470,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Uppgifter från arbetsgivardeklaration"
 tables = ["SKV_ag_skatt"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
+panel_time_key = "beskattningsperiod"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2389,6 +2484,7 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Reducerad egenavgift inkomstår 2020"
 tables = ["SKV_reducerad_egenavg"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
 
 [[flavor]]
 holding = "Skatteverket"
@@ -2400,6 +2496,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Uppgifter från momsdeklaration"
 tables = ["SKV_Moms"]
+panel_entity_key = ["persorgnr-personnr", "persorgnr-peorgnr"]
+panel_time_key = "period-from"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Korttidsarbete/Individer"
@@ -2410,6 +2509,9 @@ register_name = "Korttidsarbete (KTA)"
 variant = "individer"
 variant_slug = "individer"
 variant_name = "Individer"
+panel_entity_key = ["arendeid-kta", "personnr"]
+panel_time_key = "delperiod-start-datum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Korttidsarbete/Transaktioner"
@@ -2420,6 +2522,9 @@ register_name = "Korttidsarbete (KTA)"
 variant = "transaktioner"
 variant_slug = "transaktioner"
 variant_name = "Transaktioner"
+panel_entity_key = "arendeid-kta"
+panel_time_key = "delperiod-start-datum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Arbetsförmedlingen"
@@ -2431,6 +2536,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Aktivitet och sökandekategori (AKTSO)"
 tables = ["AMS_HIST_AKTSO", "AMS_HIST_AKTSO_2021_20230726"]
+panel_entity_key = ["personnr", "aktso-lnr"]
+panel_time_key = "akt-dat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Arbetsförmedlingen"
@@ -2442,6 +2550,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Inskrivningsperioder (INSPER)"
 tables = ["AMS_INSPER", "AMS_INSPER_2021_20230726"]
+panel_entity_key = ["personnr", "inlnr"]
+panel_time_key = "intr-dat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Arbetsförmedlingen"
@@ -2453,6 +2564,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Sökandekategoriperioder (SOKATPER)"
 tables = ["AMS_SOKATPER", "AMS_SOKATPER_2021_20230726"]
+panel_entity_key = ["personnr", "sokatlnr"]
+panel_time_key = "inska-dat"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2464,6 +2578,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Beslut"
 tables = ["IFA_Beslut", "IFA_Beslut_From2018_Lev2", "IFA_Beslut_Lev3", "IFA_Beslut_Tom2017_Lev2"]
+panel_entity_key = ["personnr", "beslutsnr"]
+panel_time_key = "beslutgallerfrom"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2475,6 +2592,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Diverse beslut"
 tables = ["IFA_Diverse_Lev2", "IFA_Diverse_Lev3"]
+panel_entity_key = ["personnr", "beslutsnr"]
+panel_time_key = "beslutgallerfrom"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2486,6 +2606,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Ersättningsperioder"
 tables = ["IFA_Ersperiod_Lev2", "IFA_Ersperiod_Lev3"]
+panel_entity_key = "personnr"
+panel_time_key = "ersperiodfrom"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2497,6 +2620,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Utbetalningar"
 tables = ["IFA_Utbet_2015_2017_Lev2", "IFA_Utbet_2018_2019_Lev2", "IFA_Utbet_2020_2021_Lev2", "IFA_Utbet_Lev3"]
+panel_entity_key = "personnr"
+panel_time_key = "utbetdatum"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2508,6 +2634,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Medlemskap i a-kassa"
 tables = ["IFA_Medlemskap_Lev2", "IFA_Medlemskap_Lev3"]
+panel_entity_key = "personnr"
+panel_time_key = "medlemfrom"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "IAF"
@@ -2519,6 +2648,7 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Kassakoder (a-kassor)"
 tables = ["IFA_Kassakod", "IFA_Kassakod_Lev2", "IFA_Kassakod_Lev3"]
+panel_entity_key = "kassanr"
 
 [[flavor]]
 holding = "IAF"
@@ -2530,6 +2660,7 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Kassakortsveckor"
 tables = ["IFA_KKvecka_Lev2", "IFA_KKvecka_Lev3"]
+panel_entity_key = "kassakortsvecka"
 
 [[flavor]]
 holding = "IAF"
@@ -2541,6 +2672,9 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Deltidsveckor"
 tables = ["IFA_Deltidsveckor_Lev2", "IFA_Deltidsveckor_Lev3"]
+panel_entity_key = "personnr"
+panel_time_key = "dvecka"
+panel_time_grain = "row"
 
 [[flavor]]
 holding = "Läkemedelsverket"
@@ -2557,3 +2691,6 @@ tables = ["LV_mla_2005010", "LV_mla_2020010"]
 # vaccine-scoped field list of the global lakemedelsverket/biverkningar register, so
 # they get their own register from the delivery's field names. A flavor cannot add a
 # variant to a global register (maintainer decision 2026-10-16, #1603 batch-e D7; #1610).
+panel_entity_key = "personnr"
+panel_time_key = "rcvdate"
+panel_time_grain = "row"

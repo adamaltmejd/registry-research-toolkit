@@ -5,6 +5,11 @@
   margin: var(--space-4) 0;
 }
 
+/* The Timeline's header sits on its drawing's axis, not a section gap away. */
+.timelineHead {
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;

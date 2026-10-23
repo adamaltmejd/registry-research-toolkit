@@ -15,12 +15,14 @@ edition = 2024
 [[column]]
 column = "P1105_Lopnr_cfarnr"
 tables = ["FDB_AE_Ng_2023"]
-unmap = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-nummer is orderable from FDB_AE_2023, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/cfar-nummer", representation = "CFARNr", carried = true }]
+reason = "Carried row key (#1844): the workplace id, the variant's row key, so every file of this table carries it; FDB_AE_2023 serves the ordered cell, so the one-source-per-cell rule holds."
 
 [[column]]
 column = "P1105_Lopnr_cfarnr"
 tables = ["FDB_AE_Ng_2024"]
-unmap = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-nummer is orderable from FDB_AE_2024, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/cfar-nummer", representation = "CFARNr", carried = true }]
+reason = "Carried row key (#1844): the workplace id, the variant's row key, so every file of this table carries it; FDB_AE_2024 serves the ordered cell, so the one-source-per-cell rule holds."
 
 [[column]]
 column = "RangOrdning"

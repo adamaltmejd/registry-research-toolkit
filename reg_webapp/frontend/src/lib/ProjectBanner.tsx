@@ -15,8 +15,10 @@ import {
   safeSourceSlots,
 } from "./project_data";
 import { projectStore, type ValidationStatus } from "./project_store";
+import { revealFindings } from "./reveal_findings";
 import { router } from "./router";
 import { Button } from "./ui/Button";
+import band from "./ui/WindowBand.module.css";
 import { useStudyWindow } from "./use_project";
 import { useProjectRead } from "./use_store_read";
 import { windowStore } from "./window";
@@ -33,14 +35,29 @@ type BannerStatus = ValidationStatus | "blocked";
 // its glyph from the status set, so none is told apart by hue alone. Unchecked
 // and in-flight are not verdicts: plain muted "Checking", no glyph. "Valid"
 // speaks for the draft; a window-blocked order still reads "Order blocked".
-const STATUS: Record<BannerStatus, { label: string; glyph: string | null }> = {
-  unchecked: { label: "Checking", glyph: null },
-  checking: { label: "Checking", glyph: null },
-  ok: { label: "Valid", glyph: "✓" },
-  warnings: { label: "Warnings", glyph: "▲" },
-  errors: { label: "Errors", glyph: "✕" },
-  blocked: { label: "Order blocked", glyph: "✕" },
+// A verdict with findings to read links to them on /project (#1835).
+const STATUS: Record<
+  BannerStatus,
+  { label: string; glyph: string | null; findings: boolean }
+> = {
+  unchecked: { label: "Checking", glyph: null, findings: false },
+  checking: { label: "Checking", glyph: null, findings: false },
+  ok: { label: "Valid", glyph: "✓", findings: false },
+  warnings: { label: "Warnings", glyph: "▲", findings: true },
+  errors: { label: "Errors", glyph: "✕", findings: true },
+  blocked: { label: "Order blocked", glyph: "✕", findings: true },
 };
+
+// Every verdict's words, each drawn hidden in the verdict's one grid cell, so
+// the slot is as wide as the widest and the banner keeps its size while the
+// verdict changes (#1819).
+const VERDICT_SIZERS = [
+  ...new Set(
+    Object.values(STATUS).map((s) =>
+      s.glyph === null ? s.label : `${s.glyph} ${s.label}`,
+    ),
+  ),
+];
 
 interface ProjectSummary {
   open: boolean;
@@ -138,10 +155,34 @@ export function ProjectBanner({
             {plural(project.columns, "column", "columns")}
           </span>
           <span className={styles.status} data-status={project.status}>
-            {status.glyph !== null && (
-              <span aria-hidden="true">{status.glyph} </span>
+            {VERDICT_SIZERS.map((text) => (
+              <span key={text} className={styles.sizer} aria-hidden="true">
+                {text}
+              </span>
+            ))}
+            {status.findings ? (
+              <Link
+                href="/project"
+                className={`link ${styles.verdict}`}
+                aria-label={`${status.label}: show the findings`}
+                onPress={(e) => {
+                  // A modified press opens another tab: nothing to reveal here.
+                  if (!(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
+                    revealFindings();
+                  }
+                }}
+              >
+                <span aria-hidden="true">{status.glyph} </span>
+                {status.label}
+              </Link>
+            ) : (
+              <span className={styles.verdict}>
+                {status.glyph !== null && (
+                  <span aria-hidden="true">{status.glyph} </span>
+                )}
+                {status.label}
+              </span>
             )}
-            {status.label}
           </span>
         </div>
       </div>
@@ -151,7 +192,8 @@ export function ProjectBanner({
 }
 
 /**
- * The study window: a two-thumb year slider over the catalog's bounds. The
+ * The study window: a two-thumb year slider over the catalog's bounds, drawn
+ * as the window band (ui/WindowBand). The
  * thumbs move live while dragged; the window store is written once, on release
  * or on each committed key press, so a drag is one draft edit and one autosave.
  * Unset, the thumbs rest at the full span and the readout says so.
@@ -197,14 +239,20 @@ function StudyWindow({ bounds }: { bounds: WindowBounds }) {
           </span>
         )}
       </div>
+      {/* The window band, the same drawing as the Timeline's (#1823): the
+          fill is the band, the thumbs its bounds. */}
       <SliderTrack className={styles.track}>
-        <SliderFill className={styles.fill} />
+        <SliderFill className={`${band.band} ${styles.fill}`} />
         <SliderThumb
           index={0}
           aria-label="Start year"
-          className={styles.thumb}
+          className={`${band.thumb} ${styles.thumb}`}
         />
-        <SliderThumb index={1} aria-label="End year" className={styles.thumb} />
+        <SliderThumb
+          index={1}
+          aria-label="End year"
+          className={`${band.thumb} ${styles.thumb}`}
+        />
       </SliderTrack>
     </Slider>
   );

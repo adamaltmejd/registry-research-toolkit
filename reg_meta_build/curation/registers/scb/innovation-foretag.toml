@@ -7880,7 +7880,9 @@ members = [{ variable = "cis2016-cooperation-group-enterprises-sweden", coords =
 native_id = "257.553"
 slug = "_default"
 display_group = "Innovation i företagssektorn"
-panel_entity_key = "orgnr"
+# simplify: one firm id under three slugs, as alternatives (each wave holds one);
+# folding them into one variable replaces this list.
+panel_entity_key = ["orgnr", "orgnr-12", "peorgnrhe"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 

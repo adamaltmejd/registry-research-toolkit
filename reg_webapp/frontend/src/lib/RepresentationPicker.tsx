@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import type { GroupAxisModel, RelationshipGraph } from "./api";
 import {
   type PickerDimension,
   pickerFilterDimensions,
   pickerRowPasses,
 } from "./catalog";
-import { LaneGraph } from "./LaneGraph";
+import { type LaneCoverage, LaneGraph } from "./LaneGraph";
 import { type PickerBand, pickerLanes } from "./picker_lanes";
 import type { ProjectStudyWindow } from "./project_data";
 import styles from "./RepresentationPicker.module.css";
@@ -22,6 +23,19 @@ import { ColumnChip } from "./ui/ColumnChip";
 import { FilterChip } from "./ui/FilterChip";
 
 export type { PickerBand } from "./picker_lanes";
+
+/** The variable page's Timeline drawn into the picker's graph (#1833): its
+ * header, coverage row, period slider and the words under them. */
+export interface PickerTimeline {
+  head: ReactNode;
+  /** The band the graph shades: the active window, which mid-drag is the
+   * selection. */
+  band: [number, number] | null;
+  coverage: LaneCoverage;
+  /** The period slider over the coverage row, on the axis the graph draws. */
+  overlay?: (axis: [number, number]) => ReactNode;
+  foot: ReactNode;
+}
 
 interface Props {
   /** One for the binding leaf; one per member variable on a group page. */
@@ -52,6 +66,8 @@ interface Props {
   onApply: (payload: StagedApplyPayload) => Promise<boolean>;
   /** Whether a diff is now staged, so the page retires a stale status line. */
   onStageChange?: (hasDiff: boolean) => void;
+  /** Draw the graph as the variable page's one Timeline. */
+  timeline?: PickerTimeline;
 }
 
 interface Staging {
@@ -83,8 +99,11 @@ export function RepresentationPicker({
   catalogYears,
   onApply,
   onStageChange,
+  timeline,
 }: Props) {
   const [staging, setStaging] = useState<Staging>(EMPTY);
+  const pickerRef = useRef<HTMLElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
   const [filters, setFilters] = useState<Record<string, Set<string>>>({});
   const [applying, setApplying] = useState(false);
 
@@ -134,7 +153,23 @@ export function RepresentationPicker({
     stagedRemoves: removes,
   });
 
+  /** The add bar unmounts once nothing is staged: focus it held goes to the
+   * graph's first column rather than to the document body. Call it while the
+   * columns are enabled (not mid-apply), or the focus is refused. */
+  function keepFocus(held: boolean): void {
+    if (!held) return;
+    pickerRef.current
+      ?.querySelector<HTMLInputElement>(
+        "ol input[type=checkbox]:not(:disabled)",
+      )
+      ?.focus();
+  }
+
+  const barHasFocus = () =>
+    footerRef.current?.contains(document.activeElement) ?? false;
+
   function stage(next: Staging): void {
+    if (next.adds.size + next.removes.size === 0) keepFocus(barHasFocus());
     setStaging(next);
     onStageChange?.(next.adds.size + next.removes.size > 0);
   }
@@ -172,13 +207,20 @@ export function RepresentationPicker({
 
   const visible = new Set(graphModel.rows.keys());
   // Committed columns whose source and the study window disagree: the
-  // reason, in words, under the graph.
-  const notes = graphModel.spans.filter((span) => span.note);
+  // reason, in words, under the graph. Under the Timeline the ▲ row already
+  // says the years differ, so only a column outside the window is named.
+  const notes = graphModel.spans.filter(
+    (span) => span.note && (!timeline || span.note.tone === "error"),
+  );
   const hidden = [...adds, ...removes].filter((k) => !visible.has(k)).length;
   const summary = stagedDiffSummary({
     added: adds.size,
     removed: removes.size,
   });
+  const summaryText =
+    summary === ""
+      ? ""
+      : `${summary}${hidden > 0 ? ` (${hidden} hidden by the filters)` : ""}`;
   const canApply = adds.size + removes.size > 0 && (adds.size === 0 || canAdd);
   const applyLabel =
     adds.size > 0 && removes.size > 0
@@ -201,14 +243,28 @@ export function RepresentationPicker({
     };
     setApplying(true);
     try {
-      if (await onApply(payload)) setStaging(EMPTY);
+      if (await onApply(payload)) {
+        const held = barHasFocus();
+        // Commit first, so the columns are enabled again when focus moves.
+        flushSync(() => {
+          setApplying(false);
+          setStaging(EMPTY);
+        });
+        keepFocus(held);
+      }
     } finally {
       setApplying(false);
     }
   }
 
   return (
-    <section className={styles.picker} aria-label="Columns">
+    <section
+      ref={pickerRef}
+      className={styles.picker}
+      // Under the Timeline the card around it names the region.
+      aria-label={timeline ? undefined : "Columns"}
+    >
+      {timeline && <div className={styles.timelineHead}>{timeline.head}</div>}
       {dimensions.length > 0 && (
         <div className={styles.filters}>
           {dimensions.map((dim) => (
@@ -237,7 +293,7 @@ export function RepresentationPicker({
           )}
         </div>
       )}
-      {graphModel.lanes.length > 0 ? (
+      {(graphModel.lanes.length > 0 || timeline) && (
         <LaneGraph
           label={
             bands.length === 1 ? "Columns over time" : "Variables over time"
@@ -246,11 +302,14 @@ export function RepresentationPicker({
           spans={graphModel.spans}
           edges={graphModel.edges}
           axis={graphModel.axis}
-          window={window}
+          window={timeline ? timeline.band : window}
+          coverage={timeline?.coverage}
+          overlay={timeline?.overlay}
           isDisabled={applying}
           onToggle={toggle}
         />
-      ) : (
+      )}
+      {graphModel.lanes.length === 0 && filtering && (
         <p className="muted">
           No column matches these filters.{" "}
           <Button variant="ghost" onPress={() => setFilters({})}>
@@ -258,6 +317,7 @@ export function RepresentationPicker({
           </Button>
         </p>
       )}
+      {timeline?.foot}
       {notes.length > 0 && (
         <ul className={styles.notes}>
           {notes.map((span) => (
@@ -271,31 +331,33 @@ export function RepresentationPicker({
           ))}
         </ul>
       )}
-      <div className={styles.footer}>
-        <output className={styles.summary} aria-live="polite">
-          {summary === ""
-            ? "Tick a column to add it to the project."
-            : `${summary}${hidden > 0 ? ` (${hidden} hidden by the filters)` : ""}`}
-        </output>
-        <div className={styles.actions}>
-          {/* Always mounted, inert with nothing staged: a press that empties
-              the selection keeps focus here instead of dropping to body. */}
-          <Button
-            isInert={applying || summary === ""}
-            onPress={() => stage(EMPTY)}
-          >
-            Clear selection
-          </Button>
-          <Button
-            variant="primary"
-            isInert={!canApply || applying}
-            isBusy={applying}
-            onPress={() => void apply()}
-          >
-            {applyLabel}
-          </Button>
+      {/* One standing live region, so the first tick is announced; the bar
+          that shows the same words mounts with it. */}
+      <output className="visually-hidden" aria-live="polite">
+        {summaryText}
+      </output>
+      {/* Only while something is staged, like the register's add bar
+          (DESIGN.md → VariableRow); the graph says how to tick. */}
+      {(summary !== "" || applying) && (
+        <div ref={footerRef} className={styles.footer}>
+          <span className={styles.summary} aria-hidden="true">
+            {summaryText}
+          </span>
+          <div className={styles.actions}>
+            <Button isInert={applying} onPress={() => stage(EMPTY)}>
+              Clear selection
+            </Button>
+            <Button
+              variant="primary"
+              isInert={!canApply || applying}
+              isBusy={applying}
+              onPress={() => void apply()}
+            >
+              {applyLabel}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

@@ -417,6 +417,57 @@ export function coverageBandEdges(
   return from > to ? null : { from, to };
 }
 
+/** What a coverage drawing marks (DESIGN.md → Time): the delivered runs inside
+ * `covered` (one run when `years` is null), the gaps between them and an
+ * edition tick at every year boundary inside a run. */
+export function coverageMarks(
+  covered: ProjectStudyWindow | null,
+  years: readonly number[] | null,
+): {
+  delivered: ProjectStudyWindow[];
+  gaps: ProjectStudyWindow[];
+  ticks: number[];
+} {
+  const delivered: ProjectStudyWindow[] = [];
+  if (covered !== null && years === null) delivered.push({ ...covered });
+  if (covered !== null && years !== null) {
+    for (const y of years) {
+      if (y < covered.from || y > covered.to) continue;
+      const last = delivered.at(-1);
+      if (last && y === last.to + 1) last.to = y;
+      else delivered.push({ from: y, to: y });
+    }
+  }
+  const gaps: ProjectStudyWindow[] = [];
+  for (let i = 1; i < delivered.length; i += 1) {
+    gaps.push({ from: delivered[i - 1].to + 1, to: delivered[i].from - 1 });
+  }
+  const ticks =
+    years === null
+      ? []
+      : delivered.flatMap((r) =>
+          Array.from({ length: r.to - r.from }, (_, i) => r.from + i + 1),
+        );
+  return { delivered, gaps, ticks };
+}
+
+/** The years of `window` outside `covered`: what the window asks for that the
+ * subject does not deliver. */
+export function uncoveredYears(
+  window: ProjectStudyWindow,
+  covered: ProjectStudyWindow | null,
+): ProjectStudyWindow[] {
+  if (covered === null) return [];
+  const out: ProjectStudyWindow[] = [];
+  if (window.from < covered.from) {
+    out.push({ from: window.from, to: Math.min(window.to, covered.from - 1) });
+  }
+  if (window.to > covered.to) {
+    out.push({ from: Math.max(window.from, covered.to + 1), to: window.to });
+  }
+  return out.filter((r) => r.from <= r.to);
+}
+
 /** The seed window for the availability slider when there is no explicit
  * `?period` to honour (#671): the part of the data COVERAGE the project window
  * actually frames, so a variable's true coverage shows UP FRONT rather than the
@@ -587,10 +638,9 @@ export function periodWindowRelation(
     : "differs";
 }
 
-// ── Exact-year entry (Y-16 PeriodTimeline + Y-81 SourceEditor, hoisted Y-100) ──
-// Both the catalog's period card and the /project cart's per-source period
-// editor carry two typed year fields and resolve them the same way; this is
-// the "is this a usable year pair" rule they both call, once.
+// ── Exact-year entry (Y-81 SourceEditor, hoisted Y-100) ──
+// The /project cart's per-source period editor carries two typed year fields;
+// this is the "is this a usable year pair" rule it calls.
 
 /** Any four-digit run → its int, else null. WIDER than `wireYear` (19xx/20xx)
  * so a caller with its own selectable band (`YearEntryOptions.selectableYears`)
@@ -620,8 +670,8 @@ export interface YearEntryOptions {
 }
 
 /**
- * The exact-year entry both `PeriodTimeline` and `SourceEditor` resolve their two
- * typed year fields against: the year window the pair names, or why it names
+ * The exact-year entry `SourceEditor` resolves its two typed year fields
+ * against: the year window the pair names, or why it names
  * none — with the field(s) that refusal is about, so the caller's hairline
  * marks the year at fault rather than both. `from`/`to` are the raw field text,
  * or `null` while the fields still mirror the seeded value (nothing typed

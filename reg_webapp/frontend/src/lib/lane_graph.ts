@@ -49,6 +49,9 @@ export interface LaneGeometryInput {
   window: [number, number] | null;
   /** The graph's measured width in px. */
   width: number;
+  /** Reserve the Timeline's coverage row between the axis and the lanes (the
+   * variable page). */
+  coverageRow?: boolean;
 }
 
 export interface PlacedSegment {
@@ -82,6 +85,8 @@ export interface LaneGeometry {
   trackWidth: number;
   height: number;
   axisY: number;
+  /** The coverage row's top, when one is reserved. */
+  coverageY: number | null;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
   /** `label` and `anchor` are set on the one label that stands for both
@@ -111,6 +116,8 @@ export const LANE_HEIGHT = 58;
 export const SPAN_HEIGHT = 24;
 const ROW_STEP = 32;
 const AXIS_HEIGHT = 28;
+// The Timeline's plot: a 12 px coverage bar centred in a 40 px row.
+export const COVERAGE_HEIGHT = 40;
 // Above this width the names take the `--col-list` column beside the track.
 const NAME_WIDTH = 230;
 const NAME_GAP = 16;
@@ -206,7 +213,8 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   // Stack the lanes and give each span its row's height.
   const lanes: PlacedLane[] = [];
   const laneTop = new Map<string, number>();
-  let y = AXIS_HEIGHT;
+  const coverageY = input.coverageRow ? AXIS_HEIGHT : null;
+  let y = AXIS_HEIGHT + (input.coverageRow ? COVERAGE_HEIGHT : 0);
   const spanTop = stacked
     ? STACKED_NAME_HEIGHT
     : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
@@ -347,6 +355,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     trackWidth,
     height: y,
     axisY: AXIS_HEIGHT,
+    coverageY,
     lanes,
     spans: placed,
     ticks,

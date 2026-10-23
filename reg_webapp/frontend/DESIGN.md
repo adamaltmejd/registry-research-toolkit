@@ -330,8 +330,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   key hint; the key hints are `text-muted` on `surface-sunken`. There are no "Search" or
   "Project" nav items; the bar and the banner are those. Its content shares the shell's
   `shell-max` and centring, so the banner sits over the detail pane rather than at the
-  screen's edge. It sticks to the top of the page above `breakpoint-narrow`; below it
-  the bar wraps and scrolls away with the page.
+  screen's edge. Where the row is tight the brand wraps and the search bar shrinks
+  before the banner leaves the row. It sticks to the top of the page above
+  `breakpoint-narrow`; below it the brand, the bar and the banner take a row each and
+  scroll away with the page.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
   then the selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
@@ -415,27 +417,41 @@ Time is the axis every relation is drawn on.
   it is bounded by the viewed catalog's first and last year (`/api/context`
   `period_span`). It shades every `Timeline` and `LaneGraph` as an `accent-bg` band with
   `accent` bounds and `accent-ink` years on the axis. With no project open there is no
-  band.
+  band. That **window band** is the one drawing of a period control: where the period is
+  set (the banner's study window, a variable page's source period) the band is dragged
+  by slim `accent` thumbs on its bounds; both compose the same classes
+  (`ui/WindowBand.module.css`), and a new period selector does too.
 - A **source period** narrows the window for one variable. It stays allowed but is the
-  exception: on a variable page the `Timeline`'s band is a selection, two thumbs bounded
-  by the variable's availability. The thumbs move live while dragged and the period is
-  applied when they come to rest (on release, or on each key press); there are no year
-  fields and no Apply, and a "Clear period" ghost action drops it (maintainer ruling
+  exception: on a variable page the `Timeline`'s band is a selection, two thumbs on the
+  coverage row bounded by the variable's availability. The thumbs move live while
+  dragged (the band and the columns' in/out follow them) and the period is applied when
+  they come to rest (on release, or on each key press); there are no year fields and no
+  Apply, and a "Clear period" ghost action in the header drops it (maintainer ruling
   2026-10-22). The band always shows the active window: the source period when it
   differs, else the project window. A source period that differs from the project window
   within the variable's availability says so in a `warn` `StatusRow`, "▲ Differs from
   the project window", with a "Reset" ghost action; a period narrowed only by
-  availability does not. A register or group pane draws the `Timeline` read-only.
+  availability does not. On the variable page that row is the only line about years that
+  differ: a column already in the project whose source years differ from the study
+  window says so in its tooltip and accessible name, not in a line under the graph
+  (#1833); one outside the window is still named there at `err`. A register or group
+  pane draws the `Timeline` read-only.
 - A variable whose **availability is narrower** than the window is information, not a
-  warning: an `info` "i" note in the `Timeline` header names the uncovered years, and
-  the uncovered part of the window is an `info-bg` band. `warn-hatch` stays for a
-  delivery gap inside coverage.
+  warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
+  picture says it, so there is no note or legend entry for it; the header names those
+  years to a screen reader only (#1833). `warn-hatch` stays for a delivery gap inside
+  coverage.
 - A **`Timeline`** is one axis from the catalog's first year to its last, under a
   `label` header that says what the band is and states the covered years (years only: no
   edition count). Coverage is an ink bar with `viz-edition` ticks per delivered year, a
-  `warn-hatch` hatch for a gap, and a `label` legend of the marks it shows. Labelled
-  spans for columns, with a definition change under the same column name as two spans
-  and a `warn` mark, belong to it too (not drawn yet).
+  `warn-hatch` hatch for a gap, and a `label` legend of the marks it shows. On a
+  variable page it is one drawing with the columns (#1833, maintainer ruling
+  2026-10-23): it is drawn as a `LaneGraph` headed by a coverage row (axis, then
+  coverage with the period thumbs, then lanes), so the band runs through every lane. The
+  variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
+  coding change as a `warn` mark; the variables a succession reaches are further lanes
+  in time order, with their arrows. A line under the drawing says plainly that clicking
+  a column ticks it, and there is no second graph on the page.
 - A **`VariableRow`** repeats the same axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
@@ -450,8 +466,10 @@ Time is the axis every relation is drawn on.
   rename. A lane's title joins its facet values with a comma, and its name opens the
   variable; a span is a checkbox for the add bar, and hovering it highlights its edges.
   Its axis is the catalog's first year to its last, like the `Timeline`'s. The band is
-  the active window: the source period when one is set, else the study window. Don't
-  draw free-form node graphs; the time axis is the information.
+  the active window: the source period when one is set, else the study window. Its add
+  bar, like the register's, shows only while a change is staged. On a variable page the
+  `LaneGraph` is the `Timeline` (above). Don't draw free-form node graphs; the time axis
+  is the information.
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
 
@@ -528,13 +546,18 @@ not grow new visual language meanwhile.
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
   verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
   "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
-  "Checking" with no glyph. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
+  "Checking" with no glyph. Its slot is as wide as the widest verdict, so the banner
+  keeps one size while validation runs. A verdict with findings (Warnings, Errors, Order
+  blocked) is a link, in its status hue with the link's `accent` rule, to /project,
+  where the first non-empty findings group scrolls into view and takes focus; Valid and
+  Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
   never a status hue. The study window is the period picker: an inline two-thumb RAC
-  `Slider` (no popover) bounded by the viewed catalog's first and last year, its years
-  an `accent-ink` `mono` readout, with a "Clear" ghost action. With no project open it
-  is the same box, empty and untinted with a `border` leading bar, holding a `default`
-  "Create a project" Button, which starts a project and opens it, and nothing in the
-  catalog is tinted.
+  `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn as
+  the Timeline's window band (see Time) on a `surface` strip, its years an `accent-ink`
+  `mono` readout, with a "Clear" ghost action; the label, the readout and Clear keep one
+  line. With no project open it is the same box, empty and untinted with a `border`
+  leading bar, holding a `default` "Create a project" Button, which starts a project and
+  opens it, and nothing in the catalog is tinted.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", or the group's name on a group page; one line, truncated with an
   ellipsis, the whole of it as hover text) (#1825), then items on `bg`, one selected (2
@@ -550,7 +573,9 @@ not grow new visual language meanwhile.
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
   signal). The same shape as a lane span, so the two read as one object. The project's
   column list chips every column, its superseded names too, beside the variable's name
-  in the text face and its FQID in `mono` `text-muted`.
+  in the text face; the FQID stays out of that list (it is in the findings' "Fix in
+  catalog" links and the downloaded files). Each row's remove action is a quiet ghost
+  "Remove" that asks first in a `Dialog`, whose answer is the `danger` button.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
   register's or a variable's page title, where it leads with a glyph in its ink (a table
   for a register, one filled column of it for a variable). The label is fixed per type
