@@ -18,11 +18,12 @@
 #
 # Rationale, the schema and policy formats and the refusal codes:
 # reg_export_gate/DESIGN.md. Packages: base R (>= 4.2), jsonlite and arrow (>= 9),
-# plus SHA-256 from tools::sha256sum (R >= 4.5) or else the digest package.
+# plus SHA-256 from tools::sha256sum (R >= 4.5) or else the digest package. A
+# call installs any that are missing or too old into R's default library first.
 #
 # Fixed toolkit code: copy it unchanged. Its version is in every receipt.
 
-EXPORT_GATE_VERSION <- "0.1.0"
+EXPORT_GATE_VERSION <- "0.2.0"
 
 export_gate <- local({
   RECEIPT <- "receipt.json"
@@ -634,13 +635,48 @@ export_gate <- local({
     }
   }
 
+  # The version R would use: a loaded namespace's own, else the installed one's,
+  # else NULL. A loaded namespace is not replaced by installing over it.
+  package_version_of <- function(pkg) {
+    if (isNamespaceLoaded(pkg)) {
+      getNamespaceVersion(pkg)
+    } else if (nzchar(system.file(package = pkg))) {
+      utils::packageVersion(pkg)
+    }
+  }
+
+  # Same helper in reg_mona_runner/swecov_extract.R: each script is uploaded to
+  # MONA alone. Installs each package into R's default library (.libPaths()[1])
+  # from the repository R's options name (MONA's own mirror), so neither `lib`
+  # nor `repos` is set. A failure is not reported here: the caller checks the
+  # packages again and refuses, naming the package. Warnings and errors are
+  # caught: run()'s handlers would otherwise report a failed install as
+  # internal_warning or internal_error, without the package's name.
+  install_missing <- function(pkgs) {
+    for (pkg in pkgs) {
+      tryCatch(
+        suppressWarnings(utils::install.packages(pkg)),
+        error = function(e) NULL
+      )
+    }
+  }
+
+  # concat_arrays() and write_parquet(version = "2.4") arrived in arrow 8 and 9.
   check_packages <- function() {
+    arrow_ok <- function() {
+      v <- package_version_of("arrow")
+      !is.null(v) && package_version(v) >= ARROW_FLOOR
+    }
+    install_missing(c(
+      if (is.null(package_version_of("jsonlite"))) "jsonlite",
+      if (!arrow_ok()) "arrow",
+      if (!has_sha256()) "digest"
+    ))
     missing <- c(
       if (!requireNamespace("jsonlite", quietly = TRUE)) "jsonlite_missing",
       if (!requireNamespace("arrow", quietly = TRUE)) {
         "arrow_missing"
-      } else if (utils::packageVersion("arrow") < ARROW_FLOOR) {
-        # concat_arrays() and write_parquet(version = "2.4") arrived in 8 and 9.
+      } else if (!arrow_ok()) {
         "arrow_too_old"
       },
       if (!has_sha256()) "sha256_missing"

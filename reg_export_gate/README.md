@@ -39,21 +39,28 @@ export_gate_trial\
   .diagnostics\     the gate's report; stays on MONA, never exported
 ```
 
-## 3. Preflight (one minute)
+## 3. Preflight
 
-In R on MONA:
+The gate needs R 4.2 or newer, `arrow` 9.0.0 or newer and `jsonlite`, plus SHA-256:
+`tools::sha256sum` on R 4.5 or newer, else the `digest` package. Each call of
+`export_gate()` first installs whichever of these is missing or too old with
+`install.packages()`, into R's default library (`.libPaths()[1]`) from the mirror R is
+already set up with on MONA. Sourcing the file installs nothing. On a batch server that
+lacks your packages, the first run installs them and takes longer.
 
-```r
-R.version.string                              # 4.2 or newer
-packageVersion("arrow")                       # 9.0.0 or newer
-packageVersion("jsonlite")
-exists("sha256sum", asNamespace("tools")) ||  # TRUE on R >= 4.5
-  requireNamespace("digest", quietly = TRUE)  # else digest must be installed
-```
+If an install fails, the gate refuses `setup` with the package's rule: `arrow_missing`,
+`arrow_too_old`, `jsonlite_missing` or `sha256_missing` (for `digest`); the console
+above the refusal shows R's install output. The usual causes:
 
-If the last line is `FALSE`, the gate cannot hash files and refuses every run with
-`setup` (`sha256_missing`): stop the trial there and report it. The same holds for an
-arrow older than 9.0.0 (`arrow_too_old`).
+- **The default library is not writable.** Run `install.packages("arrow")` (or the
+  package named) once yourself in an interactive R session. If R offers a personal
+  library, accept it; it becomes the default library for later sessions. Otherwise ask
+  MONA support.
+- **The mirror is unreachable.** Ask MONA support; the gate cannot run without the
+  packages.
+- **`arrow_too_old` right after an install.** An older arrow was already loaded in the
+  session (the pipeline called `arrow::write_parquet()` first) and R cannot replace it
+  while it is loaded. Restart R and rerun.
 
 ## 4. The pipeline's last step
 
@@ -114,7 +121,7 @@ Column types matter: R `integer` is the schema's `integer`, `numeric` its `doubl
 The console shows
 
 ```text
-export gate 0.1.0: pass, 2 files
+export gate 0.2.0: pass, 2 files
   written with receipt.json to \\micro.intra\...\export_gate_trial\export
 ```
 
@@ -134,7 +141,7 @@ exported.
 The call stops with an error, for example
 
 ```text
-export gate 0.1.0: refused (disclosure)
+export gate 0.2.0: refused (disclosure)
   min_cell_count file=persons_by_year_group.parquet column=n_persons
 Error: export gate refused (disclosure); report in ...\.diagnostics\export_gate_report.json
 ```
@@ -189,7 +196,8 @@ Then run step 4 unchanged once more: it passes, and the new export replaces the 
 
 ## Report back
 
-Note the R, arrow and jsonlite versions, which SHA-256 route the preflight found, how
-long the gate took, whether two passing runs over the same staging wrote the same
-receipt, any `.export-gate-...` folder left beside `export\`, and anything that refused
-unexpectedly (the rule and file, not the data).
+Note the R, arrow and jsonlite versions, which SHA-256 route R used
+(`exists("sha256sum", asNamespace("tools"))` is `TRUE` on R 4.5 or newer), whether the
+gate installed anything, how long the gate took, whether two passing runs over the same
+staging wrote the same receipt, any `.export-gate-...` folder left beside `export\`, and
+anything that refused unexpectedly (the rule and file, not the data).

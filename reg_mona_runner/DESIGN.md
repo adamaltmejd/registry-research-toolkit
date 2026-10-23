@@ -8,10 +8,18 @@ file that gets uploaded with the orders. Run steps are in [README.md](README.md)
 
 ## Shape
 
-- **One file, base R plus DBI, odbc and jsonlite.** These packages are assumed to be
-  preinstalled in MONA's R (>= 4.2, so the native encoding is UTF-8). jsonlite parses
-  the manifest; a hand-written JSON parser would be more code to trust than the
-  dependency.
+- **One file, base R plus DBI, odbc and jsonlite.** R is >= 4.2, so the native encoding
+  is UTF-8. jsonlite parses the manifest; a hand-written JSON parser would be more code
+  to trust than the dependency.
+- **It installs its own packages.** A batch server can lack them, and MONA's CRAN mirror
+  and library path are already in R's options. So the run starts by installing whichever
+  of the three is missing, with plain `install.packages(pkg)` into R's default library
+  (`.libPaths()[1]`); it never adds a library path. One still missing after that ends
+  the run with exit code 2 and a console line naming the package, before any order is
+  read; there is no per-order `error_log.csv` for it, since no order ran. The install
+  runs when the script runs, which for this script is when it is sourced: sourcing it is
+  running it. The export gate carries the same helper (`reg_export_gate/DESIGN.md`, "The
+  R file"), since each file is uploaded alone.
 - **One configuration block.** The steward id, the export root and the connection (DSN
   `P1105`) sit at the top of the script, so another steward copies the file and edits
   that block. Two environment variables (`SWECOV_EXTRACT_BASE` and
@@ -104,16 +112,16 @@ that wrote it, are the control on what is extracted.
 
 Stable; the process exits with the code of the first order, in name order, that failed.
 
-  | Code | Meaning                                                                   |
-  | ---- | ------------------------------------------------------------------------- |
-  | 0    | every order extracted (or no orders)                                      |
-  | 2    | setup: no `orders/` folder, a package missing, no connection, no archive  |
-  | 3    | the order is not JSON                                                     |
-  | 4    | `version` is not 1                                                        |
-  | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order   |
-  | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name |
-  | 7    | a table in no schema or several, a missing column, a wrong period type    |
-  | 8    | a query or a file write failed                                            |
+  | Code | Meaning                                                                          |
+  | ---- | -------------------------------------------------------------------------------- |
+  | 0    | every order extracted (or no orders)                                             |
+  | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive |
+  | 3    | the order is not JSON                                                            |
+  | 4    | `version` is not 1                                                               |
+  | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order          |
+  | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name        |
+  | 7    | a table in no schema or several, a missing column, a wrong period type           |
+  | 8    | a query or a file write failed                                                   |
 
 ## Tests
 

@@ -11,9 +11,10 @@
 # The contract it reads is crates/DESIGN.md, "Order manifest"; the rationale and
 # the exit codes are reg_mona_runner/DESIGN.md.
 #
-# Packages: base R (>= 4.2, UTF-8 native), DBI, odbc and jsonlite, all assumed
-# preinstalled on MONA. Row values are never printed or logged: only file names,
-# row and column counts and manifest fields are.
+# Packages: base R (>= 4.2, UTF-8 native), DBI, odbc and jsonlite; any missing
+# is installed into R's default library before anything else runs. Row values
+# are never printed or logged: only file names, row and column counts and
+# manifest fields are.
 #
 # This file is ASCII only: a non-ASCII name reaches SQL Server as NCHAR() code
 # points, never as R string bytes (non-ASCII identifiers sent as text fail on MONA).
@@ -95,6 +96,24 @@ refuse <- function(code, ...) {
 }
 
 say <- function(...) cat(paste0(...), "\n", sep = "")
+
+PACKAGES <- c("DBI", "odbc", "jsonlite")
+
+# Same helper in reg_export_gate/export_gate.R: each script is uploaded to MONA
+# alone. Installs each package into R's default library (.libPaths()[1]) from
+# the repository R's options name (MONA's own mirror), so neither `lib` nor
+# `repos` is set. A failure is not reported here: the caller checks the
+# packages again and refuses, naming the package. Warnings and errors are
+# caught: a caller that turns any warning into a failure would otherwise
+# report a failed install without the package's name.
+install_missing <- function(pkgs) {
+  for (pkg in pkgs) {
+    tryCatch(
+      suppressWarnings(utils::install.packages(pkg)),
+      error = function(e) NULL
+    )
+  }
+}
 
 # ---- Manifest validation --------------------------------------------------------
 
@@ -821,12 +840,6 @@ connection <- function(db) {
     if (!is.null(db$failed)) {
       refuse("setup", db$failed)
     }
-    for (pkg in c("DBI", "odbc")) {
-      if (!requireNamespace(pkg, quietly = TRUE)) {
-        db$failed <- paste0("R package ", pkg, " is not installed")
-        refuse("setup", db$failed)
-      }
-    }
     db$con <- tryCatch(config$connect(), error = function(e) {
       db$failed <- paste0("cannot connect to the database", sqlstate(e))
       refuse("setup", db$failed)
@@ -836,9 +849,6 @@ connection <- function(db) {
 }
 
 extract_order <- function(path, out, db) {
-  if (!requireNamespace("jsonlite", quietly = TRUE)) {
-    refuse("setup", "R package jsonlite is not installed")
-  }
   doc <- check_manifest(read_order(path))
   files <- plan_files(doc$entries)
   con <- connection(db)
@@ -976,6 +986,18 @@ run_order <- function(path, base, db) {
 # Runs every order independently and returns the exit code of the first order
 # (in name order) that failed, else 0.
 main <- function() {
+  installed <- function(pkg) nzchar(system.file(package = pkg))
+  install_missing(PACKAGES[!vapply(PACKAGES, installed, TRUE)])
+  for (pkg in PACKAGES) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      say(
+        "R package ",
+        pkg,
+        " is missing and could not be installed into R's default library"
+      )
+      return(EXIT[["setup"]])
+    }
+  }
   orders_dir <- file.path(config$base, "orders")
   if (!dir.exists(orders_dir)) {
     say("export root has no orders folder: ", orders_dir)
