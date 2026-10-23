@@ -5,7 +5,6 @@ import {
   dataAxis,
   intersectCoverageWindow,
   nextResolutionQuery,
-  notDeliveredGaps,
   periodCoverageUnion,
   periodWindowRelation,
   yearSegmentsFromWire,
@@ -140,23 +139,6 @@ describe("intersectCoverageWindow (#671 coverage-aware seed)", () => {
         2024,
       ),
     ).toEqual({ from: 2000, to: 2010 });
-  });
-});
-
-describe("notDeliveredGaps (selection minus coverage)", () => {
-  it("both leading and trailing gaps", () => {
-    expect(
-      notDeliveredGaps({ from: 1990, to: 2020 }, { from: 2000, to: 2010 }),
-    ).toEqual([
-      { from: 1990, to: 1999 },
-      { from: 2011, to: 2020 },
-    ]);
-  });
-
-  it("a selection entirely outside (before) coverage is one gap", () => {
-    expect(
-      notDeliveredGaps({ from: 1980, to: 1990 }, { from: 2000, to: 2010 }),
-    ).toEqual([{ from: 1980, to: 1990 }]);
   });
 });
 

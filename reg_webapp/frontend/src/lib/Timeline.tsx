@@ -50,8 +50,8 @@ interface DrawingProps {
   years: readonly number[] | null;
 }
 
-/** The drawing: the band, coverage as an ink bar cut by edition ticks, a gap
- * inside coverage as a hatch, the uncovered part of the band in `info-bg`,
+/** The drawing: the band, coverage as an ink bar cut by edition ticks (a year
+ * without a delivery is empty space), the uncovered part of the band in `info-bg`,
  * then the axis. A year is a cell, [year, year + 1). Hidden from assistive
  * technology: the header and the legend say the same in words. */
 function Drawing({ axis, band, covered, years }: DrawingProps) {
@@ -62,7 +62,7 @@ function Drawing({ axis, band, covered, years }: DrawingProps) {
     width: `${pct(r.to + 1) - pct(r.from)}%`,
   });
 
-  const { delivered, gaps, ticks } = coverageMarks(covered, years);
+  const { delivered, ticks } = coverageMarks(covered, years);
   const outside = band ? uncoveredYears(band, covered) : [];
 
   const labels: {
@@ -149,9 +149,6 @@ function Drawing({ axis, band, covered, years }: DrawingProps) {
             style={place(r)}
           />
         ))}
-        {gaps.map((r) => (
-          <div key={`g${r.from}`} className={styles.gap} style={place(r)} />
-        ))}
         {ticks.map((y) => (
           <div
             key={`t${y}`}
@@ -224,7 +221,7 @@ function Head({ id, label, covered, outside, action }: HeadProps) {
 }
 
 /** The legend, in `label` text: only the marks the drawing shows. */
-function Legend({ band, gaps }: { band: string | null; gaps: boolean }) {
+function Legend({ band }: { band: string | null }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
       {band && (
@@ -237,12 +234,6 @@ function Legend({ band, gaps }: { band: string | null; gaps: boolean }) {
         <i className={styles.keyCoverage} />
         Delivered years
       </li>
-      {gaps && (
-        <li>
-          <i className={styles.keyGap} />
-          Gap inside coverage
-        </li>
-      )}
     </ul>
   );
 }
@@ -266,7 +257,7 @@ interface TimelineProps {
 /**
  * The read-only Timeline (DESIGN.md → Time): one axis over the page's data
  * and the study window, the active window as an `accent-bg` band, coverage as an ink bar with
- * edition ticks, a gap inside coverage hatched, and the window's uncovered part
+ * edition ticks, a year without a delivery left empty, and the window's uncovered part
  * in `info-bg`. For register and group panes; the variable page's is
  * `VariableTimeline`.
  */
@@ -291,10 +282,7 @@ export function Timeline({
         outside={outside}
       />
       <Drawing axis={axis} band={band} covered={covered} years={years} />
-      <Legend
-        band={bandName}
-        gaps={coverageMarks(covered, years).gaps.length > 0}
-      />
+      <Legend band={bandName} />
     </section>
   );
 }

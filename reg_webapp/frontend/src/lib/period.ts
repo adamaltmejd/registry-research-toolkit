@@ -371,14 +371,14 @@ export function coverageBandEdges(
 }
 
 /** What a coverage drawing marks (DESIGN.md → Time): the delivered runs inside
- * `covered` (one run when `years` is null), the gaps between them and an
- * edition tick at every year boundary inside a run. */
+ * `covered` (one run when `years` is null) and an edition tick at every year
+ * boundary inside a run. A year between runs is empty space, not a mark
+ * (#1832). */
 export function coverageMarks(
   covered: ProjectStudyWindow | null,
   years: readonly number[] | null,
 ): {
   delivered: ProjectStudyWindow[];
-  gaps: ProjectStudyWindow[];
   ticks: number[];
 } {
   const delivered: ProjectStudyWindow[] = [];
@@ -391,17 +391,13 @@ export function coverageMarks(
       else delivered.push({ from: y, to: y });
     }
   }
-  const gaps: ProjectStudyWindow[] = [];
-  for (let i = 1; i < delivered.length; i += 1) {
-    gaps.push({ from: delivered[i - 1].to + 1, to: delivered[i].from - 1 });
-  }
   const ticks =
     years === null
       ? []
       : delivered.flatMap((r) =>
           Array.from({ length: r.to - r.from }, (_, i) => r.from + i + 1),
         );
-  return { delivered, gaps, ticks };
+  return { delivered, ticks };
 }
 
 /** The years of `window` outside `covered`: what the window asks for that the
@@ -473,36 +469,6 @@ export function intersectCoverageWindow(
     return { from: edge, to: edge };
   }
   return { from, to };
-}
-
-/** The not-delivered gaps of a `selection` window against the subject's
- * `coverage` — the sub-spans inside the selection but OUTSIDE coverage (#615
- * availability deviation). Returns the leading gap (selection starts before a
- * FINITE coverage start) and/or trailing gap (selection ends after a FINITE
- * coverage end), each a year-int `{from, to}`; an empty array when coverage
- * fully covers the selection, the relevant side is unbounded (null = no gap
- * there), or there is no coverage to compare against. Inclusive bounds. */
-export function notDeliveredGaps(
-  selection: ProjectStudyWindow,
-  coverage: Coverage | null,
-): ProjectStudyWindow[] {
-  if (coverage === null) {
-    return [];
-  }
-  const gaps: ProjectStudyWindow[] = [];
-  if (coverage.from !== null && selection.from < coverage.from) {
-    gaps.push({
-      from: selection.from,
-      to: Math.min(selection.to, coverage.from - 1),
-    });
-  }
-  if (coverage.to !== null && selection.to > coverage.to) {
-    gaps.push({
-      from: Math.max(selection.from, coverage.to + 1),
-      to: selection.to,
-    });
-  }
-  return gaps.filter((g) => g.from <= g.to);
 }
 
 /** Whether two year windows describe the SAME span (the user-deviation test:

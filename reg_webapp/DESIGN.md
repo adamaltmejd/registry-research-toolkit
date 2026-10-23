@@ -938,12 +938,13 @@ kind:
 The **time axis** is the `Timeline` (`src/lib/Timeline.tsx`; see the Project-window
 store section): one axis over the page's data and the study window, rounded out to
 multiples of 5 (`dataAxis` in `period.ts`, frontend/DESIGN.md → Time), the active window
-as a band, the subject's coverage as a bar cut by edition ticks, a gap inside coverage
-hatched, and the part of the window outside coverage in the `info` tint (named in the
-header to a screen reader only). An open-ended coverage end is projected to the catalog
-vintage and an unknown start to the catalog's first year (`coverageBandEdges` in
-`period.ts`; a column's span likewise, `spanEnds` in `picker_lanes.ts`), and both count
-toward the axis, as does the active window. The control does a different job per kind:
+as a band, the subject's coverage as a bar cut by edition ticks and left empty in a year
+without a delivery (#1832), and the part of the window outside coverage in the `info`
+tint (named in the header to a screen reader only). An open-ended coverage end is
+projected to the catalog vintage and an unknown start to the catalog's first year
+(`coverageBandEdges` in `period.ts`; a column's span likewise, `spanEnds` in
+`picker_lanes.ts`), and both count toward the axis, as does the active window. The
+control does a different job per kind:
 
 - On the **variable** it is `VariableTimeline`, the selectable form, and one drawing
   with the columns (#1833): the `RepresentationPicker`'s `LaneGraph` headed by a

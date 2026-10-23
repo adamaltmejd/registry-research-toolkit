@@ -246,7 +246,6 @@
   --err-border: #f0a8a8; /* the error hairline on status rows */
   --warn: #7a5c00; /* also the "definition changed" mark on a timeline */
   --warn-bg: #f7f0d8;
-  --warn-hatch: #c9a200; /* the hatch stroke for a delivery gap (non-text) */
   --info: #2f5f8f;
   --info-bg: #e6eef7;
   --ok: #1e7a3c;

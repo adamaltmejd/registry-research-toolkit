@@ -55,7 +55,6 @@ colors:
   err-border: "#f0a8a8"
   warn: "#7a5c00"
   warn-bg: "#f7f0d8"
-  warn-hatch: "#c9a200"
   info: "#2f5f8f"
   info-bg: "#e6eef7"
   ok: "#1e7a3c"
@@ -274,8 +273,8 @@ pure role remaps.
   type or decoration; `ok` is a verdict, `accent` is ownership.
 - **Status (`err`, `warn`, `info`, `ok` and their `-bg` tints):** the only other
   chromatic chrome, each paired with a glyph and text. `warn` also marks a definition
-  change on a timeline; `warn-hatch` draws a delivery gap as a hatch. Never use a `-bg`
-  tint as a text color, and never use a status hue for emphasis, selection, or brand.
+  change on a timeline. Never use a `-bg` tint as a text color, and never use a status
+  hue for emphasis, selection, or brand.
 - **Categorical node type (`cat-reg` teal, `cat-var` indigo, `cat-code` gold,
   `cat-class` plum, `cat-group` moss):** appears only in a MIXED list — palette results,
   mentions, a project's sources — as a `TypeTag`. Fill and border take the raw hue at a
@@ -455,8 +454,11 @@ Time is the axis every relation is drawn on.
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those
-  years to a screen reader only (#1833). `warn-hatch` stays for a delivery gap inside
-  coverage.
+  years to a screen reader only (#1833).
+- A **year without a delivery** is plain empty space on the `Timeline`, the `LaneGraph`
+  and the `VariableRow`, for every register (#1832, maintainer ruling 2026-10-23): no
+  hatch, no gap mark and no legend entry. Elections, censuses and other periodic
+  deliveries read as delivered years with space between, which is all the catalog knows.
 - The **axis** spans the data a page draws, not the catalog: from the first to the last
   year of that data, joined with the study window when one is set, rounded out to
   multiples of 5 (#1831). A register page's data is its variants' deliveries, a concept
@@ -470,15 +472,15 @@ Time is the axis every relation is drawn on.
   `Timeline`, and a page with several sources draws them on one axis.
 - A **`Timeline`** is drawn on the page's axis, under a `label` header that says what
   the band is and states the covered years (years only: no edition count). Coverage is
-  an ink bar with `viz-edition` ticks per delivered year, a `warn-hatch` hatch for a
-  gap, and a `label` legend of the marks it shows. On a variable page it is one drawing
-  with the columns (#1833, maintainer ruling 2026-10-23): it is drawn as a `LaneGraph`
-  headed by a coverage row (axis, then coverage with the period thumbs, then lanes), so
-  the band runs through every lane. The variable's columns are the first lane, labelled
-  spans in the `ColumnChip` shape with a coding change as a `warn` mark; the variables a
-  succession reaches are further lanes in time order, with their arrows. A line under
-  the drawing says plainly that clicking a column ticks it, and there is no second graph
-  on the page.
+  an ink bar with `viz-edition` ticks per delivered year, empty where a year has no
+  delivery, and a `label` legend of the marks it shows. On a variable page it is one
+  drawing with the columns (#1833, maintainer ruling 2026-10-23): it is drawn as a
+  `LaneGraph` headed by a coverage row (axis, then coverage with the period thumbs, then
+  lanes), so the band runs through every lane. The variable's columns are the first
+  lane, labelled spans in the `ColumnChip` shape with a coding change as a `warn` mark;
+  the variables a succession reaches are further lanes in time order, with their arrows.
+  A line under the drawing says plainly that clicking a column ticks it, and there is no
+  second graph on the page.
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text

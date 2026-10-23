@@ -278,7 +278,6 @@ function Marks({
   markerId: string;
 }) {
   const marker = `${markerId}-arrow`;
-  const hatch = `${markerId}-hatch`;
   const bottom = geometry.height;
   const x = (year: number) =>
     geometry.trackX +
@@ -311,15 +310,6 @@ function Marks({
         >
           <path d="M0,0 L8,4 L0,8 z" className={styles.arrowhead} />
         </marker>
-        <pattern
-          id={hatch}
-          width="4"
-          height="4"
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
-          <rect width="2" height="4" className={styles.hatch} />
-        </pattern>
       </defs>
       {geometry.lanes.map((lane) =>
         lanes.find((l) => l.id === lane.id)?.current ? (
@@ -378,15 +368,6 @@ function Marks({
               rx={1}
               x={run(r).x}
               width={Math.max(run(r).width, 2)}
-            />
-          ))}
-          {marks.gaps.map((r) => (
-            <rect
-              key={`g${r.from}`}
-              fill={`url(#${hatch})`}
-              y={cy + 14}
-              height={12}
-              {...run(r)}
             />
           ))}
           {marks.ticks.map((year) => (
@@ -641,13 +622,6 @@ function Legend({
           Delivered years
         </li>
       )}
-      {coverage &&
-        coverageMarks(coverage.covered, coverage.years).gaps.length > 0 && (
-          <li>
-            <i className={styles.keyGap} />
-            Gap inside coverage
-          </li>
-        )}
       {succession && (
         <li>
           <i className={styles.keySuccession} />

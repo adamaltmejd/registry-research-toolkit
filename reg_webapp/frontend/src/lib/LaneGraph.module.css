@@ -368,11 +368,6 @@ a.nameText {
   stroke: var(--viz-edition);
 }
 
-/* A delivery gap inside coverage. */
-.hatch {
-  fill: var(--warn-hatch);
-}
-
 .hint {
   margin: 0;
   color: var(--text-muted);
@@ -380,8 +375,7 @@ a.nameText {
 }
 
 .keyBand,
-.keyCoverage,
-.keyGap {
+.keyCoverage {
   display: inline-block;
   width: 10px;
   height: 10px;
@@ -395,14 +389,4 @@ a.nameText {
 
 .keyCoverage {
   background: var(--text);
-}
-
-.keyGap {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--warn-hatch) 0,
-    var(--warn-hatch) 2px,
-    var(--surface) 2px,
-    var(--surface) 4px
-  );
 }
