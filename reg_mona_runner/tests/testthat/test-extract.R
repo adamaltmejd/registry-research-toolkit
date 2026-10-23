@@ -28,13 +28,16 @@ load_fixture <- function() {
 # A binary extract as its oracle spells it: each column's storage type (the R
 # class haven reads a .dta column as and its Stata display format, which tells a
 # long, %12.0g, from a double, or the Parquet type) and each row's values as
-# text, "<NULL>" for a missing value. Rendered here, not by the runner.
+# text, "<NULL>" for a missing value, and a .dta file's variable labels.
+# Rendered here, not by the runner.
 read_binary <- function(path) {
+  labels <- NULL
   if (endsWith(path, ".dta")) {
     data <- as.data.frame(haven::read_dta(path))
     types <- lapply(data, function(x) {
       paste(class(x)[1], attr(x, "format.stata"))
     })
+    labels <- unlist(lapply(data, attr, "label"))
     text <- lapply(data, function(x) {
       if (inherits(x, "POSIXct")) {
         format(x, "%Y-%m-%d %H:%M:%S", tz = "UTC")
@@ -53,13 +56,18 @@ read_binary <- function(path) {
     })
   }
   text <- lapply(text, function(x) ifelse(is.na(x), "<NULL>", x))
-  list(types = types, rows = do.call(paste, c(text, sep = "\r")))
+  list(
+    types = types,
+    labels = labels,
+    rows = do.call(paste, c(text, sep = "\r"))
+  )
 }
 
 # Every expected file, byte for byte except row order (the extract has no
 # ORDER BY): the header line exactly, then the same multiset of rows. A .dta or
-# .parquet file's oracle is <file>.json: its column types and rows, null for a
-# missing value (read_binary).
+# .parquet file's oracle is <file>.json: its column types, a .dta file's
+# variable labels where it has any, and its rows, null for a missing value
+# (read_binary).
 expect_export <- function(base, case) {
   expected <- file.path(cases_dir, case, "expected")
   out <- export_dir(base, case)
@@ -68,6 +76,11 @@ expect_export <- function(base, case) {
     want <- jsonlite::read_json(file.path(expected, name))
     got <- read_binary(file.path(out, sub("\\.json$", "", name)))
     expect_identical(got$types, want$types, label = paste(case, name, "types"))
+    expect_identical(
+      as.list(got$labels),
+      if (is.null(want$labels)) list() else want$labels,
+      label = paste(case, name, "labels")
+    )
     rows <- vapply(
       want$rows,
       function(r) {
@@ -127,14 +140,15 @@ test_that("orders extract their files from SQL Server", {
     # scaled decimal, a NULL row and an empty string keep their values and take
     # the format's storage type.
     "types-dta",
+    # A .dta order of columns that are not Stata variable names: each is written
+    # under the order's alias, labelled with its full name.
+    "stata-names",
     "types-parquet",
     "types-csv"
   )
   refused <- c(
     `missing-table` = 7L,
     `ambiguous-table` = 7L,
-    # A .dta order of a column whose name is over Stata's 32 characters.
-    `stata-name` = 7L,
     # A .dta order of a bigint id no double holds: refused, never rounded.
     `inexact-dta` = 8L,
     `broken-view` = 8L

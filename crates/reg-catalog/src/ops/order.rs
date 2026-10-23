@@ -15,6 +15,7 @@
 //! steward-side extractor reads; `order`'s `data` is the same document.
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt::Write;
 
 use reg_core::project::{
     Binding, ExtractFormat, ProjectData, Source, project_hash, to_json_pretty,
@@ -25,6 +26,7 @@ use reg_core::{
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
 use super::family::{VariantFamily, variant_family};
@@ -34,14 +36,14 @@ use super::{Params, Raw, Server};
 use crate::{Catalog, Code, Error, Scope};
 
 /// The order manifest contract version.
-const VERSION: u8 = 2;
+const VERSION: u8 = 3;
 
 /// The order manifest: machine-written here, machine-read by the steward-side
 /// extract system, never hand-edited.
 #[derive(Serialize, ToSchema)]
 #[schema(as = OrderManifest)]
 pub struct Manifest {
-    /// The manifest contract version, 2.
+    /// The manifest contract version, 3.
     version: u8,
     /// The file format the extract runner writes every file in: the project's
     /// `extract_format`, `dta` when it sets none.
@@ -150,6 +152,13 @@ struct Physical {
     /// The column's wide-pivot member index; absent for a plain column.
     #[serde(skip_serializing_if = "Option::is_none")]
     member: Option<Member>,
+    /// The name a `dta` order writes the column under, with `column` as the
+    /// variable's label, when `column` is not a Stata variable name: its first 25
+    /// characters made a name, `_` and 6 hex digits of its SHA-256; absent otherwise,
+    /// and on every `parquet` or `csv` order.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(required = false)]
+    stata_name: Option<String>,
 }
 
 /// A file's row filter (crates/DESIGN.md, "Order manifest"): keep the rows whose
@@ -363,12 +372,8 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     }
     file_names(&conn, order.steward, &mut order.entries)?;
     let extract_format = project.extract_format();
-    // Checked on the whole order, held keys included: each is a column of a file.
     if extract_format == ExtractFormat::Dta && order.steward {
-        let findings = stata_names(&order.entries);
-        if !findings.is_empty() {
-            return Err(blocked(findings));
-        }
+        stata_names(&mut order.entries);
     }
     Ok(Manifest {
         version: VERSION,
@@ -685,29 +690,47 @@ fn row_filters(conn: &Connection, entries: &mut [Entry]) -> Result<(), Error> {
     Ok(())
 }
 
-/// `stata_name_invalid`, once per physical column that cannot be a Stata variable
-/// name, so a `dta` order the extract runner would refuse blocks here instead.
-fn stata_names(entries: &[Entry]) -> Vec<Blocking> {
-    let mut seen = BTreeSet::new();
-    entries
-        .iter()
-        .filter(|e| !is_stata_name(&e.physical.column))
-        .filter(|e| seen.insert((&e.physical.table, &e.physical.column)))
-        .map(|e| Blocking {
-            code: "stata_name_invalid",
-            message: format!(
-                "column {} of table {} is not a Stata variable name (1 to 32 letters, \
-                 digits or underscores, not starting with a digit, not a reserved word), \
-                 so it cannot be written to a .dta file — set extract_format to parquet \
-                 or csv",
-                quote(&e.physical.column),
-                quote(&e.physical.table)
-            ),
-            source: Some(e.source.clone()),
-            variable: Some(e.logical.variable.clone()),
-            period: Some(e.requested_period.clone()),
+/// Sets `physical.stata_name` on every entry whose column is not a Stata variable
+/// name, held keys included, so a `dta` order writes it under [`stata_alias`].
+fn stata_names(entries: &mut [Entry]) {
+    for e in entries.iter_mut() {
+        if !is_stata_name(&e.physical.column) {
+            e.physical.stata_name = Some(stata_alias(&e.physical.column));
+        }
+    }
+}
+
+/// The Stata variable name a `.dta` file holds a column under when its own name is
+/// not one (crates/DESIGN.md, "Order manifest"): the name's first 25 characters, each
+/// that is not a letter, ASCII digit or `_` made `_` (and `_` put first when it would
+/// start with a digit or `str` and a digit), then `_` and the first 6 hex digits of
+/// the SHA-256 of the name's UTF-8 bytes. A function of the name alone, so a column
+/// takes one alias in every table, order and catalog generation, and two names that
+/// share their first 25 characters differ in the hash.
+fn stata_alias(name: &str) -> String {
+    let mut alias: String = name
+        .chars()
+        .map(|c| {
+            if is_letter(c) || c.is_ascii_digit() || c == '_' {
+                c
+            } else {
+                '_'
+            }
         })
-        .collect()
+        .collect();
+    let str_digit = alias
+        .strip_prefix("str")
+        .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()));
+    if str_digit || alias.starts_with(|c: char| c.is_ascii_digit()) {
+        alias.insert(0, '_');
+    }
+    let mut alias: String = alias.chars().take(25).collect();
+    alias.push('_');
+    for byte in &Sha256::digest(name.as_bytes())[..3] {
+        let _ = write!(alias, "{byte:02x}");
+    }
+    debug_assert!(is_stata_name(&alias), "{alias} is a Stata name");
+    alias
 }
 
 /// Whether `name` is a variable name a `.dta` file (format 118) can hold: Stata's rule
@@ -1123,6 +1146,7 @@ impl Order<'_> {
                     partition: placement.partition,
                     projection: placement.projection,
                     member: placement.member,
+                    stata_name: None,
                 },
                 key: false,
                 filter: None,
@@ -1241,6 +1265,7 @@ impl Order<'_> {
                     partition: c.placement.partition,
                     projection: c.placement.projection,
                     member: c.placement.member,
+                    stata_name: None,
                 },
                 key: false,
                 filter: None,

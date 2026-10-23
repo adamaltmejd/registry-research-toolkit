@@ -637,18 +637,10 @@ Per binding, in declaration order, over its source's period
 `variable_unresolved`, `binding_unavailable`, `representation_unknown`,
 `representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
 `coverage_gap`, `column_window_unavailable`) as structured fields of `order_blocked`, so
-a researcher fixes the whole order in one edit. One finding follows that pass, because
-it reads the finished entries, held keys included: `stata_name_invalid`, once per
-physical column a `dta` order on a steward artifact would write under a name a `.dta`
-file cannot hold (more than 32 characters, a character other than a letter, ASCII digit
-or `_`, a leading digit, or a reserved word; Stata's rule, stricter than what ReadStat
-writes, which the extract runner repeats). The runner would refuse the order on MONA;
-blocking here tells the researcher in the browser, where switching to `parquet` or `csv`
-is one edit. 68 SWECOV columns are over 32 characters (the financial-statement tables),
-and truncating them collides in at least one table, so the order never renames. An empty
-project is a valid draft that cannot become a header-only manifest; so is an unnamed one
-(a blank or whitespace-only `name`), which cannot fill `provenance.project_name`. Only
-`order` reports these two: `validate` judges the draft, which may be both.
+a researcher fixes the whole order in one edit. An empty project is a valid draft that
+cannot become a header-only manifest; so is an unnamed one (a blank or whitespace-only
+`name`), which cannot fill `provenance.project_name`. Only `order` reports these two:
+`validate` judges the draft, which may be both.
 
 **The manifest is a versioned JSON contract.** It carries the extract format (the
 project's `extract_format`, resolved to `dta` when the project sets none, so the runner
@@ -666,18 +658,38 @@ sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical acro
 periods render through the shared grammar, except a row filter's ISO day bounds. No
 timestamps: the only time-shaped values come from the artifact and the project.
 `partition`, `projection` (the table's token), `member` (`{"position": N}`,
-`{"year": YYYY}` or `{"month": "YYYY-MM"}`), `key`, `filter` and a filter range's `from`
-and `to` are the only optional fields; absent means none (an ordered entry for `key`, an
-unfiltered file for `filter`, an open end for a bound), so an inventory without
-partitions, projections, pivot members or period columns, and an order that binds every
-held key, produces the bytes it did before any existed. The parent (`projection_of`) is
-not in the manifest: the token is the placement.
+`{"year": YYYY}` or `{"month": "YYYY-MM"}`), `stata_name`, `key`, `filter` and a filter
+range's `from` and `to` are the only optional fields; absent means none (an ordered
+entry for `key`, an unfiltered file for `filter`, an open end for a bound), so an
+inventory without partitions, projections, pivot members or period columns, and an order
+that binds every held key, produces the bytes it did before any existed. The parent
+(`projection_of`) is not in the manifest: the token is the placement.
 
-**Version 2 is frozen** (2026-10-23; version 1, frozen 2026-10-22 with its first reader,
-the extract runner, had no `extract_format` and is retired). Every object is closed;
-this is the whole field set:
+**A `dta` order renames a column `.dta` cannot hold.** A Stata variable name is 1 to 32
+characters, a letter (general category L\*) or `_` first, then letters, ASCII digits and
+`_`, and not a reserved word nor `str` and a digit (Stata's rule, stricter than what
+ReadStat writes). In 0.61.0, 274 SWECOV columns (68 distinct names, the
+financial-statement and pregnancy-register tables) are over 32 characters and 4 more
+hold a space, `-`, `,` or `(`; no two of their aliases meet in one table. On a `dta`
+order of a steward artifact every entry whose column fails the rule, held keys included,
+carries `physical.stata_name`: the column's first 25 characters, each that is not a
+letter, ASCII digit or `_` made `_` (and `_` put first when it would start with a digit
+or `str` and a digit), then `_` and the first 6 lowercase hex digits of the SHA-256 of
+the column's UTF-8 name, 32 characters at most. The runner writes the column under it,
+with the full name as its variable label. The alias is a function of the name alone, so
+a column takes one alias in every table, order and catalog generation, and two columns
+sharing their first 25 characters (up to nine in one table do) differ in the hash.
+Truncation with a counter would read better but makes a column's name depend on its
+table's other columns, so a new sibling could rename it under a researcher's do-file. A
+hash collision within one file is not handled here: the runner refuses a file that would
+hold two columns of one name. `parquet` and `csv` orders keep every name.
 
-- root: `version` (the integer 2), `extract_format` (`dta`, `parquet` or `csv`),
+**Version 3 is frozen** (2026-10-23; version 2, frozen 2026-10-23, had no `stata_name`
+and refused `.dta` orders of long names; version 1, frozen 2026-10-22 with its first
+reader, the extract runner, had no `extract_format`; both are retired). Every object is
+closed; this is the whole field set:
+
+- root: `version` (the integer 3), `extract_format` (`dta`, `parquet` or `csv`),
   `provenance`, `entries` (non-empty), `clips`;
 - `provenance`: `mode`, `steward`, `project_name`, `project_schema_version`,
   `project_reg_meta_version`, `project_hash`, `catalog_schema_version`,
@@ -686,15 +698,16 @@ this is the whole field set:
 - entry: `source`, `logical`, `requested_period`, `physical`, optional `key` (only
   `true`) and optional `filter`;
 - `logical`: `provider`, `register`, `variant`, `variable`, `representation`;
-- `physical`: `file`, `edition`, `table`, `column`, optional `partition`, `projection`
-  and `member`; `member` holds exactly one of `position`, `year`, `month`;
+- `physical`: `file`, `edition`, `table`, `column`, optional `partition`, `projection`,
+  `member` and `stata_name` (only on a `dta` order); `member` holds exactly one of
+  `position`, `year`, `month`;
 - `filter`: `column`, `encoding` (`date`, `year`, `yyyymm` or `yyyymmdd`), `ranges`
   (non-empty); a range has optional `from` and `to`, inclusive `YYYY-MM-DD` days;
 - clip: `source`, `variable`, `requested_period`, `ordered_period`.
 
 Rust writes only these fields; the runner enforces the set, refusing a version other
-than 2, a mode other than `steward_holdings`, another steward's order and any unknown
-field. So any change to the shape, an added optional field included, is version 3: a v2
+than 3, a mode other than `steward_holdings`, another steward's order and any unknown
+field. So any change to the shape, an added optional field included, is version 4: a v3
 runner refuses it rather than misreading it.
 
 The manifest stays pretty-printed. MONA's upload limit is 10 MB; a typical order is

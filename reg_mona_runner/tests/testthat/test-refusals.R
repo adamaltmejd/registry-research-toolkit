@@ -17,14 +17,13 @@ test_that("an order that is not JSON is refused (3)", {
   expect_refused(base, "900", 3L)
 })
 
-test_that("a manifest version other than 2 is refused (4)", {
-  # Regression: a retired v1 manifest, which names no extract format, is read
-  # with v2 semantics.
+test_that("a manifest version other than 3 is refused (4)", {
+  # Regression: a retired v2 manifest, whose .dta columns carry no stata_name,
+  # is read with v3 semantics.
   base <- export_root(
     text = list(
       `900` = order_text("row-filter", function(doc) {
-        doc$version <- 1L
-        doc$extract_format <- NULL
+        doc$version <- 2L
         doc
       })
     )
@@ -64,6 +63,23 @@ test_that("an output file named like the run log is refused (6)", {
         for (i in seq_along(doc$entries)) {
           doc$entries[[i]]$physical$file <- "Run_Log"
         }
+        doc
+      })
+    )
+  )
+  expect_identical(run_runner(base)$status, 6L)
+  expect_refused(base, "900", 6L)
+})
+
+test_that("two columns written under one Stata name are refused (6)", {
+  # Regression: a .dta file holds two variables of one name, which Stata cannot
+  # read, or haven keeps one column's data under the other's name.
+  base <- export_root(
+    text = list(
+      `900` = order_text("stata-names", function(doc) {
+        doc$entries[[2]]$physical$stata_name <- doc$entries[[
+          3
+        ]]$physical$stata_name
         doc
       })
     )
