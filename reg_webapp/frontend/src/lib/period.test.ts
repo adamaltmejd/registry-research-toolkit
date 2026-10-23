@@ -5,11 +5,9 @@ import {
   dataAxis,
   intersectCoverageWindow,
   nextResolutionQuery,
-  normalizePeriodRows,
   notDeliveredGaps,
   periodCoverageUnion,
   periodWindowRelation,
-  resolveYearEntry,
   yearSegmentsFromWire,
   yearWindowFromWire,
 } from "./period";
@@ -226,41 +224,6 @@ describe("periodWindowRelation", () => {
   });
 });
 
-describe("normalizePeriodRows (Y-101 period-row list → Period)", () => {
-  it("disjoint rows sort ascending, out of the order they were entered", () => {
-    expect(
-      normalizePeriodRows([
-        { from: 2019, to: 2020 },
-        { from: 2015, to: 2017 },
-      ]),
-    ).toEqual({
-      period: [
-        { from: 2015, to: 2017 },
-        { from: 2019, to: 2020 },
-      ],
-    });
-  });
-
-  it("adjacency-merges TOUCHING rows into one span, same as periodCoverageUnion", () => {
-    expect(
-      normalizePeriodRows([
-        { from: 2010, to: 2011 },
-        { from: 2012, to: 2013 },
-      ]),
-    ).toEqual({ period: { from: 2010, to: 2013 } });
-  });
-
-  it("reports the first overlapping pair by ORIGINAL row index, not sorted position", () => {
-    expect(
-      normalizePeriodRows([
-        { from: 2019, to: 2021 },
-        { from: 2015, to: 2016 },
-        { from: 2020, to: 2022 },
-      ]),
-    ).toEqual({ a: 0, b: 2 });
-  });
-});
-
 describe("coverageBandEdges (#671 selectable band / #631 vintage cap)", () => {
   it("an open START runs to the track floor", () => {
     expect(
@@ -272,26 +235,6 @@ describe("coverageBandEdges (#671 selectable band / #631 vintage cap)", () => {
     expect(coverageBandEdges({ from: 1995, to: null }, 1960, 2026)).toEqual({
       from: 1995,
       to: 2026,
-    });
-  });
-});
-
-describe("resolveYearEntry (Y-16/Y-81 exact-year entry, hoisted Y-100)", () => {
-  it("without a band: badly-typed text refuses with the default century wording", () => {
-    expect(resolveYearEntry("20x", "2020")).toEqual({
-      problem: "From must be a four-digit year, 1900 to 2099.",
-      at: { from: true, to: false },
-    });
-    expect(resolveYearEntry("", "")).toEqual({
-      problem: "From and To must each be a four-digit year, 1900 to 2099.",
-      at: { from: true, to: true },
-    });
-  });
-
-  it("without a band: a year outside 1900-2099 refuses the same as badly-typed (no band to be 'outside')", () => {
-    expect(resolveYearEntry("2100", "2100")).toEqual({
-      problem: "From and To must each be a four-digit year, 1900 to 2099.",
-      at: { from: true, to: true },
     });
   });
 });

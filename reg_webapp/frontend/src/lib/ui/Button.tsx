@@ -13,8 +13,8 @@ type Props = {
   /** A request this button started is in flight (`aria-busy`). Busy, not
    * inert: the button keeps working, so its handler ignores a second press. */
   isBusy?: boolean;
-  /** Only where the visible words lean on the surrounding card ("Apply" on a
-   * source card is "Apply period"), or repeat down a list (label-in-name: it
+  /** Only where the visible words lean on the surrounding card ("Remove
+   * source" on a source card names the source), or repeat down a list (label-in-name: it
    * starts with the visible text). */
   "aria-label"?: string;
   /** The id of visible text that says why an inert button refuses. */
