@@ -320,10 +320,18 @@ impl Semantic<'_> {
             .iter()
             .map(|(lo, hi, _)| (lo.clone(), hi.clone()))
             .collect();
-        if resolution.finding.is_some() {
+        if let Some(finding) = &resolution.finding {
+            // A finding that names no slices (an unresolved or unknown
+            // representation) does not say which days it blocks: all of them may.
+            // No availability at all blocks nothing; the order clips it away.
+            let blocking = match finding.code {
+                "binding_unavailable" => Vec::new(),
+                _ if available.is_empty() => window.to_vec(),
+                _ => available,
+            };
             return Ok(WindowReach {
                 served: Vec::new(),
-                blocking: available,
+                blocking,
             });
         }
         if !self.steward {
