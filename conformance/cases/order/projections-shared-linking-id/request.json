@@ -1,0 +1,30 @@
+{
+  "note": "Hush (household x month) is a coarser-grain projection of Pers (recipient x month) and lacks Recipient, the monthly entity key. Household is an identifier both tables hold that is not the monthly row key; it is ordered, so each file carries it: the parent serving it must not drop it from Hush, whose rows would otherwise not join on it. Each file gains its own held row key (Pers Month and Recipient, Hush Month); Recipient is not invented for Hush. Fails if Hush loses the ordered Household (the regression: the projection filter keeping only row keys), if HhAmount is emitted from Pers, if the ordered Household is marked `key`, or if Recipient is invented for Hush.",
+  "fixture": "projection-order",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Example",
+        "register_variant": "scb/example/monthly",
+        "period": 2019,
+        "bindings": [
+          {
+            "variable": "scb/example/household",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/hhamount",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  }
+}

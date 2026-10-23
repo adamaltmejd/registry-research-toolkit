@@ -64,7 +64,6 @@
   "conformance/cases/order/canonical-case-twin-steward/request.json#/project": "709bc2ced4e845e7e02e261d508a9c2c862d3437235416ee718f4643de503b14",
   "conformance/cases/order/clipped-inapplicable-edition/request.json#/project": "228a6931cc80049de660be10b568e610b12e1fdea53b97a1544a2253dc8445ae",
   "conformance/cases/order/column-windows/request.json#/project": "2cba8558b2326f545ddb9cacf38996a75622299344c2be544da40bb8f08647c7",
-  "conformance/cases/order/held-keys-unordered/request.json#/project": "9e38b3ae33973f948dadecd20805c8b3f3331e2c1861866c58ce34973445ccd9",
   "conformance/cases/order/open-ended/request.json#/project": "e7e345ef8aed2c3dd57f167dc9839b6e8f0ae5d3b25644cd7ac0b290b1a43f1c",
   "conformance/cases/order/outside-column-window/request.json#/project": "709bc2ced4e845e7e02e261d508a9c2c862d3437235416ee718f4643de503b14",
   "conformance/cases/order/outside-period/request.json#/project": "6f56735f1054e7936ae35ab153254d204e10da77bbacb1d71e82bd4477150a89",

@@ -2,7 +2,8 @@ version = 1
 steward = "swecov"
 
 # Narrow is Wide's delivery under other columns: it shares the key Id and the
-# non-key Region with Wide, and has its own key Child and non-key Extra.
+# non-key Region with Wide, and has its own key Child and non-key Extra (the
+# annual variant's panel_entity_key is the pair Id, Child).
 [[table]]
 id = "Narrow"
 edition = 2018
@@ -56,7 +57,8 @@ representation = "Region"
 
 # The finer-grain pair: VB is recipient x month, VBBARN recipient x child x
 # month. Recipient (the variant's panel_entity_key, a JSON list) and Month
-# (its panel_time_key, a bare slug) are keys though neither is an identifier.
+# (its panel_time_key, a bare slug) are keys though neither is an identifier;
+# Child, an identifier, is a linking id under monthly, never an auto-added key.
 [[table]]
 id = "VB"
 edition = 2018
@@ -170,8 +172,9 @@ register_variant = "scb/example/annual"
 variable = "scb/example/diagnos"
 representation = "DIA"
 
-# One physical column serving two variants: CombinedNarrow shares the key Child with
-# Combined under both, and has its own Extra under the annual variant only.
+# One physical column serving two variants: CombinedNarrow shares Child (the annual
+# key, a monthly linking id) with Combined under both, and has its own Extra under
+# the annual variant only.
 [[table]]
 id = "Combined"
 edition = 2019
@@ -206,3 +209,51 @@ name = "Extra"
 register_variant = "scb/example/annual"
 variable = "scb/example/extra"
 representation = "Extra"
+
+# A coarser-grain projection, as EKB's household file is of its person file: Hush
+# is household x month and lacks Recipient, the monthly entity key. Household, an
+# identifier both tables hold, is a monthly linking id, not a row key.
+[[table]]
+id = "Pers"
+edition = 2019
+[[table.column]]
+name = "Household"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/household"
+representation = "Household"
+[[table.column]]
+name = "Month"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/month"
+representation = "Month"
+[[table.column]]
+name = "Recipient"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/recipient"
+representation = "Recipient"
+
+[[table]]
+id = "Hush"
+edition = 2019
+projection = { of = "Pers", token = "hushall" }
+[[table.column]]
+name = "HhAmount"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/hhamount"
+representation = "HhAmount"
+[[table.column]]
+name = "Household"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/household"
+representation = "Household"
+[[table.column]]
+name = "Month"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/month"
+representation = "Month"

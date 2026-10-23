@@ -18,7 +18,11 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
@@ -84,7 +88,11 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
@@ -132,7 +140,11 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
@@ -163,11 +175,85 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
         "delivery_column_name": "Extra",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "hhamount",
+    "provider_key": "57",
+    "name": "HhAmount",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "monthly",
+          "name": "Monthly",
+          "panel_entity_key": [
+            "recipient"
+          ],
+          "panel_time_key": "month"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "HhAmount",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "household",
+    "provider_key": "58",
+    "name": "Household",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": true,
+    "states": [
+      {
+        "variant": {
+          "slug": "monthly",
+          "name": "Monthly",
+          "panel_entity_key": [
+            "recipient"
+          ],
+          "panel_time_key": "month"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Household",
         "data_type": "integer",
         "data_length": "8",
         "operational_definition": null,
@@ -194,7 +280,11 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
@@ -225,7 +315,11 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",
@@ -361,7 +455,11 @@
       {
         "variant": {
           "slug": "annual",
-          "name": "Annual"
+          "name": "Annual",
+          "panel_entity_key": [
+            "id",
+            "child"
+          ]
         },
         "valid_from": "2010-01-01",
         "valid_to": "2025-12-31",

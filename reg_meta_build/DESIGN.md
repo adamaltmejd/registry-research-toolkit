@@ -3015,10 +3015,11 @@ a mapping the parent does not serve, two columns of one projection, two projecti
 sharing a cell the parent lacks, and every third table still conflict, each with the
 ordinary located `inventory_cell_conflict`. The order's `PARENT_SERVES` is the same rule
 ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"), so it drops exactly the
-mappings this check admitted as served. The order emits a shared non-key cell from the
-parent alone and keeps every key cell (an identifier, or the bound variant's panel
-entity or time key) in both files, so each file carries its own row keys and the user
-joins a projection file to its parent's on the shared key
+mappings this check admitted as served. The order emits a shared value cell from the
+parent alone and keeps every ordered key or identifier cell (the bound variant's panel
+entity or time key, or an `is_identifier` variable such as a household id) in both
+files, so each file carries its own row keys and the user joins a projection file to its
+parent's on a shared id, even when the projection sits at another grain
 ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"). An undeclared overlap
 stays a refusal; the order never deduplicates one.
 

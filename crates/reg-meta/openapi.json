@@ -3627,7 +3627,7 @@
           },
           "key": {
             "type": "boolean",
-            "description": "A held key column of the output file that no binding ordered (the row key, or\nany identifier, linking ids included: [`IS_KEY`]), carried so every file joins\non its keys; absent on an ordered entry."
+            "description": "A held row key column of the output file that no binding ordered (its\nvariant's panel entity or time key, [`IS_KEY`]; a linking id comes only when\nordered), carried so every file joins on its row key; absent on an ordered entry."
           },
           "logical": {
             "$ref": "#/components/schemas/LogicalCoordinate"

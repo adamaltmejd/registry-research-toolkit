@@ -986,9 +986,9 @@ export interface components {
         OrderEntry: {
             filter?: components["schemas"]["OrderRowFilter"] | null;
             /**
-             * @description A held key column of the output file that no binding ordered (the row key, or
-             *     any identifier, linking ids included: [`IS_KEY`]), carried so every file joins
-             *     on its keys; absent on an ordered entry.
+             * @description A held row key column of the output file that no binding ordered (its
+             *     variant's panel entity or time key, [`IS_KEY`]; a linking id comes only when
+             *     ordered), carried so every file joins on its row key; absent on an ordered entry.
              */
             key?: boolean;
             logical: components["schemas"]["LogicalCoordinate"];
