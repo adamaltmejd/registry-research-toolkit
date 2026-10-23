@@ -201,7 +201,7 @@ def edition_periods(edition: object) -> list[tuple[str, str]]:
 
 
 def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> dict:
-    """Compare table/cell census and all four relations, keeping identifiers private.
+    """Compare table/cell census and all five relations, keeping identifiers private.
 
     `path` is the accepted candidate (its `manifest.json` roles name the census
     and inventory); `spec_dir` is the steward spec the artifact was compiled
@@ -286,12 +286,8 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
             }
             for column in (None, *sorted(raw[table]))
         )
-    expected_tables, expected_columns, expected_periods, expected_mappings = (
-        [],
-        [],
-        [],
-        [],
-    )
+    expected_tables, expected_columns, expected_periods = [], [], []
+    expected_mappings, expected_keys = [], []
     unmapped_reasons = Counter()
     with open_db(db) as conn:
         manifest = get_manifest(conn)
@@ -341,7 +337,11 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
                         raise ValueError(
                             "Holdings mapping coordinate is missing from artifact"
                         )
-                    expected_mappings.append(
+                    # A carried join key serves no cell: it compiles into
+                    # holding_key, never holding_mapping.
+                    (
+                        expected_keys if mapping.get("carried") else expected_mappings
+                    ).append(
                         (
                             physical,
                             column["name"],
@@ -373,11 +373,18 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
             "holding_column": "SELECT ht.physical_id,hc.name,hc.unmapped_reason FROM holding_column hc JOIN holding_table ht USING(table_id)",
             "holding_period": "SELECT ht.physical_id,hp.lo,hp.hi FROM holding_period hp JOIN holding_table ht USING(table_id)",
             "holding_mapping": "SELECT ht.physical_id,hc.name,hm.variant_id,hm.variable_id,hm.representation_literal FROM holding_mapping hm JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id)",
+            "holding_key": "SELECT ht.physical_id,hc.name,hk.variant_id,hk.variable_id,hk.representation_literal FROM holding_key hk JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id)",
         }
         relations = {}
         for (name, sql), expected in zip(
             queries.items(),
-            (expected_tables, expected_columns, expected_periods, expected_mappings),
+            (
+                expected_tables,
+                expected_columns,
+                expected_periods,
+                expected_mappings,
+                expected_keys,
+            ),
             strict=True,
         ):
             actual = [tuple(row) for row in conn.execute(sql)]
@@ -391,7 +398,8 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
         folded_equal = all(
             literal.lower() == representative.lower()
             for literal, representative in conn.execute(
-                "SELECT representation_literal,representation_canonical FROM holding_mapping"
+                "SELECT representation_literal,representation_canonical FROM holding_mapping "
+                "UNION ALL SELECT representation_literal,representation_canonical FROM holding_key"
             )
         )
     spec_sha = spec_digest(spec_dir)

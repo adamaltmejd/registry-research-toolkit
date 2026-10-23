@@ -38,6 +38,9 @@ class AcceptanceBinding:
             "steward": steward,
             "reg_meta_version": "conformance",
             "name": "Acceptance sample",
+            # Not the `dta` default: Stata's 32-character name limit would refuse
+            # long column names, and this sample judges admission, not naming.
+            "extract_format": "parquet",
             "sources": [
                 {
                     "name": "Sample",
