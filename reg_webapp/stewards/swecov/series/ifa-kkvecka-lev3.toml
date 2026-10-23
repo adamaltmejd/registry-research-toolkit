@@ -1,8 +1,10 @@
 id = "ifa-kkvecka-lev3"
 register = "iaf/kassakortsvecka"
-variants = ["iaf/kassakortsvecka/_default"]
+variants = ["iaf/kassakortsvecka/kalender"]
 
 [[table]]
 table = "IFA_KKvecka_Lev3"
-# Maintainer-decided 2026-10-22 (#1810): IAF ASTAT holdings start 2015; editions 2015–2023.
-edition = { from = 2015, to = 2023 }
+# A week calendar (kassakortsvecka -> dates), not person data: one
+# lookup with no calendar coverage, so it is year-independent (row-key follow-up to
+# #1849, 2026-10-23).
+period_scope = "year_independent"

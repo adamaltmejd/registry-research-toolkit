@@ -137,9 +137,9 @@ members = [{ variable = "personnrap1", value = "1", label = "1" }, { variable = 
 
 [[identity.partition]]
 variable = "2.57"
-columns = { PNR = "2.57.pnr", PersonNr = "2.57.personnr", PersonNrAnkn = "2.57.personnrankn", PersonNrMor = "2.57.personnrmor", PersonNrSamh = "2.57.personnrsamh", PersonNrsamh = "2.57.personnrsamh" }
+columns = { PNR = "2.57.personnr", PersonNr = "2.57.personnr", PersonNrAnkn = "2.57.personnrankn", PersonNrMor = "2.57.personnrmor", PersonNrSamh = "2.57.personnrsamh", PersonNrsamh = "2.57.personnrsamh" }
 unassigned_columns = ["Personnr"]
-columns_ref = "curation/relations.toml replaced_by edge scb/rtb/pnr -> scb/rtb/personnr (PNR -> PersonNr, 1998); fqid_slugs/scb.toml comment on 2.57.personnr: PersonNrSamh/PersonNrsamh is case-wobble of one column. Personnr has no ownership declaration."
+columns_ref = "PNR and PersonNr are one subject personnummer (SCB VarId 57, name Personnummer) under a sequential delivery-column rename: PNR only on familjer-1990-1997 (1990-1997), PersonNr on every other RTB variant, never co-delivered. One owner under the Y-211/Y-276 sequential-rename policy, so every RTB variant keys on personnr; this replaces the #846 pnr sibling and its replaced_by edge (row-key follow-up to #1849, 2026-10-23). PersonNrSamh/PersonNrsamh is case-wobble of one column. Personnr has no ownership declaration."
 
 # Y-306 2026-09-29: nine RTB sequential delivery-column renames. Each family's
 # exact literals occupy disjoint, non-interleaved windows and map to one existing
@@ -681,7 +681,7 @@ panel_time_grain = "delivery"
 native_id = "2.1524"
 slug = "familjer-1990-1997"
 display_group = "Familjer 1990-1997"
-panel_entity_key = "pnr"
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 

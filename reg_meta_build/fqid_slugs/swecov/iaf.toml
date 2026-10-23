@@ -49,8 +49,8 @@ panel_entity_key = "kassanr"
 [register."7553107867301677954"]
 slug = "kassakortsvecka"
 
-[register_variant."7553107867301677954.6719584853787947455"]
-slug = "_default"
+[register_variant."7553107867301677954.5842639139790026534"]
+slug = "kalender"
 panel_entity_key = "kassakortsvecka"
 
 [register."8830696829911089636"]
