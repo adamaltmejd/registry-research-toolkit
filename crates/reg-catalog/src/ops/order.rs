@@ -1160,7 +1160,8 @@ const PARENT_SERVES: &str = "EXISTS (SELECT 1 FROM holding_table pt \
 /// `panel_entity_key` or `panel_time_key`, each a bare slug or a JSON list of slugs
 /// (decoded as `show`'s `panel_key` does). Any other identifier is a linking id,
 /// carried only when ordered (maintainer ruling 2026-10-23); a variant that declares no
-/// panel key has no row key here.
+/// panel key has no row key here. This decides what [`held_keys`] auto-adds; [`kept`]
+/// also keeps an ordered identifier ([`IS_IDENTIFIER`]).
 // simplify: the `panel_time_key` sentinel `period` passes through as a slug, so a
 // variable slugged `period` would count as a time key; exclude the sentinel if such a
 // variable is ever bound as a panel key.
@@ -1171,10 +1172,17 @@ const IS_KEY: &str = "EXISTS (SELECT 1 FROM variable v JOIN register_variant rv 
           OR v.slug IN (SELECT value FROM json_each(CASE WHEN rv.panel_time_key LIKE '[%' \
               THEN rv.panel_time_key ELSE json_array(rv.panel_time_key) END))))";
 
-/// A projection's mapping its parent serves is dropped unless it is a key: the
-/// parent alone serves a shared non-key cell, while each file carries its own keys.
+/// Whether mapping `hm` binds an identifier variable: a row key or a linking id.
+const IS_IDENTIFIER: &str = "EXISTS (SELECT 1 FROM variable v \
+     WHERE v.variable_id = hm.variable_id AND v.is_identifier = 1)";
+
+/// An ordered projection mapping its parent serves is dropped unless it is a row key
+/// or an identifier: the parent alone serves a shared value cell, while a projection
+/// may sit at another grain (EKB's household file beside its person file), so a
+/// shared id emitted from the parent alone would leave the projection's rows
+/// unjoinable on it. This only filters ordered matches; it adds nothing.
 fn kept() -> String {
-    format!("({IS_KEY} OR NOT {PARENT_SERVES})")
+    format!("({IS_KEY} OR {IS_IDENTIFIER} OR NOT {PARENT_SERVES})")
 }
 
 /// The held locations of the variable under the variant in tables of `scope`

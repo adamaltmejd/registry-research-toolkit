@@ -1,0 +1,119 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Household",
+        "variable": "scb/example/household",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Household",
+        "edition": "2019",
+        "projection": "hushall",
+        "table": "Hush"
+      },
+      "requested_period": "2019",
+      "source": "Example"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Household",
+        "variable": "scb/example/household",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Household",
+        "edition": "2019",
+        "table": "Pers"
+      },
+      "requested_period": "2019",
+      "source": "Example"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "HhAmount",
+        "variable": "scb/example/hhamount",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "HhAmount",
+        "edition": "2019",
+        "projection": "hushall",
+        "table": "Hush"
+      },
+      "requested_period": "2019",
+      "source": "Example"
+    },
+    {
+      "key": true,
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Month",
+        "variable": "scb/example/month",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Month",
+        "edition": "2019",
+        "projection": "hushall",
+        "table": "Hush"
+      },
+      "requested_period": "2019",
+      "source": "Example"
+    },
+    {
+      "key": true,
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Month",
+        "variable": "scb/example/month",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Month",
+        "edition": "2019",
+        "table": "Pers"
+      },
+      "requested_period": "2019",
+      "source": "Example"
+    },
+    {
+      "key": true,
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Recipient",
+        "variable": "scb/example/recipient",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Recipient",
+        "edition": "2019",
+        "table": "Pers"
+      },
+      "requested_period": "2019",
+      "source": "Example"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "582daf5815b89e658901e474fca359bf5388e57340a781e7ee4127b0248b60f1",
+    "catalog_schema_version": "12.2.0",
+    "mode": "steward_holdings",
+    "project_hash": "7a5e01a0aba5e82a629c13ef8e10921081c170cf2cb7b473bfbd3dbdaae4c450",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

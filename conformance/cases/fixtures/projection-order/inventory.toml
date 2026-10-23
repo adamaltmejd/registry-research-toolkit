@@ -209,3 +209,51 @@ name = "Extra"
 register_variant = "scb/example/annual"
 variable = "scb/example/extra"
 representation = "Extra"
+
+# A coarser-grain projection, as EKB's household file is of its person file: Hush
+# is household x month and lacks Recipient, the monthly entity key. Household, an
+# identifier both tables hold, is a monthly linking id, not a row key.
+[[table]]
+id = "Pers"
+edition = 2019
+[[table.column]]
+name = "Household"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/household"
+representation = "Household"
+[[table.column]]
+name = "Month"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/month"
+representation = "Month"
+[[table.column]]
+name = "Recipient"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/recipient"
+representation = "Recipient"
+
+[[table]]
+id = "Hush"
+edition = 2019
+projection = { of = "Pers", token = "hushall" }
+[[table.column]]
+name = "HhAmount"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/hhamount"
+representation = "HhAmount"
+[[table.column]]
+name = "Household"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/household"
+representation = "Household"
+[[table.column]]
+name = "Month"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/month"
+representation = "Month"

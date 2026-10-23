@@ -546,31 +546,36 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    (`holding_mapping.window_lo`/`window_hi`, #1645) likewise limits a mapping to its own
    period: the column matches, covers and is emitted only there, and a request outside
    every window of a column is a gap, never served from its table's edition. A declared
-   projection's non-key mapping (`holding_table.projection_of`, #1634) is dropped
-   wherever its parent serves it: the parent maps the same canonical triple over that
-   instant, at the same position. A projection's position member is served only by the
-   parent's member of that position, and a plain column, a year or month member or a
-   windowed mapping only by a parent mapping that is not a position member. The parent
-   serves a cell only where its own served period (its edition, or the mapping's member
-   or window) covers the instant the projection's mapping serves: a projection cell
-   outside the parent's window stays the projection's and counts as its own cell for
-   emission (conformance `order/projection-windows`). This is the inventory's rule
+   projection's value mapping (`holding_table.projection_of`, #1634) is dropped wherever
+   its parent serves it: the parent maps the same canonical triple over that instant, at
+   the same position. A projection's position member is served only by the parent's
+   member of that position, and a plain column, a year or month member or a windowed
+   mapping only by a parent mapping that is not a position member. The parent serves a
+   cell only where its own served period (its edition, or the mapping's member or
+   window) covers the instant the projection's mapping serves: a projection cell outside
+   the parent's window stays the projection's and counts as its own cell for emission
+   (conformance `order/projection-windows`). This is the inventory's rule
    ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Projections"), which
    refuses any other overlap, so the parent alone serves each shared cell and no
    projection cell is dropped without a parent cell in its place. A key mapping (the
-   bound variant's `panel_entity_key` or `panel_time_key`, a bare slug or a JSON list;
-   any other identifier is a linking id, not a key) is never dropped: each file carries
-   its own row keys. Tables without the declaration are never filtered.
+   bound variant's `panel_entity_key` or `panel_time_key`, a bare slug or a JSON list)
+   or an identifier mapping (`is_identifier`, a linking id included) is never dropped:
+   each file carries its own row keys, and a projection may sit at another grain (EKB's
+   household file beside its person file, keyed by a household id the person file also
+   holds), so an ordered id emitted from the parent alone would leave the projection's
+   rows unjoinable on it. This filters ordered matches only; which keys a file gains
+   unordered is step 5's narrower test. Tables without the declaration are never
+   filtered.
 4. **Emission.** Every matching table is emitted whole, every partition included. A
    projection's output file (its variant and table edition, below) is emitted when the
    projection contributes at least one cell its parent does not serve anywhere in that
-   file, key or non-key, from any source or period; its shared key cells then come along
-   with it. A projection file whose ordered cells its parent all serves is not emitted,
-   its shared keys included, so no file holds only keys its parent's file also holds.
-   Entries carry the literal physical table and column; the canonical representation is
-   a join key, not an output substitute. Entries keep project order, then table,
-   edition, member index and column, so members order by index (`DIA2` before `DIA10`),
-   not by name.
+   file, key or non-key, from any source or period; its shared key and identifier cells
+   then come along with it. A projection file whose ordered cells its parent all serves
+   is not emitted, its shared keys included, so no file holds only keys its parent's
+   file also holds. Entries carry the literal physical table and column; the canonical
+   representation is a join key, not an output substitute. Entries keep project order,
+   then table, edition, member index and column, so members order by index (`DIA2`
+   before `DIA10`), not by name.
 5. **Held keys.** On a steward artifact every emitted file then carries its table's held
    row key, whether or not the order binds it: each column of the file's table that maps
    a key of the file's variant (the key test of step 3: the variant's `panel_entity_key`
