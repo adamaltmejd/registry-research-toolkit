@@ -52,9 +52,10 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    file's columns are its entries' distinct physical columns in manifest order (ordered
    entries first, then held keys). Every entry of a file must carry the same name and
    the same filter. A name outside slug spelling is refused, so a manifest cannot name a
-   path, and so are two files whose names differ only in case (MONA's file system would
-   let one overwrite the other). A table or column name is at most 128 UTF-16 units, SQL
-   Server's `sysname`.
+   path; so are two files whose names differ only in case (MONA's file system would let
+   one overwrite the other), a file named like the run's own logs, and a Windows device
+   name (`nul`, `con`, ...), which would swallow the data. A table or column name is at
+   most 128 UTF-16 units, SQL Server's `sysname`.
 3. Resolve every file before writing any: its table's schema from
    `INFORMATION_SCHEMA.TABLES` (exactly one hit; the holdings put 17 views in schema
    `P1105` and the rest in `dbo`, with no name in both), then each column and the period

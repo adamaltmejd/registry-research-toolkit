@@ -54,3 +54,20 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
   expect_identical(run_runner(base)$status, 6L)
   expect_refused(base, "900", 6L)
 })
+
+test_that("an output file named like the run log is refused (6)", {
+  # Regression: a csv file named run_log.csv is overwritten by the run log, so
+  # the order succeeds with its data gone.
+  base <- export_root(
+    text = list(
+      `900` = order_text("row-filter", function(doc) {
+        for (i in seq_along(doc$entries)) {
+          doc$entries[[i]]$physical$file <- "Run_Log"
+        }
+        doc
+      })
+    )
+  )
+  expect_identical(run_runner(base)$status, 6L)
+  expect_refused(base, "900", 6L)
+})

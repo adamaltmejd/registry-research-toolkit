@@ -113,7 +113,7 @@ MAPPED_TYPES <- c(
 # Stata holds (larger ones are its missing codes).
 STATA_LONG_MAX <- 2147483620L
 DOUBLE_EXACT <- 2^53
-STATA_DOUBLE_MAX <- 8.988465674311579e307
+STATA_DOUBLE_MAX <- 8.98846567431157e307
 # A decimal of at most this many digits is a Stata double; a wider one is text.
 DTA_DOUBLE_DIGITS <- 15L
 
@@ -463,6 +463,26 @@ plan_files <- function(entries, format) {
       "manifest",
       "two output files share the name ",
       paste(clash, collapse = ", ")
+    )
+  }
+  # The runner's own logs, and Windows device names (whatever the extension),
+  # which would swallow the file's data.
+  device <- c(
+    "con",
+    "prn",
+    "aux",
+    "nul",
+    paste0(c("com", "lpt"), rep(1:9, each = 2))
+  )
+  taken <- file_names %in%
+    c("run_log.csv", "error_log.csv") |
+    sub("\\..*$", "", file_names) %in% device
+  if (any(taken)) {
+    refuse(
+      "manifest",
+      "output file name ",
+      paste(file_names[taken], collapse = ", "),
+      " is reserved"
     )
   }
   files

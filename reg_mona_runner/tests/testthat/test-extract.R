@@ -163,10 +163,16 @@ test_that("orders extract their files from SQL Server", {
     broken$message,
     " failed \\(driver message withheld: it may quote row values\\)$"
   )
-  # The refusal names the column and the bound, never the value.
+  # The refusal names the column and the bound, never the value (and is not
+  # another extract failure, which shares exit 8).
   inexact <- readLines(file.path(
     export_dir(base, "inexact-dta"),
     "error_log.csv"
   ))
+  expect_true(any(grepl(
+    "column LopNr holds a value beyond 2^53",
+    inexact,
+    fixed = TRUE
+  )))
   expect_false(any(grepl("9007199254740993", inexact, fixed = TRUE)))
 })
