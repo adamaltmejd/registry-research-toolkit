@@ -3229,10 +3229,10 @@ def _check_representation_replaced_by(
 
 def _check_variant_families(conn: sqlite3.Connection, result: ValidationResult) -> None:
     """#1840: a variant succession family is a chain whose members deliver disjoint
-    days, by their dated states and, on a steward artifact, by the editions held
-    under them. A dated source period reaches its variant's whole family and the
-    order resolves each day to the one member delivering it (crates/DESIGN.md,
-    "Order manifest"), so a shared day would make that choice a guess.
+    days, by their dated states. A dated source period reaches its variant's whole
+    family and the order resolves each day to the one member delivering it
+    (crates/DESIGN.md, "Order manifest"), so a shared day would make that choice a
+    guess.
 
     A family is a connected component of `variant_replaced_by` edges inside one
     register, as the reader derives it (`show.rs` `variant_families`)."""
@@ -3262,19 +3262,11 @@ def _check_variant_families(conn: sqlite3.Connection, result: ValidationResult) 
         neighbors.setdefault(b, set()).add(a)
         outgoing[a] = outgoing.get(a, 0) + 1
         incoming[b] = incoming.get(b, 0) + 1
-    days = {
-        "deliver": (
-            "SELECT DISTINCT valid_from, valid_to FROM variable_state "
-            "WHERE register_variant_id = ? AND period_scope = 'intervals' "
-            "AND valid_from IS NOT NULL AND valid_to IS NOT NULL"
-        ),
-        "are held under": (
-            "SELECT DISTINCT hp.lo, hp.hi FROM holding_period hp "
-            "JOIN holding_table ht USING(table_id) WHERE ht.scope = 'intervals' "
-            "AND EXISTS (SELECT 1 FROM holding_column hc JOIN holding_mapping hm "
-            "USING(column_id) WHERE hc.table_id = ht.table_id AND hm.variant_id = ?)"
-        ),
-    }
+    delivered = (
+        "SELECT DISTINCT valid_from, valid_to FROM variable_state "
+        "WHERE register_variant_id = ? AND period_scope = 'intervals' "
+        "AND valid_from IS NOT NULL AND valid_to IS NOT NULL"
+    )
     failures = []
     seen: set[tuple[str, str, str]] = set()
     for start in sorted(neighbors):
@@ -3297,30 +3289,28 @@ def _check_variant_families(conn: sqlite3.Connection, result: ValidationResult) 
                 f"variant succession family {family} is not a chain: "
                 f"{', '.join(forks)} has more than one successor or predecessor"
             )
-        for verb, sql in days.items():
-            spans = {
-                m: [tuple(r) for r in conn.execute(sql, (ids[m],))] for m in members
-            }
-            for i, a in enumerate(members):
-                for b in members[i + 1 :]:
-                    shared = sorted(
-                        (max(x[0], y[0]), min(x[1], y[1]))
-                        for x in spans[a]
-                        for y in spans[b]
-                        if max(x[0], y[0]) <= min(x[1], y[1])
+        spans = {
+            m: [tuple(r) for r in conn.execute(delivered, (ids[m],))] for m in members
+        }
+        for i, a in enumerate(members):
+            for b in members[i + 1 :]:
+                shared = sorted(
+                    (max(x[0], y[0]), min(x[1], y[1]))
+                    for x in spans[a]
+                    for y in spans[b]
+                    if max(x[0], y[0]) <= min(x[1], y[1])
+                )
+                if shared:
+                    lo, hi = shared[0]
+                    failures.append(
+                        f"variant succession family {family}: {a[2]} and {b[2]} "
+                        f"both deliver days from {lo} to {hi}"
                     )
-                    if shared:
-                        lo, hi = shared[0]
-                        failures.append(
-                            f"variant succession family {family}: {a[2]} and {b[2]} "
-                            f"both {verb} days from {lo} to {hi}"
-                        )
     for failure in failures:
         result.fail(
             f"{failure}; a family's members must deliver disjoint days in a chain, "
             "so an order resolves each day to one member: correct or remove the "
-            "variant [[edge]] in curation/relations.toml (or the steward inventory "
-            "that holds the shared edition)"
+            "variant [[edge]] in curation/relations.toml"
         )
     if not failures:
         result.ok(

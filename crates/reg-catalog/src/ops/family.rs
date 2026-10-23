@@ -4,9 +4,8 @@
 //! ([`variant_families`]), or the named variant alone; `_default` resolves the named
 //! variant exactly.
 //!
-//! The build refuses a family whose members deliver, or a steward holds under them, a
-//! shared day (`validate_built_db`), so each day has at most one delivering member and
-//! the split needs no tie-break.
+//! The build refuses a family whose members deliver a shared day (`validate_built_db`),
+//! so each day has at most one delivering member and the split needs no tie-break.
 
 use std::collections::BTreeMap;
 
