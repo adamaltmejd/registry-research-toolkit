@@ -16,6 +16,10 @@
             "variable": "scb/example/value",
             "type": "numeric",
             "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/group",
+            "type": "categorical"
           }
         ]
       }

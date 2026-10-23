@@ -5126,7 +5126,7 @@
               "$ref": "#/$defs/OrderProvenance"
             },
             "version": {
-              "description": "The manifest contract version, 2.",
+              "description": "The manifest contract version, 3.",
               "format": "int32",
               "minimum": 0,
               "type": "integer"
@@ -5247,6 +5247,13 @@
             },
             "projection": {
               "description": "The table's projection token (#1634): the table is a declared projection\nof another table's delivery, extracted as its own file; absent otherwise.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "stata_name": {
+              "description": "The name a `dta` order writes the column under, with `column` as the\nvariable's label, when `column` is not a Stata variable name: its first 25\ncharacters made a name, `_` and 6 hex digits of its SHA-256; absent otherwise,\nand on every `parquet` or `csv` order.",
               "type": [
                 "string",
                 "null"

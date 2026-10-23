@@ -1,0 +1,16 @@
+{
+  "types": {
+    "_Value_e5ce0c": "numeric %12.0g",
+    "LopNrForSammanstalldaFore_bdf70d": "numeric %20.0g",
+    "LopNrForSammanstalldaFore_3912c3": "numeric %20.0g"
+  },
+  "labels": {
+    "_Value_e5ce0c": "ⒶValue",
+    "LopNrForSammanstalldaFore_bdf70d": "LopNrForSammanstalldaForetagsgrupper",
+    "LopNrForSammanstalldaFore_3912c3": "LopNrForSammanstalldaForetagsuppgifter"
+  },
+  "rows": [
+    ["7", "101", "1001"],
+    [null, "102", "1002"]
+  ]
+}

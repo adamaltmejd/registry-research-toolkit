@@ -66,5 +66,39 @@
         "provenance": null
       }
     ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "group",
+    "provider_key": "3",
+    "name": "Group",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": true,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual",
+          "panel_entity_key": [
+            "person"
+          ]
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "LopNrForSammanstalldaForetagsgrupper",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
   }
 ]

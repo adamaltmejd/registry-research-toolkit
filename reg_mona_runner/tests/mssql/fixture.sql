@@ -51,8 +51,9 @@ GO
 -- Typed: one value of each SQL type a .dta or .parquet file maps (a leading-zero
 -- code, a day before Stata's 1960 epoch, a 12-digit bigint id, an 18-digit
 -- decimal no double holds, a decimal with a scale), a row of NULLs and a row with
--- an empty string. Long: a column name over Stata's 32 characters. Inexact: a
--- bigint id 2^53 + 1, which no double holds.
+-- an empty string. Accounts: the stata-names golden's table, two column names
+-- over Stata's 32 characters and one starting with a symbol (written under the
+-- order's aliases). Inexact: a bigint id 2^53 + 1, which no double holds.
 CREATE TABLE dbo.Typed (
   LopNr bigint, Kod char(4), Datum date, Ref decimal(18, 0), Belopp decimal(9, 2),
   Antal int, Stamp datetime2, Flag bit, Namn nvarchar(50)
@@ -62,7 +63,11 @@ INSERT INTO dbo.Typed VALUES
    '2019-01-01T10:00:00', 1, N'Västerås'),
   (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (201001011234, '0001', '2020-02-29', 1, -0.5, 7, '2020-02-29T23:59:59', 0, N'');
-CREATE TABLE dbo.Long (LopNrForSammanstalldaForetagsuppgifter bigint);
+CREATE TABLE dbo.Accounts (
+  LopNrForSammanstalldaForetagsuppgifter bigint, [ⒶValue] int,
+  LopNrForSammanstalldaForetagsgrupper bigint
+);
+INSERT INTO dbo.Accounts VALUES (1001, 7, 101), (1002, NULL, 102);
 CREATE TABLE dbo.Inexact (LopNr bigint);
 INSERT INTO dbo.Inexact VALUES (9007199254740993);
 GO

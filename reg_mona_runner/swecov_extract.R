@@ -285,13 +285,13 @@ check_entry <- function(e, where) {
     ph,
     paste0(where, ".physical"),
     c("file", "edition", "table", "column"),
-    c("partition", "projection", "member")
+    c("partition", "projection", "member", "stata_name")
   )
   check_string(ph$file, paste0(where, ".physical.file"))
   check_string(ph$edition, paste0(where, ".physical.edition"))
   check_name(ph$table, paste0(where, ".physical.table"))
   check_name(ph$column, paste0(where, ".physical.column"))
-  for (k in c("partition", "projection")) {
+  for (k in c("partition", "projection", "stata_name")) {
     if (!is.null(ph[[k]])) check_string(ph[[k]], paste0(where, ".physical.", k))
   }
   if (!is.null(ph$member)) {
@@ -319,12 +319,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 2)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 3)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 2"
+      " is not supported; this runner reads version 3"
     )
   }
   p <- doc$provenance
@@ -430,6 +430,7 @@ plan_files <- function(entries, format) {
         file = ph$file,
         table = ph$table,
         columns = character(),
+        names = character(),
         filter = e$filter,
         first = i
       )
@@ -450,8 +451,55 @@ plan_files <- function(entries, format) {
         ")"
       )
     }
-    f$columns <- union(f$columns, ph$column)
+    # The name the column is written under: its .dta alias, or its own name.
+    name <- if (is.null(ph$stata_name)) ph$column else ph$stata_name
+    if (!is.null(ph$stata_name) && format != "dta") {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical.stata_name is set on a .",
+        format,
+        " order"
+      )
+    }
+    # Only a name .dta cannot hold is renamed, so an alias never takes the name
+    # of a column written under its own.
+    if (!is.null(ph$stata_name) && stata_name_ok(ph$column)) {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical.stata_name renames column ",
+        ph$column,
+        ", which is a Stata variable name"
+      )
+    }
+    j <- match(ph$column, f$columns)
+    if (is.na(j)) {
+      f$columns <- c(f$columns, ph$column)
+      f$names <- c(f$names, name)
+    } else if (!identical(f$names[j], name)) {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical.stata_name differs from another entry's for column ",
+        ph$column,
+        " of ",
+        f$name
+      )
+    }
     files[[id]] <- f
+  }
+  for (f in files) {
+    # Case-sensitive, as Stata's variable names are.
+    clash <- unique(f$names[duplicated(f$names)])
+    if (length(clash)) {
+      refuse(
+        "manifest",
+        f$name,
+        " would hold two columns named ",
+        paste(clash, collapse = ", ")
+      )
+    }
   }
   names(files) <- NULL
   # Case-insensitive: MONA's Windows file system would let one file overwrite
@@ -658,8 +706,8 @@ resolve_columns <- function(con, schema_id, table, columns) {
 
 # Whether `name` is a variable name a .dta file (format 118) can hold: Stata's
 # rule (stricter than ReadStat, which writes any non-ASCII name), which
-# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats so a dta order
-# blocks before it reaches MONA. 1 to 32 characters; a letter (\p{L}) or _
+# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats, so every name a
+# dta order writes (a column's own, or its stata_name) passes this backstop. 1 to 32 characters; a letter (\p{L}) or _
 # first, then letters, ASCII digits and _; not a reserved word, nor str and a
 # digit.
 stata_name_ok <- function(name) {
@@ -691,8 +739,9 @@ stata_name_ok <- function(name) {
 }
 
 # Refuse, before any row is read, a column of `file` the order's format cannot
-# hold: a SQL type outside MAPPED_TYPES (.dta and .parquet) or a name that is
-# not a Stata variable name (.dta). A CSV holds anything as text.
+# hold: a SQL type outside MAPPED_TYPES (.dta and .parquet), or a name it is
+# written under (its stata_name, else its own) that is not a Stata variable name
+# and a label too long for its full name (.dta). A CSV holds anything as text.
 check_format <- function(file, types, format) {
   if (format == "csv") {
     return(invisible())
@@ -712,15 +761,33 @@ check_format <- function(file, types, format) {
         format
       )
     }
-    if (format == "dta" && !stata_name_ok(column)) {
+    if (format == "dta" && !stata_name_ok(file$names[j])) {
       refuse(
         "resolve",
         "column ",
         column,
         " of ",
         file$table,
-        " is not a Stata variable name (1 to 32 letters, digits or _, not ",
-        "starting with a digit, not a reserved word): order it as parquet or csv"
+        " would be written as ",
+        file$names[j],
+        ", which is not a Stata variable name (1 to 32 letters, digits or _, ",
+        "not starting with a digit, not a reserved word)"
+      )
+    }
+    # A renamed column's label is its full name, and Stata shows at most 80
+    # characters of a label (haven cuts one past 320 UTF-8 bytes without a word).
+    if (
+      format == "dta" &&
+        file$names[j] != column &&
+        nchar(column) > 80L
+    ) {
+      refuse(
+        "resolve",
+        "column ",
+        column,
+        " of ",
+        file$table,
+        " is longer than a Stata variable label holds (80 characters)"
       )
     }
   }
@@ -1082,9 +1149,11 @@ dta_column <- function(x, type, precision, column, what) {
 }
 
 # Collects the converted chunks and writes the file once: haven cannot append.
+# Each column is written under its `names` entry (its manifest stata_name, or
+# its own name); a renamed column's own name is its variable label.
 # simplify: the whole file is in memory; a LISA year file is about 8M rows x
 # 100 columns, so stream (or split) if a real .dta order exhausts MONA's RAM.
-dta_writer <- function(path, columns, types) {
+dta_writer <- function(path, columns, types, names) {
   what <- paste0("writing ", basename(path))
   state <- new.env()
   state$chunks <- list()
@@ -1117,12 +1186,15 @@ dta_writer <- function(path, columns, types) {
         if (inherits(x, "POSIXct")) {
           attr(x, "tzone") <- "UTC"
         }
+        if (names[j] != columns[j]) {
+          attr(x, "label") <- columns[j]
+        }
         x
       })
       state$chunks <- list()
       haven::write_dta(
         structure(
-          stats::setNames(data, columns),
+          stats::setNames(data, names),
           class = "data.frame",
           row.names = .set_row_names(length(data[[1]]))
         ),
@@ -1136,16 +1208,18 @@ dta_writer <- function(path, columns, types) {
   )
 }
 
-WRITERS <- list(dta = dta_writer, parquet = parquet_writer, csv = csv_writer)
+WRITERS <- list(parquet = parquet_writer, csv = csv_writer)
 
 extract_file <- function(con, file, schema_id, types, format, out) {
   batch <- select_batch(file, schema_id, types)
   n <- length(file$columns)
-  writer <- WRITERS[[format]](
-    file.path(out, file$name),
-    file$columns,
-    lapply(types, `[`, seq_len(n))
-  )
+  path <- file.path(out, file$name)
+  column_types <- lapply(types, `[`, seq_len(n))
+  writer <- if (format == "dta") {
+    dta_writer(path, file$columns, column_types, file$names)
+  } else {
+    WRITERS[[format]](path, file$columns, column_types)
+  }
   on.exit(writer$release(), add = TRUE)
   what <- paste0("extracting ", file$name)
   res <- tryCatch(

@@ -1089,7 +1089,7 @@ export interface components {
             provenance: components["schemas"]["OrderProvenance"];
             /**
              * Format: int32
-             * @description The manifest contract version, 2.
+             * @description The manifest contract version, 3.
              */
             version: number;
         };
@@ -1170,6 +1170,13 @@ export interface components {
              *     of another table's delivery, extracted as its own file; absent otherwise.
              */
             projection?: string | null;
+            /**
+             * @description The name a `dta` order writes the column under, with `column` as the
+             *     variable's label, when `column` is not a Stata variable name: its first 25
+             *     characters made a name, `_` and 6 hex digits of its SHA-256; absent otherwise,
+             *     and on every `parquet` or `csv` order.
+             */
+            stata_name?: string | null;
             table: string;
         };
         /**

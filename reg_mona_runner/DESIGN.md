@@ -1,7 +1,7 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
 `swecov_extract.R` turns order manifests into extract files inside MONA. It is the first
-reader of the order manifest, whose v2 contract is frozen in
+reader of the order manifest, whose v3 contract is frozen in
 [../crates/DESIGN.md](../crates/DESIGN.md) ("Order manifest"). A SWECOV data manager
 runs it by hand; no agent and no network reach MONA, so the script is one self-contained
 file that gets uploaded with the orders. Run steps are in [README.md](README.md).
@@ -44,7 +44,7 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
 
 1. Parse and check the whole manifest before touching the database: version, then mode
    and steward, then shape. Each object is closed, so an unknown field anywhere is a
-   refusal (the v2 freeze relies on this). `extract_format` is required: the runner has
+   refusal (the v3 freeze relies on this). `extract_format` is required: the runner has
    no default format.
 2. Plan the files: one per physical table and table edition, whatever variants bind it,
    named `<physical.file>.<format>` (the catalog names the file after the table,
@@ -62,8 +62,9 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    column's `DATA_TYPE` (and each column's precision and scale). Names match
    byte-exactly (`Latin1_General_BIN2`). A column the format cannot hold is refused
    here, before any row is read: for `.dta` and `.parquet` a SQL type outside the
-   mapping below, for `.dta` a name that is not a Stata variable name (the order
-   operation blocks the same names as `stata_name_invalid`, so this is a backstop).
+   mapping below, for `.dta` a name it is written under that is not a Stata variable
+   name (the order gives every such column a `stata_name`, so this is a backstop) or a
+   full name longer than a variable label holds (80 characters).
 4. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
    order's one format (below), then write `run_log.csv` (file, rows, columns, filter;
    the file name's extension is the format).
@@ -150,8 +151,13 @@ Choices behind the table:
 - **Text NULL is `""` in `.dta`.** Stata has no missing string, and reads an empty
   string as missing. CSV and Parquet keep NULL apart from `""`.
 - **Stata limits.** Format 118 (Stata 14 and later) is UTF-8 with 32-character names and
-  strL for text over 2045 bytes. `%tc` holds milliseconds, so a `datetime2`'s finer
-  digits are dropped; Parquet keeps microseconds, dropping `datetime2(7)`'s 100 ns
+  strL for text over 2045 bytes. A column whose name is not a Stata variable name is
+  written under the entry's `physical.stata_name`, the order's alias
+  ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"), with its full name as
+  the variable label. Every entry of a file names a column under one alias, only a
+  column that is not a Stata variable name has one, and no two columns of a file share a
+  name, or the order is refused (exit 6). `%tc` holds milliseconds, so a `datetime2`'s
+  finer digits are dropped; Parquet keeps microseconds, dropping `datetime2(7)`'s 100 ns
   digit; CSV already writes whole seconds.
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
   chunk). haven cannot append, so a `.dta` file is collected whole and written once: the
