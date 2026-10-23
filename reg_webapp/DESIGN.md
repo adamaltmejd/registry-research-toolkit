@@ -772,9 +772,11 @@ which reg_meta build it reflects without navigating away.
 window" control (#614/#611), reachable on every route. It sets the active project window
 over the catalog's bounds (`window_bounds.ts`: `/api/context`'s `period_span`, else 1960
 → the catalog vintage year from `import_date`; the current year is the pre-context
-fallback). The thumbs move live and the store is written once, on release or on each
-committed key press, so a drag is one draft edit and one autosave. It writes through
-`windowStore` (`src/lib/window.ts`) — see the store description below.
+fallback). The slider keeps that span although the drawings scale to their data (#1831):
+it shows no data, and the early years must stay reachable. The thumbs move live and the
+store is written once, on release or on each committed key press, so a drag is one draft
+edit and one autosave. It writes through `windowStore` (`src/lib/window.ts`) — see the
+store description below.
 
 ## SPA routing + production fallback
 
@@ -932,11 +934,12 @@ kind:
     the eras inside the row's one span.
 
 The **time axis** is the `Timeline` (`src/lib/Timeline.tsx`; see the Project-window
-store section): one axis over the viewed catalog's years, the active window as a band,
-the subject's coverage as a bar cut by edition ticks, a gap inside coverage hatched, and
-the part of the window outside coverage in the `info` tint (named in the header to a
-screen reader only). An open-ended coverage end is projected to the catalog vintage
-(`coverageBandEdges` in `period.ts`). The control does a different job per kind:
+store section): one axis over the page's data and the study window, rounded out to
+multiples of 5 (`dataAxis` in `period.ts`, frontend/DESIGN.md → Time), the active window
+as a band, the subject's coverage as a bar cut by edition ticks, a gap inside coverage
+hatched, and the part of the window outside coverage in the `info` tint (named in the
+header to a screen reader only). An open-ended coverage end is projected to the catalog
+vintage (`coverageBandEdges` in `period.ts`). The control does a different job per kind:
 
 - On the **variable** it is `VariableTimeline`, the selectable form, and one drawing
   with the columns (#1833): the `RepresentationPicker`'s `LaneGraph` headed by a
@@ -1652,8 +1655,8 @@ The variable page's `VariableTimeline` (#615/#671) seeds its pending selection w
 coverage-aware precedence — explicit year `?period` > intersection(coverage, window)
 when a window is set > the coverage span when none is > the bare window when there is no
 coverage > full bounds when neither — so a variable's true data coverage shows up front
-instead of the full 1960–vintage axis reading as available (M11). The part of the window
-outside coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
+instead of the whole axis reading as available (M11). The part of the window outside
+coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
 hard-clamped to the coverage span (#671). A local change writes `?period` only (never
 the global window). A window wider than coverage is information, not a warning: the
 differs-from-window warning compares the selection and the window inside coverage, so
@@ -1693,12 +1696,15 @@ fallback (`windowStore.fallback`) is seeded into `draft.window` as the clean bas
 so a window set while browsing without a project carries over into the project created
 from that browse state rather than silently reverting to full history. `newProject`
 invoked while a draft is already active (the "New" button inside a project) does NOT
-seed: the fallback is the stale no-draft value (active-draft window writes/clears don't
-update it), so the new project starts windowless (full history) unless the user sets
+seed the fallback: it is the stale no-draft value (active-draft window writes/clears
+don't update it). A deliberately created project (the banner's "Create a project", the
+"New" button) otherwise starts at 2015 to the catalog's last year (`defaultStudyWindow`;
+the whole span when the catalog ends before 2015, #1831). A project minted by a catalog
+Add with no window set stays windowless (full history): its picks were judged without
 one. An opened project (an open / restore) keeps its own `window` unchanged. The
 banner's study-window slider also has a Clear control that writes `null` back to the
 store, making full history reachable at any time after the first interaction. Filtered
-steward deployments seed the slider and per-page Timeline bounds from `/api/context`'s
+steward deployments seed the slider bounds and the axis fallback from `/api/context`'s
 `period_span` (#1037), a best-effort year span derived from admitted physical
 holding-period bounds and capped at the catalog import year. Catalog artifacts and
 holdings without dated periods fall back to the fixed 1960 → catalog-vintage bounds.

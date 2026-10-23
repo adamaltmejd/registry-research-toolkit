@@ -26,6 +26,7 @@ import {
   clampYearPeriodWire,
   clampYearWindow,
   coverageBandEdges,
+  dataAxis,
   periodWindowRelation,
   periodWireValid,
   yearWindowFromWire,
@@ -352,6 +353,16 @@ export function ConceptGroupView({
     ),
     windowMaxYear,
   );
+  // One axis for the Timeline and the lanes (DESIGN.md → Time): every
+  // member's years with the study window, rounded out.
+  const axis = dataAxis(
+    deliveredYears(
+      bands.flatMap((band) => band.rows.flatMap((row) => row.windows ?? [])),
+      windowMaxYear,
+    ),
+    projectWindow,
+    [windowMinYear, windowMaxYear],
+  );
   // The band is the active window: a `?period` narrowing (a member link
   // carries one), else the project window.
   const periodYears = yearWindowFromWire(activePeriod);
@@ -441,7 +452,7 @@ export function ConceptGroupView({
       </TechnicalDetails>
 
       <Timeline
-        axis={{ from: windowMinYear, to: windowMaxYear }}
+        axis={{ from: axis[0], to: axis[1] }}
         window={band}
         windowKind={periodYears === null ? "study" : "source"}
         coverage={coverage}
@@ -487,7 +498,8 @@ export function ConceptGroupView({
           focusKey={focusKey}
           graph={graphResource.data}
           vintageYear={vintageYear}
-          catalogYears={[windowMinYear, windowMaxYear]}
+          drawnYears={axis}
+          catalogSpan={[windowMinYear, windowMaxYear]}
           onApply={onApply}
           onStageChange={(hasDiff) => {
             setRefusal(null);

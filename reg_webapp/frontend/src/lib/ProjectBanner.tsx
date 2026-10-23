@@ -22,7 +22,7 @@ import band from "./ui/WindowBand.module.css";
 import { useStudyWindow } from "./use_project";
 import { useProjectRead } from "./use_store_read";
 import { windowStore } from "./window";
-import type { WindowBounds } from "./window_bounds";
+import { defaultStudyWindow, type WindowBounds } from "./window_bounds";
 
 /** The banner's verdict: the draft's validation, except that a source the study
  * window has moved off blocks the ORDER whatever validation said — the panel's
@@ -123,6 +123,7 @@ export function ProjectBanner({
             projectStore.requestNewProject({
               reg_meta_version: regMetaReleaseTag(seed.regMetaVersion),
               steward: seed.steward,
+              window: defaultStudyWindow(bounds),
             });
             router.navigate("/project");
           }}

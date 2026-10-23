@@ -45,11 +45,13 @@ export type DraftBinding = Omit<ProjectBinding, "type"> & {
 
 /** Seed for a new project (from `/api/context`): the canonical reg_meta release
  * tag (derive it from the deployment's bare package version with
- * `regMetaReleaseTag`) + the deployment's steward id. `name` and `sources`
- * start empty. */
+ * `regMetaReleaseTag`) + the deployment's steward id, and the default study
+ * window (`defaultStudyWindow`) where the project is created deliberately.
+ * `name` and `sources` start empty. */
 export interface ProjectSeed {
   reg_meta_version: string;
   steward: string;
+  window?: ProjectStudyWindow;
 }
 
 /** Construct a fresh Model A skeleton. `schema_version` is the one reg-core reads

@@ -409,15 +409,16 @@ function loadProject(next: RawDraft): void {
  * silently dropped on create. Guard on `draft === null`: "New" from WITHIN an
  * active project must NOT inherit the fallback — that fallback is the STALE
  * browse-time value (active-draft window writes/clears don't touch it), so seeding
- * it would silently hand the fresh project an old window. From within a draft the
- * new project starts windowless (full history) unless the user sets one.
- * Open/restore keep their OWN window (they bypass this). A `null` fallback leaves
- * the key absent. */
+ * it would silently hand the fresh project an old window. Otherwise the project
+ * takes the seed's default window (2015 to the catalog's last year, #1831), and a
+ * seed without one leaves the key absent (full history): a project minted by a
+ * catalog Add keeps the window its picks were judged against.
+ * Open/restore keep their OWN window (they bypass this). */
 function newDraft(seed: ProjectSeed): RawDraft {
   const next = newProjectData(seed);
-  const fromBrowsing = draft === null;
-  const seedWindow = windowStore.fallback;
-  if (fromBrowsing && seedWindow !== null) {
+  const seedWindow =
+    draft === null ? (windowStore.fallback ?? seed.window) : seed.window;
+  if (seedWindow !== undefined) {
     next.window = seedWindow;
   }
   return next;

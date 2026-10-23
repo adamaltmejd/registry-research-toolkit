@@ -60,8 +60,10 @@ interface Props {
   neighbours?: boolean;
   /** The catalog's build year: where a still-delivered column ends. */
   vintageYear: number;
-  /** The catalog's first and last year: the lanes' axis. */
-  catalogYears: readonly [number, number];
+  /** Years the page draws above the lanes, so both share one axis. */
+  drawnYears?: readonly number[];
+  /** The catalog's first and last year: the axis when nothing is dated. */
+  catalogSpan: readonly [number, number];
   /** Commit the diff; false keeps the staging (a refused or abandoned add). */
   onApply: (payload: StagedApplyPayload) => Promise<boolean>;
   /** Whether a diff is now staged, so the page retires a stale status line. */
@@ -96,7 +98,8 @@ export function RepresentationPicker({
   graph = null,
   neighbours = false,
   vintageYear,
-  catalogYears,
+  drawnYears = [],
+  catalogSpan,
   onApply,
   onStageChange,
   timeline,
@@ -147,7 +150,8 @@ export function RepresentationPicker({
     window,
     studyWindow,
     vintageYear,
-    catalogYears,
+    drawnYears,
+    catalogSpan,
     committed: committedRows,
     stagedAdds: adds,
     stagedRemoves: removes,

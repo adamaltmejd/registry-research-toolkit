@@ -419,11 +419,14 @@ Time is the axis every relation is drawn on.
 - The **study window** is the project's period, set in the project banner (which is the
   period picker). Most researchers pick one, from a start year to the latest data, and
   it is bounded by the viewed catalog's first and last year (`/api/context`
-  `period_span`). It shades every `Timeline` and `LaneGraph` as an `accent-bg` band with
-  `accent` bounds and `accent-ink` years on the axis. With no project open there is no
-  band. That **window band** is the one drawing of a period control: where the period is
-  set (the banner's study window, a variable page's source period) the band is dragged
-  by slim `accent` thumbs on its bounds; both compose the same classes
+  `period_span`): the slider shows no data, so its track stays the catalog's span and
+  early years stay reachable. A new project starts at 2015 to the catalog's last year
+  (the whole span when the catalog ends before 2015); a window set while browsing
+  carries over instead. It shades every `Timeline` and `LaneGraph` as an `accent-bg`
+  band with `accent` bounds and `accent-ink` years on the axis. With no project open
+  there is no band. That **window band** is the one drawing of a period control: where
+  the period is set (the banner's study window, a variable page's source period) the
+  band is dragged by slim `accent` thumbs on its bounds; both compose the same classes
   (`ui/WindowBand.module.css`), and a new period selector does too.
 - A **source period** narrows the window for one variable. It stays allowed but is the
   exception: on a variable page the `Timeline`'s band is a selection, two thumbs on the
@@ -445,18 +448,25 @@ Time is the axis every relation is drawn on.
   picture says it, so there is no note or legend entry for it; the header names those
   years to a screen reader only (#1833). `warn-hatch` stays for a delivery gap inside
   coverage.
-- A **`Timeline`** is one axis from the catalog's first year to its last, under a
-  `label` header that says what the band is and states the covered years (years only: no
-  edition count). Coverage is an ink bar with `viz-edition` ticks per delivered year, a
-  `warn-hatch` hatch for a gap, and a `label` legend of the marks it shows. On a
-  variable page it is one drawing with the columns (#1833, maintainer ruling
-  2026-10-23): it is drawn as a `LaneGraph` headed by a coverage row (axis, then
-  coverage with the period thumbs, then lanes), so the band runs through every lane. The
-  variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
-  coding change as a `warn` mark; the variables a succession reaches are further lanes
-  in time order, with their arrows. A line under the drawing says plainly that clicking
-  a column ticks it, and there is no second graph on the page.
-- A **`VariableRow`** repeats the same axis as a thin bar, so a variable that does not
+- The **axis** spans the data a page draws, not the catalog: from the first to the last
+  year of that data, joined with the study window when one is set, rounded out to
+  multiples of 5 (#1831). A register page's data is its variants' deliveries, a concept
+  group's its members', a variable page's its columns and the lanes a succession
+  reaches. Data still delivered ends at the catalog's last year; an unknown start is not
+  data. A page's drawings share its one axis, so a register's `VariableRow`s line up
+  with its `Timeline`, and a page with several sources draws them on one axis.
+- A **`Timeline`** is drawn on the page's axis, under a `label` header that says what
+  the band is and states the covered years (years only: no edition count). Coverage is
+  an ink bar with `viz-edition` ticks per delivered year, a `warn-hatch` hatch for a
+  gap, and a `label` legend of the marks it shows. On a variable page it is one drawing
+  with the columns (#1833, maintainer ruling 2026-10-23): it is drawn as a `LaneGraph`
+  headed by a coverage row (axis, then coverage with the period thumbs, then lanes), so
+  the band runs through every lane. The variable's columns are the first lane, labelled
+  spans in the `ColumnChip` shape with a coding change as a `warn` mark; the variables a
+  succession reaches are further lanes in time order, with their arrows. A line under
+  the drawing says plainly that clicking a column ticks it, and there is no second graph
+  on the page.
+- A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
   face, the bar, and under them each delivery column as a `ColumnChip` with its tick (a
@@ -469,11 +479,11 @@ Time is the axis every relation is drawn on.
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A lane's title joins its facet values with a comma, and its name opens the
   variable; a span is a checkbox for the add bar, and hovering it highlights its edges.
-  Its axis is the catalog's first year to its last, like the `Timeline`'s. The band is
-  the active window: the source period when one is set, else the study window. Its add
-  bar, like the register's, shows only while a change is staged. On a variable page the
-  `LaneGraph` is the `Timeline` (above). Don't draw free-form node graphs; the time axis
-  is the information.
+  It shares the page's axis with the `Timeline`. The band is the active window: the
+  source period when one is set, else the study window. Its add bar, like the
+  register's, shows only while a change is staged. On a variable page the `LaneGraph` is
+  the `Timeline` (above). Don't draw free-form node graphs; the time axis is the
+  information.
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
 

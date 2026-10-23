@@ -14,6 +14,7 @@ import { registerRead, UNASKED } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import {
   type ProjectData,
+  type ProjectStudyWindow,
   type RawDraft,
   regMetaReleaseTag,
   safeSourceRegisterVariant,
@@ -53,6 +54,8 @@ import { PROJECT_HEADING_ID, windowDisjointFindings } from "./validation";
 interface Props {
   regMetaVersion: string;
   steward: string;
+  /** The study window a New project starts with (`defaultStudyWindow`). */
+  defaultWindow: ProjectStudyWindow;
   /** The steward's order hand-off (`steward.json` → `order_instructions`): how a
    * researcher sends the project in. Null where the deployment takes no orders. */
   orderInstructions: string | null;
@@ -146,6 +149,7 @@ function ExtractFormatField({ value }: { value: ExtractFormat }) {
 export function ProjectEditor({
   regMetaVersion,
   steward,
+  defaultWindow,
   orderInstructions,
   providerQualified,
 }: Props) {
@@ -197,6 +201,7 @@ export function ProjectEditor({
     projectStore.requestNewProject({
       reg_meta_version: regMetaReleaseTag(regMetaVersion),
       steward,
+      window: defaultWindow,
     });
   }
 

@@ -539,7 +539,7 @@ export function BindingLeafView({
             graph={graph}
             neighbours
             vintageYear={vintageYear}
-            catalogYears={[windowMinYear, windowMaxYear]}
+            catalogSpan={[windowMinYear, windowMaxYear]}
             onApply={onApply}
             onStageChange={onStageChange}
           />

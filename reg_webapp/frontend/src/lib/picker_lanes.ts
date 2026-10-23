@@ -25,7 +25,7 @@ import {
   yearOf,
 } from "./catalog";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
-import { yearWindowLabel } from "./period";
+import { dataAxis, yearWindowLabel } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
 import {
   committedMarker,
@@ -74,9 +74,11 @@ export interface PickerLaneInput {
   window: [number, number] | null;
   studyWindow: ProjectStudyWindow | null;
   vintageYear: number;
-  /** The catalog's first and last year: the axis every lane is drawn on, as
-   * on the Timeline above it (maintainer ruling 2026-10-22). */
-  catalogYears: readonly [number, number];
+  /** Years the page draws above the lanes (the coverage row, a group's
+   * Timeline), so the lanes share their axis. */
+  drawnYears: readonly number[];
+  /** The catalog's first and last year: the axis when nothing is dated. */
+  catalogSpan: readonly [number, number];
   committed: ReadonlyMap<string, PickerCommittedRow>;
   stagedAdds: ReadonlySet<string>;
   stagedRemoves: ReadonlySet<string>;
@@ -366,24 +368,23 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
     if (undelivered.length > 0) lane.undelivered = undelivered;
   }
 
-  // The axis: the catalog's years, widened only to a dated year, the window,
-  // or the vintage where a column is still delivered that falls outside them.
+  // The axis (DESIGN.md → Time): the years drawn here and above the lanes,
+  // with the study window, rounded out. A still-delivered column ends at the
+  // catalog vintage, never at the rounded axis end.
   const dated = [
-    ...input.catalogYears,
+    ...input.drawnYears,
     ...placedYears.flatMap((y) =>
       [y.from, y.to].filter((v): v is number => v !== null),
     ),
   ];
-  if (input.window) dated.push(...input.window);
-  if (placedYears.some((y) => y.openEnd) || dated.length === 0) {
-    dated.push(input.vintageYear);
-  }
-  const axis: [number, number] = [Math.min(...dated), Math.max(...dated)];
-  if (axis[1] - axis[0] < 4) axis[0] = axis[1] - 4;
+  if (placedYears.some((y) => y.openEnd)) dated.push(input.vintageYear);
+  const axis = dataAxis(dated, input.studyWindow, input.catalogSpan);
 
   for (const { span, years, parts } of pending) {
     span.from = years.from ?? axis[0];
-    span.to = years.to ?? axis[1];
+    span.to =
+      years.to ??
+      (years.openEnd ? Math.max(span.from, input.vintageYear) : axis[1]);
     span.segments = parts?.map((era) => ({
       name: era.name,
       from:

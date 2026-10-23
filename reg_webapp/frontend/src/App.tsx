@@ -29,7 +29,11 @@ import {
 } from "./lib/VariableList";
 import { VariantBrowser } from "./lib/VariantBrowser";
 import { windowStore } from "./lib/window";
-import { type WindowBounds, windowBounds } from "./lib/window_bounds";
+import {
+  defaultStudyWindow,
+  type WindowBounds,
+  windowBounds,
+} from "./lib/window_bounds";
 
 /** The register whose variables the second browse column lists, and the page
  * open under it: a register's own page, a variable, a concept group or the
@@ -238,6 +242,7 @@ function RoutedView({ route, context, bounds }: RoutedViewProps) {
         <ProjectEditor
           regMetaVersion={regMetaVersion}
           steward={steward}
+          defaultWindow={defaultStudyWindow(bounds)}
           orderInstructions={context?.steward.order_instructions ?? null}
           providerQualified={qualified}
         />
