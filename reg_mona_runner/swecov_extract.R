@@ -111,7 +111,17 @@ PACKAGES <- c("DBI", "odbc", "jsonlite")
 install_missing <- function(pkgs) {
   lib <- .libPaths()[1]
   repos <- getOption("repos")
-  if (file.access(lib, 2L) != 0L || !length(repos) || "@CRAN@" %in% repos) {
+  # install.packages()'s own test: on Windows file.access() ignores ACLs,
+  # so R creates a test folder there instead.
+  probe <- file.path(lib, paste0("_test_dir_", Sys.getpid()))
+  unlink(probe, recursive = TRUE)
+  writable <- file.access(lib, 2L) == 0L &&
+    isTRUE(tryCatch(
+      dir.create(probe, showWarnings = FALSE),
+      error = function(e) FALSE
+    ))
+  unlink(probe, recursive = TRUE)
+  if (!writable || !length(repos) || "@CRAN@" %in% repos) {
     return(invisible())
   }
   for (pkg in pkgs) {
