@@ -1,6 +1,6 @@
 id = "malmostad"
 register = "sabo/patienter"
-variants = ["sabo/patienter/_default"]
+variants = ["sabo/patienter/vistelser"]
 
 [[table]]
 table = "MalmoStad"

@@ -1,6 +1,6 @@
 id = "lansstyrelsenvg-lok01"
 register = "sabo/patienter"
-variants = ["sabo/patienter/_default"]
+variants = ["sabo/patienter/hyresstod"]
 
 [[table]]
 table = "LansstyrelsenVG_LOK01"

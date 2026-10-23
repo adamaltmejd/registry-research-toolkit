@@ -1,6 +1,6 @@
 id = "sthlmkom-sbf-vob"
 register = "sabo/patienter"
-variants = ["sabo/patienter/_default"]
+variants = ["sabo/patienter/vistelser"]
 
 [[table]]
 table = "SthlmKom_SBF_VOB"

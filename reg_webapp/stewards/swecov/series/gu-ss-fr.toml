@@ -1,6 +1,6 @@
 id = "gu-ss-fr"
 register = "sabo/patienter"
-variants = ["sabo/patienter/_default"]
+variants = ["sabo/patienter/enheter"]
 
 [[table]]
 table = "GU_ss_fr"
