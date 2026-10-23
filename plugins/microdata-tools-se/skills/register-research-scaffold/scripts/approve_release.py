@@ -1,15 +1,18 @@
+# /// script
+# requires-python = ">=3.14"
+# ///
 """Operator-only: copy exactly reviewed ZIP bytes into model-readable storage.
 
 This records human approval, not disclosure clearance or OS access isolation.
+Run with `uv run approve_release.py`, which provides the Python it needs.
 """
 
 import argparse
 import hashlib
 import json
-import os
 import re
 import tempfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -33,7 +36,7 @@ def approve(source, destination, expected_sha256, commit):
         "purpose": "human-approved-for-model-access",
         "sha256": expected_sha256,
         "source_commit": commit,
-        "approved_at": datetime.now(timezone.utc).isoformat(),
+        "approved_at": datetime.now(UTC).isoformat(),
     }
     destination.mkdir(parents=True, exist_ok=True)
     # A reader must match receipt to ZIP. An interrupted two-file replacement
@@ -48,7 +51,7 @@ def approve(source, destination, expected_sha256, commit):
                 stream.write(payload)
                 stream.close()
                 temporary.chmod(0o640)
-                os.replace(temporary, destination / name)
+                temporary.replace(destination / name)
             finally:
                 temporary.unlink(missing_ok=True)
     return receipt
@@ -69,7 +72,7 @@ def main():
     args = parser.parse_args()
     try:
         approve(args.source, args.destination, args.sha256, args.commit)
-    except (ValueError, OSError):
+    except ValueError, OSError:
         parser.exit(2, "APPROVAL_FAILED\n")
     print("APPROVED_FOR_MODEL_ACCESS")
 
