@@ -1201,7 +1201,6 @@ export interface components {
             display_name?: string | null;
             id_subtype?: components["schemas"]["ProjectIdSubtype"] | null;
             numeric_subtype?: components["schemas"]["ProjectNumericSubtype"] | null;
-            period?: components["schemas"]["ProjectSourcePeriod"] | null;
             representation?: string | null;
             type: components["schemas"]["ProjectColumnType"];
             /** @description A classification FQID `class/<slug>`. */
@@ -1275,7 +1274,7 @@ export interface components {
             register_variant: string;
         };
         /**
-         * @description `Source.period` (and a `Binding.period` inside it): one segment, or a sorted,
+         * @description `Source.period`: one segment, or a sorted,
          *     disjoint list of them (an interrupted series).
          */
         ProjectSourcePeriod: components["schemas"]["ProjectPeriodSegment"][] | components["schemas"]["ProjectPeriodSegment"];

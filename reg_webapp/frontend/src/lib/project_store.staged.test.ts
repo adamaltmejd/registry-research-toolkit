@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { bindingFieldsFromResolution } from "./catalog";
-import { type ProjectData, sourceSnapshot } from "./project_data";
+import { sourceSnapshot } from "./project_data";
 import { projectStore, type StagedAdd } from "./project_store";
 import {
   add,
@@ -65,10 +65,9 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     });
 
     expect(storedProject()?.sources).toHaveLength(1);
-    // The second pick widens the source to both eras, and each binding keeps its
-    // own (#1462): the first, which inherited 1990..2021, is pinned to it rather
-    // than widened to 2022..2023 too. Fails if a widened source re-scopes the
-    // bindings that inherited its old period.
+    // The second pick widens the source to both eras, and every binding takes the
+    // source period (#1838): the order clips each column to its own years. Fails
+    // if a widened source pins a binding to the period it had before.
     expect(storedProject()?.sources[0].period).toEqual({
       from: 1990,
       to: 2023,
@@ -78,147 +77,13 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         variable: "scb/lisa/forvink-ers-aktiv",
         type: "numeric",
         representation: null,
-        period: { from: 1990, to: 2021 },
       },
       {
         variable: "scb/lisa/forvink-ers",
         type: "numeric",
         representation: null,
-        period: { from: 2022, to: 2023 },
       },
     ]);
-  });
-
-  it("a narrower add to an existing source orders that column for its own years only (#1462)", () => {
-    // The issue's repro: A for 2014..2020, then B for 2019..2020 on one variant.
-    // Fails if B's period widens into the source's (B ordered for 2014..2018) or
-    // if the source period or A changes (the common case stays byte-identical).
-    projectStore.newProject(SEED);
-    projectStore.applyStagedDiff({
-      adds: [add("scb/lisa/v1", "scb/lisa/kon", { from: 2014, to: 2020 })],
-    });
-    projectStore.applyStagedDiff({
-      adds: [
-        add("scb/lisa/v1", "scb/lisa/alder", { from: 2019, to: 2020 }),
-        add("scb/lisa/v1", "scb/lisa/sun", { from: 2014, to: 2020 }),
-      ],
-    });
-    expect(storedProject()?.sources).toEqual([
-      {
-        name: expect.any(String),
-        register_variant: "scb/lisa/v1",
-        period: { from: 2014, to: 2020 },
-        bindings: [
-          { variable: "scb/lisa/kon", type: "categorical" },
-          {
-            variable: "scb/lisa/alder",
-            type: "categorical",
-            period: { from: 2019, to: 2020 },
-          },
-          { variable: "scb/lisa/sun", type: "categorical" },
-        ],
-      },
-    ]);
-  });
-
-  it("a period-less add in a widening batch inherits the final source period, in either order (#1462)", () => {
-    // Fails if the period-less add is pinned to the pre-batch 2018 when it comes
-    // before the widening 2020 add (it resolves over both years either way), or
-    // if the same column staged period-less AND at 2019 ends with years that
-    // depend on which came first (2018..2019 one way, 2019 the other).
-    const cases = [
-      {
-        adds: [
-          add("scb/lisa/v1", "scb/lisa/alder", ""),
-          add("scb/lisa/v1", "scb/lisa/sun", 2020),
-        ],
-        period: [2018, 2020],
-      },
-      {
-        adds: [
-          add("scb/lisa/v1", "scb/lisa/alder", ""),
-          add("scb/lisa/v1", "scb/lisa/alder", 2019),
-          add("scb/lisa/v1", "scb/lisa/sun", 2020),
-        ],
-        period: { from: 2018, to: 2020 },
-      },
-    ];
-    for (const { adds, period } of cases) {
-      const [first, second, ...rest] = adds;
-      for (const batch of [adds, [second, first, ...rest]]) {
-        projectStore.newProject(SEED);
-        projectStore.applyStagedDiff({
-          adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
-        });
-        projectStore.applyStagedDiff({ adds: batch });
-        const source = storedProject()?.sources[0];
-        expect(source?.period).toEqual(period);
-        const periods = Object.fromEntries(
-          (source?.bindings ?? []).map((b) => [b.variable, b.period]),
-        );
-        expect(periods).toEqual({
-          "scb/lisa/kon": 2018,
-          "scb/lisa/alder": undefined,
-          "scb/lisa/sun": 2020,
-        });
-      }
-    }
-  });
-
-  it("refuses a re-add whose merged binding period reg-core rejects, beside its allowed twin (#1462)", () => {
-    // `2099` plus `LA2099` union to overlapping list members: the batch is
-    // refused and the draft untouched. Fails if the merged binding period is
-    // written unchecked. `2098` plus `LA2099` merges cleanly and lands.
-    for (const [own, ok] of [
-      [2099, false],
-      [2098, true],
-    ] as const) {
-      projectStore.newProject(SEED);
-      projectStore.updateField("sources", [
-        {
-          name: "LISA",
-          register_variant: "scb/lisa/v1",
-          period: { from: own, to: "LA2099" },
-          bindings: [
-            { variable: "scb/lisa/kon", type: "categorical" },
-            { variable: "scb/lisa/alder", type: "categorical", period: own },
-          ],
-        },
-      ]);
-      const before = JSON.stringify(storedProject());
-      expect(
-        projectStore.applyStagedDiff({
-          adds: [add("scb/lisa/v1", "scb/lisa/alder", "LA2099")],
-        }),
-      ).toBe(ok);
-      if (ok) {
-        expect(storedProject()?.sources[0].bindings[1].period).toEqual([
-          2098,
-          "LA2099",
-        ]);
-      } else {
-        expect(JSON.stringify(storedProject())).toBe(before);
-      }
-    }
-    // A year-independent re-add of a binding inheriting a `_default` source is a
-    // valid merge with no dated days: a duplicate no-op, not a refusal. Fails if
-    // validity is judged by dated days alone.
-    projectStore.newProject(SEED);
-    projectStore.updateField("sources", [
-      {
-        name: "LISA",
-        register_variant: "scb/lisa/v1",
-        period: "_default",
-        bindings: [{ variable: "scb/lisa/alder", type: "categorical" }],
-      },
-    ]);
-    const before = JSON.stringify(storedProject());
-    expect(
-      projectStore.applyStagedDiff({
-        adds: [add("scb/lisa/v1", "scb/lisa/alder", "_default")],
-      }),
-    ).toBe(true);
-    expect(JSON.stringify(storedProject())).toBe(before);
   });
 
   it("preserves every same-batch token add window in the committed source period", () => {
@@ -475,101 +340,6 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
       replacementGeneration: projectStore.replacementGeneration,
     };
   }
-
-  it("clips each binding period to the edited source period (#1462)", () => {
-    // One edit that cuts one binding period, leaves another with no year inside
-    // and makes a third equal to the source. Fails if a binding period is left
-    // reaching outside the source, if the excluded one is silently dropped
-    // (widening that column to the whole source), or if a redundant one stays.
-    projectStore.newProject(SEED);
-    projectStore.updateField("sources", [
-      {
-        name: "LISA",
-        register_variant: "scb/lisa/individer",
-        period: { from: 2010, to: 2020 },
-        bindings: [
-          { variable: "scb/lisa/kon", type: "categorical" },
-          {
-            variable: "scb/lisa/alder",
-            type: "numeric",
-            period: { from: 2012, to: 2014 },
-          },
-          {
-            variable: "scb/lisa/sun",
-            type: "categorical",
-            period: { from: 2010, to: 2011 },
-          },
-          {
-            variable: "scb/lisa/ssyk",
-            type: "categorical",
-            period: { from: 2013, to: 2020 },
-          },
-        ],
-      },
-    ]);
-    expect(
-      projectStore.applySourcePeriodEdit(
-        edit("LISA", { from: 2013, to: 2018 }),
-      ),
-    ).toBe(true);
-    expect(storedProject()?.sources[0].bindings).toEqual([
-      { variable: "scb/lisa/kon", type: "categorical" },
-      {
-        variable: "scb/lisa/alder",
-        type: "numeric",
-        period: { from: 2013, to: 2014 },
-      },
-      {
-        variable: "scb/lisa/sun",
-        type: "categorical",
-        period: { from: 2010, to: 2011 },
-      },
-      { variable: "scb/lisa/ssyk", type: "categorical" },
-    ]);
-  });
-
-  it("a period edit leaves malformed bindings verbatim (#1462)", () => {
-    // Fails if the binding-period clip rewrites a non-object binding slot (a
-    // string spread into character keys) or replaces non-array `bindings`.
-    projectStore.newProject(SEED);
-    projectStore.updateField("sources", [
-      {
-        name: "LISA",
-        register_variant: "scb/lisa/individer",
-        period: { from: 2010, to: 2020 },
-        bindings: [
-          "bad",
-          {
-            variable: "scb/lisa/alder",
-            type: "numeric",
-            period: { from: 2012, to: 2014 },
-          },
-        ],
-      },
-      {
-        name: "LISA_2",
-        register_variant: "scb/lisa/individer",
-        period: 2009,
-        bindings: "nope",
-      },
-    ] as unknown as ProjectData["sources"]);
-    expect(
-      projectStore.applySourcePeriodEdit(
-        edit("LISA", { from: 2013, to: 2018 }),
-      ),
-    ).toBe(true);
-    expect(projectStore.applySourcePeriodEdit(edit("LISA_2", 2010))).toBe(true);
-    const [lisa, lisa2] = storedProject()?.sources ?? [];
-    expect(lisa.bindings).toEqual([
-      "bad",
-      {
-        variable: "scb/lisa/alder",
-        type: "numeric",
-        period: { from: 2013, to: 2014 },
-      },
-    ]);
-    expect(lisa2.bindings).toBe("nope");
-  });
 
   it("refuses an edit from a project that has since been replaced", () => {
     twoSourceDraft();

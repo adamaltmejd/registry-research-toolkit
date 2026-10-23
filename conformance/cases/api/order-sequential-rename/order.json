@@ -42,10 +42,10 @@
     "catalog_generation_id": "bf62503414df2413959e0808c75c9497fccb1d2e540053bd095fc7cde9f5e28b",
     "catalog_schema_version": "12.3.0",
     "mode": "steward_holdings",
-    "project_hash": "5e8e363289df9502e7d4d8357dc7b50999b173fc0df7eaee9c45b601d40d80d9",
+    "project_hash": "991e6f83066e702d695f875427961dc613eda3c72298e3674e2e0cf6681b9880",
     "project_name": "Synthetic rename",
     "project_reg_meta_version": "5.1.0",
-    "project_schema_version": "3.0.0",
+    "project_schema_version": "4.0.0",
     "steward": "swecov"
   },
   "version": 2

@@ -3,10 +3,10 @@ import styles from "./BindingEditor.module.css";
 import { catalogHref, registerPrefixOf } from "./catalog";
 import { columnNames, registerRead, UNASKED } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
-import { periodLabel, periodWindowRelation } from "./period";
+import { periodWindowRelation } from "./period";
 import type { DraftBinding, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
-import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
+import { sourcePeriodFromWire } from "./reg_core";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
@@ -75,17 +75,11 @@ export function BindingEditor({
     return typeof v === "string" ? v : "";
   };
   const variable = strField("variable");
-  // A binding period narrows this column to its own years inside the source's
-  // (#1462); the row says so, and resolves and warns at those years. Absent, the
-  // column inherits the source period and the row says nothing.
-  const ownPeriod =
-    binding.period == null ? null : sourcePeriodToWire(binding.period);
-  const period = ownPeriod ?? sourcePeriod;
-  // The column's own years, else the source's: none inside the window draws the
-  // chips out of it.
+  // Every column is ordered for its source's period (#1838): none of it inside the
+  // window draws the chips out of it.
   const outOfWindow =
-    period !== null &&
-    periodWindowRelation(sourcePeriodFromWire(period), studyWindow) ===
+    sourcePeriod !== null &&
+    periodWindowRelation(sourcePeriodFromWire(sourcePeriod), studyWindow) ===
       "disjoint";
   const chipState = outOfWindow ? "out" : "default";
   // The variable's descriptive name, from the register read every source card on
@@ -110,7 +104,7 @@ export function BindingEditor({
   const fileColumn = strField("display_name") || strField("representation");
   const resolved = useCatalogRead(
     fileColumn ? readUnasked : readColumnNames,
-    JSON.stringify([variable, period, variant]),
+    JSON.stringify([variable, sourcePeriod, variant]),
   );
   const resolvedNames = resolved.value ?? [];
   const columnName = fileColumn || resolvedNames[0] || "";
@@ -125,7 +119,7 @@ export function BindingEditor({
   // instance, and an unchanged value moves nothing there.
   const warningProps = {
     fqid: variable,
-    period,
+    period: sourcePeriod,
     variant,
     representation,
     framed: false,
@@ -154,18 +148,8 @@ export function BindingEditor({
                 ))}
               </span>
             )}
-            {ownPeriod !== null && (
-              <span className={styles.bindingPeriod}>
-                only{" "}
-                <span className={styles.years}>
-                  {periodLabel(binding.period)}
-                </span>
-              </span>
-            )}
             {outOfWindow && (
-              <span className={styles.bindingPeriod}>
-                outside the study window
-              </span>
+              <span className={styles.rowNote}>outside the study window</span>
             )}
           </div>
           {/* The variable it came from: its name in the text face, linked to its
@@ -182,7 +166,7 @@ export function BindingEditor({
               </a>
             </span>
           ) : (
-            <span className={styles.bindingPeriod}>(no variable)</span>
+            <span className={styles.rowNote}>(no variable)</span>
           )}
         </div>
         {/* A per-row action is quiet (#1837): `danger` is for the dialog's

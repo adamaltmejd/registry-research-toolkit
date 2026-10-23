@@ -25,10 +25,10 @@
     "catalog_generation_id": "f83fc642582bf6c6e151b9d7a56e2cbbb3b4e7374b67283d0c501bf12ec77449",
     "catalog_schema_version": "12.3.0",
     "mode": "steward_holdings",
-    "project_hash": "63b3e088a3719f367802a4aeb8668eb0e8123f60d7d8cf9cf8e348c2f7717f88",
+    "project_hash": "f8c7e5223d47558adbf29295be2e8806cb82e99463c4af4e980177fb93067088",
     "project_name": "Reader case",
     "project_reg_meta_version": "reg_meta/v0.40.1",
-    "project_schema_version": "3.0.0",
+    "project_schema_version": "4.0.0",
     "steward": "swecov"
   },
   "version": 2

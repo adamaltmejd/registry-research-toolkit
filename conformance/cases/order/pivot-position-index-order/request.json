@@ -3,7 +3,7 @@
   "artifact": "steward",
   "fails_if": "an ordered position member set drops a member, orders its members by column name (DIA10 before DIA2) instead of by index, or omits the member index from the manifest",
   "project": {
-    "schema_version": "3.0.0",
+    "schema_version": "4.0.0",
     "steward": "swecov",
     "reg_meta_version": "reg_meta/v0.40.1",
     "name": "Reader case",

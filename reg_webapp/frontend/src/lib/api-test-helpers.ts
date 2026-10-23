@@ -94,7 +94,7 @@ export function rootShow(
     catalog: {
       id: "global",
       reg_meta_version: "0.0.0",
-      project_schema_version: "3.0.0",
+      project_schema_version: "4.0.0",
     },
     children: providers.map(({ fqid, name }) => ({
       kind: "provider" as const,

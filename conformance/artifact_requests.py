@@ -75,7 +75,7 @@ def sample_project(conn, *, unheld=False):
         )
     fqid = "/".join((row["provider"], row["register_slug"], row["variable"]))
     return {
-        "schema_version": "3.0.0",
+        "schema_version": "4.0.0",
         "steward": steward,
         "reg_meta_version": "conformance",
         "name": "Artifact sample",

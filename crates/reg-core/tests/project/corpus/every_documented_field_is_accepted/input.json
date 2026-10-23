@@ -1,5 +1,5 @@
 {
-  "schema_version": "3.0.0",
+  "schema_version": "4.0.0",
   "steward": "global",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "every_documented_field",
@@ -40,8 +40,7 @@
           "type": "categorical",
           "display_name": "Ssyk4",
           "value_set": "class/ssyk2012",
-          "representation": "Ssyk4_2012_J16",
-          "period": 2018
+          "representation": "Ssyk4_2012_J16"
         }
       ]
     }
