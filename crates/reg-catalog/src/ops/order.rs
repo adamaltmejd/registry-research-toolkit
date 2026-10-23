@@ -440,7 +440,9 @@ fn steward_file_names(conn: &Connection) -> Result<BTreeMap<String, String>, Err
     let rows = stmt.query_map([], |row| {
         let edition: Option<String> = row.get(5)?;
         // One period: a year (a JSON integer) or a month or date token, not `_default`
-        // and not a range or list.
+        // and not a range or list. simplify: the token is named as authored, so a
+        // half-year `2020-H1` (which `physical.edition` renders `VT2020`) keeps its
+        // spelling; render it through the period grammar if a steward authors one.
         let period = edition
             .as_deref()
             .and_then(|e| serde_json::from_str::<Value>(e).ok())
@@ -500,10 +502,10 @@ fn slug(physical_id: &str) -> String {
 }
 
 /// The held row keys each output file lacks (crates/DESIGN.md, "Order manifest"):
-/// every column of the file's table that maps a key of a variant the file's entries bind
-/// ([`IS_KEY`]) and that no entry of the file already extracts, whatever variable ordered it. A key
-/// entry takes the source of the file's first entry and the union of the file's
-/// requested days, narrowed to a year or month member's or a column window's own
+/// every column of the file's table that maps a key of a variant the file's entries
+/// bind ([`IS_KEY`]) and that no entry of the file already extracts, whatever variable
+/// ordered it. A key entry takes the source of its variant's first entry in the file and
+/// the union of the file's requested days, narrowed to a year or month member's or a column window's own
 /// period (a member or window the union does not reach is not added); a
 /// year-independent file's keys request `_default`. An auxiliary table's carried key
 /// (`holding_key`, never a served mapping) comes along the same way. Ordered by file
