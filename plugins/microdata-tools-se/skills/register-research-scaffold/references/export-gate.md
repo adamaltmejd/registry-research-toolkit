@@ -42,8 +42,8 @@ export_gate(
 )
 ```
 
-- The output files are Parquet, one per schema file, written with `arrow`; column types
-  as the schema says (R `integer` for counts); a suppressed cell is `NA`, never `0`.
+- The output files are Parquet, one per schema file; column types as the schema says (R
+  `integer` for counts); a suppressed cell is `NA` (null), never `0`.
 - On a pass the gate writes `receipt.json` and moves staging to `<run>/export` in one
   rename, so staging and export must be on the same volume. The export holds exactly the
   schema's files and the receipt.
@@ -54,6 +54,47 @@ export_gate(
   `<run>/.diagnostics/export_gate_report.json`. It stays on the data side: never
   exported, synced or shown to the agent. The agent learns a refusal's category code
   from the user, nothing more.
+
+## A Python pipeline
+
+The gate is R even when the pipeline is not. With the scaffold's Python/DuckDB stack,
+`run.py` writes the staging Parquet files and exits; the gate then runs as its own R
+step:
+
+```sh
+uv run run.py                     # writes <run>/staging; non-zero exit on any failure
+Rscript export_gate/run_gate.R    # the gate, only if run.py succeeded
+```
+
+`run_gate.R` is a few lines of project code: it `source()`s the pinned `export_gate.R`
+and makes the `export_gate()` call above with the paths `run.py` used. It adds no checks
+and never edits the gate. Here "the execution file's last step" means the gate is the
+last command of the run: `run.py` never writes to `<run>/export`, and nothing runs after
+`Rscript`. A refusal makes `Rscript` exit non-zero; the category code is in its console
+line and in the report.
+
+The gate checks each column's Arrow type as Parquet stores it. Write each column with a
+type the gate accepts for its schema type:
+
+  | Schema type | Arrow types accepted     | Write from DuckDB as  |
+  | ----------- | ------------------------ | --------------------- |
+  | `integer`   | `int32`, `int64`         | `INTEGER` or `BIGINT` |
+  | `double`    | `double` (float64)       | `DOUBLE`              |
+  | `string`    | `string`, `large_string` | `VARCHAR`             |
+  | `boolean`   | `bool`                   | `BOOLEAN`             |
+  | `date`      | `date32[day]`            | `DATE`                |
+
+Cast every output column explicitly in the final `SELECT` (`n::BIGINT`, `mean::DOUBLE`):
+`FLOAT`, `DECIMAL`, `HUGEINT` and a dictionary (pandas `category`) column are refused as
+`structure` (`column_type`). A suppressed cell is SQL `NULL`.
+
+## Preflight
+
+The gate needs R 4.2 or newer with `arrow` and `jsonlite`, plus SHA-256: base
+`tools::sha256sum` on R 4.5 or newer, else the `digest` package. Without either it
+refuses every run as `setup` (`sha256_missing`). Check this once per machine before the
+first real run, with the commands in step 3 of the gate README, and check that `Rscript`
+is on the path where `run.py` runs.
 
 ## Locally, on mocks
 

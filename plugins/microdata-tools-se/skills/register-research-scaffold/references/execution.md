@@ -34,12 +34,13 @@ readers must not alter reference-project inputs or stores.
 Target one uploadable execution file and one result ZIP per batch. The execution file's
 last step calls the pinned `export_gate.R`, uploaded unchanged beside it with the chosen
 schema and policy, never folded into the project's own file: the receipt's gate version
-must name those exact bytes. The result ZIP is the gate's output folder (the schema's
-Parquet files and `receipt.json`), never `.diagnostics/` or staging. Python zipapp is a
-candidate when permitted; a supported plain-source format is another. Verify accepted
-formats and runtime before claiming compatibility. Preserve modular source locally; do
-not concatenate modules blindly. Include small required nonpersonal lookup/configuration
-assets.
+must name those exact bytes. A Python pipeline runs the gate as a separate `Rscript`
+step after it ([export-gate.md](export-gate.md)). The result ZIP is the gate's output
+folder (the schema's Parquet files and `receipt.json`), never `.diagnostics/` or
+staging. Python zipapp is a candidate when permitted; a supported plain-source format is
+another. Verify accepted formats and runtime before claiming compatibility. Preserve
+modular source locally; do not concatenate modules blindly. Include small required
+nonpersonal lookup/configuration assets.
 
 Build from an explicit commit and source allowlist. Exclude .git, datasets, caches,
 logs, secrets and unrelated investigations. Record commit and file hashes. Dependencies
