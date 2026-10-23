@@ -303,7 +303,6 @@ export function ProjectEditor({
           {nameBlocked && (
             <StatusRow
               tone="info"
-              id={ORDER_NAME_REASON_ID}
               className={styles.orderReason}
               action={
                 <Button
@@ -314,7 +313,9 @@ export function ProjectEditor({
                 </Button>
               }
             >
-              Name the project to download order.json.
+              <span id={ORDER_NAME_REASON_ID}>
+                Name the project to download order.json.
+              </span>
             </StatusRow>
           )}
           {/* The two downloads hand over DIFFERENT artifacts, said visibly. */}

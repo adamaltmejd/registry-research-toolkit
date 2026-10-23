@@ -828,9 +828,9 @@ export const projectStore = {
    * findings become `orderFindings`, which the ValidationPanel renders one by
    * one like validation issues. */
   async downloadOrder(): Promise<void> {
-    // The window gate holds here too, not only on the button: an order for a
+    // The window and name gates hold here too, not only on the button: an order for a
     // project the authoring rules call blocked must not be requested at all.
-    if (draft == null || windowBlocked()) {
+    if (draft == null || windowBlocked() || nameBlocked()) {
       return;
     }
     // Snapshot the draft + generation like `validate` does: a mid-flight edit

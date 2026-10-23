@@ -346,6 +346,7 @@ describe("stable client-side ids (issue #200)", () => {
         };
       });
       seedThreeSources();
+      projectStore.updateField("name", "Named"); // an unnamed draft never POSTs
       await projectStore.downloadOrder();
       expect(bodies.length).toBeGreaterThanOrEqual(1);
       for (const body of bodies) {
