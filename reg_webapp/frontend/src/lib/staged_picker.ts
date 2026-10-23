@@ -36,7 +36,11 @@ import {
   type StagedAdd,
   type StagedRemove,
 } from "./project_store";
-import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
+import {
+  sourcePeriodFromWire,
+  sourcePeriodToWire,
+  studyWindowInterval,
+} from "./reg_core";
 
 export interface StagedPickerBand {
   key: string;
@@ -72,6 +76,9 @@ export interface PickerSourcePeriod {
 export interface PickerCommitScope {
   period?: string | null | undefined;
   window?: [number, number] | null;
+  /** The project's study window, when the page's own `?period` sets the add
+   * window: a folded row's variant share outside it is left out (#1834). */
+  studyWindow?: ProjectStudyWindow | null;
 }
 
 type CommitVariantSegment = Pick<PickerVariantSegment, "variant" | "windows">;
@@ -191,8 +198,31 @@ function relevantSegments(
   const overlapping = segments.filter((segment) =>
     windowsOverlapWindow(segment.windows, addWindow),
   );
+  const relevant = overlapping.length > 0 ? overlapping : segments;
+  // A page `?period` can reach past the study window, and the variant share it
+  // reaches only there (LISA 15+ from 2010 under a 1980–2005 window) would be a
+  // source outside the window, which the Apply refuses (#1834). Leave such a share
+  // out while another overlaps the window; a row with none keeps them all, so the
+  // Apply still names it. simplify: deleted when a source spans its variant
+  // family (#1840) and a folded row is one add.
+  const study = scope.studyWindow
+    ? studyWindowInterval(scope.studyWindow)
+    : null;
+  const inStudy =
+    study && addWindow
+      ? {
+          from: addWindow.from > study[0] ? addWindow.from : study[0],
+          to: addWindow.to < study[1] ? addWindow.to : study[1],
+        }
+      : null;
+  const inside =
+    inStudy && inStudy.from <= inStudy.to
+      ? relevant.filter((segment) =>
+          windowsOverlapWindow(segment.windows, inStudy),
+        )
+      : [];
   return {
-    segments: overlapping.length > 0 ? overlapping : segments,
+    segments: inside.length > 0 ? inside : relevant,
     addWindow,
     folded: true,
   };
@@ -777,7 +807,10 @@ export async function applyStagedPicks(
   // and an underivable `type: ""` onto a draft that autosaves before /project is
   // ever opened. Refuse BEFORE any mutation (a null draft is not even minted).
   const candidates = payload.adds.flatMap((pick) =>
-    stagedAddCandidates(pick, ctx.scope),
+    stagedAddCandidates(pick, {
+      ...ctx.scope,
+      studyWindow: ctx.studyWindow ?? null,
+    }),
   );
   // A column with NO years inside the add window has no overlap to persist: the
   // common study window blocks it rather than inventing a period (reg_webapp/

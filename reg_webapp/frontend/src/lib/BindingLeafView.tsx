@@ -385,8 +385,9 @@ export function BindingLeafView({
       committedPickerRows(draft, pickerBands, {
         period: activePeriod,
         window: pickerWindow,
+        studyWindow: projectWindow,
       }),
-    [draft, pickerBands, activePeriod, pickerWindow],
+    [draft, pickerBands, activePeriod, pickerWindow, projectWindow],
   );
 
   // The last Apply's outcome and refusal, each tagged with what it was made

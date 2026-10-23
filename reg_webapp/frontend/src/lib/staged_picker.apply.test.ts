@@ -14,6 +14,7 @@ import { projectStore } from "./project_store";
 import { storedProject } from "./project-store-test-helpers";
 import {
   applyStagedPicks,
+  committedPickerRows,
   type StagedPick,
   type StagedPickerBand,
 } from "./staged_picker";
@@ -445,3 +446,79 @@ function bindingOf(variable: string): { type?: string } | undefined {
     ?.sources.flatMap((s) => s.bindings)
     .find((b) => b.variable === variable);
 }
+
+describe("applyStagedPicks against the study window", () => {
+  // DispInkFam04 as LISA delivers it: 16+ for 2004–2009, 15+ from 2010, one folded
+  // family row. A 2004–2012 page period fans the pick out per variant; the 15+ share
+  // (2010–2012) misses a 1980–2005 study window while the 16+ share overlaps it.
+  const key = "scb/lisa/dispinkfam04";
+  const family = { variant_family: "individer-15plus" };
+  const dispInk = [
+    leafState({
+      state_id: "1",
+      variant: "individer-16plus",
+      delivery_column_name: "DispInkFam04",
+      valid_from: "2004-01-01",
+      valid_to: "2009-12-31",
+      ...family,
+    }),
+    leafState({
+      state_id: "2",
+      variant: "individer-15plus",
+      delivery_column_name: "DispInkFam04",
+      valid_from: "2010-01-01",
+      valid_to: "2023-12-31",
+      ...family,
+    }),
+  ];
+  const studyWindow = { from: 1980, to: 2005 };
+  const apply = (period: string) =>
+    applyStagedPicks(
+      { adds: picksOf(pickerRepresentations(dispInk), key), removes: [] },
+      {
+        scope: { period, window: [1980, 2005] },
+        studyWindow,
+        seed: SEED,
+        cancelled: () => false,
+      },
+    );
+
+  it("adds a pick whose period overlaps the window, dropping the variant share outside it (#1834)", async () => {
+    // Fails if the refusal is judged per variant share instead of per pick.
+    stubResolve(dispInk);
+    newProject();
+
+    const result = await apply("2004..2012");
+
+    expect(result.kind).toBe("applied");
+    expect(
+      storedProject()?.sources.map((s) => [s.register_variant, s.period]),
+    ).toEqual([["scb/lisa/individer-16plus", { from: 2004, to: 2009 }]]);
+    // …and the picker reads the row back as in the project, so it is not offered
+    // for a second add (fails if the marker still expects the 15+ share).
+    const committed = committedPickerRows(
+      projectStore.draft,
+      [bandOf(key, pickerRepresentations(dispInk))],
+      { period: "2004..2012", window: [1980, 2005], studyWindow },
+    );
+    expect([...committed.values()].map((c) => c.registerVariant)).toEqual([
+      "scb/lisa/individer-16plus",
+    ]);
+  });
+
+  it("still refuses a pick with no years inside the window", async () => {
+    // Fails if the #1834 relaxation lets a wholly outside pick through.
+    stubResolve(dispInk);
+    newProject();
+    const before = JSON.stringify(projectStore.draft);
+
+    const result = await apply("2010..2012");
+
+    expect(result).toEqual({
+      kind: "outside-study-window",
+      columns: ["DispInkFam04"],
+      studyWindow,
+    });
+    expect(JSON.stringify(projectStore.draft)).toBe(before);
+  });
+});
