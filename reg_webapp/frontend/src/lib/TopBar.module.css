@@ -1,5 +1,5 @@
 /* Sticky above the narrow breakpoint (maintainer ruling 2026-10-22); below it
-   the bar wraps to three rows, too tall to pin, and scrolls away. */
+   the bar wraps to two rows, too tall to pin, and scrolls away. */
 .topBar {
   position: sticky;
   top: 0;
@@ -154,7 +154,8 @@ kbd.hint,
   white-space: nowrap;
 }
 
-/* Below the narrow breakpoint each of the three takes its own full-width row. */
+/* Below the narrow breakpoint the mark and the search bar share a row and the
+   banner takes the next. */
 @media (max-width: 48rem) {
   .topBar {
     position: static;
