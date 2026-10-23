@@ -12,6 +12,7 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "file": "scb_example_old_combined",
         "table": "Combined"
       },
       "requested_period": "2015..2016",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Id",
         "edition": "2017..2019",
+        "file": "scb_example_old_later",
         "table": "Later"
       },
       "requested_period": "2017..2019",
@@ -44,6 +46,7 @@
       "physical": {
         "column": "OldField",
         "edition": "2015..2019",
+        "file": "scb_example_old_combined",
         "table": "Combined"
       },
       "requested_period": "2015..2016",
@@ -60,6 +63,7 @@
       "physical": {
         "column": "OldField",
         "edition": "2017..2019",
+        "file": "scb_example_old_later",
         "table": "Later"
       },
       "requested_period": "2017..2019",
@@ -76,6 +80,7 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "file": "scb_example_old_combined",
         "table": "Combined"
       },
       "requested_period": "2018..2019",
@@ -92,22 +97,24 @@
       "physical": {
         "column": "NewField",
         "edition": "2015..2019",
+        "file": "scb_example_old_combined",
         "table": "Combined"
       },
       "requested_period": "2018..2019",
       "source": "New"
     }
   ],
+  "extract_format": "csv",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "663584560f48103b79ef1d573bdfc0bbb8bfe17e6d30b8d8adbf53fe64bbdb57",
     "catalog_schema_version": "12.3.0",
     "mode": "steward_holdings",
-    "project_hash": "2cba8558b2326f545ddb9cacf38996a75622299344c2be544da40bb8f08647c7",
+    "project_hash": "1bb95af8f65411cc322843e8694b4fe362a1ecd303617512ca60935cb21ecca7",
     "project_name": "Reader case",
     "project_reg_meta_version": "reg_meta/v0.40.1",
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

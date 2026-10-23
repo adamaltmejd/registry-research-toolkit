@@ -12,6 +12,7 @@
       "physical": {
         "column": "Household",
         "edition": "2019",
+        "file": "scb_example_monthly_hushall_2019",
         "projection": "hushall",
         "table": "Hush"
       },
@@ -29,6 +30,7 @@
       "physical": {
         "column": "Household",
         "edition": "2019",
+        "file": "scb_example_monthly_2019",
         "table": "Pers"
       },
       "requested_period": "2019",
@@ -45,6 +47,7 @@
       "physical": {
         "column": "HhAmount",
         "edition": "2019",
+        "file": "scb_example_monthly_hushall_2019",
         "projection": "hushall",
         "table": "Hush"
       },
@@ -63,6 +66,7 @@
       "physical": {
         "column": "Month",
         "edition": "2019",
+        "file": "scb_example_monthly_hushall_2019",
         "projection": "hushall",
         "table": "Hush"
       },
@@ -81,6 +85,7 @@
       "physical": {
         "column": "Month",
         "edition": "2019",
+        "file": "scb_example_monthly_2019",
         "table": "Pers"
       },
       "requested_period": "2019",
@@ -98,12 +103,14 @@
       "physical": {
         "column": "Recipient",
         "edition": "2019",
+        "file": "scb_example_monthly_2019",
         "table": "Pers"
       },
       "requested_period": "2019",
       "source": "Example"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "46a9f542dcafee0ad4a03495bec177704e5a7300983414e95bc59134d9400c34",
@@ -115,5 +122,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

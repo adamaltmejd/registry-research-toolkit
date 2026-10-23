@@ -12,6 +12,7 @@
       "physical": {
         "column": "DIA1",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "member": {
           "position": 1
         },
@@ -31,6 +32,7 @@
       "physical": {
         "column": "DIA2",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "member": {
           "position": 2
         },
@@ -50,6 +52,7 @@
       "physical": {
         "column": "DIA10",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "member": {
           "position": 10
         },
@@ -59,6 +62,7 @@
       "source": "Diagnoser"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "f537ec3098649d9b743563545d22de3280fbb7fe6fb41c65932334d939aa114e",
@@ -70,5 +74,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

@@ -19,12 +19,14 @@
       "physical": {
         "column": "Observed",
         "edition": "2018",
+        "file": "scb_example_annual_2018",
         "table": "Annual2018"
       },
       "requested_period": "2018",
       "source": "Example"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "ca2a11b09fb1e57e33db6395d8db24c1c9e3005753a1c92d7b73bfb8bcadcaca",
@@ -36,5 +38,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

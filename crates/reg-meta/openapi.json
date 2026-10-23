@@ -3670,6 +3670,7 @@
         "description": "The order manifest: machine-written here, machine-read by the steward-side\nextract system, never hand-edited.",
         "required": [
           "version",
+          "extract_format",
           "provenance",
           "entries",
           "clips"
@@ -3689,13 +3690,17 @@
             },
             "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column; then each file's\nheld row keys no binding ordered (`key`), by table, variant, edition, member\nindex and column."
           },
+          "extract_format": {
+            "$ref": "#/components/schemas/ProjectExtractFormat",
+            "description": "The file format the extract runner writes every file in: the project's\n`extract_format`, `dta` when it sets none."
+          },
           "provenance": {
             "$ref": "#/components/schemas/OrderProvenance"
           },
           "version": {
             "type": "integer",
             "format": "int32",
-            "description": "The manifest contract version, 1.",
+            "description": "The manifest contract version, 2.",
             "minimum": 0
           }
         }
@@ -3831,6 +3836,7 @@
         "type": "object",
         "description": "The steward-side coordinate of an entry; in the global fallback `table` is\nblank, `column` the canonical column and `edition` the requested period.",
         "required": [
+          "file",
           "edition",
           "table",
           "column"
@@ -3841,7 +3847,11 @@
           },
           "edition": {
             "type": "string",
-            "description": "The table's edition, rendered as a period. With the table and the variant it\nnames the output file: one file per table edition, whatever periods its\nentries request."
+            "description": "The table's edition, rendered as a period: one file per table, whatever\nperiods and variants its entries request."
+          },
+          "file": {
+            "type": "string",
+            "description": "The output file's name without its extension, the same on every entry of the\nfile: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the\ntable's own variant (crates/DESIGN.md, \"Extraction keeps delivery topology\")."
           },
           "member": {
             "oneOf": [
@@ -4046,6 +4056,10 @@
           "sources"
         ],
         "properties": {
+          "extract_format": {
+            "$ref": "#/components/schemas/ProjectExtractFormat",
+            "description": "The file format every extracted file is written in; absent means `dta`."
+          },
           "name": {
             "type": "string"
           },
@@ -4090,6 +4104,14 @@
           }
         ],
         "description": "A panel's entity key: one column, or a composite."
+      },
+      "ProjectExtractFormat": {
+        "type": "string",
+        "enum": [
+          "dta",
+          "parquet",
+          "csv"
+        ]
       },
       "ProjectIdSubtype": {
         "type": "string",

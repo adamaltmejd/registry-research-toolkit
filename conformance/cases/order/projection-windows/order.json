@@ -12,6 +12,7 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "file": "scb_example_annual_narrow",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -29,6 +30,7 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "file": "scb_example_annual",
         "table": "Wide"
       },
       "requested_period": "2015..2019",
@@ -45,6 +47,7 @@
       "physical": {
         "column": "FieldB",
         "edition": "2015..2019",
+        "file": "scb_example_annual_narrow",
         "projection": "narrow",
         "table": "Narrow"
       },
@@ -62,12 +65,14 @@
       "physical": {
         "column": "Field",
         "edition": "2015..2019",
+        "file": "scb_example_annual",
         "table": "Wide"
       },
       "requested_period": "2015..2016",
       "source": "Example"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "8720ae71db2872d641b01b55b0884a8e966521c1326d17ccca6435d8d2a2da6c",
@@ -79,5 +84,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

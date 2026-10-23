@@ -1,0 +1,18 @@
+{
+  "findings": [
+    {
+      "code": "stata_name_invalid",
+      "message": "column 'ⒶValue' of table 'Accounts' is not a Stata variable name (1 to 32 letters, digits or underscores, not starting with a digit, not a reserved word), so it cannot be written to a .dta file — set extract_format to parquet or csv",
+      "source": "Example",
+      "variable": "scb/example/value",
+      "period": "2018"
+    },
+    {
+      "code": "stata_name_invalid",
+      "message": "column 'LopNrForSammanstalldaForetagsuppgifter' of table 'Accounts' is not a Stata variable name (1 to 32 letters, digits or underscores, not starting with a digit, not a reserved word), so it cannot be written to a .dta file — set extract_format to parquet or csv",
+      "source": "Example",
+      "variable": "scb/example/person",
+      "period": "2018"
+    }
+  ]
+}

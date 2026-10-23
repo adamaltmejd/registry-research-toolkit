@@ -12,6 +12,7 @@
       "physical": {
         "column": "Person",
         "edition": "2021",
+        "file": "scb_example_annual_2021",
         "table": "Diag"
       },
       "requested_period": "2021",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Person",
         "edition": "2021",
+        "file": "scb_example_annual_diag-narrow_2021",
         "projection": "diag-narrow",
         "table": "DiagNarrow"
       },
@@ -45,6 +47,7 @@
       "physical": {
         "column": "Dia1",
         "edition": "2021",
+        "file": "scb_example_annual_2021",
         "member": {
           "position": 1
         },
@@ -64,6 +67,7 @@
       "physical": {
         "column": "Dia2",
         "edition": "2021",
+        "file": "scb_example_annual_2021",
         "member": {
           "position": 2
         },
@@ -83,6 +87,7 @@
       "physical": {
         "column": "Own",
         "edition": "2021",
+        "file": "scb_example_annual_diag-narrow_2021",
         "projection": "diag-narrow",
         "table": "DiagNarrow"
       },
@@ -90,6 +95,7 @@
       "source": "S"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "4a781a7c8446ae97a2ca5bdad103c107345fbeaaf03fa7e5b43d2e2f6b025cca",
@@ -101,5 +107,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

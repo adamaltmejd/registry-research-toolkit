@@ -29,7 +29,8 @@ the `register-metadata-search` skill.
 3. Write periods in the document's own grammar, which is not the `period` argument of
    the read tools: `{"from": 2015, "to": 2019}` is a range, `[2015, 2019]` is two
    separate years, `2019` is one year. A range string such as `"2015..2019"` is refused
-   with `invalid_period`.
+   with `invalid_period`. Set `extract_format` only when the user names a file format
+   for the extract: `parquet` or `csv`. Absent means Stata `.dta`.
 4. Call `order` with `operation: "validate"` and the document as `project`, on the same
    server whose `show` root gave the `steward`. Each catalog validates against its own
    holdings; another server refuses the document with `steward_mismatch`. Fix every

@@ -68,6 +68,13 @@ fn py_isalnum(c: char) -> bool {
     )
 }
 
+/// PCRE `\p{L}`: general category L*. Not `char::is_alphabetic`, which also admits
+/// `Other_Alphabetic` marks and symbols (U+0345, circled letters U+24B6..).
+#[must_use]
+pub fn is_letter(c: char) -> bool {
+    c.general_category_group() == GeneralCategoryGroup::Letter
+}
+
 /// Python `str.casefold()`: full case folding (`CaseFolding.txt` statuses C and F).
 fn case_fold(s: &str) -> String {
     let mut out = String::with_capacity(s.len());

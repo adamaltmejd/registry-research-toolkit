@@ -12,6 +12,7 @@
       "physical": {
         "column": "Hushallsid",
         "edition": "2020",
+        "file": "scb_example_annual_2020",
         "table": "Hushall2020"
       },
       "requested_period": "2020",
@@ -28,6 +29,7 @@
       "physical": {
         "column": "Hushallsid_2019",
         "edition": "2018..2020",
+        "file": "scb_example_annual_panel",
         "member": {
           "year": 2019
         },
@@ -37,6 +39,7 @@
       "source": "Hushall"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "f537ec3098649d9b743563545d22de3280fbb7fe6fb41c65932334d939aa114e",
@@ -48,5 +51,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

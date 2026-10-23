@@ -12,6 +12,7 @@
       "physical": {
         "column": "Hushallsid_2018",
         "edition": "2018..2020",
+        "file": "scb_example_annual_panel",
         "member": {
           "year": 2018
         },
@@ -31,6 +32,7 @@
       "physical": {
         "column": "Hushallsid_2019",
         "edition": "2018..2020",
+        "file": "scb_example_annual_panel",
         "member": {
           "year": 2019
         },
@@ -50,6 +52,7 @@
       "physical": {
         "column": "Hushallsid_2020",
         "edition": "2018..2020",
+        "file": "scb_example_annual_panel-narrow",
         "member": {
           "year": 2020
         },
@@ -70,6 +73,7 @@
       "physical": {
         "column": "DIA_2018",
         "edition": "2018",
+        "file": "scb_example_annual_2018_wide2018",
         "member": {
           "year": 2018
         },
@@ -79,6 +83,7 @@
       "source": "Pivot"
     }
   ],
+  "extract_format": "dta",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "46a9f542dcafee0ad4a03495bec177704e5a7300983414e95bc59134d9400c34",
@@ -90,5 +95,5 @@
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

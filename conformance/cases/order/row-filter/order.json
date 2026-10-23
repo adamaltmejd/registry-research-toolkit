@@ -22,22 +22,24 @@
       "physical": {
         "column": "Observed",
         "edition": "2018..2020",
+        "file": "scb_example_annual",
         "table": "Range"
       },
       "requested_period": "2019",
       "source": "Example"
     }
   ],
+  "extract_format": "csv",
   "provenance": {
     "artifact_kind": "steward",
     "catalog_generation_id": "5a224a76907e856533afac295d001002cc2170b2ce9680da13a5eb06df26da86",
     "catalog_schema_version": "12.3.0",
     "mode": "steward_holdings",
-    "project_hash": "709bc2ced4e845e7e02e261d508a9c2c862d3437235416ee718f4643de503b14",
+    "project_hash": "bc08492101e2e022a91e14ddf2a739c975da9cd37b411b89fe7d9c34a3cf0f35",
     "project_name": "Reader case",
     "project_reg_meta_version": "reg_meta/v0.40.1",
     "project_schema_version": "3.0.0",
     "steward": "swecov"
   },
-  "version": 1
+  "version": 2
 }

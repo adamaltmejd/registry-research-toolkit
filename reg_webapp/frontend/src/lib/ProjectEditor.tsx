@@ -1,8 +1,19 @@
 import { useEffect, useRef } from "react";
+import {
+  Button as AriaButton,
+  Label,
+  ListBox,
+  ListBoxItem,
+  Popover,
+  Select,
+  SelectValue,
+  Text,
+} from "react-aria-components";
 import { fqidSegments, registerPrefixOf } from "./catalog";
 import { registerChildren, registerRead, UNASKED } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import {
+  type ProjectData,
   type RawDraft,
   regMetaReleaseTag,
   safeSourceRegisterVariant,
@@ -20,6 +31,7 @@ import { EmptyState } from "./ui/EmptyState";
 import { KeyValue } from "./ui/KeyValue";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
+import { TreeChevron } from "./ui/TreeChevron";
 import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
@@ -94,6 +106,58 @@ const ORDER_NAME_REASON_ID = "order-name-reason";
 
 const nameOf = (draft: RawDraft): string =>
   typeof draft.name === "string" ? draft.name : "";
+
+type ExtractFormat = NonNullable<ProjectData["extract_format"]>;
+
+/** The extract formats, Stata first: the contract's default when the draft sets none. */
+const EXTRACT_FORMATS: { id: ExtractFormat; label: string }[] = [
+  { id: "dta", label: "Stata (.dta)" },
+  { id: "parquet", label: "Parquet (.parquet)" },
+  { id: "csv", label: "CSV (.csv)" },
+];
+
+const formatOf = (draft: RawDraft): ExtractFormat =>
+  EXTRACT_FORMATS.find((f) => f.id === draft.extract_format)?.id ?? "dta";
+
+/** The project's `extract_format`: the one file format the steward's extract
+ * writes every ordered file in. A pick is written explicitly, `dta` included. */
+function ExtractFormatField({ value }: { value: ExtractFormat }) {
+  return (
+    <Select
+      className={styles.field}
+      value={value}
+      onChange={(key) => {
+        if (key != null) {
+          projectStore.updateField("extract_format", key as ExtractFormat);
+        }
+      }}
+    >
+      <Label>File format</Label>
+      <AriaButton className={styles.selectButton}>
+        <SelectValue />
+        <TreeChevron />
+      </AriaButton>
+      <Text slot="description" className={`muted ${styles.hint}`}>
+        Every file of the order is written in this format.
+      </Text>
+      <Popover
+        offset={4}
+        style={{ zIndex: "var(--z-popover)" }}
+        className={({ isEntering, isExiting }) =>
+          `${styles.selectPopover} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
+        }
+      >
+        <ListBox items={EXTRACT_FORMATS} className={styles.selectList}>
+          {(format) => (
+            <ListBoxItem id={format.id} className={styles.selectItem}>
+              {format.label}
+            </ListBoxItem>
+          )}
+        </ListBox>
+      </Popover>
+    </Select>
+  );
+}
 
 export function ProjectEditor({
   regMetaVersion,
@@ -328,7 +392,8 @@ export function ProjectEditor({
               step, so plain body text. */}
           {orderInstructions && <p>{orderInstructions}</p>}
 
-          {/* `name` is the one editable top-level field on this page. */}
+          {/* `name` and `extract_format` are the editable top-level fields on
+              this page. */}
           <label className={styles.field}>
             <span>Name</span>
             <input
@@ -341,6 +406,7 @@ export function ProjectEditor({
               }
             />
           </label>
+          <ExtractFormatField value={formatOf(draft)} />
 
           {/* The sources/columns cart, keyed by the store-owned STABLE client id
               (issue #200), never the index. Adding data happens in the catalog,

@@ -1026,10 +1026,15 @@ export interface components {
              *     index and column.
              */
             entries: components["schemas"]["OrderEntry"][];
+            /**
+             * @description The file format the extract runner writes every file in: the project's
+             *     `extract_format`, `dta` when it sets none.
+             */
+            extract_format: components["schemas"]["ProjectExtractFormat"];
             provenance: components["schemas"]["OrderProvenance"];
             /**
              * Format: int32
-             * @description The manifest contract version, 1.
+             * @description The manifest contract version, 2.
              */
             version: number;
         };
@@ -1092,11 +1097,16 @@ export interface components {
         PhysicalCoordinate: {
             column: string;
             /**
-             * @description The table's edition, rendered as a period. With the table and the variant it
-             *     names the output file: one file per table edition, whatever periods its
-             *     entries request.
+             * @description The table's edition, rendered as a period: one file per table, whatever
+             *     periods and variants its entries request.
              */
             edition: string;
+            /**
+             * @description The output file's name without its extension, the same on every entry of the
+             *     file: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the
+             *     table's own variant (crates/DESIGN.md, "Extraction keeps delivery topology").
+             */
+            file: string;
             member?: components["schemas"]["PivotMember"] | null;
             /** @description The table's disjoint-partition label; absent when it has none. */
             partition?: string | null;
@@ -1148,6 +1158,8 @@ export interface components {
         ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
+            /** @description The file format every extracted file is written in; absent means `dta`. */
+            extract_format?: components["schemas"]["ProjectExtractFormat"];
             name: string;
             panels?: components["schemas"]["ProjectPanel"][];
             reg_meta_version: string;
@@ -1163,6 +1175,8 @@ export interface components {
         };
         /** @description A panel's entity key: one column, or a composite. */
         ProjectEntityKey: string | string[];
+        /** @enum {string} */
+        ProjectExtractFormat: "dta" | "parquet" | "csv";
         /** @enum {string} */
         ProjectIdSubtype: "integer" | "string";
         /** @description `{"period": int | string}`: a literal period, as opposed to a column ref. */

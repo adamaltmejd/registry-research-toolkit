@@ -1,0 +1,48 @@
+{
+  "types": {
+    "LopNr": "numeric %20.0g",
+    "Kod": "character %-9s",
+    "Datum": "Date %td",
+    "Ref": "character %-9s",
+    "Belopp": "numeric %20.0g",
+    "Antal": "numeric %12.0g",
+    "Stamp": "POSIXct %tc",
+    "Flag": "numeric %12.0g",
+    "Namn": "character %-9s"
+  },
+  "rows": [
+    [
+      "199001011234",
+      "0180",
+      "1959-12-31",
+      "123456789012345678",
+      "1234567.89",
+      "-5",
+      "2019-01-01 10:00:00",
+      "1",
+      "Västerås"
+    ],
+    [
+      null,
+      "",
+      null,
+      "",
+      null,
+      null,
+      null,
+      null,
+      ""
+    ],
+    [
+      "201001011234",
+      "0001",
+      "2020-02-29",
+      "1",
+      "-0.5",
+      "7",
+      "2020-02-29 23:59:59",
+      "0",
+      ""
+    ]
+  ]
+}

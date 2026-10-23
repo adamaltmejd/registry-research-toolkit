@@ -6,6 +6,7 @@
     "steward": "swecov",
     "reg_meta_version": "reg_meta/v0.40.1",
     "name": "Reader case",
+    "extract_format": "csv",
     "sources": [
       {
         "name": "Early",

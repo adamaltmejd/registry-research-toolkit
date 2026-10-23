@@ -3,7 +3,7 @@
 //! The types are the retired `reg_schema.project_data` models. They keep the raw spelling
 //! of every value (an int year stays an int, `"2018"` stays a string), and serialize
 //! as Pydantic's `model_dump(mode="json")` does: every optional field present, absent
-//! as `null` (except `Binding.period`, omitted when unset), `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
+//! as `null` (except `Binding.period` and `extract_format`, omitted when unset), `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
 //! shape is what [`project_hash`] hashes.
 //!
 //! [`ProjectData::from_value`] is the only way to build a project from JSON: it runs
@@ -149,6 +149,10 @@ str_enum!(
     /// The storage of a `numeric` column.
     NumericSubtype { Integer = "integer", Double = "double" }
 );
+str_enum!(
+    /// The file format a steward's extract runner writes every file of an order in.
+    ExtractFormat { Dta = "dta", Parquet = "parquet", Csv = "csv" }
+);
 
 /// The top-level `project_data.json` document.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -169,6 +173,11 @@ pub struct ProjectData {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
+    /// The file format every extracted file is written in; absent means `dta`.
+    // Omitted when unset, so a project that never set it keeps its `project_hash`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub extract_format: Option<ExtractFormat>,
 }
 
 /// [`ProjectData`]'s fields as deserialized, so that `ProjectData` has no public
@@ -185,6 +194,8 @@ struct Fields {
     panels: Vec<Panel>,
     #[serde(default)]
     window: Option<StudyWindow>,
+    #[serde(default)]
+    extract_format: Option<ExtractFormat>,
 }
 
 impl ProjectData {
@@ -212,7 +223,14 @@ impl ProjectData {
             sources: f.sources,
             panels: f.panels,
             window: f.window,
+            extract_format: f.extract_format,
         })
+    }
+
+    /// The format the order's files are written in: [`Self::extract_format`], else Stata.
+    #[must_use]
+    pub fn extract_format(&self) -> ExtractFormat {
+        self.extract_format.unwrap_or(ExtractFormat::Dta)
     }
 }
 

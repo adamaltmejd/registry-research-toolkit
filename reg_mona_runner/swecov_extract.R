@@ -2,8 +2,9 @@
 #
 # For every order manifest in <base>/orders/*.json (the order.json the catalog
 # writes, renamed to the project number), extract the ordered columns from
-# SWECOV's holdings into <base>/export_data/<nr>_<YYYY-MM-DD>/: one CSV per
-# manifest file plus run_log.csv. A success moves the order to
+# SWECOV's holdings into <base>/export_data/<nr>_<YYYY-MM-DD>/: one file per
+# manifest file, in the order's extract_format (Stata .dta, Parquet or CSV), plus
+# run_log.csv. A success moves the order to
 # orders/archive/<nr>_<YYYY-MM-DD>.json; a failure leaves it in orders/ with
 # error_log.csv in its export folder. A rerun overwrites.
 #
@@ -11,8 +12,9 @@
 # The contract it reads is crates/DESIGN.md, "Order manifest"; the rationale and
 # the exit codes are reg_mona_runner/DESIGN.md.
 #
-# Packages: base R (>= 4.2, UTF-8 native), DBI, odbc and jsonlite; any missing
-# is installed into R's default library before anything else runs. Row values
+# Packages: base R (>= 4.2, UTF-8 native), DBI, odbc and jsonlite, plus haven for
+# a .dta order and arrow for a .parquet one; any missing is installed into R's
+# default library first (haven and arrow when an order needs them). Row values
 # are never printed or logged: only file names, row and column counts and
 # manifest fields are.
 #
@@ -60,11 +62,13 @@ EXIT <- c(
   ok = 0L,
   setup = 2L, # export root, packages or database connection
   json = 3L, # the order is not JSON
-  version = 4L, # manifest version is not 1
+  version = 4L, # manifest version is not 2
   mode = 5L, # not a steward_holdings order for this steward
   manifest = 6L, # unknown field, missing or malformed field, unsafe file name
-  resolve = 7L, # table or column not found once, or a period column of the wrong type
-  extract = 8L # the query or the file write failed
+  # table or column not found once, a period column of the wrong type, or a column
+  # the order's format cannot hold (its SQL type or, for .dta, its name)
+  resolve = 7L,
+  extract = 8L # the query or the file write failed, or a value the format cannot hold
 )
 
 FETCH_ROWS <- 100000L
@@ -87,6 +91,31 @@ NUMBER_TYPES <- c(
   "real"
 )
 TEXT_TYPES <- c("char", "varchar", "nchar", "nvarchar")
+# The SQL types a .dta or .parquet file maps (reg_mona_runner/DESIGN.md, "Types per
+# format"); a CSV writes any type as text.
+INT_TYPES <- c("tinyint", "smallint", "int")
+TIME_TYPES <- c("datetime", "datetime2", "smalldatetime")
+STRING_TYPES <- c(TEXT_TYPES, "text", "ntext")
+MAPPED_TYPES <- c(
+  INT_TYPES,
+  "bigint",
+  "decimal",
+  "numeric",
+  "float",
+  "real",
+  "bit",
+  "date",
+  TIME_TYPES,
+  STRING_TYPES
+)
+# The largest value a Stata long holds (larger ones are its missing codes), the
+# bound below which a double holds every integer exactly, and the largest double
+# Stata holds (larger ones are its missing codes).
+STATA_LONG_MAX <- 2147483620L
+DOUBLE_EXACT <- 2^53
+STATA_DOUBLE_MAX <- 8.98846567431157e307
+# A decimal of at most this many digits is a Stata double; a wider one is text.
+DTA_DOUBLE_DIGITS <- 15L
 
 refuse <- function(code, ...) {
   stop(structure(
@@ -98,6 +127,10 @@ refuse <- function(code, ...) {
 say <- function(...) cat(paste0(...), "\n", sep = "")
 
 PACKAGES <- c("DBI", "odbc", "jsonlite")
+FORMATS <- c("dta", "parquet", "csv")
+# The writer package each format needs beyond PACKAGES, checked per order, so a
+# MONA without arrow still runs .dta and .csv orders.
+FORMAT_PACKAGES <- c(dta = "haven", parquet = "arrow", csv = NA)
 
 # Same helper in reg_export_gate/export_gate.R: each script is uploaded to MONA
 # alone. Installs each package into R's default library (.libPaths()[1]) from
@@ -251,9 +284,10 @@ check_entry <- function(e, where) {
   check_object(
     ph,
     paste0(where, ".physical"),
-    c("edition", "table", "column"),
+    c("file", "edition", "table", "column"),
     c("partition", "projection", "member")
   )
+  check_string(ph$file, paste0(where, ".physical.file"))
   check_string(ph$edition, paste0(where, ".physical.edition"))
   check_name(ph$table, paste0(where, ".physical.table"))
   check_name(ph$column, paste0(where, ".physical.column"))
@@ -285,12 +319,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 1)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 2)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 1"
+      " is not supported; this runner reads version 2"
     )
   }
   p <- doc$provenance
@@ -312,8 +346,15 @@ check_manifest <- function(doc) {
   check_object(
     doc,
     "the manifest",
-    c("version", "provenance", "entries", "clips")
+    c("version", "extract_format", "provenance", "entries", "clips")
   )
+  if (!is_string(doc$extract_format) || !(doc$extract_format %in% FORMATS)) {
+    refuse(
+      "manifest",
+      "extract_format is not one of ",
+      paste(FORMATS, collapse = ", ")
+    )
+  }
   provenance_fields <- c(
     "mode",
     "steward",
@@ -355,52 +396,50 @@ check_manifest <- function(doc) {
 
 # ---- Output files -----------------------------------------------------------------
 
-# One file per variant, physical table and table edition, named in slug spelling
-# (crates/DESIGN.md, "Extraction keeps delivery topology"). Columns are the
-# distinct physical columns in entry order; every entry of a file carries the
-# same filter or none.
-plan_files <- function(entries) {
+# One file per physical table and table edition, whatever variant binds it, named
+# by the manifest's physical.file with the format's extension (crates/DESIGN.md,
+# "Extraction keeps delivery topology"). Columns are the distinct physical columns
+# in entry order; every entry of a file carries the same name and the same filter
+# or none.
+plan_files <- function(entries, format) {
   files <- list()
   for (i in seq_along(entries)) {
     e <- entries[[i]]
-    lg <- e$logical
     ph <- e$physical
-    placement <- c(ph$partition, ph$projection)
-    if (length(placement) > 1L) {
+    if (length(c(ph$partition, ph$projection)) > 1L) {
       refuse(
         "manifest",
         sprintf("entries[%d]", i - 1L),
         ".physical has both a partition and a projection"
       )
     }
-    name <- paste0(
-      paste(c(lg$register, lg$variant, placement, ph$edition), collapse = "_"),
-      ".csv"
-    )
-    # The placement is part of the file's identity, so two entries of one table
-    # with different placements never merge silently (the name clash check below
-    # refuses them instead).
-    id <- paste(
-      lg$provider,
-      lg$register,
-      lg$variant,
-      ph$table,
-      ph$edition,
-      paste(placement, collapse = ""),
-      sep = "\r"
-    )
+    id <- paste(ph$table, ph$edition, sep = "\r")
     f <- files[[id]]
     if (is.null(f)) {
       # Slug spelling only: no path separator, drive or parent reference.
-      if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", name)) {
-        refuse("manifest", "output file name ", name, " is not slug spelling")
+      if (!grepl("^[A-Za-z0-9_][A-Za-z0-9_.,-]*$", ph$file)) {
+        refuse(
+          "manifest",
+          "output file name ",
+          ph$file,
+          " is not slug spelling"
+        )
       }
       f <- list(
-        name = name,
+        name = paste0(ph$file, ".", format),
+        file = ph$file,
         table = ph$table,
         columns = character(),
         filter = e$filter,
         first = i
+      )
+    } else if (!identical(f$file, ph$file)) {
+      refuse(
+        "manifest",
+        sprintf("entries[%d]", i - 1L),
+        ".physical.file differs from its table's (",
+        f$name,
+        ")"
       )
     } else if (!identical(f$filter, e$filter)) {
       refuse(
@@ -424,6 +463,26 @@ plan_files <- function(entries) {
       "manifest",
       "two output files share the name ",
       paste(clash, collapse = ", ")
+    )
+  }
+  # The runner's own logs, and Windows device names (whatever the extension),
+  # which would swallow the file's data.
+  device <- c(
+    "con",
+    "prn",
+    "aux",
+    "nul",
+    paste0(c("com", "lpt"), rep(1:9, each = 2))
+  )
+  taken <- file_names %in%
+    c("run_log.csv", "error_log.csv") |
+    sub("\\..*$", "", file_names) %in% device
+  if (any(taken)) {
+    refuse(
+      "manifest",
+      "output file name ",
+      paste(file_names[taken], collapse = ", "),
+      " is reserved"
     )
   }
   files
@@ -549,8 +608,9 @@ resolve_schema <- function(con, table) {
   hits$schema_id[[1]]
 }
 
-# Each of `columns` on the resolved table: its DATA_TYPE and
-# CHARACTER_MAXIMUM_LENGTH (-1 for max). A missing column is refused.
+# Each of `columns` on the resolved table: its DATA_TYPE,
+# CHARACTER_MAXIMUM_LENGTH (-1 for max), NUMERIC_PRECISION and NUMERIC_SCALE. A
+# missing column is refused.
 resolve_columns <- function(con, schema_id, table, columns) {
   values <- paste0(
     "(",
@@ -564,7 +624,9 @@ resolve_columns <- function(con, schema_id, table, columns) {
     con,
     paste0(
       "SELECT v.i AS i, c.DATA_TYPE AS data_type, ",
-      "CAST(c.CHARACTER_MAXIMUM_LENGTH AS int) AS max_length FROM (VALUES ",
+      "CAST(c.CHARACTER_MAXIMUM_LENGTH AS int) AS max_length, ",
+      "CAST(c.NUMERIC_PRECISION AS int) AS precision, ",
+      "CAST(c.NUMERIC_SCALE AS int) AS scale FROM (VALUES ",
       values,
       ") AS v(i, n) LEFT JOIN INFORMATION_SCHEMA.COLUMNS AS c ON c.TABLE_SCHEMA = SCHEMA_NAME(",
       as.integer(schema_id),
@@ -586,7 +648,82 @@ resolve_columns <- function(con, schema_id, table, columns) {
       paste(missing, collapse = ", ")
     )
   }
-  list(type = tolower(found$data_type), max_length = found$max_length)
+  list(
+    type = tolower(found$data_type),
+    max_length = found$max_length,
+    precision = found$precision,
+    scale = found$scale
+  )
+}
+
+# Whether `name` is a variable name a .dta file (format 118) can hold: Stata's
+# rule (stricter than ReadStat, which writes any non-ASCII name), which
+# is_stata_name in crates/reg-catalog/src/ops/order.rs repeats so a dta order
+# blocks before it reaches MONA. 1 to 32 characters; a letter (\p{L}) or _
+# first, then letters, ASCII digits and _; not a reserved word, nor str and a
+# digit.
+stata_name_ok <- function(name) {
+  reserved <- c(
+    "_all",
+    "_b",
+    "byte",
+    "_coef",
+    "_cons",
+    "double",
+    "float",
+    "if",
+    "in",
+    "int",
+    "long",
+    "_n",
+    "_N",
+    "_pi",
+    "_pred",
+    "_rc",
+    "_skip",
+    "strL",
+    "using",
+    "with"
+  )
+  grepl("^[\\p{L}_][\\p{L}0-9_]{0,31}$", name, perl = TRUE) &&
+    !(name %in% reserved) &&
+    !grepl("^str[0-9]", name)
+}
+
+# Refuse, before any row is read, a column of `file` the order's format cannot
+# hold: a SQL type outside MAPPED_TYPES (.dta and .parquet) or a name that is
+# not a Stata variable name (.dta). A CSV holds anything as text.
+check_format <- function(file, types, format) {
+  if (format == "csv") {
+    return(invisible())
+  }
+  for (j in seq_along(file$columns)) {
+    column <- file$columns[j]
+    if (!(types$type[j] %in% MAPPED_TYPES)) {
+      refuse(
+        "resolve",
+        "column ",
+        column,
+        " of ",
+        file$table,
+        " is SQL type ",
+        types$type[j],
+        ", which this runner does not map to .",
+        format
+      )
+    }
+    if (format == "dta" && !stata_name_ok(column)) {
+      refuse(
+        "resolve",
+        "column ",
+        column,
+        " of ",
+        file$table,
+        " is not a Stata variable name (1 to 32 letters, digits or _, not ",
+        "starting with a digit, not a reserved word): order it as parquet or csv"
+      )
+    }
+  }
 }
 
 # A selected column as T-SQL text around `@col`. Text the client would fetch in
@@ -795,12 +932,221 @@ write_csv <- function(df, path) {
   if (nrow(df)) writeBin(csv_bytes(df), sink)
 }
 
-extract_file <- function(con, file, schema_id, types, out) {
-  batch <- select_batch(file, schema_id, types)
-  path <- file.path(out, file$name)
+# ---- Writers --------------------------------------------------------------------
+
+# A writer for one output file: write(chunk) takes each fetched chunk (the first
+# may have no rows), finish() completes the file, release() frees what an
+# unfinished file holds (the failed order's folder is then cleared). `types` are
+# the file's columns' resolve_columns() facts, in column order.
+csv_writer <- function(path, columns, types) {
   sink <- file(path, open = "wb")
-  on.exit(close(sink), add = TRUE)
-  writeBin(csv_header(file$columns), sink)
+  writeBin(csv_header(columns), sink)
+  state <- new.env()
+  state$open <- TRUE
+  list(
+    write = function(chunk) if (nrow(chunk)) writeBin(csv_bytes(chunk), sink),
+    finish = function() {
+      close(sink)
+      state$open <- FALSE
+    },
+    release = function() if (state$open) close(sink)
+  )
+}
+
+# The arrow type each SQL type is written as: the SQL type kept (int64 ids,
+# decimal128 at the column's own precision and scale, days and UTC instants).
+arrow_type <- function(type, precision, scale) {
+  switch(
+    type,
+    tinyint = ,
+    smallint = ,
+    int = arrow::int32(),
+    bigint = arrow::int64(),
+    decimal = ,
+    numeric = arrow::decimal128(precision, scale),
+    float = arrow::float64(),
+    real = arrow::float32(),
+    bit = arrow::boolean(),
+    date = arrow::date32(),
+    datetime = ,
+    datetime2 = ,
+    smalldatetime = arrow::timestamp("us", "UTC"),
+    arrow::utf8()
+  )
+}
+
+# Streams one row group per chunk, so a file is never held whole in memory.
+parquet_writer <- function(path, columns, types) {
+  schema <- arrow::schema(stats::setNames(
+    lapply(seq_along(columns), function(j) {
+      arrow_type(types$type[j], types$precision[j], types$scale[j])
+    }),
+    columns
+  ))
+  sink <- arrow::FileOutputStream$create(path)
+  writer <- tryCatch(
+    arrow::ParquetFileWriter$create(
+      schema,
+      sink,
+      properties = arrow::ParquetWriterProperties$create(columns)
+    ),
+    error = function(e) {
+      sink$close()
+      stop(e)
+    }
+  )
+  state <- new.env()
+  state$open <- TRUE
+  # The sink closes even when the writer's close fails, so the failure path can
+  # remove a partial file (an open handle blocks that on Windows).
+  close_all <- function() {
+    if (state$open) {
+      state$open <- FALSE
+      tryCatch(writer$Close(), finally = sink$close())
+    }
+  }
+  list(
+    write = function(chunk) {
+      if (!nrow(chunk)) {
+        return(invisible())
+      }
+      arrays <- lapply(seq_along(chunk), function(j) {
+        x <- chunk[[j]]
+        if (inherits(x, "POSIXct")) {
+          attr(x, "tzone") <- "UTC"
+        }
+        # bigint and decimal arrive as text: arrow parses them exactly, or fails.
+        arrow::Array$create(x)$cast(schema[[j]]$type)
+      })
+      writer$WriteTable(
+        arrow::Table$create(
+          !!!stats::setNames(arrays, columns),
+          schema = schema
+        ),
+        chunk_size = FETCH_ROWS
+      )
+    },
+    finish = close_all,
+    release = close_all
+  )
+}
+
+# One column as .dta storage (reg_mona_runner/DESIGN.md, "Types per format").
+# A value Stata cannot hold exactly is refused, never rounded or cut.
+dta_column <- function(x, type, precision, column, what) {
+  beyond <- function(limit) {
+    refuse(
+      "extract",
+      what,
+      ": column ",
+      column,
+      " holds a value beyond ",
+      limit,
+      ", which a .dta file cannot hold exactly: order it as parquet or csv"
+    )
+  }
+  if (type %in% INT_TYPES) {
+    if (any(x > STATA_LONG_MAX, na.rm = TRUE)) {
+      beyond(paste0("Stata's long range (", STATA_LONG_MAX, ")"))
+    }
+    return(x)
+  }
+  if (
+    type == "bigint" ||
+      (type %in% c("decimal", "numeric") && precision <= DTA_DOUBLE_DIGITS)
+  ) {
+    # Text in, so the check sees the parsed value: one at or above 2^53 may have
+    # rounded on parse.
+    x <- as.numeric(x)
+    if (any(abs(x) >= DOUBLE_EXACT, na.rm = TRUE)) {
+      beyond("2^53")
+    }
+    # Stata's default %10.0g would show a 12-digit id in exponent notation.
+    attr(x, "format.stata") <- "%20.0g"
+    return(x)
+  }
+  if (type == "bit") {
+    return(as.integer(x))
+  }
+  if (
+    type %in% c("float", "real") && any(abs(x) > STATA_DOUBLE_MAX, na.rm = TRUE)
+  ) {
+    beyond("Stata's double range")
+  }
+  if (is.character(x)) {
+    # Stata has no missing string: NULL is "", as Stata itself reads it (haven
+    # also fails mid-write on an NA in a long strL column).
+    x[is.na(x)] <- ""
+  }
+  x
+}
+
+# Collects the converted chunks and writes the file once: haven cannot append.
+# simplify: the whole file is in memory; a LISA year file is about 8M rows x
+# 100 columns, so stream (or split) if a real .dta order exhausts MONA's RAM.
+dta_writer <- function(path, columns, types) {
+  what <- paste0("writing ", basename(path))
+  state <- new.env()
+  state$chunks <- list()
+  list(
+    write = function(chunk) {
+      state$chunks[[length(state$chunks) + 1L]] <- lapply(
+        seq_along(chunk),
+        function(j) {
+          dta_column(
+            chunk[[j]],
+            types$type[j],
+            types$precision[j],
+            columns[j],
+            what
+          )
+        }
+      )
+    },
+    finish = function() {
+      data <- lapply(seq_along(columns), function(j) {
+        parts <- lapply(state$chunks, `[[`, j)
+        # Drop the chunks' copy as each column is combined: about one copy of
+        # the data is held at a time, not two.
+        for (k in seq_along(state$chunks)) {
+          state$chunks[[k]][j] <- list(NULL)
+        }
+        x <- do.call(c, parts)
+        # c() keeps neither the display format nor a POSIXct's time zone.
+        attr(x, "format.stata") <- attr(parts[[1]], "format.stata")
+        if (inherits(x, "POSIXct")) {
+          attr(x, "tzone") <- "UTC"
+        }
+        x
+      })
+      state$chunks <- list()
+      haven::write_dta(
+        structure(
+          stats::setNames(data, columns),
+          class = "data.frame",
+          row.names = .set_row_names(length(data[[1]]))
+        ),
+        path,
+        version = 14
+      )
+    },
+    release = function() {
+      state$chunks <- list()
+    }
+  )
+}
+
+WRITERS <- list(dta = dta_writer, parquet = parquet_writer, csv = csv_writer)
+
+extract_file <- function(con, file, schema_id, types, format, out) {
+  batch <- select_batch(file, schema_id, types)
+  n <- length(file$columns)
+  writer <- WRITERS[[format]](
+    file.path(out, file$name),
+    file$columns,
+    lapply(types, `[`, seq_len(n))
+  )
+  on.exit(writer$release(), add = TRUE)
   what <- paste0("extracting ", file$name)
   res <- tryCatch(
     if (length(batch$params)) {
@@ -817,27 +1163,26 @@ extract_file <- function(con, file, schema_id, types, out) {
       DBI::dbFetch(res, n = FETCH_ROWS),
       error = function(e) refuse("extract", what, " failed", sqlstate(e))
     )
-    if (ncol(chunk) != length(file$columns)) {
+    if (ncol(chunk) != n) {
       refuse("extract", what, " returned an unexpected column count")
     }
-    if (nrow(chunk)) {
-      for (j in seq_along(chunk)) {
-        x <- chunk[[j]]
-        if (is.character(x) && !all(validUTF8(x[!is.na(x)]))) {
-          refuse(
-            "extract",
-            what,
-            ": column ",
-            file$columns[j],
-            " holds text that is not UTF-8"
-          )
-        }
+    for (j in seq_along(chunk)) {
+      x <- chunk[[j]]
+      if (is.character(x) && !all(validUTF8(x[!is.na(x)]))) {
+        refuse(
+          "extract",
+          what,
+          ": column ",
+          file$columns[j],
+          " holds text that is not UTF-8"
+        )
       }
-      writeBin(csv_bytes(chunk), sink)
-      rows <- rows + nrow(chunk)
     }
+    writer$write(chunk)
+    rows <- rows + nrow(chunk)
     if (DBI::dbHasCompleted(res)) break
   }
+  writer$finish()
   rows
 }
 
@@ -867,7 +1212,22 @@ connection <- function(db) {
 
 extract_order <- function(path, out, db) {
   doc <- check_manifest(read_order(path))
-  files <- plan_files(doc$entries)
+  format <- doc$extract_format
+  files <- plan_files(doc$entries, format)
+  pkg <- FORMAT_PACKAGES[[format]]
+  if (!is.na(pkg) && !nzchar(system.file(package = pkg))) {
+    install_missing(pkg)
+  }
+  if (!is.na(pkg) && !requireNamespace(pkg, quietly = TRUE)) {
+    refuse(
+      "setup",
+      "R package ",
+      pkg,
+      " (for .",
+      format,
+      ") is missing and could not be installed into R's default library"
+    )
+  }
   con <- connection(db)
   # Resolve every file before writing any, so a missing table fails fast.
   resolved <- lapply(files, function(f) {
@@ -887,6 +1247,7 @@ extract_order <- function(path, out, db) {
         f$filter$column
       )
     }
+    check_format(f, types, format)
     list(schema_id = schema_id, types = types)
   })
   log <- data.frame(
@@ -902,6 +1263,7 @@ extract_order <- function(path, out, db) {
       f,
       resolved[[i]]$schema_id,
       resolved[[i]]$types,
+      format,
       out
     )
     say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
@@ -986,7 +1348,7 @@ run_order <- function(path, base, db) {
       )
     )
   }
-  # A failed order leaves no partial CSVs, only its error log.
+  # A failed order leaves no partial files, only its error log.
   if (!reset()) {
     say("  WARNING: files remain in ", out, ": delete them before using it")
   }

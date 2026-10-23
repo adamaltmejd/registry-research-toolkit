@@ -12,17 +12,19 @@ test_that("an export root without orders/ is a setup failure (2)", {
 
 test_that("an order that is not JSON is refused (3)", {
   # Regression: a truncated upload reaches the shape checks or the database.
-  base <- export_root(text = list(`900` = "{\"version\": 1, \"entries\": ["))
+  base <- export_root(text = list(`900` = "{\"version\": 2, \"entries\": ["))
   expect_identical(run_runner(base)$status, 3L)
   expect_refused(base, "900", 3L)
 })
 
-test_that("a manifest version other than 1 is refused (4)", {
-  # Regression: a v2 manifest is read with v1 semantics.
+test_that("a manifest version other than 2 is refused (4)", {
+  # Regression: a retired v1 manifest, which names no extract format, is read
+  # with v2 semantics.
   base <- export_root(
     text = list(
       `900` = order_text("row-filter", function(doc) {
-        doc$version <- 2L
+        doc$version <- 1L
+        doc$extract_format <- NULL
         doc
       })
     )
@@ -45,6 +47,23 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
     text = list(
       `900` = order_text("row-filter", function(doc) {
         doc$entries[[1]]$filter$ranges[[1]]$step <- "month"
+        doc
+      })
+    )
+  )
+  expect_identical(run_runner(base)$status, 6L)
+  expect_refused(base, "900", 6L)
+})
+
+test_that("an output file named like the run log is refused (6)", {
+  # Regression: a csv file named run_log.csv is overwritten by the run log, so
+  # the order succeeds with its data gone.
+  base <- export_root(
+    text = list(
+      `900` = order_text("row-filter", function(doc) {
+        for (i in seq_along(doc$entries)) {
+          doc$entries[[i]]$physical$file <- "Run_Log"
+        }
         doc
       })
     )

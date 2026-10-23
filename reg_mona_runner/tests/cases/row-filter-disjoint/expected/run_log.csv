@@ -1,2 +1,2 @@
 file,rows,columns,filter
-example_annual_2018..2020.csv,3,1,AR (year): ..2018-12-31 OR 2020-01-01..
+scb_example_annual.csv,3,1,AR (year): ..2018-12-31 OR 2020-01-01..
