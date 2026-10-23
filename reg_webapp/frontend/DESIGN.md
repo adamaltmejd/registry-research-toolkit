@@ -371,11 +371,20 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   Matched text is underlined in `accent` at weight 600, a register that matched only
   through its variables says so on its own line under it ("matched on 9 variables", the
   count in `accent-ink`), the column header states how many registers match, and the
-  detail pane stays put. Escape clears the filter and restores the collapse state from
-  anywhere on the page, unless a dialog, popover, the palette or another text field has
-  focus (#1827). The command palette (RAC `Autocomplete`) opens from Enter in the field
-  or `⌘K`, seeded with the field's text (maintainer-decided 2026-10-22), for codes,
-  classifications and actions; its results are a mixed list and carry a `TypeTag`.
+  detail pane stays put. The variables column lists the open register's matches first,
+  then every other matching register's below it in the register column's order (#1828):
+  each under its name as a header, in the register column's group-row type with a
+  `border` rule above, its first five matches (six, rather than a "1 more" row), then a
+  "12 more in <register>" row that opens the register (where the whole list is). Those
+  rows are variables, not folded into concept groups, and open in their own register on
+  a click or Enter; the arrow keys pass them without opening, so walking the list does
+  not move it to another register, and once one opens, focus returns to the column. When
+  only other registers match, a line above them says the open one has none. Escape
+  clears the filter and restores the collapse state from anywhere on the page, unless a
+  dialog, popover, the palette or another text field has focus (#1827). The command
+  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, seeded with the
+  field's text (maintainer-decided 2026-10-22), for codes, classifications and actions;
+  its results are a mixed list and carry a `TypeTag`.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the

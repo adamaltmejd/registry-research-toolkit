@@ -725,11 +725,12 @@ export type RegisterFacet = RustSchemas["RegisterFacet"];
 
 /** Per register, how many of its variables match `q` (#1785): every match, no
  * paging, before concept groups fold. A register without a match is absent.
- * With `register`, only that register, and its entry lists the matched
- * variables' FQIDs (#1788). */
+ * With `register`, only that register, and its entry lists every matched
+ * variable (#1788); without it, `limit` lists each register's first `limit`
+ * and names the register (#1828). */
 export async function searchFacets(
   q: string,
-  options?: { signal?: AbortSignal; register?: string },
+  options?: { signal?: AbortSignal; register?: string; limit?: number },
 ): Promise<RegisterFacet[]> {
   return (
     await searchGet<{ data: RustSchemas["RegisterFacets"] }>(

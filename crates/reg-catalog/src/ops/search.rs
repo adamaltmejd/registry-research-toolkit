@@ -278,15 +278,31 @@ pub struct RegisterFacets {
 #[derive(Serialize, ToSchema)]
 pub struct RegisterFacet {
     fqid: Option<String>,
-    variable_matches: i64,
-    /// With `register`, the matched variables' FQIDs in FQID order, so the register
-    /// page narrows by the same admission it counts; absent without it.
+    /// The register's name, beside a list (a header over it); absent with counts.
     #[serde(skip_serializing_if = "Option::is_none")]
-    variables: Option<Vec<String>>,
+    name: Option<String>,
+    variable_matches: i64,
+    /// With `register`, every matched variable; with `limit`, each register's first
+    /// `limit` (`variable_matches` stays the whole count); in FQID order, so a list
+    /// narrows by the same admission it counts. Absent without either.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    variables: Option<Vec<MatchedVariable>>,
+}
+
+/// A matched variable as the browse column names it.
+#[derive(Serialize, ToSchema)]
+pub struct MatchedVariable {
+    fqid: String,
+    name: Option<String>,
 }
 
 pub fn facets(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let q = super::q(params)?;
+    // Absent means counts only, not `limit`'s page default.
+    let limit = params
+        .get("limit")
+        .map(|_| super::limit(params))
+        .transpose()?;
     let conn = server.catalog.connect()?;
     let register = params
         .get("register")
@@ -300,10 +316,15 @@ pub fn facets(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         register,
         after: None,
     };
-    let registers = match fts_match_query(&fold_search(q)) {
-        Some(fts) if register.is_some() => register_matches(&conn, scope, &request, &fts)?,
-        Some(fts) => register_facets(&conn, scope, &request, &fts)?,
-        None => Vec::new(),
+    let listed = if register.is_some() {
+        Some(usize::MAX)
+    } else {
+        limit
+    };
+    let registers = match (fts_match_query(&fold_search(q)), listed) {
+        (Some(fts), None) => register_facets(&conn, scope, &request, &fts)?,
+        (Some(fts), Some(listed)) => register_matches(&conn, scope, &request, &fts, listed)?,
+        (None, _) => Vec::new(),
     };
     Ok(serde_json::to_value(RegisterFacets { registers }).expect("RegisterFacets serializes"))
 }
@@ -330,6 +351,7 @@ fn register_facets(
         .query_map(params_from_iter(&args), |row| {
             Ok(RegisterFacet {
                 fqid: fqid(&[row.get(0)?, row.get(1)?]),
+                name: None,
                 variable_matches: row.get(2)?,
                 variables: None,
             })
@@ -338,38 +360,56 @@ fn register_facets(
     Ok(rows)
 }
 
-/// The facet of the one register `request` names, with its matched variables' FQIDs:
-/// the same admission ([`matched`]) listed instead of grouped, bounded by the
-/// register's size. Absent when nothing matches, as in [`register_facets`].
+/// The facets with their matched variables, each register's first `listed`: the
+/// same admission ([`matched`]) listed instead of grouped, cut per register in Rust
+/// after the count. A register absent from [`register_facets`] is absent here.
 fn register_matches(
     conn: &Connection,
     scope: Scope,
     request: &Request,
     fts: &str,
+    listed: usize,
 ) -> Result<Vec<RegisterFacet>, Error> {
     let admission = admission(request.q, fts, scope, request.years);
     let (matched, args) = matched(scope, request, &admission);
     let sql = format!(
-        "SELECT p.slug, r.slug, v.slug FROM variable_fts vf \
+        "SELECT p.slug, r.slug, r.name, v.slug, v.name FROM variable_fts vf \
          JOIN variable v ON v.variable_id = vf.rowid \
          JOIN register r ON r.register_id = vf.register_id \
          JOIN provider p ON p.provider_id = r.provider_id \
-         WHERE {matched} ORDER BY v.slug"
+         WHERE {matched} ORDER BY p.slug, r.slug, v.slug"
     );
     let mut stmt = conn.prepare(&sql)?;
-    let rows: Vec<[Option<String>; 3]> = stmt
-        .query_map(params_from_iter(&args), |row| {
-            Ok([row.get(0)?, row.get(1)?, row.get(2)?])
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let Some([provider, register, _]) = rows.first() else {
-        return Ok(Vec::new());
-    };
-    Ok(vec![RegisterFacet {
-        fqid: fqid(&[provider.clone(), register.clone()]),
-        variable_matches: i64::try_from(rows.len()).expect("a register's variables fit i64"),
-        variables: Some(rows.iter().filter_map(|slugs| fqid(slugs)).collect()),
-    }])
+    let mut rows = stmt.query(params_from_iter(&args))?;
+    let mut facets: Vec<RegisterFacet> = Vec::new();
+    while let Some(row) = rows.next()? {
+        let [provider, register, variable] = [row.get(0)?, row.get(1)?, row.get(3)?];
+        let register = fqid(&[provider, register]);
+        let facet = match facets.last_mut() {
+            Some(facet) if facet.fqid == register => facet,
+            _ => {
+                facets.push(RegisterFacet {
+                    fqid: register,
+                    name: row.get(2)?,
+                    variable_matches: 0,
+                    variables: Some(Vec::new()),
+                });
+                facets.last_mut().expect("just pushed")
+            }
+        };
+        facet.variable_matches += 1;
+        let variables = facet.variables.as_mut().expect("a listed facet lists");
+        if variables.len() < listed {
+            let slugs = [facet.fqid.clone(), variable];
+            if let Some(fqid) = fqid(&slugs) {
+                variables.push(MatchedVariable {
+                    fqid,
+                    name: row.get(4)?,
+                });
+            }
+        }
+    }
+    Ok(facets)
 }
 
 /// The page the request names: the typed list or the untyped ranking, cut at the

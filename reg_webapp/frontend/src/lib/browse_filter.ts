@@ -1,5 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { SEARCH_MIN_QUERY_LENGTH, searchFacets } from "./api";
+import {
+  type RegisterFacet,
+  SEARCH_MIN_QUERY_LENGTH,
+  searchFacets,
+} from "./api";
 import { useAsyncResource } from "./use_async_resource";
 
 /** The text in the top bar's search field, which filters both browse columns in
@@ -94,6 +98,68 @@ export function useRegisterMatches(
   );
   if (query === null || matches.data === null) return null;
   return new Set(
-    matches.data.find((facet) => facet.fqid === registerFqid)?.variables ?? [],
+    (
+      matches.data.find((facet) => facet.fqid === registerFqid)?.variables ?? []
+    ).map((variable) => variable.fqid),
   );
+}
+
+/** The registers the browse tree shows for the filter, in its order (name
+ * hits first within a provider), published by the tree so the variables
+ * column lists other registers' matches in the same order (#1828). */
+let order: readonly string[] = [];
+
+// It notifies the filter's listeners: each reads its own snapshot.
+export const browseOrder = {
+  set(next: readonly string[]): void {
+    if (next.join(" ") === order.join(" ")) return;
+    order = next;
+    for (const notify of listeners) notify();
+  },
+};
+
+const readOrder = () => order;
+
+/** How many of another register's matches the variables column lists before
+ * its "N more" row (#1828); a register with one more than this lists them all,
+ * since a "1 more" row would take the place of the row it hides. */
+const OTHER_REGISTER_LIMIT = 5;
+
+/** The filter's matches in every register but the open one (#1828), each
+ * register's first few in FQID order with the whole count, in the browse
+ * tree's order: the last answer until the next one lands, null before the
+ * first; empty when nothing else matches or the request failed, so the open
+ * register's list never waits on it. */
+export function useOtherRegisterMatches(
+  registerFqid: string,
+): readonly RegisterFacet[] | null {
+  const needle = useBrowseFilter().trim();
+  const query = useSettledFilter();
+  const treeOrder = useSyncExternalStore(browseFilter.subscribe, readOrder);
+  const matches = useAsyncResource(query, (signal) =>
+    searchFacets(query ?? "", { signal, limit: OTHER_REGISTER_LIMIT + 1 }),
+  );
+  // The last answer stands while the next query settles and loads, so the
+  // sections do not drop out and come back on every keystroke.
+  const [last, setLast] = useState<RegisterFacet[] | null>(null);
+  if (matches.data !== null && matches.data !== last) setLast(matches.data);
+  if (needle.length < SEARCH_MIN_QUERY_LENGTH) return [];
+  const pending = query === null || matches.loading;
+  const data = pending ? last : matches.data;
+  if (data === null) return pending ? null : [];
+  const place = (facet: RegisterFacet) => {
+    const at = treeOrder.indexOf(facet.fqid ?? "");
+    return at === -1 ? treeOrder.length : at;
+  };
+  return data
+    .filter((facet) => facet.fqid !== registerFqid)
+    .map((facet) =>
+      facet.variable_matches > OTHER_REGISTER_LIMIT + 1
+        ? {
+            ...facet,
+            variables: facet.variables?.slice(0, OTHER_REGISTER_LIMIT),
+          }
+        : facet,
+    )
+    .sort((a, b) => place(a) - place(b));
 }

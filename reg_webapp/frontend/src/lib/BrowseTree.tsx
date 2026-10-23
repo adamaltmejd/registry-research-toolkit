@@ -19,6 +19,7 @@ import {
 import styles from "./BrowseTree.module.css";
 import {
   browseMatches,
+  browseOrder,
   useBrowseFilter,
   useSettledFilter,
 } from "./browse_filter";
@@ -262,6 +263,17 @@ export function BrowseTree({ className }: { className?: string }) {
     browseMatches.set(matchCount);
     return () => browseMatches.set(null);
   }, [matchCount]);
+  // The kept registers in the tree's order, for the variables column (#1828).
+  // FQIDs hold no space, so the joined list keys the effect.
+  const order = filtering
+    ? nodes
+        .flatMap((node) => (node.children ?? []).map((child) => child.id))
+        .join(" ")
+    : "";
+  useEffect(() => {
+    browseOrder.set(order === "" ? [] : order.split(" "));
+    return () => browseOrder.set([]);
+  }, [order]);
 
   const current = currentRow(route);
   const currentKey = current?.key ?? null;

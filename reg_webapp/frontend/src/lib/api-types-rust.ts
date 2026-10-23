@@ -388,7 +388,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with its matched variables' FQIDs. */
+        /** @description Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with all its matched variables; without it, `limit` lists each register's first `limit` matched variables, `variable_matches` still counting them all. */
         get: operations["search_facets"];
         put?: never;
         post?: never;
@@ -946,6 +946,11 @@ export interface components {
             var_id?: number | null;
             variable_name?: string | null;
         };
+        /** @description A matched variable as the browse column names it. */
+        MatchedVariable: {
+            fqid: string;
+            name?: string | null;
+        };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
             coverage?: components["schemas"]["ShowCoverage"] | null;
@@ -1295,13 +1300,16 @@ export interface components {
         };
         RegisterFacet: {
             fqid?: string | null;
+            /** @description The register's name, beside a list (a header over it); absent with counts. */
+            name?: string | null;
             /** Format: int64 */
             variable_matches: number;
             /**
-             * @description With `register`, the matched variables' FQIDs in FQID order, so the register
-             *     page narrows by the same admission it counts; absent without it.
+             * @description With `register`, every matched variable; with `limit`, each register's first
+             *     `limit` (`variable_matches` stays the whole count); in FQID order, so a list
+             *     narrows by the same admission it counts. Absent without either.
              */
-            variables?: string[] | null;
+            variables?: components["schemas"]["MatchedVariable"][] | null;
         };
         /**
          * @description `shape.RegisterFacets`: per register, how many of its variables the variable arm
@@ -2436,6 +2444,7 @@ export interface operations {
             query: {
                 q: string;
                 register?: string;
+                limit?: number;
                 scope?: components["schemas"]["Scope"];
             };
             header?: never;
