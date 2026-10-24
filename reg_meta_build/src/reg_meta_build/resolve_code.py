@@ -9,9 +9,9 @@ the writer alone runs, so a writer-only change still reuses a bundle:
 - every `reg_meta_build` source file in the static import closure of
   `reg_meta_build.pipeline`: function-local imports count, `if TYPE_CHECKING:` bodies
   do not, and a module that imports by name at run time pulls in its whole package
-  (`import_closure`, which the real-seed cache's prepare key also walks), plus the
+  (`import_closure`, which the prepare fingerprint also walks), plus the
   non-Python files beside a walked module. A `__version__ = "..."` value in a source
-  file is normalized away (`source_sha256`, which the prepare key also uses): a
+  file is normalized away (`source_sha256`, which the prepare fingerprint also uses): a
   release bumps it, and no resolution reads it;
 - every file of the imported native `reg_core_py` package, extension included;
 - the Python version.
@@ -62,11 +62,12 @@ RESOLVE_EXCLUDED = frozenset(
 # not reach it, and the CLI calls it only for parser help text and for the confinement
 # check of an `--output`, neither of which reaches the prepared output.
 #
-# simplify: a static walk, so it is generous. It reaches 51 modules, the resolution
-# models (`resolved_catalog`, `_resolved_common`) among them, and an edit to any of
-# them refuses every prepared root, which then costs a 1-2 h re-prepare. Narrow it
+# simplify: a static walk, so it is generous. It reaches the resolution models
+# (`resolved_catalog`, `_resolved_common`) among others, and an edit to any walked
+# module refuses every prepared root, which then costs a 1-2 h re-prepare. Narrow it
 # (split the models preparation imports out of the resolve modules) if that cost
-# lands on edits preparation cannot reach.
+# lands on edits preparation cannot reach. Files are found by directory listing, not
+# git (`code_files`): a stray non-dot file beside a walked module is a code change.
 #
 # Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
 # starts calling a module outside this walk, or when a module in the walk starts
@@ -206,8 +207,8 @@ def source_sha256(path: Path) -> str:
 
     A release bumps `reg_meta_build/__init__.py`'s `__version__`, which no resolution
     or preparation reads (only the CLI's help line does), so a release build keeps
-    reusing the bundle its candidate resolved, and the real-seed cache's prepare key
-    (which hashes its walked files with this) the preparation.
+    reusing the bundle its candidate resolved, and a prepared root stays admitted
+    (`prepare_code_sha256`).
     """
     data = path.read_bytes()
     if path.suffix == ".py":
