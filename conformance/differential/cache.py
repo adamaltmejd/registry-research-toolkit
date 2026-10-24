@@ -283,6 +283,38 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path], source: str) -> dict[str, 
     return {catalog: entry / catalog for catalog in dirs}
 
 
+def candidate_dirs(candidate: dict[str, str], pins: Pins) -> dict[str, Path]:
+    """Return ``{catalog: directory}`` of the supplied release databases, in place of
+    ``ensure_derived``: a G2 run compares the checkout's server on the databases being
+    released, so nothing is derived and the comparison can cross a schema major.
+
+    ``candidate`` maps each pinned catalog, and ``docs``, to a database path. Every
+    key is required: a partial set would mix derived and released copies. The paths
+    are linked (never copied or written) into ``candidate/<catalog>/`` under the
+    cache root, the layout the server reads.
+    """
+    expected = {*pins.catalogs, "docs"}
+    if set(candidate) != expected:
+        raise RuntimeError(
+            f"candidate databases need exactly {sorted(expected)}, "
+            f"got {sorted(candidate)}"
+        )
+    paths = {name: Path(path).resolve() for name, path in candidate.items()}
+    for name, path in paths.items():
+        if not path.is_file():
+            raise RuntimeError(f"candidate {name} database {path} is not a file")
+    home = cache_root() / "candidate"
+    shutil.rmtree(home, ignore_errors=True)
+    dirs: dict[str, Path] = {}
+    for catalog in pins.catalogs:
+        directory = home / catalog
+        directory.mkdir(parents=True)
+        (directory / DB_FILENAME).symlink_to(paths[catalog])
+        (directory / DOC_DB_FILENAME).symlink_to(paths["docs"])
+        dirs[catalog] = directory
+    return dirs
+
+
 def _derive(dirs: dict[str, Path], staging: Path) -> None:
     """Derive every catalog into ``staging/<catalog>``, then the docs copy.
 

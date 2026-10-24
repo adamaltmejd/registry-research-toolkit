@@ -220,7 +220,8 @@ Three gates, named G0–G2 so they are not confused with the test tiers of
   and the touched packages) and `scripts/gate.py rust` (this suite against the Rust
   server), all on synthetic artifacts.
 - **G1**, at releases: the differential harness on the pinned real artifacts.
-- **G2**, maintainer-run at releases: a full base build, derive, and G1 on the result.
+- **G2**, maintainer-run at releases: the G1 harness with the release's own fresh
+  databases as the candidates (`--candidate`, below) in place of derived copies.
 
 **G1** (`uv run --no-project scripts/gate.py g1`, which runs
 `python -m conformance.differential`) compares the pinned release's `reg-meta` server,
@@ -243,6 +244,14 @@ change that diverges from the baseline gets a narrow exception linked to the `ap
 that pins the new behavior, kept until the next re-pin. `derived-generation` and
 `reader-version` are the standing exceptions: identity differs between originals and
 derived copies, behavior does not.
+
+**G2** runs the same harness with
+`--candidate global=PATH --candidate swecov=PATH --candidate docs=PATH` (all three
+required): the checkout's server reads those databases and nothing is derived, so the
+pinned previous release's server and the new one compare on the assets being released,
+across a schema major too (derive admits only the builder's own major). Without the
+flags the run derives, as G1 does on PRs. The paths are linked into
+`<cache>/candidate/`, never written.
 
 **The pin** is data in `differential/config.toml`: the release tag, each asset's GitHub
 SHA-256 digest (checked as it streams into the cache) and the seed. A re-pin moves it to

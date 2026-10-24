@@ -1,6 +1,6 @@
 """G1: the pinned release's server against the checkout's, on the pinned artifacts.
 
-    uv run python -m conformance.differential
+    uv run python -m conformance.differential [--candidate NAME=PATH ...]
 
 Fetches (once) the pinned artifacts and builds the release tag's ``reg-meta`` binary
 into the shared cache, derives a candidate copy of each artifact with the checkout's
@@ -12,10 +12,15 @@ goes to both unchanged and the answers compare as raw bytes: the status as ``exi
 the body as ``stdout``. Writes ``report.json`` into ``<cache>/report/`` and prints a
 plain-text summary. Exit 0 when no case differs (outside a named exception), 1 when
 any does.
+
+G2 (the maintainer's release comparison) passes ``--candidate global=PATH
+--candidate swecov=PATH --candidate docs=PATH``: the checkout's server then reads those
+release databases and nothing is derived, so the run can cross a schema major.
 """
 
 from __future__ import annotations
 
+import argparse
 import fnmatch
 import hashlib
 import json
@@ -117,7 +122,12 @@ def run(config: dict) -> int:
     pins = cache.Pins.from_config(config)
     baseline_tree = cache.ensure_baseline(pins)
     dirs = cache.ensure_artifacts(pins)
-    derived = cache.ensure_derived(pins, dirs, cache.derive_source())
+    candidate = config.get("candidate")
+    derived = (
+        cache.candidate_dirs(candidate, pins)
+        if candidate
+        else cache.ensure_derived(pins, dirs, cache.derive_source())
+    )
     server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
     report_dir = cache.cache_root() / "report"
@@ -151,6 +161,7 @@ def run(config: dict) -> int:
     wall = time.monotonic() - started
     report = {
         "release_tag": pins.tag,
+        "candidate": candidate or "derived",
         "seed": config["seed"],
         "cases": sum(compared.values()),
         "cases_by_command": dict(sorted(compared.items())),
@@ -164,7 +175,11 @@ def run(config: dict) -> int:
     report_path = report_dir / "report.json"
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 
-    print(f"G1 {pins.tag} | baseline {pins.tag} vs checkout | seed {config['seed']}")
+    print(
+        f"G1 {pins.tag} | baseline {pins.tag} vs checkout "
+        f"({'supplied release databases' if candidate else 'derived copies'}) "
+        f"| seed {config['seed']}"
+    )
     print(
         f"{report['cases']} cases compared in {report['wall_seconds']} s "
         f"({report['setup_seconds']} s fetching and deriving): "
@@ -187,8 +202,20 @@ def run(config: dict) -> int:
     return 1 if unexcepted else 0
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n")[0])
+    parser.add_argument(
+        "--candidate",
+        action="append",
+        default=[],
+        metavar="NAME=PATH",
+        help="G2: read this database instead of deriving the candidate copy; NAME "
+        "is a pinned catalog (global, swecov) or docs, and all are required",
+    )
+    args = parser.parse_args(argv)
     config = tomllib.loads((HERE / "config.toml").read_text(encoding="utf-8"))
+    if args.candidate:
+        config["candidate"] = dict(item.split("=", 1) for item in args.candidate)
     with cache.locked(cache.cache_root()):
         return run(config)
 
