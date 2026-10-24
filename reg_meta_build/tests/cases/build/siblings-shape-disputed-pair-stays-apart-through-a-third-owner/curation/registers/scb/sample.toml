@@ -1,0 +1,33 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+
+[variable]
+"1.300.fr6-1" = "fr6-1"
+"1.300.fr6-2" = "fr6-2"
+"1.300.fr6-3" = "fr6-3"
+"1.300.fr6-4" = "fr6-4"
+"1.301.g1" = "g1"
+"1.301.g2" = "g2"
+"1.301.g3" = "g3"
+"1.302.u1" = "u1"
+"1.302.u2" = "u2"
+"1.302.u3" = "u3"
+"1.302.u4" = "u4"
+
+[[identity.partition]]
+variable = "1.300"
+columns = { FR6_1 = "1.300.fr6-1", FR6_2 = "1.300.fr6-2", FR6_3 = "1.300.fr6-3", FR6_4 = "1.300.fr6-4" }
+columns_ref = "fixture"
+[[identity.partition]]
+variable = "1.301"
+columns = { G1 = "1.301.g1", G2 = "1.301.g2", G3 = "1.301.g3" }
+columns_ref = "fixture"
+[[identity.partition]]
+variable = "1.302"
+columns = { U1 = "1.302.u1", U2 = "1.302.u2", U3 = "1.302.u3", U4 = "1.302.u4" }
+columns_ref = "fixture"

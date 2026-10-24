@@ -1,0 +1,84 @@
+{
+  "note": "The lokal-demokrati fr6 shape (#1885): FR6_1, FR6_2 and FR6_3 are co-delivered in 2020 and 2021. FR6_1 is text beside the other two's int in 2020 and int beside them in 2021, so fr6-1/fr6-2 and fr6-1/fr6-3 are each disputed (two ambiguous_sibling_shape issues); fr6-2/fr6-3 agree in both editions and fold. FR6_4 is delivered alone in 2019, never co-delivered, so fr6-4 is foldable with all three: a bridge that would put fr6-1 in one group with both owners it is disputed with. A dispute holds for the group, not only the edge: the owner on the most disputes inside the joined group, fr6-1, loses its sibling edges, so the group is fr6-2/fr6-3/fr6-4. fr6-1 sorts first, so a rule that dropped the later-sorted owner of each disputed pair would prune fr6-2 and fr6-3 instead. Variable 301 is the same bridge over a plain shape conflict (#1885): G1 is text and G2 int, co-delivered only in 2020, so g1/g2 is shape_conflict (no issue), and G3, delivered alone in 2019, is foldable with both. The conflict holds for the group too; g1 and g2 tie on one dispute and one foldable edge each, so the lexically last, g2, loses its edges and the group is g1/g3. Variable 302 pins that a dispute prunes only inside one group: U1 and U3 are text, U2 and U4 int, all co-delivered in 2020, so u1/u3 and u2/u4 fold and the four cross pairs are shape conflicts between two separate groups, which both stay.",
+  "fails_if": "`resolve_sibling_pairs` (reg_meta_build/src/reg_meta_build/source_siblings.py) withholds only the direct edge of a shape-disputed pair, so fr6-1 joins fr6-2 and fr6-3 through fr6-4 in one four-member group; or it prunes the later-sorted owner of each joined disputed pair rather than the owner on the most disputes, so fr6-2 and fr6-3 lose their edges and the group is fr6-1/fr6-4; or it guards only `unresolved_shape` pairs, so the plain shape conflict g1/g2 joins through g3 in one three-member group; or it counts a dispute whose owners are both grouped but in different groups, so u1/u3 and u2/u4 lose owners",
+  "sources": {
+    "description": "Register 1, variable 300: FR6_1 (CVID 1001, Sträng (text)), FR6_2 (CVID 1002, int) and FR6_3 (CVID 1003, int) in 2020; FR6_1 (CVID 1004), FR6_2 (CVID 1005) and FR6_3 (CVID 1006), all int, in 2021; FR6_4 (CVID 1007, int) alone in 2019. Variable 301: G1 (CVID 1011, text) and G2 (CVID 1012, int) in 2020, G3 (CVID 1013, int) alone in 2019. Variable 302: U1 (CVID 1021, text), U2 (CVID 1022, int), U3 (CVID 1023, text) and U4 (CVID 1024, int), all in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 300,
+          "colname": "FR6_1",
+          "varname": "Var300",
+          "data_type": "Sträng (text)"
+        },
+        {"cvid": 1002, "var_id": 300, "colname": "FR6_2", "varname": "Var300"},
+        {"cvid": 1003, "var_id": 300, "colname": "FR6_3", "varname": "Var300"},
+        {
+          "cvid": 1004,
+          "var_id": 300,
+          "colname": "FR6_1",
+          "varname": "Var300",
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "cvid": 1005,
+          "var_id": 300,
+          "colname": "FR6_2",
+          "varname": "Var300",
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "cvid": 1006,
+          "var_id": 300,
+          "colname": "FR6_3",
+          "varname": "Var300",
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "cvid": 1007,
+          "var_id": 300,
+          "colname": "FR6_4",
+          "varname": "Var300",
+          "year": "2019",
+          "regver_id": 2019
+        },
+        {
+          "cvid": 1011,
+          "var_id": 301,
+          "colname": "G1",
+          "varname": "Var301",
+          "data_type": "Sträng (text)"
+        },
+        {"cvid": 1012, "var_id": 301, "colname": "G2", "varname": "Var301"},
+        {
+          "cvid": 1013,
+          "var_id": 301,
+          "colname": "G3",
+          "varname": "Var301",
+          "year": "2019",
+          "regver_id": 2019
+        },
+        {
+          "cvid": 1021,
+          "var_id": 302,
+          "colname": "U1",
+          "varname": "Var302",
+          "data_type": "Sträng (text)"
+        },
+        {"cvid": 1022, "var_id": 302, "colname": "U2", "varname": "Var302"},
+        {
+          "cvid": 1023,
+          "var_id": 302,
+          "colname": "U3",
+          "varname": "Var302",
+          "data_type": "Sträng (text)"
+        },
+        {"cvid": 1024, "var_id": 302, "colname": "U4", "varname": "Var302"}
+      ]
+    }
+  }
+}

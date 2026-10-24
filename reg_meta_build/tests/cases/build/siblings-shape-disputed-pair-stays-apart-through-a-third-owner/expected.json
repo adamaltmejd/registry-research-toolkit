@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "concept_groups",
+      "fields": ["variables"],
+      "rows": [
+        [
+          ["fr6-2", "fr6-3", "fr6-4"]
+        ],
+        [
+          ["g1", "g3"]
+        ],
+        [
+          ["u1", "u3"]
+        ],
+        [
+          ["u2", "u4"]
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "ambiguous_sibling_shape"},
+      "fields": ["code", "subject"],
+      "rows": [
+        ["ambiguous_sibling_shape", "same_definition_pair:scb/sample/fr6-1:scb/sample/fr6-2"],
+        ["ambiguous_sibling_shape", "same_definition_pair:scb/sample/fr6-1:scb/sample/fr6-3"]
+      ]
+    }
+  ]
+}
