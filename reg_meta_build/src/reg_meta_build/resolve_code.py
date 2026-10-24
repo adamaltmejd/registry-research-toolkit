@@ -273,7 +273,9 @@ def _running_resolve_code_sha256() -> str:
     return _digest(resolve_code_digests())
 
 
-def prepare_code_digests(source_root: Path | None = None) -> dict[str, object]:
+def prepare_code_digests(
+    source_root: Path | None = None,
+) -> dict[str, dict[str, str]]:
     """The prepare fingerprint's inputs: the digest of each file the walk from
     `PREPARE_ROOTS` reaches, by path relative to `source_root` (as in
     `resolve_code_digests`), and of each tracked native crate source, by path
