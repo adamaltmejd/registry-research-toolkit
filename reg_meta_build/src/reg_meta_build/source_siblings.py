@@ -248,11 +248,11 @@ def resolve_sibling_pairs(
     family, every literal column of one known identity is paired with every column
     of another. Any code/label column pair keeps the two apart, co-delivered or
     not, and no group the foldable pairs form may hold a code and its label or a
-    shape-disputed pair. The pair is co-delivered when any column pair is, and the
-    shape guards and evidence use exactly the co-delivered column pairs, the shapes
-    compared within each edition that delivers both columns; the decision's
-    `columns` name the first of them, else the first code/label pair, else each owner's
-    lexically first column. Co-delivery is exact edition identity, never an
+    shape-disputed (conflicting or unresolved) pair. The pair is co-delivered when
+    any column pair is, and the shape guards and evidence use exactly the
+    co-delivered column pairs, the shapes compared within each edition that delivers
+    both columns; the decision's `columns` name the first of them, else the first
+    code/label pair, else each owner's lexically first column. Co-delivery is exact edition identity, never an
     overlap of year spans. An unresolved shape matters only when its alternatives
     disagree about whether the pair can be grouped.
     """
@@ -402,13 +402,18 @@ def resolve_sibling_pairs(
     # The same accepted identities can be present in multiple original families.
     # A conflicting family must not be bypassed by an independently eligible edge.
     pairs.difference_update((d.a, d.b) for d in decisions if d.kind != "foldable")
-    disputed = {(d.a, d.b) for d in decisions if d.kind == "unresolved_shape"}
+    disputed = {
+        (d.a, d.b)
+        for d in decisions
+        if d.kind in {"shape_conflict", "unresolved_shape"}
+    }
     # Union across edges must not join a code and its label through a third owner
     # (#1760): the label owner loses its foldable edges until no such pair shares a
-    # group, so the code keeps its own folds. A shape-disputed pair is kept apart
-    # the same way (#1885); with no code side to keep, the owner on the most
-    # disputes inside one group loses its edges, the lexically last on a tie, one
-    # owner per pass so the counts are re-read.
+    # group, so the code keeps its own folds. A shape-disputed pair, conflicting or
+    # unresolved, is kept apart the same way (#1885). With no code side to keep,
+    # the owner on the most disputes inside one group loses its edges; on a tie,
+    # the one with the fewest foldable edges, so the fewest folds are split; then
+    # the lexically last. One owner per pass, so the counts are re-read.
     while True:
         groups: DisjointSet[str] = DisjointSet()
         for a, b in pairs:
@@ -430,6 +435,9 @@ def resolve_sibling_pairs(
             )
             if not counts:
                 break
-            joined = {max(counts, key=lambda owner: (counts[owner], owner))}
+            edges = Counter(owner for pair in pairs for owner in pair)
+            joined = {
+                max(counts, key=lambda owner: (counts[owner], -edges[owner], owner))
+            }
         pairs = {pair for pair in pairs if not joined & set(pair)}
     return SiblingResolution(tuple(sorted(pairs)), tuple(decisions), tuple(diagnostics))

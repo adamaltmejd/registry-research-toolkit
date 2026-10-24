@@ -1778,19 +1778,21 @@ columns, and compare the two columns' shapes within each edition that delivers b
 shape one owner delivers in an edition the other never shares does not dispute the pair
 (#1783). The guard holds for the group, not only the edge: when foldable sibling edges
 through a third owner would join a code and its label, the label owner's sibling edges
-are dropped, so the code keeps its own folds (#1760). A shape-disputed pair
-(`ambiguous_sibling_shape`) is kept apart the same way (#1885). It has no code side to
-keep, so of the disputed pairs a group would join, the owner on the most of them loses
-its sibling edges, the lexically last on a tie, recounted after each drop: one text
-column disputed with several numeric siblings leaves, and its siblings keep their group.
-A plain `shape_conflict` withholds only its edge. The code/label scope is the pairs
-whose two owners share one native family, read per family; a code and its label in
-different families that a third owner bridges are not seen. Declared pairs and curated
-groups are not pruned: they are explicit. Only a declared `[[code_label_pair]]` puts a
-code and its label in one group. `_code_label_key` strips the election prefix from both
-sides, so a code of one election kind could pair with a label of another
-(`LT_valkretskod` beside `RI_valkretsnamn`); no instance exists today, and the shape and
-coding guards fail it safe. A curated group needs at least two members.
+are dropped, so the code keeps its own folds (#1760). A shape-disputed pair, a plain
+`shape_conflict` or an unresolved one (`ambiguous_sibling_shape`), is kept apart the
+same way (#1885). It has no code side to keep, so of the disputed pairs a group would
+join, the owner on the most of them loses its sibling edges, recounted after each drop:
+one text column disputed with several numeric siblings leaves, and its siblings keep
+their group. On a tie the owner with the fewest foldable sibling edges leaves, so the
+fewest folds are split, then the lexically last. A dispute between two separate groups
+prunes nothing. The code/label scope is the pairs whose two owners share one native
+family, read per family; a code and its label in different families that a third owner
+bridges are not seen. Declared pairs and curated groups are not pruned: they are
+explicit. Only a declared `[[code_label_pair]]` puts a code and its label in one group.
+`_code_label_key` strips the election prefix from both sides, so a code of one election
+kind could pair with a label of another (`LT_valkretskod` beside `RI_valkretsnamn`); no
+instance exists today, and the shape and coding guards fail it safe. A curated group
+needs at least two members.
 
 Classification succession combines explicit edges with the accepted guarded edition
 rule. Only adjacent recognized editions with matching year-stripped names qualify.
