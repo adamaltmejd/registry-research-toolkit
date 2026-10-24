@@ -114,14 +114,15 @@ fn held(source: &str, anchor: &str, narrow: Narrow) -> String {
     if let Some(column) = narrow.column {
         // A mapping's canonical representation is its resolver-emitted spelling
         // (`holdings_compile`), so the column's identity fold names the
-        // representation it must serve.
-        let rep = format!(
-            "(SELECT rc.delivery_column_name \
-             FROM resolver_column rc WHERE rc.variable_id = hm.variable_id \
+        // representation it must serve (looked up once, not per arm of `serves`).
+        write!(
+            sql,
+            " AND EXISTS (SELECT 1 FROM resolver_column rc WHERE rc.variable_id = hm.variable_id \
              AND rc.register_variant_id = hm.variant_id \
-             AND rc.delivery_column_lower = fold_identity({column}))"
-        );
-        write!(sql, " AND {}", serves(&rep)).expect("write to String");
+             AND rc.delivery_column_lower = fold_identity({column}) AND {})",
+            serves("rc.delivery_column_name")
+        )
+        .expect("write to String");
     }
     sql + ")"
 }
