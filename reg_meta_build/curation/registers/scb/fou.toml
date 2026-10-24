@@ -3329,6 +3329,21 @@ value = "v0205"
 evidence = "SCB UF0302 Beskrivning av statistiken 2003 (FoU i företagssektorn, variable list) places 'Därav driftkostnader för forskning: Driftkostnader för grundforskning och tillämpad forskning' in the operating-cost block after Programvarurelaterad FoU (v0204) and before the 2004 budget item (v0206), i.e. column v0205; the product-group item ('FoU-verksamhetens inriktning på produktgrupper') is the separate block v040x/v0401/v0402 per product. SCB's own 2003 metadata names v0411-v0471 'Driftkostnader för FoU avs. produkt 2-8', and native 4372 'Driftkostnader för FoU avs. produkt 1' is the v0401 column at the same edition. Native 3335's v0401 column name contradicts that layout; this corrects its column name to v0205 for this edition only. Name, definition, unit, type and coding are unchanged. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 noted = "2026-10-16"
 
+# #1509: the documented 2003 ViktRev state carries SCB's generic Mattenhet placeholder.
+# Maintainer ruling 2026-10-24: ViktRev is labelled Uppräkningstal on all deliveries, so
+# every state agrees and the variable keeps one common unit (no delivery_units_vary).
+[[errata.field]]
+variable = "182.3402"
+variant = "182.373"
+column = "ViktRev"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Vikt reviderad med hänsyn till övertäckning och antal svarande" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Reviderad vikt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Uppräkningstal"
+evidence = "SCB documents ViktRev (native 3402, Reviderad vikt) only in the 2003 edition, with the generic Mattenhet placeholder 'värde, antal eller %'. The 2009-2017 deliveries added by errata.delivered carry Uppräkningstal. Maintainer ruling 2026-10-24 (#1509): the variable is labelled Uppräkningstal on all its deliveries, including the documented 2003 state; Uppräkningstal is a description of the weight more than a unit, and this is a curation matter. The label replaces the placeholder only; no value or scale is converted."
+noted = "2026-10-24"
+
 # #1603 batch-e: FoU columns with no documented same-name sibling, or with contradicting
 # evidence, become their own explicitly undocumented variables (Operator under maintainer
 # delegation 2026-10-16).
