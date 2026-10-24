@@ -599,7 +599,12 @@ another source declares. The variant has no records. Its `[[errata.version]]` ed
 establishes the native register coordinate only, as an undated mint's anchor establishes
 its variant's; `[[errata.delivered]]` with `donor_variant` supplies its documented
 columns. It has no native edition, so every edition it delivers is an
-`[[errata.version]]`.
+`[[errata.version]]`. A new export record that sorts before the current least ref moves
+the anchor, and every acknowledgement digest citing it goes stale together; that is
+accepted, as it is for a native variant's least ref. Its states come only from errata,
+so a build where no `[[errata.column]]` or `[[errata.delivered]]` entry converts onto it
+refuses it (`authored_variant_without_state`) rather than publish an empty variant. The
+check stops at conversion: it does not prove formation keeps the converted states.
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
 reviewed native family, including blank columns, every source field, parent fact and
@@ -685,9 +690,11 @@ edition tokens and retain the native owner. With `donor_coding = true` (#1855), 
 added edition the donor documents under the same edition name carries the donor row's
 coding there: the addition names that row as its checked donor and copies its coding
 declarations, and the evidence digest already covers the row. An edition the donor does
-not document stays uncoded with its `missing_coding_period`, and two donor rows at one
-edition make the entry over-broad. This requires the column to be undocumented on the
-target; an anchored additional physical delivery (with optional `data_type`) keeps
+not document stays uncoded with its `missing_coding_period`, as long as at least one
+requested edition matches; when none does, the flag would copy nothing and the entry is
+stale (`donor_coding_unmatched`). Two donor rows at one edition make the entry
+over-broad (`ambiguous_donor_coding`). This requires the column to be undocumented on
+the target; an anchored additional physical delivery (with optional `data_type`) keeps
 existing target siblings and guards and digests the complete native family on both donor
 and target variants. The native-variable anchor selects one documented identity when the
 same column literal belongs to multiple variables in the variant's history. An anchor

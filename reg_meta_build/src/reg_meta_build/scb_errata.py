@@ -1169,6 +1169,13 @@ def convert_delivered_entry(
             tuple(sorted({record_ref(record) for record in documented}, key=str)),
         )
     references = tuple(sorted({record_ref(record) for record in candidates}, key=str))
+    # `donor_coding` copies nothing unless the donor documents at least one
+    # requested edition under the same name; refuse the flag rather than ship
+    # every addition uncoded.
+    if entry.donor_coding and not {
+        record.original_period_text for record in candidates
+    } & set(entry.versions):
+        return ErrataConversion(None, ("donor_coding_unmatched",), references)
     identities = {source_occurrence(record).variable_key for record in candidates}
     if None in identities or len(identities) != 1:
         return ErrataConversion(

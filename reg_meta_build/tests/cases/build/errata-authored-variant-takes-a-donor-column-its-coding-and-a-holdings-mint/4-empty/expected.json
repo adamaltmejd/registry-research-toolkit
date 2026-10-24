@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "authored_variant_without_state",
+    "exit_code": 10,
+    "message_contains": [
+      "curation/registers/scb/sample.toml: authored variant 'people' receives no state, so it would ship as an empty public variant",
+      "curation/registers/scb/sample.toml#/errata.delivered/1: donor_coding_unmatched"
+    ]
+  }
+}
