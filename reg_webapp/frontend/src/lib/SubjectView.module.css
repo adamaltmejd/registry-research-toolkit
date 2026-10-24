@@ -14,6 +14,12 @@
   font-weight: var(--heading-weight);
 }
 
+/* Focusable (tabIndex -1) so a retry that leaves no row to land on can move focus here. */
+.sectionHeading:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 .technical {
   margin: var(--space-2) 0;
 }

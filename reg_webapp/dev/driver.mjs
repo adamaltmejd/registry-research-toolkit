@@ -833,10 +833,22 @@ async function codeTreeRetryCase(page, counts, shoot) {
   await tabTo(page, retry, "the code tree's Retry");
   await shoot("code-tree-error");
 
+  // The old Retry button still holds focus until the level reloads, so wait for
+  // the second failed read, then for a DIFFERENT Retry button to hold focus.
+  const oldRetry = await retry.elementHandle();
   await page.keyboard.press("Enter");
-  await page.waitForFunction(() => document.activeElement?.tagName === "BUTTON", null, {
-    timeout: 10_000,
-  });
+  for (let i = 0; counts.injected < 2; i++) {
+    check(i < 200, "the root retry never issued its read");
+    await page.waitForTimeout(50);
+  }
+  await page.waitForFunction(
+    (old) =>
+      document.activeElement !== old &&
+      document.activeElement?.tagName === "BUTTON" &&
+      document.activeElement.textContent === "Retry",
+    oldRetry,
+    { timeout: 10_000 },
+  );
   check(counts.injected === 2, `the retry made ${counts.injected - 1} more reads, wanted 1`);
   check(await focused(retry), "a failed root retry left focus off the new Retry button");
 
@@ -851,7 +863,7 @@ async function codeTreeRetryCase(page, counts, shoot) {
   await shoot("code-tree-retried");
 }
 
-/** Scenario 6— the source's PERIOD, edited on its /project card (Y-81) with the
+/** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81) with the
  * source timeline's thumbs (#1838). A researcher whose study window is 2018..2020
  * wants ONE source to reach back to 2015, without deleting and rebuilding it. The
  * project opened here carries two differently named sources on the SAME register
