@@ -1567,7 +1567,7 @@ valid_to = "2024-01-01"
 reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. The reviewed #1603 coding.extend that carried the identical 2018-2023 list into 2024 targeted the address variant and is not yet re-authored on the school-grain variant."
 evidence = "Availability from the #1855 errata.delivered entry for this column; the 2024 coding.extend awaits re-authoring on this variant."
 expected_evidence_sha256 = "942eaa558c7f3189f074ee7005eba8602f7226dcab7d1b1f2de19fdb6f4c7d96"
-expected_diagnostic_sha256 = "16ccefb7916d8474cddbf76287e0eed1789eb762d2552b5f3cd584220bef8ff3"
+expected_diagnostic_sha256 = "a832b1f8f16cc2ef0009e1750ca1a24c8f73c2a7b70616ae7071aa2517e1e5a6"
 
 [[acknowledge]]
 code = "missing_coding_period"

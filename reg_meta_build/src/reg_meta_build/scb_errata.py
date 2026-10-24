@@ -961,13 +961,18 @@ def _variant_records(
     register_id: int,
     variant_id: int,
     editions: tuple[ErrataEditionBinding, ...],
-    anchor: SourceRecord | None = None,
+    anchor: tuple[SourceRecord, ...] = (),
 ) -> tuple[SourceRecordRef, ...]:
-    if anchor is not None:
+    if anchor:
         # An authored variant has no records; its editions rest on the anchor.
-        if records or anchor.subject.native.register_id != register_id:
+        refs = {record_ref(record) for record in anchor}
+        if (
+            records
+            or len(refs) != 1
+            or any(r.subject.native.register_id != register_id for r in anchor)
+        ):
             raise ValueError("an authored variant takes one anchor of its register")
-        if any(edition.support != (record_ref(anchor),) for edition in editions):
+        if any(edition.support != tuple(refs) for edition in editions):
             raise ValueError("authored variant editions rest on the register anchor")
         return ()
     if not records or len({record.source for record in records}) != 1:
@@ -1001,11 +1006,12 @@ class ErrataVariantContext:
     register_id: int
     variant_id: int
     editions: tuple[ErrataEditionBinding, ...]
-    # An authored variant (#1855) has no records of its own. One record of its
-    # register, the least ref, establishes the native register coordinate and
-    # supports its declared editions; it is never a column or variable of the
-    # variant.
-    anchor: SourceRecord | None = None
+    # An authored variant (#1855) has no records of its own. Its register's least
+    # ref establishes the native register coordinate and supports its declared
+    # editions; it is never a column or variable of the variant. The anchor is
+    # every record at that ref: one export member can arrive under several
+    # parent facts, and support captured from one of them stales the case.
+    anchor: tuple[SourceRecord, ...] = ()
     by_column: Mapping[str, tuple[SourceRecord, ...]] = field(init=False, repr=False)
     by_variable: Mapping[int | None, tuple[SourceRecord, ...]] = field(
         init=False, repr=False
@@ -1029,8 +1035,8 @@ class ErrataVariantContext:
                 columns.setdefault(fold_column(column), []).append(record)
             variables.setdefault(record.subject.native.variable_id, []).append(record)
             members.setdefault(ref, []).append((position, record))
-        if self.anchor is not None:
-            members[record_ref(self.anchor)] = [(0, self.anchor)]
+        if self.anchor:
+            members[record_ref(self.anchor[0])] = list(enumerate(self.anchor))
         for name, values in (
             ("by_column", columns),
             ("by_variable", variables),
@@ -1061,10 +1067,10 @@ class ErrataVariantContext:
 
     @property
     def variant_key(self) -> NativeKey:
-        if self.anchor is None:
+        if not self.anchor:
             key = native_variant_key(self.records[0])
         else:
-            register = source_register_key(self.anchor)
+            register = source_register_key(self.anchor[0])
             assert register is not None
             key = (*register, "variant", "native-int", self.variant_id)
         assert key is not None
@@ -1072,18 +1078,18 @@ class ErrataVariantContext:
 
     @property
     def register_key(self) -> NativeKey:
-        key = source_register_key(self.anchor or self.records[0])
+        key = source_register_key((self.anchor or self.records)[0])
         assert key is not None
         return key
 
     @property
     def source(self) -> str:
-        return (self.anchor or self.records[0]).source
+        return (self.anchor or self.records)[0].source
 
     @functools.cached_property
     def complete_expectations(self) -> tuple[RecordExpectation, ...]:
         return capture_expectations(
-            self.records if self.anchor is None else (self.anchor,),
+            self.anchor or self.records,
             fields=tuple(SourceFields.model_fields),
             parents=True,
         )
@@ -1091,8 +1097,8 @@ class ErrataVariantContext:
     @functools.cached_property
     def least_ref(self) -> SourceRecordRef:
         """Cached: every undated column entry of the variant anchors on it."""
-        if self.anchor is not None:
-            return record_ref(self.anchor)
+        if self.anchor:
+            return record_ref(self.anchor[0])
         return min((record_ref(record) for record in self.records), key=str)
 
     def expectations_for_refs(

@@ -597,14 +597,17 @@ carry their source, so the documented variable could not take states on a varian
 another source declares. The variant has no records. Its `[[errata.version]]` editions,
 `[[errata.column]]` mints and naming are anchored on the register's least ref, which
 establishes the native register coordinate only, as an undated mint's anchor establishes
-its variant's; `[[errata.delivered]]` with `donor_variant` supplies its documented
-columns. It has no native edition, so every edition it delivers is an
-`[[errata.version]]`. A new export record that sorts before the current least ref moves
-the anchor, and every acknowledgement digest citing it goes stale together; that is
-accepted, as it is for a native variant's least ref. Its states come only from errata,
-so a build where no `[[errata.column]]` or `[[errata.delivered]]` entry converts onto it
-refuses it (`authored_variant_without_state`) rather than publish an empty variant. The
-check stops at conversion: it does not prove formation keeps the converted states.
+its variant's. The anchor's support is every record at that ref: one export member can
+arrive under several parent facts (GDB's least ref is two records), and support captured
+from one of them would stale every entry resting on it. `[[errata.delivered]]` with
+`donor_variant` supplies its documented columns. It has no native edition, so every
+edition it delivers is an `[[errata.version]]`. A new export record that sorts before
+the current least ref moves the anchor, and every acknowledgement digest citing it goes
+stale together; that is accepted, as it is for a native variant's least ref. Its states
+come only from errata, so a build where no `[[errata.column]]` or `[[errata.delivered]]`
+entry converts onto it refuses it (`authored_variant_without_state`) rather than publish
+an empty variant. The check stops at conversion: it does not prove formation keeps the
+converted states.
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
 reviewed native family, including blank columns, every source field, parent fact and
