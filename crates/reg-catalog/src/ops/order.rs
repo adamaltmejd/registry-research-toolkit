@@ -33,7 +33,7 @@ use super::family::{VariantFamily, variant_family};
 use super::refs;
 use super::validate::{self, Finding, Slice, held_representations, resolve_binding};
 use super::{Params, Raw, Server};
-use crate::held::{one_representation, serves, serves_at, serves_at_by};
+use crate::held::{no_column_of, one_representation, serves, serves_at_by};
 use crate::{Catalog, Code, Error, Scope};
 
 /// The order manifest contract version.
@@ -1431,16 +1431,26 @@ struct Match {
     periods: Vec<Interval>,
     placement: Placement,
     own_period: Option<Interval>,
+    /// Where the column serves a spelling through its one representation: the
+    /// windows SCB delivered that mapped representation, which it does not serve.
+    beside: Vec<Interval>,
 }
 
 impl Match {
     /// The periods the column serves: a year or month member's or a column window's
     /// own period (inside one edition segment, as the builder holds), else the
-    /// table's edition. Nothing outside a window is served or borrowed.
+    /// table's edition, less where a one-representation fallback's own spelling was
+    /// delivered (`inventory._fallbacks`: per instant, never over a whole slice).
+    /// Nothing outside a window is served or borrowed.
     fn served(&self) -> Vec<Interval> {
-        self.own_period
+        let served = self
+            .own_period
             .clone()
-            .map_or_else(|| self.periods.clone(), |period| vec![period])
+            .map_or_else(|| self.periods.clone(), |period| vec![period]);
+        if self.beside.is_empty() {
+            return served;
+        }
+        gaps(&merge(served), self.beside.clone())
     }
 }
 
@@ -1525,15 +1535,25 @@ fn matches(
     bounds: Option<(&str, &str)>,
 ) -> Result<Vec<Match>, Error> {
     let (lo, hi) = bounds.unzip();
+    // Over a slice, a one-representation fallback is admitted here and clipped per
+    // instant to where its own spelling is not delivered (`Match::beside`), as the
+    // builder's `_fallbacks` places it; `held::serves_at` would judge the whole slice
+    // and drop the years the inventory holds.
+    let may_serve = format!(
+        "(hm.representation_canonical = ?4 OR ({} AND {}))",
+        one_representation("hm", "hc"),
+        no_column_of("hc", "?4"),
+    );
     let mut stmt = conn.prepare_cached(&format!(
         "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.source_ref, \
          hp.lo, hp.hi, hm.member_position, hm.member_lo, hm.member_hi, ht.projection, \
          {parent_serves}, \
-         COALESCE(hm.member_lo, hm.window_lo), COALESCE(hm.member_hi, hm.window_hi) \
+         COALESCE(hm.member_lo, hm.window_lo), COALESCE(hm.member_hi, hm.window_hi), \
+         hm.representation_canonical \
          FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND ht.scope = ?3 \
-         AND (?4 IS NULL OR CASE WHEN ?5 IS NULL THEN {serves} ELSE {serves_at} END) \
+         AND (?4 IS NULL OR CASE WHEN ?5 IS NULL THEN {serves} ELSE {may_serve} END) \
          AND (?5 IS NULL OR EXISTS (SELECT 1 FROM holding_period p \
               WHERE p.table_id = ht.table_id AND p.lo <= ?6 AND p.hi >= ?5)) \
          AND (?5 IS NULL OR hm.member_lo IS NULL OR (hm.member_lo <= ?6 AND hm.member_hi >= ?5)) \
@@ -1542,11 +1562,15 @@ fn matches(
         kept = kept(),
         parent_serves = parent_serves(),
         serves = serves("?4"),
-        serves_at = serves_at("?4", "?5", "?6"),
     ))?;
+    let mut beside = conn.prepare_cached(
+        "SELECT valid_from, valid_to FROM expanded_state WHERE variable_id = ? \
+         AND register_variant_id = ? AND canonical_column = ? AND valid_from IS NOT NULL",
+    )?;
     let rows = stmt.query_map(params![id, variant, scope, representation, lo, hi], |row| {
         let period: (Option<String>, Option<String>) = (row.get(5)?, row.get(6)?);
         let (own_lo, own_hi): (Option<String>, Option<String>) = (row.get(12)?, row.get(13)?);
+        let mapped: String = row.get(14)?;
         Ok((
             Match {
                 table_id: row.get(0)?,
@@ -1562,20 +1586,31 @@ fn matches(
                     shared_key: row.get(11)?,
                 },
                 own_period: own_lo.zip(own_hi),
+                beside: Vec::new(),
             },
             period,
+            mapped,
         ))
     })?;
     let mut out: Vec<Match> = Vec::new();
     for row in rows {
-        let (m, period) = row?;
-        let index = out
+        let (mut m, period, mapped) = row?;
+        let found = out
             .iter()
-            .position(|o| (o.table_id, &o.column) == (m.table_id, &m.column))
-            .unwrap_or_else(|| {
-                out.push(m);
-                out.len() - 1
-            });
+            .position(|o| (o.table_id, &o.column) == (m.table_id, &m.column));
+        let index = if let Some(index) = found {
+            index
+        } else {
+            if representation.is_some_and(|r| r != mapped) {
+                m.beside = beside
+                    .query_map(params![id, variant, mapped], |row| {
+                        Ok((row.get(0)?, row.get(1)?))
+                    })?
+                    .collect::<rusqlite::Result<_>>()?;
+            }
+            out.push(m);
+            out.len() - 1
+        };
         if let (Some(lo), Some(hi)) = period {
             out[index].periods.push((lo, hi));
         }

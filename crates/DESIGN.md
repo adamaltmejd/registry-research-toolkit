@@ -566,8 +566,12 @@ Per binding, in declaration order, over its source's period
    `(variant, variable, representation)` over the slice ("Read scope and artifact
    admission": a table's one representation also serves a spelling SCB did not deliver
    beside it, so a rename inside one held table is two entries of one physical column)
-   and its edition overlaps the slice; only the intersection contributes. A held edition
-   that overlaps the request but lies wholly outside the binding's column windows is
+   and its edition overlaps the slice; only the intersection contributes. That fallback
+   is decided per instant, not over the slice: it serves exactly the slice's instants
+   where SCB did not deliver the mapped spelling, the inventory's `_fallbacks` rule, so
+   the order serves what coverage reports held (conformance
+   `api/held-projection-served-past-co-delivery`). A held edition that overlaps the
+   request but lies wholly outside the binding's column windows is
    `column_window_unavailable`. Any uncovered subperiod blocks the whole order
    (`coverage_gap`); a slice nothing serves is `mapping_missing`. The materializer never
    chooses between tables: the inventory's one-to-one invariant leaves at most one
