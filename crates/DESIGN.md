@@ -969,27 +969,136 @@ without a tree, so a client fetches a subtree only when a reader opens it. A fil
 
 ## Concept groups and tags
 
-**Concept groups** fold machine-stamped column families for browsing: month-suffixed
-families (`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
+**A variable concept group is one concept in one register.** It gathers everything a
+researcher looking for that concept in that register should find in one place: the
+variants that differ by unit, household definition, coexisting definitions or source,
+and the source's own components of the concept. To the user the group is the variable.
+They pick columns on the group page; the member variable pages are reference. A group
+never spans registers: disposable income in IoT and disposable income in LISA are two
+groups, and finding the concept across registers is a tag's job.
+
+Machine-folded families are the narrowest case of the same rule: month-suffixed families
+(`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
 (`sun2000inr`/`sun2020inr`). A group has ordered axes (stable `name`, curated `label`)
 and members with per-axis facets; a variable can be several members of one group, one
 per delivery column. Groups are presentation only: never an FQID kind, a binding, an
-order key or a stats key. Identity-level folding by classification family was tried and
-dropped after 195 measured over-folds; because grouping is presentation, a wrong group
-is a cosmetic bug, not identity corruption. A variable or classification belongs to at
-most one group.
+order key or a stats key. Picking on the group page adds member variables and their
+delivery columns to the order; the order never names the group. Identity-level folding
+by classification family was tried and dropped after 195 measured over-folds; because
+grouping is presentation, a wrong group is a cosmetic bug, not identity corruption. A
+variable or classification belongs to at most one variable group. Classification
+umbrella groups (`group:sun`, `group/class/<key>`) are exempt from the single-register
+rule: they gather classifications, which are not register-scoped.
 
 Classification vintages are not grouped: editions are a temporal succession, not a
-parallel facet. Curated classification umbrella groups (`group:sun`: the three SUN 2020
-dimensions plus the version-independent nivå aggregates) have no axes; their members are
-distinct classifications.
+parallel facet. Variable definition vintages that succeed each other are likewise not
+grouped as a facet (see the worked example). Curated classification umbrella groups
+(`group:sun`: the three SUN 2020 dimensions plus the version-independent nivå
+aggregates) have no axes; their members are distinct classifications.
+
+### Group rubric
+
+**When a group is warranted.** One register has two or more variables that are each an
+amount (or a coding) of the same concept for some unit under some definition. A
+component the source names as part of the concept counts: SCB's "Delkomponent till
+disponibel inkomst" is the individual's share that sums to the family total. So does a
+quantity computed from the concept: a ratio to the median, a median, a weight, a cost or
+a housing-adjusted remainder. A researcher looking for the concept should find these
+beside the amounts, so they join the group under the `matt` axis (below). An input to
+the concept stays out: gross income (`cbrutto`, `bruttoinkomst-familj`) goes into
+disposable income but is not a quantity of it, so it belongs to its own concept in the
+same register. A lone variable gets no group; the builder withholds a group with fewer
+than two supported members.
+
+**Narrower groups are absorbed.** A variable belongs to at most one group, so when the
+concept group is curated, any narrower group inside it (machine-folded or curated)
+becomes part of it rather than sitting beside it.
+
+**Axes come from what this register's members vary on.** Name each axis by the variation
+(`enhet`, `hushallsbegrepp`, `kapitalvinst`, `kalla`, `matt`, and `definition` only
+where definitions coexist in the same years). `matt` ("mått") says what kind of quantity
+the member is: `belopp` for the concept itself, otherwise `andel`, `median`, `vikt` or
+`justerat` (adjusted for a cost). It is a new axis because `enhet` already means the
+unit of observation (individual, family, consumption unit) and `kalla` the data source;
+neither covers "an amount of the concept" versus "something computed from it". A
+register declares `matt` only when it holds a computed member, as with any axis.
+Definition vintages that succeed one another are not an axis; they ride the period
+slider and `replaced_by`. Every member supplies every axis, with `na` where the axis
+does not apply. An axis that does not vary within the register is not declared, so the
+same concept can carry different axes in different registers.
+
+**Naming.** The key is the concept's slug, without unit, vintage or source qualifiers:
+`disponibel-inkomst`, not `disponibel-inkomst-familj-2004`. The label is the concept's
+plain Swedish name, `Disponibel inkomst`. Facet values never go into the key or the
+label. The same concept takes the same key in every register, so
+`group/scb/iot/disponibel-inkomst` and `group/scb/lisa/disponibel-inkomst` read as
+twins.
+
+### Tags
 
 **Tags** are a curated thematic vocabulary across providers and registers, so a
 researcher can find "a measure of income" without knowing the register. One global
 vocabulary and one membership table; a membership names exactly one register or one
 variable, and a variable membership can be starred with a one-line rationale. Tags are a
-discovery overlay and leave identity untouched. A group shows the union of its members'
-tags, and untagged siblings inherit the group's tags as neutral memberships.
+discovery overlay and leave identity untouched.
+
+**Tags are search-only.** They are meant for search: finding variables by topic across
+registers. Tag search is not built yet (`ops/search.rs` has no tag arm and the SPA only
+displays tags); it is tracked in #1794's later steps. A variable page never lists the
+other variables that share its tags. A group shows the union of its members' tags as its
+own labels, and untagged siblings inherit the group's tags as neutral memberships; that
+labels the group and lists no co-tagged variables.
+
+**A tag is broad.** It names a topic a researcher types before knowing which register
+holds it (`income`, `transfers`, `employment`, `education`), and it has members in
+several registers. A term that would only list one register's variables, or one
+concept's variants, is a group, not a tag. Comparing one concept across registers uses
+the broad tag: one starred member per register, each note saying how it differs (unit,
+definition vintage, population).
+
+**The narrow tags fold into broad ones.** `earned-income` folds into `income`.
+`economic-assistance-amount` and `economic-assistance-months` fold into a new
+`transfers` tag. Their starred members and notes carry over; the narrow slugs are
+deleted.
+
+### Worked example: disposable income
+
+Each register below gets one `disponibel-inkomst` group.
+
+- **IoT** already has it: 46 members, components included, axes `enhet`,
+  `hushallsbegrepp` and `kapitalvinst`. Membership and axes stay. The 1991 and 2004
+  definitions (`CDISP` and `CDISP04` share every coordinate) are not an axis: the
+  vintage rides the period slider and `replaced_by` succession (see `iot.toml`).
+- **LISA** has none. The group takes the DispInk family: individual components, family,
+  per consumption unit, individualised from family and household, with axes `enhet`,
+  `hushallsbegrepp` and `definition` (1991, 2004). Unlike IoT, LISA keeps `definition`
+  as an axis: `DispInkKE` and its 2004 twin `DispInkKE04` are co-delivered in the same
+  years (SWECOV's Individ_2010 to Individ_2012), so the definitions coexist and are not
+  a succession.
+- **FASIT** has two machine-folded pairs, each a TRIF copy beside the FASIT-derived
+  variable. The group absorbs both, adds the household, per-unit and
+  alternating-residence variables, and declares a `kalla` axis (TRIF, FASIT). The weight
+  `bsockvh` ("Justeringsfaktor för disponibel inkomst") is computed from the concept, so
+  it joins under `matt` = `vikt`.
+- **LINDA** has a machine-folded `delkomponent-disponibel-inkomst` group (12 source
+  fields). The group absorbs it and adds `cdispl`, the 2004 component and the family
+  total `cdisplh`.
+- **HEK** has none. The group takes the individual components, the household and family
+  per-unit amounts and the variants excluding capital gains. Konsumtionsutrymme
+  (`cdisp3z`, `cdisp3pz`, `cdisp3kz`: disposable income minus housing cost) is computed
+  from the concept and joins under `matt` = `justerat`. The inputs `cbrutto` and
+  `bruttoinkomst-familj` stay out.
+
+HEK's housing-adjusted `CDISPBOZ` and `CDISPKENZ` are still amounts of disposable income
+under a stated adjustment, so they join under their own axis value, `matt` = `justerat`,
+beside konsumtionsutrymme; the plain amounts carry `belopp`. Barnregistret's
+`andel-av-median` is a ratio to the national median, so it joins Barnregistret's own
+disposable-income group as `matt` = `andel`. It never joins another register's group:
+groups are single-register. Barnregistret's catalog entries hold no disposable-income
+amount beside it (`andelmediana` is its only computed sibling), so that group exists
+only if it reaches two supported members; otherwise the builder withholds it and the
+variable stays ungrouped. Cross-register discovery of disposable income goes through
+`income`, with one starred member per register.
 
 ## Relationship graph
 
