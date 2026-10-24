@@ -12,7 +12,7 @@ import pytest
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
 from reg_meta_build.errors import EXIT_CONFIG
-from reg_meta_build.resolve_code import resolve_code_sha256
+from reg_meta_build.resolve_code import prepare_code_digests, resolve_code_sha256
 
 import reg_meta_build
 
@@ -386,6 +386,22 @@ def test_writer_only_edit_keeps_the_resolve_code_fingerprint(tmp_path: Path) -> 
         with (tmp_path / package.name / module).open("a", encoding="utf-8") as stream:
             stream.write("\n# edited\n")
         assert (resolve_code_sha256(tmp_path) == before) is unchanged
+
+
+def test_prepare_code_fingerprint_holds_the_native_grammar_sources() -> None:
+    # Fails if the prepare fingerprint drops the native crate sources: preparation
+    # calls the reg-core period grammar, so a grammar edit would then admit a root
+    # prepared under the old grammar. Also fails if it holds `Cargo.lock`, where a
+    # reg_meta release bumps `reg-meta`'s version: every prepared root would then be
+    # refused after a release. Also fails if it holds a crate's `tests/**`: a corpus
+    # edit would then force a re-prepare though it cannot change prepared bytes. An
+    # input-set check, since flipping a native source in
+    # a copy needs a second git checkout.
+    native = prepare_code_digests()["native"]
+    assert "crates/reg-core/src/grammar.rs" in native
+    assert "crates/reg-core/Cargo.toml" in native
+    assert "Cargo.lock" not in native
+    assert not [path for path in native if "/tests/" in path]
 
 
 def test_parallel_resolve_is_byte_identical_to_serial(

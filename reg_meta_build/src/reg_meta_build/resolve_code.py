@@ -1,4 +1,5 @@
-"""The resolve phase's code fingerprint, which a resolved bundle records.
+"""The resolve and prepare phases' code fingerprints, which a resolved bundle and a
+prepared root record.
 
 A bundle replayed by other resolve code would place stale resolutions under the
 current builder commit, so `materialize-db` refuses any bundle whose fingerprint is
@@ -8,14 +9,31 @@ the writer alone runs, so a writer-only change still reuses a bundle:
 - every `reg_meta_build` source file in the static import closure of
   `reg_meta_build.pipeline`: function-local imports count, `if TYPE_CHECKING:` bodies
   do not, and a module that imports by name at run time pulls in its whole package
-  (`import_closure`, which the real-seed cache's prepare key also walks), plus the
+  (`import_closure`, which the prepare fingerprint also walks), plus the
   non-Python files beside a walked module. A `__version__ = "..."` value in a source
-  file is normalized away (`source_sha256`, which the prepare key also uses): a
+  file is normalized away (`source_sha256`, which the prepare fingerprint also uses): a
   release bumps it, and no resolution reads it;
 - every file of the imported native `reg_core_py` package, extension included;
 - the Python version.
 
 Third-party Python dependencies are not covered; the real-seed cache keys `uv.lock`.
+
+The prepare fingerprint (`prepare_code_sha256`) is the same digest over the walk from
+`PREPARE_ROOTS`, plus each native crate `reg_core_py` is built from, as its tracked `src/**` and its
+`Cargo.toml` (`input_snapshot.tracked_native_sources`, less documentation): preparation
+calls the period grammar (`edition_bounds`), whose results land in the prepared
+records' temporal scopes. A prepared root records it, and `build-db` and
+`check-curation` refuse a root whose recorded value is not the running builder's
+(`prepared_catalog.check_prepare_code`), so a root prepared by other adapter or grammar
+code never builds. A refusal costs a full re-prepare, so it keys sources, not runtime
+facts: not the built extension (`native_digests`: one rebuilt by another toolchain
+prepares the same bytes), not the Python version, not a crate's `tests/**` (a test
+corpus edit never changes prepared bytes, and it changes often), and not the workspace
+`Cargo.toml` and `Cargo.lock` (a release bumps `reg-meta`'s version there). A crate's
+own `Cargo.toml` is keyed with its `version` line normalized, as `__version__` is. A
+third-party dependency bump that changes period parsing is therefore not caught here;
+the real-seed cache key still covers it (`Cargo.lock`, `uv.lock`). The cache's prepare
+key holds this digest and adds those and the CLI entry point.
 """
 
 from __future__ import annotations
@@ -31,8 +49,11 @@ from typing import TYPE_CHECKING
 
 import reg_core_py
 
+from reg_meta_build.input_snapshot import tracked_native_sources
+from reg_meta_build.native_sources import native_sources
+
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable, Iterator, Mapping
 
 PACKAGE = "reg_meta_build"
 RESOLVE_ROOT = "reg_meta_build.pipeline"
@@ -47,7 +68,37 @@ RESOLVE_EXCLUDED = frozenset(
         "reg_meta_build.validate",
     }
 )
+# The prepare fingerprint's walk roots: the preparation entry point, and the modules
+# the CLI's `prepare-sources` handler imports from. Not `db`: the walk from here does
+# not reach it, and the CLI calls it only for parser help text and for the confinement
+# check of an `--output`, neither of which reaches the prepared output.
+#
+# simplify: a static walk, so it is generous. It still reaches the resolution models
+# (`resolved_catalog`, `_resolved_common`), and an edit to any walked module refuses
+# every prepared root, which then costs a 1-2 h re-prepare. The issue code
+# `source_support` reads lives in `errors`, so the walk stays out of
+# `catalog_dependencies` and the catalog modules behind it; the next split, if edits
+# to the resolution models keep refusing roots, is `source_coding`'s import of
+# `resolved_catalog`. Files are found by directory listing, not git (`code_files`): a
+# stray non-dot file beside a walked module is a code change.
+#
+# Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
+# starts calling a module outside this walk, or when a module in the walk starts
+# reading a repository file outside its package. The prepare path reads exactly the
+# curation tree's authored sources (`prepared_catalog.AUTHORED_SOURCES`), which a
+# prepared root pins by content; `curation_tree` and `fqid_slugs` read the rest of the
+# tree, and the prepare path calls neither. The walk imports `reg_core_py`
+# (`_resolved_common`, `_curation`, `edition_bounds`), and preparation's output
+# depends on it (the period grammar), so the fingerprint also holds the native
+# crates' `src/**` and `Cargo.toml` (`prepare_code_digests`).
+PREPARE_ROOTS = (
+    "reg_meta_build.prepared_catalog",
+    "reg_meta_build.input_snapshot",
+    "reg_meta_build.source_files",
+    "reg_meta_build._curation",
+)
 _VERSION = re.compile(rb'^__version__ = "[^"\n]*"$', re.MULTILINE)
+_CARGO_VERSION = re.compile(rb'^version = "[^"\n]*"$', re.MULTILINE)
 
 
 def _imports(tree: ast.Module) -> Iterator[ast.Import | ast.ImportFrom]:
@@ -171,12 +222,21 @@ def source_sha256(path: Path) -> str:
 
     A release bumps `reg_meta_build/__init__.py`'s `__version__`, which no resolution
     or preparation reads (only the CLI's help line does), so a release build keeps
-    reusing the bundle its candidate resolved, and the real-seed cache's prepare key
-    (which hashes its walked files with this) the preparation.
+    reusing the bundle its candidate resolved, and a prepared root stays admitted
+    (`prepare_code_sha256`).
     """
     data = path.read_bytes()
     if path.suffix == ".py":
         data = _VERSION.sub(b'__version__ = ""', data)
+    return hashlib.sha256(data).hexdigest()
+
+
+def _native_source_sha256(repo: Path, path: str) -> str:
+    """A fingerprinted native file's digest; a crate `Cargo.toml`'s own `version` line is
+    normalized away, as `source_sha256` does `__version__`."""
+    data = (repo / path).read_bytes()
+    if path.endswith("/Cargo.toml"):
+        data = _CARGO_VERSION.sub(b'version = ""', data)
     return hashlib.sha256(data).hexdigest()
 
 
@@ -226,7 +286,50 @@ def _running_resolve_code_sha256() -> str:
     return _digest(resolve_code_digests())
 
 
-def _digest(digests: dict[str, object]) -> str:
+def prepare_code_digests(
+    source_root: Path | None = None,
+) -> dict[str, dict[str, str]]:
+    """The prepare fingerprint's inputs: the digest of each file the walk from
+    `PREPARE_ROOTS` reaches, by path relative to `source_root` (as in
+    `resolve_code_digests`), and of each native crate's tracked `src/**` and
+    `Cargo.toml`, by path relative to the checkout that holds `source_root`."""
+    if source_root is None:
+        source_root = Path(__file__).resolve().parents[1]
+    modules, _ = import_closure(source_root, PREPARE_ROOTS)
+    repo = source_root.parents[1]
+    # Each crate's `src/**` and `Cargo.toml` only: the module docstring says why `tests/`,
+    # the workspace `Cargo.toml` and `Cargo.lock` stay out.
+    crates = [path for path in native_sources(repo) if (repo / path).is_dir()]
+    native = [
+        path
+        for path in tracked_native_sources(repo, crates)
+        if any(
+            path == f"{crate}/Cargo.toml" or path.startswith(f"{crate}/src/")
+            for crate in crates
+        )
+    ]
+    return {
+        "sources": {
+            path.relative_to(source_root).as_posix(): source_sha256(path)
+            for path in sorted(code_files(modules.values()))
+        },
+        "native": {path: _native_source_sha256(repo, path) for path in sorted(native)},
+    }
+
+
+def prepare_code_sha256(source_root: Path | None = None) -> str:
+    """The digest of `prepare_code_digests`; `source_root` as there."""
+    if source_root is None:
+        return _running_prepare_code_sha256()
+    return _digest(prepare_code_digests(source_root))
+
+
+@functools.cache
+def _running_prepare_code_sha256() -> str:
+    return _digest(prepare_code_digests())
+
+
+def _digest(digests: Mapping[str, object]) -> str:
     return hashlib.sha256(
         json.dumps(digests, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

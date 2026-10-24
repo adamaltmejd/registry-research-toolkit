@@ -40,16 +40,18 @@ Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle'
 in its repository (the manifest records it); the digest of each authored source
 `prepare-sources` reads from the curation tree (`prepared_catalog.AUTHORED_SOURCES`:
 the thin-provider TOMLs and `scb_canonical.toml`, an absent one as null), not the
-whole curation digest, so other curation edits keep the entry; the content of every file in the code
-boundary (`prepare_code_files`: the builder's own static import walk from the
-`prepare-sources` entry point, which the probe runs, plus `uv.lock`, and the native
-extension sources
-because a walked module imports `reg_core_py`); the Python and SQLite
+whole curation digest, so other curation edits keep the entry; the builder's own
+`prepare_code_sha256` (`reg_meta_build.resolve_code`: the static import walk from the
+`prepare-sources` entry point and the native crates' tracked `src/**` and `Cargo.toml`, reported by the
+probe), the value a prepared root records and a build admits it by, plus the files
+that fingerprint leaves out (`prepare_code`: the CLI entry point, `uv.lock`, and the
+native sources whole, `tests/**`, `Cargo.lock` and untracked files included, because
+a walked module imports `reg_core_py`); the Python and SQLite
 versions and the loaded extension. Every key holds `uv.lock` as `lock_sha256` does:
 only the locked runtime closure of `reg-meta-build` (`keyed_cache.uv_lock_sha256`: its
 transitive dependencies, never a dev group), so a dev-only pin (pytest, ruff, ...)
-moves no key. A release's version bumps leave it unchanged (`prepare_code`): a walked
-file's `__version__` value is normalized as the resolve fingerprint does, and
+moves no key. A release's version bumps leave it unchanged (`prepare_code`): the
+fingerprint normalizes a walked file's `__version__` value, and
 `uv.lock` and `Cargo.lock` leave out the workspace members' own versions; a
 third-party runtime pin still moves it. A prepare entry is an index record (prepared path and
 top-level manifest digest), not a copy of the 14 GB tree the maintainer commits to a
@@ -60,7 +62,9 @@ payload inventory complete, is reported as awaiting acceptance, without a rerun.
 other failed check drops the record and misses. `prepare --adopt DIR` records an
 accepted tree of the same bundle under the current key without a rerun (one prepared
 under an earlier key, when the maintainer judges the code change cannot reach it); the
-record must pass the same lookup check.
+record must pass the same lookup check, which refuses a tree whose recorded
+`prepare_code_sha256` is not the builder's (`prepared_code_stale`): only a change
+outside the fingerprint (the CLI, a lock, the built extension) can be adopted across.
 
 Build key: the raw content of `reg_meta_build/src` and the native extension sources,
 and `uv.lock`'s runtime closure (`lock_sha256`). The database records no dependency
@@ -179,28 +183,10 @@ BUNDLE_REFUSAL_PREFIX = "resolved_bundle_"
 STRICT_ONLY_REFUSALS = ("resolved_bundle_blocked", "resolved_bundle_strict_refused")
 # The source root of the one workspace package the prepare walk follows (the
 # builder's `resolve_code.import_closure` walks only `reg_meta_build`); the key
-# refuses any other workspace package the walk reaches.
+# refuses any other workspace package the walk reaches. The walk's roots are the
+# builder's `resolve_code.PREPARE_ROOTS`; a missing root stops the tool rather than
+# shrinking the key.
 PACKAGE_SOURCE = "reg_meta_build/src"
-# The prepare key's code boundary, as roots of a static import walk
-# (`prepare_code_files`): the preparation entry point, and the modules the CLI's
-# `prepare-sources` handler imports from. Not `db`: the walk from here does not reach
-# it, and the CLI calls it only for parser help text and for the confinement check of
-# an `--output` this tool never passes, neither of which reaches the prepared output.
-#
-# Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
-# starts calling a module outside this walk, or when a module in the walk starts
-# reading a repository file outside its package. The prepare path reads exactly the
-# curation tree's authored sources (`AUTHORED_SOURCES`), which the key holds by
-# content (`authored_sources`); `curation_tree` and `fqid_slugs` read the rest of the
-# tree, and the prepare path calls neither.
-#
-# A missing root stops the tool rather than shrinking the key.
-PREPARE_ROOTS = (
-    "reg_meta_build.prepared_catalog",
-    "reg_meta_build.input_snapshot",
-    "reg_meta_build.source_files",
-    "reg_meta_build._curation",
-)
 # Lock files whose workspace members' own versions the keys leave out (`lock_sha256`;
 # the build and resolve keys hold `uv.lock` the same way): a release bumps them, and
 # nothing prepared, resolved or recorded reads them.
@@ -212,9 +198,8 @@ PREPARE_ENTRY_FILES = ("reg_meta_build/src/reg_meta_build/cli.py",)
 # What this stdlib-only script needs from the project environment: the interpreter
 # and SQLite the builder runs on, the builder's own curation digest (the value a
 # build records as `curation_tree_sha256`), the builder's resolve-code fingerprint
-# (the value a resolved bundle records), the builder's own import walk from the
-# prepare roots (the files it reaches, digested as the fingerprint digests them, and
-# the other packages it imports), the
+# (the value a resolved bundle records), the builder's prepare-code fingerprint (the
+# value a prepared root records) and the other packages its walk imports, the
 # builder's warm-build check of an
 # accepted prepared tree at its repository's HEAD, and the admission checks a build
 # runs before it resolves anything (the same check of the prepared pins and, for a
@@ -262,17 +247,15 @@ if request.get("resolve_code"):
             "code": "probe_resolve_code_failed",
             "message": f"{type(exc).__name__}: {exc}",
         }
-if request.get("prepare_roots"):
-    from reg_meta_build.resolve_code import code_files, import_closure, source_sha256
+if request.get("source_root"):
+    from reg_meta_build.resolve_code import (
+        PREPARE_ROOTS, import_closure, prepare_code_sha256,
+    )
     try:
-        modules, imports = import_closure(
-            Path(request["source_root"]), request["prepare_roots"]
-        )
+        source_root = Path(request["source_root"])
+        _, imports = import_closure(source_root, PREPARE_ROOTS)
         facts["prepare_code"] = {
-            "files": {
-                p.relative_to(root).as_posix(): source_sha256(p)
-                for p in sorted(code_files(modules.values()))
-            },
+            "sha256": prepare_code_sha256(source_root),
             "imports": sorted(imports),
         }
     except Exception as exc:
@@ -281,16 +264,20 @@ if request.get("prepare_roots"):
             "message": f"{type(exc).__name__}: {exc}",
         }
 if request.get("prepared"):
-    from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+    from reg_meta_build.prepared_catalog import (
+        check_prepare_code,
+        open_prepared_catalog_sources,
+    )
     prepared = Path(request["prepared"])
     try:
         head = subprocess.run(
             ["git", "-C", str(prepared), "rev-parse", "HEAD"],
             capture_output=True, text=True, check=True,
         ).stdout.strip()
-        open_prepared_catalog_sources(
+        opened = open_prepared_catalog_sources(
             prepared, input_commit=head, expected_sha256=request["manifest_sha256"]
         )
+        check_prepare_code(opened.manifest)
         facts["accepted_commit"] = head
     except Exception as exc:
         facts["accepted_error"] = str(exc) or type(exc).__name__
@@ -299,6 +286,7 @@ if request.get("admit"):
     try:
         from reg_meta_build.prepared_catalog import (
             check_authored_sources,
+            check_prepare_code,
             open_prepared_catalog_sources,
         )
         opened = open_prepared_catalog_sources(
@@ -306,6 +294,7 @@ if request.get("admit"):
             input_commit=admit["input_commit"],
             expected_sha256=admit["manifest_sha256"],
         )
+        check_prepare_code(opened.manifest)
         check_authored_sources(opened.manifest, Path(admit["curation"]))
         if admit["builder_commit"] is not None:
             from reg_meta_build.artifact_identity import builder_commit
@@ -437,45 +426,33 @@ def workspace_packages() -> frozenset[str]:
     )
 
 
-def prepare_code_files(walk: dict) -> list[str]:
-    """The repo-relative files `prepare-sources` runs, generously, from the probe's
-    `prepare_code`.
+def prepare_code(walk: dict) -> dict[str, str]:
+    """The prepare key's code digests, from the probe's `prepare_code`, with a
+    release's version bumps left out.
 
-    The builder's own import walk (`resolve_code.import_closure`) follows every
-    import from `PREPARE_ROOTS` through `reg_meta_build`, including function-local
-    imports, whether or not the prepare path reaches them. A module that imports by
-    name at run time (`import_module`) pulls in its whole package. Data files beside
-    any walked module count, as do the native extension sources when a walked module
-    imports `reg_core_py`, and `uv.lock` always.
+    The builder's `prepare_code_sha256` covers the `reg_meta_build` files its import
+    walk from `PREPARE_ROOTS` reaches (`resolve_code.import_closure`: every import,
+    function-local ones included, whether or not the prepare path reaches them, and
+    the data files beside each walked module), with `__version__` normalized, and the
+    native crates' tracked `src/**` and `Cargo.toml` (`version` line normalized). The key adds what that fingerprint leaves
+    out: the CLI entry point, `uv.lock`, and the native sources whole (`tests/**`,
+    `Cargo.lock` and untracked files too) when a walked module imports `reg_core_py`,
+    so it stays a superset of the fingerprint. A lock leaves
+    out its workspace members' own versions and every package outside the builder's
+    runtime closure (`lock_sha256`). Every other change, a third-party runtime pin
+    included, still moves the key.
     """
     if unkeyed := sorted(set(walk["imports"]) & workspace_packages()):
         sys.exit(
             f"real-seed-cache: the prepare walk reaches workspace packages {unkeyed} "
             "that it does not key; extend the walk to them"
         )
-    walked = set(walk["files"])
-    # A walked module git ignores stays listed, so `code_digests` refuses it; ignored
-    # data beside a module is junk, never keyed.
-    files = {path for path in walked if path.endswith(".py")} | repo_files(walked)
-    files.update(PREPARE_ENTRY_FILES)
-    files.add("uv.lock")
+    files = [*PREPARE_ENTRY_FILES, "uv.lock"]
     if "reg_core_py" in walk["imports"]:
-        files.update(NATIVE_SOURCES)
-    return sorted(files)
-
-
-def prepare_code(walk: dict) -> dict[str, str]:
-    """The prepare key's code digests: `prepare_code_files`, with a release's version
-    bumps left out.
-
-    A walked file keeps the digest the probe reported, which normalizes `__version__`
-    as the resolve fingerprint does; a lock leaves out its workspace members' own
-    versions and every package outside the builder's runtime closure (`lock_sha256`).
-    Every other change, a third-party runtime pin included, still moves the key.
-    """
-    code = code_digests(prepare_code_files(walk))
-    code.update({path: sha for path, sha in walk["files"].items() if path in code})
+        files += NATIVE_SOURCES
+    code = code_digests(files)
     code.update({lock: lock_sha256(lock) for lock in VERSIONED_LOCKS if lock in code})
+    code["prepare_code_sha256"] = walk["sha256"]
     return code
 
 
@@ -487,11 +464,7 @@ def curation_dir(args: argparse.Namespace) -> str:
 
 
 def prepare_fields(args: argparse.Namespace) -> dict:
-    facts = probe(
-        source_root=str(ROOT / PACKAGE_SOURCE),
-        prepare_roots=PREPARE_ROOTS,
-        authored=curation_dir(args),
-    )
+    facts = probe(source_root=str(ROOT / PACKAGE_SOURCE), authored=curation_dir(args))
     if error := facts.pop("probe_error", None):
         sys.exit(f"real-seed-cache: {error['code']}: {error['message']}")
     return {

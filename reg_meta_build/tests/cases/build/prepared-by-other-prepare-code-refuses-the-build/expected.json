@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "prepared_code_stale",
+    "exit_code": 10,
+    "message_contains": [
+      "prepare_code_sha256 0000000000000000000000000000000000000000000000000000000000000000"
+    ]
+  }
+}

@@ -29,7 +29,6 @@ from reg_meta_build._curation import (
     load_search_synonyms,
 )
 from reg_meta_build.catalog_dependencies import (
-    DEFERRED_REFERENCE,
     CoverageObligation,
     check_delivery_coverage,
     resolve_classification_successions,
@@ -63,6 +62,7 @@ from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     check_authored_sources,
+    check_prepare_code,
     open_prepared_catalog_sources,
 )
 from reg_meta_build.prepared_sources import PreparedSourceRecords
@@ -122,7 +122,7 @@ from reg_meta_build.source_value_bindings import (
     open_value_bindings,
 )
 
-from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
+from .errors import DEFERRED_REFERENCE, EXIT_CONFIG, EXIT_USAGE, RegMetaError
 from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
@@ -1131,6 +1131,7 @@ def _resolve(
         input_commit=input_commit,
         expected_sha256=input_manifest_sha256,
     )
+    check_prepare_code(prepared.manifest)
     check_authored_sources(prepared.manifest, curation_dir)
     occurrence_sources = {
         entry.revision.dataset

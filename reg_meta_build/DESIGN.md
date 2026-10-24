@@ -98,8 +98,8 @@ there is no migration between format versions, and a bundle from other resolve c
 rebuilt, not read. The builder enforces this itself.
 `resolve_code.resolve_code_sha256()` fingerprints the content of every `reg_meta_build`
 source file in the static import closure of `reg_meta_build.pipeline` (function-local
-imports included, `TYPE_CHECKING` bodies excluded; `import_closure`, which the real-seed
-cache's prepare key also walks), the non-Python files beside them, every file of the
+imports included, `TYPE_CHECKING` bodies excluded; `import_closure`, which the prepare
+fingerprint also walks, below), the non-Python files beside them, every file of the
 imported `reg_core_py` package (its extension included) and the Python version. A
 `__version__` value is normalized away: a release bumps it and no resolution reads it,
 so a release build keeps its candidate's bundle. A build records it before resolving,
@@ -424,8 +424,25 @@ curation, not deliveries. `prepare-sources --curation-dir` reads them and record
 as a `curation` inventory entry with its SHA-256, so the prepared root carries them like
 any other source. `build-db` and `check-curation` refuse a prepared root whose pinned
 authored sources differ from the curation tree (`prepared_authored_source_stale`): an
-edit to one of these files needs a fresh prepare, and a stale root cannot build. In
-curation comments and evidence, an `inputs:` prefix names a path in that repository
+edit to one of these files needs a fresh prepare, and a stale root cannot build. The
+pins cannot see an adapter change, so the manifest also records the code that prepared
+it: `prepare_code_sha256` (`resolve_code.prepare_code_sha256`), the resolve
+fingerprint's digest over the static import walk from `resolve_code.PREPARE_ROOTS`,
+`__version__` normalized, plus each native crate `reg_core_py` is built from, as its
+tracked `src/**` and `Cargo.toml` (own `version` line normalized): preparation calls the
+reg-core period grammar, and its results land in the prepared records' temporal scopes.
+It leaves out the built extension, the Python version, the crates' `tests/**` and the
+workspace `Cargo.toml`/`Cargo.lock` (a rebuilt extension, a Python patch, a test-corpus
+edit or a release's version bump prepares the same bytes, and a refusal costs a full
+re-prepare). A dependency bump that changes period parsing is not caught by the
+fingerprint; the real-seed cache key still covers it. `build-db` and `check-curation`
+refuse a root whose recorded fingerprint is not the running builder's
+(`prepared_code_stale`), in seconds, before resolving. The walk is generous: it reaches
+the resolution models too, so an edit to them also forces a re-prepare, and the
+real-seed cache's `prepare --adopt` cannot carry a tree across it. A root from an older
+manifest schema (one prepared before the fingerprint existed has `schema_version` 4) is
+refused the same way and must be re-prepared. In curation comments and evidence, an
+`inputs:` prefix names a path in that repository
 (`inputs:catalog/docs/markdown/lisa/SektorKod.md`).
 
 Raw archives can remain compressed outside Git; the original SCB exports are release

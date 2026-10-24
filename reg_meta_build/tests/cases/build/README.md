@@ -85,16 +85,17 @@ guard sits beside its refusal twin.
 
 ## `request.json`
 
-  | Key             | Meaning                                                                                                                                                    |
-  | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `replaces`      | The Python test (`file::function[param]`) whose assertions the expected values were read from.                                                             |
-  | `fails_if`      | Required: the product change that would make this case (or step) fail. The runner refuses a request without one.                                           |
-  | `note`          | Optional prose: why this case exists.                                                                                                                      |
-  | `sources`       | A source spec, inline or the name of `_sources/<name>.json`. The build reads it.                                                                           |
-  | `authored_from` | Optional source spec that the curation placeholders read. Defaults to `sources`. A stale case authors from the reviewed source and builds the changed one. |
-  | `registers`     | Optional register slice (scope names: a native register id, a register name or `<source>:<name>`). Defaults to every register.                             |
-  | `diagnostic`    | Optional; defaults to `true`, so curation errors land in the ledger instead of aborting.                                                                   |
-  | `mode`          | Optional: `build` (the default) runs `build_catalog`; `check` runs `check_curation`, which needs `registers` and writes no catalog.                        |
+  | Key                    | Meaning                                                                                                                                                         |
+  | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `replaces`             | The Python test (`file::function[param]`) whose assertions the expected values were read from.                                                                  |
+  | `fails_if`             | Required: the product change that would make this case (or step) fail. The runner refuses a request without one.                                                |
+  | `note`                 | Optional prose: why this case exists.                                                                                                                           |
+  | `sources`              | A source spec, inline or the name of `_sources/<name>.json`. The build reads it.                                                                                |
+  | `authored_from`        | Optional source spec that the curation placeholders read. Defaults to `sources`. A stale case authors from the reviewed source and builds the changed one.      |
+  | `registers`            | Optional register slice (scope names: a native register id, a register name or `<source>:<name>`). Defaults to every register.                                  |
+  | `diagnostic`           | Optional; defaults to `true`, so curation errors land in the ledger instead of aborting.                                                                        |
+  | `mode`                 | Optional: `build` (the default) runs `build_catalog`; `check` runs `check_curation`, which needs `registers` and writes no catalog.                             |
+  | `prepared_code_sha256` | Optional: the build reads a copy of the prepared root whose manifest records this prepare-code fingerprint instead, accepted again: a root other code prepared. |
 
 `fails_if` names a change to the product, not the behavior restated. It is the claim a
 reviewer checks by applying that change and watching the case fail. For example:

@@ -4,21 +4,32 @@ The bundle remains the inventory authority for third-party machine sources. The
 maintainer-authored thin-provider TOMLs and `scb_canonical.toml` are curation: they
 are read from the selected curation tree (`AUTHORED_SOURCES`) and pinned by digest
 as `origin = "curation"` inputs, and a build refuses a prepared root whose pins
-differ from its own curation tree (`check_authored_sources`). No catalog identities
+differ from its own curation tree (`check_authored_sources`). The manifest also records
+the code that prepared it (`resolve_code.prepare_code_sha256`), and a build refuses a
+root another builder's adapters prepared (`check_prepare_code`). No catalog identities
 are formed here.
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import shutil
 import tempfile
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    TypeAdapter,
+    ValidationError,
+    model_validator,
+)
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -52,6 +63,7 @@ from reg_meta_build.prepared_values import (
     _manifest as _value_manifest,
     prepare_source_values,
 )
+from reg_meta_build.resolve_code import prepare_code_sha256
 from reg_meta_build.source_files import _file_sha256
 from reg_meta_build.source_records import SourceEvidenceTable, SourceRecord
 from reg_meta_build.source_reference_records import (
@@ -193,7 +205,8 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-catalog-sources"] = (
         "reg-meta-prepared-catalog-sources"
     )
-    schema_version: Literal[4] = 4
+    schema_version: Literal[5] = 5
+    prepare_code_sha256: str
     input_commit: str
     bundle_path: str
     bundle_manifest_sha256: str
@@ -211,6 +224,7 @@ class _ManifestDocument(_Model):
         if not _COMMIT_RE.fullmatch(self.input_commit) or not all(
             _HASH_RE.fullmatch(value)
             for value in (
+                self.prepare_code_sha256,
                 self.bundle_manifest_sha256,
                 self.snapshot_manifest_sha256,
                 self.records_manifest_sha256,
@@ -344,7 +358,20 @@ _EVIDENCE_ADAPTER = TypeAdapter(PreparedEvidence)
 
 
 def _manifest(payload: bytes) -> PreparedCatalogManifest:
-    document = _ManifestDocument.model_validate_json(payload)
+    try:
+        document = _ManifestDocument.model_validate_json(payload)
+    except ValidationError:
+        # A root another builder's preparation wrote under an older manifest schema
+        # is stale, not malformed: name the re-prepare, not a repair.
+        with suppress(ValueError, AttributeError):
+            recorded = json.loads(payload).get("schema_version")
+            current = _ManifestDocument.model_fields["schema_version"].default
+            if type(recorded) is int and recorded < current:
+                raise _prepared_code_stale(
+                    f"The prepared root's manifest has schema_version {recorded}; "
+                    f"this builder reads {current}."
+                ) from None
+        raise
     return PreparedCatalogManifest(
         **document.model_dump(), artifact_sha256=hashlib.sha256(payload).hexdigest()
     )
@@ -501,6 +528,8 @@ def prepare_catalog_sources(
 
     The authored sources (`AUTHORED_SOURCES`) are read from `curation_dir`.
     """
+    # Before any source is read, as a build captures its resolve fingerprint.
+    code_sha256 = prepare_code_sha256()
     output = output.expanduser().absolute()
     curation_dir = curation_dir.expanduser().resolve()
     if not curation_dir.is_dir():
@@ -874,6 +903,7 @@ def prepare_catalog_sources(
                 )
             )
         document = _ManifestDocument(
+            prepare_code_sha256=code_sha256,
             input_commit=selection.input_commit,
             bundle_path=bundle.root.relative_to(bundle.repository).as_posix(),
             bundle_manifest_sha256=selection.manifest_sha256,
@@ -987,6 +1017,35 @@ def check_authored_sources(
                 "directory, accept it, and build from that prepared root."
             ),
         )
+
+
+def check_prepare_code(manifest: PreparedCatalogManifest) -> None:
+    """Refuse a prepared root whose recorded prepare-code fingerprint is not the
+    running builder's.
+
+    The authored-source pins cannot see an adapter change: a root prepared by other
+    code would build from records the current adapters do not produce, failing late on
+    a stale acknowledgement or not at all (#1807).
+    """
+    if (running := prepare_code_sha256()) != manifest.prepare_code_sha256:
+        raise _prepared_code_stale(
+            "The prepared root was prepared by other preparation code: it records "
+            f"prepare_code_sha256 {manifest.prepare_code_sha256}, this builder's "
+            f"is {running}."
+        )
+
+
+def _prepared_code_stale(message: str) -> RegMetaError:
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="prepared_code_stale",
+        error_class="configuration",
+        message=message,
+        remediation=(
+            "Run prepare-sources with this builder into a new directory, accept "
+            "it, and build from that prepared root."
+        ),
+    )
 
 
 @dataclass(frozen=True)
@@ -1161,6 +1220,7 @@ __all__ = [
     "PreparedCatalogSources",
     "PreparedInputAccounting",
     "check_authored_sources",
+    "check_prepare_code",
     "open_prepared_catalog_sources",
     "prepare_catalog_sources",
 ]

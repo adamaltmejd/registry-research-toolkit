@@ -11,6 +11,12 @@ EXIT_OUTPUT = 20
 EXIT_NETWORK = 25
 EXIT_INTERNAL = 30
 
+# A register-scoped build's one warning for a reference whose other end is
+# declared only by unselected scopes. Only the complete build can resolve it. Here,
+# not in `catalog_dependencies`, so `source_support` can name it without pulling the
+# catalog modules into the prepare fingerprint's walk (`resolve_code.PREPARE_ROOTS`).
+DEFERRED_REFERENCE = "deferred_out_of_slice_reference"
+
 
 @dataclass
 class RegMetaError(Exception):

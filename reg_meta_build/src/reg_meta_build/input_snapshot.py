@@ -35,6 +35,7 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
+from .native_sources import native_doc, native_sources
 from .source_evidence import SourceRevision
 from .source_files import _file_sha256
 
@@ -1914,6 +1915,36 @@ def _tracked_source_commit(
     return repo, commit
 
 
+def tracked_native_sources(
+    repo: Path, sources: Sequence[str] | None = None
+) -> tuple[str, ...]:
+    """The tracked files under the native `sources` (default: all of
+    `native_sources(repo)`), repo-relative and less their documentation
+    (`native_doc`).
+
+    The extension loads from the environment, not the checkout, so its sources are
+    named by path. A source with no tracked file raises rather than shrinking a pin
+    or fingerprint.
+    """
+    every = native_sources(repo)
+    sources = every if sources is None else tuple(sources)
+    tracked = tuple(
+        path
+        for path in _git(repo, "ls-files", "--", *sources).splitlines()
+        if not native_doc(path, every)
+    )
+    if missing := [
+        source
+        for source in sources
+        if not any(path == source or path.startswith(f"{source}/") for path in tracked)
+    ]:
+        raise SnapshotError(
+            f"native extension sources are not tracked in the builder checkout {repo}: "
+            f"{', '.join(missing)}"
+        )
+    return tracked
+
+
 def converter_source_commit(cli_path: Path) -> str:
     """Return the commit containing the clean CLI and imported converter sources."""
     _repo, commit = _tracked_source_commit(
@@ -2785,6 +2816,7 @@ __all__ = [
     "prepare_input_bundle",
     "prepare_snapshot",
     "restore_snapshot",
+    "tracked_native_sources",
     "verify_input_bundle",
     "verify_snapshot",
 ]

@@ -6,13 +6,13 @@ import pytest
 from _catalog_dependency_support import cause as _cause, variable as _variable
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.catalog_dependencies import (
-    DEFERRED_REFERENCE,
     CatalogDependencyError,
     resolve_month_groups,
     resolve_variable_edge_groups,
 )
 from reg_meta_build.concept_groups import CodeLabelPair
 from reg_meta_build.db import open_built_db
+from reg_meta_build.errors import DEFERRED_REFERENCE
 from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import (
     ResolvedCodeSet,

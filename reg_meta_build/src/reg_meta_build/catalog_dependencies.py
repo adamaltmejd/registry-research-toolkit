@@ -51,7 +51,7 @@ from reg_meta_build.resolved_metadata import (
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic
 
-from .errors import EXIT_CONFIG, RegMetaError
+from .errors import DEFERRED_REFERENCE, EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     from collections.abc import (
@@ -67,10 +67,6 @@ if TYPE_CHECKING:
 
 
 type DependencyKey = tuple[str, ...]
-
-# A register-scoped build's one warning for a reference whose other end is
-# declared only by unselected scopes. Only the complete build can resolve it.
-DEFERRED_REFERENCE = "deferred_out_of_slice_reference"
 
 
 def resolve_classification_successions(
