@@ -257,17 +257,17 @@ jobs:
       # headless Chromium via Playwright. Cache the browser binary (keyed on the
       # lockfile, so it re-downloads only when deps change) so the ~90 MB download is a one-time cost, not per-run.
       - name: Cache Playwright browser
-        id: playwright-cache
         uses: actions/cache@v6.1.0
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('reg_webapp/frontend/bun.lock') }}
-      # Cache miss → download the browser + its OS libs. Cache hit → the binary is
-      # restored, but the apt-level libs are NOT cached, so still install those.
-      - run: bunx playwright install --with-deps chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: bunx playwright install-deps chromium
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
+      # A no-op on a cache hit. No `--with-deps`/`install-deps`: the runner image
+      # ships Chrome, so every shared library headless Chromium needs is already
+      # there, and apt would only add fonts and xvfb the smoke never uses. That apt
+      # fetch is what timed the job out when the Azure Ubuntu mirror slowed to
+      # ~40 kB/s (Oct 2026). If the image ever drops a library, launch fails fast
+      # naming it; restore `install-deps` then.
+      - run: bunx playwright install chromium
       # The gate script runs from the repository root on a uv-managed Python; it
       # needs no workspace sync. `frontend`: gen:wasm and its size budget, check
       # (tsgo), lint, test (`vitest run`, jsdom), build, the codegen drift check (TS types are codegen'd from the
