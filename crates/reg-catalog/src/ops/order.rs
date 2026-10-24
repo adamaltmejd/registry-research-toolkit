@@ -33,6 +33,7 @@ use super::family::{VariantFamily, variant_family};
 use super::refs;
 use super::validate::{self, Finding, Slice, held_representations, resolve_binding};
 use super::{Params, Raw, Server};
+use crate::held::{ONE_REPRESENTATION, serves, serves_at};
 use crate::{Catalog, Code, Error, Scope};
 
 /// The order manifest contract version.
@@ -1033,15 +1034,14 @@ impl Order<'_> {
                 continue;
             }
             let mapped = representations(self.conn, m.table_id, &m.column, id, variant)?;
-            for column in mapped
-                .iter()
-                .filter(|c| held.contains(*c) && pinned.as_ref().is_none_or(|p| p == *c))
-            {
+            for (column, &one) in mapped.iter().filter(|(c, one)| {
+                held.contains(*c) && pinned.as_ref().is_none_or(|p| p == *c || **one)
+            }) {
                 let windows = applicability.states.iter().filter_map(|s| {
                     let e = &s.emitted;
                     match (&e.canonical_column, &e.valid_from, &e.valid_to) {
                         (Some(c), Some(from), Some(to))
-                            if c == column
+                            if (one || c == column)
                                 && e.register_variant_id == variant
                                 && e.period_scope == "intervals" =>
                         {
@@ -1524,13 +1524,15 @@ fn matches(
          FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND ht.scope = ?3 \
-         AND (?4 IS NULL OR hm.representation_canonical = ?4) \
+         AND (?4 IS NULL OR CASE WHEN ?5 IS NULL THEN {serves} ELSE {serves_at} END) \
          AND (?5 IS NULL OR EXISTS (SELECT 1 FROM holding_period p \
               WHERE p.table_id = ht.table_id AND p.lo <= ?6 AND p.hi >= ?5)) \
          AND (?5 IS NULL OR hm.member_lo IS NULL OR (hm.member_lo <= ?6 AND hm.member_hi >= ?5)) \
          AND {kept} \
          ORDER BY ht.physical_id, hc.name, hp.lo, hp.hi",
         kept = kept(),
+        serves = serves("?4"),
+        serves_at = serves_at("?4", "?5", "?6"),
     ))?;
     let rows = stmt.query_map(params![id, variant, scope, representation, lo, hi], |row| {
         let period: (Option<String>, Option<String>) = (row.get(5)?, row.get(6)?);
@@ -1571,22 +1573,26 @@ fn matches(
     Ok(out)
 }
 
-/// The representations a held table column maps the variable under the variant to.
+/// The representations a held table column maps the variable under the variant to,
+/// each with whether it is its table's one representation, which may also serve
+/// another spelling ([`ONE_REPRESENTATION`]).
 fn representations(
     conn: &Connection,
     table_id: i64,
     column: &str,
     id: i64,
     variant: i64,
-) -> Result<BTreeSet<String>, Error> {
+) -> Result<BTreeMap<String, bool>, Error> {
     Ok(conn
         .prepare_cached(&format!(
-            "SELECT hm.representation_canonical FROM holding_mapping hm \
+            "SELECT hm.representation_canonical, {ONE_REPRESENTATION} FROM holding_mapping hm \
              JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
              WHERE hc.table_id = ? AND hc.name = ? AND hm.variable_id = ? AND hm.variant_id = ? \
              AND {kept}",
             kept = kept(),
         ))?
-        .query_map(params![table_id, column, id, variant], |row| row.get(0))?
+        .query_map(params![table_id, column, id, variant], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        })?
         .collect::<rusqlite::Result<_>>()?)
 }

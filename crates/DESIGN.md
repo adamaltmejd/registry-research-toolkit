@@ -480,13 +480,23 @@ every read.
   | Register               | At least one admitted variable binding at a mapped variant.                                                                  | All registers and variants.               |
   | Variable binding/state | An explicit mapping under this register; a selected variant or representation must match it. Output narrows to held periods. | Full history, subject to request filters. |
 
-Membership uses the authored variable and variant and the canonical representation. A
-`same_as` edge never grants possession of a different binding. Unknown-scope tables and
-unmapped columns admit nothing. An interval holding contributes only the intersection of
-its periods with the request and the resolved states; a year-independent holding needs
-year-independent states, never invented dates. Discovery may union admitted variants for
-a binding; variant-specific reads, validation and order never do. Coverage keeps
-disjoint intervals and does not promise orderability.
+Membership uses the authored variable and variant and the canonical representation.
+Possession is physical: a table that maps a `(variable, variant)` under one
+representation also serves each other spelling of it SCB did not deliver beside that
+one, over its held periods, so SCB's per-year spelling never subtracts held years
+(`Doda_20241231`'s `DodDatum` column holds `dodsdatum` through SCB's 1998–2023
+`DodDat`). Where SCB delivered both spellings at once, or one table maps the variable
+under several representations, the spelling must match the column. `held::serves` is the
+one predicate every holdings read and the order use; the builder's derived holdings rows
+(`browse_delivery`, coded-variable counts) repeat it. The builder's one-to-one rule
+still compares spellings only, so a second table mapping another spelling over a year
+the first serves this way would serve that cell twice; no SWECOV inventory has one
+(checked 2026-10-24). A `same_as` edge never grants possession of a different binding.
+Unknown-scope tables and unmapped columns admit nothing. An interval holding contributes
+only the intersection of its periods with the request and the resolved states; a
+year-independent holding needs year-independent states, never invented dates. Discovery
+may union admitted variants for a binding; variant-specific reads, validation and order
+never do. Coverage keeps disjoint intervals and does not promise orderability.
 
 The predicate applies before counts, grouping and pagination, so no page is backfilled.
 Cursors bind to the query, its filters, the scope and the generation; a changed context
@@ -548,14 +558,17 @@ Per binding, in declaration order, over its source's period
    runs once per requested segment, because the window fallback is decided per query; a
    state reaching two segments stays one state. Steps 1 and 2 are one pass shared with
    validation, so the two never disagree about availability.
-3. **Matching and coverage.** A table matches a slice when one of its columns maps
-   `(variant, variable, representation)` and its edition overlaps the slice; only the
-   intersection contributes. A held edition that overlaps the request but lies wholly
-   outside the binding's column windows is `column_window_unavailable`. Any uncovered
-   subperiod blocks the whole order (`coverage_gap`); a slice nothing serves is
-   `mapping_missing`. The materializer never chooses between tables: the inventory's
-   one-to-one invariant leaves at most one `(table, column)` per cell instant per
-   partition, so every contribution is wanted whole. A wide-pivot member set
+3. **Matching and coverage.** A table matches a slice when one of its columns serves
+   `(variant, variable, representation)` over the slice ("Read scope and artifact
+   admission": a table's one representation also serves a spelling SCB did not deliver
+   beside it, so a rename inside one held table is two entries of one physical column)
+   and its edition overlaps the slice; only the intersection contributes. A held edition
+   that overlaps the request but lies wholly outside the binding's column windows is
+   `column_window_unavailable`. Any uncovered subperiod blocks the whole order
+   (`coverage_gap`); a slice nothing serves is `mapping_missing`. The materializer never
+   chooses between tables: the inventory's one-to-one invariant leaves at most one
+   `(table, column)` per cell instant per partition, so every contribution is wanted
+   whole. A wide-pivot member set
    ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings resolution
    invariants") is that one location: every position member serves the table's edition
    and is emitted, while a year or month member serves only its own period, so it

@@ -13,7 +13,7 @@
 use std::collections::BTreeMap;
 
 use reg_core::Period;
-use rusqlite::Connection;
+use rusqlite::{Connection, params};
 use serde::Serialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -21,7 +21,7 @@ use utoipa::ToSchema;
 
 use super::refs::{self, Target, VAR_ID, fqid, invalid_kind};
 use super::{Params, Server, cursor, states};
-use crate::held::{self, HELD_HI, HELD_LO};
+use crate::held::{self, HELD_HI, HELD_LO, ONE_REPRESENTATION};
 use crate::{Code, Error, Scope, hex};
 
 /// `Page<SchemaColumn>`.
@@ -466,19 +466,34 @@ fn held_clip(
 ) -> Result<Vec<Rep>, Error> {
     type Key = (i64, i64, String, String);
     let mut held: BTreeMap<Key, held::Periods> = BTreeMap::new();
+    // A table's one representation, by (variable, variant, scope), then spelling: it
+    // also serves a spelling its own is not delivered beside (`held::serves_at`).
+    let mut one: BTreeMap<(i64, i64, String), BTreeMap<String, held::Periods>> = BTreeMap::new();
     let mut stmt = conn.prepare(&format!(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, ht.scope, \
-         {HELD_LO}, {HELD_HI} FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
+         {HELD_LO}, {HELD_HI}, {ONE_REPRESENTATION} FROM holding_mapping hm \
+         JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE ht.scope != 'unknown' \
          AND hm.variable_id IN (SELECT variable_id FROM variable WHERE register_id = ?)",
     ))?;
     let mut rows = stmt.query([register_id])?;
     while let Some(row) = rows.next()? {
-        held.entry((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
-            .or_default()
-            .push((row.get(4)?, row.get(5)?));
+        let key: Key = (row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?);
+        let period: (Option<String>, Option<String>) = (row.get(4)?, row.get(5)?);
+        if row.get(6)? {
+            one.entry((key.0, key.1, key.3.clone()))
+                .or_default()
+                .entry(key.2.clone())
+                .or_default()
+                .push(period.clone());
+        }
+        held.entry(key).or_default().push(period);
     }
+    let mut beside = conn.prepare(&format!(
+        "SELECT {}",
+        held::delivered("?1", "?2", "?3", "?4", "?5")
+    ))?;
     let request = years.map(|(lo, hi)| (format!("{lo:04}-01-01"), format!("{hi:04}-12-31")));
     let request = request.as_ref().map(|(lo, hi)| (lo.as_str(), hi.as_str()));
     let mut out = Vec::new();
@@ -486,22 +501,30 @@ fn held_clip(
         let Some(canonical) = rep.canonical.clone() else {
             continue;
         };
-        let key = (
-            rep.variable_id,
-            rep.variant_id,
-            canonical,
-            rep.row.period_scope.clone(),
-        );
-        let Some(periods) = held.get(&key) else {
+        let scope = rep.row.period_scope.clone();
+        let (variable, variant) = (rep.variable_id, rep.variant_id);
+        let mut periods: held::Periods = held
+            .get(&(variable, variant, canonical.clone(), scope.clone()))
+            .cloned()
+            .unwrap_or_default();
+        for (own, own_periods) in one.get(&(variable, variant, scope)).into_iter().flatten() {
+            let (from, to) = (&rep.row.valid_from, &rep.row.valid_to);
+            if *own != canonical
+                && !beside.query_row(params![variable, variant, own, from, to], |row| row.get(0))?
+            {
+                periods.extend(own_periods.iter().cloned());
+            }
+        }
+        if periods.is_empty() {
             continue;
-        };
+        }
         let (Some(from), Some(to)) = (rep.row.valid_from.as_deref(), rep.row.valid_to.as_deref())
         else {
             // Year-independent: held when any table of its scope maps it.
             out.push(rep);
             continue;
         };
-        for (lo, hi) in held::clip(periods, (from, to), request) {
+        for (lo, hi) in held::clip(&periods, (from, to), request) {
             let mut piece = rep.clone();
             piece.row.valid_from = Some(lo);
             piece.row.valid_to = Some(hi);

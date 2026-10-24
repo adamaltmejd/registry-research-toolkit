@@ -13,7 +13,7 @@ import sqlite3
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Literal
 
-from reg_meta_build.derive.browse import HELD_HI, HELD_LO, browse_scopes
+from reg_meta_build.derive.browse import HELD_HI, HELD_LO, browse_scopes, serves
 from reg_meta_build.derive.states import named_rows, register_catalog_udfs
 
 if TYPE_CHECKING:
@@ -64,7 +64,7 @@ def scope_predicate(
     if variant_sql is not None:
         member += f" AND hm.variant_id = {variant_sql}"
     if representation_sql is not None:
-        member += f" AND hm.representation_canonical = {representation_sql}"
+        member += f" AND {serves(representation_sql)}"
     if period_scope_sql is not None:
         member += f" AND ht.scope = {period_scope_sql}"
     if bounds_sql is not None:

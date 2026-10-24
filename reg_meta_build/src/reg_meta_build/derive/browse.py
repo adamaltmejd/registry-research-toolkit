@@ -31,6 +31,57 @@ type Scope = Literal["reference", "holdings"]
 # period, inside one segment of the edition.
 HELD_LO = "COALESCE(hm.member_lo, hm.window_lo, hp.lo)"
 HELD_HI = "COALESCE(hm.member_hi, hm.window_hi, hp.hi)"
+# Mapping `hm` (of column `hc`) is its table's one representation of its
+# (variable, variant). Possession is physical: such a table holds the variable under
+# every spelling SCB gave its column where SCB did not deliver the mapped spelling
+# beside it, so a per-year rename never subtracts held years (`Doda_20241231`'s
+# `DodDatum` over SCB's 1998-2023 `DodDat`). The reader's `held::ONE_REPRESENTATION`,
+# `held::delivered` and `held::serves` hold the same rule.
+ONE_REPRESENTATION = (
+    "NOT EXISTS (SELECT 1 FROM holding_column sc "
+    "JOIN holding_mapping sm USING(column_id) WHERE sc.table_id = hc.table_id "
+    "AND sm.variable_id = hm.variable_id AND sm.variant_id = hm.variant_id "
+    "AND sm.representation_canonical != hm.representation_canonical)"
+)
+
+
+def delivered(variable: str, variant: str, rep: str, lo: str, hi: str) -> str:
+    """SQL: `variable` delivers representation `rep` at `variant` over `lo..hi`
+    (both NULL for a year-independent representation)."""
+    return (
+        f"EXISTS (SELECT 1 FROM expanded_state sr WHERE sr.variable_id = {variable} "
+        f"AND sr.register_variant_id = {variant} AND sr.canonical_column = {rep} "
+        f"AND ((sr.valid_from IS NULL AND {lo} IS NULL) "
+        f"OR (sr.valid_from <= {hi} AND sr.valid_to >= {lo})))"
+    )
+
+
+def serves(rep: str) -> str:
+    """SQL: mapping `hm` serves `rep`, a canonical spelling of its variable, at any
+    time: its own, or, as its table's `ONE_REPRESENTATION`, one with a state or
+    window the mapping holds that its own spelling is not delivered beside."""
+    beside = delivered(
+        "hm.variable_id",
+        "hm.variant_id",
+        "hm.representation_canonical",
+        "se.valid_from",
+        "se.valid_to",
+    )
+    return (
+        f"(hm.representation_canonical = {rep} OR ({rep} IS NOT NULL AND "
+        f"{ONE_REPRESENTATION} AND EXISTS (SELECT 1 FROM expanded_state se "
+        "WHERE se.variable_id = hm.variable_id "
+        f"AND se.register_variant_id = hm.variant_id AND se.canonical_column = {rep} "
+        f"AND NOT {beside} "
+        "AND CASE WHEN se.valid_from IS NULL "
+        "THEN (SELECT st.scope FROM holding_table st WHERE st.table_id = hc.table_id) "
+        "= 'year_independent' "
+        "ELSE EXISTS (SELECT 1 FROM holding_period sp WHERE sp.table_id = hc.table_id "
+        "AND se.valid_from <= COALESCE(hm.member_hi, hm.window_hi, sp.hi) "
+        "AND se.valid_to >= COALESCE(hm.member_lo, hm.window_lo, sp.lo)) END)))"
+    )
+
+
 # (scope, variable_id, register_variant_id, column, period_scope, state_count,
 # windows as (valid_from, valid_to) in order)
 type BrowseRow = tuple[str, int, int, str | None, str, int, tuple[tuple[str, str], ...]]
@@ -288,9 +339,12 @@ def _held_deliveries(
         for key, columns in stated.items()
     }
     physical: dict[tuple[int, int, str, str], list[tuple[str, str]]] = {}
+    # A table's one representation, by (variable, variant, scope), then spelling:
+    # it also serves a spelling its own is not delivered beside.
+    one: dict[tuple[int, int, str], dict[str, list[tuple[str, str]]]] = {}
     for row in conn.execute(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, "
-        f"ht.scope, {HELD_LO}, {HELD_HI} "
+        f"ht.scope, {HELD_LO}, {HELD_HI}, {ONE_REPRESENTATION} "
         "FROM holding_mapping hm "
         "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
         "JOIN provider p USING(provider_id) JOIN holding_column hc USING(column_id) "
@@ -299,9 +353,16 @@ def _held_deliveries(
         params,
     ):
         intervals = physical.setdefault(tuple(row[:4]), [])
+        own = (
+            one.setdefault((row[0], row[1], row[3]), {}).setdefault(row[2], [])
+            if row[6]
+            else []
+        )
         if row[4] is not None:
             intervals.append((row[4], row[5]))
+            own.append((row[4], row[5]))
     physical = {key: list(merge(intervals)) for key, intervals in physical.items()}
+    beside_sql = "SELECT " + delivered("?1", "?2", "?3", "?4", "?5")
     groups: dict[tuple[str, str, str, str], list[tuple[str, str] | None]] = {}
     for row in rows:
         variable_id, variant_id = row["variable_id"], row["register_variant_id"]
@@ -319,7 +380,17 @@ def _held_deliveries(
                 continue
             column = spellings[(variable_id, variant_id)].get(column.lower(), column)
             key = (variable_id, variant_id, column, row["period_scope"])
-            if key not in physical:
+            served = [
+                intervals
+                for own, intervals in one.get(key[:2] + key[3:], {}).items()
+                if own != column
+                and not conn.execute(
+                    beside_sql, (variable_id, variant_id, own, lo, hi)
+                ).fetchone()[0]
+            ]
+            if key in physical:
+                served.append(physical[key])
+            if not served:
                 continue
             offered = (
                 [None]
@@ -327,7 +398,8 @@ def _held_deliveries(
                 else merge(
                     [
                         (max(lo, start), min(hi, end))
-                        for start, end in physical[key]
+                        for intervals in served
+                        for start, end in intervals
                         if max(lo, start) <= min(hi, end)
                     ]
                 )

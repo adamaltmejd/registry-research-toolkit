@@ -25,6 +25,75 @@ pub(crate) struct Narrow<'a> {
 pub(crate) const HELD_LO: &str = "COALESCE(hm.member_lo, hm.window_lo, hp.lo)";
 pub(crate) const HELD_HI: &str = "COALESCE(hm.member_hi, hm.window_hi, hp.hi)";
 
+/// Whether mapping `hm` (of column `hc`) is its table's one representation of its
+/// `(variable, variant)`. Possession is physical: such a table holds the variable
+/// under every spelling SCB gave its column where SCB did not deliver the mapped
+/// spelling beside it ([`serves`]), so a per-year rename never subtracts held years
+/// (`Doda_20241231`'s `DodDatum` over SCB's 1998–2023 `DodDat`).
+// simplify: the builder's one-to-one rule still compares spellings, so a second
+// table mapping another spelling over a year this one serves by its fallback
+// would serve that cell twice. None does on SWECOV (2026-10-24); check it in
+// `holdings_compile` against `expanded_state` once a steward inventory has one.
+pub(crate) const ONE_REPRESENTATION: &str = "NOT EXISTS (SELECT 1 FROM holding_column sc \
+     JOIN holding_mapping sm USING(column_id) WHERE sc.table_id = hc.table_id \
+     AND sm.variable_id = hm.variable_id AND sm.variant_id = hm.variant_id \
+     AND sm.representation_canonical != hm.representation_canonical)";
+
+/// Whether `variable` delivers the representation `rep` at `variant` over the bounds
+/// `lo..hi` (SQL expressions; both NULL for a year-independent representation).
+pub(crate) fn delivered(variable: &str, variant: &str, rep: &str, lo: &str, hi: &str) -> String {
+    format!(
+        "EXISTS (SELECT 1 FROM expanded_state sr WHERE sr.variable_id = {variable} \
+         AND sr.register_variant_id = {variant} AND sr.canonical_column = {rep} \
+         AND ((sr.valid_from IS NULL AND {lo} IS NULL) \
+         OR (sr.valid_from <= {hi} AND sr.valid_to >= {lo})))"
+    )
+}
+
+/// Whether the variable delivers mapping `hm`'s own representation over `lo..hi`.
+fn delivered_beside(lo: &str, hi: &str) -> String {
+    delivered(
+        "hm.variable_id",
+        "hm.variant_id",
+        "hm.representation_canonical",
+        lo,
+        hi,
+    )
+}
+
+/// Whether mapping `hm` (of column `hc`) serves the representation `rep` (an SQL
+/// expression naming one of its variable's canonical spellings at its variant)
+/// over that representation's bounds `lo..hi`: its own, or, as its table's
+/// [`ONE_REPRESENTATION`], one SCB did not deliver its own spelling beside. Where
+/// both are delivered, sibling columns side by side, the spelling chooses the column.
+pub(crate) fn serves_at(rep: &str, lo: &str, hi: &str) -> String {
+    format!(
+        "(hm.representation_canonical = {rep} OR ({rep} IS NOT NULL \
+         AND {ONE_REPRESENTATION} AND NOT {}))",
+        delivered_beside(lo, hi)
+    )
+}
+
+/// [`serves_at`] at any time: `rep` has a state or window the mapping holds (a dated
+/// one over its held periods, a year-independent one in a year-independent table)
+/// that it serves. A read that clips to held periods uses [`serves_at`] per
+/// representation instead.
+pub(crate) fn serves(rep: &str) -> String {
+    format!(
+        "(hm.representation_canonical = {rep} OR ({rep} IS NOT NULL AND {ONE_REPRESENTATION} \
+         AND EXISTS (SELECT 1 FROM expanded_state se WHERE se.variable_id = hm.variable_id \
+         AND se.register_variant_id = hm.variant_id AND se.canonical_column = {rep} \
+         AND NOT {} \
+         AND CASE WHEN se.valid_from IS NULL \
+         THEN (SELECT st.scope FROM holding_table st WHERE st.table_id = hc.table_id) \
+         = 'year_independent' \
+         ELSE EXISTS (SELECT 1 FROM holding_period sp WHERE sp.table_id = hc.table_id \
+         AND se.valid_from <= COALESCE(hm.member_hi, hm.window_hi, sp.hi) \
+         AND se.valid_to >= COALESCE(hm.member_lo, hm.window_lo, sp.lo)) END)))",
+        delivered_beside("se.valid_from", "se.valid_to")
+    )
+}
+
 fn held(source: &str, anchor: &str, narrow: Narrow) -> String {
     let mut sql = format!(
         "EXISTS (SELECT 1 FROM {source} JOIN holding_column hc USING(column_id) \
@@ -43,17 +112,16 @@ fn held(source: &str, anchor: &str, narrow: Narrow) -> String {
         write!(sql, " AND hm.variant_id = {variant}").expect("write to String");
     }
     if let Some(column) = narrow.column {
-        // Today's `py_catalog_column` equality: a mapping's canonical
-        // representation is its resolver-emitted spelling (`holdings_compile`), so
-        // the column holds it exactly when the column's identity fold names it.
-        write!(
-            sql,
-            " AND hm.representation_canonical = (SELECT rc.delivery_column_name \
+        // A mapping's canonical representation is its resolver-emitted spelling
+        // (`holdings_compile`), so the column's identity fold names the
+        // representation it must serve.
+        let rep = format!(
+            "(SELECT rc.delivery_column_name \
              FROM resolver_column rc WHERE rc.variable_id = hm.variable_id \
              AND rc.register_variant_id = hm.variant_id \
              AND rc.delivery_column_lower = fold_identity({column}))"
-        )
-        .expect("write to String");
+        );
+        write!(sql, " AND {}", serves(&rep)).expect("write to String");
     }
     sql + ")"
 }
