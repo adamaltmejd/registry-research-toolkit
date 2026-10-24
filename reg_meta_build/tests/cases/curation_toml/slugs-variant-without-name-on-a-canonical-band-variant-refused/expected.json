@@ -1,0 +1,12 @@
+{
+  "loader": "slug_dir",
+  "note": "A canonical-band RegVarID under an exported SCB register declares a variant the export lacks (#1855), and no source supplies its name. Beside the allowed authored variant in build case errata-authored-variant-takes-a-donor-column-its-coding-and-a-holdings-mint.",
+  "fails_if": "the slug loader accepts a canonical-band variant without a curated `name`, so the authored variant would publish with no name",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/gdb.toml [[variant]] entry 2",
+    "message_contains": [
+      "a canonical-band RegVarID declares a variant the SCB export lacks, which needs a curated `name`"
+    ]
+  }
+}

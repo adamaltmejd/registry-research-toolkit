@@ -48,6 +48,7 @@ from .curation_tree import (
 from .fqid_slugs import (
     SlugEntry,
     _parse_variant_id,
+    authored_scb_variant,
     freeze_state,
     load_freeze_states,
     steward_register_pins,
@@ -3464,6 +3465,20 @@ def compile_native_naming(
     }
     bindings: dict[Any, list[LegacyNamingBinding]] = {key: [] for key in scope_map}
     subject_variant_keys: set[NativeKey] = set()
+    authored_variant_keys: set[NativeKey] = set()
+    authored_variants = {
+        int(register.register_info.native_id): authored
+        for register in tree.registers
+        if register.register_info.provider == "scb"
+        and register.register_info.native_id is not None
+        and (
+            authored := tuple(
+                variant
+                for variant in register.variant
+                if authored_scb_variant("scb", variant.native_id)
+            )
+        )
+    }
     for source in sorted({scope.source for scope in scopes}):
         wanted = {scope.register_key for scope in scopes if scope.source == source}
         for family_key, members in prepared.records.iter_naming_families(
@@ -3726,6 +3741,56 @@ def compile_native_naming(
                             target=target,
                         )
                         break
+            # An authored SCB variant (#1855) has no native row: it binds under
+            # its exported register, in that register's own scope.
+            if (
+                register_key is not None
+                and register_key[1:4] == ("scb", "register", "native-int")
+                and records
+                and register_key[-1] in authored_variants
+            ):
+                # The register's least ref anchors the variant, as it anchors
+                # the variant's errata. The naming projection has no refs: read
+                # the full slice of this one register.
+                naming_anchor = min(
+                    (
+                        record
+                        for _, members in prepared.records.iter_register_slices(
+                            source, (register_key,)
+                        )
+                        for record in members
+                    ),
+                    key=lambda record: str(record_ref(record)),
+                )
+                anchor_expectations = capture_expectations((naming_anchor,), fields=())
+                for variant in authored_variants[register_key[-1]]:
+                    authored_key = (
+                        *register_key,
+                        "variant",
+                        "native-int",
+                        _parse_variant_id(variant.native_id)[1],
+                    )
+                    authored_variant_keys.add(authored_key)
+                    parents["register_variant", authored_key] = LegacyNamingBinding(
+                        kind="register_variant",
+                        provider="scb",
+                        source_id=variant.native_id,
+                        target=NativeNamingTarget(
+                            kind="register_variant",
+                            provider="scb",
+                            source_key=authored_key,
+                            register_key=register_key,
+                            expectations=anchor_expectations,
+                            peer_guards=(
+                                PeerGuard(
+                                    guard_id=f"authored-variant:{variant.native_id}",
+                                    source=naming_anchor.source,
+                                    native=naming_anchor.subject.native,
+                                    expected_members=(record_ref(naming_anchor),),
+                                ),
+                            ),
+                        ),
+                    )
             bindings[scope_key].extend(parents.values())
     compiled_names = {}
     compiled_refused = {}
@@ -3909,6 +3974,7 @@ def compile_native_naming(
             if target.kind != "register_variant" or (
                 target.source_key[-2:] != ("variant", "not-applicable")
                 and target.source_key not in subject_variant_keys
+                and target.source_key not in authored_variant_keys
             ):
                 continue
             slug = declaration.naming.slug
@@ -3922,6 +3988,8 @@ def compile_native_naming(
                             "slug": slug,
                             "name": "_default"
                             if target.source_key[-1] == "not-applicable"
+                            else declaration.naming.name
+                            if target.source_key in authored_variant_keys
                             else target.source_key[-1],
                             "description": declaration.naming.description,
                             "display_group": declaration.naming.display_group,
@@ -7022,6 +7090,10 @@ def compile_errata(
             register.errata.version
             or register.errata.delivered
             or register.errata.column
+            or any(
+                authored_scb_variant("scb", variant.native_id)
+                for variant in register.variant
+            )
         ):
             continue
         native_id = register.register_info.native_id
@@ -7044,15 +7116,27 @@ def compile_errata(
             )
         by_variant: dict[int, tuple[SourceRecord, ...]] = {}
         variant_ids: dict[str, int] = {}
+        authored: set[int] = set()
+        fed: set[int] = set()
+        tried: dict[int, set[str]] = {}
         for variant in register.variant:
             parsed = _parse_variant_id(variant.native_id)
             if len(parsed) == 3:
                 continue  # Errata targets native records before edition rebind.
             _, variant_id = parsed
             variant_ids[variant.slug] = variant_id
+            if authored_scb_variant("scb", variant.native_id):
+                authored.add(variant_id)
             by_variant[variant_id] = tuple(
                 r for r in records if r.subject.native.register_variant_id == variant_id
             )
+        # An authored variant (#1855) has no records; the register's least ref
+        # anchors it, independent of delivery row order.
+        anchor = (
+            min(records, key=lambda record: str(record_ref(record)))
+            if records and authored
+            else None
+        )
         bound_editions = {}
         for variant_id, members in by_variant.items():
             if members:
@@ -7060,6 +7144,16 @@ def compile_errata(
                     members,
                     tuple(versions.get(variant_id, ())),
                     source_file=register.source_file,
+                )
+            elif variant_id in authored and anchor is not None:
+                register_key = source_register_key(anchor)
+                assert register_key is not None
+                bound_editions[variant_id] = edition_bindings(
+                    (),
+                    tuple(versions.get(variant_id, ())),
+                    source_file=register.source_file,
+                    anchor=anchor,
+                    variant_key=(*register_key, "variant", "native-int", variant_id),
                 )
         moved_editions = {}
         for split in register.identity.edition_split:
@@ -7136,9 +7230,10 @@ def compile_errata(
                         )
                     continue
                 variant_id = variant_ids[row.variant]
+                tried.setdefault(variant_id, set()).add(case_id)
                 members = by_variant.get(variant_id, ())
                 editions = bound_editions.get(variant_id, ())
-                if not members:
+                if not members and variant_id not in authored:
                     blockers = ("no native variant records",)
                     converted = None
                 elif missing := sorted(
@@ -7198,7 +7293,11 @@ def compile_errata(
                     context = variant_contexts.get(variant_id)
                     if context is None:
                         context = ErrataVariantContext(
-                            members, register_id, variant_id, editions
+                            members,
+                            register_id,
+                            variant_id,
+                            editions,
+                            anchor if variant_id in authored else None,
                         )
                         variant_contexts[variant_id] = context
                     if table == "delivered":
@@ -7341,8 +7440,10 @@ def compile_errata(
                         pin := acknowledgement_evidence_sha256(
                             context.records_for_refs(set(result.evidence_refs))
                             + (
+                                # An authored target's register anchor can
+                                # be a donor record too: count it once.
                                 donor_context.records_for_refs(
-                                    set(result.evidence_refs)
+                                    set(result.evidence_refs) - set(context.by_ref)
                                 )
                                 if donor_context is not None
                                 else ()
@@ -7590,8 +7691,8 @@ def compile_errata(
                         fold_column(row.column),
                     )
                     if variable_key not in naming[scope_key]:
-                        anchor = members[0]
-                        ref = record_ref(anchor)
+                        naming_anchor = context.anchor or members[0]
+                        ref = record_ref(naming_anchor)
                         source_id = f"{register_id}.{row.column}"
                         slug, contributors = accepted_names[source_id]
                         naming[scope_key][variable_key] = NamingDeclaration(
@@ -7600,12 +7701,14 @@ def compile_errata(
                                 provider="scb",
                                 source_key=variable_key,
                                 register_key=register_key,
-                                expectations=capture_expectations((anchor,), fields=()),
+                                expectations=capture_expectations(
+                                    (naming_anchor,), fields=()
+                                ),
                                 peer_guards=(
                                     PeerGuard(
                                         guard_id=f"{case_id}:naming-anchor",
-                                        source=anchor.source,
-                                        native=anchor.subject.native,
+                                        source=naming_anchor.source,
+                                        native=naming_anchor.subject.native,
                                         expected_members=(ref,),
                                     ),
                                 ),
@@ -7621,6 +7724,31 @@ def compile_errata(
                         keys[scope_key][variable_key] = row.column
                 cases[scope_key].append(converted)
                 statuses["entries_matched"].append(case_id)
+                fed.add(variant_id)
+        # An authored variant (#1855) has no native rows: its states come only
+        # from the errata above. Without one it would ship as an empty public
+        # variant, so refuse it. simplify: this proves an entry converted onto
+        # the variant, not that formation kept its states; check the built
+        # variant if a converted addition is ever withheld downstream.
+        if anchor is not None and (empty := authored - fed):
+            slug, variant_id = min(
+                (slug, vid) for slug, vid in variant_ids.items() if vid in empty
+            )
+            blocked = sorted(
+                diagnostic.detail
+                for diagnostic in diagnostics
+                if diagnostic.case_id in tried.get(variant_id, ())
+            )
+            raise curation_error(
+                "authored_variant_without_state",
+                f"{register.source_file}: authored variant {slug!r} receives no "
+                "state, so it would ship as an empty public variant: no "
+                "[[errata.column]] or [[errata.delivered]] entry converted onto it"
+                + (f" ({'; '.join(blocked)})" if blocked else "")
+                + ".",
+                "Fix or add an errata entry that delivers a column onto the "
+                "variant, or remove the [[variant]].",
+            )
     return (
         {key: tuple(value) for key, value in cases.items()},
         {

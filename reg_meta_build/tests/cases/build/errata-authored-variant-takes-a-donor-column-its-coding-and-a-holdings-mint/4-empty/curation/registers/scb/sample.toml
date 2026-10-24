@@ -1,0 +1,41 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[variant]]
+native_id = "1.2"
+slug = "addresses"
+
+# Authored: SCB delivers the register at person grain, and its export has no
+# such variant. 3126028902301415265 = mint_canonical_scb("scb", "1", "people").
+[[variant]]
+native_id = "1.3126028902301415265"
+slug = "people"
+name = "People"
+description = "One row per person and delivery."
+
+[variable]
+"1.5" = "value"
+
+[[errata.version]]
+variant = "people"
+name = "2022"
+evidence = "Synthetic person-grain delivery"
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "people"
+name = "2023"
+evidence = "Synthetic person-grain delivery"
+noted = "2026-10-24"
+
+[[errata.delivered]]
+variant = "people"
+donor_variant = "addresses"
+donor_coding = true
+column = "VALUE"
+versions = ["2023"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:101}}
+evidence = "Synthetic person-grain delivery"
+noted = "2026-10-24"

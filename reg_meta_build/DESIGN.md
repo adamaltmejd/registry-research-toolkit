@@ -556,7 +556,10 @@ The target layout:
   tool, not curation. Enrichment is register-scoped curation in each register file. The
   concept-group generator treats a matching literal register `[[group]]` as an already
   accepted family; accepted families have one record, in their register file.
-- SWECOV steward holdings belong to the steward layer, not to global SCB errata.
+- A fact only SWECOV's holdings establish belongs to the steward layer, not to global
+  SCB errata. A delivery-grain fact that holds for every recipient of an SCB register is
+  global, even when SWECOV's holdings are its evidence: it is SCB errata, on an authored
+  variant when the export lacks the grain (#1855).
 
 The register tree is loaded once as strict Pydantic models. A register's provider, slug,
 and native id agree with its path. Unknown tables, unknown fields, duplicate
@@ -579,6 +582,29 @@ parent's Registervariantbeskrivning, so what the split is (a survey wave, a half
 school-year line) and what stays unverified about it belongs in the split variant's
 curated `[[variant]] description`, which replaces the inherited text, rather than in a
 warning repeated on every state (#1708).
+
+An authored SCB variant (#1855) is one SCB delivers but its Registerinformation export
+has no row for: GDB reaches every recipient at person, workplace or school grain, while
+the export documents only address and property variants. Its register file declares it
+as a `[[variant]]` whose RegVarID is in the canonical-SCB band (`mint_canonical_scb`, no
+exported RegVarID reaches it) and whose curated `name` the source cannot supply; the
+slug loader refuses a `name` on any other variant and a canonical-band variant without
+one. It forms in its exported register's own scope, keyed like a native variant, so its
+states join the register's native variables: a donor-delivered DeSO is the documented
+DeSO variable. A separate source (a `scb_canonical/` declaration attaching the variant)
+cannot do this: variables and variants form per prepared source scope, and native keys
+carry their source, so the documented variable could not take states on a variant
+another source declares. The variant has no records. Its `[[errata.version]]` editions,
+`[[errata.column]]` mints and naming are anchored on the register's least ref, which
+establishes the native register coordinate only, as an undated mint's anchor establishes
+its variant's; `[[errata.delivered]]` with `donor_variant` supplies its documented
+columns. It has no native edition, so every edition it delivers is an
+`[[errata.version]]`. A new export record that sorts before the current least ref moves
+the anchor, and every acknowledgement digest citing it goes stale together; that is
+accepted, as it is for a native variant's least ref. Its states come only from errata,
+so a build where no `[[errata.column]]` or `[[errata.delivered]]` entry converts onto it
+refuses it (`authored_variant_without_state`) rather than publish an empty variant. The
+check stops at conversion: it does not prove formation keeps the converted states.
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
 reviewed native family, including blank columns, every source field, parent fact and
@@ -660,13 +686,20 @@ an inferred one. `[[errata.delivered]]` carries `variant`, literal `column`, exi
 rows for a column documented elsewhere on the variant and names edition tokens verbatim.
 Optional `donor_variant` names a different variant of the same register: identity and
 digest come from its documented column, while added states use the target variant’s
-edition tokens and retain the native owner. This requires the column to be undocumented
-on the target; an anchored additional physical delivery (with optional `data_type`)
-keeps existing target siblings and guards and digests the complete native family on both
-donor and target variants. The native-variable anchor selects one documented identity
-when the same column literal belongs to multiple variables in the variant's history. An
-anchor must occur under that column; without one, the column must identify exactly one
-variable across the complete variant history. The required evidence digest
+edition tokens and retain the native owner. With `donor_coding = true` (#1855), each
+added edition the donor documents under the same edition name carries the donor row's
+coding there: the addition names that row as its checked donor and copies its coding
+declarations, and the evidence digest already covers the row. An edition the donor does
+not document stays uncoded with its `missing_coding_period`, as long as at least one
+requested edition matches; when none does, the flag would copy nothing and the entry is
+stale (`donor_coding_unmatched`). Two donor rows at one edition make the entry
+over-broad (`ambiguous_donor_coding`). This requires the column to be undocumented on
+the target; an anchored additional physical delivery (with optional `data_type`) keeps
+existing target siblings and guards and digests the complete native family on both donor
+and target variants. The native-variable anchor selects one documented identity when the
+same column literal belongs to multiple variables in the variant's history. An anchor
+must occur under that column; without one, the column must identify exactly one variable
+across the complete variant history. The required evidence digest
 (`acknowledgement_evidence_sha256`) covers the full originals the entry relies on: every
 documented row of the column, the native rows it rewrites or keeps beside its additions,
 and, for an additional physical column, the complete native family. It leaves out the

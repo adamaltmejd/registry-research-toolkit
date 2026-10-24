@@ -1,0 +1,12 @@
+{
+  "loader": "slug_dir",
+  "note": "A curated `name` declares an SCB variant the export lacks (#1855), whose RegVarID is in the canonical-SCB band. Beside the allowed authored variant in build case errata-authored-variant-takes-a-donor-column-its-coding-and-a-holdings-mint.",
+  "fails_if": "the slug loader accepts a curated name on a variant with an exported (low-band) RegVarID, where the build would silently ignore it",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/gdb.toml [[variant]] entry 2",
+    "message_contains": [
+      "only an SCB variant the export lacks takes a curated `name`"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "note": "Beside step 1: people's only errata entry is step 2's blocked donor_coding entry and there is no PID mint, so nothing converts onto the authored variant. The build refuses it rather than publish an empty variant.",
+  "fails_if": "compile_errata (curation_compile.py) stops refusing an authored variant no errata entry converted onto, so people ships with no states",
+  "sources": {
+    "description": "Register 1, variant 2 documents VALUE (variable 5, CVID 101) in 2022 with code list 01 One.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 101,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": [
+        "list|1|01|One|101|7001"
+      ]
+    }
+  }
+}
