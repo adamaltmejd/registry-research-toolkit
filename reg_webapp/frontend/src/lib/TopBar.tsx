@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Autocomplete, Input, SearchField } from "react-aria-components";
 import { flushSync } from "react-dom";
 import type { Steward } from "./api";
@@ -101,7 +101,12 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
 
   // ⌘K on macOS, Ctrl+K elsewhere, opens the palette from anywhere, seeded with
   // the bar's text; Shift+⌘K is a different chord. Focus moves to the bar first,
-  // so closing the palette returns it there.
+  // so closing the palette returns it there. With the palette already open it
+  // only refocuses, keeping the filter a chosen row restores.
+  const onCommandK = useEffectEvent(() => {
+    openSearch();
+    if (!palette) openPalette();
+  });
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() !== "k" || event.altKey || event.shiftKey) {
@@ -109,8 +114,7 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
       }
       if ((event.metaKey && mac) || (event.ctrlKey && !mac)) {
         event.preventDefault();
-        openSearch();
-        openPalette();
+        onCommandK();
       }
     };
     window.addEventListener("keydown", onKey);
