@@ -1155,7 +1155,7 @@ noted = "2026-10-24"
 # the same rows the #1603 entries on the donor variants pinned.
 
 [[errata.delivered]]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively."
+data_warning = "DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively."
 variant = "individer"
 donor_variant = "adresser-fastigheter"
 donor_coding = true
@@ -1167,7 +1167,7 @@ evidence = "SWECOV holds DeSO in its person-grain GDB tables for table years 199
 noted = "2026-10-24"
 
 [[errata.delivered]]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively. The workplace tables are coded on year Y+1's municipality division."
+data_warning = "DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively. The workplace tables are coded on year Y+1's municipality division."
 variant = "arbetsstallen"
 donor_variant = "adresser-fastigheter"
 donor_coding = true
@@ -1179,7 +1179,7 @@ evidence = "SWECOV holds DeSO in its workplace-grain GDB tables for table years 
 noted = "2026-10-24"
 
 [[errata.delivered]]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively."
+data_warning = "DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively."
 variant = "skolor"
 donor_variant = "adresser-fastigheter"
 donor_coding = true
@@ -1191,7 +1191,6 @@ evidence = "SWECOV holds DeSO in its school-grain GDB tables for table years 199
 noted = "2026-10-24"
 
 [[errata.delivered]]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 variant = "skolor"
 donor_variant = "fastigheter"
 donor_coding = true
@@ -1203,7 +1202,6 @@ evidence = "SWECOV holds Kommun in its school-grain GDB tables for table years 1
 noted = "2026-10-24"
 
 [[errata.delivered]]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 variant = "skolor"
 donor_variant = "adresser-fastigheter"
 donor_coding = true
