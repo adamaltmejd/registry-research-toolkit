@@ -1,0 +1,36 @@
+{
+  "replaces": [
+    "test_prepare_cases.py::_prepare_refusal"
+  ],
+  "fails_if": "`prepare_source_values` (prepared_values.py) wraps a SourceFormatError as PreparedValueError, so `prepare-sources` reports the SCB value-shape refusal as source_preparation_failed instead of its own scb_value_shape_unsupported",
+  "note": "The reachable SCB value-file refusal: one Vardemangder row whose version, level and code are the same unknown marker `New marker` (the input of cases/prepare/scb-values-unknown-type-marker-refused, which pins the code at the reader). The sibling case pins the same pass-through for scb_native_id_invalid; this one pins it for a refusal raised while the value files are prepared, which the generic wrap used to hide. The empty --curation-dir keeps the committed curation tree out of the case.",
+  "input_bundle": {
+    "scb": {
+      "registerinformation": [
+        {"cvid": 100, "var_id": 101, "colname": "VALUE"}
+      ],
+      "vardemangder": [
+        "New marker|New marker|New marker|Label|100|"
+      ],
+      "valid_dates": [
+        "5001|2000-01-01|2030-12-31",
+        "5003|2015-01-01|2030-12-31"
+      ]
+    }
+  },
+  "argv": [
+    "--output",
+    "{work}/located.json",
+    "prepare-sources",
+    "--input-bundle",
+    "{bundle}",
+    "--input-commit",
+    "{bundle_commit}",
+    "--input-manifest-sha256",
+    "{bundle_manifest}",
+    "--output-dir",
+    "{work}/candidate",
+    "--curation-dir",
+    "{work}/curation"
+  ]
+}
