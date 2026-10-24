@@ -1001,23 +1001,31 @@ aggregates) have no axes; their members are distinct classifications.
 **When a group is warranted.** One register has two or more variables that are each an
 amount (or a coding) of the same concept for some unit under some definition. A
 component the source names as part of the concept counts: SCB's "Delkomponent till
-disponibel inkomst" is the individual's share that sums to the family total. A quantity
-computed from the concept against something else (a cost, a median, a weight) and an
-input to the concept are separate concepts and stay out, whatever their names say. A
-lone variable gets no group; the builder withholds a group with fewer than two supported
-members.
+disponibel inkomst" is the individual's share that sums to the family total. So does a
+quantity computed from the concept: a ratio to the median, a median, a weight, a cost or
+a housing-adjusted remainder. A researcher looking for the concept should find these
+beside the amounts, so they join the group under the `matt` axis (below). An input to
+the concept stays out: gross income (`cbrutto`, `bruttoinkomst-familj`) goes into
+disposable income but is not a quantity of it, so it belongs to its own concept in the
+same register. A lone variable gets no group; the builder withholds a group with fewer
+than two supported members.
 
 **Narrower groups are absorbed.** A variable belongs to at most one group, so when the
 concept group is curated, any narrower group inside it (machine-folded or curated)
 becomes part of it rather than sitting beside it.
 
 **Axes come from what this register's members vary on.** Name each axis by the variation
-(`enhet`, `hushallsbegrepp`, `kapitalvinst`, `kalla`, and `definition` only where
-definitions coexist in the same years). Definition vintages that succeed one another are
-not an axis; they ride the period slider and `replaced_by`. Every member supplies every
-axis, with `na` where the axis does not apply. An axis that does not vary within the
-register is not declared, so the same concept can carry different axes in different
-registers.
+(`enhet`, `hushallsbegrepp`, `kapitalvinst`, `kalla`, `matt`, and `definition` only
+where definitions coexist in the same years). `matt` ("mått") says what kind of quantity
+the member is: `belopp` for the concept itself, otherwise `andel`, `median`, `vikt` or
+`justerat` (adjusted for a cost). It is a new axis because `enhet` already means the
+unit of observation (individual, family, consumption unit) and `kalla` the data source;
+neither covers "an amount of the concept" versus "something computed from it". A
+register declares `matt` only when it holds a computed member, as with any axis.
+Definition vintages that succeed one another are not an axis; they ride the period
+slider and `replaced_by`. Every member supplies every axis, with `na` where the axis
+does not apply. An axis that does not vary within the register is not declared, so the
+same concept can carry different axes in different registers.
 
 **Naming.** The key is the concept's slug, without unit, vintage or source qualifiers:
 `disponibel-inkomst`, not `disponibel-inkomst-familj-2004`. The label is the concept's
@@ -1070,21 +1078,27 @@ Each register below gets one `disponibel-inkomst` group.
 - **FASIT** has two machine-folded pairs, each a TRIF copy beside the FASIT-derived
   variable. The group absorbs both, adds the household, per-unit and
   alternating-residence variables, and declares a `kalla` axis (TRIF, FASIT). The weight
-  `bsockvh` ("Justeringsfaktor för disponibel inkomst") stays out.
+  `bsockvh` ("Justeringsfaktor för disponibel inkomst") is computed from the concept, so
+  it joins under `matt` = `vikt`.
 - **LINDA** has a machine-folded `delkomponent-disponibel-inkomst` group (12 source
   fields). The group absorbs it and adds `cdispl`, the 2004 component and the family
   total `cdisplh`.
 - **HEK** has none. The group takes the individual components, the household and family
   per-unit amounts and the variants excluding capital gains. Konsumtionsutrymme
-  (`cdisp3z`, `cdisp3pz`, `cdisp3kz`: disposable income minus housing cost) stays out,
-  and so do the inputs `cbrutto` and `bruttoinkomst-familj`.
+  (`cdisp3z`, `cdisp3pz`, `cdisp3kz`: disposable income minus housing cost) is computed
+  from the concept and joins under `matt` = `justerat`. The inputs `cbrutto` and
+  `bruttoinkomst-familj` stay out.
 
-HEK's housing-adjusted `CDISPBOZ` and `CDISPKENZ` are the borderline case. They are
-still amounts of disposable income under a stated adjustment, so they join under their
-own axis value. Barnregistret's `andel-av-median` names disposable income but is a ratio
-to the national median, so it stays out of that register's group. Cross-register
-discovery of disposable income goes through `income`, with one starred member per
-register.
+HEK's housing-adjusted `CDISPBOZ` and `CDISPKENZ` are still amounts of disposable income
+under a stated adjustment, so they join under their own axis value, `matt` = `justerat`,
+beside konsumtionsutrymme; the plain amounts carry `belopp`. Barnregistret's
+`andel-av-median` is a ratio to the national median, so it joins Barnregistret's own
+disposable-income group as `matt` = `andel`. It never joins another register's group:
+groups are single-register. Barnregistret's catalog entries hold no disposable-income
+amount beside it (`andelmediana` is its only computed sibling), so that group exists
+only if it reaches two supported members; otherwise the builder withholds it and the
+variable stays ungrouped. Cross-register discovery of disposable income goes through
+`income`, with one starred member per register.
 
 ## Relationship graph
 
