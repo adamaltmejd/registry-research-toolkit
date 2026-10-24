@@ -368,11 +368,10 @@ body {
 /* iOS Safari zooms the page into any text field under 16px it focuses, and
    stays zoomed: the page then reads as cut off on the left and scrolls sideways
    (the SWECOV report, 2026-10-24). Below the narrow breakpoint every text entry
-   is set at 1rem. The `:not()`s outrank a component's `font: inherit`. */
+   is set at 1rem. The `:not()`s outrank a component's `font: inherit`. The SPA
+   has no textarea or select; one would need the same rule. */
 @media (max-width: 48rem) {
-  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-  textarea,
-  select {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
     font-size: 1rem;
   }
 }

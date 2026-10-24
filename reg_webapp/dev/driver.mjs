@@ -823,6 +823,10 @@ async function browseSearchCase(page, _counts, shoot) {
     (await page.getByRole("searchbox").count()) === 1,
     "the open palette renders a search field of its own",
   );
+  // Past the popover's entry fade, so the shot shows it opaque.
+  await page.waitForFunction(() => !document.querySelector("[data-entering]"), null, {
+    timeout: 5000,
+  });
   await shoot("browse-search-palette");
   await search.press("Escape");
   await page.getByRole("menu").waitFor({ state: "detached" });
@@ -834,13 +838,24 @@ async function browseSearchCase(page, _counts, shoot) {
   // Focus off the field: the page's heading, then Escape.
   await page.getByRole("heading", { level: 1, name: "LISA" }).click();
   await page.keyboard.press("Escape");
+  // Below the breakpoint the emptied field is folded away (display: none).
+  const searchAnyState = page.getByRole("searchbox", {
+    name: /^Search registers/,
+    includeHidden: true,
+  });
   check(
-    (await search.inputValue()) === "",
+    (await searchAnyState.inputValue()) === "",
     "Escape with focus on the page left the search text in place",
   );
   if (treeShown) {
     await scb.waitFor();
   } else {
+    // The emptied field folds back behind its button: left unfolded, the
+    // header keeps an empty field and loses the logo and the button.
+    check(
+      await page.getByRole("button", { name: /^Search registers/ }).isVisible(),
+      "Escape on the page cleared the search but left the narrow field unfolded",
+    );
     await page.getByRole("link", { name: "Browse registers" }).click();
     await page.getByRole("row", { name: "LISA", exact: true }).waitFor();
   }

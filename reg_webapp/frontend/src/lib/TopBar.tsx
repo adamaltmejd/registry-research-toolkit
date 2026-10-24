@@ -130,6 +130,8 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
         return;
       }
       browseFilter.set("");
+      // Focus is elsewhere, so the emptied field folds too.
+      setOpened(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -221,7 +223,12 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
           </SearchField>
           <CommandPalette
             isOpen={palette}
-            onOpenChange={setPalette}
+            onOpenChange={(open) => {
+              setPalette(open);
+              // Closed from outside the field (a press elsewhere, a row's
+              // action, a scroll): an empty field folds with it.
+              if (!open && filter === "") setOpened(false);
+            }}
             triggerRef={field}
             text={filter}
           />
