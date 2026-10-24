@@ -417,7 +417,7 @@ source = { editable = "crates/reg-core-py" }
 
 [[package]]
 name = "reg-meta-build"
-version = "0.48.0"
+version = "0.49.0"
 source = { editable = "reg_meta_build" }
 dependencies = [
     { name = "openpyxl" },
