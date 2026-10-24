@@ -599,7 +599,12 @@ another source declares. The variant has no records. Its `[[errata.version]]` ed
 establishes the native register coordinate only, as an undated mint's anchor establishes
 its variant's; `[[errata.delivered]]` with `donor_variant` supplies its documented
 columns. It has no native edition, so every edition it delivers is an
-`[[errata.version]]`.
+`[[errata.version]]`. A new export record that sorts before the current least ref moves
+the anchor, and every acknowledgement digest citing it goes stale together; that is
+accepted, as it is for a native variant's least ref. Its states come only from errata,
+so a build where no `[[errata.column]]` or `[[errata.delivered]]` entry converts onto it
+refuses it (`authored_variant_without_state`) rather than publish an empty variant. The
+check stops at conversion: it does not prove formation keeps the converted states.
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
 reviewed native family, including blank columns, every source field, parent fact and
@@ -685,9 +690,11 @@ edition tokens and retain the native owner. With `donor_coding = true` (#1855), 
 added edition the donor documents under the same edition name carries the donor row's
 coding there: the addition names that row as its checked donor and copies its coding
 declarations, and the evidence digest already covers the row. An edition the donor does
-not document stays uncoded with its `missing_coding_period`, and two donor rows at one
-edition make the entry over-broad. This requires the column to be undocumented on the
-target; an anchored additional physical delivery (with optional `data_type`) keeps
+not document stays uncoded with its `missing_coding_period`, as long as at least one
+requested edition matches; when none does, the flag would copy nothing and the entry is
+stale (`donor_coding_unmatched`). Two donor rows at one edition make the entry
+over-broad (`ambiguous_donor_coding`). This requires the column to be undocumented on
+the target; an anchored additional physical delivery (with optional `data_type`) keeps
 existing target siblings and guards and digests the complete native family on both donor
 and target variants. The native-variable anchor selects one documented identity when the
 same column literal belongs to multiple variables in the variant's history. An anchor
@@ -1804,14 +1811,21 @@ columns, and compare the two columns' shapes within each edition that delivers b
 shape one owner delivers in an edition the other never shares does not dispute the pair
 (#1783). The guard holds for the group, not only the edge: when foldable sibling edges
 through a third owner would join a code and its label, the label owner's sibling edges
-are dropped, so the code keeps its own folds (#1760). Its scope is the code/label pairs
-whose two owners share one native family, read per family; a code and its label in
-different families that a third owner bridges are not seen. Declared pairs and curated
-groups are not pruned: they are explicit. Only a declared `[[code_label_pair]]` puts a
-code and its label in one group. `_code_label_key` strips the election prefix from both
-sides, so a code of one election kind could pair with a label of another
-(`LT_valkretskod` beside `RI_valkretsnamn`); no instance exists today, and the shape and
-coding guards fail it safe. A curated group needs at least two members.
+are dropped, so the code keeps its own folds (#1760). A shape-disputed pair, a plain
+`shape_conflict` or an unresolved one (`ambiguous_sibling_shape`), is kept apart the
+same way (#1885). It has no code side to keep, so of the disputed pairs a group would
+join, the owner on the most of them loses its sibling edges, recounted after each drop:
+one text column disputed with several numeric siblings leaves, and its siblings keep
+their group; on a tie the lexically last leaves. (Within one family a tie in disputes is
+a tie in foldable edges too, so no edge-count tie-break could decide.) A dispute between
+two separate groups prunes nothing. The code/label scope is the pairs whose two owners
+share one native family, read per family; a code and its label in different families
+that a third owner bridges are not seen. Declared pairs and curated groups are not
+pruned: they are explicit. Only a declared `[[code_label_pair]]` puts a code and its
+label in one group. `_code_label_key` strips the election prefix from both sides, so a
+code of one election kind could pair with a label of another (`LT_valkretskod` beside
+`RI_valkretsnamn`); no instance exists today, and the shape and coding guards fail it
+safe. A curated group needs at least two members.
 
 Classification succession combines explicit edges with the accepted guarded edition
 rule. Only adjacent recognized editions with matching year-stripped names qualify.

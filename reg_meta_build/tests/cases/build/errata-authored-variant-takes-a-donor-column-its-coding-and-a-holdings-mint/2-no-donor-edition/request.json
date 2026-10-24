@@ -1,0 +1,27 @@
+{
+  "note": "Beside step 1: donor_coding = true on an entry whose only requested edition (2023) the donor does not document. The flag can copy nothing, so the entry is stale; the PID mint keeps people non-empty so the stale diagnostic, not the empty-variant refusal, is what shows.",
+  "fails_if": "convert_delivered_entry (scb_errata.py) stops refusing donor_coding when no requested edition has a same-name donor row, so the entry converts and ships VALUE uncoded with no issue",
+  "sources": {
+    "description": "Register 1, variant 2 documents VALUE (variable 5, CVID 101) in 2022 with code list 01 One.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 101,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": [
+        "list|1|01|One|101|7001"
+      ]
+    }
+  }
+}

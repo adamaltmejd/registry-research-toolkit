@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "gdb"
+native_id = "70"
+
+[[variant]]
+native_id = "70.1380"
+slug = "adresser-fastigheter"
+
+# 2861754316974127173 = mint_canonical_scb("scb", "70", "individer").
+[[variant]]
+native_id = "70.2861754316974127173"
+slug = "individer"

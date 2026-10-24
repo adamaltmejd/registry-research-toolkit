@@ -7090,6 +7090,10 @@ def compile_errata(
             register.errata.version
             or register.errata.delivered
             or register.errata.column
+            or any(
+                authored_scb_variant("scb", variant.native_id)
+                for variant in register.variant
+            )
         ):
             continue
         native_id = register.register_info.native_id
@@ -7113,6 +7117,8 @@ def compile_errata(
         by_variant: dict[int, tuple[SourceRecord, ...]] = {}
         variant_ids: dict[str, int] = {}
         authored: set[int] = set()
+        fed: set[int] = set()
+        tried: dict[int, set[str]] = {}
         for variant in register.variant:
             parsed = _parse_variant_id(variant.native_id)
             if len(parsed) == 3:
@@ -7224,6 +7230,7 @@ def compile_errata(
                         )
                     continue
                 variant_id = variant_ids[row.variant]
+                tried.setdefault(variant_id, set()).add(case_id)
                 members = by_variant.get(variant_id, ())
                 editions = bound_editions.get(variant_id, ())
                 if not members and variant_id not in authored:
@@ -7717,6 +7724,31 @@ def compile_errata(
                         keys[scope_key][variable_key] = row.column
                 cases[scope_key].append(converted)
                 statuses["entries_matched"].append(case_id)
+                fed.add(variant_id)
+        # An authored variant (#1855) has no native rows: its states come only
+        # from the errata above. Without one it would ship as an empty public
+        # variant, so refuse it. simplify: this proves an entry converted onto
+        # the variant, not that formation kept its states; check the built
+        # variant if a converted addition is ever withheld downstream.
+        if anchor is not None and (empty := authored - fed):
+            slug, variant_id = min(
+                (slug, vid) for slug, vid in variant_ids.items() if vid in empty
+            )
+            blocked = sorted(
+                diagnostic.detail
+                for diagnostic in diagnostics
+                if diagnostic.case_id in tried.get(variant_id, ())
+            )
+            raise curation_error(
+                "authored_variant_without_state",
+                f"{register.source_file}: authored variant {slug!r} receives no "
+                "state, so it would ship as an empty public variant: no "
+                "[[errata.column]] or [[errata.delivered]] entry converted onto it"
+                + (f" ({'; '.join(blocked)})" if blocked else "")
+                + ".",
+                "Fix or add an errata entry that delivers a column onto the "
+                "variant, or remove the [[variant]].",
+            )
     return (
         {key: tuple(value) for key, value in cases.items()},
         {

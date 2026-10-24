@@ -1,0 +1,41 @@
+{
+  "note": "Beside step 1: the donor documents VALUE at 2022 in two rows, so donor_coding cannot name one checked donor for that edition and the entry is over-broad. The PID mint keeps people non-empty.",
+  "fails_if": "convert_delivered_entry (scb_errata.py) stops refusing two same-name donor rows at one edition (ambiguous_donor_coding), so it copies one row's coding arbitrarily or neither",
+  "sources": {
+    "description": "Register 1, variant 2 documents VALUE (variable 5) twice in 2022, as CVID 101 and 102, each with code list 01 One.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 101,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "varchar"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 102,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": [
+        "list|1|01|One|101|7001",
+        "list|1|01|One|102|7001"
+      ]
+    }
+  }
+}
