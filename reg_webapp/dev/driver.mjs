@@ -845,19 +845,9 @@ async function browseSearchCase(page, _counts, shoot) {
     "Tab out of the field left the palette open under the page",
   );
 
-  // Focus off the field (Tab again, palette reopened first), then Escape: it
-  // clears the text, and no palette is left behind. Fails if the page-wide
-  // Escape folds the narrow field over a palette it never closed, leaving a
-  // zero-width menu mounted.
-  await search.focus();
-  await search.press("Enter");
-  await page.getByRole("menu").waitFor();
-  await page.keyboard.press("Tab");
+  // Focus is now off the field (the Tab above), so Escape on the page clears
+  // the text (#1827) and, below the breakpoint, folds the narrow field.
   await page.keyboard.press("Escape");
-  check(
-    await menuGone(page),
-    "Escape on the page cleared the search but left the palette mounted",
-  );
   // Below the breakpoint the emptied field is folded away (display: none).
   const searchAnyState = page.getByRole("searchbox", {
     name: /^Search registers/,

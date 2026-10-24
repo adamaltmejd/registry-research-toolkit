@@ -143,7 +143,9 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
       }
       browseFilter.set("");
       // Focus is elsewhere, so the emptied field folds too, and a palette
-      // still open under it closes with it.
+      // still open under it closes with it. Backstop: the only route to an open
+      // palette here is a window blur, where relatedTarget is null and no
+      // pointerdown fires.
       setPalette(false);
       setOpened(false);
     };
@@ -186,6 +188,9 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
               if (!palette) openPalette();
             }}
             onBlur={(event) => {
+              // simplify: focus inside the popover is not handled, because the
+              // RAC Autocomplete menu uses virtual focus and is never tabbable;
+              // revisit if the menu ever becomes tabbable.
               // The rows take virtual focus, so focus landing in the popover is
               // still the palette's. A blur to nothing (a press on the page) is
               // left to the palette's outside-press handler.

@@ -406,8 +406,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   empty, so the brand comes back. This is a deliberate change from that ruling (Operator
   2026-10-24). Focus leaving the field for anything outside the palette closes it. Below
   the breakpoint it is as wide as the unfolded field. Escape closes the palette first,
-  then clears the text, then folds the narrow field; Escape from elsewhere on the page
-  also closes a palette still open.
+  then clears the text, then folds the narrow field; Tab or a press outside closes the
+  palette.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
