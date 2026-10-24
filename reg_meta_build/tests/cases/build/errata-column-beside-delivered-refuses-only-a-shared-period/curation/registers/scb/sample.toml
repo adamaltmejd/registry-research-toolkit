@@ -50,6 +50,7 @@ definition = "Held"
 versions = ["2022"]
 data_type = "integer"
 measurement_unit = "Antal"
+operational_definition = "Heltal, antal personer."
 is_identifier = false
 is_sensitive = false
 source = "steward-holdings"

@@ -372,6 +372,12 @@ class ErrataColumnEntry(_CurationModel):
     # (#1665). As on [[errata.delivered]], it is never inherited from a donor or
     # documented column: without it, the mint has no unit.
     measurement_unit: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
+    # How the minted column's values are encoded (e.g. a YYYYMMDD date), in the
+    # field a documented column carries it in (#1612). Curator-authored from the
+    # entry's evidence; never inherited from a sibling variable.
+    operational_definition: (
+        Annotated[str, Field(min_length=1, pattern=r"\S")] | None
+    ) = None
     classification: str | None = None
     is_identifier: bool | None = None
     is_sensitive: bool | None = None

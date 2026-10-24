@@ -3,22 +3,22 @@
     {
       "table": "states",
       "where": {"variable": ["c-q", "c-r", "v5", "v6"]},
-      "fields": ["variable", "column", "valid_from", "valid_to", "measurement_unit"],
-      "note": "c-r holds R in 2022 beside v6's documented 2018 and delivered 2020 states; the refused Q declaration forms no c-q state. Only the c-r mint authors a unit",
+      "fields": ["variable", "column", "valid_from", "valid_to", "measurement_unit", "operational_definition"],
+      "note": "c-r holds R in 2022 beside v6's documented 2018 and delivered 2020 states; the refused Q declaration forms no c-q state. Only the c-r mint authors a unit and an operational definition",
       "rows": [
-        ["c-r", "R", "2022-01-01", "2022-12-31", "Antal"],
-        ["v5", "Q", "2018-01-01", "2018-12-31", null],
-        ["v5", "Q", "2020-01-01", "2020-12-31", null],
-        ["v6", "R", "2018-01-01", "2018-12-31", null],
-        ["v6", "R", "2020-01-01", "2020-12-31", null]
+        ["c-r", "R", "2022-01-01", "2022-12-31", "Antal", "Heltal, antal personer."],
+        ["v5", "Q", "2018-01-01", "2018-12-31", null, null],
+        ["v5", "Q", "2020-01-01", "2020-12-31", null, null],
+        ["v6", "R", "2018-01-01", "2018-12-31", null, null],
+        ["v6", "R", "2020-01-01", "2020-12-31", null, null]
       ]
     },
     {
       "table": "variables",
       "where": {"variable": ["c-r"]},
-      "fields": ["variable", "column", "measurement_unit"],
+      "fields": ["variable", "column", "measurement_unit", "operational_definition"],
       "rows": [
-        ["c-r", "R", "Antal"]
+        ["c-r", "R", "Antal", "Heltal, antal personer."]
       ]
     },
     {

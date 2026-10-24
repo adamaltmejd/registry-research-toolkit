@@ -684,23 +684,26 @@ states with no unit. `[[errata.column]]` carries the variable identity (`name` a
 a column SCB does not document on that variant in the period the entry claims. Its
 optional `measurement_unit` is the mint's own unit, authored from the entry's evidence
 as on `[[errata.delivered]]` and never inherited from a donor or documented column
-(#1665). A literal SCB documents only in other editions may carry a different meaning
-there, so the entry still mints its own variable, with its own slug, and never joins the
-documented owner (#1621). It is refused (`column_now_documented`) when its named
-editions or its `holdings_period` overlap an edition that documents the literal, under
-any case/diacritic spelling: the two variables would otherwise both claim one physical
-column in one period. Undated entries and editions without known bounds cannot be shown
-disjoint, so they are refused whenever the literal is documented anywhere on the
-variant. So is a literal a checked correction touches, an `[[errata.occurrence_period]]`
-on it or an `[[errata.field]]` `column_name` rename to it, since the original records no
-longer show where it is delivered. Periods compare edition-period scopes where an
-edition has one, so sub-annual editions of one year stay disjoint. A column entry and a
-`[[errata.delivered]]` entry may share one (register, variant, column) only with named
-`versions` (#1647): a delivered literal can carry another meaning in other editions. The
-delivered editions then count as documenting ones, so the column entry is refused
-(`column_now_documented`) when a period overlaps, even under a different edition name;
-undated or `holdings_period` column entries beside a delivered one are refused at load.
-A documented_blank CIS matrix answer adds a column the source names nowhere, so the
+(#1665). Its optional `operational_definition` states how the values are encoded (a
+YYYYMMDD date), in the field a documented column carries it, so readers show it as they
+do a native one; it too is authored, never inherited (#1612). A literal SCB documents
+only in other editions may carry a different meaning there, so the entry still mints its
+own variable, with its own slug, and never joins the documented owner (#1621). It is
+refused (`column_now_documented`) when its named editions or its `holdings_period`
+overlap an edition that documents the literal, under any case/diacritic spelling: the
+two variables would otherwise both claim one physical column in one period. Undated
+entries and editions without known bounds cannot be shown disjoint, so they are refused
+whenever the literal is documented anywhere on the variant. So is a literal a checked
+correction touches, an `[[errata.occurrence_period]]` on it or an `[[errata.field]]`
+`column_name` rename to it, since the original records no longer show where it is
+delivered. Periods compare edition-period scopes where an edition has one, so sub-annual
+editions of one year stay disjoint. A column entry and a `[[errata.delivered]]` entry
+may share one (register, variant, column) only with named `versions` (#1647): a
+delivered literal can carry another meaning in other editions. The delivered editions
+then count as documenting ones, so the column entry is refused (`column_now_documented`)
+when a period overlaps, even under a different edition name; undated or
+`holdings_period` column entries beside a delivered one are refused at load. A
+documented_blank CIS matrix answer adds a column the source names nowhere, so the
 documented-column check cannot see it (a named matrix's columns are documented and
 refused there). A column entry on the same variant and column is refused as stale when
 it cannot be shown disjoint from the matrix edition, its detail naming the matrix answer
@@ -726,14 +729,14 @@ register that declares no variant). The entry anchors on one record of the varia
 guarded with that record's whole native family, and adds one pooled occurrence in the
 variant the anchor's own occurrence lands in: a SOS workbook without a Deldatamängder
 sheet places every variable in the synthesized `_default`, and the mint follows it. Its
-optional `data_warning` annotates that occurrence and its optional `measurement_unit` is
-that occurrence's unit, as on the SCB path. A routed token (`[[identity.route]]`) is
-refused as stale: name its destination. Its name is the `[variable]` pin
-`<register native_id>.<column>`, which is also a documented SOS or thin variable's own
-source id, so the entry is refused (`column_now_documented`) when the register documents
-the column anywhere, or an `[[identity.rename]]` gives a documented variable that
-column. The `[variable]` pin then names the documented variable through native naming: a
-documented column extended outside its documented years is an
+optional `data_warning` annotates that occurrence and its optional `measurement_unit`
+and `operational_definition` are that occurrence's own, as on the SCB path. A routed
+token (`[[identity.route]]`) is refused as stale: name its destination. Its name is the
+`[variable]` pin `<register native_id>.<column>`, which is also a documented SOS or thin
+variable's own source id, so the entry is refused (`column_now_documented`) when the
+register documents the column anywhere, or an `[[identity.rename]]` gives a documented
+variable that column. The `[variable]` pin then names the documented variable through
+native naming: a documented column extended outside its documented years is an
 `[[errata.occurrence_carry]]`. The mint takes its slug by naming conversion's rules
 (`accepted_variable_slugs`): a generated pin in a churning zone is inactive, and an
 authored entry overrides a generated one.
