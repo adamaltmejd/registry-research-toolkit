@@ -1164,13 +1164,20 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   its success — an image that builds but fails lint/ty/pytest never ships. Each deploy
   job carries a HEAD-of-main guard (GHA concurrency serializes by build-completion
   order, not commit order — without the guard an older commit's slow build could
-  overwrite a newer deploy; it also makes non-main dispatches deploy-inert). Two gates
-  guard a bad image: the entrypoint smoke gate (it probes `context`, `search`, docs
-  search and `/mcp` with `curl`, each carrying `__edge_v`, and the container exits
-  non-zero before ever serving when artifact admission or a probe fails) and fly.toml's
-  `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
-  `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
-  seconds.
+  overwrite a newer deploy; it also makes non-main dispatches deploy-inert). Because a
+  guarded commit skips, `changes` diffs a push against the last deployed commit, not the
+  push's `before` (#1481): otherwise a served-path push followed by a non-served one
+  before its deploy ran would deploy neither. The last deployed commit is the newest
+  successful main run of the workflow that no later push overlapped (so it finished as
+  HEAD); a failed or overlapped run never counts, which errs toward a redundant
+  redeploy, and no such run in the last 200 counts as everything changed. Dispatching
+  HEAD's run from the skipped job was rejected: it needs `actions: write`, which the
+  workflow does not hold. Two gates guard a bad image: the entrypoint smoke gate (it
+  probes `context`, `search`, docs search and `/mcp` with `curl`, each carrying
+  `__edge_v`, and the container exits non-zero before ever serving when artifact
+  admission or a probe fails) and fly.toml's `/api/context` HTTP check (flyctl reports
+  failure if it never passes). Rollback: `flyctl releases --image` lists history;
+  `flyctl deploy --image <old>` restores in seconds.
 - **Pending-schema-bump guard (#448)**: when the Rust server's schema gates (`SCHEMA` in
   `crates/reg-catalog/src/lib.rs`, `DOC_SCHEMA` in `docs.rs`) are AHEAD of the latest
   released `reg_meta/v*` asset (same major, higher minor), the image would refuse to
