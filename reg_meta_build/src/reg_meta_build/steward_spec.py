@@ -151,7 +151,7 @@ _ISSUE_REFERENCE = re.compile(r"^(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#[1-9][0-9]
 
 def _register_coordinate(value: str) -> str:
     if parse_fqid(value).kind != "register":
-        raise ValueError("policy registers must be register FQIDs")
+        raise ValueError("spec registers must be register FQIDs")
     return value
 
 
@@ -798,10 +798,10 @@ def load_steward_spec(directory: Path) -> StewardSpec:
 
 def retention_row_guards(
     source: bytes, entries: tuple[UndatedHolding, ...], excluded: set[str]
-) -> dict[str, list[dict[str, Any]]]:
-    """Check each retained table's ordered census rows against its `rows_sha256`.
-
-    Returns the census rows by table, which warning emission reuses."""
+) -> None:
+    """Hold each `retain_unknown` table's ordered census rows to its
+    `rows_sha256`, and refuse a retained table the scope also excludes;
+    `ValueError` otherwise."""
     rows_by_table: dict[str, list[dict[str, Any]]] = {}
     for line, cells in enumerate(csv.reader(io.StringIO(source.decode("utf-8"))), 1):
         if len(cells) >= 3:
@@ -814,7 +814,6 @@ def retention_row_guards(
             raise ValueError(f"Undated holdings row guard failed: {entry.table}")
         if entry.table in excluded:
             raise ValueError(f"Retained holding cannot also be excluded: {entry.table}")
-    return rows_by_table
 
 
 def census_guard(scope: Scope, census: bytes) -> None:

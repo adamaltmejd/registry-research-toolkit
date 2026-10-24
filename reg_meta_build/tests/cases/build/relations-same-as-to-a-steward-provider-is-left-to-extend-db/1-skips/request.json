@@ -1,0 +1,5 @@
+{
+  "note": "relations.toml joins scb/sample/value to scb/sample/two and to swecov/population/kon. fqid_slugs/swecov/swecov.toml pins swecov/population, so that edge is the steward's: its variables exist only in the flavored DB, where extend-db applies it (#1549; test_extend_db.py pins that side). The global build writes the scb pair and skips the steward edge without a diagnostic. Refusal twin: step 2, whose typo'd provider no steward pins.",
+  "fails_if": "`compile_declared_metadata` (curation_compile.py) stops skipping a same_as edge `steward_same_as` (relations.py) gives to a steward pinning its register, so the steward endpoint is a missing catalog dependency and every global build with a committed steward edge fails",
+  "sources": "scb-withheld-key-and-gone"
+}

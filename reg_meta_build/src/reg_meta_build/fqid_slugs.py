@@ -1515,6 +1515,19 @@ def iter_curated_provider_entries(
     ]
 
 
+def steward_register_pins(*slug_dirs: Path) -> frozenset[tuple[str, str]]:
+    """The (provider, register slug) pairs the steward slug dirs
+    (``fqid_slugs/<steward>/``) pin in their committed ``<provider>.toml`` files;
+    a missing dir pins nothing. Generated ``*.auto.toml`` files never pin."""
+    return frozenset(
+        (entry.provider, entry.slug)
+        for slug_dir in slug_dirs
+        if slug_dir.is_dir()
+        for entry in iter_curated_provider_entries(slug_dir)
+        if entry.kind == "register" and entry.provider and entry.slug
+    )
+
+
 def _entity_key_curation_basis(
     slug_dir: Path,
 ) -> tuple[dict[tuple[str, str], str], dict[tuple[str, str], str]]:

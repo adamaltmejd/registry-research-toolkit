@@ -373,7 +373,13 @@ def run_step(
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
     curation = render_curation(step / "curation", scratch / "curation", authored, built)
     write_authored(built_spec, curation)
-    output, report = scratch / "reg_meta.db", scratch / "report"
+    # Steward slug pins sit beside the curation tree, as in the checkout; the
+    # build refuses outputs in a directory that holds them, hence `first`.
+    if (step / "fqid_slugs").is_dir():
+        shutil.copytree(step / "fqid_slugs", scratch / "fqid_slugs")
+    first = scratch / "build"
+    first.mkdir()
+    output, report = first / "reg_meta.db", first / "report"
     registers = tuple(request.get("registers", ()))
     rebuild = bool(expected.get("rebuilt_identical"))
 
@@ -388,7 +394,7 @@ def run_step(
             diagnostic=request.get("diagnostic", True),
             registers=registers,
             dump_decisions=decisions,
-            resolved_out=scratch / "resolved" if rebuild else None,
+            resolved_out=first / "resolved" if rebuild else None,
         )
 
     try:
@@ -402,7 +408,7 @@ def run_step(
                 registers=registers,
             )
         else:
-            result = build(output, report, scratch / "decisions" if rebuild else None)
+            result = build(output, report, first / "decisions" if rebuild else None)
     except (RegMetaError, ValueError, OSError, KeyError) as error:
         if "error" not in expected:
             raise
@@ -426,9 +432,9 @@ def run_step(
             }
         )
         actual["rebuilt_identical"] = all(
-            _tree_bytes(scratch / name) == _tree_bytes(again / name)
+            _tree_bytes(first / name) == _tree_bytes(again / name)
             for name in ("reg_meta.db", "report/events.jsonl.gz", "decisions")
-        ) and _bundle_payloads(scratch / "resolved") == _bundle_payloads(
+        ) and _bundle_payloads(first / "resolved") == _bundle_payloads(
             again / "resolved"
         )
     if "error" in expected:

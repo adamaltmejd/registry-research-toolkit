@@ -17,7 +17,7 @@ from contextlib import ExitStack, closing
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from reg_core_py import GrammarError
 
@@ -36,6 +36,9 @@ from .ir import (
 from .slug_grammar import validate_slug
 from .source_evidence import canonical_json
 from .sources.curated import CuratedAdapter
+
+if TYPE_CHECKING:
+    from .relations import CuratedRelations
 
 # A private candidate's `manifest.json` `artifact_kind`, for any steward.
 CANDIDATE_KIND = "steward-private-extension-input-candidate"
@@ -208,6 +211,71 @@ def _assert_steward_rows_slugged(conn: sqlite3.Connection) -> None:
         )
 
 
+def _insert_steward_same_as(
+    conn: sqlite3.Connection,
+    relations: CuratedRelations,
+    pins: frozenset[tuple[str, str]],
+) -> int:
+    """Write the curated same_as edges of the steward whose register `pins` are
+    given (#1549); another steward's edges are not this flavor's and are ignored.
+
+    Each endpoint resolves by its slug FQID against the overlaid catalog, or the
+    build refuses it. The base's edges plus these pass the global graph checks,
+    each base pair taken in the direction `relations` declares it, so the cycle
+    check matches the global build's when `relations` built the base. Returns the
+    number of edges written (each stored both ways)."""
+    from .catalog_dependencies import CatalogDependencyError, MissingCatalogDependency
+    from .relations import check_same_as_graph, steward_same_as
+
+    variable_edges = [edge for edge in relations.same_as if edge.grain == "variable"]
+    edges = [
+        (edge.a_fqid(), edge.b_fqid())
+        for edge in variable_edges
+        if steward_same_as(edge, pins)
+    ]
+    if not edges:
+        return 0
+    live = {
+        "/".join(row)
+        for row in conn.execute(
+            "SELECT p.slug, r.slug, v.slug FROM variable v "
+            "JOIN register r ON r.register_id = v.register_id "
+            "JOIN provider p ON p.provider_id = r.provider_id "
+            "WHERE r.slug IS NOT NULL AND v.slug IS NOT NULL"
+        )
+    }
+    if missing := tuple(
+        MissingCatalogDependency(("variable", fqid), f"variable_same_as:{index}")
+        for index, edge in enumerate(edges, 1)
+        for fqid in edge
+        if fqid not in live
+    ):
+        raise CatalogDependencyError(missing)
+    # The base stores each pair both ways, without its declared direction; a pair
+    # `relations` no longer declares falls back to sorted order.
+    direction = {
+        frozenset(pair): pair
+        for pair in ((edge.a_fqid(), edge.b_fqid()) for edge in variable_edges)
+    }
+    base = {
+        frozenset(("/".join(row[:3]), "/".join(row[3:])))
+        for row in conn.execute(
+            "SELECT a_provider, a_register, a_variable, "
+            "b_provider, b_register, b_variable FROM variable_same_as"
+        )
+    }
+    check_same_as_graph(
+        [direction.get(pair, tuple(sorted(pair))) for pair in sorted(base, key=sorted)]
+        + edges,
+        label="steward variable same_as",
+    )
+    conn.executemany(
+        "INSERT INTO variable_same_as VALUES (?, ?, ?, ?, ?, ?)",
+        [(*x.split("/"), *y.split("/")) for a, b in edges for x, y in ((a, b), (b, a))],
+    )
+    return len(edges)
+
+
 def resolve_steward_slug_dir(slug_dir: Path | None, steward: str) -> Path:
     """Resolve the steward slug dir."""
     if slug_dir is not None:
@@ -255,19 +323,25 @@ def extend_db(
     input_manifest_sha256: str | None = None,
     diagnostic: bool = False,
     base_sha256: str | None = None,
+    relations: Path | None = None,
 ) -> dict[str, Any]:
     """Build strict accepted holdings or an explicit metadata-only diagnostic.
 
     `base_sha256` pins the base bytes a diagnostic caller hashed (the steward
     generator prints it as the candidate's global pin); an accepted candidate
-    pins them itself."""
+    pins them itself. `relations` is a diagnostic's `relations.toml`, whose
+    steward same_as edges it applies; strict extension reads the checkout's."""
     from .db import (
         _insert_core_graph_from_ir,
         _unlink_wal_sidecars,
         publish_db,
     )
     from .derive import derive, derive_holdings
-    from .fqid_slugs import populate_slugs, populate_variable_slugs
+    from .fqid_slugs import (
+        populate_slugs,
+        populate_variable_slugs,
+        steward_register_pins,
+    )
     from .source_files import _progress
 
     base_db = base_db.expanduser().resolve()
@@ -293,6 +367,7 @@ def extend_db(
             remediation="Point --db at a different output directory.",
         )
 
+    from ._curation import repo_curation_path
     from .artifact_identity import (
         builder_commit,
         committed_steward_slugs,
@@ -302,7 +377,8 @@ def extend_db(
     from .holdings_accounting import account_holdings
     from .holdings_compile import compile_holdings
     from .inventory import load_inventory
-    from .steward_spec import STEWARDS_DIR, load_steward_spec, steward_spec_sha256
+    from .relations import load_relations
+    from .steward_spec import STEWARDS_DIR, load_steward_spec
 
     candidate_manifest: dict[str, Any] = {}
     spec = spec_digest = None
@@ -320,7 +396,7 @@ def extend_db(
             holdings_input = holdings_input.expanduser().resolve()
             if not input_commit or not input_manifest_sha256:
                 raise ValueError("Private holdings require both exact input pins")
-            if slug_dir is not None:
+            if slug_dir is not None or relations is not None:
                 raise ValueError(
                     "Publishable extension requires committed steward naming without diagnostic overrides"
                 )
@@ -343,8 +419,8 @@ def extend_db(
             providers_dir = snapshot / "providers"
             # The spec is read at the builder revision, never from the candidate;
             # the candidate pins the spec it was generated from.
-            spec_dir = committed_steward_spec(steward, revision=revision)
-            spec_digest = steward_spec_sha256(spec_dir)
+            spec = load_steward_spec(committed_steward_spec(steward, revision=revision))
+            spec_digest = spec.sha256
             if candidate_manifest["steward_spec_sha256"] != spec_digest:
                 raise RegMetaError(
                     exit_code=EXIT_CONFIG,
@@ -360,7 +436,9 @@ def extend_db(
                         "revision's spec, or build from the revision it pins."
                     ),
                 )
-            spec = load_steward_spec(spec_dir)
+            # The checkout is clean at `revision` (`committed_steward_spec`), so
+            # this is the revision's committed relations.toml.
+            relations = repo_curation_path("relations.toml")
         else:
             pinned_slug_dir = None
 
@@ -477,6 +555,9 @@ def extend_db(
                 conn, steward_slug_dir, incremental=True, persist_auto=diagnostic
             )
             _assert_steward_rows_slugged(conn)
+            counts["same_as_edges"] = _insert_steward_same_as(
+                conn, load_relations(relations), steward_register_pins(steward_slug_dir)
+            )
 
             # Holdings must see the steward's own metadata, so derive runs over
             # base plus overlay.

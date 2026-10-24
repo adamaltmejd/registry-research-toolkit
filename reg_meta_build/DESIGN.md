@@ -2557,6 +2557,24 @@ evidence, but never supply build naming. Variable slugging is incremental and pr
 every existing global slug. The retained `ir/` models serve this extension graph, not
 the global source-cleaning boundary.
 
+A curated `same_as` edge in `curation/relations.toml` is a steward's (#1549) when an
+endpoint's (provider, register) is pinned in a committed `fqid_slugs/<steward>/*.toml`
+(never a generated `*.auto.toml`) and every other endpoint's provider is global. The
+register decides, not the provider, since a steward register may sit under a global
+provider (`fqid_slugs/swecov/lakemedelsverket.toml`). The global build skips an edge any
+steward claims; any other edge, one with a typo'd provider among them, takes the global
+path, where a dangling endpoint is refused. That steward's `extend-db` writes the edges
+its own pins claim, both ways, once the overlay is slugged; another steward's edges are
+ignored. Both endpoints must resolve by slug FQID in the extended catalog, or
+`extend-db` refuses `catalog_dependency_missing`. That is stricter than the global
+build, which prunes an edge into a declared but withheld variable and refuses only an
+undeclared endpoint. The base's edges plus the steward's pass the global cycle and
+component checks. The base stores each pair both ways, so a base pair takes the
+direction `relations.toml` declares it in, and sorted order if it no longer declares it;
+the cycle check matches the global build's when that `relations.toml` built the base.
+Strict extension reads the clean checkout's `relations.toml`; a diagnostic applies only
+the one its caller passes. Possession and order binding never follow `same_as`.
+
 The extension derives over base plus overlay before compiling holdings, because holdings
 canonicalize against `resolver_column`, the projection of `expanded_state`. Once the
 manifest names the steward, `derive_holdings` adds the `holdings`-scope browse and
@@ -2796,7 +2814,13 @@ one takes the series set. A table's own set is what its curated mappings and the
 generator's auto-mapping may use. A family whose tables map to different registers is
 still several series, because a series is single-register. Where the grafts stage cannot
 place a gap-fill column (one with no catalog variable yet) on one variant, a per-column
-`graft_onto` decision names it; it never reaches the inventory.
+`graft_onto` decision names it; it never reaches the inventory. The loader admits a
+`graft_onto` only among its series' variants, and the grafts stage refuses one that
+names no delivered variant of the catalog it scans (`steward_spec_invalid`), since its
+candidate would place the column on a variant no `[[errata.column]]` can name. A
+decision whose (table, column) the census no longer holds, a mapping, unmap or hold
+alike, is listed as `stale_declared_decision_physical_coordinate` and the inventory is
+not replaced.
 
 Every census table has exactly one disposition, a series or one scope entry
 (`steward_table_disposition_invalid`). A series admits variants of its own register

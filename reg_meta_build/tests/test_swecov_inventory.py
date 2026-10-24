@@ -10,6 +10,7 @@ leaves. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
@@ -18,8 +19,10 @@ import pytest
 from _swecov_fixtures import (
     FLAVORED_TOML,
     SPEC,
+    base_catalog,
     build_catalog,
     column as _column,
+    flavor_generator,
     flavor_slug_dir,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
@@ -30,6 +33,7 @@ from _swecov_fixtures import (
     synthetic_enriched as _synthetic_enriched,
     variant_block,
     write_flavored_db,
+    write_slug_pins,
     write_spec,
 )
 from reg_meta_build.errors import RegMetaError
@@ -38,6 +42,7 @@ from reg_meta_build.inventory import (
     edition_bounds,
     load_inventory as load_delivery_inventory,
 )
+from reg_meta_build.steward_spec import steward_spec_sha256
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -183,6 +188,63 @@ def test_member_decision_with_two_mappings_is_refused(tmp_path: Path) -> None:
             decisions=decisions,
         )
     assert refused.value.code == "steward_spec_invalid"
+
+
+def test_inventory_command_maps_against_its_own_base_and_prints_the_pins(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`cmd_inventory` end to end on a synthetic census (#1605): it reads the
+    storage export, builds its mapping DB as extend-db's diagnostic of
+    `--base-db` plus `--providers` under the committed steward pins (here the
+    copied generator's repo), maps the census column from it and prints the
+    candidate pins extend-db later compares: the spec digest and the base's
+    bytes. Fails if the mapping DB stops being built from the given base and
+    providers (T_kolumn would resolve to nothing), or a printed pin is not the
+    digest extend-db checks."""
+    generator = flavor_generator(tmp_path)
+    write_slug_pins(tmp_path / "reg_meta_build/fqid_slugs/swecov", FLAVORED_TOML)
+    # The storage type check loads the repo's curation tree, which needs a
+    # classifications directory.
+    (tmp_path / "reg_meta_build/curation/classifications").mkdir(parents=True)
+    providers = tmp_path / "providers"
+    providers.mkdir()
+    (providers / "inera.toml").write_text(FLAVORED_TOML, encoding="utf-8")
+    census = tmp_path / "SWECOV_variables_2025-12-11.csv"
+    census.write_text(
+        "Category,Detail,Table\nInera/1177,Ordered tests,T2019,T_kolumn\n",
+        encoding="utf-8",
+    )
+    spec = write_spec(tmp_path / "swecov", census, {"s": one_table_series("T2019")})
+    storage = tmp_path / "swecov_column_types.csv"
+    storage.write_text(
+        "table_schema,table_name,table_type,column_name,data_type,"
+        "character_maximum_length,numeric_precision,numeric_scale,ordinal_position\n"
+        "dbo,T2019,BASE TABLE,T_kolumn,varchar,20,,,1\n",
+        encoding="utf-8",
+    )
+    base = base_catalog()
+    out = tmp_path / "out"
+
+    generator.cmd_inventory(
+        argparse.Namespace(
+            storage_csv=storage,
+            base_db=base,
+            providers=providers,
+            spec=spec,
+            csv=census,
+            out=out,
+        )
+    )
+
+    (table,) = load_delivery_inventory(out / "inventory.toml").tables
+    (column,) = table.columns
+    assert [str(m.variable) for m in column.mappings] == [
+        "inera/bestallda-prover/t-kolumn"
+    ]
+    printed = capsys.readouterr().out
+    assert f'"steward_spec_sha256": "{steward_spec_sha256(spec)}"' in printed
+    base_sha = hashlib.sha256(base.read_bytes()).hexdigest()
+    assert f'"global_db_sha256": "{base_sha}"' in printed
 
 
 # --- cmd_inventory: a series' school-year edition spelling --------------------

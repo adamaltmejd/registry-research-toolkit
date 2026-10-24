@@ -22,10 +22,13 @@
 #                           of the SAME grain — both 3-segment variable OR both
 #                           2-segment classification (provider/slug). The build
 #                           writes BOTH directions; there is NO relation_kind
-#                           (identity is identity). Endpoint providers outside
-#                           the current build are skipped, but when both
-#                           providers are built the variable/classification
-#                           slugs must resolve live. Slug-anchored means the
+#                           (identity is identity). An edge with an endpoint
+#                           register a steward pins in
+#                           `fqid_slugs/<steward>/*.toml` (e.g. `swecov/
+#                           population`) is skipped by the global build and
+#                           applied by that steward's `extend-db` (#1549);
+#                           wherever an edge is written, both variable slugs
+#                           must resolve live. Slug-anchored means the
 #                           authored FQID is the stored identity, not that
 #                           dangling endpoints are accepted. Generate a review
 #                           worklist with `reg-meta-build same-as-candidates`.
@@ -59,7 +62,10 @@
 #
 # References resolve against the built DB at materialize time; a dangling FQID
 # FAILS the build (EXIT_CONFIG). An edge whose provider isn't in the build is
-# SKIPPED (a partial --providers build can't represent it).
+# SKIPPED (a partial --providers build can't represent it). A same_as edge
+# into a steward-pinned register is left to that steward's extend-db, which
+# refuses a dangling endpoint too. A provider neither global nor steward-pinned
+# (a typo) is no steward's, so its dangling endpoint fails the global build.
 
 # ── LISA "Summa annan inkomst" definition-era succession (#375) ──
 #    SCB minted a new VarId each time the definition was recut, so one measure
@@ -5983,3 +5989,14 @@ a = "scb/slk/utbildningens-niva-och-inriktning"
 b = "scb/slr/sun"
 note = "curated:#737 utbildningens nivå och inriktning (sun)"
 # Result: 61 components, 232 edges, 179 variables (max component 7 FQIDs, well under the _SAME_AS_MAX_COMPONENT cap).
+
+# ── Steward same_as: SWECOV flavor variables (#1549) ──
+#    The global build skips these (fqid_slugs/swecov/ pins the register); SWECOV's
+#    extend-db writes them into its flavored DB, both slugs resolving there.
+#    Discovery only: possession and order binding stay on the concrete variable.
+# kön of the SWECOV population spine (#1302), Källa=RTB
+[[edge]]
+type = "same_as"
+a = "swecov/population/kon"
+b = "scb/rtb/kon"
+note = "curated:#1549 SWECOV population spine Kon, Källa=RTB"

@@ -146,6 +146,43 @@ def test_an_scb_documented_column_is_the_same_entry_under_the_other_source(
     assert "narrow `all_versions` to the years its doc page carries" in text
 
 
+@pytest.mark.parametrize("target", ["scb/utbildning/annual", "scb/utbildning/gone"])
+def test_a_graft_onto_places_its_column_on_a_delivered_target_variant(
+    tmp_path: Path, flavored_db: Path, target: str
+) -> None:
+    """The holding's series deliver two variants of the register, so only the
+    curated `graft_onto` (its `graft_columns`) can place the gap-fill column;
+    it lands on that variant. The twin names a variant the catalog does not
+    deliver (the base has `scb/utbildning/annual` only) and is refused, located
+    at the holding and column, before a candidate is written. Fails if the
+    grafts stage stops reading the graft placement first (the column would be
+    ambiguous), or writes a candidate onto a variant the catalog lacks."""
+    enriched = {
+        "Utbildning / Individer": {
+            "columns": [{"name": "NyKol"}],
+            "mapping": {
+                "status": "mapped",
+                "to": {"UTB_2019": ["scb/utbildning/annual", "scb/utbildning/barn"]},
+                "graft_columns": {"NyKol": target},
+            },
+        }
+    }
+    gapfill = [_gapfill("scb/utbildning", "NyKol")]
+    if target.endswith("/gone"):
+        with pytest.raises(RegMetaError) as refused:
+            _grafts_text(tmp_path, flavored_db, gapfill, enriched)
+        assert refused.value.code == "steward_spec_invalid"
+        assert (
+            "holding 'Utbildning / Individer' column 'NyKol': graft_onto "
+            "scb/utbildning/gone"
+        ) in refused.value.message
+        assert not (tmp_path / "out/derived/column_candidates.toml").exists()
+        return
+    text = _grafts_text(tmp_path, flavored_db, gapfill, enriched)
+    (entry,) = tomllib.loads(text)["errata"]["column"]
+    assert (entry["variant"], entry["column"]) == ("annual", "NyKol")
+
+
 def test_a_docs_dir_without_register_subdirectories_is_refused(tmp_path: Path) -> None:
     """Pointing `--lisa-docs-dir` at one register's pages (`lisa/` itself) instead of
     their parent finds no register, which would tag every column
