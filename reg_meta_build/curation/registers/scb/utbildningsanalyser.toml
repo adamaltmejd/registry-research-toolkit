@@ -27,6 +27,17 @@ variable = "vt-veckor-termin"
 description = "Terminens längd"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
+# KommunGr and AstKommungrupp_Namn share no variant, so a [[code_label_pair]]
+# fails its variant guard. Claim the two coded members of today's source family
+# (KommunGr and the storstad helper reggrp) so the name stays out of their group
+# (#1790).
+[[group]]
+register = "scb/utbildningsanalyser"
+key = "kommungrupp"
+label = "Kommungrupp"
+axes = []
+members = [{ variable = "kommungrupp" }, { variable = "reggrp" }]
+
 [[variant]]
 native_id = "366.1320"
 slug = "internationell-rorlighet"

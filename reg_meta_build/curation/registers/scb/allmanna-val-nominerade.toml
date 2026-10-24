@@ -15,6 +15,13 @@ native_id = "239"
 code = "scb/allmanna-val-nominerade/partikod"
 label = "scb/allmanna-val-nominerade/partinamn"
 
+# RI_valkretskod beside the bare Valkretsnamn (#1790). The LT_ and KO_
+# valkrets codes are uncoded, so a pair would fail its coding guard: they stay
+# apart from their names.
+[[code_label_pair]]
+code = "scb/allmanna-val-nominerade/riksdagsvalkrets-kod"
+label = "scb/allmanna-val-nominerade/riksdagsvalkrets-namn"
+
 [[variant]]
 native_id = "239.466"
 slug = "riksdagsval"

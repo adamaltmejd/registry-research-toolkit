@@ -11,6 +11,12 @@ label = "scb/fortroendevalda/partinamn"
 code = "scb/fortroendevalda/skl-grupp"
 label = "scb/fortroendevalda/skl-gruppnamn"
 
+# SKL_grupp_2011 beside SKL_gruppnamn_2011: the year suffix defeats the name rule
+# (#1790).
+[[code_label_pair]]
+code = "scb/fortroendevalda/skl-grupp-2011"
+label = "scb/fortroendevalda/skl-gruppnamn-2011"
+
 [[variant]]
 native_id = "270.638"
 slug = "fortroendevalda"

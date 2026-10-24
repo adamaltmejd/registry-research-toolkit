@@ -3,6 +3,11 @@ provider = "scb"
 slug = "branslestatistik"
 native_id = "139"
 
+# Bid beside its clear text BrSlag (#1790).
+[[code_label_pair]]
+code = "scb/branslestatistik/bransleslag"
+label = "scb/branslestatistik/bransleslag-namn"
+
 [[variant]]
 native_id = "139.203"
 slug = "industrins-bransleforbrukning"

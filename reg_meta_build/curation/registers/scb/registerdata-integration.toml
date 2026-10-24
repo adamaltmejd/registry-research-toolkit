@@ -3,6 +3,15 @@ provider = "scb"
 slug = "registerdata-integration"
 native_id = "396"
 
+# regso (RegSO) and regso_namn are area names; regso_varde and RegSOkod are the
+# coded RegSO (#1790). Group the codes so no name sits beside them.
+[[group]]
+register = "scb/registerdata-integration"
+key = "regsokod"
+label = "Regionala statistikområden (kod)"
+axes = []
+members = [{ variable = "regso-varde" }, { variable = "regsokod" }]
+
 [[variant]]
 native_id = "396.1531"
 slug = "_default"

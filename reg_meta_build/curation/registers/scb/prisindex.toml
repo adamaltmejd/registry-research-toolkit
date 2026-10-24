@@ -11,6 +11,27 @@ label = "scb/prisindex/prodnamn"
 code = "scb/prisindex/kn4kod"
 label = "scb/prisindex/kn4namn"
 
+[[code_label_pair]]
+code = "scb/prisindex/kn8kod-2"
+label = "scb/prisindex/kn8beskrivning"
+
+# KN4 and KN8 are codes of different granularity, and stat_id is the sampled
+# product offering, not a KN code: one native family holds all five columns,
+# so each level is claimed as its own group and stat_id stands alone (#1790).
+[[group]]
+register = "scb/prisindex"
+key = "kn4"
+label = "KN4-varukod"
+axes = []
+members = [{ variable = "kn4kod" }, { variable = "kn4namn" }]
+
+[[group]]
+register = "scb/prisindex"
+key = "kn8"
+label = "KN8-varukod"
+axes = []
+members = [{ variable = "kn8kod-2" }, { variable = "kn8beskrivning" }]
+
 [[variant]]
 native_id = "296.828"
 slug = "konsumentprisindex-kpi"

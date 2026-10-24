@@ -3,6 +3,16 @@ provider = "scb"
 slug = "iku"
 native_id = "197"
 
+# Kommunnamn carries the kommun value set, so a [[code_label_pair]] fails its
+# label guard: claim the two kommun codes so the name stays out of their group
+# (#1790).
+[[group]]
+register = "scb/iku"
+key = "kommun"
+label = "Kommun"
+axes = []
+members = [{ variable = "kommun" }, { variable = "kommun-kommkod-2012" }]
+
 [[variant]]
 native_id = "197.299"
 slug = "privatagda-flerbostadshus"

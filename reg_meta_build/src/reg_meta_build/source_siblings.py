@@ -24,7 +24,6 @@ from reg_meta_build._curation import (
 from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_curation import ResolutionDiagnostic
 from reg_meta_build.source_effects import record_ref
-from reg_meta_build.source_intervals import scope_bounds
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -62,23 +61,12 @@ def _column(occurrence: EffectiveOccurrence) -> str | None:
     return None
 
 
-def _latest_shapes(
-    occurrences: list[EffectiveOccurrence],
-) -> set[tuple[str | None, str | None]]:
-    """Retain all equally recent evidence; a native ID is not an authority rank."""
-    ranked = []
-    for occurrence in occurrences:
-        bounds = scope_bounds(occurrence.edition_scope)
-        latest = max(hi for _, hi in bounds) if bounds else -1
-        shape = []
-        for name in ("data_type", "data_length"):
-            value = getattr(occurrence.fields, name)
-            shape.append(
-                str(value.value) if value and value.status == "value" else None
-            )
-        ranked.append((latest, (shape[0], shape[1])))
-    maximum = max(rank for rank, _ in ranked)
-    return {shape for rank, shape in ranked if rank == maximum}
+def _shape(occurrence: EffectiveOccurrence) -> tuple[str | None, str | None]:
+    data_type, data_length = (
+        str(value.value) if value and value.status == "value" else None
+        for value in (occurrence.fields.data_type, occurrence.fields.data_length)
+    )
+    return data_type, data_length
 
 
 # The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
@@ -261,7 +249,8 @@ def resolve_sibling_pairs(
     of another. Any code/label column pair keeps the two apart, co-delivered or
     not, and no group the foldable pairs form may hold a code and its label. The
     pair is co-delivered when any column pair is, and the shape guards and
-    evidence use exactly the co-delivered column pairs; the decision's `columns`
+    evidence use exactly the co-delivered column pairs, the shapes compared within
+    each edition that delivers both columns; the decision's `columns`
     name the first of them, else the first code/label pair, else each owner's
     lexically first column. Co-delivery is exact edition identity, never an
     overlap of year spans. An unresolved shape matters only when its alternatives
@@ -292,6 +281,12 @@ def resolve_sibling_pairs(
         )
         owner_columns: dict[str, set[str]] = defaultdict(set)
         editions: dict[NativeKey, set[tuple[str | None, str]]] = defaultdict(set)
+        # Shapes are compared edition by edition (#1783): a shape an owner
+        # delivers in an edition the other owner does not share never disputes
+        # the pair.
+        shapes: dict[
+            tuple[NativeKey, str | None, str], set[tuple[str | None, str | None]]
+        ] = defaultdict(set)
         for occurrence in members:
             column = _column(occurrence)
             fqid = (
@@ -304,6 +299,7 @@ def resolve_sibling_pairs(
             by_column[fqid, column].append(occurrence)
             if occurrence.edition_key is not None:
                 editions[occurrence.edition_key].add((fqid, column))
+                shapes[occurrence.edition_key, fqid, column].add(_shape(occurrence))
             if fqid is not None:
                 owner_columns[fqid].add(column)
         codelivered = {
@@ -314,7 +310,6 @@ def resolve_sibling_pairs(
         }
         if not codelivered or len(owner_columns) < 2:
             continue
-        shapes = {owned: _latest_shapes(rows) for owned, rows in by_column.items()}
         for a, b in combinations(sorted(owner_columns), 2):
             if a.rsplit("/", 1)[0] != b.rsplit("/", 1)[0]:
                 raise ValueError(
@@ -373,8 +368,12 @@ def resolve_sibling_pairs(
             elif together:
                 outcomes = {
                     sibling_shape_conflict(left, right)
+                    for edition, owned in editions.items()
                     for col_a, col_b in together
-                    for left, right in product(shapes[a, col_a], shapes[b, col_b])
+                    if (a, col_a) in owned and (b, col_b) in owned
+                    for left, right in product(
+                        shapes[edition, a, col_a], shapes[edition, b, col_b]
+                    )
                 }
                 withheld_shape = any(
                     {"data_type", "data_length"} & set(row.withheld_fields)
