@@ -428,20 +428,19 @@ edit to one of these files needs a fresh prepare, and a stale root cannot build.
 pins cannot see an adapter change, so the manifest also records the code that prepared
 it: `prepare_code_sha256` (`resolve_code.prepare_code_sha256`), the resolve
 fingerprint's digest over the static import walk from `resolve_code.PREPARE_ROOTS`,
-`__version__` normalized, plus the tracked sources of the native crates `reg_core_py`
-is built from (less their documentation): preparation calls the reg-core period grammar,
+`__version__` normalized, plus the tracked sources of the native crates `reg_core_py` is
+built from (less their documentation): preparation calls the reg-core period grammar,
 and its results land in the prepared records' temporal scopes. It leaves out the built
 extension, the Python version and the workspace `Cargo.toml`/`Cargo.lock` (a rebuilt
 extension, a Python patch or a release's version bump prepares the same bytes, and a
 refusal costs a full re-prepare). `build-db` and `check-curation` refuse a root whose
 recorded fingerprint is not the running builder's (`prepared_code_stale`), in seconds,
-before resolving. The walk is generous: it reaches the resolution models too, so an
-edit to them also forces a re-prepare, and the real-seed cache's `prepare --adopt`
-cannot carry a tree across it. A root from an older manifest schema (one prepared before
-the fingerprint existed has `schema_version` 4) is refused the same way and must be
-re-prepared. In curation
-comments and evidence, an `inputs:` prefix names a path in that repository
-(`inputs:catalog/docs/markdown/lisa/SektorKod.md`).
+before resolving. The walk is generous: it reaches the resolution models too, so an edit
+to them also forces a re-prepare, and the real-seed cache's `prepare --adopt` cannot
+carry a tree across it. A root from an older manifest schema (one prepared before the
+fingerprint existed has `schema_version` 4) is refused the same way and must be
+re-prepared. In curation comments and evidence, an `inputs:` prefix names a path in that
+repository (`inputs:catalog/docs/markdown/lisa/SektorKod.md`).
 
 Raw archives can remain compressed outside Git; the original SCB exports are release
 `scb-raw-2026-03` of the inputs repository. The lossless compact SCB snapshot keeps
