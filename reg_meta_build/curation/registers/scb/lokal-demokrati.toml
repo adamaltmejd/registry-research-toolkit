@@ -2097,42 +2097,131 @@ evidence = "Maintainer-approved retained-source/unknown-ownership, historical mi
 expected_evidence_sha256 = "7fad87878e4335e3b02dc31503284e5bd015c38c1a2b8ee26fcec1dd1c53c706"
 expected_diagnostic_sha256 = "40e21f665ceb95dee574326cdbf328109eb76823506d2603097b539b5a8d7bce"
 
-[[acknowledge]]
-code = "ambiguous_sibling_shape"
-subject = "same_definition_pair:scb/lokal-demokrati/fr1:scb/lokal-demokrati/fr14-28632"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:28632\",\"member:978234\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28632\",\"member:978326\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28632\",\"member:978328\"]}"]
-fields = ["data_type", "data_length"]
-reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "5a4bd57e1314f505ffef841fdf06504887fd8093f0e24ee3ef0e7e47710fd001"
-expected_diagnostic_sha256 = "a28622af58025b921f996f83c0730b2950ca85a0495aa3515525fd8a67529bcb"
+# #1783 per-edition sibling shape disputes found by the wave-2 diagnostic build of
+# PR #1883. Pinned by expected_diagnostic_sha256 only: the evidence digest needs a build.
 
 [[acknowledge]]
 code = "ambiguous_sibling_shape"
-subject = "same_definition_pair:scb/lokal-demokrati/fr13:scb/lokal-demokrati/fr14-28632"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:28632\",\"member:978234\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28632\",\"member:978327\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28632\",\"member:978328\"]}"]
+subject = "same_definition_pair:scb/lokal-demokrati/folkinit:scb/lokal-demokrati/folkinitant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:15024\",\"variable:28630\",\"member:700653\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:15024\",\"variable:28630\",\"member:700654\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28630\",\"member:291566\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28630\",\"member:301088\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:5055\",\"variable:28630\",\"member:310780\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:5055\",\"variable:28630\",\"member:310781\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:15092\",\"variable:28630\",\"member:704607\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:15092\",\"variable:28630\",\"member:704608\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:4438\",\"variable:28630\",\"member:280612\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:4438\",\"variable:28630\",\"member:280613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28630\",\"member:317289\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28630\",\"member:317291\"]}"]
 fields = ["data_type", "data_length"]
-reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "092e85bd022579bc75c5a9f1a2ee3d6125213cccd606f3ee63e4f15ca23d7eb7"
-expected_diagnostic_sha256 = "60bb8088867710f0b36f4900ac67203ae5d916dd15be1d640d52373f46b7c59f"
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2003 (edition 15024): FOLKINIT text(1) beside FOLKINITANT integer(0); 2008 (edition 5055): FOLKINIT text(1) beside FOLKINITANT integer(0); and 2 more co-delivered editions. They agree in 2012 (edition 4657): FOLKINIT text(255) beside FOLKINITANT text(255), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "d6d1e39fee6faf27b9a7fa224e9df0e2601e3a87b84cfca5039fb019342bf408"
 
 [[acknowledge]]
 code = "ambiguous_sibling_shape"
-subject = "same_definition_pair:scb/lokal-demokrati/fr14-28632:scb/lokal-demokrati/fr15"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:28632\",\"member:978233\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:28632\",\"member:978234\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28632\",\"member:978328\"]}"]
+subject = "same_definition_pair:scb/lokal-demokrati/folkomrost:scb/lokal-demokrati/folkomrostant"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:15024\",\"variable:28629\",\"member:700652\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:15024\",\"variable:28629\",\"member:700688\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28629\",\"member:291564\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:4657\",\"variable:28629\",\"member:291582\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:5055\",\"variable:28629\",\"member:310740\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:5055\",\"variable:28629\",\"member:310782\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:15092\",\"variable:28629\",\"member:704576\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:15092\",\"variable:28629\",\"member:704609\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:4438\",\"variable:28629\",\"member:280611\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:4438\",\"variable:28629\",\"member:280923\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28629\",\"member:317276\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:5127\",\"variable:28629\",\"member:317292\"]}"]
 fields = ["data_type", "data_length"]
-reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "37231645eea431384bf3f37eaddf1c2b76bc2ff1baeb610de4f14308362327e5"
-expected_diagnostic_sha256 = "e362748379bad66e5a04b7fa928e7f0dc382458daf67720f4892da0a901bc039"
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2003 (edition 15024): FOLKOMROST text(1) beside FOLKOMROSTANT integer(0); 2008 (edition 5055): FOLKOMROST text(1) beside FOLKOMROSTANT integer(0); and 2 more co-delivered editions. They agree in 2012 (edition 4657): FOLKOMROST text(255) beside FOLKOMROSTANT text(255), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "443e71ded73d21522b19fb213d365d4daee839a29c85663a7516f81e6959c879"
 
 [[acknowledge]]
 code = "ambiguous_sibling_shape"
-subject = "same_definition_pair:scb/lokal-demokrati/fr14-28632:scb/lokal-demokrati/fr16"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:28632\",\"member:978232\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:28632\",\"member:978234\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28632\",\"member:978328\"]}"]
+subject = "same_definition_pair:scb/lokal-demokrati/fr41:scb/lokal-demokrati/fr41-2"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:28617\",\"member:773749\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:28617\",\"member:773750\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28617\",\"member:978339\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28617\",\"member:978340\"]}"]
 fields = ["data_type", "data_length"]
-reason = "Shared wording does not establish a reliable sibling group when the supplied component shape is disputed. Keep the individually supported physical fields and all source facts; do not assert this ambiguous group relationship."
-evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "961d83fb462aeb6d6c398e7c6980ae4d520031964365d70abbd3d462aaf6d411"
-expected_diagnostic_sha256 = "9392ae57555fc0890e26cea9c86b7405e80fce9187634e392e6a85846c8f9423"
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr41_1 text(1) beside Fr41_2 decimal(53). They agree in 2024 (edition 19757): Fr41_1 decimal(53) beside Fr41_2 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "a8782a541f489c69a16daa05b89271406ddc4599b33a9aaa4cf8888094ef68ee"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr41:scb/lokal-demokrati/fr41-3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:28617\",\"member:773749\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:28617\",\"member:773796\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28617\",\"member:978340\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:28617\",\"member:978341\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr41_1 text(1) beside Fr41_3 decimal(53). They agree in 2024 (edition 19757): Fr41_1 decimal(53) beside Fr41_3 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "8be19a8f0d7fb94adf136202f539c2bb958f7c174f2f8ad12f3e19095741b7ef"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr6-2:scb/lokal-demokrati/fr6-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773811\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773823\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:978286\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:980173\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr6_2 decimal(53) beside Fr6_6 text(1). They agree in 2024 (edition 19757): Fr6_2 decimal(53) beside Fr6_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "1fe2cced33d62a7305d298ebb36def365426713737cb7adecc2250c8c8540e9c"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr6-3:scb/lokal-demokrati/fr6-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773812\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773823\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:978285\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:980173\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr6_3 decimal(53) beside Fr6_6 text(1). They agree in 2024 (edition 19757): Fr6_3 decimal(53) beside Fr6_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "56834b152c4e0a59b7488bf0508e5da08f5d88290da4eec128f4b88ee2449b33"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr6-4:scb/lokal-demokrati/fr6-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773821\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773823\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:978282\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:980173\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr6_4 decimal(53) beside Fr6_6 text(1). They agree in 2024 (edition 19757): Fr6_4 decimal(53) beside Fr6_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "38fc8a3fcefbe669d9a59844a9a216de91edbdbf4eebe2ca74aedd0d1390844e"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr6-5:scb/lokal-demokrati/fr6-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773813\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773823\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:978284\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:980173\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr6_5 decimal(53) beside Fr6_6 text(1). They agree in 2024 (edition 19757): Fr6_5 decimal(53) beside Fr6_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "7f8d9b119d2225d5919e4efd14c7d93ae50353848870d0937e73644db2467c05"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr6:scb/lokal-demokrati/fr6-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773817\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:16181\",\"variable:42789\",\"member:773823\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:978283\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1005\",\"edition:19757\",\"variable:42789\",\"member:980173\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16181): Fr6_1 decimal(53) beside Fr6_6 text(1). They agree in 2024 (edition 19757): Fr6_1 decimal(53) beside Fr6_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "1cd6b4eb5cefe11bf702b96ad9571cdff458b1166adf95057f427d1c249d906a"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr7-2:scb/lokal-demokrati/fr7-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773715\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978182\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16180): Fr7_2 decimal(53) beside Fr7_6 text(1). They agree in 2024 (edition 19756): Fr7_2 decimal(53) beside Fr7_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "056e4df6f13c5f7a90123a7f2597ef230fc097dce33b93da21fb71f9782f30f2"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr7-3:scb/lokal-demokrati/fr7-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773716\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978181\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16180): Fr7_3 decimal(53) beside Fr7_6 text(1). They agree in 2024 (edition 19756): Fr7_3 decimal(53) beside Fr7_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "4070dadfc51ee80855750479a6192552ad321d60f8057c3ad7caaf661d591b84"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr7-4:scb/lokal-demokrati/fr7-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773717\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978180\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16180): Fr7_4 decimal(53) beside Fr7_6 text(1). They agree in 2024 (edition 19756): Fr7_4 decimal(53) beside Fr7_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "5c1edb0f1ca2ba88fc5d8b02d5d61cfe5538a246613934bf96aa0dd4994cb913"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr7-5:scb/lokal-demokrati/fr7-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978179\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16180): Fr7_5 decimal(53) beside Fr7_6 text(1). They agree in 2024 (edition 19756): Fr7_5 decimal(53) beside Fr7_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "66adb46b8e84c26e582d200d68e07f1107a80c9ef370f1a2b995734ef5e34069"
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/lokal-demokrati/fr7:scb/lokal-demokrati/fr7-6"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773714\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:16180\",\"variable:42789\",\"member:773719\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:321\",\"variant:1001\",\"edition:19756\",\"variable:42789\",\"member:978183\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2020 (edition 16180): Fr7_1 decimal(53) beside Fr7_6 text(1). They agree in 2024 (edition 19756): Fr7_1 decimal(53) beside Fr7_6 decimal(53), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "fc17263f4469996beae4b03afff6021f202814b3644c8c03099aa45bd086e39f"

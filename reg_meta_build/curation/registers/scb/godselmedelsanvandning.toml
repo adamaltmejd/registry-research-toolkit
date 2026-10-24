@@ -49,3 +49,15 @@ panel_time_grain = "delivery"
 
 
 # register 151
+
+# #1783 per-edition sibling shape disputes found by the wave-2 diagnostic build of
+# PR #1883. Pinned by expected_diagnostic_sha256 only: the evidence digest needs a build.
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/godselmedelsanvandning/po18:scb/godselmedelsanvandning/po8"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:147\",\"variant:1339\",\"edition:11692\",\"variable:2432\",\"member:481884\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:147\",\"variant:1339\",\"edition:11692\",\"variable:2432\",\"member:491966\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:147\",\"variant:1339\",\"edition:14687\",\"variable:2432\",\"member:671225\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:147\",\"variant:1339\",\"edition:14687\",\"variable:2432\",\"member:671231\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:147\",\"variant:1339\",\"edition:18974\",\"variable:2432\",\"member:908958\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:147\",\"variant:1339\",\"edition:18974\",\"variable:2432\",\"member:908964\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2021-07-01-2022-06-30 (edition 18974): po18 decimal(11) beside po8 text(1). They agree in 2015-07-01-2016-06-30 (edition 11692): po18 decimal(11) beside po8 decimal(11), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "47dcb7e0bdde6966ca477a644f4c5e4952c68ff7a59d7a454c4b00d062706312"

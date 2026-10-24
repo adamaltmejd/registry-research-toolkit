@@ -171,3 +171,15 @@ reason = "The source list has23named letter-combination codes and one literal em
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
 expected_evidence_sha256 = "9d962d5983c5401217b4a36151cefe5ab56813f49cfa00957408e354b11efd25"
 expected_diagnostic_sha256 = "4449b823893f492e42be8d295f8571c8d40a6feff4085e7519ae92de40f9cab0"
+
+# #1783 per-edition sibling shape disputes found by the wave-2 diagnostic build of
+# PR #1883. Pinned by expected_diagnostic_sha256 only: the evidence digest needs a build.
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/vaxtskyddsmedel/anvandningsomrade:scb/vaxtskyddsmedel/anvandningsomradetext"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:15970\",\"variable:42775\",\"member:773022\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:15970\",\"variable:42775\",\"member:773064\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:18479\",\"variable:42775\",\"member:863640\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:18479\",\"variable:42775\",\"member:863643\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:42775\",\"member:977772\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:235\",\"variant:431\",\"edition:3522\",\"variable:42775\",\"member:977859\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2017 (edition 15970): Anvandningsomrade decimal(11) beside AnvandningsomradeText text(0); 2021 (edition 18479): Anvandningsomrade decimal(12) beside AnvandningsomradeText text(1024). They agree in 2010 (edition 3522): Anvandningsomrade text(2) beside AnvandningsomradeText text(29), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "689e922333ae9d51089b714099a2d2941455c171bbd671bfd1f8127686f71f53"

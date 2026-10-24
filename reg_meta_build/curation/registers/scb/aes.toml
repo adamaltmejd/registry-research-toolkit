@@ -6390,3 +6390,15 @@ variable = "301.24960"
 columns = { INFFIELD1 = "301.24960.inffield1", INFFIELD2 = "301.24960.inffield2", infinr1 = "301.24960.infinr1", infinr2 = "301.24960.infinr2", infinr3 = "301.24960.infinr3" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "18a221ddfaa6e63c591587d943c47df9b9450b53ba5f911bdd50f6ab7cde94ce"
+
+# #1783 per-edition sibling shape disputes found by the wave-2 diagnostic build of
+# PR #1883. Pinned by expected_diagnostic_sha256 only: the evidence digest needs a build.
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/aes/dropeduclevel:scb/aes/hatlevel"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:301\",\"variant:849\",\"edition:11748\",\"variable:24801\",\"member:485189\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:301\",\"variant:849\",\"edition:11748\",\"variable:24801\",\"member:485310\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:301\",\"variant:849\",\"edition:18969\",\"variable:24801\",\"member:908549\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:301\",\"variant:849\",\"edition:18969\",\"variable:24801\",\"member:908718\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:301\",\"variant:849\",\"edition:5659\",\"variable:24801\",\"member:348599\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2022 (edition 18969): DROPEDUCLEVEL decimal(53) beside HATLEVEL text(3). They agree in 2016 (edition 11748): DROPEDUCLEVEL text(3) beside HATLEVEL text(3), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "61163bb712d098cc90324b1dc85aecb90cf0d66ba8fe1793e5c90dba55b84460"
