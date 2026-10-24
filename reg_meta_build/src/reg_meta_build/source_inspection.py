@@ -16,11 +16,10 @@ from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     SnapshotError,
     _decode_cell,
-    _git,
     _tracked_source_commit,
     _update_record_hash,
+    tracked_native_sources,
 )
-from reg_meta_build.native_sources import native_doc, native_sources
 from reg_meta_build.source_records import (
     NativeCoordinates,
     ScopeInterval,
@@ -511,24 +510,6 @@ def _annual_targets_within_workbook_scope(
     return tuple(targets)
 
 
-def _native_sources(repo: Path) -> list[Path]:
-    """The tracked sources `reg_core_py` (the FQID and period grammar) is built from.
-    The extension loads from the environment, not the checkout, so its sources are
-    named by path. Their documentation (`native_doc`) is not pinned."""
-    sources = native_sources(repo)
-    tracked = [
-        path
-        for path in _git(repo, "ls-files", "--", *sources).splitlines()
-        if not native_doc(path, sources)
-    ]
-    if not any(path.startswith("crates/reg-core-py/") for path in tracked):
-        raise SnapshotError(
-            "source record interpreter dependency reg-core-py is not tracked in "
-            f"the builder checkout: {repo}"
-        )
-    return [repo / path for path in tracked]
-
-
 def source_interpreter_commit() -> str:
     """Pin the clean tracked implementation that gives source records meaning."""
     here = Path(__file__).resolve()
@@ -550,7 +531,8 @@ def source_interpreter_commit() -> str:
             package / "native_sources.py",
             package / "sources" / "lisa.py",
             package / "sources" / "scb_records.py",
-            *_native_sources(repo),
+            # The FQID and period grammar source records are formed with.
+            *(repo / path for path in tracked_native_sources(repo)),
             repo / "uv.lock",
         ),
         identity="source record interpreter",

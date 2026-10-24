@@ -13,14 +13,23 @@ are formed here.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import shutil
 import tempfile
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    TypeAdapter,
+    ValidationError,
+    model_validator,
+)
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -349,7 +358,20 @@ _EVIDENCE_ADAPTER = TypeAdapter(PreparedEvidence)
 
 
 def _manifest(payload: bytes) -> PreparedCatalogManifest:
-    document = _ManifestDocument.model_validate_json(payload)
+    try:
+        document = _ManifestDocument.model_validate_json(payload)
+    except ValidationError:
+        # A root another builder's preparation wrote under an older manifest schema
+        # is stale, not malformed: name the re-prepare, not a repair.
+        with suppress(ValueError, AttributeError):
+            recorded = json.loads(payload).get("schema_version")
+            current = _ManifestDocument.model_fields["schema_version"].default
+            if type(recorded) is int and recorded < current:
+                raise _prepared_code_stale(
+                    f"The prepared root's manifest has schema_version {recorded}; "
+                    f"this builder reads {current}."
+                ) from None
+        raise
     return PreparedCatalogManifest(
         **document.model_dump(), artifact_sha256=hashlib.sha256(payload).hexdigest()
     )
@@ -1006,20 +1028,24 @@ def check_prepare_code(manifest: PreparedCatalogManifest) -> None:
     a stale acknowledgement or not at all (#1807).
     """
     if (running := prepare_code_sha256()) != manifest.prepare_code_sha256:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="prepared_code_stale",
-            error_class="configuration",
-            message=(
-                "The prepared root was prepared by other preparation code: it records "
-                f"prepare_code_sha256 {manifest.prepare_code_sha256}, this builder's "
-                f"is {running}."
-            ),
-            remediation=(
-                "Run prepare-sources with this builder into a new directory, accept "
-                "it, and build from that prepared root."
-            ),
+        raise _prepared_code_stale(
+            "The prepared root was prepared by other preparation code: it records "
+            f"prepare_code_sha256 {manifest.prepare_code_sha256}, this builder's "
+            f"is {running}."
         )
+
+
+def _prepared_code_stale(message: str) -> RegMetaError:
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="prepared_code_stale",
+        error_class="configuration",
+        message=message,
+        remediation=(
+            "Run prepare-sources with this builder into a new directory, accept "
+            "it, and build from that prepared root."
+        ),
+    )
 
 
 @dataclass(frozen=True)

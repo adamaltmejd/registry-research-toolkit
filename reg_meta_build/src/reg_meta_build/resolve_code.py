@@ -19,13 +19,18 @@ the writer alone runs, so a writer-only change still reuses a bundle:
 Third-party Python dependencies are not covered; the real-seed cache keys `uv.lock`.
 
 The prepare fingerprint (`prepare_code_sha256`) is the same digest over the walk from
-`PREPARE_ROOTS`, with neither the native package nor the Python version: a prepared
-root records it, and `build-db` and `check-curation` refuse a root whose recorded value
-is not the running builder's (`prepared_catalog.check_prepare_code`), so a root
-prepared by other adapter code never builds. A refusal costs a full re-prepare, so it
-keys only the `reg_meta_build` sources: an extension rebuilt by another toolchain, or a
-Python patch release, prepares the same bytes. The real-seed cache's prepare key holds
-this digest and adds those runtime facts, `uv.lock` and the CLI entry point.
+`PREPARE_ROOTS`, plus the tracked sources of the native crates `reg_core_py` is built
+from (`input_snapshot.tracked_native_sources`, less their documentation): preparation
+calls the period grammar (`edition_bounds`), whose results land in the prepared
+records' temporal scopes. A prepared root records it, and `build-db` and
+`check-curation` refuse a root whose recorded value is not the running builder's
+(`prepared_catalog.check_prepare_code`), so a root prepared by other adapter or grammar
+code never builds. A refusal costs a full re-prepare, so it keys sources, not runtime
+facts: not the built extension (`native_digests`: one rebuilt by another toolchain
+prepares the same bytes), not the Python version, and not the workspace `Cargo.toml`
+and `Cargo.lock` (a release bumps `reg-meta`'s version there, and the grammar's output
+does not depend on a third-party pin). The real-seed cache's prepare key holds this
+digest and adds those, `uv.lock` and the CLI entry point.
 """
 
 from __future__ import annotations
@@ -40,6 +45,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import reg_core_py
+
+from reg_meta_build.input_snapshot import tracked_native_sources
+from reg_meta_build.native_sources import native_sources
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Mapping
@@ -62,12 +70,14 @@ RESOLVE_EXCLUDED = frozenset(
 # not reach it, and the CLI calls it only for parser help text and for the confinement
 # check of an `--output`, neither of which reaches the prepared output.
 #
-# simplify: a static walk, so it is generous. It reaches the resolution models
-# (`resolved_catalog`, `_resolved_common`) among others, and an edit to any walked
-# module refuses every prepared root, which then costs a 1-2 h re-prepare. Narrow it
-# (split the models preparation imports out of the resolve modules) if that cost
-# lands on edits preparation cannot reach. Files are found by directory listing, not
-# git (`code_files`): a stray non-dot file beside a walked module is a code change.
+# simplify: a static walk, so it is generous. It still reaches the resolution models
+# (`resolved_catalog`, `_resolved_common`), and an edit to any walked module refuses
+# every prepared root, which then costs a 1-2 h re-prepare. The issue code
+# `source_support` reads lives in `errors`, so the walk stays out of
+# `catalog_dependencies` and the catalog modules behind it; the next split, if edits
+# to the resolution models keep refusing roots, is `source_coding`'s import of
+# `resolved_catalog`. Files are found by directory listing, not git (`code_files`): a
+# stray non-dot file beside a walked module is a code change.
 #
 # Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
 # starts calling a module outside this walk, or when a module in the walk starts
@@ -75,8 +85,9 @@ RESOLVE_EXCLUDED = frozenset(
 # curation tree's authored sources (`prepared_catalog.AUTHORED_SOURCES`), which a
 # prepared root pins by content; `curation_tree` and `fqid_slugs` read the rest of the
 # tree, and the prepare path calls neither. The walk imports `reg_core_py`
-# (`_resolved_common`, `_curation`, `edition_bounds`), which the fingerprint leaves
-# out; add `native_digests` the day preparation's output depends on native code.
+# (`_resolved_common`, `_curation`, `edition_bounds`), and preparation's output
+# depends on it (the period grammar), so the fingerprint also holds the native
+# crates' sources (`prepare_code_digests`).
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
@@ -262,16 +273,27 @@ def _running_resolve_code_sha256() -> str:
     return _digest(resolve_code_digests())
 
 
-def prepare_code_digests(source_root: Path | None = None) -> dict[str, str]:
+def prepare_code_digests(source_root: Path | None = None) -> dict[str, object]:
     """The prepare fingerprint's inputs: the digest of each file the walk from
     `PREPARE_ROOTS` reaches, by path relative to `source_root` (as in
-    `resolve_code_digests`)."""
+    `resolve_code_digests`), and of each tracked native crate source, by path
+    relative to the checkout that holds `source_root`."""
     if source_root is None:
         source_root = Path(__file__).resolve().parents[1]
     modules, _ = import_closure(source_root, PREPARE_ROOTS)
+    repo = source_root.parents[1]
+    # The crate directories only: the module docstring says why the workspace
+    # `Cargo.toml` and `Cargo.lock`, the other native sources, stay out.
+    crates = [path for path in native_sources(repo) if (repo / path).is_dir()]
     return {
-        path.relative_to(source_root).as_posix(): source_sha256(path)
-        for path in sorted(code_files(modules.values()))
+        "sources": {
+            path.relative_to(source_root).as_posix(): source_sha256(path)
+            for path in sorted(code_files(modules.values()))
+        },
+        "native": {
+            path: _sha256(repo / path)
+            for path in sorted(tracked_native_sources(repo, crates))
+        },
     }
 
 

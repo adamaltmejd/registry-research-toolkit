@@ -6,7 +6,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
+from reg_meta_build.errors import DEFERRED_REFERENCE
 from reg_meta_build.resolved_metadata import (
     ResolvedSuccession,
     ResolvedVariantRef,

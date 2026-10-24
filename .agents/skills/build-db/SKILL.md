@@ -122,9 +122,10 @@ refuse a prepared root whose pinned authored sources differ from the curation tr
 prepare. The manifest also records the builder's `prepare_code_sha256`, and both
 commands refuse a root another builder's preparation code produced
 (`prepared_code_stale`): after an edit to any module in the prepare walk
-(`resolve_code.PREPARE_ROOTS`), prepare again; `prepare --adopt` cannot carry a tree
-across it. A root prepared before that fingerprint existed (manifest `schema_version` 4)
-is refused at manifest validation and must be re-prepared.
+(`resolve_code.PREPARE_ROOTS`) or to a tracked non-doc file under `crates/reg-core` or
+`crates/reg-core-py`, prepare again; `prepare --adopt` cannot carry a tree across it. A
+root prepared before that fingerprint existed (manifest `schema_version` 4) is refused
+with the same code and must be re-prepared.
 
 On a miss the cache runs `reg-meta-build prepare-sources` with these options into
 `--output-dir`. On a hit `--output-dir` is unused, and the result names the stored

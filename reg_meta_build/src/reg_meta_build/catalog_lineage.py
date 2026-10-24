@@ -8,7 +8,8 @@ from dataclasses import dataclass
 from itertools import combinations
 from typing import TYPE_CHECKING
 
-from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE, CatalogDependencies
+from reg_meta_build.catalog_dependencies import CatalogDependencies
+from reg_meta_build.errors import DEFERRED_REFERENCE
 from reg_meta_build.resolved_metadata import (
     ResolvedLineageWarning,
     ResolvedStateLineage,

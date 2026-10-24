@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
+from reg_meta_build.errors import DEFERRED_REFERENCE
 from reg_meta_build.normalization import normalize_token
 from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_curation import ResolutionDiagnostic

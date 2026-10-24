@@ -42,10 +42,11 @@ in its repository (the manifest records it); the digest of each authored source
 the thin-provider TOMLs and `scb_canonical.toml`, an absent one as null), not the
 whole curation digest, so other curation edits keep the entry; the builder's own
 `prepare_code_sha256` (`reg_meta_build.resolve_code`: the static import walk from the
-`prepare-sources` entry point, reported by the probe), the value a prepared root
-records and a build admits it by, plus the files that fingerprint leaves out
-(`prepare_code`: the CLI entry point, `uv.lock`, and the native extension sources
-because a walked module imports `reg_core_py`); the Python and SQLite
+`prepare-sources` entry point and the native crates' tracked sources, reported by the
+probe), the value a prepared root records and a build admits it by, plus the files
+that fingerprint leaves out (`prepare_code`: the CLI entry point, `uv.lock`, and the
+native sources whole, `Cargo.toml`, `Cargo.lock` and untracked files included, because
+a walked module imports `reg_core_py`); the Python and SQLite
 versions and the loaded extension. Every key holds `uv.lock` as `lock_sha256` does:
 only the locked runtime closure of `reg-meta-build` (`keyed_cache.uv_lock_sha256`: its
 transitive dependencies, never a dev group), so a dev-only pin (pytest, ruff, ...)
@@ -63,7 +64,7 @@ accepted tree of the same bundle under the current key without a rerun (one prep
 under an earlier key, when the maintainer judges the code change cannot reach it); the
 record must pass the same lookup check, which refuses a tree whose recorded
 `prepare_code_sha256` is not the builder's (`prepared_code_stale`): only a change
-outside the fingerprint (the CLI, a lock, the extension) can be adopted across.
+outside the fingerprint (the CLI, a lock, the built extension) can be adopted across.
 
 Build key: the raw content of `reg_meta_build/src` and the native extension sources,
 and `uv.lock`'s runtime closure (`lock_sha256`). The database records no dependency
@@ -432,9 +433,11 @@ def prepare_code(walk: dict) -> dict[str, str]:
     The builder's `prepare_code_sha256` covers the `reg_meta_build` files its import
     walk from `PREPARE_ROOTS` reaches (`resolve_code.import_closure`: every import,
     function-local ones included, whether or not the prepare path reaches them, and
-    the data files beside each walked module), with `__version__` normalized. The key
-    adds what that fingerprint leaves out: the CLI entry point, `uv.lock`, and the
-    native extension sources when a walked module imports `reg_core_py`. A lock leaves
+    the data files beside each walked module), with `__version__` normalized, and the
+    native crates' tracked non-doc sources. The key adds what that fingerprint leaves
+    out: the CLI entry point, `uv.lock`, and the native sources whole (`Cargo.toml`,
+    `Cargo.lock` and untracked files too) when a walked module imports `reg_core_py`,
+    so it stays a superset of the fingerprint. A lock leaves
     out its workspace members' own versions and every package outside the builder's
     runtime closure (`lock_sha256`). Every other change, a third-party runtime pin
     included, still moves the key.
