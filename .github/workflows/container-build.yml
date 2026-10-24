@@ -11,7 +11,8 @@
 # provenance-confinement assertion #3 (the RUN check fails the build if
 # reg_meta.provenance.db* is present). Nothing deploys.
 #
-# Pushes to main: the `changes` filter scopes four deploy jobs. Image-affecting paths
+# Pushes to main: the `changes` filter, diffed against the last deployed commit rather
+# than the push's `before` (#1481, see the job), scopes four deploy jobs. Image-affecting paths
 # build, push and `flyctl deploy` both origins (`deploy`, `deploy-swecov`). Each edge
 # job (`edge-deploy` for global, `edge-deploy-swecov`, which also builds the SPA)
 # runs when its own worker's inputs change, and after every origin deploy of its
@@ -21,7 +22,8 @@
 # its origin (deploy-skew guard). Every deploy job also verifies it is still main's
 # HEAD before shipping: GHA concurrency serializes deploys but admits them in
 # BUILD-COMPLETION order, so without the guard an older commit's slow build could
-# overwrite a newer deploy.
+# overwrite a newer deploy. A commit the guard skips is not lost: the next push's
+# `changes` range still starts at the last deployed commit, so it covers it.
 #
 # There is no separate staging, so every relevant main push deploys.
 # workflow_dispatch is the manual escape hatch (rebuild + deploy everything); the
@@ -64,14 +66,72 @@ jobs:
     if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
-      image: ${{ steps.filter.outputs.image }}
-      edge_global: ${{ steps.filter.outputs.edge_global }}
-      edge_swecov: ${{ steps.filter.outputs.edge_swecov }}
+      image: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.image }}
+      edge_global: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_global }}
+      edge_swecov: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_swecov }}
     steps:
+      # Full history on a push, for the ancestry check below.
       - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: ${{ github.event_name != 'push' && 1 || 0 }}
+      # A push diffs against the last DEPLOYED commit, not the push's `before` (#1481).
+      # Every deploy job skips unless its commit is still main's HEAD, so when push A
+      # touches a served path and push B lands before A's deploy runs, A skips; diffed
+      # against `before` (= A), B would see no served path and skip too, leaving A off
+      # production. Diffed against the last deployed commit, B's range includes A.
+      #
+      # "Deployed" is read from this workflow's run history: the newest successful main
+      # run (push or dispatch only: a fork PR from a branch named `main` also lists
+      # here) during which no other push run started, so it was still HEAD when it
+      # finished and none of its deploys took the HEAD skip. A push created up to 300 s
+      # after the run's `updatedAt` also counts as overlapping, so a HEAD-skip just
+      # before the run ends cannot pass as deployed. A run that overlapped a later push
+      # might have skipped, so it never counts; widening the window only excludes more
+      # candidates, so that over-includes paths (a redundant redeploy) but never misses one. An unfinished
+      # or failed run never counts either, so a red deploy is retried by the next push.
+      # Blind spots: a `pending_bump` run (#448) counts though it deployed nothing,
+      # which the owed release's dispatch covers. A `[skip ci]` push starts no run, so
+      # a run it overlapped (and HEAD-skipped) would count: the gap reopens for that
+      # one case; none of main's commits use it. No commit found in the last 200 runs
+      # (or one that is not an ancestor) counts as everything changed.
+      #
+      # Rejected: dispatching HEAD's run from a skipped deploy needs `actions: write`,
+      # which this workflow does not hold; reading the deployed version from the edge
+      # or Fly needs a version header the workers do not expose, or the deploy tokens.
+      - name: Resolve the last deployed commit
+        id: base
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # shellcheck disable=SC2016  # $pushes and $r are jq variables
+          base=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow container-build.yml \
+            --branch main --limit 200 --json headSha,event,conclusion,createdAt,updatedAt \
+            --jq '[.[] | select(.event == "push") | .createdAt] as $pushes
+              | [.[] | select(.conclusion == "success"
+                              and (.event == "push" or .event == "workflow_dispatch"))
+                  | . as $r
+                  | select(all($pushes[]; . <= $r.createdAt
+                      or (fromdateiso8601) >= ($r.updatedAt | fromdateiso8601) + 300))]
+              | sort_by(.createdAt) | last | .headSha // empty')
+          if [ -n "$base" ] && git merge-base --is-ancestor "$base" "$GITHUB_SHA"; then
+            echo "Diffing against the last deployed commit $base"
+            echo "sha=$base" >> "$GITHUB_OUTPUT"
+          else
+            if [ -n "$base" ]; then
+              echo "::warning::last deployed commit $base is not an ancestor of $GITHUB_SHA or is not fetched; treating every path as changed"
+            else
+              echo "::warning::no deployed commit found in the last 200 main runs; treating every path as changed"
+            fi
+            echo "all=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: dorny/paths-filter@v4.0.3
         id: filter
+        if: steps.base.outputs.all != 'true'
         with:
+          # Empty on a pull request, where the filter diffs against the PR base.
+          base: ${{ steps.base.outputs.sha }}
           # `image` lists exactly what enters the Docker image (Dockerfile
           # COPY surfaces + bake inputs) plus Fly origin config that should
           # force a redeploy. NOT all of reg_webapp/**: edge/, .claude/, and
