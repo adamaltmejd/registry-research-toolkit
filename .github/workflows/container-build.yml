@@ -81,10 +81,13 @@ jobs:
       # production. Diffed against the last deployed commit, B's range includes A.
       #
       # "Deployed" is read from this workflow's run history: the newest successful main
-      # run (push or dispatch) during which no other push run started, so it was still
-      # HEAD when it finished and none of its deploys took the HEAD skip. A run that
-      # overlapped a later push might have skipped, so it never counts; that
-      # over-includes paths (a redundant redeploy) but never misses one. An unfinished
+      # run (push or dispatch only: a fork PR from a branch named `main` also lists
+      # here) during which no other push run started, so it was still HEAD when it
+      # finished and none of its deploys took the HEAD skip. A push created up to 300 s
+      # after the run's `updatedAt` also counts as overlapping, so a HEAD-skip just
+      # before the run ends cannot pass as deployed. A run that overlapped a later push
+      # might have skipped, so it never counts; widening the window only excludes more
+      # candidates, so that over-includes paths (a redundant redeploy) but never misses one. An unfinished
       # or failed run never counts either, so a red deploy is retried by the next push.
       # Blind spots: a `pending_bump` run (#448) counts though it deployed nothing,
       # which the owed release's dispatch covers. A `[skip ci]` push starts no run, so
@@ -106,14 +109,21 @@ jobs:
           base=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow container-build.yml \
             --branch main --limit 200 --json headSha,event,conclusion,createdAt,updatedAt \
             --jq '[.[] | select(.event == "push") | .createdAt] as $pushes
-              | [.[] | select(.conclusion == "success") | . as $r
-                  | select(all($pushes[]; . <= $r.createdAt or . >= $r.updatedAt))]
+              | [.[] | select(.conclusion == "success"
+                              and (.event == "push" or .event == "workflow_dispatch"))
+                  | . as $r
+                  | select(all($pushes[]; . <= $r.createdAt
+                      or (fromdateiso8601) >= ($r.updatedAt | fromdateiso8601) + 300))]
               | sort_by(.createdAt) | last | .headSha // empty')
           if [ -n "$base" ] && git merge-base --is-ancestor "$base" "$GITHUB_SHA"; then
             echo "Diffing against the last deployed commit $base"
             echo "sha=$base" >> "$GITHUB_OUTPUT"
           else
-            echo "::warning::no deployed ancestor of $GITHUB_SHA in the last 200 runs; treating every path as changed"
+            if [ -n "$base" ]; then
+              echo "::warning::last deployed commit $base is not an ancestor of $GITHUB_SHA or is not fetched; treating every path as changed"
+            else
+              echo "::warning::no deployed commit found in the last 200 main runs; treating every path as changed"
+            fi
             echo "all=true" >> "$GITHUB_OUTPUT"
           fi
       - uses: dorny/paths-filter@v4.0.3
