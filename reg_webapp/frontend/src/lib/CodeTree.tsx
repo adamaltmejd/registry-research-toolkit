@@ -25,6 +25,16 @@ interface CodeNode {
   code: ClassificationCodeModel;
 }
 
+/** The heading a root retry falls back to: the labelled section holding the
+ * tree (its `h2`, made focusable by `SubjectSection`), or the `summary` of the
+ * disclosure it sits in. */
+function panelHeading(from: HTMLElement | null): HTMLElement | null {
+  const section = from?.closest("section[aria-labelledby]");
+  const id = section?.getAttribute("aria-labelledby");
+  if (id) return document.getElementById(id);
+  return from?.closest("details")?.querySelector("summary") ?? null;
+}
+
 function nodesOf(level: Level | undefined): CodeNode[] {
   return level?.status === "ok"
     ? level.rows.map((code) => ({ id: code.code, code }))
@@ -56,13 +66,18 @@ export function CodeTree({
   const loadRoots = useEffectEvent(() => load(""));
   useEffect(() => loadRoots(), []);
 
-  // A retry swaps the focused error row for the (unfocusable) loader, so RAC
-  // falls back to the parent row. Once the level settles, focus moves on to
-  // what replaced the error: its first child, or the error row again.
+  // A retry swaps the focused error (a nested row, or the roots' Retry button)
+  // for the loader, so focus would fall to the parent row or to <body>. Once the
+  // level settles, focus moves on to what replaced the error: its first row, the
+  // error again, or, with no row to land on, the heading of the panel holding
+  // the tree. The roots are the level "".
   const retrying = useRef<string | null>(null);
+  const heading = useRef<HTMLElement | null>(null);
   const treeElement = useRef<HTMLDivElement>(null);
+  const rootStatus = useRef<HTMLDivElement>(null);
   function retry(parent: string): void {
     retrying.current = parent;
+    if (parent === "") heading.current = panelHeading(rootStatus.current);
     load(parent);
   }
   useEffect(() => {
@@ -79,6 +94,14 @@ export function CodeTree({
     // not yet know, so the row is focused in the DOM once it exists; the row's
     // own focus handler then moves the tree's focused key to it.
     requestAnimationFrame(() => {
+      if (parent === "" && level.status === "error") {
+        rootStatus.current?.querySelector("button")?.focus();
+        return;
+      }
+      if (parent === "" && level.status === "ok" && level.rows.length === 0) {
+        heading.current?.focus();
+        return;
+      }
       // Matched by attribute value, not a selector: CSS.escape turns the NUL
       // in an error or empty row's key into U+FFFD.
       const rows =
@@ -108,11 +131,11 @@ export function CodeTree({
   }
   if (roots.status === "error") {
     return (
-      <div className={styles.status} role="alert">
+      <div ref={rootStatus} className={styles.status} role="alert">
         <p className="error">
           <span aria-hidden="true">✕</span> Could not load codes: {roots.error}
         </p>
-        <Button onPress={() => load("")}>Retry</Button>
+        <Button onPress={() => retry("")}>Retry</Button>
       </div>
     );
   }

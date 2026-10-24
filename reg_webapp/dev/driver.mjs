@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: thirteen scenarios (three /project
-// error+retry, two /project period, one /project column removal, six catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: fourteen scenarios (three /project
+// error+retry, two /project period, one /project column removal, seven catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// thirteen.
+// fourteen.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -155,7 +155,7 @@ function check(condition, message) {
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 76 PNGs. A bare `<out-dir>` runs all thirteen scenarios;
+// These write 84 PNGs. A bare `<out-dir>` runs all fourteen scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -820,6 +820,49 @@ async function browseSearchCase(page, _counts, shoot) {
   }
 }
 
+/** Scenario — a classification's code tree whose first read fails (#1539). The
+ * roots' Retry unmounts as the level reloads, so focus used to fall to <body>
+ * after a failed retry and after a successful one: it must stay on the new Retry
+ * button, then land on the first code. */
+async function codeTreeRetryCase(page, counts, shoot) {
+  const restore = await failInTransport(page, "/values/**parent=*", counts);
+  await page.reload();
+  await settled(page);
+  const retry = page.getByRole("button", { name: "Retry" });
+  await retry.waitFor();
+  await tabTo(page, retry, "the code tree's Retry");
+  await shoot("code-tree-error");
+
+  // The old Retry button still holds focus until the level reloads, so wait for
+  // the second failed read, then for a DIFFERENT Retry button to hold focus.
+  const oldRetry = await retry.elementHandle();
+  await page.keyboard.press("Enter");
+  for (let i = 0; counts.injected < 2; i++) {
+    check(i < 200, "the root retry never issued its read");
+    await page.waitForTimeout(50);
+  }
+  await page.waitForFunction(
+    (old) =>
+      document.activeElement !== old &&
+      document.activeElement?.tagName === "BUTTON" &&
+      document.activeElement.textContent === "Retry",
+    oldRetry,
+    { timeout: 10_000 },
+  );
+  check(counts.injected === 2, `the retry made ${counts.injected - 1} more reads, wanted 1`);
+  check(await focused(retry), "a failed root retry left focus off the new Retry button");
+
+  await restore();
+  await page.keyboard.press("Enter");
+  const first = page.getByRole("row", { name: /Jordbruk, skogsbruk och fiske/ });
+  await first.waitFor();
+  await page.waitForFunction(() => document.activeElement?.getAttribute("role") === "row", null, {
+    timeout: 10_000,
+  });
+  check(await focused(first), "a successful root retry left focus off the first code");
+  await shoot("code-tree-retried");
+}
+
 /** Scenario 6 — the source's PERIOD, edited on its /project card (Y-81) with the
  * source timeline's thumbs (#1838). A researcher whose study window is 2018..2020
  * wants ONE source to reach back to 2015, without deleting and rebuilding it. The
@@ -1393,6 +1436,13 @@ try {
       shots: 1,
       route: "/catalog/scb/lisa",
       run: browseSearchCase,
+    },
+    // The code tree's root read fails, then the retry does, then it succeeds:
+    // focus must follow the Retry button, then the first code.
+    "code-tree-retry": {
+      shots: 2,
+      route: "/catalog/class/sni-test",
+      run: codeTreeRetryCase,
     },
     // Opens the SAME synthetic project as the recovery cases — the file whose
     // arrival has to wait for the researcher's answer.

@@ -31,7 +31,7 @@ export function SubjectSection({
   const id = useId();
   return (
     <section className={styles.section} aria-labelledby={id}>
-      <h2 id={id} className={styles.sectionHeading}>
+      <h2 id={id} className={styles.sectionHeading} tabIndex={-1}>
         {title}
       </h2>
       {children}
