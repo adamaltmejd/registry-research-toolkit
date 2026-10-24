@@ -570,29 +570,29 @@ Per binding, in declaration order, over its source's period
    is decided per instant, not over the slice: it serves exactly the slice's instants
    where SCB did not deliver the mapped spelling, the inventory's `_fallbacks` rule
    (conformance `api/held-projection-served-past-co-delivery`). Coverage
-   (`states::held`) still judges the fallback over each state's whole bounds, so where
-   a state spans a co-delivered instant it under-reports what the order serves; it never
-   over-reports. A held edition that overlaps the
-   request but lies wholly outside the binding's column windows is
-   `column_window_unavailable`. Any uncovered subperiod blocks the whole order
-   (`coverage_gap`); a slice nothing serves is `mapping_missing`. The materializer never
-   chooses between tables: the inventory's one-to-one invariant leaves at most one
-   `(table, column)` per cell instant per partition, a spelling a table serves through
-   its one representation included, so every contribution is wanted whole. A wide-pivot
-   member set ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings
-   resolution invariants") is that one location: every position member serves the
-   table's edition and is emitted, while a year or month member serves only its own
-   period, so it matches and covers only where that period reaches the slice. A column
-   window (`holding_mapping.window_lo`/`window_hi`, #1645) likewise limits a mapping to
-   its own period: the column matches, covers and is emitted only there, and a request
-   outside every window of a column is a gap, never served from its table's edition. A
-   declared projection's value mapping (`holding_table.projection_of`, #1634) is dropped
-   wherever its parent serves it: a parent mapping serves the same canonical triple over
-   that instant (its own spelling, or one its one representation serves where SCB did
-   not deliver that representation anywhere in the projection mapping's period), at the
-   same position. A projection's position member is served only by the parent's member
-   of that position, and a plain column, a year or month member or a windowed mapping
-   only by a parent mapping that is not a position member. The parent serves a cell only
+   (`states::held`) still judges the fallback over each state's whole bounds, so where a
+   state spans a co-delivered instant it under-reports what the order serves; it never
+   over-reports. A held edition that overlaps the request but lies wholly outside the
+   binding's column windows is `column_window_unavailable`. Any uncovered subperiod
+   blocks the whole order (`coverage_gap`); a slice nothing serves is `mapping_missing`.
+   The materializer never chooses between tables: the inventory's one-to-one invariant
+   leaves at most one `(table, column)` per cell instant per partition, a spelling a
+   table serves through its one representation included, so every contribution is wanted
+   whole. A wide-pivot member set
+   ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings resolution
+   invariants") is that one location: every position member serves the table's edition
+   and is emitted, while a year or month member serves only its own period, so it
+   matches and covers only where that period reaches the slice. A column window
+   (`holding_mapping.window_lo`/`window_hi`, #1645) likewise limits a mapping to its own
+   period: the column matches, covers and is emitted only there, and a request outside
+   every window of a column is a gap, never served from its table's edition. A declared
+   projection's value mapping (`holding_table.projection_of`, #1634) is dropped wherever
+   its parent serves it: a parent mapping serves the same canonical triple over that
+   instant (its own spelling, or one its one representation serves where SCB did not
+   deliver that representation anywhere in the projection mapping's period), at the same
+   position. A projection's position member is served only by the parent's member of
+   that position, and a plain column, a year or month member or a windowed mapping only
+   by a parent mapping that is not a position member. The parent serves a cell only
    where its own served period (its edition, or the mapping's member or window) covers
    the instant the projection's mapping serves: a projection cell outside the parent's
    window stays the projection's and counts as its own cell for emission (conformance
