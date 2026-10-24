@@ -1779,7 +1779,10 @@ are dropped, so the code keeps its own folds (#1760). Its scope is the code/labe
 whose two owners share one native family, read per family; a code and its label in
 different families that a third owner bridges are not seen. Declared pairs and curated
 groups are not pruned: they are explicit. Only a declared `[[code_label_pair]]` puts a
-code and its label in one group.
+code and its label in one group. `_code_label_key` strips the election prefix from both
+sides, so a code of one election kind could pair with a label of another
+(`LT_valkretskod` beside `RI_valkretsnamn`); no instance exists today, and the shape and
+coding guards fail it safe. A curated group needs at least two members.
 
 Classification succession combines explicit edges with the accepted guarded edition
 rule. Only adjacent recognized editions with matching year-stripped names qualify.

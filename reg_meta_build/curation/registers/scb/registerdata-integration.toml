@@ -12,6 +12,15 @@ label = "Regionala statistikområden (kod)"
 axes = []
 members = [{ variable = "regso-varde" }, { variable = "regsokod" }]
 
+# regso (RegSO, "Anger namnet på området") and regso_namn are the same name under
+# two spellings. Grouped so the `_` strip does not read them as a code~label pair.
+[[group]]
+register = "scb/registerdata-integration"
+key = "regso"
+label = "Regionala statistikområden (namn)"
+axes = []
+members = [{ variable = "regso" }, { variable = "regso-namn" }]
+
 [[variant]]
 native_id = "396.1531"
 slug = "_default"
