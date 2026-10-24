@@ -1,4 +1,5 @@
-"""The resolve phase's code fingerprint, which a resolved bundle records.
+"""The resolve and prepare phases' code fingerprints, which a resolved bundle and a
+prepared root record.
 
 A bundle replayed by other resolve code would place stale resolutions under the
 current builder commit, so `materialize-db` refuses any bundle whose fingerprint is
@@ -16,6 +17,15 @@ the writer alone runs, so a writer-only change still reuses a bundle:
 - the Python version.
 
 Third-party Python dependencies are not covered; the real-seed cache keys `uv.lock`.
+
+The prepare fingerprint (`prepare_code_sha256`) is the same digest over the walk from
+`PREPARE_ROOTS`, with neither the native package nor the Python version: a prepared
+root records it, and `build-db` and `check-curation` refuse a root whose recorded value
+is not the running builder's (`prepared_catalog.check_prepare_code`), so a root
+prepared by other adapter code never builds. A refusal costs a full re-prepare, so it
+keys only the `reg_meta_build` sources: an extension rebuilt by another toolchain, or a
+Python patch release, prepares the same bytes. The real-seed cache's prepare key holds
+this digest and adds those runtime facts, `uv.lock` and the CLI entry point.
 """
 
 from __future__ import annotations
@@ -32,7 +42,7 @@ from typing import TYPE_CHECKING
 import reg_core_py
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable, Iterator, Mapping
 
 PACKAGE = "reg_meta_build"
 RESOLVE_ROOT = "reg_meta_build.pipeline"
@@ -46,6 +56,31 @@ RESOLVE_EXCLUDED = frozenset(
         "reg_meta_build.materialize",
         "reg_meta_build.validate",
     }
+)
+# The prepare fingerprint's walk roots: the preparation entry point, and the modules
+# the CLI's `prepare-sources` handler imports from. Not `db`: the walk from here does
+# not reach it, and the CLI calls it only for parser help text and for the confinement
+# check of an `--output`, neither of which reaches the prepared output.
+#
+# simplify: a static walk, so it is generous. It reaches 51 modules, the resolution
+# models (`resolved_catalog`, `_resolved_common`) among them, and an edit to any of
+# them refuses every prepared root, which then costs a 1-2 h re-prepare. Narrow it
+# (split the models preparation imports out of the resolve modules) if that cost
+# lands on edits preparation cannot reach.
+#
+# Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
+# starts calling a module outside this walk, or when a module in the walk starts
+# reading a repository file outside its package. The prepare path reads exactly the
+# curation tree's authored sources (`prepared_catalog.AUTHORED_SOURCES`), which a
+# prepared root pins by content; `curation_tree` and `fqid_slugs` read the rest of the
+# tree, and the prepare path calls neither. The walk imports `reg_core_py`
+# (`_resolved_common`, `_curation`, `edition_bounds`), which the fingerprint leaves
+# out; add `native_digests` the day preparation's output depends on native code.
+PREPARE_ROOTS = (
+    "reg_meta_build.prepared_catalog",
+    "reg_meta_build.input_snapshot",
+    "reg_meta_build.source_files",
+    "reg_meta_build._curation",
 )
 _VERSION = re.compile(rb'^__version__ = "[^"\n]*"$', re.MULTILINE)
 
@@ -226,7 +261,32 @@ def _running_resolve_code_sha256() -> str:
     return _digest(resolve_code_digests())
 
 
-def _digest(digests: dict[str, object]) -> str:
+def prepare_code_digests(source_root: Path | None = None) -> dict[str, str]:
+    """The prepare fingerprint's inputs: the digest of each file the walk from
+    `PREPARE_ROOTS` reaches, by path relative to `source_root` (as in
+    `resolve_code_digests`)."""
+    if source_root is None:
+        source_root = Path(__file__).resolve().parents[1]
+    modules, _ = import_closure(source_root, PREPARE_ROOTS)
+    return {
+        path.relative_to(source_root).as_posix(): source_sha256(path)
+        for path in sorted(code_files(modules.values()))
+    }
+
+
+def prepare_code_sha256(source_root: Path | None = None) -> str:
+    """The digest of `prepare_code_digests`; `source_root` as there."""
+    if source_root is None:
+        return _running_prepare_code_sha256()
+    return _digest(prepare_code_digests(source_root))
+
+
+@functools.cache
+def _running_prepare_code_sha256() -> str:
+    return _digest(prepare_code_digests())
+
+
+def _digest(digests: Mapping[str, object]) -> str:
     return hashlib.sha256(
         json.dumps(digests, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

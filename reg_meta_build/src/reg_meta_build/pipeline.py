@@ -63,6 +63,7 @@ from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     check_authored_sources,
+    check_prepare_code,
     open_prepared_catalog_sources,
 )
 from reg_meta_build.prepared_sources import PreparedSourceRecords
@@ -1131,6 +1132,7 @@ def _resolve(
         input_commit=input_commit,
         expected_sha256=input_manifest_sha256,
     )
+    check_prepare_code(prepared.manifest)
     check_authored_sources(prepared.manifest, curation_dir)
     occurrence_sources = {
         entry.revision.dataset

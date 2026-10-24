@@ -1,0 +1,13 @@
+{
+  "note": "The prepared root records a prepare-code fingerprint other than the running builder's: it was prepared by other adapter code. Its authored-source pins match the build's curation tree, so only the fingerprint can tell (#1807). The build must refuse before it resolves anything from the stale prepared records.",
+  "fails_if": "the build stops calling `check_prepare_code` after opening the prepared root (a root prepared by older adapter code then builds silently from records the current adapters would not produce), or the check compares anything other than the recorded `prepare_code_sha256` with the running builder's",
+  "prepared_code_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "sources": {
+    "description": "The SCB sample only.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    }
+  }
+}

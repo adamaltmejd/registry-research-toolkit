@@ -10,20 +10,23 @@ ledger and the built artifact through a fixed set of named projections
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 from _build_case_curation import render_curation
-from _build_case_sources import PreparedCache, source_spec
+from _build_case_sources import PreparedCache, PreparedSet, source_spec
 from _build_case_tables import Outcome, sorted_rows
 from _pipeline_catalog_support import (
     report_events,
     write_authored,
 )
+from _prepared_fixtures import accept_prepared
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.materialize import build_catalog
 from reg_meta_build.pipeline import check_curation
@@ -326,6 +329,25 @@ def _bundle_payloads(bundle: Path) -> dict:
     return record["payloads"]
 
 
+def _with_prepare_code(built: PreparedSet, sha256: str, scratch: Path) -> PreparedSet:
+    """A copy of ``built`` whose manifest records ``sha256`` as the prepare-code
+    fingerprint, accepted again: a root another builder's code prepared. The shared
+    cache entry is never changed."""
+    repository = scratch / "prepared"
+    shutil.copytree(built.prepared.parent, repository)
+    prepared = repository / built.prepared.name
+    manifest = prepared / "manifest.json"
+    document = json.loads(manifest.read_text(encoding="utf-8"))
+    document["prepare_code_sha256"] = sha256
+    payload = json.dumps(document, indent=2, sort_keys=True) + "\n"
+    manifest.write_text(payload, encoding="utf-8")
+    return PreparedSet(
+        prepared,
+        accept_prepared(prepared),
+        hashlib.sha256(payload.encode()).hexdigest(),
+    )
+
+
 def run_step(
     step: Path,
     cache: PreparedCache,
@@ -346,6 +368,8 @@ def run_step(
     expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
     built_spec = source_spec(request["sources"])
     built = cache.get(built_spec)
+    if "prepared_code_sha256" in request:
+        built = _with_prepare_code(built, request["prepared_code_sha256"], scratch)
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
     curation = render_curation(step / "curation", scratch / "curation", authored, built)
     write_authored(built_spec, curation)

@@ -4,7 +4,9 @@ The bundle remains the inventory authority for third-party machine sources. The
 maintainer-authored thin-provider TOMLs and `scb_canonical.toml` are curation: they
 are read from the selected curation tree (`AUTHORED_SOURCES`) and pinned by digest
 as `origin = "curation"` inputs, and a build refuses a prepared root whose pins
-differ from its own curation tree (`check_authored_sources`). No catalog identities
+differ from its own curation tree (`check_authored_sources`). The manifest also records
+the code that prepared it (`resolve_code.prepare_code_sha256`), and a build refuses a
+root another builder's adapters prepared (`check_prepare_code`). No catalog identities
 are formed here.
 """
 
@@ -52,6 +54,7 @@ from reg_meta_build.prepared_values import (
     _manifest as _value_manifest,
     prepare_source_values,
 )
+from reg_meta_build.resolve_code import prepare_code_sha256
 from reg_meta_build.source_files import _file_sha256
 from reg_meta_build.source_records import SourceEvidenceTable, SourceRecord
 from reg_meta_build.source_reference_records import (
@@ -193,7 +196,8 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-catalog-sources"] = (
         "reg-meta-prepared-catalog-sources"
     )
-    schema_version: Literal[4] = 4
+    schema_version: Literal[5] = 5
+    prepare_code_sha256: str
     input_commit: str
     bundle_path: str
     bundle_manifest_sha256: str
@@ -211,6 +215,7 @@ class _ManifestDocument(_Model):
         if not _COMMIT_RE.fullmatch(self.input_commit) or not all(
             _HASH_RE.fullmatch(value)
             for value in (
+                self.prepare_code_sha256,
                 self.bundle_manifest_sha256,
                 self.snapshot_manifest_sha256,
                 self.records_manifest_sha256,
@@ -501,6 +506,8 @@ def prepare_catalog_sources(
 
     The authored sources (`AUTHORED_SOURCES`) are read from `curation_dir`.
     """
+    # Before any source is read, as a build captures its resolve fingerprint.
+    code_sha256 = prepare_code_sha256()
     output = output.expanduser().absolute()
     curation_dir = curation_dir.expanduser().resolve()
     if not curation_dir.is_dir():
@@ -874,6 +881,7 @@ def prepare_catalog_sources(
                 )
             )
         document = _ManifestDocument(
+            prepare_code_sha256=code_sha256,
             input_commit=selection.input_commit,
             bundle_path=bundle.root.relative_to(bundle.repository).as_posix(),
             bundle_manifest_sha256=selection.manifest_sha256,
@@ -985,6 +993,31 @@ def check_authored_sources(
             remediation=(
                 "Run prepare-sources --curation-dir on this curation tree into a new "
                 "directory, accept it, and build from that prepared root."
+            ),
+        )
+
+
+def check_prepare_code(manifest: PreparedCatalogManifest) -> None:
+    """Refuse a prepared root whose recorded prepare-code fingerprint is not the
+    running builder's.
+
+    The authored-source pins cannot see an adapter change: a root prepared by other
+    code would build from records the current adapters do not produce, failing late on
+    a stale acknowledgement or not at all (#1807).
+    """
+    if (running := prepare_code_sha256()) != manifest.prepare_code_sha256:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="prepared_code_stale",
+            error_class="configuration",
+            message=(
+                "The prepared root was prepared by other preparation code: it records "
+                f"prepare_code_sha256 {manifest.prepare_code_sha256}, this builder's "
+                f"is {running}."
+            ),
+            remediation=(
+                "Run prepare-sources with this builder into a new directory, accept "
+                "it, and build from that prepared root."
             ),
         )
 
@@ -1161,6 +1194,7 @@ __all__ = [
     "PreparedCatalogSources",
     "PreparedInputAccounting",
     "check_authored_sources",
+    "check_prepare_code",
     "open_prepared_catalog_sources",
     "prepare_catalog_sources",
 ]
