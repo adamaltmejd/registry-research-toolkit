@@ -1,6 +1,6 @@
 id = "gdb-ind-250m"
 register = "scb/gdb"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/individer"]
 
 [[table]]
 table = "GDB_Ind_250m_1990"
