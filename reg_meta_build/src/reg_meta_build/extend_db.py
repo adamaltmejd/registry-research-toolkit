@@ -212,20 +212,26 @@ def _assert_steward_rows_slugged(conn: sqlite3.Connection) -> None:
 
 
 def _insert_steward_same_as(
-    conn: sqlite3.Connection, relations: CuratedRelations
+    conn: sqlite3.Connection,
+    relations: CuratedRelations,
+    pins: frozenset[tuple[str, str]],
 ) -> int:
-    """Write the curated same_as edges the global build left to a steward (#1549).
+    """Write the curated same_as edges of the steward whose register `pins` are
+    given (#1549); another steward's edges are not this flavor's and are ignored.
 
-    Each endpoint resolves by its slug FQID against the overlaid catalog, as in
-    the global build, and the base's edges plus these pass the global graph
-    checks. Returns the number of edges written (each stored both ways)."""
+    Each endpoint resolves by its slug FQID against the overlaid catalog, or the
+    build refuses it. The base's edges plus these pass the global graph checks,
+    each base pair taken in the direction `relations` declares it, so the cycle
+    check matches the global build's when `relations` built the base. Returns the
+    number of edges written (each stored both ways)."""
     from .catalog_dependencies import CatalogDependencyError, MissingCatalogDependency
-    from .relations import check_same_as_graph, leaves_global_build
+    from .relations import check_same_as_graph, steward_same_as
 
+    variable_edges = [edge for edge in relations.same_as if edge.grain == "variable"]
     edges = [
         (edge.a_fqid(), edge.b_fqid())
-        for edge in relations.same_as
-        if edge.grain == "variable" and leaves_global_build(edge)
+        for edge in variable_edges
+        if steward_same_as(edge, pins)
     ]
     if not edges:
         return 0
@@ -245,16 +251,22 @@ def _insert_steward_same_as(
         if fqid not in live
     ):
         raise CatalogDependencyError(missing)
-    # The base stores each pair both ways; the checks take one direction per pair.
-    stored = (
-        ("/".join(row[:3]), "/".join(row[3:]))
+    # The base stores each pair both ways, without its declared direction; a pair
+    # `relations` no longer declares falls back to sorted order.
+    direction = {
+        frozenset(pair): pair
+        for pair in ((edge.a_fqid(), edge.b_fqid()) for edge in variable_edges)
+    }
+    base = {
+        frozenset(("/".join(row[:3]), "/".join(row[3:])))
         for row in conn.execute(
             "SELECT a_provider, a_register, a_variable, "
             "b_provider, b_register, b_variable FROM variable_same_as"
         )
-    )
+    }
     check_same_as_graph(
-        [(a, b) for a, b in stored if a < b] + edges,
+        [direction.get(pair, tuple(sorted(pair))) for pair in sorted(base, key=sorted)]
+        + edges,
         label="steward variable same_as",
     )
     conn.executemany(
@@ -325,7 +337,11 @@ def extend_db(
         publish_db,
     )
     from .derive import derive, derive_holdings
-    from .fqid_slugs import populate_slugs, populate_variable_slugs
+    from .fqid_slugs import (
+        populate_slugs,
+        populate_variable_slugs,
+        steward_register_pins,
+    )
     from .source_files import _progress
 
     base_db = base_db.expanduser().resolve()
@@ -540,7 +556,7 @@ def extend_db(
             )
             _assert_steward_rows_slugged(conn)
             counts["same_as_edges"] = _insert_steward_same_as(
-                conn, load_relations(relations)
+                conn, load_relations(relations), steward_register_pins(steward_slug_dir)
             )
 
             # Holdings must see the steward's own metadata, so derive runs over

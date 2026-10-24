@@ -186,12 +186,12 @@ def test_steward_identity_inputs_and_slug_pins_bind(
 def test_curated_same_as_onto_a_steward_variable_resolves_in_the_flavor(
     tmp_path: Path, base_db: Path, steward_end: str
 ) -> None:
-    """A relations.toml same_as edge naming the steward's provider (#1549) joins
-    its variable to the base's `scb/utbildning/kon`, stored both ways; the global
-    build skips such an edge. Its twin names a steward variable the flavor lacks
-    and is refused as a missing catalog dependency, as the global build refuses a
-    dangling endpoint. Fails if extend-db stops applying the steward's edges, or
-    writes one whose endpoint does not resolve."""
+    """A relations.toml same_as edge into a register the steward's slug dir pins
+    (#1549) joins its variable to the base's `scb/utbildning/kon`, stored both
+    ways; the global build skips such an edge. Its twin names a steward variable
+    the flavor lacks and is refused as a missing catalog dependency. Fails if
+    extend-db stops applying the steward's edges, or writes one whose endpoint
+    does not resolve."""
     relations = tmp_path / "relations.toml"
     relations.write_text(
         '[[edge]]\ntype = "same_as"\n'

@@ -45,9 +45,15 @@ from .curation_tree import (
     _GuardedOccurrenceEntry,
     _OccurrenceCorrectionEntry,
 )
-from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
+from .fqid_slugs import (
+    SlugEntry,
+    _parse_variant_id,
+    freeze_state,
+    load_freeze_states,
+    steward_register_pins,
+)
 from .normalization import normalize_token
-from .relations import leaves_global_build
+from .relations import steward_same_as
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
     ResolvedClassificationDerivation,
@@ -377,12 +383,16 @@ def compile_declared_metadata(
         [],
         [],
     )
+    slug_root = tree.root.parent / "fqid_slugs"
+    steward_pins = steward_register_pins(
+        *(path for path in sorted(slug_root.glob("*")) if path.is_dir())
+    )
     for edge in tree.relations.same_as:
         if edge.grain != "variable":
             raise ValueError(
                 f"same_as must have variable binding endpoints: {edge.a_fqid()}"
             )
-        if leaves_global_build(edge):
+        if steward_same_as(edge, steward_pins):
             continue  # extend-db applies it onto the steward's flavor (#1549)
         if not _edge_registers((edge.a_fqid(), edge.b_fqid()), selected):
             unmatched.append(f"relations.toml#/same_as/{edge.a_fqid()}/{edge.b_fqid()}")

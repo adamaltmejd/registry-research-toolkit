@@ -1,0 +1,5 @@
+{
+  "note": "Step 1's curation plus an edge whose endpoint provider is a typo (`sbc`): no steward pins `sbc/sample` under `fqid_slugs/`, so the edge is no steward's and the global build refuses its dangling endpoint. Allowed twin: step 1, whose steward edge is skipped.",
+  "fails_if": "`steward_same_as` (relations.py) counts an endpoint outside the global provider seed as a steward's without a steward pinning its register, so the global build silently skips an edge with a typo'd provider",
+  "sources": "scb-withheld-key-and-gone"
+}

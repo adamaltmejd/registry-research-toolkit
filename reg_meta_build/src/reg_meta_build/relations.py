@@ -848,14 +848,22 @@ def check_same_as_graph(edges: list[tuple[Any, Any]], *, label: str) -> None:
     _reject_oversized_components(edges, label=label)
 
 
-def leaves_global_build(edge: CuratedSameAs) -> bool:
-    """Whether a same_as edge names a provider outside the global build.
+def steward_same_as(edge: CuratedSameAs, pins: frozenset[tuple[str, str]]) -> bool:
+    """Whether a same_as edge belongs to the stewards whose register `pins`
+    (`fqid_slugs.steward_register_pins`) are given (#1549).
 
-    Such a provider is a steward's (`swecov`), whose variables exist only in its
-    flavored DB. The global build skips the edge and `extend-db` applies it, with
-    both endpoints required to resolve there (#1549)."""
+    It does when an endpoint's (provider, register) is pinned and every other
+    endpoint's provider is global. A steward register may sit under a global
+    provider (`fqid_slugs/swecov/lakemedelsverket.toml`), so the pin decides, not
+    the provider. The global build skips such an edge given every steward's pins;
+    `extend-db` applies it given its own steward's, both endpoints required to
+    resolve there. Any other edge, a typo'd provider among them, takes the global
+    path and its dangling endpoint is refused."""
     global_providers = {slug for _, slug, _ in _PROVIDER_SEED}
-    return not {edge.a_provider, edge.b_provider} <= global_providers
+    ends = {(edge.a_provider, edge.a_register), (edge.b_provider, edge.b_register)}
+    return bool(ends & pins) and all(
+        provider in global_providers for provider, _ in ends - pins
+    )
 
 
 def _reject_oversized_components(edges: list[tuple[Any, Any]], *, label: str) -> None:

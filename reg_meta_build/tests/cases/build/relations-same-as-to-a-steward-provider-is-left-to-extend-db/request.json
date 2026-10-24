@@ -1,5 +1,0 @@
-{
-  "note": "relations.toml joins scb/sample/value to scb/sample/two and to swecov/population/kon. swecov is a steward provider, outside the global provider seed: its variables exist only in the steward's flavored DB, where extend-db applies the edge (#1549; test_extend_db.py pins that side). The global build writes the scb pair and skips the steward edge without a diagnostic. The allowed twin's refusal, a dangling endpoint on a built provider, is dependency-withheld-variable-prunes-its-dependents/4-missing-relation.",
-  "fails_if": "`compile_declared_metadata` (curation_compile.py) stops skipping a same_as edge whose endpoint provider `leaves_global_build` (relations.py), so the steward endpoint is a missing catalog dependency and every global build with a committed steward edge fails",
-  "sources": "scb-withheld-key-and-gone"
-}
