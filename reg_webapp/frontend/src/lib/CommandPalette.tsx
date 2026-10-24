@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useRef, useState } from "react";
+import { type RefObject, useEffect, useState } from "react";
 import {
   Header,
   Menu,
@@ -182,8 +182,12 @@ interface Props {
   onOpenChange: (isOpen: boolean) => void;
   /** The top-bar search field it opens under, and whose text it searches. */
   triggerRef: RefObject<HTMLElement | null>;
+  /** The popover, so the field can tell a blur into it from one away. */
+  popoverRef: RefObject<HTMLElement | null>;
   /** The top-bar field's text: the palette has no field of its own. */
   text: string;
+  /** A row was chosen: the palette closes, then the row navigates. */
+  onChoose: () => void;
 }
 
 /** The command palette (DESIGN.md → Layout → Top bar): a `Menu` in a popover
@@ -191,16 +195,18 @@ interface Props {
  * places. It renders inside the top bar's RAC `Autocomplete`, so that field is
  * its one input: focus stays there and the arrow keys move a virtual focus
  * through the rows. The popover is non-modal for the same reason; a press
- * outside it and the field closes it. Its results are a mixed list, so each row
+ * outside it and the field closes it, and so does focus leaving the field for
+ * anything outside it (TopBar). Its results are a mixed list, so each row
  * carries its type. The list is controlled: the actions are ranked with
  * `rankFilter`, the catalog by the server, and RAC filters nothing. */
 export function CommandPalette({
   isOpen,
   onOpenChange,
   triggerRef,
+  popoverRef,
   text,
+  onChoose,
 }: Props) {
-  const popover = useRef<HTMLElement>(null);
   // A non-modal popover does not dismiss itself on an outside press.
   useEffect(() => {
     if (!isOpen) return;
@@ -208,7 +214,7 @@ export function CommandPalette({
       const target = event.target as Node | null;
       if (
         target &&
-        !popover.current?.contains(target) &&
+        !popoverRef.current?.contains(target) &&
         !triggerRef.current?.contains(target)
       ) {
         onOpenChange(false);
@@ -217,11 +223,11 @@ export function CommandPalette({
     document.addEventListener("pointerdown", onPointerDown, true);
     return () =>
       document.removeEventListener("pointerdown", onPointerDown, true);
-  }, [isOpen, onOpenChange, triggerRef]);
+  }, [isOpen, onOpenChange, popoverRef, triggerRef]);
 
   return (
     <Popover
-      ref={popover}
+      ref={popoverRef}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       triggerRef={triggerRef}
@@ -235,12 +241,12 @@ export function CommandPalette({
         `${styles.popover} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
       }
     >
-      <PaletteBody text={text} close={() => onOpenChange(false)} />
+      <PaletteBody text={text} choose={onChoose} />
     </Popover>
   );
 }
 
-function PaletteBody({ text, close }: { text: string; close: () => void }) {
+function PaletteBody({ text, choose }: { text: string; choose: () => void }) {
   const query = useDebounced(text.trim());
   const asked = query.length >= SEARCH_MIN_QUERY_LENGTH ? query : null;
   const results = useAsyncResource(asked, async (signal) =>
@@ -291,7 +297,7 @@ function PaletteBody({ text, close }: { text: string; close: () => void }) {
         onAction={(id) => {
           const row = byId.get(String(id));
           if (!row) return;
-          close();
+          choose();
           router.navigate(row.href);
         }}
       >

@@ -59,9 +59,17 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
+  const popover = useRef<HTMLElement>(null);
   const filter = useBrowseFilter();
   const matches = useBrowseMatches();
   const [palette, setPalette] = useState(false);
+  // The filter as it stood when the palette opened: choosing a row puts it
+  // back, so text typed for the palette does not stay on the browse columns.
+  const beforePalette = useRef("");
+  const openPalette = () => {
+    beforePalette.current = browseFilter.value;
+    setPalette(true);
+  };
   // Below the narrow breakpoint the field is folded behind the "Search" button
   // until it is opened; it stays open while it holds text, so an active filter
   // is never hidden. Above the breakpoint CSS ignores this.
@@ -102,7 +110,7 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
       if ((event.metaKey && mac) || (event.ctrlKey && !mac)) {
         event.preventDefault();
         openSearch();
-        setPalette(true);
+        openPalette();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -130,7 +138,9 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
         return;
       }
       browseFilter.set("");
-      // Focus is elsewhere, so the emptied field folds too.
+      // Focus is elsewhere, so the emptied field folds too, and a palette
+      // still open under it closes with it.
+      setPalette(false);
       setOpened(false);
     };
     window.addEventListener("keydown", onKey);
@@ -169,10 +179,19 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
             aria-label="Search registers, variables, codes"
             className={styles.search}
             onSubmit={() => {
-              if (!palette) setPalette(true);
+              if (!palette) openPalette();
             }}
-            onBlur={() => {
-              if (filter === "" && !palette) setOpened(false);
+            onBlur={(event) => {
+              // The rows take virtual focus, so focus landing in the popover is
+              // still the palette's. A blur to nothing (a press on the page) is
+              // left to the palette's outside-press handler.
+              const next = event.relatedTarget;
+              if (next instanceof Node && popover.current?.contains(next)) {
+                return;
+              }
+              const away = next !== null;
+              if (palette && away) setPalette(false);
+              if (filter === "" && (!palette || away)) setOpened(false);
             }}
           >
             <Input
@@ -180,6 +199,13 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
               className={styles.searchInput}
               placeholder="Search registers, variables, codes…"
               autoComplete="off"
+              // No aria-expanded: ARIA does not allow it on a searchbox (axe
+              // aria-allowed-attr); it would take role="combobox".
+              aria-haspopup="menu"
+              // RAC's Autocomplete sets "list" whether or not the palette is
+              // mounted, and an undefined here does not override it; "none"
+              // says there is no list while it is closed.
+              aria-autocomplete={palette ? "list" : "none"}
               // Capture: ahead of the field's own Escape, which clears the
               // text, and of the Autocomplete's, which hands it to the list.
               onKeyDownCapture={(event) => {
@@ -230,7 +256,16 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
               if (!open && filter === "") setOpened(false);
             }}
             triggerRef={field}
+            popoverRef={popover}
             text={filter}
+            onChoose={() => {
+              // A row navigates: the columns get back the filter they had
+              // before the palette (Operator 2026-10-24), and an empty narrow
+              // field folds away so the brand returns.
+              setPalette(false);
+              browseFilter.set(beforePalette.current);
+              if (beforePalette.current === "") setOpened(false);
+            }}
           />
         </Autocomplete>
         {/* Below the breakpoint only (CSS): the folded field's way in. */}

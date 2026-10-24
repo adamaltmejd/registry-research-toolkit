@@ -835,9 +835,29 @@ async function browseSearchCase(page, _counts, shoot) {
     "Escape with the palette open cleared the text instead of closing it",
   );
 
-  // Focus off the field: the page's heading, then Escape.
-  await page.getByRole("heading", { level: 1, name: "LISA" }).click();
+  // Tab out of the field with the palette open: it closes. Left open, focus
+  // walks the page under a popover that still claims the field (#1871 review).
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
+  await page.keyboard.press("Tab");
+  check(
+    await menuGone(page),
+    "Tab out of the field left the palette open under the page",
+  );
+
+  // Focus off the field (Tab again, palette reopened first), then Escape: it
+  // clears the text, and no palette is left behind. Fails if the page-wide
+  // Escape folds the narrow field over a palette it never closed, leaving a
+  // zero-width menu mounted.
+  await search.focus();
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
+  await page.keyboard.press("Tab");
   await page.keyboard.press("Escape");
+  check(
+    await menuGone(page),
+    "Escape on the page cleared the search but left the palette mounted",
+  );
   // Below the breakpoint the emptied field is folded away (display: none).
   const searchAnyState = page.getByRole("searchbox", {
     name: /^Search registers/,
@@ -858,6 +878,36 @@ async function browseSearchCase(page, _counts, shoot) {
     );
     await page.getByRole("link", { name: "Browse registers" }).click();
     await page.getByRole("row", { name: "LISA", exact: true }).waitFor();
+  }
+
+  // Choosing a palette row gives the browse columns back the filter they had
+  // when the palette opened (Operator 2026-10-24): text typed only to find the
+  // row does not stay behind as a filter. Fails if the palette's text leaks.
+  if (treeShown) {
+    await search.fill("midas");
+  } else {
+    await page.getByRole("button", { name: /^Search registers/ }).click();
+    await page.keyboard.type("midas");
+  }
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
+  await search.fill("project");
+  await page.getByRole("menuitem", { name: /^Go to the project/ }).click();
+  await page.waitForURL("**/project");
+  const left = await searchAnyState.inputValue();
+  check(
+    left === "midas",
+    `a palette row left the browse filter at ${JSON.stringify(left)}, not "midas"`,
+  );
+}
+
+/** Whether no palette menu is mounted, given a moment to leave. */
+async function menuGone(page) {
+  try {
+    await page.locator('[role="menu"]').waitFor({ state: "detached", timeout: 2000 });
+    return true;
+  } catch {
+    return false;
   }
 }
 

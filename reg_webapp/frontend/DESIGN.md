@@ -396,12 +396,18 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   dialog, popover, the palette or another text field has focus (#1827). The command
   palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for codes,
   classifications and actions; its results are a mixed list and carry a `TypeTag`. It is
-  a list under the field with no field of its own: the top-bar field is its one input
-  (keeping the field's text, maintainer-decided 2026-10-22), so focus stays there, the
-  arrow keys move through the rows, and typing goes on filtering the columns. A second
-  field in the popover showed the same text twice (maintainer report 2026-10-24). Below
+  a list under the field with no field of its own: the top-bar field is its one input,
+  so focus stays there, the arrow keys move through the rows, and typing goes on
+  filtering the columns. A second field in the popover showed the same text twice
+  (maintainer report 2026-10-24). The 2026-10-22 ruling had the palette "seeded with the
+  field's text" (maintainer-decided 2026-10-22). It still opens with that text, but the
+  text no longer stays behind: choosing a row puts the browse filter back to its value
+  from just before the palette opened, and folds the narrow field if that value is
+  empty, so the brand comes back. This is a deliberate change from that ruling (Operator
+  2026-10-24). Focus leaving the field for anything outside the palette closes it. Below
   the breakpoint it is as wide as the unfolded field. Escape closes the palette first,
-  then clears the text, then folds the narrow field.
+  then clears the text, then folds the narrow field; Escape from elsewhere on the page
+  also closes a palette still open.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
