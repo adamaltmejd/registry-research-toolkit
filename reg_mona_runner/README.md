@@ -45,8 +45,11 @@ A successful order writes `export_data\<nr>_<date>\`:
   `scb_lisa_individer-16plus_<part>_2020.dta` for a partition or projection table; a
   table that holds several years has no year in its name (`fohm_sminet.dta`). A `.dta`
   file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty field
-  for a missing value. [DESIGN.md](DESIGN.md), "Types per format", lists what each
-  column type becomes;
+  for a missing value. A `.dta` column whose name is not a Stata variable name (for
+  example one over 32 characters) is written under its alias, the order's `stata_name`
+  (the first 25 characters and `_` and 6 hex digits), with the full name as the variable
+  label. [DESIGN.md](DESIGN.md), "Types per format", lists what each column type
+  becomes;
 - `run_log.csv`: each file's row count, column count and the period filter applied.
 
 The order then moves to `orders\archive\`.
@@ -55,13 +58,13 @@ A failed order stays in `orders\`, and its export folder holds only `error_log.c
 the exit code and the reason. Fix the cause and run the script again: a rerun overwrites
 that day's export folder.
 
-  | Code    | What to do                                                                                                                                                                                              |
-  | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 2       | Check the export root, the R packages (DBI, odbc, jsonlite, haven, arrow) and the database                                                                                                              |
-  | 3, 4, 6 | The file is not a usable order: download it again from the catalog                                                                                                                                      |
-  | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view                                                                                                                             |
-  | 7       | A table or column is not in the database: report it to the catalog team. Or the format cannot hold a column (its type, or a `.dta` name over 32 characters): the researcher orders it as Parquet or CSV |
-  | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV                          |
+  | Code    | What to do                                                                                                                                                                                                                                                                                   |
+  | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 2       | Check the export root, the R packages (DBI, odbc, jsonlite, haven, arrow) and the database                                                                                                                                                                                                   |
+  | 3, 4, 6 | The file is not a usable order: download it again from the catalog                                                                                                                                                                                                                           |
+  | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view                                                                                                                                                                                                                  |
+  | 7       | A table or column is not in the database: report it to the catalog team. Or the format cannot hold a column (its type, or a `.dta` name that is not a Stata name even as an alias, or a full name over 80 characters, which a label cannot hold): the researcher orders it as Parquet or CSV |
+  | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV                                                                                                               |
 
 ## Safety
 

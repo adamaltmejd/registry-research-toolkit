@@ -184,16 +184,16 @@ that wrote it, are the control on what is extracted.
 
 Stable; the process exits with the code of the first order, in name order, that failed.
 
-  | Code | Meaning                                                                                                                              |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------ |
-  | 0    | every order extracted (or no orders)                                                                                                 |
-  | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive                                                     |
-  | 3    | the order is not JSON                                                                                                                |
-  | 4    | `version` is not 2                                                                                                                   |
-  | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order                                                              |
-  | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name                                                            |
-  | 7    | a table in no schema or several, a missing column, a wrong period type, a column the format cannot hold (SQL type, or a `.dta` name) |
-  | 8    | a query or a file write failed, or a value the format cannot hold exactly                                                            |
+  | Code | Meaning                                                                                                                                       |
+  | ---- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+  | 0    | every order extracted (or no orders)                                                                                                          |
+  | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive                                                              |
+  | 3    | the order is not JSON                                                                                                                         |
+  | 4    | `version` is not 2                                                                                                                            |
+  | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order                                                                       |
+  | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name                                                                     |
+  | 7    | a table in no schema or several, a missing column, a wrong period type, a column the format cannot hold (SQL type, or a `.dta` name or label) |
+  | 8    | a query or a file write failed, or a value the format cannot hold exactly                                                                     |
 
 ## Tests
 
@@ -204,8 +204,7 @@ SQL Server service container loads `tests/mssql/fixture.sql`, and one run extrac
 conformance order goldens that cover filters and file topology plus the runner's own
 manifests (`tests/cases/*/order.json`: every encoding and delivery type, schema `P1105`,
 non-ASCII names, compact JSON, and `types-dta`, `types-parquet` and `types-csv` over one
-table of every mapped SQL type) and the refusals 7 (a long name in a `.dta` order among
-them) and 8. Expected CSVs under `tests/cases/*/expected/` are the fixture rows passed
-through each order by hand; a `.dta` or `.parquet` file's oracle is `<file>.json`, its
-column types and rows as text, read back with haven or arrow by the test, not the
-runner.
+table of every mapped SQL type) and the refusals 7 and 8. Expected CSVs under
+`tests/cases/*/expected/` are the fixture rows passed through each order by hand; a
+`.dta` or `.parquet` file's oracle is `<file>.json`, its column types and rows as text,
+read back with haven or arrow by the test, not the runner.
