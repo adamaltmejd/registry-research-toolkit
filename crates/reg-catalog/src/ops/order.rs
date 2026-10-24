@@ -33,6 +33,7 @@ use super::family::{VariantFamily, variant_family};
 use super::refs;
 use super::validate::{self, Finding, Slice, held_representations, resolve_binding};
 use super::{Params, Raw, Server};
+use crate::held::{no_column_of, one_representation, serves, serves_at_by};
 use crate::{Catalog, Code, Error, Scope};
 
 /// The order manifest contract version.
@@ -1033,15 +1034,14 @@ impl Order<'_> {
                 continue;
             }
             let mapped = representations(self.conn, m.table_id, &m.column, id, variant)?;
-            for column in mapped
-                .iter()
-                .filter(|c| held.contains(*c) && pinned.as_ref().is_none_or(|p| p == *c))
-            {
+            for (column, &one) in mapped.iter().filter(|(c, one)| {
+                held.contains(*c) && pinned.as_ref().is_none_or(|p| p == *c || **one)
+            }) {
                 let windows = applicability.states.iter().filter_map(|s| {
                     let e = &s.emitted;
                     match (&e.canonical_column, &e.valid_from, &e.valid_to) {
                         (Some(c), Some(from), Some(to))
-                            if c == column
+                            if (one || c == column)
                                 && e.register_variant_id == variant
                                 && e.period_scope == "intervals" =>
                         {
@@ -1431,24 +1431,36 @@ struct Match {
     periods: Vec<Interval>,
     placement: Placement,
     own_period: Option<Interval>,
+    /// Where the column serves a spelling through its one representation: the
+    /// windows SCB delivered that mapped representation, which it does not serve.
+    beside: Vec<Interval>,
 }
 
 impl Match {
     /// The periods the column serves: a year or month member's or a column window's
     /// own period (inside one edition segment, as the builder holds), else the
-    /// table's edition. Nothing outside a window is served or borrowed.
+    /// table's edition, less where a one-representation fallback's own spelling was
+    /// delivered (`inventory._fallbacks`: per instant, never over a whole slice).
+    /// Nothing outside a window is served or borrowed.
     fn served(&self) -> Vec<Interval> {
-        self.own_period
+        let served = self
+            .own_period
             .clone()
-            .map_or_else(|| self.periods.clone(), |period| vec![period])
+            .map_or_else(|| self.periods.clone(), |period| vec![period]);
+        if self.beside.is_empty() {
+            return served;
+        }
+        gaps(&merge(served), self.beside.clone())
     }
 }
 
 /// Whether a mapping `hm` of table `ht` is one its declared parent also serves
-/// (#1634): `ht` is a projection whose parent maps the same `(variable, variant,
-/// canonical representation)` at the same position, or neither at a position, over
-/// every instant `hm` serves. A position member is served only by the parent's member
-/// of that position, and a plain mapping, a year or month member or a windowed mapping
+/// (#1634): `ht` is a projection whose parent has a mapping of the same `(variable,
+/// variant)` serving `hm`'s canonical representation over `hm`'s bounds
+/// ([`serves_at_by`]: its own, or its one representation where SCB did not deliver
+/// that beside it), at the same position, or neither at a position, over every
+/// instant `hm` serves. A position member is served only by the parent's member of
+/// that position, and a plain mapping, a year or month member or a windowed mapping
 /// only by a parent mapping that is not a position member. A plain parent mapping
 /// serves the whole shared edition; a year or month member or a column window (#1645)
 /// serves its own period, so it covers a projection member or window inside it, or a
@@ -1456,18 +1468,25 @@ impl Match {
 /// nothing outside it. This is the builder's `_parent_serves`, so the order drops
 /// exactly the mappings the inventory admitted as served. Only the declared pair is
 /// compared: an undeclared overlap is the builder's refusal, never deduplicated here.
-const PARENT_SERVES: &str = "EXISTS (SELECT 1 FROM holding_table pt \
-     JOIN holding_column pc ON pc.table_id = pt.table_id \
-     JOIN holding_mapping pm ON pm.column_id = pc.column_id \
-     WHERE pt.physical_id = ht.projection_of AND pm.variable_id = hm.variable_id \
-     AND pm.variant_id = hm.variant_id \
-     AND pm.representation_canonical = hm.representation_canonical \
-     AND pm.member_position IS hm.member_position \
-     AND (COALESCE(pm.member_lo, pm.window_lo) IS NULL OR (\
-          COALESCE(pm.member_lo, pm.window_lo) <= COALESCE(hm.member_lo, hm.window_lo, \
-              (SELECT MIN(p.lo) FROM holding_period p WHERE p.table_id = ht.table_id)) \
-          AND COALESCE(pm.member_hi, pm.window_hi) >= COALESCE(hm.member_hi, hm.window_hi, \
-              (SELECT MAX(p.hi) FROM holding_period p WHERE p.table_id = ht.table_id)))))";
+fn parent_serves() -> String {
+    const LO: &str = "COALESCE(hm.member_lo, hm.window_lo, \
+         (SELECT MIN(p.lo) FROM holding_period p WHERE p.table_id = ht.table_id))";
+    const HI: &str = "COALESCE(hm.member_hi, hm.window_hi, \
+         (SELECT MAX(p.hi) FROM holding_period p WHERE p.table_id = ht.table_id))";
+    format!(
+        "EXISTS (SELECT 1 FROM holding_table pt \
+         JOIN holding_column pc ON pc.table_id = pt.table_id \
+         JOIN holding_mapping pm ON pm.column_id = pc.column_id \
+         WHERE pt.physical_id = ht.projection_of AND pm.variable_id = hm.variable_id \
+         AND pm.variant_id = hm.variant_id \
+         AND {} \
+         AND pm.member_position IS hm.member_position \
+         AND (COALESCE(pm.member_lo, pm.window_lo) IS NULL OR (\
+              COALESCE(pm.member_lo, pm.window_lo) <= {LO} \
+              AND COALESCE(pm.member_hi, pm.window_hi) >= {HI})))",
+        serves_at_by("pm", "pc", "hm.representation_canonical", LO, HI)
+    )
+}
 
 /// Whether mapping `hm` binds a row key of its variant: the bound variant's
 /// `panel_entity_key` or `panel_time_key`, each a bare slug or a JSON list of slugs
@@ -1495,7 +1514,7 @@ const IS_IDENTIFIER: &str = "EXISTS (SELECT 1 FROM variable v \
 /// shared id emitted from the parent alone would leave the projection's rows
 /// unjoinable on it. This only filters ordered matches; it adds nothing.
 fn kept() -> String {
-    format!("({IS_KEY} OR {IS_IDENTIFIER} OR NOT {PARENT_SERVES})")
+    format!("({IS_KEY} OR {IS_IDENTIFIER} OR NOT {})", parent_serves())
 }
 
 /// The held locations of the variable under the variant in tables of `scope`
@@ -1516,25 +1535,42 @@ fn matches(
     bounds: Option<(&str, &str)>,
 ) -> Result<Vec<Match>, Error> {
     let (lo, hi) = bounds.unzip();
+    // Over a slice, a one-representation fallback is admitted here and clipped per
+    // instant to where its own spelling is not delivered (`Match::beside`), as the
+    // builder's `_fallbacks` places it; `held::serves_at` would judge the whole slice
+    // and drop the years the inventory holds.
+    let may_serve = format!(
+        "(hm.representation_canonical = ?4 OR ({} AND {}))",
+        one_representation("hm", "hc"),
+        no_column_of("hc", "?4"),
+    );
     let mut stmt = conn.prepare_cached(&format!(
         "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.source_ref, \
          hp.lo, hp.hi, hm.member_position, hm.member_lo, hm.member_hi, ht.projection, \
-         {PARENT_SERVES}, \
-         COALESCE(hm.member_lo, hm.window_lo), COALESCE(hm.member_hi, hm.window_hi) \
+         {parent_serves}, \
+         COALESCE(hm.member_lo, hm.window_lo), COALESCE(hm.member_hi, hm.window_hi), \
+         hm.representation_canonical \
          FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND ht.scope = ?3 \
-         AND (?4 IS NULL OR hm.representation_canonical = ?4) \
+         AND (?4 IS NULL OR CASE WHEN ?5 IS NULL THEN {serves} ELSE {may_serve} END) \
          AND (?5 IS NULL OR EXISTS (SELECT 1 FROM holding_period p \
               WHERE p.table_id = ht.table_id AND p.lo <= ?6 AND p.hi >= ?5)) \
          AND (?5 IS NULL OR hm.member_lo IS NULL OR (hm.member_lo <= ?6 AND hm.member_hi >= ?5)) \
          AND {kept} \
          ORDER BY ht.physical_id, hc.name, hp.lo, hp.hi",
         kept = kept(),
+        parent_serves = parent_serves(),
+        serves = serves("?4"),
     ))?;
+    let mut beside = conn.prepare_cached(
+        "SELECT valid_from, valid_to FROM expanded_state WHERE variable_id = ? \
+         AND register_variant_id = ? AND canonical_column = ? AND valid_from IS NOT NULL",
+    )?;
     let rows = stmt.query_map(params![id, variant, scope, representation, lo, hi], |row| {
         let period: (Option<String>, Option<String>) = (row.get(5)?, row.get(6)?);
         let (own_lo, own_hi): (Option<String>, Option<String>) = (row.get(12)?, row.get(13)?);
+        let mapped: String = row.get(14)?;
         Ok((
             Match {
                 table_id: row.get(0)?,
@@ -1550,20 +1586,31 @@ fn matches(
                     shared_key: row.get(11)?,
                 },
                 own_period: own_lo.zip(own_hi),
+                beside: Vec::new(),
             },
             period,
+            mapped,
         ))
     })?;
     let mut out: Vec<Match> = Vec::new();
     for row in rows {
-        let (m, period) = row?;
-        let index = out
+        let (mut m, period, mapped) = row?;
+        let found = out
             .iter()
-            .position(|o| (o.table_id, &o.column) == (m.table_id, &m.column))
-            .unwrap_or_else(|| {
-                out.push(m);
-                out.len() - 1
-            });
+            .position(|o| (o.table_id, &o.column) == (m.table_id, &m.column));
+        let index = if let Some(index) = found {
+            index
+        } else {
+            if representation.is_some_and(|r| r != mapped) {
+                m.beside = beside
+                    .query_map(params![id, variant, mapped], |row| {
+                        Ok((row.get(0)?, row.get(1)?))
+                    })?
+                    .collect::<rusqlite::Result<_>>()?;
+            }
+            out.push(m);
+            out.len() - 1
+        };
         if let (Some(lo), Some(hi)) = period {
             out[index].periods.push((lo, hi));
         }
@@ -1571,22 +1618,27 @@ fn matches(
     Ok(out)
 }
 
-/// The representations a held table column maps the variable under the variant to.
+/// The representations a held table column maps the variable under the variant to,
+/// each with whether it is its table's one representation, which may also serve
+/// another spelling ([`one_representation`]).
 fn representations(
     conn: &Connection,
     table_id: i64,
     column: &str,
     id: i64,
     variant: i64,
-) -> Result<BTreeSet<String>, Error> {
+) -> Result<BTreeMap<String, bool>, Error> {
     Ok(conn
         .prepare_cached(&format!(
-            "SELECT hm.representation_canonical FROM holding_mapping hm \
+            "SELECT hm.representation_canonical, {one} FROM holding_mapping hm \
              JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
              WHERE hc.table_id = ? AND hc.name = ? AND hm.variable_id = ? AND hm.variant_id = ? \
              AND {kept}",
+            one = one_representation("hm", "hc"),
             kept = kept(),
         ))?
-        .query_map(params![table_id, column, id, variant], |row| row.get(0))?
+        .query_map(params![table_id, column, id, variant], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        })?
         .collect::<rusqlite::Result<_>>()?)
 }

@@ -1,0 +1,7 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "scope": "scope.toml",
+  "fails_if": "compilation admits a second table mapping a spelling over instants a table's one representation already serves where SCB did not deliver its own spelling (Annual2018_2019 maps Value as SCB's 2019 Valuenew, so the reader serves 2018's Valueold from it too, and Old2018 maps Valueold over 2018): the order would then extract 2018 from both tables"
+}

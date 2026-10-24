@@ -13,7 +13,8 @@ import sqlite3
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Literal
 
-from reg_meta_build.derive.browse import HELD_HI, HELD_LO, browse_scopes
+from reg_meta_build.db import register_py_lower
+from reg_meta_build.derive.browse import HELD_HI, HELD_LO, browse_scopes, serves
 from reg_meta_build.derive.states import named_rows, register_catalog_udfs
 
 if TYPE_CHECKING:
@@ -64,7 +65,7 @@ def scope_predicate(
     if variant_sql is not None:
         member += f" AND hm.variant_id = {variant_sql}"
     if representation_sql is not None:
-        member += f" AND hm.representation_canonical = {representation_sql}"
+        member += f" AND {serves(representation_sql)}"
     if period_scope_sql is not None:
         member += f" AND ht.scope = {period_scope_sql}"
     if bounds_sql is not None:
@@ -139,6 +140,8 @@ def get_coded_variables(
     if limit == 0:
         return []
     register_catalog_udfs(conn)
+    # `serves` folds column names with `py_lower`.
+    register_py_lower(conn)
     # Counting distinct codes is the expensive part: joining every coded state
     # to its value-set members fans out to ~50M rows on the release catalog
     # (~70 s). So aggregate at state grain first, carrying each name's distinct

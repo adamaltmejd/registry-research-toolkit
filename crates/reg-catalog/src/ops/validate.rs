@@ -28,6 +28,7 @@ use super::order::held_days;
 use super::refs;
 use super::states::{Emitted, emitted, value_set};
 use super::{Params, Server};
+use crate::held::serves;
 use crate::{Error, Scope};
 
 pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value, Error> {
@@ -87,18 +88,22 @@ pub(super) fn steward_mismatch(wanted: &str, served: &str) -> String {
 }
 
 /// The representations the steward holds variable `id` in under `variant`, in
-/// tables of a known scope (today's `Holdings.columns`).
+/// tables of a known scope: each spelling a mapping serves (`held::serves`).
 pub(super) fn held_representations(
     conn: &Connection,
     id: i64,
     variant: i64,
 ) -> Result<BTreeSet<String>, Error> {
     Ok(conn
-        .prepare_cached(
-            "SELECT DISTINCT hm.representation_canonical FROM holding_mapping hm \
+        .prepare_cached(&format!(
+            "SELECT DISTINCT rc.delivery_column_name FROM resolver_column rc \
+             JOIN holding_mapping hm ON hm.variable_id = rc.variable_id \
+             AND hm.variant_id = rc.register_variant_id \
              JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
-             WHERE ht.scope != 'unknown' AND hm.variable_id = ? AND hm.variant_id = ?",
-        )?
+             WHERE ht.scope != 'unknown' AND hm.variable_id = ?1 AND hm.variant_id = ?2 \
+             AND {}",
+            serves("rc.delivery_column_name")
+        ))?
         .query_map([id, variant], |row| row.get(0))?
         .collect::<rusqlite::Result<_>>()?)
 }

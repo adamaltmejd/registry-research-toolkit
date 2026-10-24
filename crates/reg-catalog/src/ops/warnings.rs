@@ -11,7 +11,7 @@ use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
 use super::refs::{self, Target};
 use super::{Components, Params, Server, component};
-use crate::held::{HELD_HI, HELD_LO};
+use crate::held::{HELD_HI, HELD_LO, serves};
 use crate::{Code, Error, Scope};
 
 /// A retained source limitation or interpretation assumption: the builder's
@@ -230,6 +230,7 @@ fn held(period: bool, variant: bool, representation: bool) -> String {
          JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
          WHERE hm.variable_id = w.variable_id AND ht.scope != 'unknown'{held_period} \
          AND hm.variant_id = COALESCE(w.register_variant_id, {held_variant}) \
-         AND hm.representation_canonical = COALESCE({CANONICAL}, {held_column})))"
+         AND {}))",
+        serves(&format!("COALESCE({CANONICAL}, {held_column})"))
     )
 }
