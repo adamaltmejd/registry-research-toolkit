@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+
+[variable]
+"1.300.fr6-1" = "fr6-1"
+"1.300.fr6-2" = "fr6-2"
+"1.300.fr6-3" = "fr6-3"
+"1.300.fr6-4" = "fr6-4"
+
+[[identity.partition]]
+variable = "1.300"
+columns = { FR6_1 = "1.300.fr6-1", FR6_2 = "1.300.fr6-2", FR6_3 = "1.300.fr6-3", FR6_4 = "1.300.fr6-4" }
+columns_ref = "fixture"
