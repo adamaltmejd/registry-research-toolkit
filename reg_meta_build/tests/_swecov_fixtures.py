@@ -31,7 +31,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _extend_db_support import BASE_FIXTURE
-from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
+from reader_artifacts import (
+    FIXTURE_IMPORT_DATE,
+    build_reader_artifact,
+    cached_reader_artifact,
+)
 from reg_meta_build.db import DB_FILENAME
 from reg_meta_build.extend_db import extend_db
 from reg_meta_build.id import mint
@@ -117,14 +121,13 @@ def synthetic_enriched() -> dict[str, dict]:
     return enriched
 
 
-def write_flavored_db(
-    directory: Path, provider_toml: str = FLAVORED_TOML, *, provider: str = "inera"
-) -> Path:
+def write_flavored_db(directory: Path, provider_toml: str = FLAVORED_TOML) -> Path:
     """A FLAVORED DB: `provider_toml` (by default `cases/swecov/inera.toml`) as
-    the steward provider `provider`, overlaid by `extend_db` onto the synthetic
+    the steward provider `inera`, overlaid by `extend_db` onto the synthetic
     global base, so every row is one the builder writes. Each register, variant
     and variable is pinned to its own key as its slug, as the committed steward
     slug pins do for `_default`."""
+    provider = "inera"
     providers = directory / "providers"
     providers.mkdir(parents=True)
     (providers / f"{provider}.toml").write_text(provider_toml, encoding="utf-8")
@@ -159,14 +162,6 @@ def write_flavored_db(
         diagnostic=True,
     )
     return directory / "db" / DB_FILENAME
-
-
-def on_scb(provider_toml: str = FLAVORED_TOML) -> str:
-    """`provider_toml` authored for the `scb` provider (pass `provider="scb"`):
-    the base's own provider, whose name a steward TOML must repeat."""
-    return provider_toml.replace(
-        'name = "Inera AB / 1177 Vårdguiden"', 'name = "Statistiska Centralbyrån"', 1
-    )
 
 
 def t_kolumn_window(
@@ -230,14 +225,122 @@ def owner_block(
     return "\n".join(lines) + "\n"
 
 
-# Row ids of the default flavored DB (`mint`, as `extend_db` keys them), for the
-# probes that state a row `extend_db` never writes: alias windows with their own
-# provenance or column metadata, a year-independent state on a dated variant.
-# Those are global-build shapes; moving them to a global readable source
-# (`write_resolved_catalog`) is what remains of #1654.
-REGISTER_ID = mint("register", "inera", "bestallda-prover")
-VARIANT_ID = mint("variant", "inera", "bestallda-prover", "_default")
-T_KOLUMN_ID = mint("variable", "inera", "bestallda-prover", "t-kolumn")
+# `Beställda prover` as a GLOBAL register, for the shapes only a global build
+# writes and `extend_db` never does: alias windows with their own provenance or
+# per-column metadata, a window-less (search-only) alias, an alias window narrower
+# than its state, register versions, an errata-minted variable. Its variables are
+# resolved-catalog JSON (the `catalog.json` format of `conformance/cases/reader/`)
+# that `write_global_db` runs through the real catalog writer. A global register
+# needs a seeded provider, so it sits on `scb`.
+GLOBAL_REGISTER = {
+    "provider": "scb",
+    "slug": "bestallda-prover",
+    "name": "Beställda prover",
+}
+GLOBAL_VARIANT = "scb/bestallda-prover/_default"
+
+
+def _global_variant(slug: str) -> dict:
+    return {"slug": slug, "name": "Beställda prover" if slug == "_default" else slug}
+
+
+def global_state(
+    column: str,
+    valid_from: str | None = "0001-01-01",
+    valid_to: str = "9999-12-31",
+    *,
+    variant: str = "_default",
+    **facts: str | None,
+) -> dict:
+    """A delivery state of `column` on `variant` over `valid_from`..`valid_to`;
+    `valid_from=None` is a year-independent state. `facts` set other state fields
+    (two adjacent states agreeing on every fact are one state)."""
+    scope = (
+        {"period_scope": "year_independent"}
+        if valid_from is None
+        else {"valid_from": valid_from, "valid_to": valid_to}
+    )
+    return {
+        "variant": _global_variant(variant),
+        **scope,
+        "delivery_column_name": column,
+        "data_type": "varchar",
+        "data_length": None,
+        "operational_definition": None,
+        "provenance": None,
+        **facts,
+    }
+
+
+def alias_window(valid_from: str, valid_to: str, **facts: str | None) -> dict:
+    """One alias window; `facts` are its `provenance`, `column_metadata`, …"""
+    return {"valid_from": valid_from, "valid_to": valid_to, **facts}
+
+
+def global_alias(column: str, *windows: dict, variant: str = "_default") -> dict:
+    """An alias spelling `column` on `variant`; without `windows` it is the
+    search-only delivery-column history."""
+    return {
+        "variant": _global_variant(variant),
+        "delivery_column_name": column,
+        "windows": list(windows),
+    }
+
+
+def global_variable(
+    slug: str, *states: dict, aliases: tuple[dict, ...] = (), **facts: str
+) -> dict:
+    """A variable of the global `Beställda prover`, named and keyed by `slug`."""
+    return {
+        "register": GLOBAL_REGISTER,
+        "slug": slug,
+        "provider_key": slug,
+        "name": slug,
+        "definition": None,
+        "description": None,
+        "operational_definition": None,
+        "measurement_unit": None,
+        "is_sensitive": False,
+        "is_identifier": False,
+        "states": list(states),
+        "aliases": list(aliases),
+        **facts,
+    }
+
+
+def write_global_db(
+    directory: Path, *variables: dict, versions: tuple[str, ...] = ()
+) -> Path:
+    """A global catalog of `variables`, its `_default` variant documenting the
+    register `versions` (`editions.json`), built by the real catalog writer from
+    the readable source it leaves under `directory/source`."""
+    source = directory / "source"
+    source.mkdir(parents=True)
+    (source / "catalog.json").write_text(
+        json.dumps(variables, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
+    if versions:
+        (source / "editions.json").write_text(
+            json.dumps(
+                [
+                    {
+                        "register": GLOBAL_REGISTER,
+                        "variant": _global_variant("_default"),
+                        "name": name,
+                    }
+                    for name in versions
+                ],
+                ensure_ascii=False,
+                indent=1,
+            ),
+            encoding="utf-8",
+        )
+    return build_reader_artifact(
+        directory / "db",
+        source,
+        "catalog",
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+    )
 
 
 @pytest.fixture(scope="module", name="flavored_db")

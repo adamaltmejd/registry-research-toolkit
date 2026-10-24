@@ -20,15 +20,16 @@ import pytest
 from _swecov_fixtures import (
     build_catalog,
     flavored_db_fixture,  # noqa: F401
-    on_scb,
+    global_state,
+    global_variable,
     owner_block,
     t_kolumn_window,
     variant_block,
     write_flavored_db,
+    write_global_db,
 )
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.errors import RegMetaError
-from reg_meta_build.id import mint
 from reg_meta_build.inventory import edition_bounds
 
 if TYPE_CHECKING:
@@ -90,33 +91,21 @@ def _held(
     )
 
 
-def _scb_db(directory: Path, provider_toml: str) -> Path:
-    """The flavored DB with `Beställda prover` authored under `scb`: errata
-    stanzas are what SCB register files accept, and no other provider's."""
-    return write_flavored_db(directory, on_scb(provider_toml), provider="scb")
+def _t_kolumn(**facts: str) -> dict:
+    """The global `t-kolumn` (named `T_kolumn`), delivered in 2019 alone."""
+    return global_variable(
+        "t-kolumn",
+        global_state("T_kolumn", "2019-01-01", "2019-12-31"),
+        name="T_kolumn",
+        **facts,
+    )
 
 
-def _scb_rows(db: Path, *, versions: tuple[str, ...] = (), **sql: str) -> None:
-    """SCB-side rows the steward overlay never writes, stated directly: the
-    documented `register_version`s of the variant, and each `sql` statement
-    (the register's id bound as `:register`, `T_kolumn`'s as `:t_kolumn`)."""
-    register = mint("register", "scb", "bestallda-prover")
-    variant = mint("variant", "scb", "bestallda-prover", "_default")
-    with closing(sqlite3.connect(db)) as conn:
-        conn.executemany(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) VALUES (?, ?, ?)",
-            [(905 + index, variant, name) for index, name in enumerate(versions)],
-        )
-        for statement in sql.values():
-            conn.execute(
-                statement,
-                {
-                    "register": register,
-                    "t_kolumn": mint("variable", "scb", "bestallda-prover", "t-kolumn"),
-                },
-            )
-        conn.commit()
+def _scb_db(directory: Path, *variables: dict, versions: tuple[str, ...] = ()) -> Path:
+    """`Beställda prover` as a global SCB register of `variables` (by default
+    `_t_kolumn()`), its `_default` variant documenting the register `versions`:
+    errata stanzas are what SCB register files accept, and no other provider's."""
+    return write_global_db(directory, *(variables or (_t_kolumn(),)), versions=versions)
 
 
 def _errata_text(
@@ -155,7 +144,9 @@ def test_errata_rejects_incompatible_catalog_schema(
 ) -> None:
     db = tmp_path / "old.db"
     db.write_bytes(flavored_db.read_bytes())
-    # Closed, not only committed: the reader opens `immutable=1` and ignores a WAL.
+    # An artifact of another writer's schema, which no readable source run through
+    # this writer can produce, so its manifest is edited. Closed, not only
+    # committed: the reader opens `immutable=1` and ignores a WAL.
     with closing(sqlite3.connect(db)) as conn:
         conn.execute(
             "UPDATE import_manifest SET value = '0.1.0' WHERE key = 'schema_version'"
@@ -181,8 +172,7 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
     register files accept and no other provider: a miss on the fixture's own
     flavor provider is the curated-window case below, not this one.
     """
-    db = _scb_db(tmp_path / "narrowed", t_kolumn_window("2019-01-01", "2019-12-31"))
-    _scb_rows(db, versions=("2020",))
+    db = _scb_db(tmp_path / "narrowed", versions=("2020",))
 
     worklist = tomllib.loads(
         _errata_text(
@@ -230,20 +220,19 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
     `[[version]]` candidate. The range table proves it contributes to none of the
     candidate or assessed counts.
     """
+    # `[[column]]`-minted variables carry the SCB errata source label. The second
+    # is delivered on another variant only, so it has no state on `_default`.
     db = _scb_db(
-        tmp_path / "errata-columns", t_kolumn_window("2019-01-01", "2019-12-31")
-    )
-    # `[[column]]`-minted variables carry the SCB errata source label, which only
-    # the global SCB build writes; the second has no state at all.
-    _scb_rows(
-        db,
+        tmp_path / "errata-columns",
+        _t_kolumn(source_label="scb-errata"),
+        global_variable(
+            "errata-utan-variant",
+            global_state("Errata_utan_variant", variant="annan"),
+            provider_key="Errata_utan_variant",
+            name="Errata utan variant",
+            source_label="scb-errata",
+        ),
         versions=("2020",),
-        label="UPDATE variable SET source_label = 'scb-errata' "
-        "WHERE variable_id = :t_kolumn",
-        stateless="INSERT INTO variable "
-        "(variable_id, register_id, provider_key, slug, name, source_name, source_label) "
-        "VALUES (906, :register, 'Errata_utan_variant', 'errata-utan-variant', "
-        "'Errata utan variant', 'Errata utan variant', 'scb-errata')",
     )
 
     text = _errata_text(
@@ -293,7 +282,7 @@ def test_school_year_version_candidate_round_trips_through_scb_claims(
     uses the loader's native `2020/2021` spelling and claims those exact bounds.
     A multi-period control remains entirely outside inference.
     """
-    db = _scb_db(tmp_path / "school-year", t_kolumn_window("2019-01-01", "2019-12-31"))
+    db = _scb_db(tmp_path / "school-year")
 
     text = _errata_text(
         tmp_path,
@@ -423,11 +412,12 @@ def test_errata_worklist_excludes_every_multi_period_suggestion(
     evidence. They produce no version, delivered-column or curated-window
     suggestion regardless of provider, and the worklist/CLI report an honest
     zero assessed denominator plus the skipped-table count."""
-    narrowed = t_kolumn_window("2019-01-01", "2019-12-31")
     db = (
-        _scb_db(tmp_path / "narrowed", narrowed)
+        _scb_db(tmp_path / "narrowed")
         if variant.startswith("scb/")
-        else write_flavored_db(tmp_path / "narrowed", narrowed)
+        else write_flavored_db(
+            tmp_path / "narrowed", t_kolumn_window("2019-01-01", "2019-12-31")
+        )
     )
 
     text = _errata_text(
