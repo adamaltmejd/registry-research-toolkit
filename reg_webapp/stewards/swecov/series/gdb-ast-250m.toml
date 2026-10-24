@@ -1,6 +1,6 @@
 id = "gdb-ast-250m"
 register = "scb/gdb"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/arbetsstallen"]
 
 [[table]]
 table = "GDB_Ast_250m_1990"

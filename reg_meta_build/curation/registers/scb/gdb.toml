@@ -3,30 +3,6 @@ provider = "scb"
 slug = "gdb"
 native_id = "70"
 
-[[errata.delivered]]
-variant = "adresser-fastigheter"
-column = "Kommun"
-versions = ["2024-01-01", "2025-01-01"]
-upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "095b5bc0417d1710935159535a90d6b769d00dc8fdacb9fb03a2b97b7196514d"
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
-evidence = "SWECOV holds Kommun in GDB_Skolor2023 and GDB_Skolor2024, the 2024-01-01 and 2025-01-01 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents Kommun (VarId 36) in every adresser-fastigheter version 2018-01-01..2023-01-01 and none after. (#1603)"
-noted = "2026-10-16"
-
-# Y-113..Y-120 GDB evidence comes from the SWECOV inventory and SCB's
-# 2026-03-09 Registerinformation export.
-# ── scb/gdb — adresser-fastigheter is documented 2018-01-01..2023-01-01.
-# Under the GDB year-end rule SWECOV's GDB_Skolor2023 and GDB_Skolor2024 hold
-# Kommun for the 2024-01-01 and 2025-01-01 versions. Both start after the
-# variant's newest documented version, so the era guard admits them; that
-# version, 2023-01-01 (regver 18792), has the Kommun row (VarId 36, varchar).
-
-[[errata.version]]
-variant = "adresser-fastigheter"
-name = "2024-01-01"
-evidence = "SWECOV holds GDB_Ind2023, GDB_Ast2023 and GDB_Skolor2023, the 2024-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter through 2023-01-01 only. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
-
 [[variant]]
 native_id = "70.227"
 slug = "fastigheter"
@@ -52,6 +28,43 @@ native_id = "70.1380"
 slug = "adresser-fastigheter"
 display_group = "Adresser, fastigheter och koordinater"
 panel_entity_key = "uuid-adr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+# ── #1855: GDB at delivery grain ──
+# SCB delivers GDB to every recipient at person, workplace or school grain
+# (maintainer ruling 2026-10-24). The Registerinformation export documents
+# only the address and property variants, so these three are authored SCB
+# variants: canonical-band RegVarIDs, mint_canonical_scb("scb", "70", slug).
+# Every edition they deliver is an [[errata.version]]; their documented
+# columns come from the address and property variants by
+# [[errata.delivered]] donor_variant, and the columns SCB does not document
+# are [[errata.column]] mints.
+
+[[variant]]
+native_id = "70.2861754316974127173"
+slug = "individer"
+name = "Individer"
+description = "En rad per person och årsversion."
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+[[variant]]
+native_id = "70.3997263402060385009"
+slug = "arbetsstallen"
+name = "Arbetsställen"
+description = "En rad per arbetsställe och årsversion."
+panel_entity_key = "cfarnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+[[variant]]
+native_id = "70.2545359473442707155"
+slug = "skolor"
+name = "Skolor"
+description = "En rad per skola eller skolenhet och årsversion."
+panel_entity_key = ["skolkod", "skolenhetskod"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -243,19 +256,6 @@ expected_evidence_sha256 = "4395ad9bc99d4b7feb30d15ae51b845df10a38b73d080f962562
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
-[[coding.extend]]
-variable = "70.36"
-variant = "70.1380"
-column = "Kommun"
-periods = [["2024-01-01", "2024-01-01"]]
-reason = "The exact native four-character municipality field carries complete own source lists at the2018–2023 points, all290 code-label pairs identical. Continue the latest supplied2023 domain only at the2024 delivery point; retain all original yearly lists and version labels. No new municipality codes, guessed storage or date coverage is introduced."
-source = "Complete native-family, actual source/support and ordered own-binding review: Batch52-domain42b-own-binding-review.json; standing user explicit-association/domain-continuity policy. Exact original and complete raw coding fingerprints are guarded."
-data_warning = "The effective coding uses the exact source-bound domain outside its declared descriptor period, under the reviewed association-continuity assumption; original periods remain unchanged."
-expected_evidence_sha256 = "af767eb57c16910f0e869b336baaf03b7dda58ef9fb07d7d9441bac8160c11fb"
-list = "2023-01-01 /Län, kommuner och församlingar"
-list_members = [["0114", "Upplands Väsby"], ["0115", "Vallentuna"], ["0117", "Österåker"], ["0120", "Värmdö"], ["0123", "Järfälla"], ["0125", "Ekerö"], ["0126", "Huddinge"], ["0127", "Botkyrka"], ["0128", "Salem"], ["0136", "Haninge"], ["0138", "Tyresö"], ["0139", "Upplands-Bro"], ["0140", "Nykvarn"], ["0160", "Täby"], ["0162", "Danderyd"], ["0163", "Sollentuna"], ["0180", "Stockholm"], ["0181", "Södertälje"], ["0182", "Nacka"], ["0183", "Sundbyberg"], ["0184", "Solna"], ["0186", "Lidingö"], ["0187", "Vaxholm"], ["0188", "Norrtälje"], ["0191", "Sigtuna"], ["0192", "Nynäshamn"], ["0305", "Håbo"], ["0319", "Älvkarleby"], ["0330", "Knivsta"], ["0331", "Heby"], ["0360", "Tierp"], ["0380", "Uppsala"], ["0381", "Enköping"], ["0382", "Östhammar"], ["0428", "Vingåker"], ["0461", "Gnesta"], ["0480", "Nyköping"], ["0481", "Oxelösund"], ["0482", "Flen"], ["0483", "Katrineholm"], ["0484", "Eskilstuna"], ["0486", "Strängnäs"], ["0488", "Trosa"], ["0509", "Ödeshög"], ["0512", "Ydre"], ["0513", "Kinda"], ["0560", "Boxholm"], ["0561", "Åtvidaberg"], ["0562", "Finspång"], ["0563", "Valdemarsvik"], ["0580", "Linköping"], ["0581", "Norrköping"], ["0582", "Söderköping"], ["0583", "Motala"], ["0584", "Vadstena"], ["0586", "Mjölby"], ["0604", "Aneby"], ["0617", "Gnosjö"], ["0642", "Mullsjö"], ["0643", "Habo"], ["0662", "Gislaved"], ["0665", "Vaggeryd"], ["0680", "Jönköping"], ["0682", "Nässjö"], ["0683", "Värnamo"], ["0684", "Sävsjö"], ["0685", "Vetlanda"], ["0686", "Eksjö"], ["0687", "Tranås"], ["0760", "Uppvidinge"], ["0761", "Lessebo"], ["0763", "Tingsryd"], ["0764", "Alvesta"], ["0765", "Älmhult"], ["0767", "Markaryd"], ["0780", "Växjö"], ["0781", "Ljungby"], ["0821", "Högsby"], ["0834", "Torsås"], ["0840", "Mörbylånga"], ["0860", "Hultsfred"], ["0861", "Mönsterås"], ["0862", "Emmaboda"], ["0880", "Kalmar"], ["0881", "Nybro"], ["0882", "Oskarshamn"], ["0883", "Västervik"], ["0884", "Vimmerby"], ["0885", "Borgholm"], ["0980", "Gotland"], ["1060", "Olofström"], ["1080", "Karlskrona"], ["1081", "Ronneby"], ["1082", "Karlshamn"], ["1083", "Sölvesborg"], ["1214", "Svalöv"], ["1230", "Staffanstorp"], ["1231", "Burlöv"], ["1233", "Vellinge"], ["1256", "Östra Göinge"], ["1257", "Örkelljunga"], ["1260", "Bjuv"], ["1261", "Kävlinge"], ["1262", "Lomma"], ["1263", "Svedala"], ["1264", "Skurup"], ["1265", "Sjöbo"], ["1266", "Hörby"], ["1267", "Höör"], ["1270", "Tomelilla"], ["1272", "Bromölla"], ["1273", "Osby"], ["1275", "Perstorp"], ["1276", "Klippan"], ["1277", "Åstorp"], ["1278", "Båstad"], ["1280", "Malmö"], ["1281", "Lund"], ["1282", "Landskrona"], ["1283", "Helsingborg"], ["1284", "Höganäs"], ["1285", "Eslöv"], ["1286", "Ystad"], ["1287", "Trelleborg"], ["1290", "Kristianstad"], ["1291", "Simrishamn"], ["1292", "Ängelholm"], ["1293", "Hässleholm"], ["1315", "Hylte"], ["1380", "Halmstad"], ["1381", "Laholm"], ["1382", "Falkenberg"], ["1383", "Varberg"], ["1384", "Kungsbacka"], ["1401", "Härryda"], ["1402", "Partille"], ["1407", "Öckerö"], ["1415", "Stenungsund"], ["1419", "Tjörn"], ["1421", "Orust"], ["1427", "Sotenäs"], ["1430", "Munkedal"], ["1435", "Tanum"], ["1438", "Dals-Ed"], ["1439", "Färgelanda"], ["1440", "Ale"], ["1441", "Lerum"], ["1442", "Vårgårda"], ["1443", "Bollebygd"], ["1444", "Grästorp"], ["1445", "Essunga"], ["1446", "Karlsborg"], ["1447", "Gullspång"], ["1452", "Tranemo"], ["1460", "Bengtsfors"], ["1461", "Mellerud"], ["1462", "Lilla Edet"], ["1463", "Mark"], ["1465", "Svenljunga"], ["1466", "Herrljunga"], ["1470", "Vara"], ["1471", "Götene"], ["1472", "Tibro"], ["1473", "Töreboda"], ["1480", "Göteborg"], ["1481", "Mölndal"], ["1482", "Kungälv"], ["1484", "Lysekil"], ["1485", "Uddevalla"], ["1486", "Strömstad"], ["1487", "Vänersborg"], ["1488", "Trollhättan"], ["1489", "Alingsås"], ["1490", "Borås"], ["1491", "Ulricehamn"], ["1492", "Åmål"], ["1493", "Mariestad"], ["1494", "Lidköping"], ["1495", "Skara"], ["1496", "Skövde"], ["1497", "Hjo"], ["1498", "Tidaholm"], ["1499", "Falköping"], ["1715", "Kil"], ["1730", "Eda"], ["1737", "Torsby"], ["1760", "Storfors"], ["1761", "Hammarö"], ["1762", "Munkfors"], ["1763", "Forshaga"], ["1764", "Grums"], ["1765", "Årjäng"], ["1766", "Sunne"], ["1780", "Karlstad"], ["1781", "Kristinehamn"], ["1782", "Filipstad"], ["1783", "Hagfors"], ["1784", "Arvika"], ["1785", "Säffle"], ["1814", "Lekeberg"], ["1860", "Laxå"], ["1861", "Hallsberg"], ["1862", "Degerfors"], ["1863", "Hällefors"], ["1864", "Ljusnarsberg"], ["1880", "Örebro"], ["1881", "Kumla"], ["1882", "Askersund"], ["1883", "Karlskoga"], ["1884", "Nora"], ["1885", "Lindesberg"], ["1904", "Skinnskatteberg"], ["1907", "Surahammar"], ["1960", "Kungsör"], ["1961", "Hallstahammar"], ["1962", "Norberg"], ["1980", "Västerås"], ["1981", "Sala"], ["1982", "Fagersta"], ["1983", "Köping"], ["1984", "Arboga"], ["2021", "Vansbro"], ["2023", "Malung-Sälen"], ["2026", "Gagnef"], ["2029", "Leksand"], ["2031", "Rättvik"], ["2034", "Orsa"], ["2039", "Älvdalen"], ["2061", "Smedjebacken"], ["2062", "Mora"], ["2080", "Falun"], ["2081", "Borlänge"], ["2082", "Säter"], ["2083", "Hedemora"], ["2084", "Avesta"], ["2085", "Ludvika"], ["2101", "Ockelbo"], ["2104", "Hofors"], ["2121", "Ovanåker"], ["2132", "Nordanstig"], ["2161", "Ljusdal"], ["2180", "Gävle"], ["2181", "Sandviken"], ["2182", "Söderhamn"], ["2183", "Bollnäs"], ["2184", "Hudiksvall"], ["2260", "Ånge"], ["2262", "Timrå"], ["2280", "Härnösand"], ["2281", "Sundsvall"], ["2282", "Kramfors"], ["2283", "Sollefteå"], ["2284", "Örnsköldsvik"], ["2303", "Ragunda"], ["2305", "Bräcke"], ["2309", "Krokom"], ["2313", "Strömsund"], ["2321", "Åre"], ["2326", "Berg"], ["2361", "Härjedalen"], ["2380", "Östersund"], ["2401", "Nordmaling"], ["2403", "Bjurholm"], ["2404", "Vindeln"], ["2409", "Robertsfors"], ["2417", "Norsjö"], ["2418", "Malå"], ["2421", "Storuman"], ["2422", "Sorsele"], ["2425", "Dorotea"], ["2460", "Vännäs"], ["2462", "Vilhelmina"], ["2463", "Åsele"], ["2480", "Umeå"], ["2481", "Lycksele"], ["2482", "Skellefteå"], ["2505", "Arvidsjaur"], ["2506", "Arjeplog"], ["2510", "Jokkmokk"], ["2513", "Överkalix"], ["2514", "Kalix"], ["2518", "Övertorneå"], ["2521", "Pajala"], ["2523", "Gällivare"], ["2560", "Älvsbyn"], ["2580", "Luleå"], ["2581", "Piteå"], ["2582", "Boden"], ["2583", "Haparanda"], ["2584", "Kiruna"]]
-witness = ["2023-01-01", "2023-01-01"]
-
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/gdb/smaort"
@@ -278,163 +278,11 @@ columns = { PostNrOmrade = "70.58.postnromrade", PostnrOmrade = "70.58.postnromr
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "8d9265a37319208d46b78bb5ee42b695a6e1137a19fea8b3c542a65776ad381b"
 
-# ── #1494: SWECOV GDB columns SCB does not document (steward-holdings, #1579) ──
+
+# ── #1855: individer, columns SCB does not document (#1494, #1603) ──
 
 [[errata.column]]
-data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
-variant = "adresser-fastigheter"
-column = "AstRuta250swX"
-data_type = "text"
-name = "Arbetsställets 250 m-ruta, X (SWEREF 99 TM)"
-definition = "Nordlig koordinat (X) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där arbetsstället ligger. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2024"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
-noted = "2026-10-16"
-
-[[errata.column]]
-data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
-variant = "adresser-fastigheter"
-column = "AstRuta250swY"
-data_type = "text"
-name = "Arbetsställets 250 m-ruta, Y (SWEREF 99 TM)"
-definition = "Östlig koordinat (Y) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där arbetsstället ligger. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2024"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "Ruta250swX"
-data_type = "text"
-name = "Bostadens 250 m-ruta, X (SWEREF 99 TM)"
-definition = "Nordlig koordinat (X) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där personens bostad ligger. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2025"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "Ruta250swY"
-data_type = "text"
-name = "Bostadens 250 m-ruta, Y (SWEREF 99 TM)"
-definition = "Östlig koordinat (Y) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där personens bostad ligger. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2025"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
-noted = "2026-10-16"
-
-[[errata.column]]
-data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
-variant = "adresser-fastigheter"
-column = "AstNr"
-data_type = "text"
-name = "Arbetsställenummer"
-definition = "Femsiffrigt nummer på arbetsstället inom organisationen; inte unikt utan organisationsnummer. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2024"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "Skolform"
-data_type = "text"
-name = "Skolform"
-definition = "Skolform för skolenheten (koderna 11 och 21; kodernas innebörd är inte dokumenterad). SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2025"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
-noted = "2026-10-16"
-
-# ── #1603 batch-e D8: GDB geo-linkage extract columns (#1494) ──
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "AstKommun"
-data_warning = "Undocumented column: SCB documents no AstKommun on any GDB variant. The meaning (the workplace's municipality code) is taken from the column name and the delivered values, not from SCB documentation."
-data_type = "text"
-name = "Arbetsställets kommun"
-definition = "Kommun där arbetsstället ligger, som kommunkod. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "1991-2024"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "DeSO_2018"
-data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and the delivered values, not from SCB documentation."
-data_type = "text"
-name = "DeSO enligt 2018 års indelning"
-definition = "Demografiskt statistikområde (DeSO) enligt SCB:s indelning från 2018. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "2024-2025"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "DeSO_2025"
-data_warning = "Undocumented column: SCB documents no DeSO_2025 on any GDB variant. The meaning (DeSO under SCB's revised 2025 division) is taken from the column name and the delivered values, not from SCB documentation."
-data_type = "text"
-name = "DeSO enligt 2025 års indelning"
-definition = "Demografiskt statistikområde (DeSO) enligt SCB:s reviderade indelning från 2025. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = false
-holdings_period = "2025-2025"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "CfarNr"
-data_warning = "Undocumented column: SCB documents no CfarNr on any GDB variant. The meaning (the workplace's CFAR number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
-data_type = "text"
-name = "Arbetsställets CFAR-nummer"
-definition = "Identitetsbegrepp för arbetsställe. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = true
-holdings_period = "1991-2024"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing cfarnr variables (non-sensitive identifier in most SCB registers)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
-column = "PeOrgNr"
-data_warning = "Undocumented column: SCB documents no PeOrgNr on any GDB variant. The meaning (a person or organisation number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
-data_type = "text"
-name = "Person-/organisationsnummer"
-definition = "Identitetsbegrepp för juridiska enheter; för fysiska personer med näringsverksamhet används personnumret. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen."
-is_sensitive = false
-is_identifier = true
-holdings_period = "1991-2024"
-source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing person-orgnr variables (non-sensitive identifier in most SCB registers)."
-noted = "2026-10-16"
-
-[[errata.column]]
-variant = "adresser-fastigheter"
+variant = "individer"
 column = "PersonNr"
 data_warning = "Undocumented column: SCB documents no PersonNr on any GDB variant. The meaning (a person number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
@@ -448,7 +296,177 @@ evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end
 noted = "2026-10-16"
 
 [[errata.column]]
-variant = "adresser-fastigheter"
+variant = "individer"
+column = "Ruta250swX"
+data_type = "text"
+name = "Bostadens 250 m-ruta, X (SWEREF 99 TM)"
+definition = "Nordlig koordinat (X) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där personens bostad ligger. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "individer"
+column = "Ruta250swY"
+data_type = "text"
+name = "Bostadens 250 m-ruta, Y (SWEREF 99 TM)"
+definition = "Östlig koordinat (Y) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där personens bostad ligger. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "individer"
+column = "DeSO_2018"
+data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2018 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s indelning från 2018. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2025-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "individer"
+column = "DeSO_2025"
+data_warning = "Undocumented column: SCB documents no DeSO_2025 on any GDB variant. The meaning (DeSO under SCB's revised 2025 division) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2025 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s reviderade indelning från 2025. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2025-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+# ── #1855: arbetsstallen, columns SCB does not document (#1494, #1603) ──
+
+[[errata.column]]
+variant = "arbetsstallen"
+column = "CfarNr"
+data_warning = "Undocumented column: SCB documents no CfarNr on any GDB variant. The meaning (the workplace's CFAR number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "Arbetsställets CFAR-nummer"
+definition = "Identitetsbegrepp för arbetsställe. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing cfarnr variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "arbetsstallen"
+column = "PeOrgNr"
+data_warning = "Undocumented column: SCB documents no PeOrgNr on any GDB variant. The meaning (a person or organisation number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "Person-/organisationsnummer"
+definition = "Identitetsbegrepp för juridiska enheter; för fysiska personer med näringsverksamhet används personnumret. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing person-orgnr variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
+variant = "arbetsstallen"
+column = "AstNr"
+data_type = "text"
+name = "Arbetsställenummer"
+definition = "Femsiffrigt nummer på arbetsstället inom organisationen; inte unikt utan organisationsnummer. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "arbetsstallen"
+column = "AstKommun"
+data_warning = "Undocumented column: SCB documents no AstKommun on any GDB variant. The meaning (the workplace's municipality code) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "Arbetsställets kommun"
+definition = "Kommun där arbetsstället ligger, som kommunkod. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+[[errata.column]]
+data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
+variant = "arbetsstallen"
+column = "AstRuta250swX"
+data_type = "text"
+name = "Arbetsställets 250 m-ruta, X (SWEREF 99 TM)"
+definition = "Nordlig koordinat (X) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där arbetsstället ligger. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
+variant = "arbetsstallen"
+column = "AstRuta250swY"
+data_type = "text"
+name = "Arbetsställets 250 m-ruta, Y (SWEREF 99 TM)"
+definition = "Östlig koordinat (Y) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där arbetsstället ligger. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "arbetsstallen"
+column = "DeSO_2018"
+data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2018 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s indelning från 2018. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2024-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+# ── #1855: skolor, columns SCB does not document (#1494, #1603) ──
+
+[[errata.column]]
+variant = "skolor"
+column = "skolkod"
+data_warning = "Undocumented column: SCB documents no skolkod on any GDB variant. The meaning (the school code, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "Skola"
+definition = "Skola, en administrativ enhet där lärare och/eller elever finns; den avser en organisatorisk enhet på en adress, inte en byggnad. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing skolkod variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "skolor"
 column = "skolenhetskod"
 data_warning = "Undocumented column: SCB documents no skolenhetskod on any GDB variant. The meaning (the school unit code, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
@@ -462,301 +480,741 @@ evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end
 noted = "2026-10-16"
 
 [[errata.column]]
-variant = "adresser-fastigheter"
-column = "skolkod"
-data_warning = "Undocumented column: SCB documents no skolkod on any GDB variant. The meaning (the school code, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
+variant = "skolor"
+column = "Skolform"
 data_type = "text"
-name = "Skola"
-definition = "Skola, en administrativ enhet där lärare och/eller elever finns; den avser en organisatorisk enhet på en adress, inte en byggnad. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen."
+name = "Skolform"
+definition = "Skolform för skolenheten (koderna 11 och 21; kodernas innebörd är inte dokumenterad). SCB dokumenterar inte kolumnen."
 is_sensitive = false
-is_identifier = true
-holdings_period = "1991-2014"
+is_identifier = false
+holdings_period = "1991-2025"
 source = "steward-holdings"
-evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing skolkod variables (non-sensitive identifier in most SCB registers)."
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
 noted = "2026-10-16"
 
-# ── #1603 C: GDB year-end rule — DeSO and Kommun versions SCB's export omits ──
-
-[[errata.version]]
-variant = "adresser-fastigheter"
-name = "2025-01-01"
-evidence = "SWECOV holds GDB_Ind2024 and GDB_Skolor2024, the 2025-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter through 2023-01-01 only. Named in the variant's own YYYY-01-01 token convention. (#1603)"
+[[errata.column]]
+variant = "skolor"
+column = "DeSO_2018"
+data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2018 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s indelning från 2018. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2025-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
 noted = "2026-10-16"
 
+[[errata.column]]
+variant = "skolor"
+column = "DeSO_2025"
+data_warning = "Undocumented column: SCB documents no DeSO_2025 on any GDB variant. The meaning (DeSO under SCB's revised 2025 division) is taken from the column name and the delivered values, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2025 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s reviderade indelning från 2025. SCB dokumenterar inte kolumnen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2025-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+# ── #1855: individer, the annual versions SCB delivers at person grain ──
+
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1991-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1990, the 1991-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1990 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1992-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1991, the 1992-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1991 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1993-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1992, the 1993-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1992 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1994-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1993, the 1994-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1993 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1995-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1994, the 1995-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1994 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1996-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1995, the 1996-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1995 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1997-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1996, the 1997-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1996 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1998-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1997, the 1998-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1997 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "1999-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1998, the 1999-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1998 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2000-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 1999, the 2000-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1999 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2001-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2000, the 2001-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2000 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2002-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2001, the 2002-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2001 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2003-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2002, the 2003-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2002 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2004-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2003, the 2004-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2003 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2005-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2004, the 2005-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2004 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2006-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2005, the 2006-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2005 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2007-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2006, the 2007-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2006 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2008-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2007, the 2008-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2007 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2009-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2008, the 2009-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2008 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2010-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2009, the 2010-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2009 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2011-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2010, the 2011-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2010 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2012-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2011, the 2012-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2011 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2013-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2012, the 2013-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2012 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2014-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2013, the 2014-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2013 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2015-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2014, the 2015-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2014 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2016-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2015, the 2016-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2015 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "adresser-fastigheter"
+variant = "individer"
 name = "2017-01-01"
-evidence = "SWECOV holds DeSO in its GDB tables for year 2016, the 2017-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents adresser-fastigheter from 2018-01-01. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2016 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "individer"
+name = "2018-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2017 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2019-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2018 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2020-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2019 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2021-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2020 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2022-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2021 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2023-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2022 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2024-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2023 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "individer"
+name = "2025-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2024 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+# ── #1855: arbetsstallen, the annual versions SCB delivers at workplace grain ──
+
+[[errata.version]]
+variant = "arbetsstallen"
 name = "1991-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1990, the 1991-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1990 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1992-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1991, the 1992-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1991 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1993-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1992, the 1993-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1992 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1994-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1993, the 1994-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1993 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1995-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1994, the 1995-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1994 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1996-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1995, the 1996-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1995 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1997-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1996, the 1997-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1996 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1998-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1997, the 1998-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1997 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "1999-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1998, the 1999-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1998 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "2000-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor1999, the 2000-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1999 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "2001-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor2000, the 2001-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2000 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
 
 [[errata.version]]
-variant = "fastigheter"
+variant = "arbetsstallen"
 name = "2002-01-01"
-evidence = "SWECOV holds Kommun in GDB_Skolor2001, the 2002-01-01 version. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export documents fastigheter from 2003-01-01, which these versions join without a gap. Named in the variant's own YYYY-01-01 token convention. (#1603)"
-noted = "2026-10-16"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2001 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2003-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2002 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2004-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2003 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2005-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2004 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2006-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2005 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2007-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2006 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2008-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2007 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2009-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2008 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2010-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2009 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2011-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2010 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2012-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2011 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2013-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2012 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2014-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2013 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2015-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2014 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2016-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2015 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2017-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2016 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2018-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2017 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2019-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2018 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2020-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2019 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2021-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2020 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2022-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2021 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2023-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2022 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "arbetsstallen"
+name = "2024-01-01"
+evidence = "SCB delivers GDB at workplace grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2023 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no workplace-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+# ── #1855: skolor, the annual versions SCB delivers at school grain ──
+
+[[errata.version]]
+variant = "skolor"
+name = "1991-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1990 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1992-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1991 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1993-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1992 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1994-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1993 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1995-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1994 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1996-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1995 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1997-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1996 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1998-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1997 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "1999-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1998 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2000-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1999 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2001-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2000 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2002-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2001 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2003-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2002 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2004-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2003 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2005-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2004 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2006-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2005 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2007-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2006 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2008-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2007 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2009-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2008 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2010-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2009 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2011-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2010 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2012-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2011 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2013-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2012 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2014-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2013 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2015-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2014 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2016-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2015 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2017-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2016 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2018-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2017 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2019-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2018 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2020-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2019 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2021-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2020 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2022-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2021 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2023-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2022 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2024-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2023 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+[[errata.version]]
+variant = "skolor"
+name = "2025-01-01"
+evidence = "SCB delivers GDB at school grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 2024 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no school-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
+
+# ── #1855: documented columns, from the address and property variants ──
+# expected_evidence_sha256 digests the donor's documented rows of the column,
+# the same rows the #1603 entries on the donor variants pinned.
 
 [[errata.delivered]]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
-variant = "adresser-fastigheter"
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively."
+variant = "individer"
+donor_variant = "adresser-fastigheter"
+donor_coding = true
 column = "DeSO"
-versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01", "2003-01-01", "2004-01-01", "2005-01-01", "2006-01-01", "2007-01-01", "2008-01-01", "2009-01-01", "2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2024-01-01"]
+versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01", "2003-01-01", "2004-01-01", "2005-01-01", "2006-01-01", "2007-01-01", "2008-01-01", "2009-01-01", "2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01", "2024-01-01"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "034cd01c859f9f85d06034ad4b676462bc3217677cf2e08efa5308766ad07f99"
-evidence = "SWECOV holds DeSO in GDB_Ind, GDB_Ast and GDB_Skolor for table years 1990-2016 and in GDB_Ind2023 and GDB_Skolor2023, the 1991-2017 and 2024-01-01 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents DeSO on adresser-fastigheter 2018-01-01..2023-01-01 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
-noted = "2026-10-16"
+evidence = "SWECOV holds DeSO in its person-grain GDB tables for table years 1990-2023, the 1991-2024 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents DeSO on adresser-fastigheter 2018-01-01..2023-01-01 with the same definition, and its coding there is the donor's. (#1603, #1855; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-24"
+
+[[errata.delivered]]
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively. The workplace tables are coded on year Y+1's municipality division."
+variant = "arbetsstallen"
+donor_variant = "adresser-fastigheter"
+donor_coding = true
+column = "DeSO"
+versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01", "2003-01-01", "2004-01-01", "2005-01-01", "2006-01-01", "2007-01-01", "2008-01-01", "2009-01-01", "2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "034cd01c859f9f85d06034ad4b676462bc3217677cf2e08efa5308766ad07f99"
+evidence = "SWECOV holds DeSO in its workplace-grain GDB tables for table years 1990-2022, the 1991-2023 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents DeSO on adresser-fastigheter 2018-01-01..2023-01-01 with the same definition, and its coding there is the donor's. The workplace tables are coded on year Y+1's municipality division (aggregate check on MONA, reported as a conclusion only). (#1603, #1855; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-24"
+
+[[errata.delivered]]
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively."
+variant = "skolor"
+donor_variant = "adresser-fastigheter"
+donor_coding = true
+column = "DeSO"
+versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01", "2003-01-01", "2004-01-01", "2005-01-01", "2006-01-01", "2007-01-01", "2008-01-01", "2009-01-01", "2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01", "2024-01-01"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "034cd01c859f9f85d06034ad4b676462bc3217677cf2e08efa5308766ad07f99"
+evidence = "SWECOV holds DeSO in its school-grain GDB tables for table years 1990-2023, the 1991-2024 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents DeSO on adresser-fastigheter 2018-01-01..2023-01-01 with the same definition, and its coding there is the donor's. (#1603, #1855; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-24"
 
 [[errata.delivered]]
 data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
-variant = "fastigheter"
+variant = "skolor"
+donor_variant = "fastigheter"
+donor_coding = true
 column = "Kommun"
-versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01"]
+versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01", "2003-01-01", "2004-01-01", "2005-01-01", "2006-01-01", "2007-01-01", "2008-01-01", "2009-01-01", "2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "c19569b53d207dbfc11cad0e9167e3eb78fd332ef643c92ae04a8f78d91a278d"
-evidence = "SWECOV holds Kommun in GDB_Skolor1990-GDB_Skolor2001, the 1991-2002 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents Kommun on fastigheter from 2003 with the same definition, and the aggregate check found every code valid in the municipality list of the table's own year (the maintainer's aggregate check on MONA, reported as a conclusion only). (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
-noted = "2026-10-16"
+evidence = "SWECOV holds Kommun in its school-grain GDB tables for table years 1990-2016, the 1991-2017 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents Kommun on fastigheter 2003-01-01..2017-01-01 with the same definition (spelled Kommun, kommun and KOMMUN), and its coding there is the donor's. The aggregate check found every code valid in the municipality list of the table's own year (the maintainer's aggregate check on MONA, reported as a conclusion only). (#1603, #1855; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-24"
 
-# ── #1603 C: coding of the added windows left unavailable ──
+[[errata.delivered]]
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
+variant = "skolor"
+donor_variant = "adresser-fastigheter"
+donor_coding = true
+column = "Kommun"
+versions = ["2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01", "2024-01-01", "2025-01-01"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "095b5bc0417d1710935159535a90d6b769d00dc8fdacb9fb03a2b97b7196514d"
+evidence = "SWECOV holds Kommun in its school-grain GDB tables for table years 2017-2024, the 2018-2025 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents Kommun (VarId 36) on adresser-fastigheter 2018-01-01..2023-01-01 and none after, and its coding there is the donor's. (#1603, #1855; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-24"
 
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/gdb/kommun"
-refs = [
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13392\",\"variable:36\",\"member:599438\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13681\",\"variable:36\",\"member:615819\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:14482\",\"variable:36\",\"member:660225\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:16395\",\"variable:36\",\"member:799147\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18792\",\"variable:36\",\"member:891448\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18793\",\"variable:36\",\"member:891473\"]}",
-]
-fields = ["coding"]
-valid_from = "2025-01-01"
-valid_to = "2025-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "942eaa558c7f3189f074ee7005eba8602f7226dcab7d1b1f2de19fdb6f4c7d96"
-expected_diagnostic_sha256 = "16ccefb7916d8474cddbf76287e0eed1789eb762d2552b5f3cd584220bef8ff3"
+# ── #1855: Kommun windows no donor codes, left unavailable (#1603) ──
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -781,7 +1239,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1991-01-01"
 valid_to = "1991-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "6728cf1e5ca9a7e3fdd14c89d18c29a74aba1e26a76fdb2ad89943b973db5e0e"
@@ -809,7 +1267,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1992-01-01"
 valid_to = "1992-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "b8dae568bc5ae486c590c510ba34880fe3359eee29fac85aa2d163eb3c15b6b3"
@@ -837,7 +1295,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1993-01-01"
 valid_to = "1993-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "526e6030f7ff07e69e01875415534070175fb49ede4bd83b3029618ab626428b"
@@ -865,7 +1323,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1994-01-01"
 valid_to = "1994-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "0644a7f7af044519a0beb55197e76a7a5a21ce43ef570a09a4a31070c9d9391d"
@@ -893,7 +1351,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1995-01-01"
 valid_to = "1995-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "19302b00a1879ba90d13719d0fd8029839685401c010aa5540f047983d082032"
@@ -921,7 +1379,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1996-01-01"
 valid_to = "1996-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "dca9dd4694e821cc4ef7afebcaaa1f4a5aa66532b1124c9220d3b403c9d26191"
@@ -949,7 +1407,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1997-01-01"
 valid_to = "1997-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "b8f3fcd26c1ccb4a8895da366a53dae5bc316ebc0b498bc2da7809ddd504c945"
@@ -977,7 +1435,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1998-01-01"
 valid_to = "1998-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "1ffda0af3d2623a6f56c8aa16227a825a337fd3197ef980623589100b388e347"
@@ -1005,7 +1463,7 @@ refs = [
 fields = ["coding"]
 valid_from = "1999-01-01"
 valid_to = "1999-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "637f539a6d2a0d1ffe4fe6b7dbfb1dd5d2074c8939d05b752bd25e00447259ac"
@@ -1033,7 +1491,7 @@ refs = [
 fields = ["coding"]
 valid_from = "2000-01-01"
 valid_to = "2000-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "4a2f8f3e1e86517fdfdd022fba57245a79bd7fe26d841e4ab3f21ff658254444"
@@ -1061,7 +1519,7 @@ refs = [
 fields = ["coding"]
 valid_from = "2001-01-01"
 valid_to = "2001-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "cc7c012ecacd315d7aae567d357574a2561772e94c9ab2d7bc77ea659058e3e9"
@@ -1089,64 +1547,45 @@ refs = [
 fields = ["coding"]
 valid_from = "2002-01-01"
 valid_to = "2002-01-01"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "36e3844b026aba8a5142b16b4fc8551cbda18f69ee148f8ad1a762e87108d4b9"
 expected_diagnostic_sha256 = "d934c8df0815d4090c9097c746becd792678897313867ebed1805920ff15aa26"
 
-# ── #1603 D: GDB year-end rule on SCB-documented versions (#1639) ──
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/gdb/kommun"
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13392\",\"variable:36\",\"member:599438\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13681\",\"variable:36\",\"member:615819\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:14482\",\"variable:36\",\"member:660225\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:16395\",\"variable:36\",\"member:799147\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18792\",\"variable:36\",\"member:891448\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18793\",\"variable:36\",\"member:891473\"]}",
+]
+fields = ["coding"]
+valid_from = "2024-01-01"
+valid_to = "2024-01-01"
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "942eaa558c7f3189f074ee7005eba8602f7226dcab7d1b1f2de19fdb6f4c7d96"
+expected_diagnostic_sha256 = "16ccefb7916d8474cddbf76287e0eed1789eb762d2552b5f3cd584220bef8ff3"
 
-[[coding.warning]]
-variable = "70.37894"
-variant = "adresser-fastigheter"
-column = "DeSO"
-periods = [["2018-01-01", "2018-01-01"], ["2019-01-01", "2019-01-01"], ["2020-01-01", "2020-01-01"], ["2021-01-01", "2021-01-01"], ["2022-01-01", "2022-01-01"], ["2023-01-01", "2023-01-01"]]
-fields = ["reference_period"]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
-expected_evidence_sha256 = "034cd01c859f9f85d06034ad4b676462bc3217677cf2e08efa5308766ad07f99"
-reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
-source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
-
-[[coding.warning]]
-variable = "70.36"
-variant = "fastigheter"
-column = "Kommun"
-periods = [["2003-01-01", "2003-01-01"], ["2004-01-01", "2004-01-01"], ["2005-01-01", "2005-01-01"], ["2006-01-01", "2006-01-01"], ["2007-01-01", "2007-01-01"]]
-fields = ["reference_period"]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
-expected_evidence_sha256 = "601412e798d8700d4e6b183114b48db96aa8ccf3b80f076b7019da5dca16172b"
-reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
-source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
-
-[[coding.warning]]
-variable = "70.36"
-variant = "fastigheter"
-column = "kommun"
-periods = [["2008-01-01", "2008-01-01"], ["2009-01-01", "2009-01-01"], ["2010-01-01", "2010-01-01"], ["2011-01-01", "2011-01-01"], ["2012-01-01", "2012-01-01"], ["2013-01-01", "2013-01-01"], ["2014-01-01", "2014-01-01"], ["2015-01-01", "2015-01-01"]]
-fields = ["reference_period"]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
-expected_evidence_sha256 = "89fcc66391c8f2288dc7e76c9d7896208cadb5e7ea716d67bad1a07b5cb76527"
-reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
-source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
-
-[[coding.warning]]
-variable = "70.36"
-variant = "fastigheter"
-column = "KOMMUN"
-periods = [["2016-01-01", "2016-01-01"], ["2017-01-01", "2017-01-01"]]
-fields = ["reference_period"]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
-expected_evidence_sha256 = "3faab02e052ce68aecfcd2103967f3d4a402d858a05e5f007c10334d5adfa1a6"
-reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
-source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
-
-[[coding.warning]]
-variable = "70.36"
-variant = "adresser-fastigheter"
-column = "Kommun"
-periods = [["2018-01-01", "2018-01-01"], ["2019-01-01", "2019-01-01"], ["2020-01-01", "2020-01-01"], ["2021-01-01", "2021-01-01"], ["2022-01-01", "2022-01-01"], ["2023-01-01", "2023-01-01"]]
-fields = ["reference_period"]
-data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
-expected_evidence_sha256 = "af767eb57c16910f0e869b336baaf03b7dda58ef9fb07d7d9441bac8160c11fb"
-reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
-source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/gdb/kommun"
+refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13392\",\"variable:36\",\"member:599438\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:13681\",\"variable:36\",\"member:615819\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:14482\",\"variable:36\",\"member:660225\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:16395\",\"variable:36\",\"member:799147\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18792\",\"variable:36\",\"member:891448\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:70\",\"variant:1380\",\"edition:18793\",\"variable:36\",\"member:891473\"]}",
+]
+fields = ["coding"]
+valid_from = "2025-01-01"
+valid_to = "2025-01-01"
+reason = "The #1855 errata.delivered entry adds this column's availability on the school-grain variant; its donor documents no coding at this edition (donor_coding copies only the editions the donor documents), and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 batch-C errata.delivered entry for this column (maintainer decisions 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "942eaa558c7f3189f074ee7005eba8602f7226dcab7d1b1f2de19fdb6f4c7d96"
+expected_diagnostic_sha256 = "16ccefb7916d8474cddbf76287e0eed1789eb762d2552b5f3cd584220bef8ff3"

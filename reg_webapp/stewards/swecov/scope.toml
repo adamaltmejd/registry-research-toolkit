@@ -46,10 +46,6 @@
 # The census these decisions were reviewed against (a new census needs review).
 census_sha256 = "ff306a9f449b312f10da72d918cd33ae5aa3894ad0257cc96a9d2a620552947a"
 
-# Registers whose delivered columns are a privacy aggregation: grafts
-# route their columns to the steward flavor, never global.
-flavor_registers = ["scb/gdb"]
-
 [non_catalog_categories]
 "Arbetsförmedlingen" = "Arbetsförmedlingen delivery (AMS_*), not SCB/SOS"
 "FOHM" = "Folkhälsomyndigheten delivery (FHM_*)"
@@ -157,23 +153,20 @@ status = "mapped"
 [[holding]]
 category = "Geografidatabasen"
 detail = "Arbetsställen"
-status = "flavor"
-note = "master-list Källa=Geo.databas for every column -> graft onto scb/gdb; reg_meta gdb variants don't enumerate the DeSO/Ruta250 delivery columns"
-graft = "scb/gdb"
+status = "mapped"
+note = "SCB delivers GDB to every recipient at workplace, person or school grain: global scb/gdb authored variants, columns SCB does not document are gdb.toml errata (maintainer ruling 2026-10-24, #1855)"
 
 [[holding]]
 category = "Geografidatabasen"
 detail = "Individer"
-status = "flavor"
+status = "mapped"
 note = "as Arbetsställen"
-graft = "scb/gdb"
 
 [[holding]]
 category = "Geografidatabasen"
 detail = "Skolor"
-status = "flavor"
+status = "mapped"
 note = "as Arbetsställen"
-graft = "scb/gdb"
 
 [[holding]]
 category = "Högskoleregistret"

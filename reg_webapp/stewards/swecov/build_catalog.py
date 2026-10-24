@@ -1295,7 +1295,6 @@ def cmd_grafts(args: argparse.Namespace) -> None:
     ge = json.loads((derived / "global_enrichment.json").read_text())
     csv_holdings = parse_inventory(args.csv)
     variant_index = load_variant_index(args.db)
-    flavor_registers = frozenset(load_steward_spec(args.spec).scope.flavor_registers)
     # A curated `graft_onto` (carried here as a holding's `graft_columns`) naming
     # no delivered variant of the catalog would place its column where no
     # `[[errata.column]]` can name it (#1605).
@@ -1368,11 +1367,6 @@ def cmd_grafts(args: argparse.Namespace) -> None:
             # Curated mapping didn't place it — fall back to grounding the
             # column's own table(s) (and flavor-only holdings → FLAVOR).
             variant = _ground_fallback(col, reg, csv_holdings, enriched, variant_index)
-        # A privacy-aggregation register's delivered columns (GDB's grid
-        # coordinates, the spatial analogue of a LopNr) are steward flavor,
-        # never global (maintainer call 2026-06-14).
-        if reg in flavor_registers:
-            variant = "FLAVOR"
         row = {
             "register": reg,
             "variant": variant,

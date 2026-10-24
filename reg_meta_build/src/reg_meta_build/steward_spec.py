@@ -313,7 +313,6 @@ class UndatedHolding(BaseModel):
 class Scope(_SpecModel):
     census_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     non_catalog_categories: dict[str, str] = Field(default_factory=dict)
-    flavor_registers: list[RegisterCoordinate] = Field(default_factory=list)
     holdings: list[HoldingRoute] = Field(alias="holding", default_factory=list)
     lookups: list[TableDisposition] = Field(alias="lookup", default_factory=list)
     excludes: list[TableDisposition] = Field(alias="exclude", default_factory=list)
@@ -329,7 +328,6 @@ class Scope(_SpecModel):
 
     @model_validator(mode="after")
     def _unique_entries(self) -> Scope:
-        _unique(self.flavor_registers, "flavor register")
         _unique([f"{h.category}/{h.detail}" for h in self.holdings], "holding route")
         for label, entries in (
             ("lookup", [entry.table for entry in self.lookups]),

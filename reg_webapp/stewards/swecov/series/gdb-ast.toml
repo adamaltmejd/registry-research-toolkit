@@ -1,6 +1,6 @@
 id = "gdb-ast"
 register = "scb/gdb"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/arbetsstallen"]
 
 [[table]]
 table = "GDB_Ast1990"
@@ -175,5 +175,5 @@ partition = "ast"
 [[column]]
 column = "DeSO"
 tables = ["GDB_Ast1990", "GDB_Ast1991", "GDB_Ast1992", "GDB_Ast1993", "GDB_Ast1994", "GDB_Ast1995", "GDB_Ast1996", "GDB_Ast1997", "GDB_Ast1998", "GDB_Ast1999", "GDB_Ast2000", "GDB_Ast2001", "GDB_Ast2002", "GDB_Ast2003", "GDB_Ast2004", "GDB_Ast2005", "GDB_Ast2006", "GDB_Ast2007", "GDB_Ast2008", "GDB_Ast2009", "GDB_Ast2010", "GDB_Ast2011", "GDB_Ast2012", "GDB_Ast2013", "GDB_Ast2014", "GDB_Ast2015", "GDB_Ast2016", "GDB_Ast2017", "GDB_Ast2018", "GDB_Ast2019", "GDB_Ast2020", "GDB_Ast2021", "GDB_Ast2022"]
-mappings = [{ register_variant = "scb/gdb/adresser-fastigheter", variable = "scb/gdb/deso", representation = "DeSO" }]
-reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. DeSO maps onto adresser-fastigheter; versions SCB's export omits are added in gdb.toml with a reference-date data warning. The GDB_Ast tables are coded on year Y+1's municipality division (aggregate check on MONA, reported as a conclusion only)."
+mappings = [{ register_variant = "scb/gdb/arbetsstallen", variable = "scb/gdb/deso", representation = "DeSO" }]
+reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. DeSO maps onto the arbetsstallen grain variant (#1855); gdb.toml adds it there from adresser-fastigheter, with SCB's coding where SCB documents the version and a reference-date data warning. The GDB_Ast tables are coded on year Y+1's municipality division (aggregate check on MONA, reported as a conclusion only)."
