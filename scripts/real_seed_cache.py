@@ -42,10 +42,10 @@ in its repository (the manifest records it); the digest of each authored source
 the thin-provider TOMLs and `scb_canonical.toml`, an absent one as null), not the
 whole curation digest, so other curation edits keep the entry; the builder's own
 `prepare_code_sha256` (`reg_meta_build.resolve_code`: the static import walk from the
-`prepare-sources` entry point and the native crates' tracked sources, reported by the
+`prepare-sources` entry point and the native crates' tracked `src/**` and `Cargo.toml`, reported by the
 probe), the value a prepared root records and a build admits it by, plus the files
 that fingerprint leaves out (`prepare_code`: the CLI entry point, `uv.lock`, and the
-native sources whole, `Cargo.toml`, `Cargo.lock` and untracked files included, because
+native sources whole, `tests/**`, `Cargo.lock` and untracked files included, because
 a walked module imports `reg_core_py`); the Python and SQLite
 versions and the loaded extension. Every key holds `uv.lock` as `lock_sha256` does:
 only the locked runtime closure of `reg-meta-build` (`keyed_cache.uv_lock_sha256`: its
@@ -434,8 +434,8 @@ def prepare_code(walk: dict) -> dict[str, str]:
     walk from `PREPARE_ROOTS` reaches (`resolve_code.import_closure`: every import,
     function-local ones included, whether or not the prepare path reaches them, and
     the data files beside each walked module), with `__version__` normalized, and the
-    native crates' tracked non-doc sources. The key adds what that fingerprint leaves
-    out: the CLI entry point, `uv.lock`, and the native sources whole (`Cargo.toml`,
+    native crates' tracked `src/**` and `Cargo.toml` (`version` line normalized). The key adds what that fingerprint leaves
+    out: the CLI entry point, `uv.lock`, and the native sources whole (`tests/**`,
     `Cargo.lock` and untracked files too) when a walked module imports `reg_core_py`,
     so it stays a superset of the fingerprint. A lock leaves
     out its workspace members' own versions and every package outside the builder's

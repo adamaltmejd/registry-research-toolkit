@@ -393,11 +393,15 @@ def test_prepare_code_fingerprint_holds_the_native_grammar_sources() -> None:
     # calls the reg-core period grammar, so a grammar edit would then admit a root
     # prepared under the old grammar. Also fails if it holds `Cargo.lock`, where a
     # reg_meta release bumps `reg-meta`'s version: every prepared root would then be
-    # refused after a release. An input-set check, since flipping a native source in
+    # refused after a release. Also fails if it holds a crate's `tests/**`: a corpus
+    # edit would then force a re-prepare though it cannot change prepared bytes. An
+    # input-set check, since flipping a native source in
     # a copy needs a second git checkout.
     native = prepare_code_digests()["native"]
     assert "crates/reg-core/src/grammar.rs" in native
+    assert "crates/reg-core/Cargo.toml" in native
     assert "Cargo.lock" not in native
+    assert not [path for path in native if "/tests/" in path]
 
 
 def test_parallel_resolve_is_byte_identical_to_serial(
