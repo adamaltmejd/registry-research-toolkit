@@ -25,6 +25,8 @@ slug = "people"
 "1.700.antaltxt" = "antaltxt"
 "1.800.x" = "x"
 "1.800.xtxt" = "xtxt"
+"1.900.lt-kgruppnr" = "kgruppnr"
+"1.900.kgrupp-beskrivning" = "kgrupp-beskrivning"
 
 [[identity.partition]]
 variable = "1.200"

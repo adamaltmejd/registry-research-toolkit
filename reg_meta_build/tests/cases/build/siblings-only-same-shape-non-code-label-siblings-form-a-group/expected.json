@@ -23,7 +23,9 @@
         ["antal"],
         ["antaltxt"],
         ["x"],
-        ["xtxt"]
+        ["xtxt"],
+        ["kgruppnr"],
+        ["kgrupp-beskrivning"]
       ]
     },
     {

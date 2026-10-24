@@ -235,12 +235,17 @@ def _data_type_class(dt: str | None) -> str:
 # Code/label column-pair detection for source sibling checks
 # (`source_siblings.py`). The build checks it BEFORE the shape-conflict heuristic:
 # a `<stem>` code + its `<stem>namn` label is a representation pair, NOT a
-# mis-typed delivery. A label column carries the Swedish `namn` (name) suffix; its
-# partner code column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a
-# `kod`/`id` code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`). `fold_column`
-# (above) is the only dependency, so these leaves live with it.
-_CODE_SUFFIXES = ("kod", "id")
-_LABEL_SUFFIX = "namn"
+# mis-typed delivery. A label column carries a label suffix (`namn`, or
+# `beskrivning` for a description); its partner code column is either the bare
+# stem (`Kommun`/`Kommunnamn`) or carries a code suffix (`Lid`/`LNamn`,
+# `Sun2000Kod`/`Sun2000Namn`, `Kgruppnr`/`Kgruppnamn`, `KN8Kod`/`KN8Beskrivning`).
+# Each spelling is compared without an exact SCB election-kind prefix
+# (`RI_valkretskod`/`Valkretsnamn`) and without `_` (`regso`/`regso_namn`).
+# Exact lists only, no name patterns (#1790). `fold_column` (above) is the only
+# dependency, so these leaves live with it.
+_CODE_SUFFIXES = ("kod", "id", "nr")
+_LABEL_SUFFIXES = ("namn", "beskrivning")
+_CODE_LABEL_PREFIXES = ("ko_", "lt_", "ri_")
 
 
 def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
@@ -251,12 +256,22 @@ def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
     return None
 
 
+def _code_label_key(folded: str) -> str:
+    """A `fold_column`-folded spelling as the code/label rule compares it."""
+    for prefix in _CODE_LABEL_PREFIXES:
+        if folded.startswith(prefix):
+            folded = folded[len(prefix) :]
+            break
+    return folded.replace("_", "")
+
+
 def _is_code_then_label(code: str, label: str) -> bool:
     """True when `code` is a code column and `label` its matching label column:
-    `label` is `<stem>namn` and `code` is either the bare `<stem>` or
-    `<stem>kod`/`<stem>id` on the SAME stem. Both args are already `fold_column`-
-    folded."""
-    stem = _strip_suffix(label, (_LABEL_SUFFIX,))
+    `label` is `<stem>namn` or `<stem>beskrivning` and `code` is either the bare
+    `<stem>` or `<stem>kod`/`<stem>id`/`<stem>nr` on the SAME stem. Both args are
+    already `fold_column`-folded."""
+    code, label = _code_label_key(code), _code_label_key(label)
+    stem = _strip_suffix(label, _LABEL_SUFFIXES)
     if stem is None:
         return False
     if code == stem:  # bare-stem code paired with its `<stem>namn` label

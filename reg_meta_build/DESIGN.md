@@ -1768,12 +1768,24 @@ groups use the finite accepted month vocabulary, minimum three distinct months a
 shared-label guard; ambiguous collisions remain separate and diagnosed.
 
 A checked split-sibling pair folds only when no guard keeps it apart. A code column and
-its label column (`<stem>`, `<stem>kod` or `<stem>id` beside `<stem>namn`, by name)
-never fold, whether or not their owners co-deliver; the numeric/text and length shape
-guards apply only to co-delivered columns. The guard holds for the group, not only the
-edge: when foldable edges through a third owner would join a code and its label, the
-label owner's edges are dropped, so the code keeps its own folds (#1760). Only a
-declared `[[code_label_pair]]` puts a code and its label in one group.
+its label column never fold, whether or not their owners co-deliver. The name rule uses
+exact lists, no name patterns: `<stem>`, `<stem>kod`, `<stem>id` or `<stem>nr` beside
+`<stem>namn` or `<stem>beskrivning`, each spelling compared without `_` and without an
+SCB election-kind prefix (`KO_`, `LT_`, `RI_`). A code beside its label in a spelling
+the rule misses is curated: a declared pair, or a curated group that leaves the label
+out (#1790). The numeric/text and length shape guards apply only to co-delivered
+columns, and compare the two columns' shapes within each edition that delivers both: a
+shape one owner delivers in an edition the other never shares does not dispute the pair
+(#1783). The guard holds for the group, not only the edge: when foldable sibling edges
+through a third owner would join a code and its label, the label owner's sibling edges
+are dropped, so the code keeps its own folds (#1760). Its scope is the code/label pairs
+whose two owners share one native family, read per family; a code and its label in
+different families that a third owner bridges are not seen. Declared pairs and curated
+groups are not pruned: they are explicit. Only a declared `[[code_label_pair]]` puts a
+code and its label in one group. `_code_label_key` strips the election prefix from both
+sides, so a code of one election kind could pair with a label of another
+(`LT_valkretskod` beside `RI_valkretsnamn`); no instance exists today, and the shape and
+coding guards fail it safe. A curated group needs at least two members.
 
 Classification succession combines explicit edges with the accepted guarded edition
 rule. Only adjacent recognized editions with matching year-stripped names qualify.

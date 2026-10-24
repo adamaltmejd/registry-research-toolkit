@@ -3,6 +3,16 @@ provider = "scb"
 slug = "iku"
 native_id = "197"
 
+# Kommunnamn carries the kommun value set, so a [[code_label_pair]] fails its
+# label guard: claim the two kommun codes so the name stays out of their group
+# (#1790).
+[[group]]
+register = "scb/iku"
+key = "kommun"
+label = "Kommun"
+axes = []
+members = [{ variable = "kommun" }, { variable = "kommun-kommkod-2012" }]
+
 [[variant]]
 native_id = "197.299"
 slug = "privatagda-flerbostadshus"
@@ -756,3 +766,15 @@ reason = "The exact excluded source coordinates have no safe ownership: TOYF in 
 evidence = "Maintainer-approved exact retained-ambiguity/unmapped-source policy, complete native peer families and real same-register support. No guessed table routing, classification continuity, suffix meaning or value equivalence. Batch52-IKU-source-positive-proof.json."
 expected_evidence_sha256 = "79c1f18a516371e19c031a6b95bf827ba39d363d4909e06692422f9c58899329"
 expected_diagnostic_sha256 = "22d6d16f37921933b190725525bf00293d1776f2c8b68f382359972335bb06c7"
+
+# #1783 per-edition sibling shape disputes found by the wave-2 diagnostic build of
+# PR #1883. Pinned by expected_diagnostic_sha256 only: the evidence digest needs a build.
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/iku/vardear:scb/iku/vardear-vaeaaar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:11247\",\"variable:3413\",\"member:457228\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:2900\",\"variable:3413\",\"member:171794\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:3237\",\"variable:3413\",\"member:198483\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:3984\",\"variable:3413\",\"member:249311\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:4465\",\"variable:3413\",\"member:281694\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:5349\",\"variable:3413\",\"member:329920\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:299\",\"edition:6072\",\"variable:3413\",\"member:374455\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:11245\",\"variable:3413\",\"member:457132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:1385\",\"variable:3413\",\"member:108171\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:2896\",\"variable:3413\",\"member:171641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:3235\",\"variable:3413\",\"member:198391\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:3983\",\"variable:3413\",\"member:249266\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:4461\",\"variable:3413\",\"member:281475\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:5347\",\"variable:3413\",\"member:329830\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:197\",\"variant:394\",\"edition:6064\",\"variable:3413\",\"member:374243\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2015 (edition 11247): VardeAr text(0) beside VAEAAR decimal(0); 2013 (edition 6072): Vardear text(0) beside VAEAAR decimal(0); and 2 more co-delivered editions. They agree in 2012 (edition 5349): Vardear <undefined>(0) beside VAEAAR <undefined>(0), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "caba6434383c87365f16563a63b8005890a37c2079694a7dabd69dcb009d419c"

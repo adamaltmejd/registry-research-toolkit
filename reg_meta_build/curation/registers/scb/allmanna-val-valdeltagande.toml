@@ -15,6 +15,21 @@ label = "scb/allmanna-val-valdeltagande/kommunnamn"
 code = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
 label = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-namn"
 
+# The kommungrupp codes and their names in each classification vintage (#1790):
+# Kgruppnr/Kgruppnamn, Kgruppnr2011/Kgruppnamn2011 and Grupp beside
+# kommungrupp_2017_namn.
+[[code_label_pair]]
+code = "scb/allmanna-val-valdeltagande/kommungrupp-kod"
+label = "scb/allmanna-val-valdeltagande/kommungrupp-namn"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valdeltagande/kgruppnr2011"
+label = "scb/allmanna-val-valdeltagande/kgruppnamn2011"
+
+[[code_label_pair]]
+code = "scb/allmanna-val-valdeltagande/grupp"
+label = "scb/allmanna-val-valdeltagande/kommungrupp-2017-namn"
+
 [[variant]]
 native_id = "242.471"
 slug = "_default"

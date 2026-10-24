@@ -11,6 +11,12 @@ label = "scb/fortroendevalda/partinamn"
 code = "scb/fortroendevalda/skl-grupp"
 label = "scb/fortroendevalda/skl-gruppnamn"
 
+# SKL_grupp_2011 beside SKL_gruppnamn_2011: the year suffix defeats the name rule
+# (#1790).
+[[code_label_pair]]
+code = "scb/fortroendevalda/skl-grupp-2011"
+label = "scb/fortroendevalda/skl-gruppnamn-2011"
+
 [[variant]]
 native_id = "270.638"
 slug = "fortroendevalda"
@@ -553,3 +559,15 @@ reason = "These exact source windows have no own bound stored-code domain. Exist
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "2d91f95953319440283b59bb87d2c1d36dee40b584d51b876aa0b759ef05df1a"
 expected_diagnostic_sha256 = "b716cce0da7f9079be7c6c0a345f9107fd922b3efc328ea50d3809f2e5082db5"
+
+# #1783 per-edition sibling shape disputes found by the wave-2 diagnostic build of
+# PR #1883. Pinned by expected_diagnostic_sha256 only: the evidence digest needs a build.
+
+[[acknowledge]]
+code = "ambiguous_sibling_shape"
+subject = "same_definition_pair:scb/fortroendevalda/position:scb/fortroendevalda/position-text"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15028\",\"variable:17647\",\"member:700792\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15029\",\"variable:17647\",\"member:700834\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:15095\",\"variable:17647\",\"member:704813\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:19124\",\"variable:17647\",\"member:917404\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:5164\",\"variable:17647\",\"member:318871\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:5164\",\"variable:17647\",\"member:318894\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:1094\",\"edition:8594\",\"variable:17647\",\"member:419387\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:14432\",\"variable:17647\",\"member:656737\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:19122\",\"variable:17647\",\"member:917295\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:3447\",\"variable:17647\",\"member:214775\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:4427\",\"variable:17647\",\"member:280120\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:4427\",\"variable:17647\",\"member:281217\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:5001\",\"variable:17647\",\"member:309010\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:270\",\"variant:638\",\"edition:8587\",\"variable:17647\",\"member:418702\"]}"]
+fields = ["data_type", "data_length"]
+reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2011 (edition 4427): position decimal(8) beside Position__text text(15). They agree in 2011 (edition 5164): position text(1) beside Position__text text(15), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
+evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
+expected_diagnostic_sha256 = "695a4ee1b6524808258984187397a7adfc146cfbed5076a41b616dc0d35cf62e"

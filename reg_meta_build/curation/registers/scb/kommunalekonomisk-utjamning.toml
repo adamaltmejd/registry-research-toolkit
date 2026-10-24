@@ -3,6 +3,11 @@ provider = "scb"
 slug = "kommunalekonomisk-utjamning"
 native_id = "117"
 
+# Kommun beside its name column, delivered as bare `namn` (#1790).
+[[code_label_pair]]
+code = "scb/kommunalekonomisk-utjamning/kommun"
+label = "scb/kommunalekonomisk-utjamning/kommun-namn"
+
 [[variant]]
 native_id = "117.132"
 slug = "kommunalekonomisk-utjamning-regioner"

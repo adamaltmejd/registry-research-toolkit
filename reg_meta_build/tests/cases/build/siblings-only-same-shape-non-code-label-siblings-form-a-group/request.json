@@ -2,10 +2,10 @@
   "replaces": [
     "test_curation_sibling_heuristics_boundary.py::test_only_same_shape_non_code_label_siblings_form_a_group"
   ],
-  "note": "Co-delivered siblings of one source definition group unless a guard keeps them apart: a code/label pair (either column order), a numeric/text type mismatch (Swedish labels classify by ASCII fold), or differing lengths when the type is unclassifiable. Of the co-delivered pairs only FORNAMN/EFTERNAMN remain eligible. The code/label guard holds whether or not the two owners co-deliver (#1760, the iku kommun case): KOMMUN 2019 is kommun, KOMMUN 2020 is a column_owner's kommun-2020, co-delivered with KOMMUNNAMN. kommun and kommun-2020 are one code delivered in two years and fold; kommun never shares an edition with kommunnamn but is still its code, so it does not fold with it. KOMMUNTEXT 2018 (kommuntext) is neither a code nor a label of the others by name and is never co-delivered, so it is foldable with all three: a bridge that would put kommunnamn in the kommun group through kommuntext. The guard holds for the group, so the group is kommun/kommun-2020/kommuntext without the label.",
-  "fails_if": "`_looks_like_code_label_pair` stops recognizing a `<stem>namn` label beside its bare, `kod` or `id` code column in either order, so LID/LNAMN, KOMMUN/KOMMUNNAMN or SUN2000KOD/SUN2000NAMN join a concept group; or `resolve_sibling_pairs` applies the code/label guard only to co-delivered columns, so kommun (KOMMUN 2019), never co-delivered with kommunnamn, folds with it and the kommun group takes the label; or the guard holds only for a direct edge, so kommunnamn joins the group through kommuntext",
+  "note": "Co-delivered siblings of one source definition group unless a guard keeps them apart: a code/label pair (either column order), a numeric/text type mismatch (Swedish labels classify by ASCII fold), or differing lengths when the type is unclassifiable. Of the co-delivered pairs only FORNAMN/EFTERNAMN remain eligible. The code/label guard holds whether or not the two owners co-deliver (#1760, the iku kommun case): KOMMUN 2019 is kommun, KOMMUN 2020 is a column_owner's kommun-2020, co-delivered with KOMMUNNAMN. kommun and kommun-2020 are one code delivered in two years and fold; kommun never shares an edition with kommunnamn but is still its code, so it does not fold with it. KOMMUNTEXT 2018 (kommuntext) is neither a code nor a label of the others by name and is never co-delivered, so it is foldable with all three: a bridge that would put kommunnamn in the kommun group through kommuntext. The guard holds for the group, so the group is kommun/kommun-2020/kommuntext without the label. LT_KGRUPPNR/KGRUPP_BESKRIVNING (#1790) is a code and its description under the exact lists: an election-kind prefix (`LT_`), a `_` separator, an `nr` code suffix and a `beskrivning` label suffix, so it does not group although its shapes agree. EFTERNAMN is delivered again alone in 2021 as text: shapes compare per co-delivered edition (#1783), so that edition, never shared with FORNAMN, does not dispute the 2020 int/int pair.",
+  "fails_if": "`_looks_like_code_label_pair` stops recognizing a `<stem>namn` label beside its bare, `kod` or `id` code column in either order, so LID/LNAMN, KOMMUN/KOMMUNNAMN or SUN2000KOD/SUN2000NAMN join a concept group; or `resolve_sibling_pairs` applies the code/label guard only to co-delivered columns, so kommun (KOMMUN 2019), never co-delivered with kommunnamn, folds with it and the kommun group takes the label; or the guard holds only for a direct edge, so kommunnamn joins the group through kommuntext; or the name rule drops the `LT_` prefix, `_`, `nr` or `beskrivning` from its exact lists, so kgruppnr and kgrupp-beskrivning group; or the shape guard compares each owner's latest shape across all its editions instead of per co-delivered edition, so EFTERNAMN's 2021 text shape conflicts with FORNAMN's int and fornamn/efternamn do not group",
   "sources": {
-    "description": "SCB register 1 delivers eight source variables, each as two columns of the 2020 edition; (var_id, column, Datatyp, Datalängd) per row. Variable 200 also delivers KOMMUNTEXT alone in 2018 (CVID 1017, with its unika flags row) and KOMMUN alone in 2019 (CVID 1016).",
+    "description": "SCB register 1 delivers nine source variables, each as two columns of the 2020 edition; (var_id, column, Datatyp, Datalängd) per row. Variable 200 also delivers KOMMUNTEXT alone in 2018 (CVID 1017, with its unika flags row) and KOMMUN alone in 2019 (CVID 1016). Variable 300 also delivers EFTERNAMN alone in 2021 as Sträng (text) (CVID 1018).",
     "scb": {
       "registerinformation": [
         {
@@ -75,6 +75,16 @@
           "varname": "Var300",
           "data_type": "int",
           "data_length": "1"
+        },
+        {
+          "cvid": 1018,
+          "var_id": 300,
+          "colname": "EFTERNAMN",
+          "varname": "Var300",
+          "data_type": "Sträng (text)",
+          "data_length": "1",
+          "year": "2021",
+          "regver_id": 2021
         },
         {
           "cvid": 1006,
@@ -155,6 +165,22 @@
           "varname": "Var800 xtxt",
           "data_type": "int",
           "data_length": "2"
+        },
+        {
+          "cvid": 1019,
+          "var_id": 900,
+          "colname": "LT_KGRUPPNR",
+          "varname": "Var900",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1020,
+          "var_id": 900,
+          "colname": "KGRUPP_BESKRIVNING",
+          "varname": "Var900 beskrivning",
+          "data_type": "int",
+          "data_length": "1"
         }
       ],
       "unika": [
@@ -165,6 +191,7 @@
         "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUNTEXT|2018|2018|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var300 fornamn|FORNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var300|EFTERNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var300|EFTERNAMN|2021|2021|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var400|BELOPP|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var400 belopptxt|BELOPPTXT|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var500|DAG|2020|2020|0|0|0",
@@ -174,7 +201,9 @@
         "TESTREG|Testregistret|Individer|Individer|Var700|ANTAL|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var700 antaltxt|ANTALTXT|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var800|X|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var800 xtxt|XTXT|2020|2020|0|0|0"
+        "TESTREG|Testregistret|Individer|Individer|Var800 xtxt|XTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var900|LT_KGRUPPNR|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var900 beskrivning|KGRUPP_BESKRIVNING|2020|2020|0|0|0"
       ]
     }
   }

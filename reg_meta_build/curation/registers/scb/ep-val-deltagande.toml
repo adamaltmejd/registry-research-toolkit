@@ -15,6 +15,15 @@ label = "scb/ep-val-deltagande/kommunnamn"
 code = "scb/ep-val-deltagande/medborgarland-varldsdel-2"
 label = "scb/ep-val-deltagande/medborgarland-varldsdel-namn"
 
+# The kommungrupp codes and their names (#1790).
+[[code_label_pair]]
+code = "scb/ep-val-deltagande/kommungrupp-kod"
+label = "scb/ep-val-deltagande/kommungrupp-namn"
+
+[[code_label_pair]]
+code = "scb/ep-val-deltagande/kgruppnr2011"
+label = "scb/ep-val-deltagande/kgruppnamn2011"
+
 [[variant]]
 native_id = "245.474"
 slug = "_default"

@@ -7,6 +7,11 @@ native_id = "240"
 code = "scb/ep-val-resultat/partikod"
 label = "scb/ep-val-resultat/partinamn"
 
+# RI_valkretskod beside the bare valkretsnamn (#1790).
+[[code_label_pair]]
+code = "scb/ep-val-resultat/riksdagsvalkrets-kod"
+label = "scb/ep-val-resultat/riksdagsvalkrets-namn"
+
 [[variant]]
 native_id = "240.467"
 slug = "valresultat"
