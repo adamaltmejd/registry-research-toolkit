@@ -182,6 +182,38 @@ def test_steward_identity_inputs_and_slug_pins_bind(
     conn.close()
 
 
+@pytest.mark.parametrize("steward_end", ["belopp", "saldo"])
+def test_curated_same_as_onto_a_steward_variable_resolves_in_the_flavor(
+    tmp_path: Path, base_db: Path, steward_end: str
+) -> None:
+    """A relations.toml same_as edge naming the steward's provider (#1549) joins
+    its variable to the base's `scb/utbildning/kon`, stored both ways; the global
+    build skips such an edge. Its twin names a steward variable the flavor lacks
+    and is refused as a missing catalog dependency, as the global build refuses a
+    dangling endpoint. Fails if extend-db stops applying the steward's edges, or
+    writes one whose endpoint does not resolve."""
+    relations = tmp_path / "relations.toml"
+    relations.write_text(
+        '[[edge]]\ntype = "same_as"\n'
+        f'a = "swedbank/transaktioner/{steward_end}"\nb = "scb/utbildning/kon"\n',
+        encoding="utf-8",
+    )
+    if steward_end == "saldo":
+        with pytest.raises(RegMetaError) as refused:
+            _run(tmp_path, base_db, relations=relations)
+        assert refused.value.code == "catalog_dependency_missing"
+        assert "swedbank/transaktioner/saldo" in refused.value.message
+        assert not (tmp_path / "out" / "reg_meta.db").exists()
+        return
+    result, out = _run(tmp_path, base_db, relations=relations)
+    assert result["same_as_edges"] == 1
+    with closing(sqlite3.connect(out)) as conn:
+        assert sorted(conn.execute("SELECT * FROM variable_same_as")) == [
+            ("scb", "utbildning", "kon", "swedbank", "transaktioner", "belopp"),
+            ("swedbank", "transaktioner", "belopp", "scb", "utbildning", "kon"),
+        ]
+
+
 def test_new_provider_content_is_searchable(tmp_path: Path, base_db: Path) -> None:
     # Fails if the overlay stops indexing its own variables for search.
     _, out = _run(tmp_path, base_db)

@@ -20,6 +20,7 @@ from ._curation import (
     located,
     require_fqid,
 )
+from ._resolved_common import _PROVIDER_SEED
 from .slug_grammar import validate_slug
 
 if TYPE_CHECKING:
@@ -837,6 +838,24 @@ def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
     for start in list(adj):
         if color[start] == 0:
             visit(start)
+
+
+def check_same_as_graph(edges: list[tuple[Any, Any]], *, label: str) -> None:
+    """The graph checks every written same_as graph passes: acyclic as declared
+    and no identity component above the cap. The global build runs them on its
+    resolved edges, `extend-db` on the base's edges plus the steward's."""
+    _reject_same_as_cycles(edges, label=label)
+    _reject_oversized_components(edges, label=label)
+
+
+def leaves_global_build(edge: CuratedSameAs) -> bool:
+    """Whether a same_as edge names a provider outside the global build.
+
+    Such a provider is a steward's (`swecov`), whose variables exist only in its
+    flavored DB. The global build skips the edge and `extend-db` applies it, with
+    both endpoints required to resolve there (#1549)."""
+    global_providers = {slug for _, slug, _ in _PROVIDER_SEED}
+    return not {edge.a_provider, edge.b_provider} <= global_providers
 
 
 def _reject_oversized_components(edges: list[tuple[Any, Any]], *, label: str) -> None:

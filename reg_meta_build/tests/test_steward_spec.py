@@ -14,6 +14,7 @@ from reg_meta_build.errors import RegMetaError
 from reg_meta_build.inventory import WINDOW_INVALID
 from reg_meta_build.steward_spec import (
     SERIES_REGISTER_MISMATCH,
+    SPEC_INVALID,
     TABLE_DISPOSITION_INVALID,
     load_steward_spec,
 )
@@ -148,6 +149,33 @@ def test_table_in_a_series_and_a_scope_exclusion_is_refused(tmp_path: Path) -> N
         "T2019": ["series/prover.toml"],
         "T2020": ["series/prover.toml"],
     }
+
+
+@pytest.mark.parametrize(("selected", "admitted"), [("T2020", True), ("T2021", False)])
+def test_column_decision_selects_only_tables_of_its_series(
+    tmp_path: Path, selected: str, admitted: bool
+) -> None:
+    """A decision's `tables` selects whole member tables of its own series; a
+    table another series (or none) holds is refused, located at the column,
+    since the decision would never reach it. Fails if `tables` is not checked
+    against the series membership."""
+    body = _series(
+        "prover",
+        "inera/bestallda-prover",
+        ["inera/bestallda-prover/_default"],
+        ["T2019", "T2020"],
+    ) + (f'\n[[column]]\ncolumn = "Kol"\ntables = ["{selected}"]\nunmap = "Gone."\n')
+    spec_dir = _spec(tmp_path, {"prover": body})
+    if admitted:
+        (series,) = load_steward_spec(spec_dir).series
+        assert set(series.decisions()) == {("T2020", "Kol")}
+        return
+    with pytest.raises(RegMetaError) as refused:
+        load_steward_spec(spec_dir)
+    assert refused.value.code == SPEC_INVALID
+    assert "column[1] (Kol): tables outside the series: T2021" in (
+        refused.value.message
+    )
 
 
 @pytest.mark.parametrize(

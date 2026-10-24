@@ -47,6 +47,7 @@ from .curation_tree import (
 )
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
 from .normalization import normalize_token
+from .relations import leaves_global_build
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
     ResolvedClassificationDerivation,
@@ -381,6 +382,8 @@ def compile_declared_metadata(
             raise ValueError(
                 f"same_as must have variable binding endpoints: {edge.a_fqid()}"
             )
+        if leaves_global_build(edge):
+            continue  # extend-db applies it onto the steward's flavor (#1549)
         if not _edge_registers((edge.a_fqid(), edge.b_fqid()), selected):
             unmatched.append(f"relations.toml#/same_as/{edge.a_fqid()}/{edge.b_fqid()}")
         same_as.append(ResolvedVariableSameAs(a=edge.a_fqid(), b=edge.b_fqid()))

@@ -132,7 +132,31 @@ def write_flavored_db(directory: Path, provider_toml: str = FLAVORED_TOML) -> Pa
     providers.mkdir(parents=True)
     (providers / f"{provider}.toml").write_text(provider_toml, encoding="utf-8")
     slugs = directory / "slugs"
-    slugs.mkdir()
+    write_slug_pins(slugs, provider_toml)
+    extend_db(
+        base_db=base_catalog(),
+        providers_dir=providers,
+        db_dir=directory / "db",
+        steward="swecov",
+        slug_dir=slugs,
+        diagnostic=True,
+    )
+    return directory / "db" / DB_FILENAME
+
+
+def base_catalog() -> Path:
+    """The synthetic global base every flavored DB overlays (read-only, cached)."""
+    return cached_reader_artifact(
+        BASE_FIXTURE,
+        "catalog",
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+    )
+
+
+def write_slug_pins(slugs: Path, provider_toml: str, provider: str = "inera") -> None:
+    """Steward slug pins for `provider_toml`: each register, variant and variable
+    pinned to its own key."""
+    slugs.mkdir(parents=True)
     (slugs / ".snapshot.json").write_text("{}\n", encoding="utf-8")
     pins = []
     for register in tomllib.loads(provider_toml)["register"]:
@@ -149,19 +173,6 @@ def write_flavored_db(directory: Path, provider_toml: str = FLAVORED_TOML) -> Pa
             for key in dict.fromkeys(v["key"] for v in register["variable"])
         ]
     (slugs / f"{provider}.toml").write_text("".join(pins), encoding="utf-8")
-    extend_db(
-        base_db=cached_reader_artifact(
-            BASE_FIXTURE,
-            "catalog",
-            identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
-        ),
-        providers_dir=providers,
-        db_dir=directory / "db",
-        steward="swecov",
-        slug_dir=slugs,
-        diagnostic=True,
-    )
-    return directory / "db" / DB_FILENAME
 
 
 def t_kolumn_window(

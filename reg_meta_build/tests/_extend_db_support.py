@@ -159,6 +159,7 @@ def run(
     text: str = BASE_TOML,
     *,
     provider: str = BANK,
+    relations: Path | None = None,
 ) -> tuple[dict, Path]:
     providers_dir = providers(tmp_path, text, name="out-providers", provider=provider)
     slug_dir = tmp_path / "out-slugs"
@@ -171,5 +172,6 @@ def run(
         steward=STEWARD,
         slug_dir=slug_dir,
         diagnostic=True,
+        relations=relations,
     )
     return result, out / "reg_meta.db"

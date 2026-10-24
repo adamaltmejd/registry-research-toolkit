@@ -278,7 +278,7 @@ def test_mapping_decision_requires_complete_catalog_coverage(tmp_path: Path) -> 
 def test_two_decisions_for_one_column_of_one_table_are_refused(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    with pytest.raises(RegMetaError, match="second decision for table T2019"):
+    with pytest.raises(RegMetaError, match="second decision for table T2019") as exc:
         _run_inventory(
             tmp_path,
             flavored_db,
@@ -286,7 +286,33 @@ def test_two_decisions_for_one_column_of_one_table_are_refused(
             ["Physical"],
             decisions=_mapping_decision() + "\n" + _mapping_decision(),
         )
+    assert exc.value.code == "steward_spec_invalid"
     assert not (tmp_path / "steward/inventory.toml").exists()
+
+
+def test_unmap_of_a_column_the_census_no_longer_holds_is_refused(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """An unmap is held to the census like a mapping: one naming a column the
+    table no longer delivers refuses the run, its coordinate listed, instead of
+    being silently ignored (#1605). Fails if the stale-coordinate check covers
+    mapping decisions only."""
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(
+            tmp_path,
+            flavored_db,
+            "T2019",
+            ["T_kolumn"],
+            decisions='[[column]]\ncolumn = "Dropped"\nunmap = "Never ordered."\n',
+        )
+    assert not (tmp_path / "steward/inventory.toml").exists()
+    assert _inventory_worklist(tmp_path)["mapping_scope_needed"] == [
+        {
+            "table": "T2019",
+            "column": "Dropped",
+            "code": "stale_declared_decision_physical_coordinate",
+        }
+    ]
 
 
 def test_mapping_decision_does_not_hide_ambiguous_catalog_owners(

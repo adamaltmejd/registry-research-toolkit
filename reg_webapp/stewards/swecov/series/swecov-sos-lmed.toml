@@ -23,16 +23,6 @@ mappings = [{ register_variant = "sos/lmed/lmed", variable = "sos/lmed/personnr"
 reason = "Pseudonymised patient key of the LMED delivery (PNR). Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
 
 [[column]]
-column = "AR"
-graft_onto = "sos/lmed/lmed"
-reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."
-
-[[column]]
-column = "ar"
-graft_onto = "sos/lmed/lmed"
-reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."
-
-[[column]]
 column = "arbetspl_lopnr"
 graft_onto = "sos/lmed/lmed"
 reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."

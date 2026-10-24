@@ -42,10 +42,6 @@
 # administrative delivery (IFA_*). One ("IAF", "") holding bundles 8 distinct tables
 # (Lev2/Lev3 access tiers and year-range vintages carry identical columns → collapse
 # into one register each via the [[flavor]] `tables`). All columns Källa-empty.
-# Arbetsförmedlingen (AMS): one holding, 3 registers; each pairs a base table with
-# its 2021-vintage twin (identical columns → deduped by norm_col into one set).
-# IAF: one holding, 8 registers; Lev2/Lev3 access tiers and year-range vintages
-# carry identical columns, so each register names all its physical tables.
 
 # The census these decisions were reviewed against (a new census needs review).
 census_sha256 = "ff306a9f449b312f10da72d918cd33ae5aa3894ad0257cc96a9d2a620552947a"
@@ -587,8 +583,8 @@ reason = "cumulative NVR covid re-delivery; superseded by FHM_NVR_Covid_20240422
 
 # ── DECIDED (maintainer-approved 2026-09-01): mechanical translation of the drop rules in the
 # maintainer's MONA-side get_all_variables.R (the full→curated CSV filter,
-# lines 182-205) — the pre-existing supersession policy, moved into the
-# committed overlay so the holdings curation rules own it. APPROVED by
+# lines 182-205) — the pre-existing supersession rules, moved into the
+# steward spec so its dispositions own them. APPROVED by
 # maintainer 2026-09-01.
 [[exclude]]
 table = "AGIHuvud202101_Prel"

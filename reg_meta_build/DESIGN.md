@@ -2557,6 +2557,15 @@ evidence, but never supply build naming. Variable slugging is incremental and pr
 every existing global slug. The retained `ir/` models serve this extension graph, not
 the global source-cleaning boundary.
 
+A curated `same_as` edge in `curation/relations.toml` that names a provider outside the
+global provider seed is a steward's (#1549): the global build skips it, and that
+steward's `extend-db` writes it, both ways, once the overlay is slugged. Both endpoints
+must resolve by slug FQID in the extended catalog, or the build refuses
+`catalog_dependency_missing` as the global build does for a dangling endpoint, and the
+base's edges plus the steward's pass the global cycle and component checks. Strict
+extension reads the clean checkout's `relations.toml`; a diagnostic applies only the one
+its caller passes. Possession and order binding never follow `same_as`.
+
 The extension derives over base plus overlay before compiling holdings, because holdings
 canonicalize against `resolver_column`, the projection of `expanded_state`. Once the
 manifest names the steward, `derive_holdings` adds the `holdings`-scope browse and
@@ -2796,7 +2805,13 @@ one takes the series set. A table's own set is what its curated mappings and the
 generator's auto-mapping may use. A family whose tables map to different registers is
 still several series, because a series is single-register. Where the grafts stage cannot
 place a gap-fill column (one with no catalog variable yet) on one variant, a per-column
-`graft_onto` decision names it; it never reaches the inventory.
+`graft_onto` decision names it; it never reaches the inventory. The loader admits a
+`graft_onto` only among its series' variants, and the grafts stage refuses one that
+names no delivered variant of the catalog it scans (`steward_spec_invalid`), since its
+candidate would place the column on a variant no `[[errata.column]]` can name. A
+decision whose (table, column) the census no longer holds, a mapping, unmap or hold
+alike, is listed as `stale_declared_decision_physical_coordinate` and the inventory is
+not replaced.
 
 Every census table has exactly one disposition, a series or one scope entry
 (`steward_table_disposition_invalid`). A series admits variants of its own register

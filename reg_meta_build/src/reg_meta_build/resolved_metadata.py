@@ -21,8 +21,7 @@ from reg_meta_build._resolved_common import (
 )
 from reg_meta_build.concept_groups import _is_path_safe_key
 from reg_meta_build.relations import (
-    _reject_oversized_components,
-    _reject_same_as_cycles,
+    check_same_as_graph,
     reject_cycles,
     reject_nonmonotone_representation_cycles,
 )
@@ -375,8 +374,7 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
     _unique((tag.slug for tag in metadata.tags), "tag slug")
     same_as = [(e.a, e.b) for e in metadata.variable_same_as]
     _unique((tuple(sorted(pair)) for pair in same_as), "variable same_as")
-    _reject_same_as_cycles(same_as, label="resolved variable same_as")
-    _reject_oversized_components(same_as, label="resolved variable same_as")
+    check_same_as_graph(same_as, label="resolved variable same_as")
     graphs = defaultdict(list)
     for edge in metadata.successions:
         graphs[parse_fqid(edge.predecessor).kind].append(

@@ -1,0 +1,19 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "edges",
+      "where": {"type": "same_as"},
+      "fields": ["a", "b"],
+      "rows": [
+        ["scb/sample/two", "scb/sample/value"],
+        ["scb/sample/value", "scb/sample/two"]
+      ]
+    }
+  ]
+}
