@@ -47,6 +47,15 @@ def case_steps(case: Path) -> list[Path]:
     """A case is one step (its own `request.json`) or step subdirectories, run in the
     numeric order of their prefixes (`9-`, `10-`; `3b-` after `3-`)."""
     if (case / "request.json").is_file():
+        numbered = sorted(
+            path.name
+            for path in case.iterdir()
+            if path.is_dir() and re.match(r"\d+", path.name)
+        )
+        assert not numbered, (
+            f"{case.name}: a root request.json would skip the numbered steps "
+            f"{numbered}; move the root files into a step or delete them"
+        )
         return [case]
 
     def order(path: Path) -> tuple[int, str]:
