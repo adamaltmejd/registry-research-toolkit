@@ -1,0 +1,7 @@
+{
+  "error_code": "inventory_cell_conflict",
+  "error_contains": "exactly one physical (table, column)",
+  "error_locators": [
+    "table['Annual2018_2019'].column['Observed'] (representation 'Valueold', served by its one representation 'Valuenew' where that is not delivered) and table['Old2018'].column['Valueold'] (representation 'Valueold') both map scb/example/annual scb/example/value over 2018"
+  ]
+}

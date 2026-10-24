@@ -465,47 +465,53 @@ fn held_clip(
     years: Option<(u16, u16)>,
 ) -> Result<Vec<Rep>, Error> {
     type Key = (i64, i64, String, String);
+    type Own = BTreeMap<String, Vec<(i64, (Option<String>, Option<String>))>>;
     let mut held: BTreeMap<Key, held::Periods> = BTreeMap::new();
     let mut stmt = conn.prepare(&format!(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, ht.scope, \
-         {HELD_LO}, {HELD_HI}, hc.table_id FROM holding_mapping hm \
+         {HELD_LO}, {HELD_HI}, hc.table_id, hc.column_id FROM holding_mapping hm \
          JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE ht.scope != 'unknown' \
          AND hm.variable_id IN (SELECT variable_id FROM variable WHERE register_id = ?)",
     ))?;
     let mut rows = stmt.query([register_id])?;
-    // Each mapping with its table, and per (table, variable, variant) the spellings it
-    // is mapped under: `held::ONE_REPRESENTATION` over rows already read, which a
-    // per-row subquery would make the slowest part of a register's schema.
+    // Each mapping with its table and column, and per (table, variable, variant) the
+    // spellings it is mapped under: `held::one_representation` over rows already read,
+    // which a per-row subquery would make the slowest part of a register's schema.
     let mut mapped = Vec::new();
     let mut spellings: BTreeMap<(i64, i64, i64), BTreeSet<String>> = BTreeMap::new();
     while let Some(row) = rows.next()? {
         let key: Key = (row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?);
         let period: (Option<String>, Option<String>) = (row.get(4)?, row.get(5)?);
-        let table: i64 = row.get(6)?;
+        let (table, column): (i64, i64) = (row.get(6)?, row.get(7)?);
         spellings
             .entry((table, key.0, key.1))
             .or_default()
             .insert(key.2.clone());
-        mapped.push((table, key, period));
+        mapped.push((table, column, key, period));
     }
-    // A table's one representation, by (variable, variant, scope), then spelling: it
-    // also serves a spelling its own is not delivered beside (`held::serves_at`).
-    let mut one: BTreeMap<(i64, i64, String), BTreeMap<String, held::Periods>> = BTreeMap::new();
-    for (table, key, period) in mapped {
+    // A table's one representation, by (variable, variant, scope), then spelling, with
+    // its column: it also serves a spelling its own is not delivered beside and its
+    // table has no other column of (`held::serves_at`).
+    let mut one: BTreeMap<(i64, i64, String), Own> = BTreeMap::new();
+    for (table, column, key, period) in mapped {
         if spellings[&(table, key.0, key.1)].len() == 1 {
             one.entry((key.0, key.1, key.3.clone()))
                 .or_default()
                 .entry(key.2.clone())
                 .or_default()
-                .push(period.clone());
+                .push((column, period.clone()));
         }
         held.entry(key).or_default().push(period);
     }
     let mut beside = conn.prepare(&format!(
         "SELECT {}",
         held::delivered("?1", "?2", "?3", "?4", "?5")
+    ))?;
+    let mut unnamed = conn.prepare(&format!(
+        "SELECT {} FROM holding_column c WHERE c.column_id = ?1",
+        held::no_column_of("c", "?2")
     ))?;
     let request = years.map(|(lo, hi)| (format!("{lo:04}-01-01"), format!("{hi:04}-12-31")));
     let request = request.as_ref().map(|(lo, hi)| (lo.as_str(), hi.as_str()));
@@ -520,22 +526,29 @@ fn held_clip(
             .get(&(variable, variant, canonical.clone(), scope.clone()))
             .cloned()
             .unwrap_or_default();
-        for (own, own_periods) in one.get(&(variable, variant, scope)).into_iter().flatten() {
+        for (own, own_columns) in one.get(&(variable, variant, scope)).into_iter().flatten() {
             let (from, to) = (&rep.row.valid_from, &rep.row.valid_to);
             // Cheap first: a dated representation outside every held period of the
             // mapping gains nothing from it.
-            let reaches = match (from, to) {
-                (Some(from), Some(to)) => own_periods.iter().any(|(lo, hi)| {
+            let reaches = |(lo, hi): &(Option<String>, Option<String>)| match (from, to) {
+                (Some(from), Some(to)) => {
                     lo.as_ref().is_some_and(|lo| lo <= to)
                         && hi.as_ref().is_some_and(|hi| hi >= from)
-                }),
+                }
                 _ => true,
             };
-            if reaches
-                && *own != canonical
-                && !beside.query_row(params![variable, variant, own, from, to], |row| row.get(0))?
+            if *own == canonical
+                || !own_columns.iter().any(|(_, period)| reaches(period))
+                || beside.query_row(params![variable, variant, own, from, to], |row| row.get(0))?
             {
-                periods.extend(own_periods.iter().cloned());
+                continue;
+            }
+            for (column, period) in own_columns {
+                if reaches(period)
+                    && unnamed.query_row(params![column, canonical], |row| row.get::<_, bool>(0))?
+                {
+                    periods.push(period.clone());
+                }
             }
         }
         if periods.is_empty() {

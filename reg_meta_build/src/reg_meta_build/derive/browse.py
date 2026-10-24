@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from reg_core_py import merge
+from reg_core_py import fold_identity, merge
 
 from reg_meta_build.derive.states import (
     _applicable_alias_windows,
@@ -34,15 +34,26 @@ HELD_HI = "COALESCE(hm.member_hi, hm.window_hi, hp.hi)"
 # Mapping `hm` (of column `hc`) is its table's one representation of its
 # (variable, variant). Possession is physical: such a table holds the variable under
 # every spelling SCB gave its column where SCB did not deliver the mapped spelling
-# beside it, so a per-year rename never subtracts held years (`Doda_20241231`'s
-# `DodDatum` over SCB's 1998-2023 `DodDat`). The reader's `held::ONE_REPRESENTATION`,
-# `held::delivered` and `held::serves` hold the same rule.
+# beside it and the table has no other column of that spelling, so a per-year rename
+# never subtracts held years (`Doda_20241231`'s `DodDatum` over SCB's 1998-2023
+# `DodDat`). The reader's `held::one_representation`, `held::no_column_of`,
+# `held::delivered` and `held::serves` hold the same rule (the reader folds with
+# `fold_identity`, this builder with `py_lower`: one function).
 ONE_REPRESENTATION = (
     "NOT EXISTS (SELECT 1 FROM holding_column sc "
     "JOIN holding_mapping sm USING(column_id) WHERE sc.table_id = hc.table_id "
     "AND sm.variable_id = hm.variable_id AND sm.variant_id = hm.variant_id "
     "AND sm.representation_canonical != hm.representation_canonical)"
 )
+
+
+def no_column_of(rep: str) -> str:
+    """SQL: column `hc`'s table has no other column whose name folds to the
+    spelling `rep`; one that has (mapped elsewhere or unmapped) holds `rep`'s data."""
+    return (
+        "NOT EXISTS (SELECT 1 FROM holding_column oc WHERE oc.table_id = hc.table_id "
+        f"AND oc.column_id != hc.column_id AND py_lower(oc.name) = py_lower({rep}))"
+    )
 
 
 def delivered(variable: str, variant: str, rep: str, lo: str, hi: str) -> str:
@@ -59,7 +70,8 @@ def delivered(variable: str, variant: str, rep: str, lo: str, hi: str) -> str:
 def serves(rep: str) -> str:
     """SQL: mapping `hm` serves `rep`, a canonical spelling of its variable, at any
     time: its own, or, as its table's `ONE_REPRESENTATION`, one with a state or
-    window the mapping holds that its own spelling is not delivered beside."""
+    window the mapping holds that its own spelling is not delivered beside and no
+    other column of its table is named for (`no_column_of`). Needs `py_lower`."""
     beside = delivered(
         "hm.variable_id",
         "hm.variant_id",
@@ -78,7 +90,8 @@ def serves(rep: str) -> str:
         "= 'year_independent' "
         "ELSE EXISTS (SELECT 1 FROM holding_period sp WHERE sp.table_id = hc.table_id "
         "AND se.valid_from <= COALESCE(hm.member_hi, hm.window_hi, sp.hi) "
-        "AND se.valid_to >= COALESCE(hm.member_lo, hm.window_lo, sp.lo)) END)))"
+        f"AND se.valid_to >= COALESCE(hm.member_lo, hm.window_lo, sp.lo)) END) "
+        f"AND {no_column_of(rep)}))"
     )
 
 
@@ -339,12 +352,13 @@ def _held_deliveries(
         for key, columns in stated.items()
     }
     physical: dict[tuple[int, int, str, str], list[tuple[str, str]]] = {}
-    # A table's one representation, by (variable, variant, scope), then spelling:
-    # it also serves a spelling its own is not delivered beside.
-    one: dict[tuple[int, int, str], dict[str, list[tuple[str, str]]]] = {}
+    # A table's one representation, by (variable, variant, scope), then spelling, with
+    # its table and column name: it also serves a spelling its own is not delivered
+    # beside and its table has no other column of (`serves`, `no_column_of`).
+    one: dict[tuple[int, int, str], dict[str, dict[tuple[int, str], list]]] = {}
     for row in conn.execute(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, "
-        f"ht.scope, {HELD_LO}, {HELD_HI}, {ONE_REPRESENTATION} "
+        f"ht.scope, {HELD_LO}, {HELD_HI}, {ONE_REPRESENTATION}, hc.table_id, hc.name "
         "FROM holding_mapping hm "
         "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
         "JOIN provider p USING(provider_id) JOIN holding_column hc USING(column_id) "
@@ -354,7 +368,9 @@ def _held_deliveries(
     ):
         intervals = physical.setdefault(tuple(row[:4]), [])
         own = (
-            one.setdefault((row[0], row[1], row[3]), {}).setdefault(row[2], [])
+            one.setdefault((row[0], row[1], row[3]), {})
+            .setdefault(row[2], {})
+            .setdefault((row[7], row[8]), [])
             if row[6]
             else []
         )
@@ -362,6 +378,19 @@ def _held_deliveries(
             intervals.append((row[4], row[5]))
             own.append((row[4], row[5]))
     physical = {key: list(merge(intervals)) for key, intervals in physical.items()}
+    # Each holding table's column names by identity fold, read once and only when a
+    # one-representation mapping's fallback needs them.
+    folded: dict[int, dict[str, set[str]]] = {}
+
+    def named(table: int, column: str, spelling: str) -> bool:
+        if table not in folded:
+            folded[table] = {}
+            for (name,) in conn.execute(
+                "SELECT name FROM holding_column WHERE table_id = ?", (table,)
+            ):
+                folded[table].setdefault(fold_identity(name), set()).add(name)
+        return bool(folded[table].get(fold_identity(spelling), set()) - {column})
+
     beside_sql = "SELECT " + delivered("?1", "?2", "?3", "?4", "?5")
     groups: dict[tuple[str, str, str, str], list[tuple[str, str] | None]] = {}
     for row in rows:
@@ -382,11 +411,13 @@ def _held_deliveries(
             key = (variable_id, variant_id, column, row["period_scope"])
             served = [
                 intervals
-                for own, intervals in one.get(key[:2] + key[3:], {}).items()
+                for own, columns in one.get(key[:2] + key[3:], {}).items()
                 if own != column
                 and not conn.execute(
                     beside_sql, (variable_id, variant_id, own, lo, hi)
                 ).fetchone()[0]
+                for (table, name), intervals in columns.items()
+                if not named(table, name, column)
             ]
             if key in physical:
                 served.append(physical[key])

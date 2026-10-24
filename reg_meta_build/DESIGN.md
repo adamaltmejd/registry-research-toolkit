@@ -2991,6 +2991,16 @@ ordinary annual series), a declared projection shares cells with its parent
 ("Projections" below), and a windowed mapping serves only its window ("Column windows"
 below).
 
+**One representation serves its renames.** A table that maps a `(variable, variant)`
+under one representation also serves the variable's other catalog spellings wherever the
+catalog does not deliver the mapped one and no other column of the table folds to that
+spelling ([../crates/DESIGN.md](../crates/DESIGN.md), "Read scope and artifact
+admission"; `held::serves`). Compilation (`holdings_compile.canonical_inventory`, which
+`validate_built_db` reruns on the artifact) places each such spelling at the mapping's
+location over every instant it is delivered and the mapped one is not, so a second table
+or column claiming that cell is the ordinary `inventory_cell_conflict`; the literal
+inventory check (`load_inventory`) has no catalog and compares spellings only.
+
 **Disjoint partitions.** Some registers arrive as several tables split by sub-population
 within one edition: survey strata (`ITftg_Mikro`/`ITftg_Stora`), reporter streams
 (`Arb_`/`Soc_AGIIndivid`), administrative splits (`NDR_adults` over and under 70),
@@ -3023,20 +3033,22 @@ of projections may repeat one token, as partitions repeat across editions. There
 grain check: each projection is its own extract file, so a finer grain is carried by its
 own keys.
 
-The parent serves a projection's mapping when it maps the same canonical triple over
-every instant the mapping serves, and at the same position: a projection's position
-member is served only by the parent's member of that position (the parent's set holds
-that member), and a plain column or a year or month member only by a parent mapping that
-is not a position member (a plain column or a year or month member covering it). So a
-projection whose position set is equal to or a subset of the parent's is served, while a
-larger set, a position set beside a plain parent column, or a plain column beside a
-parent position set is the projection's own claim on the parent's cell. Coverage
-compares coalesced editions, like the edition check. The one-to-one rule then skips the
-declared pair where the parent serves the projection's mapping, and skips two
+The parent serves a projection's mapping when it serves the same canonical triple over
+every instant the mapping serves, and at the same position (a spelling the parent's one
+representation serves counts where that representation is delivered nowhere in the
+projection mapping's period; see "One representation serves its renames" below): a
+projection's position member is served only by the parent's member of that position (the
+parent's set holds that member), and a plain column or a year or month member only by a
+parent mapping that is not a position member (a plain column or a year or month member
+covering it). So a projection whose position set is equal to or a subset of the parent's
+is served, while a larger set, a position set beside a plain parent column, or a plain
+column beside a parent position set is the projection's own claim on the parent's cell.
+Coverage compares coalesced editions, like the edition check. The one-to-one rule then
+skips the declared pair where the parent serves the projection's mapping, and skips two
 projections of one parent where the parent serves each one's mapping; partial coverage,
 a mapping the parent does not serve, two columns of one projection, two projections
 sharing a cell the parent lacks, and every third table still conflict, each with the
-ordinary located `inventory_cell_conflict`. The order's `PARENT_SERVES` is the same rule
+ordinary located `inventory_cell_conflict`. The order's `parent_serves` is the same rule
 ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"), so it drops exactly the
 mappings this check admitted as served. The order emits a shared value cell from the
 parent alone and keeps every ordered key or identifier cell (the bound variant's panel

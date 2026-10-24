@@ -22,7 +22,9 @@ from .holdings_accounting import (
 )
 from .inventory import (
     ColumnMapping,
+    Deliveries,
     DeliveryInventory,
+    Spellings,
     _edition_intervals,
     _location,
     _segment_bounds,
@@ -141,8 +143,48 @@ def canonical_inventory(
     if rejections:
         raise HoldingsFoldError(tuple(rejections))
     canonical = inventory.model_copy(update={"tables": tuple(tables)})
-    validate_inventory_placements(canonical.tables)
+    validate_inventory_placements(
+        canonical.tables, _deliveries(conn, canonical, variables, variants)
+    )
     return canonical
+
+
+def _deliveries(
+    conn: sqlite3.Connection,
+    canonical: DeliveryInventory,
+    variables: dict[str, int],
+    variants: dict[str, int],
+) -> Deliveries:
+    """The catalog's spellings of each mapped `(register_variant, variable)`, from
+    `expanded_state` as the reader's `held::serves` reads them, so the one-to-one
+    rule sees every spelling a table's one representation serves."""
+    out: dict[tuple[str, str], Spellings] = {}
+    for variant, variable in sorted(
+        {
+            (mapping.register_variant, mapping.variable)
+            for table in canonical.tables
+            for column in table.columns
+            for mapping in column.mappings
+            if not mapping.carried
+        }
+    ):
+        dated: dict[str, list[tuple[str, str]]] = defaultdict(list)
+        undated: set[str] = set()
+        for spelling, lo, hi in conn.execute(
+            "SELECT canonical_column, valid_from, valid_to FROM expanded_state "
+            "WHERE variable_id = ? AND register_variant_id = ? "
+            "AND canonical_column IS NOT NULL",
+            (variables[variable], variants[variant]),
+        ):
+            if lo is None:
+                undated.add(spelling)
+            else:
+                dated[spelling].append((lo, hi))
+        out[variant, variable] = {
+            spelling: (merge(dated.get(spelling, [])), spelling in undated)
+            for spelling in dated.keys() | undated
+        }
+    return out
 
 
 COVERAGE_WARNING_INVALID = "inventory_coverage_warning_invalid"

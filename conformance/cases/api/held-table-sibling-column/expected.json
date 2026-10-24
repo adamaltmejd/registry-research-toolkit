@@ -1,0 +1,28 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/years": [2019],
+      "/data/registers/0/aliases_by_year": {"2019": ["Valuenew"]},
+      "/meta/scope": "holdings"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/0/deliveries/*/column": ["Valuenew"],
+      "/data/children/0/deliveries/*/windows": [
+        [{"valid_from": "2019-01-01", "valid_to": "2019-12-31"}]
+      ],
+      "/meta/scope": "holdings"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/fields/findings/*/code": ["mapping_missing"],
+      "/error/fields/findings/*/period": ["2018"]
+    }
+  }
+]

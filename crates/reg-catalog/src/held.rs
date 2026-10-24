@@ -25,19 +25,33 @@ pub(crate) struct Narrow<'a> {
 pub(crate) const HELD_LO: &str = "COALESCE(hm.member_lo, hm.window_lo, hp.lo)";
 pub(crate) const HELD_HI: &str = "COALESCE(hm.member_hi, hm.window_hi, hp.hi)";
 
-/// Whether mapping `hm` (of column `hc`) is its table's one representation of its
+/// Whether mapping `m` (of column `c`) is its table's one representation of its
 /// `(variable, variant)`. Possession is physical: such a table holds the variable
 /// under every spelling SCB gave its column where SCB did not deliver the mapped
-/// spelling beside it ([`serves`]), so a per-year rename never subtracts held years
-/// (`Doda_20241231`'s `DodDatum` over SCB's 1998–2023 `DodDat`).
-// simplify: the builder's one-to-one rule still compares spellings, so a second
-// table mapping another spelling over a year this one serves by its fallback
-// would serve that cell twice. None does on SWECOV (2026-10-24); check it in
-// `holdings_compile` against `expanded_state` once a steward inventory has one.
-pub(crate) const ONE_REPRESENTATION: &str = "NOT EXISTS (SELECT 1 FROM holding_column sc \
-     JOIN holding_mapping sm USING(column_id) WHERE sc.table_id = hc.table_id \
-     AND sm.variable_id = hm.variable_id AND sm.variant_id = hm.variant_id \
-     AND sm.representation_canonical != hm.representation_canonical)";
+/// spelling beside it and the table has no column of that spelling ([`serves`]), so
+/// a per-year rename never subtracts held years (`Doda_20241231`'s `DodDatum` over
+/// SCB's 1998–2023 `DodDat`). The builder refuses an inventory where this would
+/// serve a cell another location also serves (`holdings_compile.canonical_inventory`,
+/// `inventory_cell_conflict`).
+pub(crate) fn one_representation(m: &str, c: &str) -> String {
+    format!(
+        "NOT EXISTS (SELECT 1 FROM holding_column sc \
+         JOIN holding_mapping sm USING(column_id) WHERE sc.table_id = {c}.table_id \
+         AND sm.variable_id = {m}.variable_id AND sm.variant_id = {m}.variant_id \
+         AND sm.representation_canonical != {m}.representation_canonical)"
+    )
+}
+
+/// Whether column `c`'s table has no other column whose name folds to the spelling
+/// `rep`: where it has one (mapped elsewhere or unmapped), that column holds `rep`'s
+/// data, so `c` does not. The builder's copies (`derive/browse.py`, `inventory.py`)
+/// fold with `py_lower`/`fold_identity`, the same function.
+pub(crate) fn no_column_of(c: &str, rep: &str) -> String {
+    format!(
+        "NOT EXISTS (SELECT 1 FROM holding_column oc WHERE oc.table_id = {c}.table_id \
+         AND oc.column_id != {c}.column_id AND fold_identity(oc.name) = fold_identity({rep}))"
+    )
+}
 
 /// Whether `variable` delivers the representation `rep` at `variant` over the bounds
 /// `lo..hi` (SQL expressions; both NULL for a year-independent representation).
@@ -50,28 +64,36 @@ pub(crate) fn delivered(variable: &str, variant: &str, rep: &str, lo: &str, hi: 
     )
 }
 
-/// Whether the variable delivers mapping `hm`'s own representation over `lo..hi`.
-fn delivered_beside(lo: &str, hi: &str) -> String {
+/// Whether the variable delivers mapping `m`'s own representation over `lo..hi`.
+fn delivered_beside(m: &str, lo: &str, hi: &str) -> String {
     delivered(
-        "hm.variable_id",
-        "hm.variant_id",
-        "hm.representation_canonical",
+        &format!("{m}.variable_id"),
+        &format!("{m}.variant_id"),
+        &format!("{m}.representation_canonical"),
         lo,
         hi,
     )
 }
 
-/// Whether mapping `hm` (of column `hc`) serves the representation `rep` (an SQL
+/// Whether mapping `m` (of column `c`) serves the representation `rep` (an SQL
 /// expression naming one of its variable's canonical spellings at its variant)
 /// over that representation's bounds `lo..hi`: its own, or, as its table's
-/// [`ONE_REPRESENTATION`], one SCB did not deliver its own spelling beside. Where
-/// both are delivered, sibling columns side by side, the spelling chooses the column.
-pub(crate) fn serves_at(rep: &str, lo: &str, hi: &str) -> String {
+/// [`one_representation`], one SCB did not deliver its own spelling beside and no
+/// other column of its table is named for ([`no_column_of`]). Where both are delivered,
+/// sibling columns side by side, the spelling chooses the column.
+pub(crate) fn serves_at_by(m: &str, c: &str, rep: &str, lo: &str, hi: &str) -> String {
     format!(
-        "(hm.representation_canonical = {rep} OR ({rep} IS NOT NULL \
-         AND {ONE_REPRESENTATION} AND NOT {}))",
-        delivered_beside(lo, hi)
+        "({m}.representation_canonical = {rep} OR ({rep} IS NOT NULL \
+         AND {} AND NOT {} AND {}))",
+        one_representation(m, c),
+        delivered_beside(m, lo, hi),
+        no_column_of(c, rep),
     )
+}
+
+/// [`serves_at_by`] for mapping `hm` of column `hc`.
+pub(crate) fn serves_at(rep: &str, lo: &str, hi: &str) -> String {
+    serves_at_by("hm", "hc", rep, lo, hi)
 }
 
 /// [`serves_at`] at any time: `rep` has a state or window the mapping holds (a dated
@@ -80,7 +102,7 @@ pub(crate) fn serves_at(rep: &str, lo: &str, hi: &str) -> String {
 /// representation instead.
 pub(crate) fn serves(rep: &str) -> String {
     format!(
-        "(hm.representation_canonical = {rep} OR ({rep} IS NOT NULL AND {ONE_REPRESENTATION} \
+        "(hm.representation_canonical = {rep} OR ({rep} IS NOT NULL AND {} \
          AND EXISTS (SELECT 1 FROM expanded_state se WHERE se.variable_id = hm.variable_id \
          AND se.register_variant_id = hm.variant_id AND se.canonical_column = {rep} \
          AND NOT {} \
@@ -89,8 +111,11 @@ pub(crate) fn serves(rep: &str) -> String {
          = 'year_independent' \
          ELSE EXISTS (SELECT 1 FROM holding_period sp WHERE sp.table_id = hc.table_id \
          AND se.valid_from <= COALESCE(hm.member_hi, hm.window_hi, sp.hi) \
-         AND se.valid_to >= COALESCE(hm.member_lo, hm.window_lo, sp.lo)) END)))",
-        delivered_beside("se.valid_from", "se.valid_to")
+         AND se.valid_to >= COALESCE(hm.member_lo, hm.window_lo, sp.lo)) END) \
+         AND {}))",
+        one_representation("hm", "hc"),
+        delivered_beside("hm", "se.valid_from", "se.valid_to"),
+        no_column_of("hc", rep),
     )
 }
 

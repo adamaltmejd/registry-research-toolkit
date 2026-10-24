@@ -34,6 +34,7 @@ from pydantic import (
 )
 from reg_core_py import (
     fold_identity,
+    gaps,
     merge,
     overlap,
     parse_fqid,
@@ -46,6 +47,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .slug_grammar import DEFAULT_VARIANT_SLUG, validate_slug
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Mapping
     from pathlib import Path
 
 # Inventory refusals, one code per rule family (as `curation_tree` does for the
@@ -187,6 +189,12 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 # period and a browse row can never disagree with the reader about bounds or
 # spelling.
 _Interval = tuple[str, str]
+# The spellings the catalog delivers one `(register_variant, variable)` under, from
+# `expanded_state`: per canonical spelling, its dated intervals (merged) and whether
+# it has a year-independent state. Compilation passes them so the one-to-one rule
+# also sees the spellings a table's one representation serves (`_fallbacks`).
+type Spellings = Mapping[str, tuple[tuple[_Interval, ...], bool]]
+type Deliveries = Mapping[tuple[str, str], Spellings]
 
 
 def _representations_conflate(left: str, right: str) -> bool:
@@ -717,7 +725,8 @@ class _Placement(NamedTuple):
     the served bounds are the table's coalesced edition, a year or month
     member's own period, or a column window (#1645); `position` is a position
     member's index, None for a plain column, a windowed column or a year or month
-    member."""
+    member. `origin` is the mapping's own placement when this one is another
+    spelling its table's one representation serves (`_fallbacks`), else None."""
 
     location: str
     representation: str
@@ -725,6 +734,7 @@ class _Placement(NamedTuple):
     partition: str | None
     table: str
     position: int | None
+    origin: _Placement | None = None
 
 
 def _edition_intervals(table: InventoryTable) -> tuple[_Interval, ...]:
@@ -736,7 +746,39 @@ def _edition_intervals(table: InventoryTable) -> tuple[_Interval, ...]:
     return merge(list(edition_bounds(table.edition)))
 
 
-def _parent_serves(placement: _Placement, parent: _Placement) -> bool:
+def _fallbacks(
+    table: InventoryTable,
+    column: InventoryColumn,
+    own: _Placement,
+    spellings: Spellings,
+) -> Iterator[_Placement]:
+    """The other spellings `own`, its table's one representation of the variable,
+    also serves, each as a placement at its location: `crates/reg-catalog`'s
+    `held::serves`. A table that maps a `(variable, variant)` under one spelling
+    holds it under every spelling the catalog delivers where it does not deliver
+    the mapped one, unless another column of the table folds to that spelling (that
+    column holds it). The served period is every instant of the mapping's period
+    the spelling is delivered and the mapped one is not: the reader decides per
+    state or per order slice, never over more."""
+    own_dated, own_undated = spellings.get(own.representation, ((), False))
+    for spelling, (dated, undated) in sorted(spellings.items()):
+        if spelling == own.representation or any(
+            other.name != column.name
+            and fold_identity(other.name) == fold_identity(spelling)
+            for other in table.columns
+        ):
+            continue
+        if table.period_scope == "intervals":
+            served = gaps(list(overlap(own.served, dated)), list(own_dated))
+            if served:
+                yield own._replace(representation=spelling, served=served, origin=own)
+        elif undated and not own_undated:
+            yield own._replace(representation=spelling, origin=own)
+
+
+def _parent_serves(
+    placement: _Placement, parent: _Placement, spellings: Spellings
+) -> bool:
     """Whether a projection's `placement` is a cell its parent's `parent`
     placement serves (#1634): the representations conflate, both are the same
     position member or neither is a position member, and the parent serves every
@@ -744,12 +786,35 @@ def _parent_serves(placement: _Placement, parent: _Placement) -> bool:
     a projection's positions must be positions of the parent's set; a plain
     column, a windowed column or a year or month member is served only by a
     parent mapping that is not a position member and whose own served period
-    (edition, member or window) covers it. `crates/reg-catalog`'s `PARENT_SERVES`
-    is the same rule at order time."""
-    return (
+    (edition, member or window) covers it. A parent's fallback placement
+    (`_fallbacks`) serves it only where the parent's own spelling is delivered
+    nowhere in the hull of the projection's period, as the order's
+    `held::serves_at` decides over the projection mapping's bounds.
+    `crates/reg-catalog`'s `parent_serves` is the same rule at order time."""
+    if not (
         _representations_conflate(placement.representation, parent.representation)
         and placement.position == parent.position
-        and overlap(placement.served, parent.served) == placement.served
+    ):
+        return False
+    own = parent.origin or parent
+    if overlap(placement.served, own.served) != placement.served:
+        return False
+    if parent.origin is None:
+        return True
+    dated, undated = spellings.get(own.representation, ((), False))
+    if not placement.served:
+        return not undated
+    hull = ((placement.served[0][0], placement.served[-1][1]),)
+    return not overlap(hull, dated)
+
+
+def _placement_label(placement: _Placement) -> str:
+    if placement.origin is None:
+        return _representation_label(placement.representation)
+    return (
+        f"{_representation_label(placement.representation)}, served by its one "
+        f"representation {placement.origin.representation!r} where that is not "
+        "delivered"
     )
 
 
@@ -930,7 +995,9 @@ def _placement_name_collisions(tables: tuple[InventoryTable, ...]) -> list[str]:
     return problems
 
 
-def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
+def validate_inventory_placements(
+    tables: tuple[InventoryTable, ...], deliveries: Deliveries | None = None
+) -> None:
     """Enforce the one-to-one resolution invariant (ratified 2026-09-01;
     reg_meta_build/DESIGN.md → "Holdings resolution invariants").
 
@@ -982,6 +1049,15 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     the table that serves the key is the one location, and the carried column only
     rides along in its own table's files.
 
+    Fallback spellings: with `deliveries` (compilation passes the catalog's), a
+    table's one representation of a `(variant, variable)` is also placed at every
+    other spelling it serves (`_fallbacks`, the reader's `held::serves`), so a
+    second table or column mapping that spelling over those instants conflicts as
+    any other pair does. A projection mapping its parent serves by fallback is
+    served, as above, and the order drops it; a projection's own fallback is
+    served exactly when the projection mapping it comes from is, since the order
+    drops that mapping whole.
+
     Cost: group by `(register_variant, variable, period_scope)` and compare
     pairwise only within each group. An inventory with many variables avoids a
     global quadratic scan; the usual largest group is one variable's annual
@@ -993,6 +1069,13 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     located: dict[tuple[str, str, str], list[_Placement]] = {}
     for table in tables:
         bounds = _edition_intervals(table)
+        spelled: dict[tuple[str, str], set[str]] = {}
+        for column in table.columns:
+            for mapping in column.mappings:
+                if not mapping.carried:
+                    spelled.setdefault(
+                        (mapping.register_variant, mapping.variable), set()
+                    ).add(mapping.representation)
         for column in table.columns:
             for mapping in column.mappings:
                 if mapping.carried:
@@ -1007,33 +1090,41 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     location = _location(table.id, column.name)
                 else:
                     location = _member_location(table.id, mapping.representation)
-                located.setdefault(key, []).append(
-                    _Placement(
-                        location,
-                        mapping.representation,
-                        served,
-                        table.partition,
-                        table.id,
-                        mapping.member.position if mapping.member else None,
-                    )
+                own = _Placement(
+                    location,
+                    mapping.representation,
+                    served,
+                    table.partition,
+                    table.id,
+                    mapping.member.position if mapping.member else None,
                 )
+                located.setdefault(key, []).append(own)
+                coordinate = (mapping.register_variant, mapping.variable)
+                if deliveries is not None and len(spelled[coordinate]) == 1:
+                    located[key].extend(
+                        _fallbacks(table, column, own, deliveries.get(coordinate, {}))
+                    )
     conflicts: list[str] = []
     reported: set[tuple[str, ...]] = set()
     for (variant, variable, scope), placements in located.items():
-        # The placements of this coordinate whose table's declared parent serves them.
+        spellings = (deliveries or {}).get((variant, variable), {})
+        # The placements of this coordinate whose table's declared parent serves
+        # them; a fallback placement goes with the mapping it comes from.
         served = {
             placement
             for placement in placements
-            if any(
+            if placement.origin is None
+            and any(
                 other.table == parents.get(placement.table)
-                and _parent_serves(placement, other)
+                and _parent_serves(placement, other, spellings)
                 for other in placements
             )
         }
+        served |= {p for p in placements if p.origin in served}
         for index, a in enumerate(placements):
-            a_location, a_rep, a_bounds, a_part, a_table, _ = a
+            a_location, a_rep, a_bounds, a_part, a_table, *_ = a
             for b in placements[index + 1 :]:
-                b_location, b_rep, b_bounds, b_part, b_table, _ = b
+                b_location, b_rep, b_bounds, b_part, b_table, *_ = b
                 if a_location == b_location:
                     # One location serving one cell IS the invariant; a
                     # repeated triple there is `InventoryColumn`'s error.
@@ -1067,9 +1158,9 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                 reported.add(pair)
                 conflicts.append(
                     f"{a_location} "
-                    f"({_representation_label(a_rep)}) and "
+                    f"({_placement_label(a)}) and "
                     f"{b_location} "
-                    f"({_representation_label(b_rep)}) both map "
+                    f"({_placement_label(b)}) both map "
                     f"{variant} {variable} over {'_default' if scope == 'year_independent' else render(shared)}"
                     + _partition_hint(a_part, b_part)
                 )
