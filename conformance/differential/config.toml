@@ -40,17 +40,17 @@ paths = ["/meta/generation", "/data/reg_meta_version", "/data/schema_version"]
 # compared against. `sha256` is the GitHub release asset digest (of the `.zst`), checked
 # while the asset streams into the cache.
 [release]
-tag = "reg_meta/v0.61.0"
+tag = "reg_meta/v0.62.0"
 
 [[release.asset]]
 catalog = "global"
 name = "reg_meta.db.zst"
-sha256 = "450914636ddcaad55b6feef698bd57c93a06d1c561c51ec3243468dba3e7107b"
+sha256 = "0f693dea8a93c545a83d97a1f5c7744d336022dc9fe0a0e5c23887df9aed50ea"
 
 [[release.asset]]
 catalog = "swecov"
 name = "reg_meta_swecov.db.zst"
-sha256 = "c3bda2da9159fac73f030a24a98afd072f9d1897f080598913a07ff9620dca72"
+sha256 = "5b1a10056c24b20dba4f9cde2f739110ed2f498d8e487301e2e7fab1eabefad6"
 
 # The docs database is optional enrichment for `search` and required by `docs`; it is
 # placed beside both catalogs so the two read the same documentation.
