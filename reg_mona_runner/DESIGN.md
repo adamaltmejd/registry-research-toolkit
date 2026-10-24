@@ -189,7 +189,7 @@ Stable; the process exits with the code of the first order, in name order, that 
   | 0    | every order extracted (or no orders)                                                                                                          |
   | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive                                                              |
   | 3    | the order is not JSON                                                                                                                         |
-  | 4    | `version` is not 2                                                                                                                            |
+  | 4    | `version` is not 3                                                                                                                            |
   | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order                                                                       |
   | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name                                                                     |
   | 7    | a table in no schema or several, a missing column, a wrong period type, a column the format cannot hold (SQL type, or a `.dta` name or label) |

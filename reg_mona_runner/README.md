@@ -47,9 +47,9 @@ A successful order writes `export_data\<nr>_<date>\`:
   file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty field
   for a missing value. A `.dta` column whose name is not a Stata variable name (for
   example one over 32 characters) is written under its alias, the order's `stata_name`
-  (the first 25 characters and `_` and 6 hex digits), with the full name as the variable
-  label. [DESIGN.md](DESIGN.md), "Types per format", lists what each column type
-  becomes;
+  (a Stata-safe form of its first 25 characters, `_` and 6 hex digits), with the full
+  name as the variable label. [DESIGN.md](DESIGN.md), "Types per format", lists what
+  each column type becomes;
 - `run_log.csv`: each file's row count, column count and the period filter applied.
 
 The order then moves to `orders\archive\`.
