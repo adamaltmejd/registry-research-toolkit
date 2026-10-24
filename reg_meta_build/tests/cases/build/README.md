@@ -43,6 +43,7 @@ the behavior in plain words. For example,
   | `split-partition-`     | SCB `[[identity.partition]]`, `[[identity.column_owner]]` and `[[identity.unassigned]]`, and slices that reference them                                                          |
   | `errata-delivered-`    | `[[errata.delivered]]` additions                                                                                                                                                 |
   | `errata-column-`       | `[[errata.column]]` placements, flags, prose, classification references and steward storage types, and `[[errata.version]]` declared editions                                    |
+  | `errata-authored-`     | authored SCB variants (a canonical-band `[[variant]]` the export lacks) and the errata that deliver onto them                                                                    |
   | `errata-sos-`          | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                                                                                                             |
   | `errata-field-`        | `[[errata.field]]` checked corrections of one source occurrence                                                                                                                  |
   | `errata-period-`       | `[[errata.occurrence_period]]` checked period corrections                                                                                                                        |

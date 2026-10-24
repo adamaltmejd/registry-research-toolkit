@@ -392,10 +392,17 @@ def authored_scb_variant(provider: str | None, source_id: str) -> bool:
     variant for (GDB at person, workplace and school grain). Curation declares
     such a variant under the exported register with a RegVarID in the
     canonical-SCB band, which no exported RegVarID reaches, so it can never
-    collide with a native variant. A split variant (three parts) is not one.
+    collide with a native variant. A split variant (three parts) is not one,
+    nor is a variant of a canonical-SCB register (`scb_canonical/`), which its
+    authored source declares.
     """
     parsed = _parse_variant_id(source_id)
-    return provider == "scb" and len(parsed) == 2 and is_canonical_scb(parsed[1])
+    return (
+        provider == "scb"
+        and len(parsed) == 2
+        and not is_canonical_scb(parsed[0])
+        and is_canonical_scb(parsed[1])
+    )
 
 
 def _validate_authored_variant_name(
