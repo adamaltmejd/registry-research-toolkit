@@ -1,0 +1,14 @@
+{
+  "exit_code": 10,
+  "files": {
+    "located.json": {
+      "includes": {
+        "error": {
+          "code": "scb_value_shape_unsupported"
+        }
+      },
+      "contains": ["unsupported code/version shape 'New marker' at level 'New marker'"]
+    },
+    "candidate": {"absent": true}
+  }
+}

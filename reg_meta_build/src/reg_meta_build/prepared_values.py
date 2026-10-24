@@ -36,6 +36,7 @@ from reg_meta_build._accepted_prepared import (
     check_accepted_files,
     read_accepted_manifest,
 )
+from reg_meta_build.errors import SourceFormatError
 from reg_meta_build.input_snapshot import SnapshotError, _git
 from reg_meta_build.prepared_sources import (
     _COMMIT_RE,
@@ -584,7 +585,8 @@ def prepare_source_values(
         staging.replace(output)
         return manifest
     except (AttributeError, OSError, TypeError, ValueError, sqlite3.Error) as exc:
-        if isinstance(exc, PreparedValueError):
+        # Both are located refusals; keep their own code.
+        if isinstance(exc, (PreparedValueError, SourceFormatError)):
             raise
         raise PreparedValueError(f"cannot prepare source values: {exc}") from exc
     finally:
