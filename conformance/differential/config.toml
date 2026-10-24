@@ -1,8 +1,8 @@
 # G1 differential harness (conformance/README.md, "Verification gates"): the seed, the
-# pins and the named semantic exceptions. The cache root is the only other setting
-# (`$REG_META_G1_CACHE`). A re-pin edits this file only: it runs G1 on the old and new
-# pin and records any difference. Each run deletes every
-# cached artifact or baseline build that is not pinned here.
+# pins and the named semantic exceptions. The cache root (`$REG_META_G1_CACHE`)
+# and the G2 candidate databases (`--candidate`) are set outside this file. A re-pin
+# edits this file only: it runs G1 on the old and new pin and records any difference.
+# Each run deletes every cached artifact or baseline build that is not pinned here.
 
 # Seeds every sample (`cases.py`, `served.py`).
 seed = 0

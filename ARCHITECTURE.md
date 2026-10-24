@@ -386,7 +386,7 @@ procedure and the pin.
   | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ----------------------------------- |
   | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and the touched packages) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change                        |
   | G1   | `scripts/gate.py g1`: derive on the pinned real artifacts, then the pinned release's server against the checkout's, as raw bytes           | under 5 min warm                 | reader and derive changes, releases |
-  | G2   | a full base build, derive, and G1 on the result                                                                                            | about 1 h                        | maintainer, at releases             |
+  | G2   | G1 with the release's own fresh databases as candidates (`--candidate`), no derive                                                         | about 1 h                        | maintainer, at releases             |
 
 `crates/` takes 10 s of G0's 60 s, so any change touching the runtime fits it;
 conformance runs in `rust`, with its own 30 s row. G1 and G2 run on real artifacts in
@@ -412,7 +412,7 @@ These rules keep them coupled only through released artifacts.
    G1 derive cache. Batch them just before a planned real-seed build. A prepare-key miss
    never forces a re-prepare: an accepted prepared root can be reused.
 4. **Releases follow builder batches**, derive-only changes included, not reader
-   changes. Each release runs G2 (strict build, derive, then G1 on the result) before
+   changes. Each release runs G2 (G1 on the release's fresh databases) before
    publishing, and re-pins G1 after.
 
 ### Conformance suite

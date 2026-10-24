@@ -299,6 +299,23 @@ command the `scripts/gate.py` `release` step runs, pointed at that directory
 (`--run-release --artifact-dir=... --server-cmd=...`; `cargo build --workspace` first).
 A red run stops publication: fix the asset and re-run.
 
+#### 8f. G2: compare the release databases with the pinned release
+
+With the pin still on the previous release, run G1 with the three decompressed draft
+databases from 8e as candidates, so nothing is derived and a schema major can be
+crossed:
+
+```sh
+uv run python -m conformance.differential \
+  --candidate global=<dir>/reg_meta.db \
+  --candidate swecov=<dir>/reg_meta_swecov.db \
+  --candidate docs=<dir>/reg_meta_docs.db
+```
+
+Run from the checkout at the release commit. Every difference beyond the standing
+exceptions must trace to the release's content changes; report the rest and stop
+publication. The paths are read only.
+
 ### 9. Publish the draft release
 
 This fires `publish_reg_meta.yml`:
