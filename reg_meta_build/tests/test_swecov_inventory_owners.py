@@ -4,36 +4,34 @@ A column maps to the catalog variable(s) whose resolved delivery windows cover t
 table's whole edition; distinct owners covering it together are ambiguous, and a
 column no owner covers is refused into `derived/inventory_worklist.json` with the
 records it resolved. Which windows a column resolves to is read back from that
-refusal. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
+refusal. Which spellings and windows a column resolves to:
+`test_swecov_inventory_representations`. Fixture provenance and the generator's
+boundary: `_swecov_fixtures`.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import shutil
-import sqlite3
-from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
     FLAVORED_TOML,
-    REGISTER_ID,
-    T_KOLUMN_ID,
-    VARIANT_ID,
+    alias_window,
     build_catalog,
-    flavored_db_fixture,  # noqa: F401
+    global_alias,
+    global_state,
+    global_variable,
     inventory_worklist as _inventory_worklist,
     one_table_series,
     owner_block,
     run_inventory as _run_inventory,
     t_kolumn_window,
-    variant_block,
     write_flavored_db,
+    write_global_db,
     write_spec,
 )
-from reg_meta_build.derive.states import derive_states
 from reg_meta_build.inventory import load_inventory as load_delivery_inventory
 
 if TYPE_CHECKING:
@@ -59,35 +57,24 @@ def test_inventory_uses_the_declared_owner_covering_its_exact_year(
     assert len(table.columns[0].mappings) == 1
 
 
-def _owner_db(
-    tmp_path: Path, flavored_db: Path, owners: dict[str, list[tuple[str, str] | None]]
-) -> Path:
-    """A copy of the flavored DB adding one variable per owner slug, delivered
-    through the literal column `Column` in each listed window; `None` is a
-    year-independent state (no calendar window)."""
-    db = tmp_path / "owners.db"
-    shutil.copyfile(flavored_db, db)
-    with closing(sqlite3.connect(db, autocommit=True)) as conn:
-        for variable_id, (owner, windows) in enumerate(owners.items(), start=910):
-            conn.execute(
-                "INSERT INTO variable(variable_id,register_id,provider_key,slug,name,"
-                f"source_name) VALUES (?,{REGISTER_ID},?,?,?,?)",
-                (variable_id, owner, owner, owner, owner),
-            )
-            for window in windows:
-                start, end = window or (None, None)
-                conn.execute(
-                    "INSERT INTO variable_state(state_id, variable_id,register_variant_id,"
-                    "period_scope,valid_from,valid_to,delivery_column_name) "
-                    f"VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,{VARIANT_ID},?,?,?,'Column')",
-                    (
-                        variable_id,
-                        "intervals" if window else "year_independent",
-                        start,
-                        end,
-                    ),
-                )
-    return db
+def _owner_db(tmp_path: Path, owners: dict[str, list[tuple[str, str] | None]]) -> Path:
+    """The flavored DB plus one variable per owner slug, delivered through the
+    literal column `Column` in each listed window; `[None]` is one
+    year-independent state, which makes `_default` a year-independent variant
+    (the fixture's other states have no window, so they become year-independent
+    too)."""
+    source = FLAVORED_TOML + "".join(
+        owner_block(owner, "Column", *(w for w in windows if w is not None))
+        for owner, windows in owners.items()
+    )
+    if None in (w for windows in owners.values() for w in windows):
+        # A year-independent state carries no co-delivered aliases.
+        source = source.replace(
+            '  key = "_default"\n',
+            '  key = "_default"\n  period_scope = "year_independent"\n',
+            1,
+        ).replace('    aliases = ["Covid_19_antikroppar"]\n', "", 1)
+    return write_flavored_db(tmp_path / "owners", source)
 
 
 @pytest.mark.parametrize(
@@ -107,7 +94,6 @@ def _owner_db(
 )
 def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
     tmp_path: Path,
-    flavored_db: Path,
     owners: dict[str, list[tuple[str, str] | None]],
     issue: str,
 ) -> None:
@@ -119,7 +105,7 @@ def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
     owner whose only state has no calendar window is refused the same way,
     because owner choice reads interval windows only. Whether a year-independent
     state should map regardless of edition awaits the maintainer's ruling."""
-    db = _owner_db(tmp_path, flavored_db, owners)
+    db = _owner_db(tmp_path, owners)
 
     with pytest.raises(SystemExit, match="Inventory not replaced"):
         _run_inventory(tmp_path, db, "T2019", ["Column"])
@@ -139,7 +125,7 @@ _CARRIED = (
 
 
 def test_inventory_carries_a_key_only_from_an_owner_delivering_inside_the_edition(
-    tmp_path: Path, flavored_db: Path
+    tmp_path: Path,
 ) -> None:
     """A carried key serves no cell, so an owner covering half of 2019 still
     yields it against T2019; an owner delivering only in 2018 is stale. Fails if
@@ -149,7 +135,7 @@ def test_inventory_carries_a_key_only_from_an_owner_delivering_inside_the_editio
     part, miss = tmp_path / "part", tmp_path / "miss"
     part.mkdir()
     miss.mkdir()
-    db = _owner_db(part, flavored_db, {"one": [("2019-01-01", "2019-06-30")]})
+    db = _owner_db(part, {"one": [("2019-01-01", "2019-06-30")]})
     steward = _run_inventory(
         part, db, "T2019", ["Column", "T_kolumn"], decisions=_CARRIED
     )
@@ -158,7 +144,7 @@ def test_inventory_carries_a_key_only_from_an_owner_delivering_inside_the_editio
         ("inera/bestallda-prover/one", True)
     ]
 
-    db = _owner_db(miss, flavored_db, {"one": [("2018-01-01", "2018-12-31")]})
+    db = _owner_db(miss, {"one": [("2018-01-01", "2018-12-31")]})
     with pytest.raises(SystemExit, match="Inventory not replaced"):
         _run_inventory(miss, db, "T2019", ["Column", "T_kolumn"], decisions=_CARRIED)
     (entry,) = _inventory_worklist(miss)["mapping_scope_needed"]
@@ -166,11 +152,10 @@ def test_inventory_carries_a_key_only_from_an_owner_delivering_inside_the_editio
 
 
 def test_inventory_accepts_abutting_delivery_windows_of_the_same_owner(
-    tmp_path: Path, flavored_db: Path
+    tmp_path: Path,
 ) -> None:
     db = _owner_db(
         tmp_path,
-        flavored_db,
         {"one": [("2019-01-01", "2019-06-30"), ("2019-07-01", "2019-12-31")]},
     )
 
@@ -183,14 +168,11 @@ def test_inventory_accepts_abutting_delivery_windows_of_the_same_owner(
     assert _inventory_worklist(tmp_path)["mapping_scope_needed"] == []
 
 
-def test_inventory_does_not_choose_an_owner_from_a_pooled_range(
-    tmp_path: Path, flavored_db: Path
-) -> None:
+def test_inventory_does_not_choose_an_owner_from_a_pooled_range(tmp_path: Path) -> None:
     """A range edition is record coverage, not per-column availability: every
     owner the range touches is mapped and none is chosen by its window."""
     db = _owner_db(
         tmp_path,
-        flavored_db,
         {"one": [("2019-01-01", "2019-12-31")], "two": [("2020-01-01", "2020-12-31")]},
     )
 
@@ -229,336 +211,6 @@ def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory
     assert (
         worklist["mapping_scope_needed"][0]["candidate_records"][0]["valid_to"]
         == "2018-12-31"
-    )
-
-
-def _resolved_records(tmp_path: Path, db: Path, columns: list[str]) -> list[dict]:
-    """Every resolution record `cmd_inventory` holds for `columns`, read through a
-    table of an edition (2017) that no window in these databases covers: each
-    column that resolves is refused with its records as `candidate_records`, and
-    a column that resolves to nothing goes to the unresolved worklist."""
-    with pytest.raises(SystemExit, match="Inventory not replaced"):
-        _run_inventory(tmp_path, db, "T2017", columns)
-    worklist = _inventory_worklist(tmp_path)
-    entries = worklist["mapping_scope_needed"]
-    if not entries:
-        assert [entry["column"] for entry in worklist["unresolved"]] == columns
-        return []
-    assert {entry["code"] for entry in entries} == {"no_covering_delivery_owner"}
-    return [record for entry in entries for record in entry["candidate_records"]]
-
-
-def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
-    tmp_path: Path, flavored_db: Path
-) -> None:
-    db = tmp_path / "alias-intersections.db"
-    shutil.copyfile(flavored_db, db)
-    conn = sqlite3.connect(db)
-    conn.execute(f"DELETE FROM variable_state WHERE variable_id={T_KOLUMN_ID}")
-    conn.executemany(
-        "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
-        "valid_from, valid_to, data_type, delivery_column_name) "
-        f"VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), {T_KOLUMN_ID}, {VARIANT_ID}, ?, ?, 'varchar', ?)",
-        [
-            ("2018-01-01", "2018-12-31", "Earlier"),
-            ("2019-01-01", "2019-06-30", "Current"),
-            ("2019-07-01", "2019-12-31", "Current"),
-            ("2020-01-01", "2020-12-31", "Current"),
-        ],
-    )
-    conn.executemany(
-        "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-        "delivery_column_name, valid_from, valid_to, column_metadata) "
-        f"VALUES ({T_KOLUMN_ID}, {VARIANT_ID}, ?, ?, ?, 'per_column')",
-        [
-            ("Earlier", "2019-01-01", "2020-12-31"),
-            ("Current", "2019-01-01", "2019-12-31"),
-        ],
-    )
-    conn.commit()
-    conn.close()
-
-    # No positive current-column backing in 2020: the spanning source alias
-    # must not create a temporal hull into that year.
-    with pytest.raises(SystemExit, match="Inventory not replaced"):
-        _run_inventory(tmp_path, db, "T2020", ["Earlier"])
-
-    (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
-    assert entry["code"] == "no_covering_delivery_owner"
-    assert [(r["valid_from"], r["valid_to"]) for r in entry["candidate_records"]] == [
-        ("2018-01-01", "2018-12-31"),
-        ("2019-01-01", "2019-06-30"),
-        ("2019-07-01", "2019-12-31"),
-    ]
-
-
-@pytest.mark.parametrize(
-    ("provenance", "mode", "start", "end", "expected"),
-    [
-        (
-            "reviewed alias",
-            "shared",
-            "2019-03-01",
-            "2019-08-31",
-            [("2019-03-01", "2019-08-31")],
-        ),
-        (None, "shared", "2019-03-01", "2019-08-31", []),
-        ("reviewed alias", "shared", "2018-01-01", "2020-12-31", []),
-        (
-            "reviewed alias",
-            "per_column",
-            "2018-01-01",
-            "2020-12-31",
-            [("2019-01-01", "2019-12-31")],
-        ),
-    ],
-)
-def test_inventory_curated_alias_needs_no_base_column_window(
-    tmp_path: Path,
-    flavored_db: Path,
-    provenance: str | None,
-    mode: str,
-    start: str,
-    end: str,
-    expected: list[tuple[str, str]],
-) -> None:
-    db = tmp_path / "additive-alias.db"
-    shutil.copyfile(flavored_db, db)
-    with closing(sqlite3.connect(db, autocommit=True)) as conn:
-        conn.execute(
-            "UPDATE variable_state SET valid_from='2019-01-01', "
-            f"valid_to='2019-12-31' WHERE variable_id={T_KOLUMN_ID}"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-            "delivery_column_name, valid_from, valid_to, provenance, column_metadata) "
-            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'Historic',?,?,?,?)",
-            (start, end, provenance, mode),
-        )
-
-    records = _resolved_records(tmp_path, db, ["Historic"])
-
-    assert [(r["valid_from"], r["valid_to"]) for r in records] == expected
-
-
-@pytest.mark.parametrize("curated_backing", [False, True])
-def test_inventory_shared_alias_cannot_use_invalid_or_curated_source_backing(
-    tmp_path: Path,
-    flavored_db: Path,
-    curated_backing: bool,
-) -> None:
-    db = tmp_path / "source-alias-guards.db"
-    shutil.copyfile(flavored_db, db)
-    with closing(sqlite3.connect(db, autocommit=True)) as conn:
-        conn.execute(
-            "UPDATE variable_state SET valid_from='2019-01-01', "
-            f"valid_to='2019-12-31' WHERE variable_id={T_KOLUMN_ID}"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-            "delivery_column_name, valid_from, valid_to) "
-            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'Historic','2019-03-01','2019-08-31')"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-            "delivery_column_name, valid_from, valid_to, provenance) "
-            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'T_kolumn',?,?,?)",
-            (
-                "2019-01-01" if curated_backing else "2018-01-01",
-                "2019-12-31" if curated_backing else "2020-12-31",
-                "curated base" if curated_backing else None,
-            ),
-        )
-
-    assert _resolved_records(tmp_path, db, ["Historic"]) == []
-
-
-@pytest.mark.parametrize(
-    "case",
-    ["source_replacement", "curated_additive", "source_no_base", "year_independent"],
-)
-def test_inventory_column_windows_preserve_source_and_curated_scope(
-    tmp_path: Path,
-    flavored_db: Path,
-    case: str,
-) -> None:
-    db = tmp_path / "public-resolution-parity.db"
-    shutil.copyfile(flavored_db, db)
-    with closing(sqlite3.connect(db, autocommit=True)) as conn:
-        conn.execute(
-            "UPDATE variable_state SET valid_from='2019-01-01', "
-            f"valid_to='2019-12-31' WHERE variable_id={T_KOLUMN_ID}"
-        )
-        if case == "year_independent":
-            conn.execute(
-                "UPDATE variable_state SET period_scope='year_independent', "
-                f"valid_from=NULL,valid_to=NULL WHERE variable_id={T_KOLUMN_ID}"
-            )
-        if case in {"source_replacement", "year_independent"}:
-            conn.execute(
-                "INSERT INTO variable_alias_window (variable_id,register_variant_id, "
-                "delivery_column_name,valid_from,valid_to) "
-                f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'T_kolumn','2019-03-01','2019-08-31')"
-            )
-        conn.execute(
-            "INSERT INTO variable_alias_window (variable_id,register_variant_id, "
-            "delivery_column_name,valid_from,valid_to,provenance) "
-            f"VALUES ({T_KOLUMN_ID},{VARIANT_ID},'Historic','2019-03-01','2019-08-31',?)",
-            ("reviewed alias" if case == "curated_additive" else None,),
-        )
-    expected = {
-        "source_replacement": {
-            ("T_kolumn", "2019-03-01", "2019-08-31", "intervals"),
-            ("Historic", "2019-03-01", "2019-08-31", "intervals"),
-        },
-        "curated_additive": {
-            ("T_kolumn", "2019-01-01", "2019-12-31", "intervals"),
-            ("Historic", "2019-03-01", "2019-08-31", "intervals"),
-        },
-        "source_no_base": {("T_kolumn", "2019-01-01", "2019-12-31", "intervals")},
-        "year_independent": {("T_kolumn", None, None, "year_independent")},
-    }[case]
-
-    records = _resolved_records(tmp_path, db, ["Historic", "T_kolumn"])
-
-    actual = {
-        (r["col"], r["valid_from"], r["valid_to"], r["period_scope"])
-        for r in records
-        if r["vslug"] == "t-kolumn"
-    }
-    assert actual == expected
-    if case == "source_replacement":
-        assert {r[1:3] for r in actual} == {("2019-03-01", "2019-08-31")}
-
-
-def _case_twin_db(tmp_path: Path, flavored_db: Path, windows: tuple[str, ...]) -> Path:
-    """A copy of the flavored DB where `t-kolumn` (state spelling `T_kolumn`) is
-    co-delivered under `windows`, spellings that differ only in case."""
-    db = tmp_path / "case-twins.db"
-    shutil.copyfile(flavored_db, db)
-    with closing(sqlite3.connect(db, autocommit=True)) as conn:
-        conn.executemany(
-            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-            "delivery_column_name, valid_from, valid_to) "
-            f"VALUES ({T_KOLUMN_ID}, {VARIANT_ID}, ?, '0001-01-01', '9999-12-31')",
-            [(window,) for window in windows],
-        )
-        # The generator reads the derived `resolver_column` universe, as the
-        # holdings compiler does, so re-derive it over the edited core rows.
-        derive_states(conn)
-    return db
-
-
-@pytest.mark.parametrize(
-    ("physical", "expected"),
-    [
-        ("T_KOLUMN", "T_KOLUMN"),
-        ("P1105_LopNr_T_KOLUMN", "T_KOLUMN"),
-        ("t_kolumn", "T_kolumn"),
-    ],
-    ids=["physical-literal", "lopnr-physical-literal", "representative"],
-)
-def test_inventory_emits_one_mapping_for_case_only_twin_spellings(
-    tmp_path: Path, flavored_db: Path, physical: str, expected: str
-) -> None:
-    """Case-only twins fold to one canonical triple at holdings compilation, so
-    the generator emits one mapping: the physical literal when it is one of the
-    twins, otherwise the representative (state) spelling (#1170)."""
-    db = _case_twin_db(tmp_path, flavored_db, ("T_kolumn", "T_KOLUMN"))
-
-    steward = _run_inventory(tmp_path, db, "T2019", [physical])
-
-    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
-    assert [(str(m.variable), m.representation) for m in column.mappings] == [
-        ("inera/bestallda-prover/t-kolumn", expected)
-    ]
-
-
-def test_inventory_curated_mapping_wins_among_case_only_twins(
-    tmp_path: Path, flavored_db: Path
-) -> None:
-    """A reviewed mapping decision's spelling outranks the physical literal:
-    the fold never silently replaces a curated representation."""
-    db = _case_twin_db(tmp_path, flavored_db, ("T_kolumn", "T_KOLUMN"))
-    decisions = (
-        '[[column]]\ncolumn = "T_KOLUMN"\n'
-        'mappings = [{ register_variant = "inera/bestallda-prover/_default", '
-        'variable = "inera/bestallda-prover/t-kolumn", representation = "T_kolumn" }]\n'
-        'reason = "reviewed spelling"\n'
-    )
-
-    steward = _run_inventory(tmp_path, db, "T2019", ["T_KOLUMN"], decisions=decisions)
-
-    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
-    assert [(str(m.variable), m.representation) for m in column.mappings] == [
-        ("inera/bestallda-prover/t-kolumn", "T_kolumn")
-    ]
-
-
-@pytest.mark.parametrize("scope", ["variant", "owner"])
-def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
-    tmp_path: Path, scope: str
-) -> None:
-    """Spellings that differ only in case under different variants, or under
-    different owners, are separate coordinates and each keep their mapping."""
-    if scope == "variant":
-        source = (
-            FLAVORED_TOML.replace(
-                '  key = "t-kolumn"\n',
-                '  key = "t-kolumn"\n  variants = ["_default"]\n',
-            )
-            + variant_block("andra")
-            + owner_block("t-kolumn", "T_KOLUMN", variants=("andra",), name="T_kolumn")
-        )
-        table = "T2019"
-        series = {
-            "variants": (
-                "inera/bestallda-prover/_default",
-                "inera/bestallda-prover/andra",
-            )
-        }
-        expected = [
-            ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
-            ("inera/bestallda-prover/andra", "t-kolumn", "T_KOLUMN"),
-        ]
-    else:
-        source = FLAVORED_TOML + owner_block(
-            "annan", "T_KOLUMN", ("2020", "2020"), name="Annan"
-        )
-        table = "T_pooled"
-        series = {"edition": "{ from = 2019, to = 2020 }"}
-        expected = [
-            ("inera/bestallda-prover/_default", "annan", "T_KOLUMN"),
-            ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
-        ]
-    db = write_flavored_db(tmp_path / "case-scopes", source)
-
-    steward = _run_inventory(tmp_path, db, table, ["T_KOLUMN"], **series)
-
-    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
-    assert (
-        sorted(
-            (m.register_variant, m.variable.rsplit("/", 1)[1], m.representation)
-            for m in column.mappings
-        )
-        == expected
-    )
-
-
-def test_inventory_refuses_case_only_twins_without_physical_or_representative(
-    tmp_path: Path, flavored_db: Path
-) -> None:
-    """With neither the physical literal nor the representative spelling among
-    the twins, no spelling is chosen: the column goes to the worklist."""
-    db = _case_twin_db(tmp_path, flavored_db, ("T_KOLUMN", "t_KOLUMN"))
-
-    with pytest.raises(SystemExit, match="Inventory not replaced"):
-        _run_inventory(tmp_path, db, "T2019", ["t_kolumn"])
-
-    (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
-    assert (entry["column"], entry["code"]) == (
-        "t_kolumn",
-        "case_twin_without_physical_or_representative_literal",
     )
 
 
@@ -605,7 +257,6 @@ _MIXED = {
 )
 def test_inventory_maps_a_column_by_the_union_of_split_variants(
     tmp_path: Path,
-    flavored_db: Path,
     successor_from: str,
     beside: str | None,
     refusal: str | None,
@@ -644,82 +295,45 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     beside a window is judged a competitor or dropped, or if the plain mapping's
     renamed-column competitor check is skipped or clipped to the other mapping's
     window."""
-    db = tmp_path / "split.db"
-    shutil.copyfile(flavored_db, db)
-    with closing(sqlite3.connect(db, autocommit=True)) as conn:
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id, "
-            f"name, slug) VALUES (905, {REGISTER_ID}, 'Efter', 'efter')"
+    lopnr = [
+        global_state(
+            "Lopnr", "2002-01-01", "9999-12-31" if beside in _MIXED else "2018-09-30"
+        ),
+        global_state("Lopnr", successor_from, variant="efter"),
+    ]
+    if beside in _THIRD_VARIANT:
+        lopnr.append(
+            global_state(
+                "Lopnr",
+                None if beside == "independent" else "1990-01-01",
+                "2001-12-31" if beside == "historical" else "9999-12-31",
+                variant="tidig",
+            )
         )
-        conn.execute(
-            "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-            f"name, source_name) VALUES (920, {REGISTER_ID}, 'lopnr', 'lopnr', "
-            "'Lopnr', 'Lopnr')"
+    # Co-delivered spellings: each alias window, the state's own included.
+    aliases = (
+        (
+            global_alias("Lopnr", alias_window("2002-01-01", "2018-09-30")),
+            global_alias("LOPNR", alias_window("2018-01-01", "2018-06-30")),
         )
-        for variant, start, end in (
-            (
-                VARIANT_ID,
-                "2002-01-01",
-                "9999-12-31" if beside in _MIXED else "2018-09-30",
-            ),
-            (905, successor_from, "9999-12-31"),
-        ):
-            conn.execute(
-                "INSERT INTO variable_state (state_id, variable_id, "
-                "register_variant_id, valid_from, valid_to, data_type, "
-                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
-                "+ 1 FROM variable_state), 920, ?, ?, ?, 'varchar', 'Lopnr')",
-                (variant, start, end),
-            )
-        if beside == "alias":
-            # Co-delivered spellings: each alias window, the state's own included.
-            conn.executemany(
-                f"INSERT INTO variable_alias VALUES (920, {VARIANT_ID}, ?)",
-                [("Lopnr",), ("LOPNR",)],
-            )
-            conn.executemany(
-                "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-                f"delivery_column_name, valid_from, valid_to) VALUES (920, {VARIANT_ID}, ?, ?, ?)",
-                [
-                    ("Lopnr", "2002-01-01", "2018-09-30"),
-                    ("LOPNR", "2018-01-01", "2018-06-30"),
-                ],
-            )
-        if beside in _THIRD_VARIANT:
-            conn.execute(
-                "INSERT INTO register_variant (register_variant_id, register_id, "
-                f"name, slug) VALUES (906, {REGISTER_ID}, 'Tidig', 'tidig')"
-            )
-            conn.execute(
-                "INSERT INTO variable_state (state_id, variable_id, "
-                "register_variant_id, valid_from, valid_to, data_type, "
-                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
-                "+ 1 FROM variable_state), 920, 906, '1990-01-01', ?, 'varchar', "
-                "'Lopnr')",
-                ("2001-12-31" if beside == "historical" else "9999-12-31",),
-            )
-        if beside == "independent":
-            conn.execute(
-                "UPDATE variable_state SET period_scope='year_independent', "
-                "valid_from=NULL, valid_to=NULL WHERE register_variant_id=906"
-            )
-        if beside in _COMPETITOR:
-            conn.execute(
-                "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-                f"name, source_name) VALUES (921, {REGISTER_ID}, 'annan', 'annan', "
-                "'Annan', 'Annan')"
-            )
-            conn.execute(
-                "INSERT INTO variable_state (state_id, variable_id, "
-                "register_variant_id, valid_from, valid_to, data_type, "
-                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
-                f"+ 1 FROM variable_state), 921, {VARIANT_ID}, ?, ?, 'varchar', ?)",
-                _COMPETITOR[beside],
-            )
-    variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
+        if beside == "alias"
+        else ()
+    )
+    others = []
+    if beside in _COMPETITOR:
+        start, end, column = _COMPETITOR[beside]
+        others.append(
+            global_variable("annan", global_state(column, start, end), name="Annan")
+        )
+    db = write_global_db(
+        tmp_path / "split",
+        global_variable("lopnr", *lopnr, aliases=aliases, name="Lopnr"),
+        *others,
+    )
+    variants = ("scb/bestallda-prover/_default", "scb/bestallda-prover/efter")
     # A third admissible variant the decision does not map.
     admissible = (
-        (*variants, "inera/bestallda-prover/tidig")
+        (*variants, "scb/bestallda-prover/tidig")
         if beside in _THIRD_VARIANT
         else variants
     )
@@ -756,7 +370,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         f'[[column]]\ncolumn = "{physical}"\nmappings = ['
         + ", ".join(
             f'{{ register_variant = "{variant}", '
-            'variable = "inera/bestallda-prover/lopnr", representation = "Lopnr"'
+            'variable = "scb/bestallda-prover/lopnr", representation = "Lopnr"'
             + (
                 f', window = {{ from = "{window["from"]}", to = "{window["to"]}" }}'
                 if window
@@ -794,6 +408,6 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         )
         for m in column.mappings
     ) == [
-        (variants[0], "inera/bestallda-prover/lopnr", windows[0]),
-        (variants[1], "inera/bestallda-prover/lopnr", windows[1]),
+        (variants[0], "scb/bestallda-prover/lopnr", windows[0]),
+        (variants[1], "scb/bestallda-prover/lopnr", windows[1]),
     ]
