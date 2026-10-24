@@ -288,6 +288,8 @@ class RegisterVariantSlug(_CurationModel):
     slug: str
     display_group: str | None = None
     description: str | None = None
+    # Only an authored SCB variant (canonical-band RegVarID) names itself (#1855).
+    name: str | None = None
     panel_entity_key: str | list[str] | None = None
     panel_time_key: str | list[str] | None = None
     panel_time_grain: str | None = None
@@ -339,6 +341,10 @@ class ErrataDeliveredEntry(_CurationModel):
     noted: str
     upstream: str | None = None
     native_variable_id: int | None = None
+    # Opt-in (#1855): each added edition the donor variant documents under the
+    # same edition name carries the donor's coding there. Other editions stay
+    # uncoded. Requires `donor_variant`.
+    donor_coding: bool = False
     # Curated physical storage type of the delivered column. It takes the place
     # storage evidence had: widened with documented Datatyp, or alone for an
     # additional physical column. Absent leaves only the documented type.
@@ -358,6 +364,8 @@ class ErrataDeliveredEntry(_CurationModel):
             and self.native_variable_id is None
         ):
             raise ValueError("additional physical delivery requires native_variable_id")
+        if self.donor_coding and self.donor_variant is None:
+            raise ValueError("donor_coding requires donor_variant")
         return self
 
 

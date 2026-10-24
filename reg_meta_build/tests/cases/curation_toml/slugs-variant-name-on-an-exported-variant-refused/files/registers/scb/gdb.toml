@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "gdb"
+native_id = "70"
+
+[[variant]]
+native_id = "70.1380"
+slug = "adresser-fastigheter"
+
+[[variant]]
+native_id = "70.1381"
+slug = "individer"
+name = "Individer"

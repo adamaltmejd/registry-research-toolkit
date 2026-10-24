@@ -31,7 +31,7 @@ from reg_core_py import fold_search
 
 from ._curation import curation_error, display_path, repo_curation_dir
 from .errors import RegMetaError
-from .id import is_canonical_scb
+from .id import is_canonical_scb, mint_canonical_scb
 from .slug_grammar import derive_variable_slug, validate_slug
 
 if TYPE_CHECKING:
@@ -97,6 +97,11 @@ class SlugEntry:
     # Registervariantbeskrivning, which a curated split variant only inherits
     # from its parent (#1708).
     description: str | None = None
+    # The name of an authored SCB variant (#1855): one SCB delivers that its
+    # Registerinformation export has no row for, so no source supplies a name.
+    # Set exactly when the RegVarID is in the canonical-SCB band
+    # (`authored_scb_variant`).
+    name: str | None = None
     # A4.4c panel-shape coordinates (register_variant only). MUTABLE — these do
     # NOT enter the slug snapshot (snapshot_payload copies only `slug`).
     # `panel_entity_key`: a bare variable-slug str (simple) or a tuple of
@@ -248,6 +253,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
             | {
                 "display_group",
                 "description",
+                "name",
                 "panel_entity_key",
                 "panel_time_key",
                 "panel_time_grain",
@@ -351,6 +357,7 @@ def _validate_entry(
             f"{kind}.{source_id!r}: `description` must be a non-blank, trimmed string.",
             "Write the description as plain text or remove it.",
         )
+    name = _validate_authored_variant_name(kind, source_id, provider, entry)
     # A4.4c panel-shape fields (register_variant only — the unknown-field guard
     # above already rejects them on other kinds via `_allowed_fields`).
     panel_entity_key = _validate_panel_entity_key(
@@ -370,11 +377,65 @@ def _validate_entry(
         provider=provider,
         display_group=display_group,
         description=description,
+        name=name,
         panel_entity_key=panel_entity_key,
         panel_time_key=panel_time_key,
         panel_time_grain=panel_time_grain,
         deprecated=deprecated_raw,
     )
+
+
+def authored_scb_variant(provider: str | None, source_id: str) -> bool:
+    """True iff ``source_id`` names an authored SCB variant (#1855).
+
+    SCB delivers some registers at grains its Registerinformation export has no
+    variant for (GDB at person, workplace and school grain). Curation declares
+    such a variant under the exported register with a RegVarID in the
+    canonical-SCB band, which no exported RegVarID reaches, so it can never
+    collide with a native variant. A split variant (three parts) is not one.
+    """
+    parsed = _parse_variant_id(source_id)
+    return provider == "scb" and len(parsed) == 2 and is_canonical_scb(parsed[1])
+
+
+def _validate_authored_variant_name(
+    kind: EntityKind, source_id: str, provider: str, entry: dict[str, Any]
+) -> str | None:
+    """An authored SCB variant names itself; every other variant takes its
+    name from its source."""
+    name = entry.get("name")
+    if name is not None and (
+        not isinstance(name, str) or not name.strip() or name != name.strip()
+    ):
+        raise curation_error(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `name` must be a non-blank, trimmed string.",
+            "Write the name as plain text.",
+        )
+    authored = kind == "register_variant" and authored_scb_variant(provider, source_id)
+    if authored and name is None:
+        raise curation_error(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: a canonical-band RegVarID declares a variant "
+            "the SCB export lacks, which needs a curated `name`.",
+            "Add the variant's `name`, or use the exported RegVarID.",
+        )
+    if name is not None and not authored:
+        register = source_id.partition(".")[0]
+        hint = (
+            f" ({register}.{mint_canonical_scb('scb', register, slug)} mints one "
+            "from this entry's slug)"
+            if provider == "scb" and isinstance(slug := entry.get("slug"), str)
+            else ""
+        )
+        raise curation_error(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: only an SCB variant the export lacks takes a "
+            "curated `name`; this one takes its name from its source.",
+            "Remove `name`, or declare the SCB variant the export lacks with a "
+            f"canonical-band RegVarID{hint}.",
+        )
+    return name
 
 
 def _validate_panel_slug_ref(

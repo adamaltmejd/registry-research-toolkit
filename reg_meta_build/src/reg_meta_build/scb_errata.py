@@ -84,6 +84,9 @@ _VERSION_NATIVE_FIX = (
     "entry; errata entries name the native edition directly."
 )
 _DEFAULT_DELIVERED_CLASS = "omitted-column-in-version"
+# The coding declarations a `donor_coding` addition copies with the donor's
+# coding records, so the copy is checked against the donor it names.
+_DONOR_CODING_FIELDS = ("classification_declared", "value_set_declared")
 _RESERVED_CORRECTION_CLASSES = frozenset(
     {"scoped-attributions", "overlapping-attributions"}
 )
@@ -132,6 +135,8 @@ class ErrataDelivered:
     provenance: str
     native_variable_id: int | None = None
     donor_variant_id: int | None = None
+    # Carry the donor's coding into each added edition it documents (#1855).
+    donor_coding: bool = False
 
 
 # The `[[column]]` fields that say WHERE the variable is delivered rather
@@ -438,6 +443,7 @@ def resolve_scb_errata(
                 provenance,
                 cast("int | None", values.get("native_variable_id")),
                 donor_variant_id,
+                values.get("donor_coding") is True,
             )
         )
 
@@ -864,16 +870,27 @@ def edition_bindings(
     versions: tuple[ErrataVersion, ...],
     *,
     source_file: str,
+    anchor: SourceRecord | None = None,
+    variant_key: NativeKey | None = None,
 ) -> tuple[ErrataEditionBinding, ...]:
     """Bind native and accepted missing editions once for a complete variant.
 
     ``source_file`` is the register file whose errata need the bindings; a
-    refusal names it.
+    refusal names it. An authored variant (#1855) has no records: its declared
+    editions are supported by the register ``anchor`` under its ``variant_key``.
     """
-    if not records:
-        raise ValueError("errata edition bindings require a native variant slice")
-    variant_key = native_variant_key(records[0])
+    if (anchor is None) != (variant_key is None) or (anchor is None) != bool(records):
+        raise ValueError(
+            "errata edition bindings require a native variant slice, or an "
+            "authored variant's key and register anchor"
+        )
+    variant_key = variant_key or native_variant_key(records[0])
     assert variant_key is not None
+    declared_support = (
+        (record_ref(anchor),)
+        if anchor is not None
+        else tuple(sorted({record_ref(r) for r in records}, key=str))
+    )
     by_id: dict[int, ErrataEditionBinding] = {}
     for record in sorted(records, key=lambda item: str(record_ref(item))):
         native_id = record.subject.native.edition_id
@@ -928,7 +945,7 @@ def edition_bindings(
                 name=version.name,
                 edition_scope=edition_scope,
                 edition_period_scope=period_scope,
-                support=tuple(sorted({record_ref(r) for r in records}, key=str)),
+                support=declared_support,
             )
         )
     return tuple(sorted(bindings, key=lambda item: (item.name, repr(item.key))))
@@ -944,7 +961,15 @@ def _variant_records(
     register_id: int,
     variant_id: int,
     editions: tuple[ErrataEditionBinding, ...],
+    anchor: SourceRecord | None = None,
 ) -> tuple[SourceRecordRef, ...]:
+    if anchor is not None:
+        # An authored variant has no records; its editions rest on the anchor.
+        if records or anchor.subject.native.register_id != register_id:
+            raise ValueError("an authored variant takes one anchor of its register")
+        if any(edition.support != (record_ref(anchor),) for edition in editions):
+            raise ValueError("authored variant editions rest on the register anchor")
+        return ()
     if not records or len({record.source for record in records}) != 1:
         raise ValueError("conversion requires a complete single-source variant slice")
     if any(
@@ -976,6 +1001,11 @@ class ErrataVariantContext:
     register_id: int
     variant_id: int
     editions: tuple[ErrataEditionBinding, ...]
+    # An authored variant (#1855) has no records of its own. One record of its
+    # register, the least ref, establishes the native register coordinate and
+    # supports its declared editions; it is never a column or variable of the
+    # variant.
+    anchor: SourceRecord | None = None
     by_column: Mapping[str, tuple[SourceRecord, ...]] = field(init=False, repr=False)
     by_variable: Mapping[int | None, tuple[SourceRecord, ...]] = field(
         init=False, repr=False
@@ -988,7 +1018,7 @@ class ErrataVariantContext:
         object.__setattr__(self, "records", tuple(self.records))
         object.__setattr__(self, "editions", tuple(self.editions))
         refs = _variant_records(
-            self.records, self.register_id, self.variant_id, self.editions
+            self.records, self.register_id, self.variant_id, self.editions, self.anchor
         )
         columns: dict[str, list[SourceRecord]] = {}
         variables: dict[int | None, list[SourceRecord]] = {}
@@ -999,6 +1029,8 @@ class ErrataVariantContext:
                 columns.setdefault(fold_column(column), []).append(record)
             variables.setdefault(record.subject.native.variable_id, []).append(record)
             members.setdefault(ref, []).append((position, record))
+        if self.anchor is not None:
+            members[record_ref(self.anchor)] = [(0, self.anchor)]
         for name, values in (
             ("by_column", columns),
             ("by_variable", variables),
@@ -1027,10 +1059,31 @@ class ErrataVariantContext:
             )
         )
 
+    @property
+    def variant_key(self) -> NativeKey:
+        if self.anchor is None:
+            key = native_variant_key(self.records[0])
+        else:
+            register = source_register_key(self.anchor)
+            assert register is not None
+            key = (*register, "variant", "native-int", self.variant_id)
+        assert key is not None
+        return key
+
+    @property
+    def register_key(self) -> NativeKey:
+        key = source_register_key(self.anchor or self.records[0])
+        assert key is not None
+        return key
+
+    @property
+    def source(self) -> str:
+        return (self.anchor or self.records[0]).source
+
     @functools.cached_property
     def complete_expectations(self) -> tuple[RecordExpectation, ...]:
         return capture_expectations(
-            self.records,
+            self.records if self.anchor is None else (self.anchor,),
             fields=tuple(SourceFields.model_fields),
             parents=True,
         )
@@ -1038,6 +1091,8 @@ class ErrataVariantContext:
     @functools.cached_property
     def least_ref(self) -> SourceRecordRef:
         """Cached: every undated column entry of the variant anchors on it."""
+        if self.anchor is not None:
+            return record_ref(self.anchor)
         return min((record_ref(record) for record in self.records), key=str)
 
     def expectations_for_refs(
@@ -1073,11 +1128,12 @@ def convert_delivered_entry(
     context.require_coordinates(entry.register_id, entry.register_variant_id)
     if (entry.donor_variant_id is None) != (donor_context is None):
         raise ValueError("donor_variant requires its source context")
+    if entry.donor_coding and donor_context is None:
+        raise ValueError("donor_coding requires donor_variant")
     if additional_physical_column and entry.native_variable_id is None:
         raise ValueError("additional physical delivery requires native_variable_id")
-    records, editions = context.records, context.editions
-    target_variant = native_variant_key(records[0])
-    assert target_variant is not None
+    editions = context.editions
+    target_variant = context.variant_key
     for name in entry.versions:
         if not any(edition.name == name for edition in editions):
             raise ValueError(f"missing edition conversion binding: {name!r}")
@@ -1184,7 +1240,7 @@ def convert_delivered_entry(
         guards.append(
             PeerGuard(
                 guard_id=f"{case_id}:target-column-absent",
-                source=records[0].source,
+                source=context.source,
                 native=NativeCoordinates(
                     register_id=entry.register_id,
                     register_variant_id=entry.register_variant_id,
@@ -1199,7 +1255,7 @@ def convert_delivered_entry(
         guards.append(
             PeerGuard(
                 guard_id=f"{case_id}:complete-native-family:{family_context.variant_id}",
-                source=family_context.records[0].source,
+                source=family_context.source,
                 native=NativeCoordinates(
                     register_id=entry.register_id,
                     register_variant_id=family_context.variant_id,
@@ -1229,7 +1285,7 @@ def convert_delivered_entry(
         guards.append(
             PeerGuard(
                 guard_id=f"{case_id}:{edition.name}:variable:{native.variable_id}",
-                source=records[0].source,
+                source=context.source,
                 native=NativeCoordinates(
                     register_id=entry.register_id,
                     register_variant_id=entry.register_variant_id,
@@ -1303,6 +1359,30 @@ def convert_delivered_entry(
                     )
             continue
         targets.update(references)
+        # The donor's documented row at the same edition name lends its coding
+        # (#1855); an edition the donor does not document stays uncoded.
+        coding_donor = None
+        if entry.donor_coding:
+            same_edition = {
+                record_ref(record)
+                for record in candidates
+                if record.original_period_text == edition.name
+            }
+            if len(same_edition) > 1:
+                blockers.append(f"ambiguous_donor_coding:{edition.name}")
+                continue
+            coding_donor = next(iter(same_edition), None)
+        donor_fields = (
+            {
+                name: getattr(
+                    documented_context.records_for_refs({coding_donor})[0].fields,
+                    name,
+                )
+                for name in _DONOR_CODING_FIELDS
+            }
+            if coding_donor is not None
+            else {}
+        )
         effects.append(
             CuratedOccurrenceAddition(
                 occurrence_key=f"{case_id}:{canonical_sha256([list(edition.key), entry.column])}",
@@ -1317,7 +1397,11 @@ def convert_delivered_entry(
                     if inferred_type is not None
                     else None,
                     measurement_unit=value_field(unit) if unit is not None else None,
+                    **donor_fields,
                 ),
+                donor=coding_donor,
+                copied_fields=_DONOR_CODING_FIELDS if coding_donor is not None else (),
+                copy_coding=coding_donor is not None,
                 edition_scope=edition.edition_scope,
                 edition_period_scope=edition.edition_period_scope,
                 # Edition support guards the date assertion; unrelated variables
@@ -1358,7 +1442,13 @@ def convert_delivered_entry(
     # Capturing flags/coding guards them; it does not copy them across editions.
     expected = context.expectations_for_refs(required)
     if donor_context is not None:
-        expected += donor_context.expectations_for_refs(required)
+        # An authored target's register anchor can be a donor record too.
+        own = {item.ref for item in expected}
+        expected += tuple(
+            item
+            for item in donor_context.expectations_for_refs(required)
+            if item.ref not in own
+        )
     case = CurationCase(
         case_id=case_id,
         targets=tuple(item for item in expected if item.ref in targets),
@@ -1516,7 +1606,7 @@ def convert_column_entry(
     if not declared_flags <= {"is_identifier", "is_sensitive"}:
         raise ValueError("declared_flags must name original boolean declaration keys")
     context.require_coordinates(entry.register_id, entry.register_variant_id)
-    records, editions = context.records, context.editions
+    editions = context.editions
     names = set(entry.versions or ())
     missing = names - {edition.name for edition in editions}
     if missing or entry.versions == ():
@@ -1556,9 +1646,7 @@ def convert_column_entry(
                 expected_members=(ref,),
             )
         )
-    register = source_register_key(records[0])
-    variant = native_variant_key(records[0])
-    assert register is not None and variant is not None
+    register, variant = context.register_key, context.variant_key
     variable = (*register, "declared-column", fold_column(entry.column))
     provenance = entry.provenance
     fields = declared_column_fields(entry, declared_flags, curated_unit)
