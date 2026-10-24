@@ -971,11 +971,11 @@ without a tree, so a client fetches a subtree only when a reader opens it. A fil
 
 **A variable concept group is one concept in one register.** It gathers everything a
 researcher looking for that concept in that register should find in one place: the
-variants that differ by unit, household definition, definition vintage or source, and
-the source's own components of the concept. To the user the group is the variable. They
-pick columns on the group page; the member variable pages are reference. A group never
-spans registers: disposable income in IoT and disposable income in LISA are two groups,
-and finding the concept across registers is a tag's job.
+variants that differ by unit, household definition, coexisting definitions or source,
+and the source's own components of the concept. To the user the group is the variable.
+They pick columns on the group page; the member variable pages are reference. A group
+never spans registers: disposable income in IoT and disposable income in LISA are two
+groups, and finding the concept across registers is a tag's job.
 
 Machine-folded families are the narrowest case of the same rule: month-suffixed families
 (`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
@@ -986,12 +986,15 @@ order key or a stats key. Picking on the group page adds member variables and th
 delivery columns to the order; the order never names the group. Identity-level folding
 by classification family was tried and dropped after 195 measured over-folds; because
 grouping is presentation, a wrong group is a cosmetic bug, not identity corruption. A
-variable or classification belongs to at most one group.
+variable or classification belongs to at most one variable group. Classification
+umbrella groups (`group:sun`, `group/class/<key>`) are exempt from the single-register
+rule: they gather classifications, which are not register-scoped.
 
 Classification vintages are not grouped: editions are a temporal succession, not a
-parallel facet. Curated classification umbrella groups (`group:sun`: the three SUN 2020
-dimensions plus the version-independent nivå aggregates) have no axes; their members are
-distinct classifications.
+parallel facet. Variable definition vintages that succeed each other are likewise not
+grouped as a facet (see the worked example). Curated classification umbrella groups
+(`group:sun`: the three SUN 2020 dimensions plus the version-independent nivå
+aggregates) have no axes; their members are distinct classifications.
 
 ### Group rubric
 
@@ -1009,10 +1012,12 @@ concept group is curated, any narrower group inside it (machine-folded or curate
 becomes part of it rather than sitting beside it.
 
 **Axes come from what this register's members vary on.** Name each axis by the variation
-(`enhet`, `hushallsbegrepp`, `kapitalvinst`, `definition`, `kalla`). Every member
-supplies every axis, with `na` where the axis does not apply. An axis that does not vary
-within the register is not declared, so the same concept can carry different axes in
-different registers.
+(`enhet`, `hushallsbegrepp`, `kapitalvinst`, `kalla`, and `definition` only where
+definitions coexist in the same years). Definition vintages that succeed one another are
+not an axis; they ride the period slider and `replaced_by`. Every member supplies every
+axis, with `na` where the axis does not apply. An axis that does not vary within the
+register is not declared, so the same concept can carry different axes in different
+registers.
 
 **Naming.** The key is the concept's slug, without unit, vintage or source qualifiers:
 `disponibel-inkomst`, not `disponibel-inkomst-familj-2004`. The label is the concept's
@@ -1029,10 +1034,12 @@ vocabulary and one membership table; a membership names exactly one register or 
 variable, and a variable membership can be starred with a one-line rationale. Tags are a
 discovery overlay and leave identity untouched.
 
-**Tags are search-only.** Search, MCP and the SPA use them to find and filter. A
-variable page never lists the other variables that share its tags. A group shows the
-union of its members' tags as its own labels, and untagged siblings inherit the group's
-tags as neutral memberships; that labels the group and lists no co-tagged variables.
+**Tags are search-only.** They are meant for search: finding variables by topic across
+registers. Tag search is not built yet (`ops/search.rs` has no tag arm and the SPA only
+displays tags); it is tracked in #1794's later steps. A variable page never lists the
+other variables that share its tags. A group shows the union of its members' tags as its
+own labels, and untagged siblings inherit the group's tags as neutral memberships; that
+labels the group and lists no co-tagged variables.
 
 **A tag is broad.** It names a topic a researcher types before knowing which register
 holds it (`income`, `transfers`, `employment`, `education`), and it has members in
@@ -1051,12 +1058,15 @@ deleted.
 Each register below gets one `disponibel-inkomst` group.
 
 - **IoT** already has it: 46 members, components included, axes `enhet`,
-  `hushallsbegrepp` and `kapitalvinst`. Membership stays. The members also vary by
-  definition vintage (`CDISP` and `CDISP04` share every coordinate), so the group gains
-  a `definition` axis.
+  `hushallsbegrepp` and `kapitalvinst`. Membership and axes stay. The 1991 and 2004
+  definitions (`CDISP` and `CDISP04` share every coordinate) are not an axis: the
+  vintage rides the period slider and `replaced_by` succession (see `iot.toml`).
 - **LISA** has none. The group takes the DispInk family: individual components, family,
   per consumption unit, individualised from family and household, with axes `enhet`,
-  `hushallsbegrepp` and `definition` (1991, 2004).
+  `hushallsbegrepp` and `definition` (1991, 2004). Unlike IoT, LISA keeps `definition`
+  as an axis: `DispInkKE` and its 2004 twin `DispInkKE04` are co-delivered in the same
+  years (SWECOV's Individ_2010 to Individ_2012), so the definitions coexist and are not
+  a succession.
 - **FASIT** has two machine-folded pairs, each a TRIF copy beside the FASIT-derived
   variable. The group absorbs both, adds the household, per-unit and
   alternating-residence variables, and declares a `kalla` axis (TRIF, FASIT). The weight
