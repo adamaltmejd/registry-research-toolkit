@@ -9,38 +9,21 @@
   box-shadow: var(--elevation-float);
 }
 
-.dialog {
+.body {
   display: flex;
   flex-direction: column;
   max-height: min(
     32rem,
     calc(100vh - var(--top-bar-height, 4rem) - var(--space-5))
   );
-  outline: none;
 }
 
-.field {
-  display: flex;
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--border);
-}
-.input {
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text);
-  font: inherit;
-}
-.input[data-focused] {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: var(--focus-ring);
-}
-.input::-webkit-search-cancel-button {
-  display: none;
+/* Below the narrow breakpoint the field it opens under takes the top bar's
+   width, and the palette takes the field's. */
+@media (max-width: 48rem) {
+  .popover {
+    width: var(--trigger-width);
+  }
 }
 
 /* One line of state above the list; gone when there is nothing to say. */

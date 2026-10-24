@@ -186,24 +186,25 @@ Rust server. Maintainers measure relevance with the repository's
 running `reg-meta serve`.
 
 The SPA surface is the command palette (`CommandPalette.tsx`), opened from the top-bar
-field with Enter or `Meta/Ctrl+K` and seeded with the field's text. It is a RAC
-`Autocomplete` over a `Menu` in a popover under the field, for codes, classifications
-and the app's places; registers and variables are the in-place filter's. It asks three
-arms (classifications, classification codes, register-local value sets; 5 hits each,
-debounced, from 2 characters) and lists the hits as a mixed list with type tags, after
-the places ranked by `rankFilter`; RAC's own filter is never used. A hit goes to its
-catalog page; a code, which has no page, goes to its defining classification or else to
-the first variable that uses it. There is no search route: a query is not a shareable
-URL (the `/search` page and its `?q=`/`?type=` state were removed in the React port).
-`api.ts` has `search(q, {limit?, type?, cursor?})` typed off the generated
-`api-types-rust.ts`. Global search does **not** render documentation results;
-documentation is reached from item pages via `DocMentionsPanel` and then the
-`/doc/<filename>` route (router `Route` union arm `{name:"doc",identifier}`), which
-renders `DocView.tsx`: title, register/variable/tags, a `source_url` link to the SCB
-source PDF (resolved from the curated map at doc-DB build, #372; None when uncurated)
-with `source_title` as label, and a bounded `excerpt`; 404 distinguishes "not ingested"
-vs "not found"; `snippet`/`excerpt` are rendered as TEXT, never
-`dangerouslySetInnerHTML`, and the full converted body is never fetched.
+field with Enter or `Meta/Ctrl+K`. The top bar's RAC `Autocomplete` wraps that field and
+a `Menu` in a non-modal popover under it, so the field is the palette's one input and
+its text the palette's query, for codes, classifications and the app's places; registers
+and variables are the in-place filter's. It asks three arms (classifications,
+classification codes, register-local value sets; 5 hits each, debounced, from 2
+characters) and lists the hits as a mixed list with type tags, after the places ranked
+by `rankFilter`; RAC's own filter is never used. A hit goes to its catalog page; a code,
+which has no page, goes to its defining classification or else to the first variable
+that uses it. There is no search route: a query is not a shareable URL (the `/search`
+page and its `?q=`/`?type=` state were removed in the React port). `api.ts` has
+`search(q, {limit?, type?, cursor?})` typed off the generated `api-types-rust.ts`.
+Global search does **not** render documentation results; documentation is reached from
+item pages via `DocMentionsPanel` and then the `/doc/<filename>` route (router `Route`
+union arm `{name:"doc",identifier}`), which renders `DocView.tsx`: title,
+register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
+curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
+and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
+`snippet`/`excerpt` are rendered as TEXT, never `dangerouslySetInnerHTML`, and the full
+converted body is never fetched.
 
 ## Docs library (the Rust server's `docs` operations)
 

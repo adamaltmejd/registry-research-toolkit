@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Input, SearchField } from "react-aria-components";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { Autocomplete, Input, SearchField } from "react-aria-components";
+import { flushSync } from "react-dom";
 import type { Steward } from "./api";
 import {
   browseFilter,
@@ -10,6 +11,7 @@ import { CommandPalette } from "./CommandPalette";
 import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import styles from "./TopBar.module.css";
+import { Button } from "./ui/Button";
 import type { WindowBounds } from "./window_bounds";
 
 interface Props {
@@ -56,11 +58,29 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const popover = useRef<HTMLElement>(null);
   const filter = useBrowseFilter();
   const matches = useBrowseMatches();
-  // The palette opens with the field's text at that moment; it never writes
-  // back to the filter.
-  const [palette, setPalette] = useState<{ seed: string } | null>(null);
+  const [palette, setPalette] = useState(false);
+  // The filter as it stood when the palette opened: choosing a row puts it
+  // back, so text typed for the palette does not stay on the browse columns.
+  const beforePalette = useRef("");
+  const openPalette = () => {
+    beforePalette.current = browseFilter.value;
+    setPalette(true);
+  };
+  // Below the narrow breakpoint the field is folded behind the "Search" button
+  // until it is opened; it stays open while it holds text, so an active filter
+  // is never hidden. Above the breakpoint CSS ignores this.
+  const [opened, setOpened] = useState(false);
+  const searchOpen = opened || filter !== "";
+
+  /** Unfold the field and move focus into it, in the user's own act. */
+  const openSearch = () => {
+    flushSync(() => setOpened(true));
+    input.current?.focus();
+  };
 
   useEffect(() => {
     const header = ref.current;
@@ -81,7 +101,12 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
 
   // ⌘K on macOS, Ctrl+K elsewhere, opens the palette from anywhere, seeded with
   // the bar's text; Shift+⌘K is a different chord. Focus moves to the bar first,
-  // so closing the palette returns it there.
+  // so closing the palette returns it there. With the palette already open it
+  // only refocuses, keeping the filter a chosen row restores.
+  const onCommandK = useEffectEvent(() => {
+    openSearch();
+    if (!palette) openPalette();
+  });
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() !== "k" || event.altKey || event.shiftKey) {
@@ -89,8 +114,7 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
       }
       if ((event.metaKey && mac) || (event.ctrlKey && !mac)) {
         event.preventDefault();
-        input.current?.focus();
-        setPalette({ seed: input.current?.value ?? "" });
+        onCommandK();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -118,6 +142,12 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
         return;
       }
       browseFilter.set("");
+      // Focus is elsewhere, so the emptied field folds too, and a palette
+      // still open under it closes with it. Backstop: the only route to an open
+      // palette here is a window blur, where relatedTarget is null and no
+      // pointerdown fires.
+      setPalette(false);
+      setOpened(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -127,7 +157,7 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
     <header ref={ref} className={styles.topBar}>
       {/* The row is the shell's width, so on a wide screen the banner stays
           over the detail pane's edge instead of the screen's. */}
-      <div className={styles.inner}>
+      <div className={styles.inner} data-search-open={searchOpen || undefined}>
         <a href="/" className={styles.brand}>
           <span className={styles.brandName}>{brand}</span>
           {/* The steward's logo (`stewards/<catalog>/logo.svg`, also the
@@ -143,52 +173,120 @@ export function TopBar({ steward, regMetaVersion, bounds }: Props) {
           />
         </a>
         {/* Text here filters both browse columns in place, never the open
-          page; Escape, here or anywhere on the page, clears it and gives back
-          the collapse state. Enter opens the palette with the text,
-          the way to codes, classifications and the rest of the catalog. */}
-        <SearchField
-          ref={field}
-          aria-label="Search registers, variables, codes"
-          className={styles.search}
-          value={filter}
-          onChange={browseFilter.set}
-          onSubmit={(text) => setPalette({ seed: text })}
-        >
-          <Input
-            ref={input}
-            className={styles.searchInput}
-            placeholder="Search registers, variables, codes…"
-            autoComplete="off"
-          />
-          {filter === "" ? (
-            <kbd className={styles.hint} aria-hidden="true">
-              {commandShortcutHint(mac)}
-            </kbd>
-          ) : (
-            <span className={styles.hint}>
-              {/* The count is a live region that exists with the text, so a
-                change in it is announced. */}
-              <span className={styles.count} aria-live="polite">
-                {matches === null
-                  ? ""
-                  : matches === 1
-                    ? "1 match"
-                    : `${matches} matches`}
-              </span>
-              <kbd className={styles.key} aria-hidden="true">
-                Esc
+          page. Enter opens the palette under it, the way to codes,
+          classifications and the rest of the catalog; the field stays the
+          palette's one input, so typing there goes on filtering the columns
+          too. Escape closes the palette first, then clears the text (here or
+          anywhere on the page, giving back the collapse state), then, below
+          the breakpoint, folds the field back behind the "Search" button. */}
+        <Autocomplete inputValue={filter} onInputChange={browseFilter.set}>
+          <SearchField
+            ref={field}
+            aria-label="Search registers, variables, codes"
+            className={styles.search}
+            onSubmit={() => {
+              if (!palette) openPalette();
+            }}
+            onBlur={(event) => {
+              // simplify: focus inside the popover is not handled, because the
+              // RAC Autocomplete menu uses virtual focus and is never tabbable;
+              // revisit if the menu ever becomes tabbable.
+              // The rows take virtual focus, so focus landing in the popover is
+              // still the palette's. A blur to nothing (a press on the page) is
+              // left to the palette's outside-press handler.
+              const next = event.relatedTarget;
+              if (next instanceof Node && popover.current?.contains(next)) {
+                return;
+              }
+              const away = next !== null;
+              if (palette && away) setPalette(false);
+              if (filter === "" && (!palette || away)) setOpened(false);
+            }}
+          >
+            <Input
+              ref={input}
+              className={styles.searchInput}
+              placeholder="Search registers, variables, codes…"
+              autoComplete="off"
+              // No aria-expanded: ARIA does not allow it on a searchbox (axe
+              // aria-allowed-attr); it would take role="combobox".
+              aria-haspopup="menu"
+              // RAC's Autocomplete sets "list" whether or not the palette is
+              // mounted, and an undefined here does not override it; "none"
+              // says there is no list while it is closed.
+              aria-autocomplete={palette ? "list" : "none"}
+              // Capture: ahead of the field's own Escape, which clears the
+              // text, and of the Autocomplete's, which hands it to the list.
+              onKeyDownCapture={(event) => {
+                if (event.key !== "Escape" || event.nativeEvent.isComposing) {
+                  return;
+                }
+                if (palette) {
+                  // Marked handled too: the page-wide Escape skips it.
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setPalette(false);
+                } else if (filter === "" && opened) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  flushSync(() => setOpened(false));
+                  toggle.current?.focus();
+                }
+              }}
+            />
+            {filter === "" ? (
+              <kbd className={styles.hint} aria-hidden="true">
+                {commandShortcutHint(mac)}
               </kbd>
-            </span>
-          )}
-        </SearchField>
-        <CommandPalette
-          isOpen={palette !== null}
-          onOpenChange={(open) => {
-            if (!open) setPalette(null);
-          }}
-          triggerRef={field}
-          seed={palette?.seed ?? ""}
-        />
+            ) : (
+              <span className={styles.hint}>
+                {/* How many registers the browse columns keep, never the
+                  palette's hits, so it names its noun. A live region that
+                  exists with the text, so a change in it is announced. */}
+                <span className={styles.count} aria-live="polite">
+                  {matches === null
+                    ? ""
+                    : matches === 1
+                      ? "1 register"
+                      : `${matches} registers`}
+                </span>
+                <kbd className={styles.key} aria-hidden="true">
+                  Esc
+                </kbd>
+              </span>
+            )}
+          </SearchField>
+          <CommandPalette
+            isOpen={palette}
+            onOpenChange={(open) => {
+              setPalette(open);
+              // Closed from outside the field (a press elsewhere, a row's
+              // action, a scroll): an empty field folds with it.
+              if (!open && filter === "") setOpened(false);
+            }}
+            triggerRef={field}
+            popoverRef={popover}
+            text={filter}
+            onChoose={() => {
+              // A row navigates: the columns get back the filter they had
+              // before the palette (Operator 2026-10-24), and an empty narrow
+              // field folds away so the brand returns.
+              setPalette(false);
+              browseFilter.set(beforePalette.current);
+              if (beforePalette.current === "") setOpened(false);
+            }}
+          />
+        </Autocomplete>
+        {/* Below the breakpoint only (CSS): the folded field's way in. */}
+        <span className={styles.searchToggle}>
+          <Button
+            ref={toggle}
+            aria-label="Search registers, variables, codes"
+            onPress={openSearch}
+          >
+            Search
+          </Button>
+        </span>
         <ProjectBanner
           bounds={bounds}
           seed={{ regMetaVersion, steward: steward?.id ?? "" }}

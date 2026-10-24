@@ -786,7 +786,15 @@ async function browseSearchCase(page, _counts, shoot) {
   const scb = page.getByRole("row", { name: "Statistiska Centralbyrån", exact: true });
   const treeShown = await page.getByRole("button", { name: "Collapse all" }).isVisible();
 
-  await search.fill("midas");
+  if (!treeShown) {
+    // Below the breakpoint the field is folded behind a "Search" button, and
+    // pressing it puts focus in the field: typing with no fill() goes nowhere
+    // if focus does not move.
+    await page.getByRole("button", { name: /^Search registers/ }).click();
+    await page.keyboard.type("midas");
+  } else {
+    await search.fill("midas");
+  }
   if (treeShown) {
     await page.getByRole("row", { name: "MiDAS", exact: true }).waitFor();
     await scb.waitFor({ state: "detached" });
@@ -805,18 +813,91 @@ async function browseSearchCase(page, _counts, shoot) {
     );
   }
 
-  // Focus off the field: the page's heading, then Escape.
-  await page.getByRole("heading", { level: 1, name: "LISA" }).click();
-  await page.keyboard.press("Escape");
+  // Enter opens the palette under the field, which stays its one input: a
+  // palette with a field of its own shows the text twice (the SWECOV report,
+  // 2026-10-24), and its popover, open, must still fit the viewport (the shot).
+  // Escape closes it and leaves the text.
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
   check(
-    (await search.inputValue()) === "",
+    (await page.getByRole("searchbox").count()) === 1,
+    "the open palette renders a search field of its own",
+  );
+  // Past the popover's entry fade, so the shot shows it opaque.
+  await page.waitForFunction(() => !document.querySelector("[data-entering]"), null, {
+    timeout: 5000,
+  });
+  await shoot("browse-search-palette");
+  await search.press("Escape");
+  await page.getByRole("menu").waitFor({ state: "detached" });
+  check(
+    (await search.inputValue()) === "midas",
+    "Escape with the palette open cleared the text instead of closing it",
+  );
+
+  // Tab out of the field with the palette open: it closes. Left open, focus
+  // walks the page under a popover that still claims the field (#1871 review).
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
+  await page.keyboard.press("Tab");
+  check(
+    await menuGone(page),
+    "Tab out of the field left the palette open under the page",
+  );
+
+  // Focus is now off the field (the Tab above), so Escape on the page clears
+  // the text (#1827) and, below the breakpoint, folds the narrow field.
+  await page.keyboard.press("Escape");
+  // Below the breakpoint the emptied field is folded away (display: none).
+  const searchAnyState = page.getByRole("searchbox", {
+    name: /^Search registers/,
+    includeHidden: true,
+  });
+  check(
+    (await searchAnyState.inputValue()) === "",
     "Escape with focus on the page left the search text in place",
   );
   if (treeShown) {
     await scb.waitFor();
   } else {
+    // The emptied field folds back behind its button: left unfolded, the
+    // header keeps an empty field and loses the logo and the button.
+    check(
+      await page.getByRole("button", { name: /^Search registers/ }).isVisible(),
+      "Escape on the page cleared the search but left the narrow field unfolded",
+    );
     await page.getByRole("link", { name: "Browse registers" }).click();
     await page.getByRole("row", { name: "LISA", exact: true }).waitFor();
+  }
+
+  // Choosing a palette row gives the browse columns back the filter they had
+  // when the palette opened (Operator 2026-10-24): text typed only to find the
+  // row does not stay behind as a filter. Fails if the palette's text leaks.
+  if (treeShown) {
+    await search.fill("midas");
+  } else {
+    await page.getByRole("button", { name: /^Search registers/ }).click();
+    await page.keyboard.type("midas");
+  }
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
+  await search.fill("project");
+  await page.getByRole("menuitem", { name: /^Go to the project/ }).click();
+  await page.waitForURL("**/project");
+  const left = await searchAnyState.inputValue();
+  check(
+    left === "midas",
+    `a palette row left the browse filter at ${JSON.stringify(left)}, not "midas"`,
+  );
+}
+
+/** Whether no palette menu is mounted, given a moment to leave. */
+async function menuGone(page) {
+  try {
+    await page.locator('[role="menu"]').waitFor({ state: "detached", timeout: 2000 });
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -1433,7 +1514,7 @@ try {
     // The browse search on a register page, and the narrow way back to the
     // register list.
     "browse-search": {
-      shots: 1,
+      shots: 2,
       route: "/catalog/scb/lisa",
       run: browseSearchCase,
     },
