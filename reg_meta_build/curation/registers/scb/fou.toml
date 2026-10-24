@@ -167,6 +167,7 @@ evidence = "SWECOV holds V201 in FTG_FOU_2005..2009; public SCB documentation (U
 noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3331
+measurement_unit = "1000-tal kronor (KSEK)"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -178,6 +179,7 @@ evidence = "SWECOV holds v201 in FTG_FOU_2011..2015; public SCB documentation (U
 noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3331
+measurement_unit = "1000-tal kronor (KSEK)"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -189,6 +191,7 @@ evidence = "SWECOV holds Vikt in FTG_FOU_2011..2015; public SCB documentation (U
 noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3402
+measurement_unit = "Uppräkningstal"
 
 # ── #1603 C (#1509): FoU weight and row 201 in further SWECOV-held editions ──
 
@@ -202,6 +205,7 @@ evidence = "SWECOV holds VIKT in FTG_FOU_2009. SCB's SCBDOK for the 2009 busines
 noted = "2026-10-16"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3402
+measurement_unit = "Uppräkningstal"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -213,6 +217,7 @@ evidence = "SWECOV holds Vikt in FTG_FOU_2017. SCB's Statistikens framställning
 noted = "2026-10-16"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3402
+measurement_unit = "Uppräkningstal"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -224,6 +229,7 @@ evidence = "SWECOV holds v201 in FTG_FOU_2017, the same spelling it holds for 20
 noted = "2026-10-16"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3331
+measurement_unit = "1000-tal kronor (KSEK)"
 
 [[errata.column]]
 variant = "foretagssektorn"
