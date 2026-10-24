@@ -7137,6 +7137,12 @@ def compile_errata(
             if records and authored
             else None
         )
+        # Every record at the anchor ref, as the variant's support captures them.
+        anchor_records = (
+            tuple(r for r in records if record_ref(r) == record_ref(anchor))
+            if anchor is not None
+            else ()
+        )
         bound_editions = {}
         for variant_id, members in by_variant.items():
             if members:
@@ -7297,7 +7303,7 @@ def compile_errata(
                             register_id,
                             variant_id,
                             editions,
-                            anchor if variant_id in authored else None,
+                            anchor_records if variant_id in authored else (),
                         )
                         variant_contexts[variant_id] = context
                     if table == "delivered":
@@ -7691,7 +7697,7 @@ def compile_errata(
                         fold_column(row.column),
                     )
                     if variable_key not in naming[scope_key]:
-                        naming_anchor = context.anchor or members[0]
+                        naming_anchor = (context.anchor or members)[0]
                         ref = record_ref(naming_anchor)
                         source_id = f"{register_id}.{row.column}"
                         slug, contributors = accepted_names[source_id]
