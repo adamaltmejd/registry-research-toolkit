@@ -169,6 +169,7 @@ class ErrataColumn:
     column: str
     name: str
     definition: str
+    operational_definition: str | None
     data_type: str | None
     classification: str | None
     is_identifier: bool
@@ -484,6 +485,7 @@ def resolve_scb_errata(
             column=column,
             name=_require_str(values, "name", ctx),
             definition=_require_str(values, "definition", ctx),
+            operational_definition=_column_operational_definition(values, ctx),
             data_type=_column_data_type(values, ctx),
             classification=classification,
             is_identifier=_require_bool(values, "is_identifier", ctx),
@@ -525,7 +527,8 @@ def resolve_scb_errata(
                 "register.",
                 "A column delivered on two variants of one register is ONE "
                 "variable: give both entries the same column spelling, name, "
-                "definition, data_type, classification and PII flags, or "
+                "definition, operational_definition, data_type, classification "
+                "and PII flags, or "
                 "rename one of the columns.",
             )
         columns.append(loaded)
@@ -550,6 +553,7 @@ class ProviderErrataColumn:
     column: str
     name: str
     definition: str
+    operational_definition: str | None
     data_type: str | None
     classification: str | None
     is_identifier: bool
@@ -565,6 +569,7 @@ class ProviderErrataColumn:
             self.column,
             self.name,
             self.definition,
+            self.operational_definition,
             self.data_type,
             self.classification,
             self.is_identifier,
@@ -625,6 +630,7 @@ def resolve_provider_columns(
             column=column,
             name=_require_str(values, "name", ctx),
             definition=_require_str(values, "definition", ctx),
+            operational_definition=_column_operational_definition(values, ctx),
             data_type=_column_data_type(values, ctx),
             classification=classification,
             is_identifier=_require_bool(values, "is_identifier", ctx),
@@ -805,6 +811,12 @@ def _column_data_type(entry: dict, ctx: str) -> str | None:
             f"Use a canonical data_type: {sorted(_DATA_TYPES)}, or omit the key.",
         )
     return data_type
+
+
+def _column_operational_definition(entry: dict, ctx: str) -> str | None:
+    if "operational_definition" not in entry:
+        return None
+    return _require_str(entry, "operational_definition", ctx)
 
 
 def _column_classification(entry: dict, ctx: str) -> str | None:
@@ -1446,6 +1458,11 @@ def declared_column_fields(
         column_name=value_field(entry.column),
         name=value_field(normalize_text(entry.name)),
         description=value_field(normalize_text(entry.definition, multiline=True)),
+        operational_definition=value_field(
+            normalize_text(entry.operational_definition, multiline=True)
+        )
+        if entry.operational_definition is not None
+        else None,
         data_type=(
             value_field(entry.data_type) if entry.data_type is not None else None
         ),

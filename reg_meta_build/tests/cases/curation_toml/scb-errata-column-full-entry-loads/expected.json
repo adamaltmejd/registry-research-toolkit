@@ -13,6 +13,7 @@
         "column": "Ssyk4_J16",
         "name": "Yrke enligt SSYK 96",
         "definition": "Yrkeskod pa 4-siffernivan.",
+        "operational_definition": null,
         "versions": [
           "2010",
           "2011"
