@@ -568,9 +568,11 @@ Per binding, in declaration order, over its source's period
    beside it, so a rename inside one held table is two entries of one physical column)
    and its edition overlaps the slice; only the intersection contributes. That fallback
    is decided per instant, not over the slice: it serves exactly the slice's instants
-   where SCB did not deliver the mapped spelling, the inventory's `_fallbacks` rule, so
-   the order serves what coverage reports held (conformance
-   `api/held-projection-served-past-co-delivery`). A held edition that overlaps the
+   where SCB did not deliver the mapped spelling, the inventory's `_fallbacks` rule
+   (conformance `api/held-projection-served-past-co-delivery`). Coverage
+   (`states::held`) still judges the fallback over each state's whole bounds, so where
+   a state spans a co-delivered instant it under-reports what the order serves; it never
+   over-reports. A held edition that overlaps the
    request but lies wholly outside the binding's column windows is
    `column_window_unavailable`. Any uncovered subperiod blocks the whole order
    (`coverage_gap`); a slice nothing serves is `mapping_missing`. The materializer never
