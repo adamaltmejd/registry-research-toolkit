@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import styles from "./Button.module.css";
 import type { ButtonVariant } from "./types";
@@ -21,6 +21,8 @@ type Props = {
   "aria-describedby"?: string;
   /** Hover text for a pointer; never the only place a reason is given. */
   title?: string;
+  /** For a caller that moves focus back to the button. */
+  ref?: Ref<HTMLButtonElement>;
   children: ReactNode;
 } & (
   | { type?: "button"; onPress: () => void }
@@ -43,10 +45,12 @@ export function Button({
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
   title,
+  ref,
   children,
 }: Props) {
   return (
     <AriaButton
+      ref={ref}
       type={type}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}

@@ -325,9 +325,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the palette), and
   the `ProjectBanner` at the right. The field reads "Search registers, variables,
   codes…". While it holds text, focused or not, it takes an `accent` border with an
-  `accent-bg` halo, and its hint becomes the match count in `accent-ink` with an `Esc`
-  key hint; the key hints are `text-muted` on `surface-sunken`. There are no "Search" or
-  "Project" nav items; the bar and the banner are those. Its content shares the shell's
+  `accent-bg` halo, and its hint becomes the count of matching registers ("12
+  registers", naming its noun so it never reads as the palette's hits) in `accent-ink`
+  with an `Esc` key hint; the key hints are `text-muted` on `surface-sunken`. There are
+  no "Search" or "Project" nav items; the bar and the banner are those. The tab's title
+  is the deployment's long name too. Its content shares the shell's
   `shell-max` and centring, so the banner sits over the detail pane rather than at the
   screen's edge. Where the row is tight the brand wraps and the search bar shrinks
   before the banner leaves the row. From 60rem down the name would push the banner off
@@ -335,8 +337,13 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   full name as the link's accessible name (#1820, maintainer rulings 2026-10-23). Each
   steward supplies a logo (`stewards/<id>/logo.svg`), used in the compact header and as
   the favicon. 60rem is the top bar's own fit, not a layout breakpoint. It sticks to the
-  top of the page above `breakpoint-narrow`; below it the logo and the search bar share
-  a row, the banner takes the next, and both scroll away with the page.
+  top of the page above `breakpoint-narrow`; below it the logo and a "Search" button
+  share a row, the banner takes the next, and both scroll away with the page. The
+  button unfolds the field, which takes the row's whole width in place of the logo and
+  the button, with focus in it; it stays open while it holds text, and folds back on
+  a blur or an Escape while empty, focus returning to the button (maintainer ruling
+  2026-10-24). Below the breakpoint every text field is set at 1rem: iOS Safari zooms
+  the page into a focused field under 16px and leaves it zoomed, cut off at the left.
 - **Browse columns (`ColumnList`):** registers grouped under sticky provider headers,
   then the selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
@@ -387,9 +394,14 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   only other registers match, a line above them says the open one has none. Escape
   clears the filter and restores the collapse state from anywhere on the page, unless a
   dialog, popover, the palette or another text field has focus (#1827). The command
-  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, seeded with the
-  field's text (maintainer-decided 2026-10-22), for codes, classifications and actions;
-  its results are a mixed list and carry a `TypeTag`.
+  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for codes,
+  classifications and actions; its results are a mixed list and carry a `TypeTag`. It
+  is a list under the field with no field of its own: the top-bar field is its one
+  input (keeping the field's text, maintainer-decided 2026-10-22), so focus stays there,
+  the arrow keys move through the rows, and typing goes on filtering the columns. A
+  second field in the popover showed the same text twice (maintainer report
+  2026-10-24). Below the breakpoint it is as wide as the unfolded field. Escape closes
+  the palette first, then clears the text, then folds the narrow field.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the

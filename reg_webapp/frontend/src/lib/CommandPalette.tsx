@@ -1,14 +1,10 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
 import {
-  Autocomplete,
-  Dialog,
   Header,
-  Input,
   Menu,
   MenuItem,
   MenuSection,
   Popover,
-  SearchField,
 } from "react-aria-components";
 import {
   type CodeHit,
@@ -184,28 +180,52 @@ function useDebounced(value: string): string {
 interface Props {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  /** The top-bar field it opens under; focus returns there on close. */
+  /** The top-bar search field it opens under, and whose text it searches. */
   triggerRef: RefObject<HTMLElement | null>;
-  /** The text the palette starts with: the top-bar field's. */
-  seed: string;
+  /** The top-bar field's text: the palette has no field of its own. */
+  text: string;
 }
 
-/** The command palette (DESIGN.md → Layout → Top bar): a RAC `Autocomplete`
- * over a `Menu`, in a popover under the search bar, for codes, classifications
- * and the app's places. Its results are a mixed list, so each row carries its
- * type. The list is controlled: the actions are ranked with `rankFilter`, the
- * catalog by the server, and RAC filters nothing. */
+/** The command palette (DESIGN.md → Layout → Top bar): a `Menu` in a popover
+ * under the top-bar search field, for codes, classifications and the app's
+ * places. It renders inside the top bar's RAC `Autocomplete`, so that field is
+ * its one input: focus stays there and the arrow keys move a virtual focus
+ * through the rows. The popover is non-modal for the same reason; a press
+ * outside it and the field closes it. Its results are a mixed list, so each row
+ * carries its type. The list is controlled: the actions are ranked with
+ * `rankFilter`, the catalog by the server, and RAC filters nothing. */
 export function CommandPalette({
   isOpen,
   onOpenChange,
   triggerRef,
-  seed,
+  text,
 }: Props) {
+  const popover = useRef<HTMLElement>(null);
+  // A non-modal popover does not dismiss itself on an outside press.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (
+        target &&
+        !popover.current?.contains(target) &&
+        !triggerRef.current?.contains(target)
+      ) {
+        onOpenChange(false);
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [isOpen, onOpenChange, triggerRef]);
+
   return (
     <Popover
+      ref={popover}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       triggerRef={triggerRef}
+      isNonModal
       placement="bottom start"
       offset={4}
       // RAC writes its own z-index inline; the palette sits at the popover
@@ -215,20 +235,12 @@ export function CommandPalette({
         `${styles.popover} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
       }
     >
-      <Dialog aria-label="Command palette" className={styles.dialog}>
-        {/* Mounted per opening, so each one starts from the field's text. */}
-        <PaletteBody seed={seed} close={() => onOpenChange(false)} />
-      </Dialog>
+      <PaletteBody text={text} close={() => onOpenChange(false)} />
     </Popover>
   );
 }
 
-function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
-  const [text, setText] = useState(seed);
-  const input = useRef<HTMLInputElement>(null);
-  // Opening the palette is the user's own act, so its field takes focus; the
-  // Dialog would otherwise focus itself.
-  useEffect(() => input.current?.focus(), []);
+function PaletteBody({ text, close }: { text: string; close: () => void }) {
   const query = useDebounced(text.trim());
   const asked = query.length >= SEARCH_MIN_QUERY_LENGTH ? query : null;
   const results = useAsyncResource(asked, async (signal) =>
@@ -265,23 +277,7 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
   }
 
   return (
-    <Autocomplete inputValue={text} onInputChange={setText}>
-      <SearchField
-        aria-label="Search classifications and codes"
-        className={styles.field}
-        // One Escape closes the palette; SearchField would spend the first
-        // one clearing its text.
-        onKeyDown={(event) => {
-          if (event.key === "Escape") close();
-        }}
-      >
-        <Input
-          ref={input}
-          className={styles.input}
-          placeholder="Classifications, codes, value sets…"
-          autoComplete="off"
-        />
-      </SearchField>
+    <div className={styles.body}>
       <output
         className={`${styles.status} ${results.error ? "error" : ""}`}
         aria-busy={pending || undefined}
@@ -290,7 +286,7 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
         {status}
       </output>
       <Menu
-        aria-label="Results"
+        aria-label="Classifications, codes and places"
         className={styles.menu}
         onAction={(id) => {
           const row = byId.get(String(id));
@@ -318,7 +314,7 @@ function PaletteBody({ seed, close }: { seed: string; close: () => void }) {
           </MenuSection>
         )}
       </Menu>
-    </Autocomplete>
+    </div>
   );
 }
 

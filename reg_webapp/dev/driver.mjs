@@ -786,7 +786,15 @@ async function browseSearchCase(page, _counts, shoot) {
   const scb = page.getByRole("row", { name: "Statistiska Centralbyrån", exact: true });
   const treeShown = await page.getByRole("button", { name: "Collapse all" }).isVisible();
 
-  await search.fill("midas");
+  if (!treeShown) {
+    // Below the breakpoint the field is folded behind a "Search" button, and
+    // pressing it puts focus in the field: typing with no fill() goes nowhere
+    // if focus does not move.
+    await page.getByRole("button", { name: /^Search registers/ }).click();
+    await page.keyboard.type("midas");
+  } else {
+    await search.fill("midas");
+  }
   if (treeShown) {
     await page.getByRole("row", { name: "MiDAS", exact: true }).waitFor();
     await scb.waitFor({ state: "detached" });
@@ -804,6 +812,24 @@ async function browseSearchCase(page, _counts, shoot) {
       "below the breakpoint the search left no way to its matches",
     );
   }
+
+  // Enter opens the palette under the field, which stays its one input: a
+  // palette with a field of its own shows the text twice (the SWECOV report,
+  // 2026-10-24), and its popover, open, must still fit the viewport (the shot).
+  // Escape closes it and leaves the text.
+  await search.press("Enter");
+  await page.getByRole("menu").waitFor();
+  check(
+    (await page.getByRole("searchbox").count()) === 1,
+    "the open palette renders a search field of its own",
+  );
+  await shoot("browse-search-palette");
+  await search.press("Escape");
+  await page.getByRole("menu").waitFor({ state: "detached" });
+  check(
+    (await search.inputValue()) === "midas",
+    "Escape with the palette open cleared the text instead of closing it",
+  );
 
   // Focus off the field: the page's heading, then Escape.
   await page.getByRole("heading", { level: 1, name: "LISA" }).click();
@@ -1390,7 +1416,7 @@ try {
     // The browse search on a register page, and the narrow way back to the
     // register list.
     "browse-search": {
-      shots: 1,
+      shots: 2,
       route: "/catalog/scb/lisa",
       run: browseSearchCase,
     },

@@ -97,6 +97,13 @@ export function App() {
     };
   }, []);
 
+  // The tab's title is the deployment's name, the brand the top bar shows;
+  // index.html's static title stands until the context arrives.
+  const title = context.data?.steward.long_name;
+  useEffect(() => {
+    if (title) document.title = title;
+  }, [title]);
+
   // A stale window (an opened project, a previous deployment's localStorage) is
   // clamped into the steward's span through the normal write path, so neither
   // the exported project nor the fallback keeps an out-of-steward span.

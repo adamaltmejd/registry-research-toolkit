@@ -154,8 +154,14 @@ kbd.hint,
   white-space: nowrap;
 }
 
-/* Below the narrow breakpoint the mark and the search bar share a row and the
-   banner takes the next. */
+/* The folded field's "Search" button: below the narrow breakpoint only. */
+.searchToggle {
+  display: none;
+}
+
+/* Below the narrow breakpoint the mark and the "Search" button share a row and
+   the banner takes the next. The button unfolds the field, which then takes
+   the first row's whole width in their place (maintainer ruling 2026-10-24). */
 @media (max-width: 48rem) {
   .topBar {
     position: static;
@@ -164,10 +170,21 @@ kbd.hint,
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2) var(--space-3);
   }
-  /* Two rows: the mark and the search bar, then the banner. */
+  .searchToggle {
+    display: block;
+    margin-left: auto;
+  }
   .search {
+    display: none;
     flex: 1 1 0;
     max-width: none;
+  }
+  .inner[data-search-open] .search {
+    display: flex;
+  }
+  .inner[data-search-open] .brand,
+  .inner[data-search-open] .searchToggle {
+    display: none;
   }
   .inner > :last-child {
     flex-basis: 100%;

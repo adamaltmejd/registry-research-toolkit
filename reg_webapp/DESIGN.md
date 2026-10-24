@@ -186,8 +186,9 @@ Rust server. Maintainers measure relevance with the repository's
 running `reg-meta serve`.
 
 The SPA surface is the command palette (`CommandPalette.tsx`), opened from the top-bar
-field with Enter or `Meta/Ctrl+K` and seeded with the field's text. It is a RAC
-`Autocomplete` over a `Menu` in a popover under the field, for codes, classifications
+field with Enter or `Meta/Ctrl+K`. The top bar's RAC `Autocomplete` wraps that field
+and a `Menu` in a non-modal popover under it, so the field is the palette's one input
+and its text the palette's query, for codes, classifications
 and the app's places; registers and variables are the in-place filter's. It asks three
 arms (classifications, classification codes, register-local value sets; 5 hits each,
 debounced, from 2 characters) and lists the hits as a mixed list with type tags, after
