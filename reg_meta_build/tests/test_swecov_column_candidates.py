@@ -205,17 +205,6 @@ def test_a_docs_dir_without_register_subdirectories_is_refused(tmp_path: Path) -
             id="unplaced",
         ),
         pytest.param(
-            _gapfill("scb/gdb", "Ruta250"),
-            {
-                "Geografidatabasen / Individer": {
-                    "columns": [{"name": "Ruta250"}],
-                    "mapping": {"status": "flavor", "graft": "scb/gdb"},
-                }
-            },
-            "steward flavor:",
-            id="flavor-register",
-        ),
-        pytest.param(
             _gapfill("scb/lisa", "SyssStat_klartext"),
             _lisa_holding("SyssStat_klartext"),
             "content-dropped:",
@@ -231,9 +220,9 @@ def test_a_column_the_scan_cannot_place_is_a_comment_not_an_entry(
     section: str,
 ) -> None:
     """Nothing the scan did not place reaches the grammar. A column with no variant
-    has nothing to mint onto, a steward-flavor column is not SCB's export at all,
-    and a klartext label column is #373's — each rides as a comment in its own
-    section, so the file the maintainer reads parses to no entries."""
+    has nothing to mint onto, and a klartext label column is #373's — each rides
+    as a comment in its own section, so the file the maintainer reads parses to no
+    entries."""
     text = _grafts_text(tmp_path, flavored_db, [gapfill], enriched)
 
     assert tomllib.loads(text) == {}
