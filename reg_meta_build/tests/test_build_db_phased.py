@@ -129,7 +129,9 @@ def test_strict_places_a_zero_error_diagnostic_bundle_as_a_strict_build(
     # places it with the resolving run's mode instead of the requested one: the
     # manifest's catalog_artifact_kind, the status or publication_ready would differ
     # from the strict build's. Scoped, so no clean builder checkout is needed; the
-    # publishable leg (commit stamp, corpus guards) is the same code path.
+    # publishable leg (commit stamp, corpus guards) is the same code path. Also fails
+    # if a repeated --registers keeps only its last SPEC: the three-scope CLI builds
+    # would then differ from the in-process build of all three.
     prepared = prepared_cache.get(
         json.loads((CLASSIFIED / "source.json").read_text(encoding="utf-8"))
     )
@@ -137,9 +139,10 @@ def test_strict_places_a_zero_error_diagnostic_bundle_as_a_strict_build(
     catalog = CatalogFixture(
         prepared.prepared, prepared.commit, prepared.digest, tmp_path / "curation"
     )
-    registers = "11,12,13"
+    registers = ("11", "12", "13")
+    scopes = [arg for spec in registers for arg in ("--registers", spec)]
     unphased = catalog.build(
-        tmp_path / "a.db", tmp_path / "a-report", registers=tuple(registers.split(","))
+        tmp_path / "a.db", tmp_path / "a-report", registers=registers
     )
     assert unphased["status"] == "complete"
     assert (
@@ -150,8 +153,7 @@ def test_strict_places_a_zero_error_diagnostic_bundle_as_a_strict_build(
                 "--diagnostic",
                 "--diagnostic-db-path",
                 str(tmp_path / "b.db"),
-                "--registers",
-                registers,
+                *scopes,
                 "--report-dir",
                 str(tmp_path / "b-report"),
                 "--resolved-out",
@@ -169,8 +171,7 @@ def test_strict_places_a_zero_error_diagnostic_bundle_as_a_strict_build(
                 "materialize-db",
                 "--resolved",
                 str(tmp_path / "bundle"),
-                "--registers",
-                registers,
+                *scopes,
                 "--report-dir",
                 str(tmp_path / "c-report"),
             ]

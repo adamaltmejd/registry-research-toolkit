@@ -2595,25 +2595,27 @@ reg-meta-build verify-input-bundle --input-bundle DIR ...
 reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
-reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
+reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC [--registers SPEC]...
 reg-meta-build build-db ... --resolved-out NEW_DIR
 reg-meta-build build-db ... --workers N
-reg-meta-build materialize-db --resolved DIR --report-dir NEW_DIR [--diagnostic --diagnostic-db-path NEW.db] [--registers SPEC[,SPEC...]]
-reg-meta-build check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir NEW_DIR
+reg-meta-build materialize-db --resolved DIR --report-dir NEW_DIR [--diagnostic --diagnostic-db-path NEW.db] [--registers SPEC]...
+reg-meta-build check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC [--registers SPEC]... --report-dir NEW_DIR
 reg-meta-build inspect-source-records --input-bundle DIR ...
 reg-meta-build extend-db --base-db DB --providers-dir DIR --steward NAME ...
 reg-meta-build build-docs ...
 ```
 
 `--db DIR` and other global output flags precede the subcommand. Per-command `--help`
-describes paths and pins. A `--registers` SPEC names a prepared scope: an SCB register
-by its register id (`258`), or an SOS workbook or thin-provider register by its register
-name (`Patientregistret`, `aktivitetsstod`). A name or id naming scopes in more than one
-source is refused; `SOURCE:ID` (`scb-registerinformation:258`) picks one. It also
-combines with `--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an
-explicit new `--db` directory: it never replaces the active catalog. Naming,
-classification, group, succession, same-as and document-coverage worklist commands
-produce review material; they do not approve or apply new curation during a build.
+describes paths and pins. A `--registers` SPEC names a prepared scope. Repeat the flag
+for several scopes; a SPEC is never split on commas, so a register name may contain one.
+It is an SCB register by its register id (`258`), or an SOS workbook or thin-provider
+register by its register name (`Patientregistret`, `aktivitetsstod`). A name or id
+naming scopes in more than one source is refused; `SOURCE:ID`
+(`scb-registerinformation:258`) picks one. It also combines with
+`--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an explicit new `--db`
+directory: it never replaces the active catalog. Naming, classification, group,
+succession, same-as and document-coverage worklist commands produce review material;
+they do not approve or apply new curation during a build.
 
 `succession-candidates` also reports two kinds as comments and JSON lists, never as
 loadable TOML (#1907). A contradicted edge is a curated `replaced_by` edge with an
