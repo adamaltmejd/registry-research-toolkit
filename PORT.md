@@ -60,11 +60,14 @@ today's v16 shape and names each one's delta in one place
 ## Legacy references in the artifact
 
 The artifact stores old verb names in two places. Provenance heads (`errata:<class>`,
-`curated:<table>`, `curated:alias-window`) are in `variable_state.provenance`. Curation
-case ids (`<file>#/<table>/<n>[/period/<k>]`) are in `data_warning.evidence_json`: 745
-`case_id` values and 1,418 `acknowledged_by` refs in 0.64.0. Converted entries carry
-both verbatim (`legacy = { ref, head }`). The post-cutover rename PR rewrites heads and
-case ids together, as one reviewed dbdiff, so neither stays behind.
+`errata:<upstream>`, `errata:<source>`, `curated:<table>`, `curated:alias-window`,
+`curated:matrix-answer`; the full table is in
+[crates/reg-build-model/DESIGN.md](crates/reg-build-model/DESIGN.md) §11) are in
+`variable_state.provenance`. Curation case ids (`<file>#/<table>/<n>[/period/<k>]`) are
+in `data_warning.evidence_json`: 745 `case_id` values and 1,418 `acknowledged_by` refs
+in 0.64.0. Converted entries carry both verbatim (`legacy = { ref, head }`). The
+post-cutover rename PR rewrites heads and case ids together, as one reviewed dbdiff, so
+neither stays behind.
 
 ## Known non-neutral addresses
 

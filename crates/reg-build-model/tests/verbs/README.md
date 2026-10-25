@@ -6,8 +6,10 @@ Each directory is one old verb at its hardest real case.
   1 is `# case: <case id>`.
 - `after.toml` is its neutral form, which `reg_build_model::verbs::Verbs` reads with
   unknown fields denied.
-- `tests/verbs_golden.rs` parses every pair and checks each `legacy.ref` against the
-  `# case:` line.
+- `tests/verbs_golden.rs` is a schema check: every old verb has a pair, every
+  `after.toml` parses, and each carries one entry. Its semantic oracle is PR C's
+  per-entry record-set equivalence in today's Python compile, which also checks each
+  converted `head` against the provenance Python publishes for the same entry.
 - PR C's converter must produce each `after.toml`, compared as parsed values, not bytes.
 - Counts come from the pinned prepared root `.local/build-2026-10-25/prepared` (manifest
   `030c4709…`, `records.sqlite`, read-only). "Old" is the record set the old entry acts
@@ -19,9 +21,13 @@ Each directory is one old verb at its hardest real case.
 
 - **Case ids are 1-based.** Every loop in `curation_compile.py` is `enumerate(..., 1)`
   (`#/identity.partition/{i}`, `#/errata.{table}/{index}`), and the build fixtures
-  agree. The matrix case id is `#/matrix/<edition name>`, with head `curated:matrix`.
-- **Head** per `_curated_head`: `errata.<c>` becomes `errata:<c>`, else
-  `curated:<table>`.
+  agree. The matrix case id is `#/matrix/<edition name>`.
+- **Head** is the first line of the provenance the old entry publishes, from the code
+  path that publishes it (`crates/reg-build-model/DESIGN.md` §11): `errata:<class>`,
+  `errata:<upstream>` (delivered), `errata:<source>` (column), `curated:matrix-answer`,
+  `curated:alias-window`, `curated:coding.<kind>`,
+  `curated:representation.period_family`. The identity verbs, `errata.version`,
+  `parallel` and `delivery_metadata` publish none, so `head` is absent.
 - **Member rule.** Translate the coordinates the old entry names: variant to `table`,
   edition or `versions` to `deliveries`, SoS `deldatamangd` to `table`, SoS bare
   `variable` to `column`. Drop the provider ids (VarID, family key). Add `where` only to

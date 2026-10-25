@@ -1,5 +1,5 @@
 [[representation.parallel]]
-legacy = { ref = "curation/registers/scb/klk.toml#/representation.parallel/1", head = "curated:representation.parallel" }
+legacy = { ref = "curation/registers/scb/klk.toml#/representation.parallel/1" }
 owner = "manad"
 table = "_default"
 columns = [

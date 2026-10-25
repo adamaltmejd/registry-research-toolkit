@@ -1,5 +1,5 @@
 [[representation.delivery_metadata]]
-legacy = { ref = "curation/registers/sos/lova.toml#/representation.delivery_metadata/2", head = "curated:representation.delivery_metadata" }
+legacy = { ref = "curation/registers/sos/lova.toml#/representation.delivery_metadata/2" }
 owner = "yrkeskod"
 fields = ["description"]
 columns = [

@@ -3,9 +3,10 @@
 //! (`after.toml`), at the verb's hardest case.
 //!
 //! It fails if an `after.toml` names a field the schema lacks or misspells one
-//! (`deny_unknown_fields`), if an old verb has no pair, or if a converted entry's legacy
-//! case id is not the case id its `before.toml` names, which would break the case ids the
-//! artifact stores.
+//! (`deny_unknown_fields`), if an old verb has no pair, or if a pair converts to other than
+//! one entry carrying the case id its `before.toml` names. It is a schema check: the
+//! semantic oracle for each conversion is the converter's per-entry record-set
+//! equivalence in today's Python compile (phase 2, PR C).
 
 use std::collections::BTreeSet;
 use std::fs;

@@ -426,12 +426,27 @@ form.
 
 **One old entry, one new entry.** Each converted entry carries `legacy = { ref, head }`:
 the old case id root (`<file>#/<table>/<n>`, `n` counted from 1; a CIS matrix entry's is
-`#/matrix/<edition name>`) and its provenance head. The artifact stores both
-(`data_warning.evidence_json`, `variable_state.provenance`), so the build writes them
-verbatim until the post-cutover rename. A coding entry keeps its `periods` in order,
-because a period's position is the `/period/<k>` suffix of its case id. Because the
-guards of one old entry span all its owners, `identity.assign` holds several links
-(`owner` plus `members`) in one entry rather than one entry per owner.
+`#/matrix/<edition name>`) and the first line of the provenance it publishes. The
+artifact stores both (`data_warning.evidence_json`, `variable_state.provenance`), so the
+build writes them verbatim until the post-cutover rename. The head comes from the code
+path that publishes it, not from the table name; the build derives the lines after it as
+Python does:
+
+  | Old verb                                                                                                             | Head                                                                                                                    |
+  | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+  | `errata.field`, `support`, `flags`, `occurrence_period`, `occurrence_carry`, `data_type`, `classification_reference` | `errata:<class>` (`_curated_head`)                                                                                      |
+  | `errata.delivered`                                                                                                   | `errata:<upstream>`, default `errata:omitted-column-in-version`; storage-fact lines follow                              |
+  | `errata.column`                                                                                                      | `errata:<source>`                                                                                                       |
+  | `representation.period_family`                                                                                       | `curated:representation.period_family`                                                                                  |
+  | `representation.alias_window`                                                                                        | `curated:alias-window`, in `variable_alias_window.provenance`                                                           |
+  | `representation.matrix`                                                                                              | `curated:matrix-answer`; document lines follow                                                                          |
+  | `coding.<kind>`                                                                                                      | `curated:coding.<kind>`; locator lines follow                                                                           |
+  | `identity.*`, `errata.version`, `representation.parallel`, `delivery_metadata`                                       | none: `head` is absent (the representation stage writes the rule constant `curated:representations`, not an entry head) |
+
+A coding entry keeps its `periods` in order, because a period's position is the
+`/period/<k>` suffix of its case id. Because the guards of one old entry span all its
+owners, `identity.assign` holds several links (`owner` plus `members`) in one entry
+rather than one entry per owner.
 
 **Members.** `M = {table?, column?, deliveries? | period?, where?}`:
 

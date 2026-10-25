@@ -50,9 +50,12 @@ pub struct Legacy {
     /// `/period/<k>` suffix) where Python writes the case id today.
     #[serde(rename = "ref")]
     pub case_id: String,
-    /// The provenance head the old entry's facts publish: `errata:<class>`,
-    /// `curated:<table>` or `curated:alias-window`.
-    pub head: String,
+    /// The first line of the provenance the old entry's facts publish, absent where
+    /// they publish none (the identity verbs, `table.assign`, `errata.delivery`,
+    /// `representation.parallel` and `delivery_metadata`). The build derives the lines
+    /// after it (locators, document pins, storage facts) as Python does. The forms are
+    /// listed in `DESIGN.md` §11.
+    pub head: Option<String>,
 }
 
 /// The member selector `M`: the records an entry acts on. Every given coordinate must

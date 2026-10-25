@@ -324,11 +324,13 @@ and `compile_scb_preliminary` becomes supersession over `release_status`.
   Rust after it; content-neutral restructuring (the new types, re-addressing, verb
   merges) rides with the port behind one TOML regeneration.
 - **Verb names are artifact content.** `_curated_head` writes `errata:<class>` or
-  `curated:<table>` into `variable_state.provenance`, and alias windows write
-  `curated:alias-window`, and `data_warning.evidence_json` stores each entry's case id
-  (`<file>#/<table>/<n>`, with `/period/<k>` for coding periods). The converter keeps
-  each entry's legacy case id and head, and Rust writes both verbatim until one reviewed
-  rename after cutover.
+  `curated:<table>` into `variable_state.provenance`; delivered and column errata write
+  `errata:<upstream>` and `errata:<source>`, alias windows `curated:alias-window` and
+  CIS matrix answers `curated:matrix-answer`
+  ([../crates/reg-build-model/DESIGN.md](../crates/reg-build-model/DESIGN.md) §11), and
+  `data_warning.evidence_json` stores each entry's case id (`<file>#/<table>/<n>`, with
+  `/period/<k>` for coding periods). The converter keeps each entry's legacy case id and
+  head, and Rust writes both verbatim until one reviewed rename after cutover.
 - **Guard digests keep their basis.** Rust reproduces `evidence_sha256` over the
   prepared records, so `expected_*_sha256` guards are carried unchanged
   ([../crates/DESIGN.md](../crates/DESIGN.md), "Guard digest basis").

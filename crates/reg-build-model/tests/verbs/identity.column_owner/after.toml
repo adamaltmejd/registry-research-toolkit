@@ -1,5 +1,5 @@
 [[identity.assign]]
-legacy = { ref = "curation/registers/scb/iot.toml#/identity.column_owner/129", head = "curated:identity.column_owner" }
+legacy = { ref = "curation/registers/scb/iot.toml#/identity.column_owner/129" }
 ref = "Prepared SCB complete native25.659:2000–2016 AKYRK is explicitly measured in SEK with Skatteverket origin and no supplied operation;2017–2024 AKYRK is explicitly Procent with operation Kyrkoavgiftssats and Svenska kyrkan origin. Generic fee definition does not assert either numeric role. Preserve the amount and rate as distinct supplied concepts, without reconstructing an older formula or changing values. Every original name, generic definition, unit, operation, source attribution, type, width, period and coding remains immutable. Exact enumerated editions only; no unlisted future source ownership."
 
 [identity.assign.guard]

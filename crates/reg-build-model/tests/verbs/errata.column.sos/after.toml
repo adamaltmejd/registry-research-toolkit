@@ -1,5 +1,5 @@
 [[errata.column]]
-legacy = { ref = "curation/registers/sos/ekb.toml#/errata.column/1", head = "errata:column" }
+legacy = { ref = "curation/registers/sos/ekb.toml#/errata.column/1", head = "errata:steward-holdings" }
 member = { table = "ekb-manad", column = "P1105_LopNr_EKB", period = { kind = "pooled", label = "2015-2023", pooled_start = "2015-01-01", pooled_end = "2023-12-31" } }
 name = "Löpnummer för hushåll och år"
 definition = "Länknyckel mellan EKB:s hushålls- och personfiler: ett löpnummer per hushåll och år."

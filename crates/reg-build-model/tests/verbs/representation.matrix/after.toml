@@ -1,5 +1,5 @@
 [[representation.matrix]]
-legacy = { ref = "curation/registers/scb/innovation-foretag.toml#/matrix/2014 - 2016", head = "curated:matrix" }
+legacy = { ref = "curation/registers/scb/innovation-foretag.toml#/matrix/2014 - 2016", head = "curated:matrix-answer" }
 member = { table = "_default", deliveries = ["2014 - 2016"], where = { name = "Typ av samarbetspartner geografiskt fördelat" } }
 source_mode = "named"
 evidence_file = "registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
