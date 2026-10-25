@@ -295,7 +295,9 @@ export function findingLocation(
     return null;
   }
   const sIdx = Number(tokens[1]);
-  if (!Number.isInteger(sIdx) || sIdx < 0) {
+  // A source past the end (edited away since the request) has no card to render
+  // on: the finding stays in the summary panel rather than vanishing.
+  if (!Number.isInteger(sIdx) || sIdx < 0 || sIdx >= sources.length) {
     return null;
   }
   const source = sources[sIdx] ?? null;
