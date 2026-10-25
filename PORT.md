@@ -190,8 +190,7 @@ register coordinate, so an SCB integer register id, a thin-provider `native_id` 
 or an SoS register **name** (SoS coordinates carry no `native_id`), or
 `SOURCE:<that value>`. `[register].slug` and `provider/slug` are not accepted
 (`--registers sos/lova` fails with `pipeline_registers_unknown`). `--registers` is
-repeated once per SPEC, so a name may contain a comma (the CLI fix that precedes slice
-3; it split on commas before).
+repeated once per SPEC, so a name may contain a comma (#1936).
 
 #### Park criterion (all slices)
 
@@ -389,8 +388,8 @@ guard semantics also blocks slice 4; flag it as such.
 - Socialtjänstinsatser till äldre och personer med funktionsnedsättning
 - Tandhälsoregistret
 
-LVM's name contains a comma, so the slice needs the repeatable `--registers` flag (a
-separate Python PR, mirrored by the Rust CLI); it does not wait for phase-1 b4.
+LVM's name contains a comma; the repeatable `--registers` flag (#1936) selects it, and
+the Rust CLI mirrors that flag.
 
 **Tables populated** (0.64.0 reference for all 13): `register` 13, `register_variant`
 45, `variable` 1,740, `variable_state` 2,404, `source_relationship` 21 (documentary
