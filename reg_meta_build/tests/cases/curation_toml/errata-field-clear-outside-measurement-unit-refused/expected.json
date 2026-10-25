@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "fails_if": "the `[[errata.field]]` validator lets `clear = true` drop a field other than `measurement_unit` (#1881), so a correction that clears a variable's name loads",
+  "note": "The entry is otherwise a valid name correction; only the clear-is-unit-only rule refuses it. The allowed twin, a cleared unit, is the build case errata-field-clear-drops-a-placeholder-unit.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "only a measurement_unit correction may clear"
+    ]
+  }
+}

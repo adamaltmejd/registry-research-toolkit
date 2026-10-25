@@ -61,3 +61,32 @@ fields = ["data_type", "data_length"]
 reason = "Per-edition shape dispute (#1783): the columns disagree, numeric beside text, within a co-delivered edition: 2021-07-01-2022-06-30 (edition 18974): po18 decimal(11) beside po8 text(1). They agree in 2015-07-01-2016-06-30 (edition 11692): po18 decimal(11) beside po8 decimal(11), so the pair is disputed, not a split. Withholding the fold is the Operator's standing fail-safe; both variables keep every source fact."
 evidence = "Diagnostic real-seed build 6ba544b94aab of PR #1883 (prepared manifest 609e4a4ec375): the issue ledger refs, and the data_type and data_length of each ref read from the prepared source records, edition by edition."
 expected_diagnostic_sha256 = "47dcb7e0bdde6966ca477a644f4c5e4952c68ff7a59d7a454c4b00d062706312"
+
+# #1881: SCB's Mattenhet 'värde, antal eller %' is a generic placeholder that names
+# no unit. Each occurrence below gets the unit its documentation establishes, or
+# none (`clear = true`) where the variable is a weight or a key. Curated per
+# variable; there is no builder-level placeholder list (maintainer ruling 2026-10-24).
+
+[[errata.field]]
+variable = "147.4613"
+variant = "147.214"
+column = "StoraN"
+editions = ["3120", "4375", "5600"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Populationsstorlek per stratum" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Populationsstorlek per stratum" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 3120 = "2008/2009", 4375 = "2010/2011", 5600 = "2012/2013" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Populationsstorlek per stratum as the number of units in the stratum population. Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "147.4613"
+variant = "147.1339"
+column = "storaN"
+editions = ["11692", "14687", "18974"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Populationsstorlek per stratum" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Populationsstorlek per stratum" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 11692 = "2015/2016", 14687 = "2018/2019", 18974 = "2021/2022" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Populationsstorlek per stratum as the number of units in the stratum population. Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"

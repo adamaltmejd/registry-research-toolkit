@@ -649,15 +649,29 @@ class ErrataFieldEntry(_GuardedOccurrenceEntry):
         "identifier",
     ]
     # Text for every field but `identifier`, whose correction states a boolean (#1662).
-    value: str | bool
+    # None only with `clear`.
+    value: str | bool | None = None
+    # Drop a supplied unit that names no unit, such as SCB's "värde, antal eller %"
+    # placeholder (#1881): the corrected occurrence states no unit.
+    clear: bool = False
 
     @field_validator("value")
     @classmethod
-    def _value(cls, value: str | bool) -> str | bool:
-        return value if isinstance(value, bool) else _require_trimmed(value)
+    def _value(cls, value: str | bool | None) -> str | bool | None:
+        return (
+            value
+            if value is None or isinstance(value, bool)
+            else _require_trimmed(value)
+        )
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
+        if self.clear and (self.field != "measurement_unit" or self.value is not None):
+            raise ValueError(
+                "only a measurement_unit correction may clear, and a clear states no value"
+            )
+        if not self.clear and self.value is None:
+            raise ValueError("a field correction states its replacement value")
         if self.editions is not None:
             for edition in self.editions:
                 _require_trimmed(edition)
@@ -739,7 +753,7 @@ class ErrataFieldEntry(_GuardedOccurrenceEntry):
             expected is None
             or expected.status != "value"
             or type(expected.value) is not kind
-            or type(self.value) is not kind
+            or (not self.clear and type(self.value) is not kind)
         ):
             raise ValueError(
                 "an identifier correction states a boolean and guards the original's stated identifier"

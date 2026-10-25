@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[errata.field]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+editions = ["99"]
+expected_fields = [{ name = "name", status = "value", value = "GenericVar" }, { name = "definition", status = "absent" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = { 99 = "2009" }
+evidence = "The supplied name is not a name."
+noted = "2026-10-25"
+field = "name"
+clear = true

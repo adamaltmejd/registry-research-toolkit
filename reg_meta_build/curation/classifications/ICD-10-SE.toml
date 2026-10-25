@@ -1,5 +1,10 @@
 [classification]
 short_name = "ICD-10-SE"
+family = "icd"
+# DORS declares this WHO ICD-10 link on columns coded in whichever ICD edition
+# applied that year (1952 onward); sos/dors.toml's [[classification_timeline]] names
+# the edition per window (#1908).
+family_aliases = ["https://icd.who.int/browse10/2019/en"]
 aliases = ["https://www.socialstyrelsen.se/statistik-och-data/klassifikationer-och-koder/icd-10/"]
 slug = "icd-10-se"
 name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version (ICD-10-SE)"

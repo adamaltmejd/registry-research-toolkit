@@ -5726,7 +5726,7 @@ def _snapshot_key(entry: Any) -> tuple[str, str]:
     return revision.artifact_path[: -len(suffix)], revision.upstream_revision
 
 
-def _family_status(report: dict[str, dict[str, list[str]]], name: str):
+def register_status(report: dict[str, dict[str, list[str]]], name: str):
     return report.setdefault(
         name,
         {
@@ -6044,7 +6044,7 @@ def compile_occurrence_corrections(
         if not any(rows for _, rows in entries):
             continue
         name = f"{register.register_info.provider}/{register.register_info.slug}"
-        statuses = _family_status(report, name)
+        statuses = register_status(report, name)
         matches = locations.get(name, ())
         location = matches[0] if len(matches) == 1 else None
         families = {}
@@ -6548,7 +6548,10 @@ def compile_occurrence_corrections(
                             variant_key=variant_key,
                             fields=donor.fields.model_copy(
                                 update={
-                                    name: value_field(next(iter(values)))
+                                    # A cleared unit (None) carries as absent.
+                                    name: None
+                                    if (carried := next(iter(values))) is None
+                                    else value_field(carried)
                                     for name, values in corrected.items()
                                 }
                             ),
@@ -6593,6 +6596,10 @@ def compile_occurrence_corrections(
                         CheckedFieldChange(
                             ref=ref,
                             replacement=FieldExpectation(
+                                name=entry.field, status="absent"
+                            )
+                            if entry.clear
+                            else FieldExpectation(
                                 name=entry.field, status="value", value=entry.value
                             ),
                             when_scope=original_of[ref].scope
@@ -6850,7 +6857,7 @@ def _compile_provider_columns(
         register = registers[entry.source_file]
         row = register.errata.column[entry.index - 1]
         case_id = f"{entry.source_file}#/errata.column/{entry.index}"
-        statuses = _family_status(report, entry.register_fqid)
+        statuses = register_status(report, entry.register_fqid)
         statuses["entries_read"].append(case_id)
         matches = locations.get(entry.register_fqid, ())
         if len(matches) != 1:
@@ -7101,7 +7108,7 @@ def compile_errata(
             raise ValueError(f"{register.source_file}: SCB register has no native_id")
         register_id = int(native_id)
         name = f"scb/{register.register_info.slug}"
-        statuses = _family_status(report, name)
+        statuses = register_status(report, name)
         accepted_names = accepted_variable_slugs(tree, register)
         matches = locations.get(register_id, ())
         records = ()
@@ -7829,7 +7836,7 @@ def compile_enrichment(
         if not (register.enrichment.description or register.enrichment.alias):
             continue
         name = f"{register.register_info.provider}/{register.register_info.slug}"
-        statuses = _family_status(report, name)
+        statuses = register_status(report, name)
         for table, entries in (
             ("description", register.enrichment.description),
             ("alias", register.enrichment.alias),

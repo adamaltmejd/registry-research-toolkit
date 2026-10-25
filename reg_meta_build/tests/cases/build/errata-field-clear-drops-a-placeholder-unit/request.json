@@ -1,0 +1,23 @@
+{
+  "note": "SCB documents WEIGHT (variable 5, edition 99 = 2009) with the generic Mattenhet placeholder 'värde, antal eller %', which names no unit (#1881). A unit correction with `clear = true` drops it, so neither the state nor the variable states a unit.",
+  "fails_if": "a cleared `[[errata.field]]` unit correction emits no effect or a value effect instead of an absent replacement, so WEIGHT keeps the placeholder as its unit",
+  "sources": {
+    "description": "Variable 5 delivers WEIGHT in edition 99 (2009, CVID 20) with the placeholder unit.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "WEIGHT",
+          "cvid": 20,
+          "var_id": 5,
+          "varname": "Urvalsvikt",
+          "vardef": "Vikt per stratum",
+          "data_type": "decimal",
+          "unit": "värde, antal eller %",
+          "year": "2009",
+          "regver_id": 99,
+          "register": ["TESTREG", 1, 2]
+        }
+      ]
+    }
+  }
+}
