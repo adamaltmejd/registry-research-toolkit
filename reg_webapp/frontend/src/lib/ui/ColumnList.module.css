@@ -134,22 +134,9 @@
   white-space: nowrap;
 }
 
-/* A facet header over a group's members: mono, the label size, muted (the
-   artifact's text-faint fails AA for text that must be read). */
-.facet {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  padding: var(--space-2) var(--space-3) var(--space-1);
-  background: var(--bg);
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
-}
-
 /* Another register's header over its matches (#1828): the browse tree's group
-   row (the text face at the label size and column weight, muted), sticky like a
-   facet header, with a rule above it dividing it from the run before. */
+   row (the text face at the label size and column weight, muted), sticky, with
+   a rule above it dividing it from the run before. */
 .register {
   position: sticky;
   top: 0;

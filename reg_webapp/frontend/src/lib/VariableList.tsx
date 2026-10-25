@@ -76,9 +76,7 @@ function otherRegisterSections(
         leaves: true,
       });
     }
-    return [
-      { id: `register:${facet.fqid}`, label: name, register: true, items },
-    ];
+    return [{ id: `register:${facet.fqid}`, label: name, items }];
   });
 }
 
