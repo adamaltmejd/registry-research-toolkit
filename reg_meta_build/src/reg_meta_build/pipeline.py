@@ -1297,6 +1297,22 @@ def _resolve(
             or register.coding.support
         )
     }
+
+    def register_report(name: str) -> dict[str, list[str]]:
+        return compiled.report.setdefault(
+            name,
+            {
+                key: []
+                for key in (
+                    "entries_read",
+                    "entries_matched",
+                    "stale",
+                    "over_broad",
+                    "not_evaluated_in_subset",
+                )
+            },
+        )
+
     coding_ids = {}
     for name, register in coding_registers.items():
         ids = tuple(
@@ -1315,19 +1331,18 @@ def _resolve(
             for period_index, _ in enumerate(coding_entry_windows(entry), 1)
         )
         coding_ids[name] = ids
-        compiled.report.setdefault(
-            name,
-            {
-                key: []
-                for key in (
-                    "entries_read",
-                    "entries_matched",
-                    "stale",
-                    "over_broad",
-                    "not_evaluated_in_subset",
-                )
-            },
-        )["entries_read"].extend(ids)
+        register_report(name)["entries_read"].extend(ids)
+    # Each timeline entry and each of its rows, as the stale check below locates them.
+    timeline_ids: dict[str, dict[str, tuple[str, ...]]] = {}
+    for register in tree.registers:
+        name = f"{register.register_info.provider}/{register.register_info.slug}"
+        for index, entry in enumerate(register.classification_timeline, 1):
+            case_id = f"{register.source_file}#/classification_timeline/{index}"
+            rows = tuple(
+                f"{case_id}/editions/{row}" for row in range(1, len(entry.editions) + 1)
+            )
+            timeline_ids.setdefault(name, {})[case_id] = rows
+            register_report(name)["entries_read"].extend((case_id, *rows))
     matched_labels: set[str] = set()
     matched_timelines: set[str] = set()
     duplicate_overrides: set[str] = set()
@@ -1986,11 +2001,23 @@ def _resolve(
                 name = (
                     f"{register.register_info.provider}/{register.register_info.slug}"
                 )
+                entries = timeline_ids.get(name, {})
+                report = register_report(name) if entries else None
                 if registers and name not in selected_coding_names:
+                    if report is not None:
+                        report["not_evaluated_in_subset"].extend(
+                            item
+                            for case_id, rows in entries.items()
+                            for item in (case_id, *rows)
+                        )
                     continue
-                for index, entry in enumerate(register.classification_timeline, 1):
-                    case_id = f"{register.source_file}#/classification_timeline/{index}"
+                for entry, (case_id, rows) in zip(
+                    register.classification_timeline, entries.items(), strict=True
+                ):
+                    assert report is not None
                     if case_id not in matched_timelines:
+                        # The whole entry binds nothing; one issue names it.
+                        report["stale"].extend((case_id, *rows))
                         stale = [
                             (
                                 case_id,
@@ -1999,17 +2026,23 @@ def _resolve(
                             )
                         ]
                     else:
-                        stale = [
-                            (
-                                row_id,
-                                f"edition {slug!r} {start}..{end} overlaps no window "
-                                f"of a declaration of family {entry.family!r} in "
-                                f"{name}",
+                        report["entries_matched"].append(case_id)
+                        stale = []
+                        for row_id, (slug, start, end) in zip(
+                            rows, entry.editions, strict=True
+                        ):
+                            if row_id in matched_timelines:
+                                report["entries_matched"].append(row_id)
+                                continue
+                            report["stale"].append(row_id)
+                            stale.append(
+                                (
+                                    row_id,
+                                    f"edition {slug!r} {start}..{end} overlaps no "
+                                    f"window of a declaration of family "
+                                    f"{entry.family!r} in {name}",
+                                )
                             )
-                            for row, (slug, start, end) in enumerate(entry.editions, 1)
-                            if (row_id := f"{case_id}/editions/{row}")
-                            not in matched_timelines
-                        ]
                     for stale_id, reason in stale:
                         issue(
                             ResolutionDiagnostic(

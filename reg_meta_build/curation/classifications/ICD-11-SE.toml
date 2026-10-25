@@ -1,5 +1,6 @@
 [classification]
 short_name = "ICD-11-SE"
+family = "icd"
 slug = "icd-11-se"
 name = "ICD-11 för statistik över dödlighet och sjuklighet, svensk version"
 name_en = "ICD-11 for Mortality and Morbidity Statistics, Swedish version"

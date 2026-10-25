@@ -1,5 +1,6 @@
 [classification]
 short_name = "ICD-9-KS87"
+family = "icd"
 slug = "icd-9-ks87"
 name = "Klassifikation av sjukdomar 1987 (ICD-9 / KS87)"
 name_en = "Swedish Classification of Diseases 1987 (ICD-9 / KS87)"
