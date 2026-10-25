@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { bindingFieldsFromResolution } from "./catalog";
-import { sourceSnapshot } from "./project_data";
+import { newProjectData, sourceSnapshot } from "./project_data";
 import { projectStore, type StagedAdd } from "./project_store";
 import {
   add,
@@ -37,6 +37,32 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     );
     // The #312 name prefill fired on the created source (register + variant, #1466).
     expect(storedProject()?.sources[0].name).toBe("LISA_V1");
+  });
+
+  it("keeps sources ordered by register, then variant, on open and on add (#1905)", () => {
+    // The register slug decides before the provider (`sos/akut` before
+    // `scb/lisa`), the variant slug next. Fails if an open keeps the file's
+    // order or an add appends.
+    const source = (register_variant: string) => ({
+      name: register_variant.replaceAll("/", "_"),
+      register_variant,
+      period: 2018,
+      bindings: [{ variable: `${register_variant}/x`, type: "categorical" }],
+    });
+    openFile(
+      JSON.stringify({
+        ...newProjectData(SEED),
+        sources: [source("scb/lisa/v2"), source("sos/akut/v1")],
+      }),
+    );
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
+    });
+    expect(storedProject()?.sources.map((s) => s.register_variant)).toEqual([
+      "sos/akut/v1",
+      "scb/lisa/v1",
+      "scb/lisa/v2",
+    ]);
   });
 
   it("keys adds and removes by variant family, whichever member a source names (#1840)", () => {

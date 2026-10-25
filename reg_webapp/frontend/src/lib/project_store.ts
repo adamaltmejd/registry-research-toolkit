@@ -32,6 +32,7 @@ import {
 } from "./api";
 import { periodCoverageUnion, samePeriod } from "./period";
 import {
+  compareSources,
   type DraftBinding,
   defaultSourceName,
   isPlainObject,
@@ -53,6 +54,7 @@ import {
   sourceSnapshot,
   uniqueSourceName,
   updateField,
+  withSortedSources,
 } from "./project_data";
 import { checkProject } from "./reg_core";
 import { windowDisjointFindings } from "./validation";
@@ -389,7 +391,10 @@ function replaceDraft(next: RawDraft): void {
  * re-serialized through OUR serializer — never an opened file's raw text — so a
  * freshly loaded, unedited draft is CLEAN even when the file's own formatting
  * differs from our pretty-print. */
-function loadProject(next: RawDraft): void {
+function loadProject(opened: RawDraft): void {
+  // Sorted once on entry (#1905); the baseline below is the sorted draft, so an
+  // out-of-order file opens clean, as one in another formatting does.
+  const next = withSortedSources(opened);
   const ids = buildIds(next);
   replaceDraft(next);
   setRequestError(null);
@@ -989,10 +994,12 @@ export const projectStore = {
       );
       const binding = stagedToBinding(add.binding);
       if (idx < 0) {
-        sources = [
-          ...sources,
-          newSource(add.registerVariant, add.period, sources, [binding]),
-        ];
+        // At its sorted place (#1905), not appended.
+        const created = newSource(add.registerVariant, add.period, sources, [
+          binding,
+        ]);
+        const at = sources.findIndex((s) => compareSources(created, s) < 0);
+        sources = sources.toSpliced(at < 0 ? sources.length : at, 0, created);
         continue;
       }
       const found = sources[idx];
@@ -1180,10 +1187,12 @@ export function startDraftLifecycle(): () => void {
     .catch(() => null)
     .then((loaded) => {
       if (loaded != null && draft == null) {
+        // An autosave from before #1905 can hold its sources out of order.
+        const sorted = withSortedSources(loaded);
         // Atomic replacement: compute the mirror before assigning `draft` so a throw
         // can't leave a restored draft with a stale/empty mirror inside this `.then()`.
-        const ids = buildIds(loaded);
-        replaceDraft(loaded);
+        const ids = buildIds(sorted);
+        replaceDraft(sorted);
         sourceIds = ids;
         notify();
         // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been

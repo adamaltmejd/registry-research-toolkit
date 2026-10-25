@@ -1400,7 +1400,7 @@ function pickerRow(
   // Coding change over time: >1 DISTINCT value_set_id across the group's states.
   // Keyed on the reliable id (not the label, which SCB labels inconsistently for
   // one id); `null` (code-less) is its own value, so a null↔id transition counts.
-  const codingsVary = new Set(group.map((s) => s.value_set_id)).size > 1;
+  const codingsVary = new Set(group.map(valueSetKey)).size > 1;
   // The variant display label — the curator `variant_label`, falling back to the
   // slug for a NULL-named variant. Display-only; the slug stays the key/coordinate.
   const variantLabel = latest.variant_label ?? variant;
@@ -1983,6 +1983,10 @@ export interface ValueSetVariantUsage {
  * plain value set (#1301), a gap year staying a gap. */
 export interface DistinctValueSet {
   key: string;
+  /** The states with no value set and no declared classification: their usage
+   * lines, never a value set of their own (#1902). A null-id group that declares
+   * a classification is still shown as one. */
+  uncoded: boolean;
   classificationSlugs: string[];
   /** Every distinct stored verdict the entry's states carry, each with the state
    * its mismatch list is read by and the variants/window it was recorded over.
@@ -2156,10 +2160,20 @@ function collapseRun(
   return spans;
 }
 
-/** Source coding identity; a declared classification does not replace it. */
-function valueSetDedupKey(s: VariableStateModel): string {
-  return `id/${s.value_set_id ?? "none"}`;
+/** A state's value-set identity: the reliable `value_set_id`, never the
+ * provider's version label (SCB labels one id inconsistently). Null for an
+ * uncoded state. The one definition every "which coding is this" question
+ * reads: a coding change over time (`codingsVary`, the lane change marks) and
+ * the value-set fold (`distinctValueSets`). Null is a value of its own, so a
+ * null↔id transition is a coding change. A declared classification does not
+ * replace it. */
+export function valueSetKey(s: { value_set_id: string | null }): string | null {
+  return s.value_set_id;
 }
+
+/** The fold's group key: the uncoded states form one group, so their per-variant
+ * usage lines still render, but never as a value set (`uncoded`). */
+const UNCODED_GROUP_KEY = "uncoded";
 
 /** Source-local codes need a notice even though the declared book stays linked. */
 export function conformanceNeedsNotice(
@@ -2234,7 +2248,7 @@ export function distinctValueSets(
 ): DistinctValueSet[] {
   const byKey = new Map<string, VariableStateModel[]>();
   for (const s of states) {
-    const k = valueSetDedupKey(s);
+    const k = valueSetKey(s) ?? UNCODED_GROUP_KEY;
     const group = byKey.get(k);
     if (group) {
       group.push(s);
@@ -2264,11 +2278,13 @@ export function distinctValueSets(
         ),
       }),
     );
+    const classificationSlugs = [
+      ...new Set(group.flatMap((s) => s.classifications.map((c) => c.slug))),
+    ];
     return {
       key,
-      classificationSlugs: [
-        ...new Set(group.flatMap((s) => s.classifications.map((c) => c.slug))),
-      ],
+      uncoded: key === UNCODED_GROUP_KEY && classificationSlugs.length === 0,
+      classificationSlugs,
       conformances,
       versionLabel: rep.value_set_version_label,
       valueSetId: rep.value_set_id,

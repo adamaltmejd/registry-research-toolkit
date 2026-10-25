@@ -47,7 +47,7 @@ import {
   committedPickerRows,
   type PickerCommitScope,
   pickerRowKey,
-  rowDeliversInScope,
+  rowAddable,
   type StagedApplyOutcome,
   type StagedPick,
   type StagedPickerBand,
@@ -385,18 +385,27 @@ export function RegisterView({
     column.windows.length > 0 &&
     windowsOverlapWindow(column.windows, add.bounds);
 
+  /** Could an Add commit this row of this column? One gate for the sweep and
+   * the marker (#1903). */
+  const addable = (column: DeliveryColumn, row: PickerRepresentation) =>
+    rowAddable(row, add.scope, column.windowsByVariant.get(row.variant) ?? []);
+
   // Which listed columns are already wholly in the draft, by tick identity,
   // each with its marker against the study window (the most severe across the
-  // variants that deliver it). Partial cover reads as not added.
+  // variants that deliver it). Only the rows an Add could commit count: a row
+  // the window leaves out can never be added, so it cannot hold the marker
+  // back. Partial cover of those rows reads as not added, and a column with
+  // none is not marked.
   const committed = new Map<string, CommittedMarker>();
   const committedRows = committedPickerRows(draft, bands, node.variants);
   if (committedRows.size > 0) {
     for (const band of bands) {
       for (const column of columnsByFqid.get(band.key) ?? []) {
         const markers: CommittedMarker[] = [];
+        const rows = column.rows.filter((row) => addable(column, row));
         const all =
-          column.rows.length > 0 &&
-          column.rows.every((row) => {
+          rows.length > 0 &&
+          rows.every((row) => {
             const match = committedRows.get(pickerRowKey(band, row));
             if (match === undefined) return false;
             markers.push(committedMarker(match.period, add.bounded));
@@ -435,14 +444,7 @@ export function RegisterView({
         // Per (variant, name) as well as per name: the tick was offered off the
         // pooled eras, so a retired name must not stage the variant that
         // renamed it.
-        if (
-          !tickedUnder.has(row.variant) ||
-          !windowsOverlapWindow(
-            column.windowsByVariant.get(row.variant) ?? [],
-            add.bounds,
-          ) ||
-          !rowDeliversInScope(row, add.scope)
-        ) {
+        if (!tickedUnder.has(row.variant) || !addable(column, row)) {
           continue;
         }
         stagedKeys.add(key);
