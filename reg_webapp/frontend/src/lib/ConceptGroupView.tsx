@@ -23,6 +23,7 @@ import {
   pickerRepresentations,
   pickerWindowYears,
   registerPrefixOf,
+  stateKey,
 } from "./catalog";
 import { registerRead } from "./catalog_names";
 import {
@@ -33,7 +34,7 @@ import {
   periodWireValid,
   yearWindowFromWire,
 } from "./period";
-import type { PickerBand } from "./picker_lanes";
+import { bandFacets, type PickerBand } from "./picker_lanes";
 import { studyWindowInterval } from "./reg_core";
 import { router } from "./router";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
@@ -60,6 +61,7 @@ import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
 import { useCatalogRead } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
+import { VariableReference, VariableTags } from "./VariableReference";
 
 interface Props extends PeriodProps {
   provider: string;
@@ -112,7 +114,6 @@ function groupBands(
   group: ConceptGroupShow,
   nodes: ReadonlyMap<string, VariableGraphNode>,
   memberHref: (fqid: string) => string,
-  titledByFacets: boolean,
 ): PickerBand[] {
   const byFqid = new Map<string, ConceptGroupMember[]>();
   for (const member of group.members) {
@@ -170,12 +171,7 @@ function groupBands(
       laneKey,
       name: lead.name ?? leafSlug(fqid),
       registerPrefix: registerPrefixOf(fqid),
-      // With every axis one-to-one the facets only number the members: the
-      // lane is titled by the variable's name (#1904).
-      facetLabel:
-        titledByFacets && lead.facets.length > 0
-          ? facetLabelJoin(lead.facets)
-          : null,
+      facetLabel: lead.facets.length > 0 ? facetLabelJoin(lead.facets) : null,
       facetsByColumn,
       facets: wholeFacets,
       operationalDefinition: node?.operational_definition ?? null,
@@ -359,9 +355,6 @@ export function ConceptGroupView({
     nodes.set(node.fqid, node);
     for (const alias of node.same_as) nodes.set(alias.fqid, node);
   }
-  // The axes that tell members apart in bulk: the header's facet values, the
-  // filter row and the member titles all read this one list (#1904).
-  const shownAxes = informativeAxes(group);
   // A member is this page focused on it (#1909): its link keeps the period
   // the group was narrowed to.
   const memberHref = (fqid: string) => {
@@ -370,8 +363,21 @@ export function ConceptGroupView({
     query.set("member", fqid);
     return `${groupHref(registerFqid, groupKey)}?${query}`;
   };
-  const bands = groupBands(group, nodes, memberHref, shownAxes.length > 0);
-  const focusKey = bands.find((band) => band.key === memberHint)?.key ?? null;
+  const lanes = groupBands(group, nodes, memberHref);
+  // The axes that tell lanes apart in bulk: the header's facet values, the
+  // filter row and the lane titles all read this one list (#1904).
+  const shownAxes = informativeAxes(
+    group.axes,
+    lanes.map((lane) => ({ facets: bandFacets(lane) })),
+  );
+  // With every axis one-to-one the facets only number the lanes: each is
+  // titled by its variable's name.
+  const bands =
+    shownAxes.length > 0
+      ? lanes
+      : lanes.map((lane) => ({ ...lane, facetLabel: null }));
+  const focusBand = bands.find((band) => band.key === memberHint) ?? null;
+  const focusKey = focusBand?.key ?? null;
   const committedRows = committedPickerRows(
     draft,
     bands,
@@ -476,6 +482,19 @@ export function ConceptGroupView({
           ]}
         />
       </TechnicalDetails>
+      {/* A member's URL whose variable has no lane here (a stale link, or a
+          member out of this catalog's scope): its own page still opens. */}
+      {memberHint && !focusKey && (
+        <StatusRow tone="info">
+          <code>{memberHint}</code> is not a member of this group here.{" "}
+          <a href={catalogHref(memberHint)}>Open its variable page</a>.
+        </StatusRow>
+      )}
+      {/* A lane link moves this page to another member without a new page
+          load: say which, as a page change would. */}
+      <output className="visually-hidden" aria-live="polite">
+        {focusBand ? `Showing ${focusBand.facetLabel || focusBand.name}.` : ""}
+      </output>
 
       {graphResource.loading ? (
         <Skeleton variant="block" />
@@ -509,6 +528,9 @@ export function ConceptGroupView({
           studyWindow={projectWindow}
           focusKey={focusKey}
           graph={graphResource.data}
+          // The focused member's predecessor and successor, as on its own
+          // variable page.
+          neighbours={focusKey !== null}
           vintageYear={vintageYear}
           onApply={onApply}
           onStageChange={(hasDiff) => {
@@ -544,6 +566,7 @@ export function ConceptGroupView({
         <MemberDetails
           key={focusKey}
           fqid={focusKey}
+          period={activePeriod}
           shared={{ definition, description }}
         />
       )}
@@ -551,14 +574,18 @@ export function ConceptGroupView({
   );
 }
 
-/** The focused member's own text (#1909): what its variable page showed under
- * the head, now on the group page that is its page. Facts the group's head
- * already shows as shared are not repeated. */
+/** The focused member's own page (#1909): everything its variable page showed
+ * below the picker, now on the group page that is its page. Facts the group's
+ * head already shows as shared are not repeated. With a `?period` its states
+ * narrow as on the variable page, so one resolved state names its type and
+ * column. */
 function MemberDetails({
   fqid,
+  period,
   shared,
 }: {
   fqid: string;
+  period: string | null;
   shared: { definition: string | null; description: string | null };
 }) {
   const resource = useAsyncResource(fqid, async (signal) => {
@@ -566,8 +593,12 @@ function MemberDetails({
     if (node.kind !== "variable") {
       throw new Error(`${fqid} is not a variable`);
     }
-    return { node, states: await getStates(node.fqid) };
+    return { node, history: await getStates(node.fqid) };
   });
+  const periodResource = useAsyncResource(
+    period ? `${fqid}\u0000${period}` : null,
+    () => getStates(fqid, { period: period ?? undefined }),
+  );
   if (resource.loading) {
     return (
       <section aria-busy="true" aria-live="polite">
@@ -585,7 +616,16 @@ function MemberDetails({
       </StatusRow>
     );
   }
-  const { node, states } = resource.data;
+  const { node, history } = resource.data;
+  // As the variable page: one resolved state is the detail; otherwise the
+  // whole history, `scope` marking what is in period (#744). A failed or
+  // pending resolve shows the whole history.
+  const narrowed = period !== null ? periodResource.data : null;
+  const states = narrowed?.length === 1 ? narrowed : history;
+  const technicalState =
+    states.length === 1 && !(narrowed !== null && narrowed.length === 0)
+      ? states[0]
+      : null;
   const own = (value: string | null | undefined, groupValue: string | null) =>
     value && value.trim() !== groupValue ? value : null;
   const facts: KeyValueRow[] = (
@@ -599,13 +639,20 @@ function MemberDetails({
   return (
     <SubjectSection title={nodeLabel(node)}>
       <div className={styles.member}>
+        <VariableTags tags={node.tags} />
         {facts.length > 0 && <KeyValue rows={facts} />}
         <ScopedDataWarnings fqid={node.fqid} />
+        <ScopedDataWarnings
+          fqid={registerPrefixOf(node.fqid)}
+          registerOnly
+          collapsed
+        />
         <ValueSetView
+          key={narrowed === null ? "-" : narrowed.map(stateKey).join(",")}
           fqid={node.fqid}
           states={states}
-          narrowed={false}
-          scopeStates={null}
+          narrowed={narrowed !== null}
+          scopeStates={narrowed}
           common={{
             name: node.name ?? null,
             description: node.description ?? null,
@@ -613,15 +660,11 @@ function MemberDetails({
             unit: node.measurement_unit ?? null,
           }}
         />
-        {/* The flags its variable page kept under Technical details. */}
-        <TechnicalDetails>
-          <KeyValue
-            rows={[
-              { label: "Sensitive", value: node.is_sensitive ? "yes" : "no" },
-              { label: "Identifier", value: node.is_identifier ? "yes" : "no" },
-            ]}
-          />
-        </TechnicalDetails>
+        <VariableReference
+          node={node}
+          states={states}
+          technicalState={technicalState}
+        />
       </div>
     </SubjectSection>
   );

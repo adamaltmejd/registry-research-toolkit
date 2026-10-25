@@ -128,7 +128,7 @@ pub fn graph(server: &Server, scope: Scope, params: &Params) -> Result<Value, Er
         Target::Variable { id } => {
             let slugs = slugs(&conn, id)?;
             let focus = builder.add_variable(&slugs)?;
-            if let Some(key) = show::group_key(&conn, id)?
+            if let Some(key) = show::group_key(&conn, scope, id)?
                 && let Some(group) = builder.group(&slugs[0], &slugs[1], &key)?
             {
                 builder.add_members(&group)?;
@@ -348,7 +348,7 @@ impl<'c> Builder<'c> {
                     ))
                 },
             )?;
-        let (group_key, facets, group_label) = match show::group_key(self.conn, id)? {
+        let (group_key, facets, group_label) = match show::group_key(self.conn, self.scope, id)? {
             Some(key) => {
                 let group = self.group(&slugs[0], &slugs[1], &key)?;
                 let member = group

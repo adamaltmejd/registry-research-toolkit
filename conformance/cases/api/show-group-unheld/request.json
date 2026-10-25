@@ -1,5 +1,5 @@
 {
-  "note": "The graph steps fail if graph draws an unheld group under holdings (the group path in graph.rs) instead of refusing it, or focuses a node for a group in reference.",
+  "note": "The graph steps fail if graph draws an unheld group under holdings (the group path in graph.rs) instead of refusing it, or focuses a node for a group in reference. The variable steps fail if a held variable whose group member rows are all unheld names that group under holdings (show.rs group_key ignoring scope), sending the webapp to a group page with no lane for it.",
   "fixture": "unheld-group",
   "requests": [
     {"operation": "show", "path": "/api/catalog/group/scb/example/value-family"},
@@ -12,6 +12,12 @@
     {
       "operation": "graph",
       "path": "/api/graph/group/scb/example/value-family",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "show", "path": "/api/catalog/scb/example/value"},
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example/value",
       "query": {"scope": "reference"}
     }
   ]

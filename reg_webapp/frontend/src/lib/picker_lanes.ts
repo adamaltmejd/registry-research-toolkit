@@ -69,7 +69,8 @@ export interface PickerLaneInput {
   axes: readonly { name: string }[];
   graph: RelationshipGraph | null;
   /** Draw the graph's other variables that a relation reaches as lanes to
-   * read, not pick (the binding leaf: its predecessor and successor). */
+   * read, not pick (a variable's predecessor and successor): from the
+   * `focusKey` band when one is set, else from every band. */
   neighbours: boolean;
   focusKey: string | null;
   window: [number, number] | null;
@@ -86,7 +87,8 @@ export interface PickerLaneInput {
   stagedRemoves: ReadonlySet<string>;
 }
 
-function bandFacets(band: PickerBand): GroupFacetModel[] {
+/** A band's facets: its whole-variable member's, else its first column's. */
+export function bandFacets(band: PickerBand): GroupFacetModel[] {
   return band.facets ?? Object.values(band.facetsByColumn ?? {})[0] ?? [];
 }
 
@@ -220,15 +222,21 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
   const bandKeys = new Set(ordered.map((band) => band.key));
 
   // The variables a relation reaches from a band, drawn as lanes to read.
+  // A group page focused on a member draws that member's neighbours only, as
+  // its own variable page did (#1909).
+  const nearKeys =
+    input.focusKey !== null && bandKeys.has(input.focusKey)
+      ? new Set([input.focusKey])
+      : bandKeys;
   const neighbours: VariableGraphNode[] = [];
   if (input.neighbours) {
     const seen = new Set<string>();
     for (const edge of input.graph?.edges ?? []) {
       if (edge.kind !== "succession") continue;
-      const [near, far] = bandKeys.has(edge.source)
+      const [near, far] = nearKeys.has(edge.source)
         ? [edge.source, edge.target]
         : [edge.target, edge.source];
-      if (!bandKeys.has(near) || bandKeys.has(far) || seen.has(far)) continue;
+      if (!nearKeys.has(near) || bandKeys.has(far) || seen.has(far)) continue;
       const node = nodes.get(far);
       if (node && node.states.length > 0) {
         seen.add(far);

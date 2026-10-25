@@ -164,8 +164,9 @@ function NodeView({
 
 /** A grouped member's URL opens its group's page focused on it, in place of
  * this history entry, carrying the URL's query (`?period`) along. History is
- * the external system the effect syncs with; a second run in StrictMode finds
- * the URL already there and does nothing. */
+ * the external system the effect syncs with. StrictMode's second run
+ * navigates again, a replace to the URL the first run already wrote, so it
+ * adds no history entry. */
 function MemberRedirect({
   groupRef,
   fqid,

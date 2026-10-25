@@ -296,26 +296,34 @@ export function facetLabelJoin(facets: { label: string }[]): string {
   return facets.map((f) => f.label).join(", ");
 }
 
-/** A group's axes that tell its members apart in bulk (#1904): an axis where
- * some value is carried by two or more members. A one-to-one axis (each value
- * one member, e.g. DORS's `ordinal` 1…48) only repeats the member list, so the
- * group page hides its filter and its header values, and with every axis
- * hidden titles the members by name. Every axis still orders the members. The
- * one read the page's header, filter row and member titles share. */
-export function informativeAxes(group: {
-  axes: readonly GroupAxisModel[];
-  members: readonly { facets: readonly GroupFacetModel[] }[];
-}): GroupAxisModel[] {
-  return group.axes.filter((axis) => {
+/** A group's axes that tell its lanes apart in bulk (#1904): an axis where
+ * some value is carried by two or more lanes. The filters act on lanes (one
+ * per variable, or per column of a variable split by column), so a value two
+ * members of one lane share still selects one lane. A one-to-one axis (each
+ * value one lane, e.g. DORS's `ordinal` 1…48) only repeats the lane list, so
+ * the group page hides its filter and its header values, and with every axis
+ * hidden titles the lanes by name. Every axis still orders the lanes. The one
+ * read the page's header, filter row and lane titles share. */
+export function informativeAxes(
+  axes: readonly GroupAxisModel[],
+  lanes: readonly { facets: readonly GroupFacetModel[] }[],
+): GroupAxisModel[] {
+  return axes.filter((axis) => {
     const seen = new Set<string>();
-    return group.members.some((member) => {
-      const facet = member.facets.find((f) => f.axis === axis.name);
+    return lanes.some((lane) => {
+      const facet = lane.facets.find((f) => f.axis === axis.name);
       if (!facet) return false;
       if (seen.has(facet.value)) return true;
       seen.add(facet.value);
       return false;
     });
   });
+}
+
+/** A state's identity in a list: its state, column and start, so a column's
+ * renamed spellings of one state stay apart. */
+export function stateKey(state: VariableStateModel): string {
+  return `${state.state_id}|${state.delivery_column_name ?? ""}|${state.valid_from}`;
 }
 
 /** A node's display label — its `name` when present, else its FQID. Groups are

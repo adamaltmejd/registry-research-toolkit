@@ -868,18 +868,23 @@ Per-kind mapping into the six sections:
   | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
   | description   | definition / description / unit `<dl>`                                                                                                                   | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
   | picker        | `VariableTimeline`: one `RepresentationPicker` graph headed by the coverage row and period slider, + add-to-project                                      | `ClassificationEditionGraph` compact edition DAG (#906)          | `CoverageTimeline`: the variable page's graph headed by the coverage row, without the slider (#1909)                                          |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | the `?member`'s own definitions, data warnings and `ValueSetView`                                                                             |
-  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
-  | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | —                                                                                                                                             |
-  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, single-state data type / column, and corrected delivery intervals with class/evidence) | —                                                                | —                                                                                                                                             |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | the `?member`'s own tags, definitions, data warnings and `ValueSetView`, its states narrowed by `?period`                                     |
+  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | the `?member`'s `LineageDetails`; its succession neighbours are lanes in the picker                                                           |
+  | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | the `?member`'s `DocMentionsPanel`                                                                                                            |
+  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, single-state data type / column, and corrected delivery intervals with class/evidence) | —                                                                | the `?member`'s `TechnicalDetails`, as on the variable page                                                                                   |
 
 **A concept group is its members' variable page (#1909, ruling #1794).** A grouped
 member has no page of its own: `CatalogNodeView` sends its URL, with the query, to
 `group/<provider>/<register>/<key>?member=<fqid>`, history-replaced. The group page
-marks that member's lane current (`aria-current` on its name, scrolled into view) and
-shows its own definition, operational definition, data warnings, states and sensitive /
-identifier flags below the picker; a lane's name links to the same page with that
-`?member`, a query-only move. Its lineage and document mentions are not repeated there.
+marks that member's lane current (`aria-current` on its name, scrolled into view), draws
+its succession neighbours as read-only lanes, and shows below the picker everything its
+variable page did: tags, definitions, data warnings, states, lineage, document mentions
+and technical details, through the same components (`VariableReference.tsx`). Nothing a
+researcher could reach from a member's page is lost. A lane's name links to the same
+page with that `?member`, a query-only move announced in a polite live region. The
+server names a variable's group only where its member row is in the scope's group
+(`group_key` in `show.rs`), so a variable whose group has no lane for it in holdings
+keeps its own page; a `?member` that still matches no lane says so and links that page.
 `BindingLeafView` therefore only ever shows an ungrouped variable, and its `/graph` read
 feeds the picker's neighbour lanes only.
 
@@ -907,7 +912,7 @@ kind:
   ordered by facet, each delivery column a span on one shared year axis. Spans are
   native checkboxes named column-first; succession edges between drawn lanes are solid
   arrows, a #902 rename fold a dashed hop inside one span, and the active window an
-  `accent-bg` band. A one-to-one axis (no value selects two or more members, e.g. an
+  `accent-bg` band. A one-to-one axis (no value selects two or more lanes, e.g. an
   `ordinal` 1…48) still orders the lanes but offers no filter and no header values; with
   every axis hidden the lanes are titled by variable name (`informativeAxes` in
   `catalog.ts`, #1904). The Variant and coding filters are exempt: they name the unit of

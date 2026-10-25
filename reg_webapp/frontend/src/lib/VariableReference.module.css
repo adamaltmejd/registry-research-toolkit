@@ -1,0 +1,58 @@
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.small {
+  font-size: var(--text-sm);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-4) 0;
+}
+.meta dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.matrixSource {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding-inline-start: var(--space-4);
+}
+
+.evidence {
+  margin: var(--space-1) 0 0;
+}
+
+@media (max-width: 48rem) {
+  .meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+  .meta dt:not(:first-child) {
+    margin-top: var(--space-2);
+  }
+}

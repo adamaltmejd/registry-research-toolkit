@@ -14,5 +14,13 @@
   {
     "status": 200,
     "json": {"/data/focus_id": null}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "scb/example/value", "/data/group": null}
+  },
+  {
+    "status": 200,
+    "json": {"/data/group": "group/scb/example/value-family"}
   }
 ]
