@@ -1,31 +1,27 @@
-import { Button as AriaButton } from "react-aria-components";
-import type { OrderBlocking, ValidationResultModel } from "./api";
-import type { SafeSource } from "./project_data";
+import type { ValidationResultModel } from "./api";
+import { FindingList, type NameOf } from "./Finding";
+import {
+  type SafeSource,
+  safeSourceBindings,
+  safeSourceRegisterVariant,
+} from "./project_data";
 import type { RequestErrorSource, ValidationStatus } from "./project_store";
 import { useRevealFindings } from "./reveal_findings";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
 import styles from "./ValidationPanel.module.css";
 import {
-  codeLabel,
-  type FindingLocation,
-  findingLocation,
-  orderFindingPointer,
-  type ValidationIssue,
-  type WindowDisjointFinding,
+  FINDING_LEVELS,
+  type FindingLevel,
+  type ProjectFinding,
 } from "./validation";
 
-// The validation echo (see crates/reg-core/DESIGN.md → Structural rules and issue
-// codes). Renders the `/validate` result's issue list grouped by level (error /
-// warning / info), the ok/not-ok summary, and — distinct from a 200 `ok:false`
-// issue list — a malformed-REQUEST banner (a true 4xx ApiError).
-//
-// Each finding LEADS with the human title (`codeLabel`), DEMOTES the raw `code` to
-// a small muted chip (still the stable identifier people cite), and — instead of
-// leaking the raw JSON pointer — renders a click-to-LOCATE label ("Source
-// 'lisa_main', column scb/lisa/adeldag", via `findingLocation`) that scrolls to
-// and briefly flashes the relevant source/binding card. `sources` is the draft's
-// (possibly malformed) source list, used only to resolve those labels.
+// The project's findings summary (see crates/reg-core/DESIGN.md → Structural
+// rules and issue codes). A located finding renders on its source card, under
+// what it concerns (#1906); this panel keeps the verdict, the count per level,
+// the findings that have no card (the name, the study window, the schema) in
+// full, and a jump link to every located one. Distinct from a 200 `ok:false`
+// list, a malformed REQUEST (a true 4xx ApiError) is a banner.
 
 interface Props {
   result: ValidationResultModel | null;
@@ -34,14 +30,12 @@ interface Props {
   /** WHICH request `requestError` came from — the discriminator the retry
    * affordance is gated on. */
   requestErrorSource: RequestErrorSource | null;
-  /** A blocked order's findings (`/order`'s 422), rendered in the SAME
-   * per-finding shape as a validation issue — they are findings, not a message. */
-  orderFindings: readonly OrderBlocking[];
-  /** Sources the common study window has left with no years inside it — the SPA's
-   * own blocking authoring finding (`windowDisjointFindings`), rendered like a
-   * blocked order's findings because it blocks the order the same way. */
-  windowFindings: readonly WindowDisjointFinding[];
+  /** Every finding on the project (`projectFindings`): validation issues, a
+   * blocked order's findings and the study window's disjoint sources. */
+  findings: readonly ProjectFinding[];
+  /** The draft's sources, to name where a located finding sits. */
   sources: readonly SafeSource[];
+  nameOf: NameOf;
   /** Re-runs `/validate`. Offered ONLY for a failed validation REQUEST. */
   onRetry: () => void;
   /** Re-POSTs `/order`. Offered ONLY for an order request the backend never
@@ -49,107 +43,108 @@ interface Props {
   onRetryOrder: () => void;
 }
 
-/** Scroll the located card into view and flash it. Imperative: findings live in
- * this panel and cards in sibling components, and restarting the CSS animation on
- * a re-click needs a reflow between removing the class and adding it back. */
-function locate(anchorId: string): void {
-  const el = document.getElementById(anchorId);
+/** Scroll the finding into view, move focus to it and flash it. Imperative:
+ * the finding lives on a card in a sibling component, and restarting the CSS
+ * animation on a second press needs a reflow between removing the class and
+ * adding it back. */
+function jump(id: string): void {
+  const el = document.getElementById(id);
   if (el == null) {
     return;
   }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.focus({ preventScroll: true });
   el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
   el.classList.remove("locate-flash");
   void el.offsetWidth;
   el.classList.add("locate-flash");
 }
 
-/** `items` paired with React keys built from their content: `base`, with an
- * occurrence suffix where two items share one (two identical findings). */
-function keyed<T>(
-  items: readonly T[],
-  base: (item: T) => string,
-): [string, T][] {
-  const seen = new Map<string, number>();
-  return items.map((item) => {
-    const key = base(item);
-    const n = seen.get(key) ?? 0;
-    seen.set(key, n + 1);
-    return [n === 0 ? key : `${key}#${n}`, item];
-  });
-}
-
-const LEVELS = ["error", "warning", "info"] as const;
-type Level = (typeof LEVELS)[number];
-
-const LEVEL_LABEL: Record<Level, string> = {
+const LEVEL_LABEL: Record<FindingLevel, string> = {
   error: "Errors",
   warning: "Warnings",
   info: "Info",
 };
 
-function groupByLevel(
-  issues: readonly ValidationIssue[],
-): Record<Level, ValidationIssue[]> {
-  const out: Record<Level, ValidationIssue[]> = {
-    error: [],
-    warning: [],
-    info: [],
-  };
-  for (const issue of issues) {
-    // An unknown level (forward-compat) buckets under `info` so it still shows.
-    const level: Level = LEVELS.includes(issue.level as Level)
-      ? (issue.level as Level)
-      : "info";
-    out[level].push(issue);
-  }
-  return out;
+/** Where a located finding sits, in the catalog's words: the column's variable
+ * and the source's register ("Kön in LISA, Individer"), falling back to
+ * positions while the names are unread. */
+function placeOf(
+  finding: ProjectFinding,
+  sources: readonly SafeSource[],
+  nameOf: NameOf,
+): string {
+  const location = finding.location;
+  if (location === null) return "";
+  const source = sources[location.sourceIndex] ?? null;
+  const rv = safeSourceRegisterVariant(source);
+  const sourceName = (rv && nameOf(rv)) || `source ${location.sourceIndex + 1}`;
+  if (location.bindingIndex === null) return sourceName;
+  const variable = (
+    safeSourceBindings(source)[location.bindingIndex] as
+      | { variable?: unknown }
+      | undefined
+  )?.variable;
+  const column =
+    (typeof variable === "string" && variable && nameOf(variable)) ||
+    `column ${location.bindingIndex + 1}`;
+  return `${column} in ${sourceName}`;
 }
 
-/** Where a finding sits in the draft, for both finding lists: a validation issue
- * and an order finding differ in how they name their location, not in how it is
- * presented. */
-function Locators({ loc }: { loc: FindingLocation }) {
-  return (
-    <div className={styles.locators}>
-      <AriaButton
-        className={styles.locate}
-        onPress={() => locate(loc.anchorId)}
-      >
-        {loc.label}
-      </AriaButton>
-      {/* The cart is read-only (#991): fixes happen on the catalog subject page.
-          Omitted when the finding resolves no catalog coordinate. */}
-      {loc.catalogHref && (
-        <a className={styles.catalogLink} href={loc.catalogHref}>
-          Fix in catalog: <code>{loc.catalogLabel}</code>
-        </a>
-      )}
-    </div>
-  );
-}
-
-function Finding({
-  title,
-  code,
-  message,
-  children,
+/** One group of findings: the ones with no card in full, then a jump link to
+ * each located one. */
+function FindingGroup({
+  headingId,
+  heading,
+  level,
+  findings,
+  sources,
+  nameOf,
 }: {
-  title: string;
-  code?: string;
-  message: string;
-  children?: React.ReactNode;
+  headingId: string;
+  heading: string;
+  level: FindingLevel;
+  findings: readonly ProjectFinding[];
+  sources: readonly SafeSource[];
+  nameOf: NameOf;
 }) {
+  const unlocated = findings.filter((f) => f.location === null);
+  const located = findings.filter((f) => f.location !== null);
   return (
-    <li>
-      <div className={styles.issueHead}>
-        <span className={styles.label}>{title}</span>
-        {/* The raw code stays visible but DEMOTED: the stable id people cite. */}
-        {code && <code className={styles.code}>{code}</code>}
-      </div>
-      <p className={styles.message}>{message}</p>
-      {children}
-    </li>
+    <fieldset
+      className={`${styles.group} ${styles[level]}`}
+      aria-labelledby={headingId}
+      data-findings
+    >
+      <h4 className="micro-label" id={headingId} tabIndex={-1}>
+        {heading} ({findings.length})
+      </h4>
+      <FindingList
+        findings={unlocated}
+        nameOf={nameOf}
+        label={`${heading} on the project`}
+      />
+      {located.length > 0 && (
+        <ul className={styles.jumps}>
+          {located.map((finding) => (
+            <li key={finding.id}>
+              {/* A plain fragment link, so it works without script too; the
+                  handler adds the focus and the flash. */}
+              <a
+                className="link"
+                href={`#${finding.id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  jump(finding.id);
+                }}
+              >
+                {finding.title} on {placeOf(finding, sources, nameOf)}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </fieldset>
   );
 }
 
@@ -158,14 +153,17 @@ export function ValidationPanel({
   status,
   requestError,
   requestErrorSource,
-  orderFindings,
-  windowFindings,
+  findings,
   sources,
+  nameOf,
   onRetry,
   onRetryOrder,
 }: Props) {
-  const grouped = groupByLevel(result?.issues ?? []);
   useRevealFindings();
+  const orderFindings = findings.filter((f) => f.check === "order");
+  const windowFindings = findings.filter((f) => f.check === "window");
+  const issues = findings.filter((f) => f.check === "validation");
+  const errorCount = issues.filter((f) => f.level === "error").length;
   return (
     <section className={styles.validation} aria-label="Validation results">
       {requestError && (
@@ -202,71 +200,27 @@ export function ValidationPanel({
       )}
 
       {orderFindings.length > 0 && (
-        <fieldset
-          className={`${styles.group} ${styles.error}`}
-          aria-labelledby="order-findings-heading"
-          data-findings
-        >
-          <h4 className="micro-label" id="order-findings-heading" tabIndex={-1}>
-            Blocking findings ({orderFindings.length})
-          </h4>
-          <ul>
-            {keyed(
-              orderFindings,
-              (f) => `${f.code}|${f.variable ?? ""}|${f.period ?? ""}`,
-            ).map(([key, finding]) => {
-              const loc = findingLocation(
-                orderFindingPointer(finding, sources),
-                sources,
-              );
-              return (
-                <Finding
-                  key={key}
-                  title={codeLabel(finding.code)}
-                  code={finding.code}
-                  message={finding.message}
-                >
-                  {/* The EXACT offending subperiod for the coverage codes — the
-                      one edit that fixes the request. */}
-                  {finding.period && (
-                    <p className={styles.path}>Period {finding.period}</p>
-                  )}
-                  {loc && <Locators loc={loc} />}
-                </Finding>
-              );
-            })}
-          </ul>
-        </fieldset>
+        <FindingGroup
+          headingId="order-findings-heading"
+          heading="Blocking findings"
+          level="error"
+          findings={orderFindings}
+          sources={sources}
+          nameOf={nameOf}
+        />
       )}
 
       {/* Sources the study window has moved off: each keeps its explicit period,
           so the ORDER is blocked until the researcher decides. */}
       {windowFindings.length > 0 && (
-        <fieldset
-          className={`${styles.group} ${styles.error}`}
-          aria-labelledby="window-findings-heading"
-          data-findings
-        >
-          <h4
-            className="micro-label"
-            id="window-findings-heading"
-            tabIndex={-1}
-          >
-            Blocking the order: outside the study window (
-            {windowFindings.length})
-          </h4>
-          <ul>
-            {keyed(windowFindings, (f) => f.message).map(([key, finding]) => (
-              <Finding
-                key={key}
-                title="No years inside the study window"
-                message={finding.message}
-              >
-                {finding.location && <Locators loc={finding.location} />}
-              </Finding>
-            ))}
-          </ul>
-        </fieldset>
+        <FindingGroup
+          headingId="window-findings-heading"
+          heading="Blocking the order: outside the study window"
+          level="error"
+          findings={windowFindings}
+          sources={sources}
+          nameOf={nameOf}
+        />
       )}
 
       {/* The summary is suppressed while a request error stands: `/order` can
@@ -289,50 +243,24 @@ export function ValidationPanel({
                 is the whole line. */}
             {result.ok
               ? status === "warnings"
-                ? `Draft valid with warnings: project rules and catalog metadata checked (${result.issues.length} non-blocking ${result.issues.length === 1 ? "note" : "notes"}).`
+                ? `Draft valid with warnings: project rules and catalog metadata checked (${issues.length} non-blocking ${issues.length === 1 ? "note" : "notes"}).`
                 : "Draft valid"
-              : `Draft not valid: ${grouped.error.length} ${grouped.error.length === 1 ? "error" : "errors"}.`}
+              : `Draft not valid: ${errorCount} ${errorCount === 1 ? "error" : "errors"}.`}
           </StatusRow>
-          {LEVELS.map(
-            (level) =>
-              grouped[level].length > 0 && (
-                <div
-                  key={level}
-                  className={`${styles.group} ${styles[level]}`}
-                  data-findings
-                >
-                  <h4 className="micro-label" tabIndex={-1}>
-                    {LEVEL_LABEL[level]} ({grouped[level].length})
-                  </h4>
-                  <ul>
-                    {keyed(
-                      grouped[level],
-                      (issue) => `${issue.code}|${issue.path}`,
-                    ).map(([key, issue]) => {
-                      const loc = findingLocation(issue.path, sources);
-                      return (
-                        <Finding
-                          key={key}
-                          title={codeLabel(issue.code)}
-                          code={issue.code}
-                          message={issue.message}
-                        >
-                          {loc ? (
-                            <Locators loc={loc} />
-                          ) : issue.path ? (
-                            <code className={styles.path}>{issue.path}</code>
-                          ) : (
-                            <span className={styles.path}>
-                              (whole document)
-                            </span>
-                          )}
-                        </Finding>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ),
-          )}
+          {FINDING_LEVELS.map((level) => {
+            const atLevel = issues.filter((f) => f.level === level);
+            return atLevel.length > 0 ? (
+              <FindingGroup
+                key={level}
+                headingId={`${level}-findings-heading`}
+                heading={LEVEL_LABEL[level]}
+                level={level}
+                findings={atLevel}
+                sources={sources}
+                nameOf={nameOf}
+              />
+            ) : null;
+          })}
           {/* Order materialization is a SEPARATE check; said only where there is
               already something to read, outside the live region. */}
           {status === "warnings" && (

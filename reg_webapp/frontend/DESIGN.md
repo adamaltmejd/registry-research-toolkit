@@ -537,8 +537,13 @@ Time is the axis every relation is drawn on.
   no bar.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, ordered by
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
-  rename. A lane's title joins its facet values with a comma, and its name opens the
-  variable; a span is a checkbox for the add bar, and hovering it highlights its edges.
+  rename. A succession arrow between overlapping spans drops at the edge's effective
+  year. A lane's title joins its facet values with a comma, and its name opens the
+  variable; its line under the name is plain words, never a slug: the register when it
+  differs from the page's, or what tells two lanes of one name apart. A read-only
+  neighbour lane still shows its columns' "in project" state. A span is a checkbox for
+  the add bar, and hovering it highlights its edges. On `/project` a column's findings
+  sit across its lane, under its spans.
   It shares the page's axis with the `Timeline`. It draws the study window's band and,
   over it, an add window that differs, as on the variable page, with the axis years on
   the add window's bounds when one is drawn. Its legend keys only the marks drawn: the
@@ -635,6 +640,13 @@ not grow new visual language meanwhile.
   With no project open it is the same box, empty and untinted with a `border` leading
   bar, holding a `default` "Create a project" Button, which starts a project and opens
   it, and nothing in the catalog is tinted.
+- **Findings** are `StatusRow`s in their level's tone, set under what they concern: a
+  column's under its lane, a source's at the top of its card. Each names its place in
+  the catalog's words, never an FQID. Its title holds the stable code in a delayed
+  `Tooltip` (`mono`, press to copy); no code chip on the page. The summary panel under
+  the sources keeps the verdict, the counts per level, the project's own findings in
+  full and a plain link to each located one, which scrolls to it, focuses it and flashes
+  it.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items

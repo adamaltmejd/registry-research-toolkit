@@ -38,6 +38,9 @@ export interface LaneEdgeInput {
   from: string;
   to: string;
   kind: LaneEdgeKind;
+  /** The year the succession takes effect: where the arrow is drawn when the
+   * two spans overlap. Unknown, the arrow drops where they start to overlap. */
+  year?: number | null;
 }
 
 export interface LaneGeometryInput {
@@ -52,6 +55,9 @@ export interface LaneGeometryInput {
   /** Reserve the Timeline's coverage row between the axis and the lanes (the
    * variable page). */
   coverageRow?: boolean;
+  /** Measured px under a lane's spans for what the page sets there (a
+   * column's findings on /project, #1906), by lane id. */
+  below?: ReadonlyMap<string, number>;
 }
 
 export interface PlacedSegment {
@@ -98,7 +104,6 @@ export interface LaneGeometry {
     label?: string;
     anchor?: "start" | "end";
   }[];
-  window: { x: number; width: number } | null;
   /** Drawn from a span's end to the next one's start. A span folding a
    * rename also gets one dashed edge per change of name inside it. */
   edges: {
@@ -220,9 +225,11 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
   for (const lane of input.lanes) {
     const rows = rowsOf.get(lane.id) ?? 1;
-    const height = stacked
-      ? STACKED_NAME_HEIGHT + rows * ROW_STEP + 2
-      : LANE_HEIGHT + (rows - 1) * ROW_STEP;
+    const height =
+      (stacked
+        ? STACKED_NAME_HEIGHT + rows * ROW_STEP + 2
+        : LANE_HEIGHT + (rows - 1) * ROW_STEP) +
+      (input.below?.get(lane.id) ?? 0);
     lanes.push({ id: lane.id, y, height });
     laneTop.set(lane.id, y);
     y += height;
@@ -236,14 +243,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       (rowOf.get(span.id) ?? 0) * ROW_STEP;
   }
 
-  const window = input.window
-    ? {
-        x: x(Math.max(input.window[0], first)),
-        width:
-          x(Math.min(input.window[1], last) + 1) -
-          x(Math.max(input.window[0], first)),
-      }
-    : null;
   const inWindow = (year: number) =>
     input.window !== null &&
     (year === input.window[0] || year === input.window[1]);
@@ -307,14 +306,19 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     if (to.x < fromEnd - 1) {
       // The successor starts before its predecessor ends (overlapping
       // deliveries): a forward curve would loop back, so drop straight from
-      // the predecessor to the successor where the successor begins.
+      // the predecessor to the successor, at the year the succession takes
+      // effect (#1901), else where the overlap begins.
       const lo = Math.max(from.x, to.x);
       const hi = Math.min(fromEnd, to.x + to.width);
-      const x = Math.min(lo + 12, (lo + hi) / 2);
+      const at =
+        edge.year != null ? x(edge.year) : Math.min(lo + 12, (lo + hi) / 2);
+      // Kept on both spans, so the line never hangs in empty track.
+      const drop =
+        hi - lo > 4 ? Math.min(Math.max(at, lo + 2), hi - 2) : (lo + hi) / 2;
       const down = to.y > from.y;
       const y1 = down ? from.y + SPAN_HEIGHT : from.y;
       const y2 = down ? to.y : to.y + SPAN_HEIGHT;
-      return [{ ...edge, d: `M${x},${y1} L${x},${y2}` }];
+      return [{ ...edge, d: `M${drop},${y1} L${drop},${y2}` }];
     }
     return [
       {
@@ -359,7 +363,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     lanes,
     spans: placed,
     ticks,
-    window,
     edges,
   };
 }

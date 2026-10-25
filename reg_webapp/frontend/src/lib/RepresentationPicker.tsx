@@ -1,11 +1,13 @@
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import type { GroupAxisModel, RelationshipGraph } from "./api";
 import {
   type PickerDimension,
   pickerFilterDimensions,
   pickerRowPasses,
+  registerPrefixOf,
 } from "./catalog";
+import { catalogNames } from "./catalog_names";
 import { type LaneCoverage, LaneGraph } from "./LaneGraph";
 import { type PickerBand, pickerLanes } from "./picker_lanes";
 import type { ProjectStudyWindow } from "./project_data";
@@ -21,6 +23,8 @@ import {
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
 import { FilterChip } from "./ui/FilterChip";
+import { useProject } from "./use_project";
+import { useCatalogRead } from "./use_store_read";
 
 export type { PickerBand } from "./picker_lanes";
 
@@ -148,6 +152,20 @@ export function RepresentationPicker({
   const removes = new Set(
     [...staging.removes].filter((key) => committedRows.has(key)),
   );
+  const draft = useProject((store) => store.draft);
+  // The registers the lanes can reach, named for their lines: a neighbour in
+  // another register, or two lanes under one name. Keyed by their text, so the
+  // read is rebuilt only when the set changes.
+  const registerKey = [
+    ...new Set(
+      [
+        ...bands.map((band) => band.key),
+        ...(graph?.nodes ?? []).map((node) => node.fqid),
+      ].map(registerPrefixOf),
+    ),
+  ].join("\n");
+  const registers = useMemo(() => registerKey.split("\n"), [registerKey]);
+  const names = useCatalogRead(catalogNames, registers);
   const graphModel = pickerLanes({
     bands: shown,
     axes,
@@ -160,6 +178,8 @@ export function RepresentationPicker({
     drawnYears,
     catalogSpan,
     committed: committedRows,
+    draft,
+    names,
     stagedAdds: adds,
     stagedRemoves: removes,
   });

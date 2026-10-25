@@ -15,10 +15,11 @@ import type {
 } from "./api";
 import {
   catalogHref,
-  leafSlug,
+  facetLabelJoin,
   OPEN_ENDED_VALID_TO,
   type PickerRepresentation,
   pickerRepresentations,
+  registerPrefixOf,
   representationInWindow,
   rowCoversColumn,
   valueSetKey,
@@ -27,9 +28,10 @@ import {
 } from "./catalog";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
 import { dataAxis, yearWindowLabel } from "./period";
-import type { ProjectStudyWindow } from "./project_data";
+import type { ProjectStudyWindow, RawDraft } from "./project_data";
 import {
   committedMarker,
+  committedPickerRows,
   type PickerCommittedRow,
   pickerRowKey,
   type StagedPickerBand,
@@ -83,6 +85,13 @@ export interface PickerLaneInput {
    * the axis when nothing is dated. */
   catalogSpan: readonly [number, number];
   committed: ReadonlyMap<string, PickerCommittedRow>;
+  /** The project, for the neighbour lanes' own "in project" state: a
+   * neighbour is read, not picked, but a column of it already in the project
+   * says so (#1901). */
+  draft: RawDraft | null;
+  /** The catalog's names for the lanes' registers (`catalogNames`): what tells
+   * a neighbour in another register, or two lanes under one name, apart. */
+  names: Readonly<Record<string, string>>;
   stagedAdds: ReadonlySet<string>;
   stagedRemoves: ReadonlySet<string>;
 }
@@ -204,6 +213,26 @@ function codingChanges(
   return [...years].sort((a, b) => a - b);
 }
 
+/** A lane's columns as words: the last thing that tells two variables under one
+ * name apart, and one a researcher reads in the delivered file. */
+function columnsTeller(rows: readonly PickerRepresentation[]): string | null {
+  const columns = [...new Set(rows.map((row) => row.column))];
+  if (columns.length === 0) return null;
+  return `${columns.length === 1 ? "Column" : "Columns"} ${columns.join(", ")}`;
+}
+
+function textSub(text: string | null): LaneModel["sub"] {
+  return text ? { text } : null;
+}
+
+/** The concrete variants a row is delivered under: what a variant-scoped
+ * succession edge is matched against. */
+function rowVariants(row: PickerRepresentation): string[] {
+  return row.variantSegments && row.variantSegments.length > 0
+    ? row.variantSegments.map((segment) => segment.variant)
+    : [row.variant];
+}
+
 function graphNodes(
   graph: RelationshipGraph | null,
 ): Map<string, VariableGraphNode> {
@@ -253,13 +282,23 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
   >();
   // Every lane of a variable: a group gives one per member column.
   const lanesOfFqid = new Map<string, string[]>();
+  // Span id → the row it draws, for every lane (`rows` holds only the ones a
+  // tick reaches).
+  const spanRows = new Map<string, PickerRepresentation>();
   const placedYears: Years[] = [];
   const draft: {
     lane: LaneModel;
     band: PickerBand;
     rows: PickerRepresentation[];
     selectable: boolean;
+    /** What could tell this lane from another under the same name, best
+     * first: never its slug, which names neither a column nor a variable. */
+    tellers: (string | null | undefined)[];
   }[] = [];
+  const registerName = (fqid: string) => {
+    const register = registerPrefixOf(fqid);
+    return input.names[register] ?? null;
+  };
 
   for (const band of ordered) {
     const lane: LaneModel = {
@@ -274,36 +313,87 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
       current: input.focusKey === band.key,
       relations: [],
     };
-    draft.push({ lane, band, rows: band.rows, selectable: true });
+    draft.push({
+      lane,
+      band,
+      rows: band.rows,
+      selectable: true,
+      tellers: [
+        band.operationalDefinition,
+        band.facetLabel,
+        registerName(band.key),
+        columnsTeller(band.rows),
+      ],
+    });
     lanesOfFqid.set(band.key, [...(lanesOfFqid.get(band.key) ?? []), lane.id]);
   }
+  const bandRegisters = new Set(
+    ordered.map((band) => registerPrefixOf(band.key)),
+  );
+  const neighbourBands: PickerBand[] = [];
   for (const node of neighbours) {
     const band: PickerBand = {
       key: node.fqid,
       name: node.label,
-      registerPrefix: "",
+      registerPrefix: registerPrefixOf(node.fqid),
       rows: pickerRepresentations(node.states),
     };
+    neighbourBands.push(band);
     const lane: LaneModel = {
       id: node.fqid,
       name: node.label,
-      sub: { text: leafSlug(node.fqid), mono: true },
+      // A neighbour in another register says which; in the page's own register
+      // it needs no line.
+      sub: bandRegisters.has(band.registerPrefix)
+        ? null
+        : textSub(registerName(node.fqid)),
       href: catalogHref(node.fqid),
       relations: [],
     };
-    draft.push({ lane, band, rows: band.rows, selectable: false });
+    draft.push({
+      lane,
+      band,
+      rows: band.rows,
+      selectable: false,
+      tellers: [
+        node.operational_definition,
+        node.facets.length > 0 ? facetLabelJoin(node.facets) : null,
+        registerName(node.fqid),
+        columnsTeller(band.rows),
+      ],
+    });
     lanesOfFqid.set(node.fqid, [lane.id]);
   }
+  // A neighbour is in the project the way a band is, through a source of its
+  // family; it is still only read here, never ticked.
+  const neighbourCommitted = committedPickerRows(
+    input.draft,
+    neighbourBands,
+    [],
+  );
+  const committedOf = (key: string) =>
+    input.committed.get(key) ?? neighbourCommitted.get(key);
 
-  // Two lanes under one name say which variable each is.
-  const names = new Map<string, number>();
-  for (const { lane } of draft) {
-    const key = `${lane.name}\u0000${lane.sub?.text ?? ""}`;
-    names.set(key, (names.get(key) ?? 0) + 1);
+  // Two lanes under one name say which variable each is, by the first thing
+  // that tells every one of them apart.
+  const shown = (lane: LaneModel) =>
+    `${lane.name}\u0000${lane.sub?.text ?? ""}`;
+  const alike = new Map<string, typeof draft>();
+  for (const entry of draft) {
+    const key = shown(entry.lane);
+    alike.set(key, [...(alike.get(key) ?? []), entry]);
   }
-  for (const { lane } of draft) {
-    if ((names.get(`${lane.name}\u0000${lane.sub?.text ?? ""}`) ?? 0) > 1) {
-      lane.sub = { text: leafSlug(lane.id), mono: true };
+  for (const group of alike.values()) {
+    if (group.length < 2) continue;
+    const slots = group[0].tellers.length;
+    for (let i = 0; i < slots; i += 1) {
+      const texts = group.map((entry) => entry.tellers[i]?.trim() || "");
+      if (texts.every(Boolean) && new Set(texts).size === texts.length) {
+        group.forEach((entry, j) => {
+          entry.lane.sub = { text: texts[j] };
+        });
+        break;
+      }
     }
   }
 
@@ -339,7 +429,10 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
       const key = selectable
         ? pickerRowKey(band, row)
         : `${band.laneKey ?? band.key}::${row.key}`;
-      const committed = selectable ? input.committed.get(key) : undefined;
+      // Membership is looked up for every lane; whether a lane can be ticked
+      // is a separate matter (#1901).
+      const committed = committedOf(pickerRowKey(band, row));
+      spanRows.set(key, row);
       const staged = input.stagedAdds.has(key)
         ? ("add" as const)
         : input.stagedRemoves.has(key)
@@ -456,13 +549,19 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
       column: string | null | undefined,
       last: boolean,
     ) => {
-      const candidates = spans.filter((s) => laneIds.includes(s.lane));
+      // A variant-scoped edge holds only where that variant's columns are
+      // drawn: it reaches no span delivered under another variant.
+      const candidates = spans.filter((s) => {
+        if (!laneIds.includes(s.lane)) return false;
+        const row = spanRows.get(s.id);
+        return (
+          !edge.variant || (!!row && rowVariants(row).includes(edge.variant))
+        );
+      });
       const named = column
         ? candidates.filter((s) => {
-            const entry = rows.get(s.id);
-            return entry
-              ? rowCoversColumn(entry.row, column)
-              : s.name === column;
+            const row = spanRows.get(s.id);
+            return row ? rowCoversColumn(row, column) : s.name === column;
           })
         : [];
       const pool = named.length > 0 ? named : candidates;
@@ -475,7 +574,13 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
     if (!from || !to || from.id === to.id) continue;
     const fromLane = from.lane;
     const toLane = to.lane;
-    edges.push({ id: edge.id, from: from.id, to: to.id, kind: "succession" });
+    edges.push({
+      id: edge.id,
+      from: from.id,
+      to: to.id,
+      kind: "succession",
+      year: edge.effective_year ?? null,
+    });
     const year = edge.effective_year ? ` in ${edge.effective_year}` : "";
     if (fromLane !== toLane) {
       lanes

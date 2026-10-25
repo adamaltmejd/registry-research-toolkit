@@ -110,6 +110,19 @@
   left: 0;
 }
 
+/* A lane's `below` block (a /project column's findings), across the whole lane
+   under its spans; the lane's height already holds it. */
+.below {
+  position: absolute;
+  right: 0;
+  left: 0;
+  box-sizing: border-box;
+  padding-bottom: var(--space-2);
+}
+.listBelow {
+  padding-bottom: var(--space-2);
+}
+
 .name {
   display: flex;
   flex-direction: column;

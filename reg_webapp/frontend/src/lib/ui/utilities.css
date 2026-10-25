@@ -135,8 +135,8 @@ a:not([class]):focus-visible,
   color: var(--err);
 }
 
-/* `.locate-flash` — briefly rings a /project source or column card when the
-   validation panel locates it; the panel toggles the class on the element. */
+/* `.locate-flash` — briefly rings a /project finding when the validation
+   panel's jump link lands on it; the panel toggles the class on the element. */
 .locate-flash {
   animation: locate-flash calc(5 * var(--duration-slow)) var(--ease-out);
 }

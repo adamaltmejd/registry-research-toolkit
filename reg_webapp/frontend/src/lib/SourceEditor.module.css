@@ -88,3 +88,12 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
+
+/* The window finding's line: a jump-link target, clear of the sticky bar, with
+   no ring for a focus the reader did not Tab to. */
+.jumpTarget {
+  scroll-margin-top: calc(var(--top-bar-height, 0px) + var(--space-4));
+}
+.jumpTarget:focus {
+  outline: none;
+}
