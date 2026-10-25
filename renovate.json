@@ -145,14 +145,14 @@
       "allowedVersions": "<=0.1.25"
     },
     {
-      "description": "Hold: `typescript` is the JS compiler API openapi-typescript imports (peer ^5.x); TS 7 does not ship it. Type checking already runs TS 7 through the @typescript/native alias. Lift when openapi-typescript supports TS 7.",
+      "description": "Hold: `typescript` is the JS compiler API openapi-typescript imports (peer ^5.x); TS 7 does not ship it. Type checking already runs TS 7 through the @typescript/native alias. Lift when openapi-typescript supports TS 7. matchDepNames, not matchPackageNames: the @typescript/native alias's packageName is also `typescript`, and it must keep taking 7.x.",
       "matchFileNames": [
         "reg_webapp/frontend/package.json"
       ],
-      "matchPackageNames": [
+      "allowedVersions": "<7",
+      "matchDepNames": [
         "typescript"
-      ],
-      "allowedVersions": "<7"
+      ]
     }
   ]
 }
