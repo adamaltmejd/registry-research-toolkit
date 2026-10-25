@@ -21,11 +21,11 @@ COPY --from=uv /uv /uvx /usr/local/bin/
 # uv takes its interpreter install dir only from the environment, so the
 # interpreter is linked onto PATH and uv finds it there with downloads off.
 RUN export UV_PYTHON_INSTALL_DIR=/opt/uv/python \
-    && uv python install 3.14 \
-    && ln -s "$(uv python find --managed-python 3.14)" /usr/local/bin/python3.14 \
+    && uv python install 3.15 \
+    && ln -s "$(uv python find --managed-python 3.15)" /usr/local/bin/python3.15 \
     && chmod -R a+rX /opt/uv \
     && mkdir -p /etc/uv \
     && printf 'python-downloads = "never"\n' > /etc/uv/uv.toml \
-    && env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/tmp uv python find 3.14
+    && env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/tmp uv python find 3.15
 
 WORKDIR /workspace

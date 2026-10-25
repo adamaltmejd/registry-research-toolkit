@@ -46,6 +46,7 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.source_support import SupportTarget, support_join_key
 
+from ._curation import common_prefix
 from .source_evidence import (
     DeliveredCell,
     RecordLocator,
@@ -371,7 +372,7 @@ def _write_record(
 def _locator_values(
     payloads: _PayloadWriter, locator: RecordLocator
 ) -> tuple[str, str, str, str, int]:
-    prefix = os.path.commonprefix(locator.physical_cells)
+    prefix = common_prefix(locator.physical_cells)
     return (
         locator.physical_file,
         locator.physical_table,
