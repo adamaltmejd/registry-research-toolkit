@@ -1,0 +1,17 @@
+{
+  "note": "A cross-register table beside the allowed same-register variant twin and unmapped columns; a second offender pins aggregate table order. Counts are distinct columns, not mappings.",
+  "fails_if": "load_inventory admits cross-register tables, rejects same-register variants or unmapped columns, counts mappings instead of columns, omits an offender, or changes deterministic ordering.",
+  "error": {
+    "code": "inventory_table_spans_registers",
+    "locators": [
+      "table['Mixed.csv']",
+      "table['Other.csv']"
+    ],
+    "message_contains": [
+      "table['Mixed.csv']: Value error, maps columns of more than one register: scb/alpha (1 mapped columns), scb/zeta (2 mapped columns)\n  table['Other.csv']: Value error, maps columns of more than one register: other/alpha (1 mapped columns), scb/alpha (1 mapped columns)"
+    ],
+    "message_excludes": [
+      "Allowed.csv"
+    ]
+  }
+}

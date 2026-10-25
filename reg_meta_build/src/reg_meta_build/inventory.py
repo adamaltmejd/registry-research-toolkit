@@ -70,6 +70,7 @@ _MEMBER = "inventory_member_invalid"
 _PROJECTION = "inventory_projection_invalid"
 _PERIOD_COLUMN = "inventory_period_column_invalid"
 _CARRIED = "inventory_carried_key_invalid"
+_SPANS_REGISTERS = "inventory_table_spans_registers"
 # Public: the steward spec refuses a mapping warning that misses every table
 # under the same code (#1684).
 WINDOW_INVALID = "inventory_window_invalid"
@@ -715,6 +716,29 @@ class InventoryTable(_InventoryModel):
                 _CARRIED,
                 f"carries a key of {', '.join(dead)} but serves no cell of it, so "
                 "no file of this table and variant is ever ordered to carry it",
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _check_one_register(self) -> InventoryTable:
+        """A delivery table is ordered as one object, so its mapped columns come
+        from at most one `provider/register`; its variants may differ and
+        unmapped columns do not count. Counts are columns, not mappings."""
+        counts: dict[str, int] = {}
+        for column in self.columns:
+            for register in {
+                mapping.register_variant.rsplit("/", 1)[0]
+                for mapping in column.mappings
+            }:
+                counts[register] = counts.get(register, 0) + 1
+        if len(counts) > 1:
+            raise _InventoryGuardError(
+                _SPANS_REGISTERS,
+                "maps columns of more than one register: "
+                + ", ".join(
+                    f"{register} ({count} mapped columns)"
+                    for register, count in sorted(counts.items())
+                ),
             )
         return self
 

@@ -1,0 +1,87 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Mixed.csv"
+edition = 2020
+
+[[table.column]]
+name = "A"
+
+[[table.column.mapping]]
+register_variant = "scb/zeta/first"
+variable = "scb/zeta/a"
+representation = "A"
+
+[[table.column.mapping]]
+register_variant = "scb/zeta/second"
+variable = "scb/zeta/a"
+representation = "A"
+
+[[table.column]]
+name = "B"
+
+[[table.column.mapping]]
+register_variant = "scb/alpha/main"
+variable = "scb/alpha/b"
+representation = "B"
+
+[[table.column]]
+name = "C"
+
+[[table.column.mapping]]
+register_variant = "scb/zeta/first"
+variable = "scb/zeta/c"
+representation = "C"
+
+[[table.column]]
+name = "Unmapped"
+unmapped_reason = "No catalog mapping"
+
+[[table]]
+id = "Allowed.csv"
+edition = 2020
+
+[[table.column]]
+name = "D"
+
+[[table.column.mapping]]
+register_variant = "scb/solo/first"
+variable = "scb/solo/d"
+representation = "D"
+
+[[table.column]]
+name = "E"
+
+[[table.column.mapping]]
+register_variant = "scb/solo/second"
+variable = "scb/solo/e"
+representation = "E"
+
+[[table.column]]
+name = "Unmapped"
+unmapped_reason = "No catalog mapping"
+
+[[table]]
+id = "Other.csv"
+edition = 2020
+
+[[table.column]]
+name = "F"
+
+[[table.column.mapping]]
+register_variant = "other/alpha/main"
+variable = "other/alpha/f"
+representation = "F"
+
+[[table.column]]
+name = "G"
+
+[[table.column.mapping]]
+register_variant = "scb/alpha/main"
+variable = "scb/alpha/g"
+representation = "G"
+
+[[table.column]]
+name = "Unmapped"
+unmapped_reason = "No catalog mapping"
