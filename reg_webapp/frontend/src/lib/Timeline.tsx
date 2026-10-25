@@ -529,7 +529,10 @@ export function VariableTimeline({
   // period resting on the window is the same as none.
   const canClear =
     period !== null &&
-    (boundedPeriodWindow === null || !matchesWindow(boundedPeriodWindow));
+    // A sub-annual period has no thumbs, so Clear is its only way out.
+    (subAnnualPeriod !== null ||
+      boundedPeriodWindow === null ||
+      !matchesWindow(boundedPeriodWindow));
 
   function slider(axis: [number, number]): ReactNode {
     return (
