@@ -23,8 +23,8 @@ version is a deliberate update of this pin, not something to pick up silently.
 - In the project instructions: the gate version, the schema and policy names and
   versions, and the three files' SHA-256, so a changed copy is visible.
 
-Commit the three files with the project. MONA accepts only `.R` and `.py` uploads; the
-toolkit README's step 1 says how to bring the JSON files in unchanged.
+Commit the three files with the project. Upload them to MONA unchanged (the toolkit
+README's step 1).
 
 ## The pipeline's last step
 
