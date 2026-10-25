@@ -1112,15 +1112,14 @@ Each register below gets one `disponibel-inkomst` group.
   `replaced_by` edges that once modelled them as a succession were removed, since
   `succession-candidates` reported each as contradicted (the predecessor outlives the
   successor's start). The pre-1991 `DIN*` columns share `fore-1991`; their own
-  successive definitions ride the period slider. `nordisk-lon` holds the #1302
-  `_INKLGP` columns (2015-2019, including wage earned in another Nordic country) beside
-  their base twins, which include that wage only from income year 2020.
-- **LISA** has the DispInk family: individual component, family and household total,
-  per consumption unit, and individualised from family, with axes `enhet`,
-  `hushallsbegrepp` and `definition` (1991, 2004). `DispInkKE` and its 2004 twin
-  `DispInkKE04` are co-delivered 2005-2023, so the definitions coexist. LISA's
-  `DispInk*_INKLGP` columns are not yet curated as variables, so LISA has no
-  `nordisk-lon` axis.
+  successive definitions ride the period slider. `nordisk-lon` holds the #1302 `_INKLGP`
+  columns (2015-2019, including wage earned in another Nordic country) beside their base
+  twins, which include that wage only from income year 2020.
+- **LISA** has the DispInk family: individual component, family and household total, per
+  consumption unit, and individualised from family, with axes `enhet`, `hushallsbegrepp`
+  and `definition` (1991, 2004). `DispInkKE` and its 2004 twin `DispInkKE04` are
+  co-delivered 2005-2023, so the definitions coexist. LISA's `DispInk*_INKLGP` columns
+  are not yet curated as variables, so LISA has no `nordisk-lon` axis.
 - **FASIT** has two machine-folded pairs, each a TRIF copy beside the FASIT-derived
   variable. The group absorbs both, adds the household, per-unit and
   alternating-residence variables, and declares a `kalla` axis (TRIF, FASIT). The weight
