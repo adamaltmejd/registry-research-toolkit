@@ -67,3 +67,11 @@ export function useProjectRead<A, T>(read: (arg: A) => T, arg: A): T {
 export function useCatalogRead<A, T>(read: (arg: A) => T, arg: A): T {
   return useStoreRead(subscribeCatalogNames, read, arg);
 }
+
+/** `items` without repeats or blanks, as the SAME array for as long as its
+ * contents stay the same: the argument of a `useCatalogRead`, whose subscription
+ * is rebuilt whenever the argument's identity changes. */
+export function useDistinct(items: readonly string[]): readonly string[] {
+  const key = [...new Set(items.filter(Boolean))].join("\n");
+  return useMemo(() => (key ? key.split("\n") : []), [key]);
+}

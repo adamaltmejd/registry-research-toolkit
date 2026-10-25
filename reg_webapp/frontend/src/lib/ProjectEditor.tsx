@@ -38,7 +38,7 @@ import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useProject } from "./use_project";
-import { useCatalogRead } from "./use_store_read";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
 import {
   PROJECT_HEADING_ID,
@@ -236,19 +236,9 @@ export function ProjectEditor({
     windowFindings: windowDisjointFindings(studyWindow, sources),
     sources,
   });
-  // The coordinates the findings print, said in the catalog's words. Keyed by
-  // their text, so the read is rebuilt only when the set changes.
-  const coordinateKey = [
-    ...new Set(
-      findings.flatMap((f) => [
-        ...f.fqids,
-        ...(f.location?.catalogFqid ? [f.location.catalogFqid] : []),
-      ]),
-    ),
-  ].join("\n");
-  const coordinates = useMemo(
-    () => (coordinateKey ? coordinateKey.split("\n") : []),
-    [coordinateKey],
+  // The coordinates the findings print, said in the catalog's words.
+  const coordinates = useDistinct(
+    findings.flatMap((f) => [...f.fqids, f.location?.catalogFqid ?? ""]),
   );
   const names = useCatalogRead(catalogNames, coordinates);
   const catalogName = (fqid: string) => names[fqid] ?? null;

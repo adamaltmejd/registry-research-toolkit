@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useRef, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import type { GroupAxisModel, RelationshipGraph } from "./api";
 import {
@@ -24,7 +24,7 @@ import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
 import { FilterChip } from "./ui/FilterChip";
 import { useProject } from "./use_project";
-import { useCatalogRead } from "./use_store_read";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 
 export type { PickerBand } from "./picker_lanes";
 
@@ -154,17 +154,13 @@ export function RepresentationPicker({
   );
   const draft = useProject((store) => store.draft);
   // The registers the lanes can reach, named for their lines: a neighbour in
-  // another register, or two lanes under one name. Keyed by their text, so the
-  // read is rebuilt only when the set changes.
-  const registerKey = [
-    ...new Set(
-      [
-        ...bands.map((band) => band.key),
-        ...(graph?.nodes ?? []).map((node) => node.fqid),
-      ].map(registerPrefixOf),
-    ),
-  ].join("\n");
-  const registers = useMemo(() => registerKey.split("\n"), [registerKey]);
+  // another register, or two lanes under one name.
+  const registers = useDistinct(
+    [
+      ...bands.map((band) => band.key),
+      ...(graph?.nodes ?? []).map((node) => node.fqid),
+    ].map(registerPrefixOf),
+  );
   const names = useCatalogRead(catalogNames, registers);
   const graphModel = pickerLanes({
     bands: shown,
