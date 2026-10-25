@@ -885,8 +885,8 @@ page with that `?member`, a query-only move announced in a polite live region. T
 server names a variable's group only where its member row is in the scope's group
 (`group_key` in `show.rs`), so a variable whose group has no lane for it in holdings
 keeps its own page; a `?member` that still matches no lane says so and links that page.
-`BindingLeafView` therefore only ever shows an ungrouped variable, and its `/graph` read
-feeds the picker's neighbour lanes only.
+`BindingLeafView` therefore only ever shows a variable ungrouped in the scope, and its
+`/graph` read feeds the picker's neighbour lanes only.
 
 ### The picker — slice axis × time axis
 

@@ -22,5 +22,13 @@
   {
     "status": 200,
     "json": {"/data/group": "group/scb/example/value-family"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/group": [null, null]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/nodes/*/group_key": [null]}
   }
 ]

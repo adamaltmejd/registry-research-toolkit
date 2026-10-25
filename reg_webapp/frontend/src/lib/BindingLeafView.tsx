@@ -163,8 +163,8 @@ export function BindingLeafView({
 
   // One `/graph` read (#761/#792) feeds the Timeline's related-variable lanes.
   // Its own failure domain: an error leaves the Timeline on this variable's
-  // lane. A grouped member never renders here: its page is its group's
-  // (#1909).
+  // lane. A member of a group in this scope never renders here: its page is
+  // its group's (#1909).
   const graphResource = useAsyncResource(node.fqid, (signal) =>
     getGraph(node.fqid, { signal }),
   );
