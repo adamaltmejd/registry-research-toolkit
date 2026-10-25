@@ -1997,17 +1997,17 @@ columns_ref = "One series under two delivery headers; the header changes to Sjuk
 [[identity.partition]]
 variable = "34.31532"
 columns = { SjukP_Bdag = "34.31532.sjukpenning-bruttodagar", SjukP_Bdag_MiDAS = "34.31532.sjukpenning-bruttodagar" }
-columns_ref = "One series under two delivery headers; the header changes to SjukP_Bdag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31532: SjukP_Bdag 1993-2015; SjukP_Bdag_MiDAS 2016-2023."
+columns_ref = "One series under two delivery headers; the errata.field renames make Individ carry SjukP_Bdag_MiDAS from 1994, and the plain spelling remains only for 1993 (#1907). SCB labels the series MiDAS-sourced from 2017; prepared v28 native family 34.31532: SjukP_Bdag 1993-2015; SjukP_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31533"
 columns = { SjukP_Ndag = "34.31533.sjukpenning-nettodagar", SjukP_Ndag_MiDAS = "34.31533.sjukpenning-nettodagar" }
-columns_ref = "One series under two delivery headers; the header changes to SjukP_Ndag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31533: SjukP_Ndag 1993-2015; SjukP_Ndag_MiDAS 2016-2023."
+columns_ref = "One series under two delivery headers; the errata.field renames make Individ carry SjukP_Ndag_MiDAS from 1994, and the plain spelling remains only for 1993 (#1907). SCB labels the series MiDAS-sourced from 2017; prepared v28 native family 34.31533: SjukP_Ndag 1993-2015; SjukP_Ndag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31534"
 columns = { SjukP_Belopp = "34.31534.sjukpenning-ersattningsbelopp", SjukP_Belopp_MiDAS = "34.31534.sjukpenning-ersattningsbelopp" }
-columns_ref = "One series under two delivery headers; the header changes to SjukP_Belopp_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31534: SjukP_Belopp 1993-2015; SjukP_Belopp_MiDAS 2016-2023."
+columns_ref = "One series under two delivery headers; the errata.field renames make Individ carry SjukP_Belopp_MiDAS from 1994, and the plain spelling remains only for 1993 (#1907). SCB labels the series MiDAS-sourced from 2017; prepared v28 native family 34.31534: SjukP_Belopp 1993-2015; SjukP_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31535"
@@ -2072,17 +2072,17 @@ columns_ref = "One series under two delivery headers; the header changes to AktE
 [[identity.partition]]
 variable = "34.37047"
 columns = { ForPeng_Bdag = "34.37047.foraldrapenning-antal-bruttodagar", ForPeng_Bdag_MiDAS = "34.37047.foraldrapenning-antal-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
+columns_ref = "Source switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.37048"
 columns = { ForPeng_Belopp = "34.37048.foraldrapenning-ersattningsbelopp", ForPeng_Belopp_MiDAS = "34.37048.foraldrapenning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37048: ForPeng_Belopp 1993-2012; ForPeng_Belopp_MiDAS 2016-2023."
+columns_ref = "Source switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37048: ForPeng_Belopp 1993-2012; ForPeng_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.37049"
 columns = { ForPeng_Ndag = "34.37049.foraldrapenning-antal-nettodagar", ForPeng_Ndag_MiDAS = "34.37049.foraldrapenning-antal-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37049: ForPeng_Ndag 1993-2012; ForPeng_Ndag_MiDAS 2016-2023."
+columns_ref = "Source switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37049: ForPeng_Ndag 1993-2012; ForPeng_Ndag_MiDAS 2016-2023."
 
 # Y-292 2026-09-29: LISA pension and adult-study loan documented-concept
 # partitions. SCB `lisa-bakgrundsfakta-1990-2017` documents that the earlier

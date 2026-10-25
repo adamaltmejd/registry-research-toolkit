@@ -497,12 +497,11 @@ effective_year = 2014
 note = "Föräldrapenning, ersättningsbelopp sourced from Försäkringskassans MiDAS from 2014"
 
 # ── BReg familjetyp: FamTyp → Famtyp_BarnReg redefinition (#1907) ──
-#    Famtyp_BarnReg is delivered from "2014-12-31 enligt ny definition", and
-#    the 2014-12-31 date carries both FamTyp and Famtyp_BarnReg in two of the three
-#    variants (333.1077, 333.1079): a redefinition beside the old column, not a header rename (unlike
-#    FamStall_BarnReg, folded in breg.toml). A fold leaves that date with two
-#    parallel columns and no catalog representation, so the two stay separate
-#    variables joined by a succession. Variable grain.
+#    FamTyp and Famtyp_BarnReg are both delivered on 2014-12-31, in two variants
+#    (333.1077, 333.1079), and SCB labels Famtyp_BarnReg "enligt ny definition".
+#    A fold attempt failed real-seed check-curation with
+#    unresolved_column_representation. So this is a redefinition, not a header
+#    rename: the two stay separate variables joined by a succession. Variable grain.
 [[edge]]
 type = "replaced_by"
 from = "scb/breg/familjetyp"
