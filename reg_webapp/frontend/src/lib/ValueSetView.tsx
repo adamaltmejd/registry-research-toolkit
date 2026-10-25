@@ -604,7 +604,9 @@ export function ValueSetView({
             .join(" and ")}{" "}
           outside this period
         </summary>
-        <ul className={styles.list}>{collapsedValueSets.map(valueSetRow)}</ul>
+        {collapsedValueSets.length > 0 && (
+          <ul className={styles.list}>{collapsedValueSets.map(valueSetRow)}</ul>
+        )}
         {collapsedUncodedShown !== null && (
           <>
             <h3 className={`micro-label ${styles.usageHeading}`}>
