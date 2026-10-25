@@ -6548,7 +6548,10 @@ def compile_occurrence_corrections(
                             variant_key=variant_key,
                             fields=donor.fields.model_copy(
                                 update={
-                                    name: value_field(next(iter(values)))
+                                    # A cleared unit (None) carries as absent.
+                                    name: None
+                                    if (carried := next(iter(values))) is None
+                                    else value_field(carried)
                                     for name, values in corrected.items()
                                 }
                             ),
@@ -6593,6 +6596,10 @@ def compile_occurrence_corrections(
                         CheckedFieldChange(
                             ref=ref,
                             replacement=FieldExpectation(
+                                name=entry.field, status="absent"
+                            )
+                            if entry.clear
+                            else FieldExpectation(
                                 name=entry.field, status="value", value=entry.value
                             ),
                             when_scope=original_of[ref].scope

@@ -1,0 +1,22 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": "weight"},
+      "fields": ["column", "measurement_unit"],
+      "rows": [["WEIGHT", null]]
+    },
+    {
+      "table": "variables",
+      "where": {"variable": "weight"},
+      "fields": ["variable", "measurement_unit"],
+      "rows": [["weight", null]]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator"],
+      "rows": []
+    }
+  ]
+}

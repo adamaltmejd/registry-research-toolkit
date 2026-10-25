@@ -63,3 +63,20 @@ panel_time_grain = "delivery"
 "246.14704" = "storleksklass-pa-foretag-eu"
 "246.17351" = "medborgarskap"
 "246.17402" = "koncerntillhorighet"
+
+# #1881: SCB's Mattenhet 'värde, antal eller %' is a generic placeholder that names
+# no unit. Each occurrence below gets the unit its documentation establishes, or
+# none (`clear = true`) where the variable is a weight or a key. Curated per
+# variable; there is no builder-level placeholder list (maintainer ruling 2026-10-24).
+
+[[errata.field]]
+variable = "246.17350"
+variant = "246.654"
+column = "key_lx"
+editions = ["1572"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Uppgiften är en nyckel mellan individer och företag." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Nyckel" }, { name = "operational_definition", status = "value", value = "Värden sätts maskinellt på variabeln." }, { name = "representation", status = "absent" }]
+expected_period_text = { 1572 = "2006" }
+field = "measurement_unit"
+clear = true
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Nyckel as a key between individuals and enterprises, a text identifier set by machine. An identifier has no unit of measure, and SCB's other editions of it state none. Clear it: the corrected occurrence states no unit."
+noted = "2026-10-25"

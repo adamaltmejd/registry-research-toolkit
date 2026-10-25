@@ -53,3 +53,20 @@ reason = "The source supplies no own stratum coding association for this exact 1
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch50-missing-domain56-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
 expected_evidence_sha256 = "52bd3fa3b36589439949ced99e602635dccd8c88da8b33414be24ad8e334a892"
 expected_diagnostic_sha256 = "03cee436d6a315e9136487896b661202b94c45ff87c826b8cbfa62b7b7cb5d1a"
+
+# #1881: SCB's Mattenhet 'värde, antal eller %' is a generic placeholder that names
+# no unit. Each occurrence below gets the unit its documentation establishes, or
+# none (`clear = true`) where the variable is a weight or a key. Curated per
+# variable; there is no builder-level placeholder list (maintainer ruling 2026-10-24).
+
+[[errata.field]]
+variable = "166.466"
+variant = "166.239"
+column = "Uppr"
+editions = ["430", "2091", "2092", "2093", "2094", "2408", "2841", "3032", "3033", "3034", "3035", "3036", "3037", "3038", "3445", "4152", "4707", "5375", "6047", "7534", "11258", "12048", "13321", "13798", "16377", "18156", "18925", "19284", "19960"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Totaler skattas genom att summera uppräknade observationer (observerat värde * uppräkningstal). Synonymer är vägningstal och (uppräknings)vikt." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Uppräkningstal" }, { name = "operational_definition", status = "value", value = "För totalundersökta stratum 6-9 är uppr faktorn 1. För övriga är värdet (N/n)." }, { name = "representation", status = "absent" }]
+expected_period_text = { 430 = "2004", 2091 = "2005", 2092 = "2006", 2093 = "2007", 2094 = "2008", 2408 = "2009", 2841 = "2010", 3032 = "2003", 3033 = "2002", 3034 = "2001", 3035 = "2000", 3036 = "1999", 3037 = "1998", 3038 = "1997", 3445 = "2011", 4152 = "2012", 4707 = "2013", 5375 = "2014", 6047 = "2015", 7534 = "2016", 11258 = "2017", 12048 = "2018", 13321 = "2019", 13798 = "2020", 16377 = "2021", 18156 = "2022", 18925 = "2023", 19284 = "2024", 19960 = "2025" }
+field = "measurement_unit"
+clear = true
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Uppräkningstal as an expansion weight (observerat värde * uppräkningstal; synonyms vägningstal, uppräkningsvikt). A weight is a ratio with no unit of measure, and the placeholder names none. Clear it: the corrected occurrence states no unit."
+noted = "2026-10-25"

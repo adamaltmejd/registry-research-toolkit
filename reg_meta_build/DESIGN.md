@@ -980,11 +980,16 @@ Register `[[errata.field]]` entries correct reviewed source-backed text in `name
 variable/variant/column coordinates. Unit corrections additionally pin the supplied unit
 and both coverage fields. They reconcile literal wording only when the source definition
 positively establishes the same quantity; they do not convert values, merge differing
-scales or infer absent units. A `source_attribution` correction requires exact editions,
-all supplied fields and complete original-record expectations, including parents. It can
-normalize an abbreviation explicitly defined in the source to the existing variant name;
-it does not introduce inferred aliases. The catalog stores the interpreted attribution
-while immutable source evidence retains the original text.
+scales or infer absent units. A unit correction may instead state `clear = true` (and no
+`value`) to drop a supplied unit that names no unit, such as SCB's generic Mattenhet
+placeholder "värde, antal eller %" on a weight or a key (#1881); the corrected
+occurrence then states no unit. Only `measurement_unit` clears, and which spellings are
+placeholders is decided per variable in curation, not by a builder list. A
+`source_attribution` correction requires exact editions, all supplied fields and
+complete original-record expectations, including parents. It can normalize an
+abbreviation explicitly defined in the source to the existing variant name; it does not
+introduce inferred aliases. The catalog stores the interpreted attribution while
+immutable source evidence retains the original text.
 
 One `[[errata.field]]` entry states one correction across SCB editions:
 `editions = [...]` lists them in numeric order and `expected_period_text` pins each

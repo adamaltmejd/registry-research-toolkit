@@ -975,7 +975,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V011 on FoU Företagssektorn for 1999, 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V011"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["1999", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3321
@@ -987,7 +987,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V012 on FoU Företagssektorn for 1999, 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V012"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["1999", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3322
@@ -999,7 +999,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V013 on FoU Företagssektorn for 1999, 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V013"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["1999", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3323
@@ -1011,7 +1011,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V014 on FoU Företagssektorn for 1999, 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V014"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["1999", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3324
@@ -1023,7 +1023,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V015 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V015"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3325
@@ -1035,7 +1035,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V016 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V016"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3326
@@ -1117,7 +1117,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V021 on FoU Företagssektorn for 1999, 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V021"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["1999", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3338
@@ -1129,7 +1129,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V022 on FoU Företagssektorn for 1999, 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V022"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["1999", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3339
@@ -1141,7 +1141,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V023 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V023"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3340
@@ -1153,7 +1153,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V024 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V024"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3341
@@ -1165,7 +1165,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V025 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V025"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3342
@@ -1188,7 +1188,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V027 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V027"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3344
@@ -1212,7 +1212,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V031 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V031"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3348
@@ -1236,7 +1236,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V032 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V032"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3351
@@ -1260,7 +1260,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V033 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V033"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3354
@@ -1272,7 +1272,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V034 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V034"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3355
@@ -1284,7 +1284,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V035 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V035"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3356
@@ -1296,7 +1296,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V036 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V036"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3357
@@ -1308,7 +1308,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V037 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V037"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3358
@@ -1332,7 +1332,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V041 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V041"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3360
@@ -1368,7 +1368,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V042 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V042"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3361
@@ -1404,7 +1404,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V043 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V043"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3362
@@ -1440,7 +1440,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V044 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V044"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3363
@@ -1476,7 +1476,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V045 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V045"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3364
@@ -1512,7 +1512,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V046 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V046"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3365
@@ -1548,7 +1548,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V047 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V047"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3366
@@ -1704,7 +1704,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V051 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V051"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3368
@@ -1836,7 +1836,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V052 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V052"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3369
@@ -1896,7 +1896,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V053 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V053"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3370
@@ -1967,7 +1967,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V054 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V054"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3371
@@ -1991,7 +1991,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V055 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V055"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3372
@@ -2086,7 +2086,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V056 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V056"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3373
@@ -2110,7 +2110,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V057 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V057"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3374
@@ -2122,7 +2122,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0571 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0571"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3488
@@ -2146,7 +2146,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0581 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0581"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3490
@@ -2170,7 +2170,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0591 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0591"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3492
@@ -2194,7 +2194,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0601 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0601"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3494
@@ -2218,7 +2218,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V061 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V061"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3376
@@ -2230,7 +2230,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0611 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0611"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3496
@@ -2254,7 +2254,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V062 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V062"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3377
@@ -2266,7 +2266,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0621 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0621"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3498
@@ -2290,7 +2290,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V063 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V063"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3378
@@ -2302,7 +2302,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0631 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0631"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3500
@@ -2326,7 +2326,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V064 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V064"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3379
@@ -2338,7 +2338,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0641 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0641"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3502
@@ -2362,7 +2362,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V065 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V065"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3380
@@ -2374,7 +2374,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0651 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0651"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3504
@@ -2398,7 +2398,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V066 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V066"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3381
@@ -2410,7 +2410,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0661 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0661"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3506
@@ -2433,7 +2433,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V067 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V067"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3382
@@ -2445,7 +2445,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0671 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0671"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3508
@@ -2469,7 +2469,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column v068 on FoU Företagssektorn for 2012, 2014. The meaning and unit are assumed from SCB's 2015 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "v068"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2012", "2014"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3383
@@ -2481,7 +2481,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0681 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0681"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3510
@@ -2504,7 +2504,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0691 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0691"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3512
@@ -2528,7 +2528,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0701 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0701"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3514
@@ -2552,7 +2552,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0711 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0711"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3516
@@ -2576,7 +2576,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0721 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0721"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3518
@@ -2600,7 +2600,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0731 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0731"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3520
@@ -2624,7 +2624,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0741 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0741"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3522
@@ -2648,7 +2648,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0751 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0751"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3524
@@ -2672,7 +2672,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V076 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V076"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3384
@@ -2684,7 +2684,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0761 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0761"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3526
@@ -2708,7 +2708,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V077 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V077"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3385
@@ -2720,7 +2720,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0771 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0771"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3528
@@ -2744,7 +2744,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V0781 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V0781"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3530
@@ -2768,7 +2768,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V080 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V080"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3386
@@ -2780,7 +2780,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V081 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V081"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3387
@@ -2792,7 +2792,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V082 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V082"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3388
@@ -2804,7 +2804,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V083 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V083"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3389
@@ -2816,7 +2816,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V084 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V084"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3390
@@ -2828,7 +2828,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V085 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V085"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3391
@@ -2840,7 +2840,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V086 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V086"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3392
@@ -2852,7 +2852,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V090 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V090"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3394
@@ -2864,7 +2864,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V091 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V091"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3395
@@ -2876,7 +2876,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V092 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V092"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3396
@@ -2899,7 +2899,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V094 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V094"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3398
@@ -2911,7 +2911,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V095 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V095"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3399
@@ -2934,7 +2934,7 @@ noted = "2026-10-16"
 data_warning = "SCB documents no column V098 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 variant = "foretagssektorn"
 column = "V098"
-measurement_unit = "värde, antal eller %"
+measurement_unit = "Antal årsverken"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3401
@@ -17445,3 +17445,1184 @@ holdings_period = "2013-2013"
 source = "steward-holdings"
 evidence = "SWECOV holds v7002 in FTG_FOU_2013; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists it for 2013 without a description; SCB's Registerinformation export carries no row for it on this variant (#1302, low confidence on meaning)."
 noted = "2026-10-12"
+
+# #1881: SCB's Mattenhet 'värde, antal eller %' is a generic placeholder that names
+# no unit. Each occurrence below gets the unit its documentation establishes, or
+# none (`clear = true`) where the variable is a weight or a key. Curated per
+# variable; there is no builder-level placeholder list (maintainer ruling 2026-10-24).
+
+[[errata.field]]
+variable = "182.109"
+variant = "182.441"
+column = "TjOmf"
+editions = ["1714", "3655", "4472", "5770", "12470"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1714 = "2007", 3655 = "2009", 4472 = "2011", 5770 = "2013", 12470 = "2017" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.109"
+variant = "182.441"
+column = "TjOmf"
+editions = ["9956"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "value", value = "Variabeln hämtas från registret över högskolans personal." }, { name = "representation", status = "absent" }]
+expected_period_text = { 9956 = "2015" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.109"
+variant = "182.441"
+column = "Upphandling"
+editions = ["693"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 693 = "2005" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3321"
+variant = "182.373"
+column = "v011"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "antal kvinnor" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal kvinnor med forskarutbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3322"
+variant = "182.373"
+column = "v012"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal män" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal män med forskarutbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3323"
+variant = "182.373"
+column = "v013"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda forskarutbildade kvinnor" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3324"
+variant = "182.373"
+column = "v014"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda forskarutbildade män" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3325"
+variant = "182.373"
+column = "v015"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av forskarutbildade" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3326"
+variant = "182.373"
+column = "v016"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal årsverken för forskning av forskarutbildade" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3328"
+variant = "182.373"
+column = "v017"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal årsverken för utveckling av forskarutbildade" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3329"
+variant = "182.373"
+column = "v018"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av forskarutbildade, uppskattning för 2004" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3338"
+variant = "182.373"
+column = "v021"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal kvinnor" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal kvinnor med akadem. utb 3- år eller mer" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3339"
+variant = "182.373"
+column = "v022"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal män" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal män med akadem. utb 3- år eller mer" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3340"
+variant = "182.373"
+column = "v023"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av kvinnor med akadem. utb 3- år eller mer" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3341"
+variant = "182.373"
+column = "v024"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av män med akadem. utb 3- år eller mer" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3342"
+variant = "182.373"
+column = "v025"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av akadem. utb 3- år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3343"
+variant = "182.373"
+column = "v026"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för forskning av akadem. utb 3- år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3344"
+variant = "182.373"
+column = "v027"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för utveckling av akadem. utb 3- år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3345"
+variant = "182.373"
+column = "v028"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av akadem. utb 3- år, uppskattning för 2004" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3348"
+variant = "182.373"
+column = "v031"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal kvinnor" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal kvinnor med akadem. utb kortare än 3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3351"
+variant = "182.373"
+column = "v032"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal män" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal män med akadem. utb kortare än 3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3354"
+variant = "182.373"
+column = "v033"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av kvinnor med akadem. utb kortare än 3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3355"
+variant = "182.373"
+column = "v034"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av män med akadem. utb kortare än 3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3356"
+variant = "182.373"
+column = "v035"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av akadem. utb <3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3357"
+variant = "182.373"
+column = "v036"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för forskning av akadem. utb <3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3358"
+variant = "182.373"
+column = "v037"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för utveckling av akadem. utb kortare än 3 år" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3359"
+variant = "182.373"
+column = "v038"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av akadem. utb <3 år, uppskattning för 2004" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3360"
+variant = "182.373"
+column = "v041"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal kvinnor" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal kvinnor med gymnasial utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3361"
+variant = "182.373"
+column = "v042"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal män" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal män med gymnasial utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3362"
+variant = "182.373"
+column = "v043"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av kvinnor med gymnasial utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3363"
+variant = "182.373"
+column = "v044"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av män med gymnasial utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3364"
+variant = "182.373"
+column = "v045"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av gymnasial utb." }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3365"
+variant = "182.373"
+column = "v046"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för forskning av gymnasial utb." }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3366"
+variant = "182.373"
+column = "v047"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för utveckling av gymnasial utb." }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3367"
+variant = "182.373"
+column = "v048"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av gymnasial utb. uppskattning för 2004" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3368"
+variant = "182.373"
+column = "v051"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Kvinnor med förgymnasial utbildning eller där uppgift om utbildningsnivå saknas" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal kvinnor med övrig utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3369"
+variant = "182.373"
+column = "v052"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal män med förgymnasial utbildning eller som som saknar uppgift om ut bildningnivå" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal män med övrig utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3370"
+variant = "182.373"
+column = "v053"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av kvinnor med övrig utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3371"
+variant = "182.373"
+column = "v054"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av män med övrig utbildning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3372"
+variant = "182.373"
+column = "v055"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av annan utb." }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3373"
+variant = "182.373"
+column = "v056"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för forskning av annan utb." }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3374"
+variant = "182.373"
+column = "v057"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för utveckling av annan utb." }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3375"
+variant = "182.373"
+column = "v058"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU av annan utb., uppskattning för 2004" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3376"
+variant = "182.373"
+column = "v061"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal kvinnor totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3377"
+variant = "182.373"
+column = "v062"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Antal män totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3378"
+variant = "182.373"
+column = "v063"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av kvinnor totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3379"
+variant = "182.373"
+column = "v064"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken utförda av män totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3380"
+variant = "182.373"
+column = "v065"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för FoU totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3381"
+variant = "182.373"
+column = "v066"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för forskning totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3382"
+variant = "182.373"
+column = "v067"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för utveckling totalt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3383"
+variant = "182.373"
+column = "v068"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Uppskattat antal årsverken i den egna FoU-verksamheten 2004" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3384"
+variant = "182.373"
+column = "v076"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för forskning utförda av kvinnor" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3385"
+variant = "182.373"
+column = "v077"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk = det arbete en heltidsanställd utför under ett år" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "antal årsverken för utveckling utförda av kvinnor" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3386"
+variant = "182.373"
+column = "v080"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet naturvetenskap (Kod 15 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Naturvetenskap" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3387"
+variant = "182.373"
+column = "v081"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet matematik (Kod 14 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Matematik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3388"
+variant = "182.373"
+column = "v082"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet teknikvetenskap (Kod 16 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Teknikvetenskap" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3389"
+variant = "182.373"
+column = "v083"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnena medicin, odontologi och farmakologi  (Kod 18-21 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Medicin" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3390"
+variant = "182.373"
+column = "v084"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet lantbruksvetenskap och eterinärmedicina (Kod 17 och 22 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Lantbruksvetenskap" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3391"
+variant = "182.373"
+column = "v085"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet rättsvetenskap/juridik och samhällsvetenskap (Kod 12 och 13  i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Samhällsvetenskap" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3392"
+variant = "182.373"
+column = "v086"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet humaniora (Kod 11 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Disciplin: Humaniora" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3393"
+variant = "182.373"
+column = "v087"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för FoU inom ämnet tvärvetenskap (Kod 23 i Nationell förteckning över forskningsämnen)" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "disciplin: Tvärvetenskap" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3394"
+variant = "182.373"
+column = "v090"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 160 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "ämne: Informationsteknik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3395"
+variant = "182.373"
+column = "v091"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 161 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "ämne: Teknisk fysik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3396"
+variant = "182.373"
+column = "v092"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 162 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Ämne: Elektroteknik, elektronik och fotonik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3397"
+variant = "182.373"
+column = "v093"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 163 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "ämne: Kemiteknik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3398"
+variant = "182.373"
+column = "v094"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 164 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "ämne: Bioteknik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3399"
+variant = "182.373"
+column = "v095"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 165 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Ämne: Teknisk mekanik" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3400"
+variant = "182.373"
+column = "v096"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 166 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Ämne: Teknisk materialvetenskap" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3401"
+variant = "182.373"
+column = "v098"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal årsverk för ämne 168 i Nationell ämnesförteckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Ämne: Industriell teknik och ekonomi" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3488"
+variant = "182.373"
+column = "v0571"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Stockholm" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3490"
+variant = "182.373"
+column = "v0581"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Uppsala" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3492"
+variant = "182.373"
+column = "v0591"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Södermanland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3494"
+variant = "182.373"
+column = "v0601"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Östergötland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3496"
+variant = "182.373"
+column = "v0611"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Jönköping" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3498"
+variant = "182.373"
+column = "v0621"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Kronoberg" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3500"
+variant = "182.373"
+column = "v0631"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Kalmar" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3502"
+variant = "182.373"
+column = "v0641"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Gotland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3504"
+variant = "182.373"
+column = "v0651"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Blekinge" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3506"
+variant = "182.373"
+column = "v0661"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Skåne" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3508"
+variant = "182.373"
+column = "v0671"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Halland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3510"
+variant = "182.373"
+column = "v0681"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Västra Götaland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3512"
+variant = "182.373"
+column = "v0691"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Värmland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3514"
+variant = "182.373"
+column = "v0701"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Örebro län" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3516"
+variant = "182.373"
+column = "v0711"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Västmanland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3518"
+variant = "182.373"
+column = "v0721"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Dalarna" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3520"
+variant = "182.373"
+column = "v0731"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU- regionala fördelning:FoU-årsverken i Gävleborg" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3522"
+variant = "182.373"
+column = "v0741"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Västernorrland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3524"
+variant = "182.373"
+column = "v0751"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Jämtland" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3526"
+variant = "182.373"
+column = "v0761"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Västerbotten" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3528"
+variant = "182.373"
+column = "v0771"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Årsverk för egen FoU  i angivet län" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "FoU regionala fördelning:FoU-årsverken i Norrbotten" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3530"
+variant = "182.373"
+column = "v0781"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Summering av regionalt fdelade årsverken för FoU" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "summa regional fördelning: antal FoU-årsverken" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal årsverken"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal årsverken, spelled like the catalog's other counted units (Antal timmar, Antal år); no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3573"
+variant = "182.373"
+column = "Lillan"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal enheter i urvalet" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Lilla n" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Lilla n as 'Antal enheter i urvalet', a number of sampled units. Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3574"
+variant = "182.373"
+column = "LillaNRev"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal enheter i urvalet reviderat för övertäckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "lilla n reviderat" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines lilla n reviderat as the number of sampled units revised for overcoverage. Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3582"
+variant = "182.373"
+column = "Storan"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal enheter i aktuellt stratum i populationen." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Stora N" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Stora N as 'Antal enheter i aktuellt stratum i populationen', a number of population units. Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3583"
+variant = "182.373"
+column = "StoraNRev"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Antal enheter i aktuellt stratum i populationen reviderat för övertäckning" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "stora N reviderat" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+value = "Antal"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines stora N reviderat as the number of population units in the stratum revised for overcoverage. Replace it with Antal; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3584"
+variant = "182.373"
+column = "urvalsvikt"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "vikt beräknad som kvoten mellan ursprungligt antal enheter i populationen och ursprungligt antal enheter i urvalet per stratum" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "urvalsvikt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+clear = true
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines urvalsvikt as the ratio of the original number of population units to the original number of sample units per stratum. A weight is a ratio with no unit of measure, and the placeholder names none. Clear it: the corrected occurrence states no unit."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.3584"
+variant = "182.373"
+column = "viktU"
+editions = ["394"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "vikt beräknad som kvoten mellan ursprungligt antal enheter i populationen och ursprungligt antal enheter i urvalet per stratum" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "urvalsvikt" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 394 = "2003" }
+field = "measurement_unit"
+clear = true
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines urvalsvikt as the ratio of the original number of population units to the original number of sample units per stratum. A weight is a ratio with no unit of measure, and the placeholder names none. Clear it: the corrected occurrence states no unit."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "182.14614"
+variant = "182.446"
+column = "ForskAndEgFoU"
+editions = ["1005"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Anger andelen utgifter för egen FoU som avser forskning" }, { name = "description", status = "value", value = "Alla variabler som kopplas till denna kommer att flyttas till en annan variabel. Detta görs i samråd med innehållsansvariga." }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Andel forskning av egen FoU" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1005 = "2005" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Andel forskning av egen FoU as the share of own R&D expenditure that is research, and documents the same native variable with Mattenhet Procent in its 2005 and 2007 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"

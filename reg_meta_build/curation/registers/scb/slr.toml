@@ -120,3 +120,164 @@ variable = "51.749"
 columns = { agrupp = "51.749.agrupp", agrupp2 = "51.749.agrupp2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "88f3d2db36f145fab48b2e406110b5a45819b75758fdf7450b1f591f685c6a65"
+
+# #1881: SCB's Mattenhet 'värde, antal eller %' is a generic placeholder that names
+# no unit. Each occurrence below gets the unit its documentation establishes, or
+# none (`clear = true`) where the variable is a weight or a key. Curated per
+# variable; there is no builder-level placeholder list (maintainer ruling 2026-10-24).
+
+[[errata.field]]
+variable = "51.109"
+variant = "51.170"
+column = "TjOmf"
+editions = ["1551", "1552", "1556"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1551 = "2002", 1552 = "2001", 1556 = "1999" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.109"
+variant = "51.170"
+column = "Tjomf"
+editions = ["1553", "1557", "1568", "1569"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1553 = "2000", 1557 = "1998", 1568 = "1997", 1569 = "1996" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.109"
+variant = "51.170"
+column = "tjomf"
+editions = ["1088", "1380", "1381", "1541", "2169", "2875", "3563", "4136"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1088 = "2005", 1380 = "2006", 1381 = "2007", 1541 = "2003", 2169 = "2008", 2875 = "2009", 3563 = "2010", 4136 = "2011" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.109"
+variant = "51.170"
+column = "tjomf"
+editions = ["207"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 207 = "2004" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.3112"
+variant = "51.170"
+column = "Osysly"
+editions = ["1557", "1569"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Överenskommen sysselsättningsgrad för månadsavlönade" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Överenskommen sysselsättningsgrad för månadsavlönade" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1557 = "1998", 1569 = "1996" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Överenskommen sysselsättningsgrad för månadsavlönade as the employment rate in the contract of employment, a share of full time; SCB documents the sibling native 5717 (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.3112"
+variant = "51.170"
+column = "osysly"
+editions = ["207", "1088", "1380", "1381", "2169", "2875", "3563", "4136", "4677"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Överenskommen sysselsättningsgrad för månadsavlönade" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Överenskommen sysselsättningsgrad för månadsavlönade" }, { name = "operational_definition", status = "value", value = "Sysselsättningsgrad enligt anställningsbevis för månadsavlönade. För anställda med timlön sker nollutfyllnad." }, { name = "representation", status = "absent" }]
+expected_period_text = { 207 = "2004", 1088 = "2005", 1380 = "2006", 1381 = "2007", 2169 = "2008", 2875 = "2009", 3563 = "2010", 4136 = "2011", 4677 = "2012" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Överenskommen sysselsättningsgrad för månadsavlönade as the employment rate in the contract of employment, a share of full time; SCB documents the sibling native 5717 (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.3112"
+variant = "51.170"
+column = "osysly"
+editions = ["5346", "6038", "7525"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Överenskommen sysselsättningsgrad för månadsavlönade" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Överenskommen sysselsättningsgrad för månadsavlönade" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 5346 = "2013", 6038 = "2014", 7525 = "2015" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Överenskommen sysselsättningsgrad för månadsavlönade as the employment rate in the contract of employment, a share of full time; SCB documents the sibling native 5717 (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.5717"
+variant = "51.170"
+column = "Osys"
+editions = ["1557", "1568", "1569"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Överenskommen sysselsättningsgrad" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Överenskommen sysselsättningsgrad" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1557 = "1998", 1568 = "1997", 1569 = "1996" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB documents the same native variable (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.5717"
+variant = "51.170"
+column = "osys"
+editions = ["207", "1088", "1380", "1381", "2169", "2875", "3563", "4136"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Överenskommen sysselsättningsgrad" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Överenskommen sysselsättningsgrad" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 207 = "2004", 1088 = "2005", 1380 = "2006", 1381 = "2007", 2169 = "2008", 2875 = "2009", 3563 = "2010", 4136 = "2011" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB documents the same native variable (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.5717"
+variant = "51.170"
+column = "osysly"
+editions = ["11166", "11907"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Överenskommen sysselsättningsgrad" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Överenskommen sysselsättningsgrad" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 11166 = "2016", 11907 = "2017" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB documents the same native variable (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.5976"
+variant = "51.170"
+column = "TjlOm"
+editions = ["1551", "1552", "1553", "1556"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Tjänstledighetens omfattning, 0 - 100 procent" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstledighetsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1551 = "2002", 1552 = "2001", 1553 = "2000", 1556 = "1999" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.5976"
+variant = "51.170"
+column = "Tjlom"
+editions = ["1557", "1568", "1569"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Tjänstledighetens omfattning, 0 - 100 procent" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstledighetsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 1557 = "1998", 1568 = "1997", 1569 = "1996" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
+
+[[errata.field]]
+variable = "51.5976"
+variant = "51.170"
+column = "tjlom"
+editions = ["207", "1088", "1380", "1381", "1541", "2169", "2875", "3563", "4136"]
+expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Tjänstledighetens omfattning, 0 - 100 procent" }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstledighetsomfattning" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }]
+expected_period_text = { 207 = "2004", 1088 = "2005", 1380 = "2006", 1381 = "2007", 1541 = "2003", 2169 = "2008", 2875 = "2009", 3563 = "2010", 4136 = "2011" }
+field = "measurement_unit"
+value = "Procent"
+evidence = "SCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+noted = "2026-10-25"
