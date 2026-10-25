@@ -1,0 +1,14 @@
+[package]
+name = "reg-build-model"
+version = "0.0.0"
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+rusqlite = { version = "0.41.0", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+
+[lints]
+workspace = true
