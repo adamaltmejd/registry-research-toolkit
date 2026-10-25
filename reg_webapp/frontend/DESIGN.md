@@ -543,14 +543,14 @@ Time is the axis every relation is drawn on.
   differs from the page's, or what tells two lanes of one name apart. A read-only
   neighbour lane still shows its columns' "in project" state. A span is a checkbox for
   the add bar, and hovering it highlights its edges. On `/project` a column's findings
-  sit across its lane, under its spans.
-  It shares the page's axis with the `Timeline`. It draws the study window's band and,
-  over it, an add window that differs, as on the variable page, with the axis years on
-  the add window's bounds when one is drawn. Its legend keys only the marks drawn: the
-  plain chip is "Click to select" and the filled one "In project"; a chip outside the
-  window needs no key. Its add bar, like the register's, shows only while a change is
-  staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
-  free-form node graphs; the time axis is the information.
+  sit across its lane, under its spans. It shares the page's axis with the `Timeline`.
+  It draws the study window's band and, over it, an add window that differs, as on the
+  variable page, with the axis years on the add window's bounds when one is drawn. Its
+  legend keys only the marks drawn: the plain chip is "Click to select" and the filled
+  one "In project"; a chip outside the window needs no key. Its add bar, like the
+  register's, shows only while a change is staged. On a variable page the `LaneGraph` is
+  the `Timeline` (above). Don't draw free-form node graphs; the time axis is the
+  information.
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
 

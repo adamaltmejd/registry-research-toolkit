@@ -929,8 +929,8 @@ kind:
   dimension surfaces only when it discriminates (≥2 distinct values). Filtering is a
   presentation lens: a hidden-but-selected row still commits, and the footer signals
   this. OR within a dimension, AND across. The binding leaf uses the same picker, with
-  read-only neighbour lanes for variables a succession edge reaches (#1901). A
-  neighbour lane is not tickable, but its spans still show project membership
+  read-only neighbour lanes for variables a succession edge reaches (#1901). A neighbour
+  lane is not tickable, but its spans still show project membership
   (`committedPickerRows` over the neighbour bands): selectability and "in project" are
   separate. A lane never prints its slug, which names neither a column nor a variable;
   two lanes under one name are told apart by the first of operational definition, facet
@@ -1497,24 +1497,24 @@ study window, `period_outside_state_validity` when nothing is left,
 `binding_state_drifts_within_period` across a transition — see `crates/DESIGN.md` →
 Project semantic validation), and auto-validation surfaces it on every edit (§ "Browser
 storage + project-file persistence" below). Each finding that resolves a catalog
-coordinate carries a "Fix <name> in the catalog" link, so the remediation path is
-always back to the catalog, never a cart-side patch.
+coordinate carries a "Fix <name> in the catalog" link, so the remediation path is always
+back to the catalog, never a cart-side patch.
 
 **Findings sit under what they concern (#1906).** `projectFindings` folds the three
 checks (a `/validate` issue, a blocked order's finding, the study window's disjoint
 source) into one located shape; `findingLocation` reads the JSON pointer to a source
 card and, for `/sources/i/bindings/j`, the column lane. A binding's finding renders
-under its lane (`LaneModel.below`; `LaneList` for a token period), a source's own at
-the top of its card, and the window finding as the period's error row. The summary
-panel (`ValidationPanel`) keeps the verdict, the count per level, the findings with no
-card (name, study window, schema) in full, and a jump link to each located one; there
-are no locate buttons. The validator keeps printing FQIDs: the UI names them.
-`catalogNames` is the one helper that turns a coordinate into the catalog's words (a
-register, a variable, a register variant as "LISA, Individer 16 år och äldre"), shared
-by finding messages (`plainMessage` replaces only the coordinates a finding is known to
-carry, as whole tokens), the "Fix in the catalog" link and the picker's lane
-disambiguator. A coordinate it cannot name stays as printed. The stable issue code sits
-in a delayed RAC `Tooltip` on the finding's title; pressing the title copies it.
+under its lane (`LaneModel.below`; `LaneList` for a token period), a source's own at the
+top of its card, and the window finding as the period's error row. The summary panel
+(`ValidationPanel`) keeps the verdict, the count per level, the findings with no card
+(name, study window, schema) in full, and a jump link to each located one; there are no
+locate buttons. The validator keeps printing FQIDs: the UI names them. `catalogNames` is
+the one helper that turns a coordinate into the catalog's words (a register, a variable,
+a register variant as "LISA, Individer 16 år och äldre"), shared by finding messages
+(`plainMessage` replaces only the coordinates a finding is known to carry, as whole
+tokens), the "Fix in the catalog" link and the picker's lane disambiguator. A coordinate
+it cannot name stays as printed. The stable issue code sits in a delayed RAC `Tooltip`
+on the finding's title; pressing the title copies it.
 
 The one field a pick does NOT write is `display_name`, which it leaves **absent**. The
 field is optional — an absent one resolves to the reg_meta default from `variable_alias`
