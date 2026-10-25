@@ -43,7 +43,15 @@ function FindingTitle({ title, code }: { title: string; code: string | null }) {
       <span className="visually-hidden" aria-live="polite">
         {copied ? `Code ${code} copied` : ""}
       </span>
-      <TooltipTrigger delay={600} onOpenChange={() => setCopied(false)}>
+      {/* Kept open on press, so the tooltip can say "Copied"; it resets only
+        once the tooltip closes. */}
+      <TooltipTrigger
+        delay={600}
+        shouldCloseOnPress={false}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) setCopied(false);
+        }}
+      >
         <AriaButton
           className={styles.titleButton}
           onPress={() => {
