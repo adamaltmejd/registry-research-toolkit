@@ -24,6 +24,8 @@ slug = "individer"
 "8.94" = "ntal"
 "8.95" = "gsum"
 "8.96" = "nsum"
+"8.97" = "gpos"
+"8.98" = "npos"
 "8.FAMTYP_MIDAS" = "famtyp-midas"
 
 [[errata.column]]

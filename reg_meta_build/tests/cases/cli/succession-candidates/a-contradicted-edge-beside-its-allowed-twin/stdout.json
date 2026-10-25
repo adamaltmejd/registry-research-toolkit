@@ -23,6 +23,16 @@
         "successor_before": []
       },
       {
+        "from": "scb/suffix/gpos",
+        "to": "scb/suffix/npos",
+        "from_column": null,
+        "to_column": null,
+        "variant": "",
+        "effective_year": 2020,
+        "predecessor_after": [["individer", 2020, 2021]],
+        "successor_before": []
+      },
+      {
         "from": "scb/suffix/gsum",
         "to": "scb/suffix/nsum",
         "from_column": null,
