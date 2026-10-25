@@ -133,8 +133,9 @@ jobs:
   # SQL Server, and the production T-SQL runs nowhere else.
   runner:
     runs-on: ubuntu-latest
-    # The runner CI budget (ARCHITECTURE.md "Tiers").
-    timeout-minutes: 6
+    # ARCHITECTURE.md "Tiers" budgets a healthy run at 6 min; the job limit also
+    # covers a failed R setup attempt and its retry (3 + 5 min per attempt, below).
+    timeout-minutes: 20
     needs: changes
     if: needs.changes.outputs.runner == 'true'
     services:
@@ -158,10 +159,35 @@ jobs:
       # R with binary DBI, odbc, jsonlite, haven, arrow and testthat from Posit's
       # package manager (Ubuntu's archive has no r-cran-odbc), and Microsoft's ODBC
       # driver unless the image ships it.
-      - uses: r-lib/actions/setup-r@v2.14.0
+      # Each setup step has its own timeout and one retry (the second copy runs only
+      # when the first failed or timed out), so a stalled apt/RSPM mirror costs a few
+      # minutes instead of cancelling the job (#1887). Keep the pairs identical.
+      - id: r_setup
+        continue-on-error: true
+        timeout-minutes: 3
+        uses: r-lib/actions/setup-r@v2.14.0
         with:
           use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2.14.0
+      - if: steps.r_setup.outcome == 'failure'
+        timeout-minutes: 3
+        uses: r-lib/actions/setup-r@v2.14.0
+        with:
+          use-public-rspm: true
+      - id: r_deps
+        continue-on-error: true
+        timeout-minutes: 5
+        uses: r-lib/actions/setup-r-dependencies@v2.14.0
+        with:
+          packages: |
+            any::DBI
+            any::odbc
+            any::jsonlite
+            any::haven
+            any::arrow
+            any::testthat
+      - if: steps.r_deps.outcome == 'failure'
+        timeout-minutes: 5
+        uses: r-lib/actions/setup-r-dependencies@v2.14.0
         with:
           packages: |
             any::DBI
@@ -193,16 +219,36 @@ jobs:
   # where arrow is preinstalled.
   export-gate:
     runs-on: ubuntu-latest
-    # The export gate CI budget (ARCHITECTURE.md "Tiers").
-    timeout-minutes: 6
+    # As the runner job: the limit covers a failed R setup attempt and its retry.
+    timeout-minutes: 20
     needs: changes
     if: needs.changes.outputs.export_gate == 'true'
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: r-lib/actions/setup-r@v2.14.0
+      # One retry per R setup step, as in the runner job (#1887).
+      - id: r_setup
+        continue-on-error: true
+        timeout-minutes: 3
+        uses: r-lib/actions/setup-r@v2.14.0
         with:
           use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2.14.0
+      - if: steps.r_setup.outcome == 'failure'
+        timeout-minutes: 3
+        uses: r-lib/actions/setup-r@v2.14.0
+        with:
+          use-public-rspm: true
+      - id: r_deps
+        continue-on-error: true
+        timeout-minutes: 5
+        uses: r-lib/actions/setup-r-dependencies@v2.14.0
+        with:
+          packages: |
+            any::arrow
+            any::jsonlite
+            any::testthat
+      - if: steps.r_deps.outcome == 'failure'
+        timeout-minutes: 5
+        uses: r-lib/actions/setup-r-dependencies@v2.14.0
         with:
           packages: |
             any::arrow

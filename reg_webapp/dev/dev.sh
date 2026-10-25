@@ -254,7 +254,18 @@ fi
 # browser shared machine-wide, so concurrent runs would drive each other's page.
 # The idle timeout reaps the daemon even if this script is SIGKILLed.
 ab_session=""
-if [ "$mode" = smoke ] || [ "$mode" = shot ]; then ab_session="reg-webapp-dev-$$"; fi
+ab_socket_dir=""
+if [ "$mode" = smoke ] || [ "$mode" = shot ]; then
+	ab_session="reg-webapp-dev-$$"
+	# The daemon's sockets and pid/target files default to ~/.agent-browser, which a
+	# sandboxed agent shell cannot write (#1776). A private temp dir keeps the run off
+	# $HOME and leaves nothing behind. Short on purpose: it holds a unix socket, whose
+	# path caps at 103 bytes (/tmp, not a long sandbox $TMPDIR; TMPDIR as the fallback).
+	if [ -z "${AGENT_BROWSER_SOCKET_DIR:-}" ]; then
+		ab_socket_dir=$(mktemp -d /tmp/ab.XXXXXX 2>/dev/null || mktemp -d "${TMPDIR:-/tmp}/ab.XXXXXX") || exit 1
+		export AGENT_BROWSER_SOCKET_DIR="$ab_socket_dir"
+	fi
+fi
 ab() {
 	bun "$root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
 		--session "$ab_session" --idle-timeout 2m "$@"
@@ -272,6 +283,7 @@ cleanup() {
 		for p in "${pids[@]}"; do kill -- -"$p" 2>/dev/null; done
 	fi
 	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
+	if [ -n "$ab_socket_dir" ]; then rm -rf "$ab_socket_dir"; fi
 }
 # Tear every server down on ANY exit — including the one-shot smoke/shot paths, so
 # they never leak a dev server (the failure mode that motivated this mode). INT/TERM

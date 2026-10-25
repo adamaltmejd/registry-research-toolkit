@@ -375,8 +375,8 @@ over budget is a finding for the `test-audit` skill, not a reason to raise the n
   | `crates/` (`cargo test --workspace`)      | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
   | conformance (`scripts/gate.py rust`)      | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
   | frontend (`bun run test`)                 | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
-  | `reg_mona_runner` (`gate.py runner`)      | 10 s  | 6 min  | One `Rscript` run per refusal locally; CI adds one SQL Server run of every extract case, after installing R and the ODBC driver.     |
-  | `reg_export_gate` (`gate.py export_gate`) | 10 s  | 6 min  | The case corpus in one R session; the CI job also installs R and the arrow binary.                                                   |
+  | `reg_mona_runner` (`gate.py runner`)      | 10 s  | 20 min | One `Rscript` run per refusal locally; CI adds one SQL Server run of every extract case, after installing R and the ODBC driver.     |
+  | `reg_export_gate` (`gate.py export_gate`) | 10 s  | 20 min | The case corpus in one R session; the CI job also installs R and the arrow binary.                                                   |
 
 Three verification gates cut across the tiers. They are named G0–G2 so they are not
 confused with the tiers; `conformance/README.md` ("Verification gates") has the G1
