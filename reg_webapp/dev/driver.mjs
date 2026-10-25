@@ -1083,6 +1083,25 @@ async function periodAvailabilityCase(page, _counts, shoot, project) {
     .inputValue();
   check(seeded === "2018", `the add window seeded at ${seeded}, not 2018`);
   await shoot("catalog-period-availability");
+
+  // (3) Back at the window, the period is gone (#1910). A From thumb moved in
+  //     applies a period and offers Clear; moved back onto window ∩
+  //     availability it drops the period and Clear with it. Fails on the
+  //     pre-fix code, which wrote `?period=2018..2020` and kept Clear.
+  const fromThumb = card.getByRole("slider", { name: "From year" });
+  const clear = card.getByRole("button", { name: "Clear period" });
+  check((await clear.count()) === 0, "Clear period showed with no period set");
+  await tabTo(page, fromThumb, "the From year thumb");
+  await page.keyboard.press("ArrowRight");
+  await periodApplied(page, "2019..2020");
+  await clear.waitFor();
+  await page.keyboard.press("ArrowLeft");
+  await periodApplied(page, null);
+  await settled(page);
+  check(
+    (await clear.count()) === 0,
+    "Clear period stayed after the thumbs came back to the study window",
+  );
 }
 
 /** Scenario 10 — the /project cart judges a source's period against the study

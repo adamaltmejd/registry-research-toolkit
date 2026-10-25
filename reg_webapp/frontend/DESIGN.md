@@ -44,6 +44,7 @@ colors:
   accent-hover: "#0c5c4d"
   accent-fg: "{colors.white}"
   accent-bg: "#dcefe9"
+  accent-band: "#bfe0d4"
   accent-soft: "#eaf5f1"
   accent-ink: "#0b5546"
   # Status — AA-cleared foreground stop + a separate fill tint each. Never a
@@ -267,10 +268,12 @@ pure role remaps.
   this is yours, or this is where you are. Primary button fill (`accent-fg` text), the
   bar and count on a column item or group that has something in the project, the
   selected row's bar, the focus ring, the study-window bounds. `accent-bg` is the wash:
-  selected variable rows, the study-window band, the active segment. `accent-soft` is
-  the project banner's fill and the current lane in a graph. `accent-ink` is pine as
-  text (in-project counts, window years on an axis). Never use pine for a verdict, a
-  type or decoration; `ok` is a verdict, `accent` is ownership.
+  selected variable rows, the study-window band, the active segment. `accent-band` is
+  one stop stronger and has one use: an add window that differs from the study window
+  (see Time). `accent-soft` is the project banner's fill and the current lane in a
+  graph. `accent-ink` is pine as text (in-project counts, window years on an axis).
+  Never use pine for a verdict, a type or decoration; `ok` is a verdict, `accent` is
+  ownership.
 - **Status (`err`, `warn`, `info`, `ok` and their `-bg` tints):** the only other
   chromatic chrome, each paired with a glyph and text. `warn` also marks a definition
   change on a timeline. Never use a `-bg` tint as a text color, and never use a status
@@ -440,29 +443,42 @@ Time is the axis every relation is drawn on.
   early years stay reachable. A new project starts at 2015 to the catalog's last year
   (the whole span when the catalog ends before 2015); a window set while browsing
   carries over instead. It shades every `Timeline` and `LaneGraph` as an `accent-bg`
-  band with `accent` bounds and `accent-ink` years on the axis. With no project open
-  there is no band. That **window band** is the one drawing of a period control: where
-  the period is set (the banner's study window, a variable page's add window, a source's
-  period on `/project`) the band is dragged by slim `accent` thumbs on its bounds; all
-  compose the same classes (`ui/WindowBand.module.css`), and a new period selector does
-  too. On a coverage row (the add window, a source period) the two thumbs never sit
-  closer than 16 px: a short window on a long axis pushes their faces apart to that
-  distance, all of it inward at an end of the axis so both faces stay on the row, so a
-  one-year window keeps both visible and grabbable, while the window's years and its
-  band stay where they are (maintainer ruling 2026-10-23).
+  band with `accent` bounds and `accent-ink` years on the axis, and it looks the same
+  everywhere, the banner included: the bounds and the light shade are always drawn, also
+  where an add window narrows inside it (#1910). With no project open there is no band.
+  That **window band** is the one drawing of a period control: where the period is set
+  (the banner's study window, a variable page's add window, a source's period on
+  `/project`) the band is dragged by slim `accent` thumbs on its bounds, so it is clear
+  what can be moved; all compose the same classes (`ui/WindowBand.module.css`), and a
+  new period selector does too (#1823). On a coverage row (the add window, a source
+  period) the two thumbs never sit closer than 16 px: a short window on a long axis
+  pushes their faces apart to that distance, all of it inward at an end of the axis so
+  both faces stay on the row, so a one-year window keeps both visible and grabbable,
+  while the window's years and its band stay where they are (maintainer ruling
+  2026-10-23).
 - The **add window** is a variable page's band: the years the columns ticked there are
   added for (#1838). On a variable page the `Timeline`'s band is a selection, two thumbs
   on the coverage row bounded by the variable's availability. The thumbs move live while
   dragged (the band and the columns' in/out follow them) and the window is applied when
   they come to rest (on release, or on each key press); there are no year fields and no
-  Apply, and a "Clear period" ghost action in the header drops it (maintainer ruling
-  2026-10-22). The band shows the add window when it differs from the study window
-  inside the variable's availability, else the study window. An add widens its source's
-  period to the union and never narrows it, so the add window raises no warning; a
-  column already in the project whose source years differ from the study window says so
-  in its tooltip and accessible name, not in a line under the graph (#1833); one outside
-  the window is still named there at `err`. A register or group pane draws the
-  `Timeline` read-only.
+  Apply (maintainer ruling 2026-10-22). Where the add window differs from the study
+  window inside the variable's availability it is a second encoding over the study
+  window's: the stronger `accent-band` between the thumbs, with no bounds of its own,
+  running through every lane; the study window's shade and bounds stay drawn, so a
+  narrower add window shows the study window is larger, and an add window that reaches
+  past the study window extends the stronger band beyond its bounds. The legend's "Study
+  window" key never changes; an "Add window" key appears only while the add window
+  differs. A "Clear period" ghost action in the header drops the period, and shows only
+  while it differs; thumbs that come to rest on the study window (inside the
+  availability) drop the period rather than write one equal to it. Only the drawn
+  windows' years without availability are `info-bg` (below); the add window's fill never
+  means a narrowing. While an add window is drawn the axis years are its bounds in
+  `accent-ink`; the study window's bounds keep their rules, unlabelled. An add widens
+  its source's period to the union and never narrows it, so the add window raises no
+  warning; a column already in the project whose source years differ from the study
+  window says so in its tooltip and accessible name, not in a line under the graph
+  (#1833); one outside the window is still named there at `err`. A register or group
+  pane draws the `Timeline` read-only.
 - A **source period** is set on `/project`, on the source's card, where the source is
   drawn whole as the **source timeline**: a `LaneGraph` headed by the coverage row of
   the source's variant family, its period as the window band with the same thumbs,
@@ -498,17 +514,18 @@ Time is the axis every relation is drawn on.
   widens by one step of 5, backward where forward would pass the catalog's last year. A
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
   `Timeline`, and a page with several sources draws them on one axis.
-- A **`Timeline`** is drawn on the page's axis, under a `label` header that says what
-  the band is and states the covered years (years only: no edition count). Coverage is
-  an ink bar with `viz-edition` ticks per delivered year, empty where a year has no
-  delivery, and a `label` legend of the marks it shows. On a variable page it is one
-  drawing with the columns (#1833, maintainer ruling 2026-10-23): it is drawn as a
-  `LaneGraph` headed by a coverage row (axis, then coverage with the period thumbs, then
-  lanes), so the band runs through every lane. The variable's columns are the first
-  lane, labelled spans in the `ColumnChip` shape with a coding change as a `warn` mark;
-  the variables a succession reaches are further lanes in time order, with their arrows.
-  A line under the drawing says plainly that clicking a column ticks it, and there is no
-  second graph on the page.
+- A **`Timeline`** is drawn on the page's axis, under a `label` header, "Coverage", that
+  states the covered years (years only: no edition count); where the coverage row
+  carries its own "Coverage" caption (a variable or group page) the header's label is
+  for a screen reader only. Coverage is an ink bar with `viz-edition` ticks per
+  delivered year, empty where a year has no delivery, and a `label` legend of the marks
+  it shows. On a variable page it is one drawing with the columns (#1833, maintainer
+  ruling 2026-10-23): it is drawn as a `LaneGraph` headed by a coverage row (axis, then
+  coverage with the period thumbs, then lanes), so the band runs through every lane. The
+  variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
+  coding change as a `warn` mark; the variables a succession reaches are further lanes
+  in time order, with their arrows. A line under the drawing says plainly that clicking
+  a column ticks it, and there is no second graph on the page.
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one row of a register's variable
   list, never a table with column headers: the in-project dot, the name in the text
@@ -522,10 +539,13 @@ Time is the axis every relation is drawn on.
   facet), columns as spans, and relations as arrows: solid for succession, dashed for
   rename. A lane's title joins its facet values with a comma, and its name opens the
   variable; a span is a checkbox for the add bar, and hovering it highlights its edges.
-  It shares the page's axis with the `Timeline`. The band is the active window: the add
-  window when one is set, else the study window. Its add bar, like the register's, shows
-  only while a change is staged. On a variable page the `LaneGraph` is the `Timeline`
-  (above). Don't draw free-form node graphs; the time axis is the information.
+  It shares the page's axis with the `Timeline`. It draws the study window's band and,
+  over it, an add window that differs, as on the variable page, with the axis years on
+  the add window's bounds when one is drawn. Its legend keys only the marks drawn: the
+  plain chip is "Click to select" and the filled one "In project"; a chip outside the
+  window needs no key. Its add bar, like the register's, shows only while a change is
+  staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
+  free-form node graphs; the time axis is the information.
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
 
@@ -609,11 +629,12 @@ not grow new visual language meanwhile.
   Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved",
   never a status hue. The study window is the period picker: an inline two-thumb RAC
   `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn as
-  the Timeline's window band (see Time) on a `surface` strip, its years an `accent-ink`
-  `mono` readout, with a "Clear" ghost action; the label, the readout and Clear keep one
-  line. With no project open it is the same box, empty and untinted with a `border`
-  leading bar, holding a `default` "Create a project" Button, which starts a project and
-  opens it, and nothing in the catalog is tinted.
+  the Timeline's study-window band (see Time: `accent-bg` between `accent` bounds, the
+  thumbs on those bounds) on a `surface` strip, its years an `accent-ink` `mono`
+  readout, with a "Clear" ghost action; the label, the readout and Clear keep one line.
+  With no project open it is the same box, empty and untinted with a `border` leading
+  bar, holding a `default` "Create a project" Button, which starts a project and opens
+  it, and nothing in the catalog is tinted.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items

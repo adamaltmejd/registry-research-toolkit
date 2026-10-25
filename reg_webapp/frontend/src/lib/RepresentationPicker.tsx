@@ -28,9 +28,11 @@ export type { PickerBand } from "./picker_lanes";
  * header, coverage row, period slider and the words under them. */
 export interface PickerTimeline {
   head: ReactNode;
-  /** The band the graph shades: the active window, which mid-drag is the
-   * selection. */
-  band: [number, number] | null;
+  /** The study window, drawn with its bounds and light shade. */
+  study: [number, number] | null;
+  /** An add window that differs from the study window (mid-drag, the
+   * selection), drawn as the stronger band between the thumbs. */
+  add: [number, number] | null;
   coverage: LaneCoverage;
   /** The period slider over the coverage row, on the axis the graph draws. */
   overlay?: (axis: [number, number]) => ReactNode;
@@ -311,7 +313,8 @@ export function RepresentationPicker({
           spans={graphModel.spans}
           edges={graphModel.edges}
           axis={graphModel.axis}
-          window={timeline ? timeline.band : window}
+          window={timeline ? timeline.study : window}
+          addWindow={timeline?.add}
           coverage={timeline?.coverage}
           overlay={timeline?.overlay}
           isDisabled={applying}

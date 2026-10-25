@@ -218,6 +218,8 @@
   --accent-hover: #0c5c4d; /* primary button hover */
   --accent-fg: #ffffff; /* text/icon on an accent fill (6.2:1) */
   --accent-bg: #dcefe9; /* the in-project wash: selected rows, the study-window band */
+  /* the add window's fill, stronger than accent-bg; text-muted on it still clears AA */
+  --accent-band: #bfe0d4;
   --accent-soft: #eaf5f1; /* the project banner's fill; the current lane in a graph */
   --accent-ink: #0b5546; /* accent-coloured TEXT on bg/surface/accent-bg (8.7:1) */
 

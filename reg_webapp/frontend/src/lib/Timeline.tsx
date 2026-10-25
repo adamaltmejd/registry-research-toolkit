@@ -177,33 +177,67 @@ function Drawing({ axis, band, covered, years }: DrawingProps) {
   );
 }
 
-/** What the drawing is against. */
-function headLabel(hasBand: boolean, add: boolean): string {
-  return !hasBand
-    ? "Coverage"
-    : add
-      ? "Coverage against your add window"
-      : "Coverage against your study window";
+/** The drawn windows' years outside coverage, merged: each window's own
+ * uncovered years, so the gap between two disjoint windows is not painted. */
+function uncoveredByWindows(
+  windows: readonly (Years | null)[],
+  covered: Years | null,
+): Years[] {
+  const all = windows
+    .flatMap((w) => (w ? uncoveredYears(w, covered) : []))
+    .sort((a, b) => a.from - b.from);
+  const merged: Years[] = [];
+  for (const r of all) {
+    const last = merged[merged.length - 1];
+    if (last && r.from <= last.to + 1) last.to = Math.max(last.to, r.to);
+    else merged.push({ ...r });
+  }
+  return merged;
 }
 
 interface HeadProps {
   id?: string;
-  label: string;
+  /** Name the drawing for a screen reader only: in the LaneGraph the
+   * coverage row carries the visible "Coverage". */
+  quietLabel?: boolean;
   covered: Years | null;
   /** The band's years outside coverage. The drawing shows them in `info-bg`;
    * the header names them for a screen reader only (#1833). */
   outside: readonly Years[];
-  /** Clear, while an add window is applied (variable page). */
+  /** The windows drawn, named for a screen reader only: the legend is hidden
+   * from assistive technology. */
+  study?: Years | null;
+  add?: Years | null;
+  /** Clear, while an add window differs from the study window (variable
+   * page). */
   action?: ReactNode;
 }
 
-/** The `label` header: what the drawing is against, then the covered years. */
-function Head({ id, label, covered, outside, action }: HeadProps) {
+/** The `label` header: "Coverage", then the covered years. */
+function Head({
+  id,
+  quietLabel = false,
+  covered,
+  outside,
+  study = null,
+  add = null,
+  action,
+}: HeadProps) {
   return (
     <div className={styles.head}>
-      <span id={id} className="micro-label">
-        {label}
+      <span id={id} className={quietLabel ? "visually-hidden" : "micro-label"}>
+        Coverage
       </span>
+      {(study || add) && (
+        <span className="visually-hidden">
+          {[
+            study && `Study window ${span(study)}`,
+            add && `Add window ${span(add)}`,
+          ]
+            .filter(Boolean)
+            .join("; ")}
+        </span>
+      )}
       {action}
       {covered && (
         <span className={styles.covered}>
@@ -241,11 +275,9 @@ function Legend({ band }: { band: string | null }) {
 interface TimelineProps {
   /** The page's axis (`dataAxis`, DESIGN.md → Time). */
   axis: Years;
-  /** The active window, or null with no project window and no add window:
-   * then there is no band. */
+  /** The study window, or null with no project open: then there is no
+   * band. */
   window: Years | null;
-  /** Says what the band is: the project's study window or an add window. */
-  windowKind?: "study" | "add";
   /** The subject's coverage (`coverageFromStates`, a union), or null. */
   coverage: Coverage | null;
   /** Delivered years (`deliveredYears`), or null to draw coverage solid. */
@@ -256,33 +288,26 @@ interface TimelineProps {
 
 /**
  * The read-only Timeline (DESIGN.md → Time): one axis over the page's data
- * and the study window, the active window as an `accent-bg` band, coverage as an ink bar with
- * edition ticks, a year without a delivery left empty, and the window's uncovered part
- * in `info-bg`. For the register pane; the variable page's is
+ * and the study window, the study window as the window band (`accent-bg`
+ * between `accent` bounds), coverage as an ink bar with edition ticks, a year
+ * without a delivery left empty, and the window's uncovered part in `info-bg`. For the register pane; the variable page's is
  * `VariableTimeline`, a group's `CoverageTimeline`.
  */
 export function Timeline({
   axis,
   window,
-  windowKind = "study",
   coverage,
   years,
   vintageYear,
 }: TimelineProps) {
   const covered = coverageBandEdges(coverage, axis.from, axis.to, vintageYear);
   const band = window ? clampYearWindow(window, axis.from, axis.to) : null;
-  const outside = band ? uncoveredYears(band, covered) : [];
-  const bandName =
-    band === null ? null : windowKind === "add" ? "Add window" : "Study window";
+  const outside = uncoveredByWindows([band], covered);
   return (
     <section className={styles.timeline} aria-label="Coverage">
-      <Head
-        label={headLabel(band !== null, windowKind === "add")}
-        covered={covered}
-        outside={outside}
-      />
+      <Head covered={covered} outside={outside} study={band} />
       <Drawing axis={axis} band={band} covered={covered} years={years} />
-      <Legend band={bandName} />
+      <Legend band={band && "Study window"} />
     </section>
   );
 }
@@ -293,11 +318,12 @@ type PickerProps = Omit<
 >;
 
 interface CoverageTimelineProps extends PickerProps {
-  /** The active window drawn as the band: a `?period` narrowing, else the
-   * project window; null draws none. */
-  band: Years | null;
-  /** Says what the band is: the project's study window or an add window. */
-  bandKind: "study" | "add";
+  /** The study window, drawn with its bounds and light shade; null when no
+   * project is open. */
+  study: Years | null;
+  /** A `?period` that differs from the study window, drawn as the stronger
+   * band; null draws none. */
+  add: Years | null;
   /** The window the columns are read against (`pickerWindowYears`). */
   pickerWindow: [number, number] | null;
   /** The subject's coverage (a union over its members), or null. */
@@ -318,8 +344,8 @@ interface CoverageTimelineProps extends PickerProps {
  * group page draws the period and does not set one.
  */
 export function CoverageTimeline({
-  band,
-  bandKind,
+  study,
+  add,
   pickerWindow,
   coverage,
   years,
@@ -337,8 +363,8 @@ export function CoverageTimeline({
     windowMaxYear,
     windowMaxYear,
   );
-  const outside = band ? uncoveredYears(band, covered) : [];
-  const drawn = band ? [band.from, band.to] : [];
+  const outside = uncoveredByWindows([study, add], covered);
+  const drawn = [study, add].flatMap((w) => (w ? [w.from, w.to] : []));
   if (covered) drawn.push(covered.from, covered.to);
   return (
     <section aria-labelledby={labelId}>
@@ -351,22 +377,20 @@ export function CoverageTimeline({
           head: (
             <Head
               id={labelId}
-              label={headLabel(band !== null, bandKind === "add")}
+              quietLabel
               covered={covered}
               outside={outside}
+              study={study}
+              add={add}
             />
           ),
-          band: band && [band.from, band.to],
+          study: study && [study.from, study.to],
+          add: add && [add.from, add.to],
           coverage: {
             covered,
             years,
             outside,
-            bandName:
-              band === null
-                ? null
-                : bandKind === "add"
-                  ? "Add window"
-                  : "Study window",
+            bandName: study && "Study window",
           },
           foot,
         }}
@@ -404,16 +428,19 @@ interface VariableTimelineProps extends PickerProps {
 /**
  * The variable page's one Timeline (#615, #1833; DESIGN.md → Time): coverage,
  * the variable's columns and the variables a succession reaches, drawn as one
- * LaneGraph on one axis. The band is the add window (Q4, #1838): the years the
- * columns ticked here are added for, a selection whose two thumbs over the
- * coverage row stop at the variable's availability. An add widens its source
+ * LaneGraph on one axis. The study window is always drawn, its bounds and
+ * light shade; the thumbs set the add window (Q4, #1838), the years the columns
+ * ticked here are added for, a selection whose two thumbs over the coverage row
+ * stop at the variable's availability. Where it differs from the study window
+ * it is the stronger band between the thumbs (#1910). An add widens its source
  * to the union and never narrows it; a source's period is edited on /project. The thumbs
  * move live while dragged (the band and the columns' in/out follow them) and
  * the period is applied when they come to rest (on release, or on each
  * committed key press), so a drag is one URL change; there are no year fields
  * and no Apply (maintainer ruling 2026-10-22).
  *
- * A window wider than the availability is the `info-bg` part of the band.
+ * Window years without availability are the `info-bg` part of the coverage
+ * row.
  *
  * A non-year `?period` (a term, a list, `_default`) is valid URL state this UI
  * does not author: it reads as text with Clear and is never rewritten.
@@ -511,27 +538,36 @@ export function VariableTimeline({
   if (covered) drawn.push(covered.from, covered.to);
   const userChosen = periodWindow !== null || dragging !== null;
 
-  // The band names the add window only where it differs from the study
-  // window inside the variable's availability (`periodWindowRelation`): years
-  // it has no data for are the data's narrowing, not the user's, and show as
-  // the band's `info-bg` part. So the default seed (window∩coverage), that
-  // seed applied, and the window itself all read as the study window.
+  // An add window is drawn only where it differs from the study window
+  // inside the variable's availability (`periodWindowRelation`): years it has
+  // no data for are the data's narrowing, not the user's, and show as the
+  // `info-bg` part of the coverage row. So the default seed (window∩coverage),
+  // that seed applied, and the window itself draw the study window alone.
   const coveredDays = covered && studyWindowInterval(covered);
-  const matchesWindow =
+  const matchesWindow = (at: Years) =>
     boundedWindow !== null &&
     periodWindowRelation(
-      selection,
+      at,
       boundedWindow,
       coveredDays ? [coveredDays] : null,
     ) === "same";
-  const addKind = userChosen && !matchesWindow;
-  // The band is the active window: an add window that differs, else the
-  // project window (the thumbs may sit on the narrower seed), so the uncovered
-  // years show for as long as the period only follows availability.
-  const showBand =
-    subAnnualPeriod === null && (userChosen || boundedWindow !== null);
-  const band = showBand ? (addKind ? selection : boundedWindow) : null;
-  const outside = band ? uncoveredYears(band, covered) : [];
+  // The study window is always drawn (#1910), its shade still showing where a
+  // narrower add window leaves it; the add window is the stronger band between
+  // the thumbs, and may reach past the study window.
+  const study = subAnnualPeriod === null ? boundedWindow : null;
+  const add =
+    subAnnualPeriod === null && userChosen && !matchesWindow(selection)
+      ? selection
+      : null;
+  const outside = uncoveredByWindows([study, add], covered);
+  // Clear shows while the applied period differs from the study window: a
+  // period resting on the window is the same as none.
+  const canClear =
+    period !== null &&
+    // A sub-annual period has no thumbs, so Clear is its only way out.
+    (subAnnualPeriod !== null ||
+      boundedPeriodWindow === null ||
+      !matchesWindow(boundedPeriodWindow));
 
   function slider(axis: [number, number]): ReactNode {
     return (
@@ -545,6 +581,12 @@ export function VariableTimeline({
         }}
         onRest={(at) => {
           setDragging(null);
+          // A rest on the study window is no period: drop the one applied
+          // rather than write a `?period` equal to the window.
+          if (matchesWindow(at)) {
+            if (period !== null) onClear();
+            return;
+          }
           // A rest where the period already is applies nothing: a click
           // on a thumb must not turn the seed into a URL period.
           if (
@@ -571,11 +613,13 @@ export function VariableTimeline({
           head: (
             <Head
               id={labelId}
-              label={headLabel(band !== null, addKind)}
+              quietLabel
               covered={covered}
               outside={outside}
+              study={study}
+              add={add}
               action={
-                period !== null && (
+                canClear && (
                   <Button variant="ghost" onPress={onClear}>
                     Clear period
                   </Button>
@@ -583,13 +627,13 @@ export function VariableTimeline({
               }
             />
           ),
-          band: band && [band.from, band.to],
+          study: study && [study.from, study.to],
+          add: add && [add.from, add.to],
           coverage: {
             covered,
             years,
             outside,
-            bandName:
-              band === null ? null : addKind ? "Add window" : "Study window",
+            bandName: study && "Study window",
           },
           overlay: subAnnualPeriod === null ? slider : undefined,
           foot: (
