@@ -1,0 +1,47 @@
+{
+  "total": 0,
+  "contradicted_edges": {
+    "$exact": [
+      {
+        "from": "scb/suffix/bel",
+        "to": "scb/suffix/belopp",
+        "from_column": "BEL",
+        "to_column": "BELOPP",
+        "variant": "individer",
+        "effective_year": 2021,
+        "predecessor_after": [],
+        "successor_before": [["individer", 2020, 2020]]
+      },
+      {
+        "from": "scb/suffix/gkod",
+        "to": "scb/suffix/nkod",
+        "from_column": null,
+        "to_column": null,
+        "variant": "",
+        "effective_year": 2020,
+        "predecessor_after": [["individer", 2020, 2022]],
+        "successor_before": []
+      },
+      {
+        "from": "scb/suffix/gpos",
+        "to": "scb/suffix/npos",
+        "from_column": null,
+        "to_column": null,
+        "variant": "",
+        "effective_year": 2020,
+        "predecessor_after": [["individer", 2020, 2021]],
+        "successor_before": []
+      },
+      {
+        "from": "scb/suffix/gsum",
+        "to": "scb/suffix/nsum",
+        "from_column": null,
+        "to_column": null,
+        "variant": "",
+        "effective_year": 2020,
+        "predecessor_after": [["individer", 2020, 2021]],
+        "successor_before": [["individer", 2019, 2019]]
+      }
+    ]
+  }
+}

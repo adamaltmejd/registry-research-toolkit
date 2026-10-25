@@ -122,6 +122,14 @@ cases. Its `source.json` description lists what it delivers: three registers (`u
 their bindings in `curation/classifications/`. Each case's `note` says which rows carry
 its claims.
 
+`_suffixed/` is the artifact of the `succession-candidates` cases on provider-suffixed
+headers and contradicted edges: one register (`suffix`) with one variant, two header
+pairs that share one year (a handover, and a co-delivery), a suffixed header minted by a
+`scb-docs` `[[errata.column]]` in its register file, and five pairs joined by succession
+edges: four by the edges in its `curation/relations.toml`, one by the edge the build
+derives from the classification edition edge there. Its `source.json` description lists
+the rows.
+
 ## The working directory
 
 Each case runs in its own empty directory, `{work}`:

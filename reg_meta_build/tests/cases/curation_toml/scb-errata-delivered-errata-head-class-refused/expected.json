@@ -1,0 +1,14 @@
+{
+  "loader": "scb_errata",
+  "replaces": "none: new behavior (PR #1915)",
+  "fails_if": "resolve_scb_errata lets an [[errata.delivered]] upstream claim an errata table or [[errata.column]] source name, so succession-candidates reads a documentation-only state as the provider's export",
+  "note": "`steward-holdings` is an [[errata.column]] source, which `succession-candidates` counts as exported; the scoped-provenance names are the sibling case.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.delivered]] entry 1 (scb/lisa)/individer-15plus/Kon",
+    "message_contains": [
+      "correction class 'steward-holdings'",
+      "reserved"
+    ]
+  }
+}

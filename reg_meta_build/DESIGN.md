@@ -2601,6 +2601,36 @@ explicit new `--db` directory: it never replaces the active catalog. Naming,
 classification, group, succession, same-as and document-coverage worklist commands
 produce review material; they do not approve or apply new curation during a build.
 
+`succession-candidates` also reports two kinds as comments and JSON lists, never as
+loadable TOML (#1907). A contradicted edge is a curated `replaced_by` edge with an
+`effective_year` that the deliveries in its scope disagree with: the predecessor still
+delivers in or after that year, or the successor before it (a reverse edge's years are
+excluded, so a header renamed and renamed back is not flagged). Only relations.toml
+edges (`note` `curated:…`) are checked: a derived edge
+(`derived:classification_vintage_lift`) cannot be fixed by the edit the report names. A
+variable-grain edge is allowed a dual-delivery transition (maintainer ruling, PR #1915;
+classification-edition successions such as SUN2000 → SUN2020 ship both editions for a
+while): with effective year Y, it is not flagged when the two are co-delivered for at
+most two years in all. Only co-delivery counts: every year the predecessor delivers from
+Y must also be a successor delivery year, and every year the successor delivers before Y
+a predecessor one, so a predecessor overrunning Y alone is flagged. The joint window
+runs from the successor's first delivery before Y (Y if none) to the predecessor's last
+delivery at or after Y (Y-1 if none), so Y-1..Y and Y..Y+1 pass and Y-1..Y+1 is flagged.
+A representation-grain edge names one column renamed to another, so any overlap is
+flagged, as is a longer one at variable grain. A fold candidate is a bare header and its
+twin with an exact provider suffix (`PROVIDER_HEADER_SUFFIXES` in `_curation.py`) under
+two variables of one register. The succession rule pairs only one column, so it never
+sees these, and an edge is the wrong shape for one quantity under two headers. A pair
+the provider exported together is two quantities and is dropped. An overlap through a
+state documentation attests is reported for the curator to settle: one an
+`[[errata.delivered]]` entry added (`errata:<upstream class>` provenance) or an
+`[[errata.column]]` entry with source `scb-docs` minted. A correction of an exported
+state (`errata:field` and the other correction tables) counts as exported, and so does a
+`steward-holdings` mint, which reflects a steward's physical holdings (operator ruling,
+PR #1915). A single shared handover year (one header's last, the other's first) is a
+transition. A curator lands a fold as register curation (`[[identity.partition]]` and
+`[[errata.field]]`), as `AstNr` / `AstNr_LISA` are.
+
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated

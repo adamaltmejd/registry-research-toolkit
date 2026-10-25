@@ -1,0 +1,24 @@
+{
+  "exit_code": 0,
+  "files": {
+    "succession.toml": {
+      "toml": {},
+      "contains": [
+        "#   edge: scb/suffix/bel [BEL] -> scb/suffix/belopp [BELOPP], variant individer, effective_year 2021",
+        "#     successor delivered before the effective year: individer 2020..2020",
+        "#   edge: scb/suffix/gkod -> scb/suffix/nkod, unscoped, effective_year 2020",
+        "#     predecessor delivered from the effective year: individer 2020..2022",
+        "#   edge: scb/suffix/gsum -> scb/suffix/nsum, unscoped, effective_year 2020",
+        "#     predecessor delivered from the effective year: individer 2020..2021",
+        "#     successor delivered before the effective year: individer 2019..2019",
+        "#   edge: scb/suffix/gpos -> scb/suffix/npos, unscoped, effective_year 2020",
+        "#     predecessor delivered from the effective year: individer 2020..2021"
+      ],
+      "excludes": [
+        "scb/suffix/ant [ANT]",
+        "scb/suffix/gtal",
+        "scb/suffix/sun2000inr"
+      ]
+    }
+  }
+}

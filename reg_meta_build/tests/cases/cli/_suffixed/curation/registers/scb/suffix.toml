@@ -1,0 +1,42 @@
+[register]
+provider = "scb"
+slug = "suffix"
+native_id = "8"
+
+[[variant]]
+native_id = "8.80"
+slug = "individer"
+
+[variable]
+"8.81" = "famtyp"
+"8.82" = "famtyp-barnreg"
+"8.83" = "hid"
+"8.84" = "hid-iot"
+"8.85" = "ant"
+"8.86" = "antal"
+"8.87" = "bel"
+"8.88" = "belopp"
+"8.89" = "sun2000inr"
+"8.90" = "sun2020inr"
+"8.91" = "gkod"
+"8.92" = "nkod"
+"8.93" = "gtal"
+"8.94" = "ntal"
+"8.95" = "gsum"
+"8.96" = "nsum"
+"8.97" = "gpos"
+"8.98" = "npos"
+"8.FAMTYP_MIDAS" = "famtyp-midas"
+
+[[errata.column]]
+variant = "individer"
+column = "FAMTYP_MIDAS"
+name = "Familjetyp enligt MiDAS"
+definition = "Familjetyp, dokumenterad men inte exporterad"
+versions = ["2019", "2020"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "scb-docs"
+evidence = "SCB documentation"
+noted = "2026-10-25"

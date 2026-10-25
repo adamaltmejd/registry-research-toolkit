@@ -1,0 +1,54 @@
+# ANTAL starts delivering in the edge's effective year: the edge agrees.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/ant"
+to = "scb/suffix/antal"
+from_column = "ANT"
+to_column = "ANTAL"
+variant = "individer"
+effective_year = 2020
+
+# BELOPP already delivers in 2020, the year before the edge's: contradicted.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/bel"
+to = "scb/suffix/belopp"
+from_column = "BEL"
+to_column = "BELOPP"
+variant = "individer"
+effective_year = 2021
+
+# No edge for sun2000inr -> sun2020inr: the build chains the two SUN inriktning
+# editions by name and lifts that to the variables
+# (derived:classification_vintage_lift); sun2000inr delivers through 2022.
+
+# GKOD delivers 2020-2022, three years from the edge's: contradicted.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gkod"
+to = "scb/suffix/nkod"
+effective_year = 2020
+
+# GTAL and NTAL are co-delivered 2020-2021, two years in all: a dual-delivery
+# transition, allowed at variable grain.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gtal"
+to = "scb/suffix/ntal"
+effective_year = 2020
+
+# GSUM and NSUM are co-delivered 2019-2021, three years centred on the edge's:
+# contradicted, though neither side alone leaves Y-2..Y+1.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gsum"
+to = "scb/suffix/nsum"
+effective_year = 2020
+
+# GPOS delivers 2020-2021, but NPOS only from 2022: no year of co-delivery, so the
+# predecessor overruns the edge's year alone and the real switch is 2022: contradicted.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gpos"
+to = "scb/suffix/npos"
+effective_year = 2020

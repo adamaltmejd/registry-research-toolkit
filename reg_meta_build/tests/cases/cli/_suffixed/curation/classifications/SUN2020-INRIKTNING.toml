@@ -1,0 +1,7 @@
+[classification]
+short_name = "SUN2020-INRIKTNING"
+slug = "sun2020-inriktning"
+name = "SUN 2020 inriktning"
+codes_file = "sun2020-inriktning.csv"
+[binding]
+value_set_labels = ["SUN 2020 Inriktning"]

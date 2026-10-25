@@ -1,0 +1,13 @@
+{
+  "replaces": "none: new behavior (#1907)",
+  "fails_if": "succession-candidates stops proposing a bare header and its exact provider-suffixed twin whose only shared year ends one and starts the other, or proposes a twin the provider exported beside its bare header in a year that is not a handover, or counts an overlap a scb-docs [[errata.column]] mint attests as the provider's export",
+  "note": "From `_suffixed/source.json`, all in variant `individer`. FAMTYP (var 81, 2019-2020) and FAMTYP_BARNREG (var 82, 2020-2021) share only 2020, FAMTYP's last year and FAMTYP_BARNREG's first: a handover, so the pair is a fold candidate (the breg FamTyp / Famtyp_BarnReg shape). FAMTYP_MIDAS is an [[errata.column]] mint with source scb-docs for 2019-2020 (`_suffixed/curation/registers/scb/suffix.toml`): it shares two years with FAMTYP, which as an export would be a co-delivery, but SCB's documentation is not the export, so the pair is a fold candidate with that overlap reported (the LISA FortPens_Belopp / FortPens_Belopp_MiDAS shape). HID (var 83, 2019-2021) and HID_IoT (var 84, 2020) also share one year, but HID keeps delivering in 2021, so the two were co-delivered and are not proposed (the LISA HushallsID / HushallsID_IoT shape). The var_ids differ, so no candidate names a shared native variable.",
+  "artifact": "_suffixed",
+  "argv": [
+    "--db",
+    "{db}",
+    "succession-candidates",
+    "-o",
+    "{work}/succession.toml"
+  ]
+}
