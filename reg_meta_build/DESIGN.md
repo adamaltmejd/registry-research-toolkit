@@ -863,19 +863,12 @@ presentation, not identity or bindings. `[[code_label_pair]]` is also register-l
 both FQIDs belong to the same register, and the pair only folds matching code and label
 concepts.
 
-What a curated concept group gathers and which axes it declares follows the group rubric
-in `crates/DESIGN.md` ("Concept groups and tags"); curation applies it this way. The key
-is the bare concept slug, the same in every register (`disponibel-inkomst` in IoT and
-LISA). An axis is declared only where the register's members vary on it, and a member
-that the axis does not apply to takes `na`. Computed quantities of the concept (ratio,
-median, weight, cost-adjusted amount) join under `matt`; inputs to it stay out.
-`definition` is an axis only where two definitions are co-delivered in the same years;
-definitions that succeed one another are `replaced_by` edges in `relations.toml`. A
-`replaced_by` edge that `succession-candidates` reports as contradicted, because its
-predecessor is still delivered after the successor starts, is a coexisting definition:
-the edge is deleted and the pair becomes `definition` coordinates in the group (#1794:
-the seven IoT 1991 → 2004 disposable-income edges). Tags in `tags.toml` are broad and
-cross-register (`income`, `transfers`), never one concept's variants.
+Curated concept groups and tags follow the group rubric in `crates/DESIGN.md` ("Concept
+groups and tags"). One curation rule sits on top of it: a `replaced_by` edge that
+`succession-candidates` reports as contradicted, because its predecessor is still
+delivered after the successor starts, joins co-delivered definitions. The edge is
+deleted and the pair becomes `definition` coordinates in the group (#1794: the seven
+IoT 1991 → 2004 disposable-income edges).
 
 Delivery descriptions are enrichment, not source facts: they fill an empty description
 only when an exact delivery-column match grounds the text. The worklist generator drops
