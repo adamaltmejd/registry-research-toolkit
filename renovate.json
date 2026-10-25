@@ -133,6 +133,26 @@
       ],
       "separateMajorMinor": false,
       "minimumReleaseAge": null
+    },
+    {
+      "description": "Hold: unicode-normalization must stay on src/case_folding.rs's Unicode version (17.0.0); 0.1.26 moved to Unicode 18 ahead of Rust std. Lift with the `=` pin in crates/reg-core/Cargo.toml when std follows.",
+      "matchDatasources": [
+        "crate"
+      ],
+      "matchPackageNames": [
+        "unicode-normalization"
+      ],
+      "allowedVersions": "<=0.1.25"
+    },
+    {
+      "description": "Hold: `typescript` is the JS compiler API openapi-typescript imports (peer ^5.x); TS 7 does not ship it. Type checking already runs TS 7 through the @typescript/native alias. Lift when openapi-typescript supports TS 7.",
+      "matchFileNames": [
+        "reg_webapp/frontend/package.json"
+      ],
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7"
     }
   ]
 }
