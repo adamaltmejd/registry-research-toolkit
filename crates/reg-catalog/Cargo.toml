@@ -6,14 +6,14 @@ publish.workspace = true
 
 [dependencies]
 reg-core = { path = "../reg-core", features = ["openapi"] }
-rusqlite = { version = "0.40.2", features = ["bundled", "functions"] }
+rusqlite = { version = "0.41.0", features = ["bundled", "functions"] }
 serde = { version = "1.0.229", features = ["derive"] }
-serde_json = "1.0.151"
-sha2 = "0.11.0"
+serde_json = "1.0.154"
+sha2 = "0.11.1"
 utoipa = "6.0.0"
 
 [lints]
 workspace = true
 
 [dev-dependencies]
-toml = "1.1.6"
+toml = "1.1.8"
