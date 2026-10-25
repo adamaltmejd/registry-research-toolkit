@@ -31,8 +31,8 @@ no-op when in sync, so a fresh worktree needs no setup. It then runs
   `bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js install` once
   (Chrome for Testing into `~/.agent-browser`); the same command with `doctor` says
   which browser it resolves.
-- For `flows`: Playwright's Chromium (the frontend's vitest-browser setup installs it;
-  if missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`).
+- For `flows`: Playwright's Chromium, once:
+  `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog: `--fixture-db` (below), or `REG_META_DB` set to a directory holding a
   release asset (`reg_meta.db` + `reg_meta_docs.db`; root `README.md`). The server
   refuses a catalog whose schema it does not admit (`SCHEMA` in
@@ -64,15 +64,12 @@ job.
 - **`shot`** captures `_<route>` per route × viewport; non-desktop captures get a
   `-<label>` suffix. `--all` is the four widths (375 / 768 / 1280 / 1920) the
   design-reviewer skill judges.
-- **`flows`** runs ten project scenarios (blocked order, order/validation retries,
-  catalog-authored draft, period-required pick, deliberate replace, per-source period
-  edit, keyboard period focus, period within availability on the variable page and on
-  /project) at four viewports, each in a fresh browser context against the real servers,
-  and writes the PNGs into `<out-dir>`. Name scenarios to run a subset
-  (`blocked-order order-retry validation-retry catalog-draft catalog-period-required project-source-period catalog-period-focus catalog-period-availability project-period-availability project-column-remove replace-confirm browse-search`).
-  It asserts on the `--fixture-db` content (`scb/lisa/kon` at `individer-15plus`,
-  `scb/rams/syss`, `scb/lisa/forsamling`), so run it with `--fixture-db`. The gate's
-  `flows` step (`uv run --no-project scripts/gate.py flows`) runs all eleven that way.
+- **`flows`** runs the project and catalog scenarios at four viewports, each in a fresh
+  browser context against the real servers, and writes the PNGs into `<out-dir>`. The
+  `scenarios` table in `driver.mjs` names them; name some to run a subset. It asserts on
+  the `--fixture-db` content (`scb/lisa/kon` at `individer-15plus`, `scb/rams/syss`,
+  `scb/lisa/forsamling`), so run it with `--fixture-db`. The gate's `flows` step
+  (`uv run --no-project scripts/gate.py flows`) runs all of them that way.
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
   `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
 

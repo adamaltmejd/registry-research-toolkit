@@ -2,3 +2,5 @@ interface:
   display_name: "Upgrade Registry Dependencies"
   short_description: "Fix red Renovate PRs and run larger upgrades"
   default_prompt: "Use $upgrade-deps to repair a red Renovate PR or run a manual, larger dependency upgrade and verify it in an isolated worktree."
+policy:
+  allow_implicit_invocation: true

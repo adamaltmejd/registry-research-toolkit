@@ -1,14 +1,14 @@
 # Codex permission setup
 
 This public repository deliberately commits no executable Codex configuration or rules.
-The one exception is `config.toml`, which sets only `service_tier = "fast"`: Yard stages
-it into every Codex box, and it also puts trusted local Codex runs here on the fast
-tier. It must stay data-only (no MCP servers, hooks, rules or approval policy). A
-trusted checkout may later hold an untrusted pull-request head, and Codex loads a
-trusted project's `.codex/config.toml` before user configuration, so a PR could replace
-an MCP command and run a host program before any per-tool approval applies. Project
-rules are also the wrong boundary for Git and GitHub commands: they match literal
-argument prefixes, which global options, wrappers and absolute paths change.
+The one exception is `config.toml`, which sets only `service_tier = "fast"`: it puts
+trusted local Codex runs here on the fast tier. It must stay data-only (no MCP servers,
+hooks, rules or approval policy). A trusted checkout may later hold an untrusted
+pull-request head, and Codex loads a trusted project's `.codex/config.toml` before user
+configuration, so a PR could replace an MCP command and run a host program before any
+per-tool approval applies. Project rules are also the wrong boundary for Git and GitHub
+commands: they match literal argument prefixes, which global options, wrappers and
+absolute paths change.
 
 So:
 

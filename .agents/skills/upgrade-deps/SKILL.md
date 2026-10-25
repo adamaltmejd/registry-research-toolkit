@@ -35,8 +35,8 @@ together, reading actual files rather than a saved version list:
 - Frontend `package.json`, `bun.lock`, `bunfig.toml`, including peer constraints and npm
   aliases such as the native TypeScript checker.
 - Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
-  pins), `reg_webapp/Dockerfile`, `.yard/Dockerfile`, and the Rust toolchain and
-  `Cargo.toml`/`Cargo.lock` dependencies.
+  pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
+  dependencies.
 - `wasm-bindgen`, pinned in three places that move together: the `=` pin in
   `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
   `ci.yml`'s frontend job, and the same tool in `container-build.yml`'s
@@ -116,9 +116,9 @@ change counts (AGENTS.md, "Git"). A skill does not grant publication authority.
 Coordinate the merge so only one writer advances main at a time, then verify the
 integrated source.
 
-Keep detailed, temporary evidence in ignored `archive/reports/`; the PR carries the
-concise durable result. Report the branch/PR, checks and unresolved holds. If release
-was also requested, hand the integrated revision and relevant asset rebuild implications
-to [release](../release/SKILL.md). That skill determines package versions, builds or
-reuses assets, publishes in dependency order and checks deployment. Do not start another
+Keep detailed, temporary evidence in ignored `.local/`; the PR carries the concise
+durable result. Report the branch/PR, checks and unresolved holds. If release was also
+requested, hand the integrated revision and relevant asset rebuild implications to
+[release](../release/SKILL.md). That skill determines package versions, builds or reuses
+assets, publishes in dependency order and checks deployment. Do not start another
 dependency refresh during that handoff.
