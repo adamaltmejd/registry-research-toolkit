@@ -485,7 +485,13 @@ function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
   return (
     <div className={styles.name} style={width ? { width } : undefined}>
       {lane.href ? (
-        <a className={`link ${styles.nameText}`} href={lane.href}>
+        <a
+          className={`link ${styles.nameText}`}
+          href={lane.href}
+          // The page's own subject (a group's focused member): said in words,
+          // not only by the lane's fill.
+          aria-current={lane.current ? "page" : undefined}
+        >
           {lane.name}
         </a>
       ) : (

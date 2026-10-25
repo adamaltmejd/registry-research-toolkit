@@ -876,9 +876,10 @@ Per-kind mapping into the six sections:
 **A concept group is its members' variable page (#1909, ruling #1794).** A grouped
 member has no page of its own: `CatalogNodeView` sends its URL, with the query, to
 `group/<provider>/<register>/<key>?member=<fqid>`, history-replaced. The group page
-marks that member's lane current and shows its own definition, operational definition,
-data warnings and states below the picker; a lane's name links to the same page with
-that `?member`, a query-only move. `BindingLeafView` therefore only ever shows an
+marks that member's lane current (`aria-current` on its name, scrolled into view) and
+shows its own definition, operational definition, data warnings, states and sensitive /
+identifier flags below the picker; a lane's name links to the same page with that
+`?member`, a query-only move. Its lineage and document mentions are not repeated there. `BindingLeafView` therefore only ever shows an
 ungrouped variable, and its `/graph` read feeds the picker's neighbour lanes only.
 
 ### The picker — slice axis × time axis

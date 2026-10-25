@@ -274,6 +274,25 @@ export function ConceptGroupView({
     };
   }, []);
 
+  // A member's URL lands here focused on it (#1909): bring its lane into view
+  // once the lanes are drawn, as its own page opened on it. `nearest`, so a
+  // lane already on screen (a click on its name) does not move.
+  const pageRef = useRef<HTMLElement>(null);
+  const lanesDrawn = resource.data != null && graphResource.data != null;
+  useEffect(() => {
+    if (!memberHint || !lanesDrawn) return;
+    const lane = pageRef.current?.querySelector<HTMLElement>(
+      '[aria-current="page"]',
+    );
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    lane?.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      block: "nearest",
+    });
+  }, [memberHint, lanesDrawn]);
+
   const onApply = useCallback(
     async (payload: StagedApplyPayload): Promise<boolean> => {
       const scope = { period: activePeriod, window: pickerWindow };
@@ -418,7 +437,7 @@ export function ConceptGroupView({
   }
 
   return (
-    <article className={styles.page}>
+    <article ref={pageRef} className={styles.page}>
       <Definitions
         title={group.label}
         memberOf={[
@@ -551,7 +570,8 @@ function MemberDetails({
   });
   if (resource.loading) {
     return (
-      <section aria-busy="true">
+      <section aria-busy="true" aria-live="polite">
+        <p className="visually-hidden">Loading…</p>
         <Skeleton width="min(16rem, 50%)" />
         <Skeleton variant="block" />
       </section>
@@ -593,6 +613,15 @@ function MemberDetails({
             unit: node.measurement_unit ?? null,
           }}
         />
+        {/* The flags its variable page kept under Technical details. */}
+        <TechnicalDetails>
+          <KeyValue
+            rows={[
+              { label: "Sensitive", value: node.is_sensitive ? "yes" : "no" },
+              { label: "Identifier", value: node.is_identifier ? "yes" : "no" },
+            ]}
+          />
+        </TechnicalDetails>
       </div>
     </SubjectSection>
   );
