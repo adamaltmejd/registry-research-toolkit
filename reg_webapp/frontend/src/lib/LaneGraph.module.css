@@ -22,8 +22,14 @@
   fill: var(--accent-soft);
 }
 
+/* The window band (ui/WindowBand, DESIGN.md → Time): the study window's
+   shade and bounds, and an add window's stronger band. */
 .band {
   fill: var(--accent-bg);
+}
+
+.addBand {
+  fill: var(--accent-band);
 }
 
 .bound {
@@ -405,6 +411,7 @@ a.nameText {
 }
 
 .keyBand,
+.keyAddBand,
 .keyCoverage {
   display: inline-block;
   width: 10px;
@@ -415,6 +422,10 @@ a.nameText {
 .keyBand {
   border: 1px solid var(--accent);
   background: var(--accent-bg);
+}
+
+.keyAddBand {
+  background: var(--accent-band);
 }
 
 .keyCoverage {

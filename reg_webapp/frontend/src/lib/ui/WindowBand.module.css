@@ -1,8 +1,11 @@
-/* The window band (DESIGN.md → Time): the one drawing of a period control. An
-   `accent-bg` wash between two `accent` bounds, dragged by slim `accent` thumbs
-   on those bounds. The Timeline's band and the ProjectBanner's study window
+/* The window band (DESIGN.md → Time): the one drawing of a period control. The
+   study window is an `accent-bg` shade between two `accent` bounds; an add
+   window that differs from it is the stronger `accent-band` fill with no bounds
+   of its own (drawn only in the LaneGraph's SVG, `.addBand` there). Either is dragged by slim `accent` thumbs on its bounds where it
+   can be changed. The Timeline's bands and the ProjectBanner's study window
    compose these classes, so every period selector reads as the same object
-   (#1823). Each consumer places them (height, `top`) in its own module. */
+   (#1823) and the study window looks the same everywhere (#1910). Each consumer
+   places them (height, `top`) in its own module. */
 .band {
   box-sizing: border-box;
   border-inline: 1.5px solid var(--accent);

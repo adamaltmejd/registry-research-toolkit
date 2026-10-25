@@ -44,6 +44,7 @@ colors:
   accent-hover: "#0c5c4d"
   accent-fg: "{colors.white}"
   accent-bg: "#dcefe9"
+  accent-band: "#bfe0d4"
   accent-soft: "#eaf5f1"
   accent-ink: "#0b5546"
   # Status — AA-cleared foreground stop + a separate fill tint each. Never a

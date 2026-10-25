@@ -83,8 +83,12 @@ interface Props {
   edges: LaneEdgeModel[];
   /** Inclusive first and last year. */
   axis: [number, number];
-  /** The active window, shaded as a band; null draws none. */
+  /** The window drawn as the band (its bounds and the light shade), the
+   * study window on a variable or group page; null draws none. */
   window: [number, number] | null;
+  /** An add window that differs from `window`, drawn as the stronger band
+   * between the thumbs (#1910); it may reach past `window`. */
+  addWindow?: [number, number] | null;
   coverage?: LaneCoverage;
   /** Laid over the coverage row's track (the period slider), on `axis`. */
   overlay?: (axis: [number, number]) => ReactNode;
@@ -95,8 +99,9 @@ interface Props {
 /**
  * Lanes over time (DESIGN.md → Time → LaneGraph): one lane per variable, each
  * column a span in the ColumnChip shape on one shared axis, relations as
- * arrows, solid for succession and dashed for a rename, and the window as an
- * `accent-bg` band. The marks are one decorative SVG; the lanes and spans are
+ * arrows, solid for succession and dashed for a rename, the window as an
+ * `accent-bg` band between `accent` bounds and an add window as a stronger
+ * `accent-band` over it. The marks are one decorative SVG; the lanes and spans are
  * HTML over it, so every span is a real checkbox in reading order, named with
  * its column, variable and years. Tab walks the spans lane by lane and Space
  * toggles one. On a variable page a coverage row heads the lanes, so the
@@ -109,6 +114,7 @@ export function LaneGraph({
   edges,
   axis,
   window,
+  addWindow = null,
   coverage,
   overlay,
   isDisabled = false,
@@ -135,7 +141,8 @@ export function LaneGraph({
           spans,
           edges,
           axis,
-          window,
+          // The axis labels the bounds of the window being moved.
+          window: addWindow ?? window,
           width,
           coverageRow: coverage !== undefined,
         })
@@ -160,6 +167,8 @@ export function LaneGraph({
               geometry={geometry}
               lanes={lanes}
               axis={axis}
+              window={window}
+              addWindow={addWindow}
               coverage={coverage}
               width={width}
               hovered={hovered}
@@ -255,9 +264,10 @@ export function LaneGraph({
         coverage={coverage}
         succession={kinds.has("succession")}
         rename={kinds.has("rename")}
+        addWindow={addWindow !== null}
+        selectable={spans.some((s) => s.selectable)}
         inProject={spans.some((s) => s.state === "in")}
         blocked={spans.some((s) => s.blocked)}
-        window={window !== null}
       />
     </div>
   );
@@ -267,6 +277,8 @@ function Marks({
   geometry,
   lanes,
   axis,
+  window,
+  addWindow,
   coverage,
   width,
   hovered,
@@ -275,6 +287,8 @@ function Marks({
   geometry: LaneGeometry;
   lanes: LaneModel[];
   axis: [number, number];
+  window: [number, number] | null;
+  addWindow: [number, number] | null;
   coverage: LaneCoverage | undefined;
   width: number;
   hovered: string | null;
@@ -289,6 +303,13 @@ function Marks({
     x: x(r.from),
     width: x(r.to + 1) - x(r.from),
   });
+  // A window as drawn: its part on the axis, or null when wholly off it.
+  const onAxis = (w: [number, number] | null) =>
+    w && w[1] >= axis[0] && w[0] <= axis[1]
+      ? run({ from: Math.max(w[0], axis[0]), to: Math.min(w[1], axis[1]) })
+      : null;
+  const study = onAxis(window);
+  const add = onAxis(addWindow);
   const cy = geometry.coverageY;
   const marks =
     coverage && cy !== null
@@ -326,29 +347,38 @@ function Marks({
           />
         ) : null,
       )}
-      {geometry.window && (
-        <>
-          <rect
-            className={styles.band}
-            x={geometry.window.x}
-            y={geometry.axisY}
-            width={geometry.window.width}
-            height={bottom - geometry.axisY}
-          />
-          {[geometry.window.x, geometry.window.x + geometry.window.width].map(
-            (x) => (
-              <line
-                key={x}
-                className={styles.bound}
-                x1={x}
-                x2={x}
-                y1={geometry.axisY}
-                y2={bottom}
-              />
-            ),
-          )}
-        </>
+      {/* The study window's shade, the add window's stronger band over it,
+          then the study window's bounds over both, so the study window reads
+          wherever an add window narrows or overreaches it (#1910). */}
+      {study && (
+        <rect
+          className={styles.band}
+          x={study.x}
+          y={geometry.axisY}
+          width={study.width}
+          height={bottom - geometry.axisY}
+        />
       )}
+      {add && (
+        <rect
+          className={styles.addBand}
+          x={add.x}
+          y={geometry.axisY}
+          width={add.width}
+          height={bottom - geometry.axisY}
+        />
+      )}
+      {study &&
+        [study.x, study.x + study.width].map((x) => (
+          <line
+            key={x}
+            className={styles.bound}
+            x1={x}
+            x2={x}
+            y1={geometry.axisY}
+            y2={bottom}
+          />
+        ))}
       {coverage && cy !== null && marks && (
         <g>
           {/* Where the band leaves coverage, its wash gives way to info-bg on
@@ -641,18 +671,20 @@ function Span({
 
 function Legend({
   coverage,
+  addWindow,
+  selectable,
   succession,
   rename,
   inProject,
   blocked,
-  window,
 }: {
+  coverage: LaneCoverage | undefined;
+  addWindow: boolean;
+  selectable: boolean;
   succession: boolean;
   rename: boolean;
   inProject: boolean;
   blocked: boolean;
-  window: boolean;
-  coverage: LaneCoverage | undefined;
 }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
@@ -660,6 +692,12 @@ function Legend({
         <li>
           <i className={styles.keyBand} />
           {coverage.bandName}
+        </li>
+      )}
+      {addWindow && (
+        <li>
+          <i className={styles.keyAddBand} />
+          Add window
         </li>
       )}
       {coverage && (
@@ -680,21 +718,20 @@ function Legend({
           renamed, same definition
         </li>
       )}
+      {selectable && (
+        <li>
+          <ColumnChip name="COL" state="default" /> Click to select
+        </li>
+      )}
       {inProject && (
         <li>
-          <ColumnChip name="COL" state="in" /> in project
+          <ColumnChip name="COL" state="in" /> In project
         </li>
       )}
       {blocked && (
         <li>
           <span className={styles.keyBlocked}>✕</span> in project, outside the
           study window
-        </li>
-      )}
-      {window && (
-        <li>
-          <ColumnChip name="COL" state="out" /> outside the{" "}
-          {coverage?.bandName?.toLowerCase() ?? "window"}
         </li>
       )}
     </ul>

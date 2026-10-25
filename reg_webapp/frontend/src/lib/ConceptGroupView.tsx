@@ -392,10 +392,8 @@ export function ConceptGroupView({
     ),
     windowMaxYear,
   );
-  // The band is the active window: a `?period` narrowing (a member link
-  // carries one), else the project window.
+  // A `?period` narrowing (a member link carries one).
   const periodYears = yearWindowFromWire(activePeriod);
-  const band = periodYears ?? projectWindow;
   // Coverage as drawn: an unknown start at the catalog's first year, an open
   // end at its last (DESIGN.md → Time).
   const covered = coverageBandEdges(
@@ -495,8 +493,10 @@ export function ConceptGroupView({
         // The variable page's one drawing (#1909): coverage heads the members'
         // lanes on one axis, the filters between them as on a variable.
         <CoverageTimeline
-          band={band}
-          bandKind={periodYears === null ? "study" : "add"}
+          study={projectWindow}
+          // The period is drawn as the add window only where it differs from
+          // the study window (#1910).
+          add={periodNarrows ? periodYears : null}
           pickerWindow={pickerWindow}
           coverage={coverage}
           years={coverageYears}
