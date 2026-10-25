@@ -1106,7 +1106,7 @@ def check_curation(
 ) -> dict[str, object]:
     """Check complete selected scopes before catalog assembly, without a database."""
     if not registers or not all(registers):
-        raise ValueError("--registers requires nonempty comma-separated scope names")
+        raise ValueError("--registers requires nonempty scope names")
     _start_timing()
     started = time.perf_counter()
     result = _resolve(

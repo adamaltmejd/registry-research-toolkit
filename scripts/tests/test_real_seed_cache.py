@@ -67,7 +67,7 @@ else:
         (bundle / "bundle.json").write_text(json.dumps({
             "resolve_code_sha256": "stub-resolve",
             "mode": "diagnostic",
-            "registers": sorted(set(option("--registers").split(","))),
+            "registers": sorted({argv[i + 1] for i, a in enumerate(argv) if a == "--registers"}),
             "prepared_commit": option("--input-commit"),
             "prepared_manifest_sha256": option("--input-manifest-sha256"),
             "curation_tree_sha256": curation,
@@ -156,7 +156,9 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     (curation / "registers").mkdir(parents=True)
     (curation / "registers/a.toml").write_text("[register]\n")
 
-    def build(*extra: str, registers: str = "SCB:B,SCB:A", **flags) -> tuple[int, dict]:
+    def build(
+        *extra: str, registers: tuple[str, ...] = ("SCB:B", "SCB:A"), **flags
+    ) -> tuple[int, dict]:
         return _tool(
             tmp_path,
             "build",
@@ -170,8 +172,7 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
             "--diagnostic",
             "--curation-dir",
             str(curation),
-            "--registers",
-            registers,
+            *[a for spec in registers for a in ("--registers", spec)],
             **flags,
         )
 
@@ -184,7 +185,7 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
 
     built = build()[1]
     assert (built["hit"], built["phased"]) == (False, False)
-    code, again = build(registers="SCB:A,SCB:B")
+    code, again = build(registers=("SCB:A", "SCB:B"))
     assert (code, again["hit"], len(_calls(tmp_path))) == (0, True, 2)
     assert Path(again["database"]).read_bytes() == b"catalog"
     summary = json.loads(Path(again["report"], "summary.json").read_text())

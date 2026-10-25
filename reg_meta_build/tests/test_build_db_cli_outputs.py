@@ -602,7 +602,12 @@ def test_diagnostic_build_never_writes_an_existing_or_active_catalog(
 @pytest.mark.parametrize(
     ("catalog", "spec", "code", "message"),
     [
-        (True, "1,3", "pipeline_registers_unknown", "names no selected scope: ['3']"),
+        (
+            True,
+            "1,3",
+            "pipeline_registers_unknown",
+            "names no selected scope: ['1,3']",
+        ),
         (
             "thin_twin",
             "1",
@@ -626,7 +631,9 @@ def test_unresolvable_register_scope_is_refused(
     # Fails if an unknown --registers spec, or a bare id that SCB register 1 and the
     # FK thin register keyed 1 both expose, stops being a usage refusal with its own
     # code (e.g. the CLI rewraps it as pipeline_build_failed, or `_selected_scopes`
-    # drops its ambiguity check and selects both scopes) or writes any output.
+    # drops its ambiguity check and selects both scopes) or writes any output. Also
+    # fails if --registers splits a SPEC on commas again: "1,3" must be one unknown
+    # name (a register name may contain a comma), not scope 1 plus unknown 3.
     prefix = ["--db", str(tmp_path / "db-dir")] if command == "build-db" else []
     args = [
         command,
