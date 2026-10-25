@@ -438,9 +438,25 @@ async function blockedOrderCase(page, counts, shoot) {
     "a blocked order must be stated as a verdict, not a request failure",
   );
   check(
-    (await findings.innerText()).includes("project_empty"),
+    (await findings.innerText()).includes("Empty project"),
     "the blocking finding must be rendered, not just flattened into the banner",
   );
+  // The stable code people cite sits in a tooltip on the finding's title, off
+  // the page until asked for (#1906). Fails if the code is printed inline again
+  // or the tooltip no longer carries it.
+  check(
+    !(await findings.innerText()).includes("project_empty"),
+    "the finding's code must not be printed inline",
+  );
+  await findings.getByRole("button", { name: "Empty project" }).hover();
+  const tip = page.getByRole("tooltip");
+  await tip.waitFor();
+  check(
+    (await tip.innerText()).includes("project_empty"),
+    "hovering the finding's title must show its code",
+  );
+  await page.mouse.move(0, 0);
+  await tip.waitFor({ state: "detached" });
   await ui.download.waitFor();
   check(await ui.download.isDisabled(), "the download must stay closed on a block");
   check(
