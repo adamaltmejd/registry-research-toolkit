@@ -1106,13 +1106,13 @@ their starred members and notes (#1794).
 Each register below gets one `disponibel-inkomst` group.
 
 - **IoT** has it: 49 members, components included, axes `enhet`, `hushallsbegrepp`,
-  `kapitalvinst`, `definition` and `nordisk-lon`. This reverses #1872, which kept IoT
-  at three axes with the 1991/2004 vintage off them: both definitions are delivered
-  side by side in 2005-2024, so a user must choose one in the picker. Every
-  2004-definition column is co-delivered with its 1991 twin from its first year through
-  2024 (`CDISP`/`CDISP04` 2005-2024), and `succession-candidates` reported each of the
-  seven `replaced_by` edges between them as contradicted, so the edges were removed.
-  The `definition` values read as SCB labels them: "1991 års definition", "2004 års
+  `kapitalvinst`, `definition` and `nordisk-lon`. This reverses #1872, which kept IoT at
+  three axes with the 1991/2004 vintage off them: both definitions are delivered side by
+  side in 2005-2024, so a user must choose one in the picker. Every 2004-definition
+  column is co-delivered with its 1991 twin from its first year through 2024
+  (`CDISP`/`CDISP04` 2005-2024), and `succession-candidates` reported each of the seven
+  `replaced_by` edges between them as contradicted, so the edges were removed. The
+  `definition` values read as SCB labels them: "1991 års definition", "2004 års
   definition" and "Före 1991". The pre-1991 `DIN*` columns share `fore-1991`, and some
   of them overlap in time (`DIN86`/`DIN88K` in 1990, the `DINPP` family 1981-1987).
   `hushallsbegrepp` = `hushall` is SCB's register household in both IoT and LISA, not
