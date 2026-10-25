@@ -35,10 +35,12 @@ The same run reports two more kinds, also as worklist data only (#1907):
   year, or the successor delivers before it. It prevents a page that tells the
   reader a column was renamed in a year when both columns are listed (the 2016
   `CfarNr → CfarNr_LISA` edge after the 2026-10-01 errata delivered `CfarNr_LISA`
-  for 1990–2015). A variable-grain edge is allowed a dual-delivery transition: the
-  predecessor delivering in Y and Y+1 at most, the successor in Y-2 and Y-1 at most
-  (`_DUAL_DELIVERY_YEARS`). An edge without an `effective_year` makes no year claim
-  and is not checked.
+  for 1990–2015). A variable-grain edge is allowed a dual-delivery transition of at
+  most two years in all (`_DUAL_DELIVERY_YEARS`): from the successor's first
+  delivery before the effective year Y (Y if none) to the predecessor's last
+  delivery at or after Y (Y-1 if none). Y-1..Y and Y..Y+1 pass, Y-1..Y+1 is
+  reported. An edge without an `effective_year` makes no year claim and is not
+  checked.
 - A FOLD CANDIDATE is two variables of one register whose headers differ only by an
   exact provider suffix (`PROVIDER_HEADER_SUFFIXES`: `CfarNr` / `CfarNr_LISA`). The
   succession rule needs the SAME column, so it never pairs them, and an edge is the
@@ -286,8 +288,9 @@ _DOCUMENTATION_COLUMN_SOURCES = frozenset({"scb-docs"})
 # table's own name (`curation_compile._curated_head`: `errata:field`,
 # `errata:flags`, ...) on a state the provider exported, and a non-documentation
 # `[[errata.column]]` source (`errata:steward-holdings`). Every other errata head
-# is documentation: an `[[errata.delivered]]` entry's `upstream` class, which is
-# free text (`omitted-column-in-version` by default), or `errata:scb-docs`.
+# is documentation: an `[[errata.delivered]]` entry's `upstream` class
+# (`omitted-column-in-version` by default; `scb_errata` refuses an `upstream` that
+# names an errata table or column source), or `errata:scb-docs`.
 _EXPORTED_ERRATA_CLASSES = (frozenset(ErrataCuration.model_fields) - {"delivered"}) | (
     _COLUMN_SOURCES - _DOCUMENTATION_COLUMN_SOURCES
 )
@@ -399,18 +402,20 @@ def _years(era: Era) -> tuple[int, int]:
 
 # Maintainer ruling (PR #1915): a variable that succeeds another can be delivered
 # beside it for a short transition (SUN2000 → SUN2020: both editions ship while
-# users switch). At variable grain an edge is not contradicted when the
-# predecessor's deliveries at or after the effective year Y all fall in
-# Y..Y+DUAL-1 and the successor's deliveries before Y all fall in Y-DUAL..Y-1. A
+# users switch), at most DUAL years in all around the effective year Y. The joint
+# window runs from the successor's first delivery before Y (Y when it has none) to
+# the predecessor's last delivery at or after Y (Y-1 when it has none), so a
+# two-year overlap passes at Y-1..Y or Y..Y+1 (or a successor from Y-2 beside a
+# predecessor ending Y-1), and any three-year one is reported. A
 # representation-grain edge names one column renamed to another, so it gets no
 # such allowance.
 _DUAL_DELIVERY_YEARS = 2
 
 
 def _dual_delivery(after: list[YearSpan], before: list[YearSpan], year: int) -> bool:
-    return all(hi < year + _DUAL_DELIVERY_YEARS for _, _, hi in after) and all(
-        lo >= year - _DUAL_DELIVERY_YEARS for _, lo, _ in before
-    )
+    first = min((lo for _, lo, _ in before), default=year)
+    last = max((hi for _, _, hi in after), default=year - 1)
+    return last - first + 1 <= _DUAL_DELIVERY_YEARS
 
 
 def _contradicted_edges(
@@ -789,8 +794,9 @@ def _contradiction_lines(contradictions: tuple[EdgeContradiction, ...]) -> list[
         "# with, in the edge's scope (its variant, or every variant; its columns at",
         "# representation grain): the predecessor still delivers in or after the",
         "# year, or the successor delivers before it. A variable-grain edge may",
-        "# overlap as a dual-delivery transition: the predecessor through year+1,",
-        "# the successor from year-2. Derived edges are not listed. Fix or delete",
+        "# overlap as a dual-delivery transition of at most two years in all, from",
+        "# the successor's first delivery before the year to the predecessor's",
+        "# last delivery from it. Derived edges are not listed. Fix or delete",
         "# the edge in curation/relations.toml; a fold may be the right shape",
         "# (below).",
     ]

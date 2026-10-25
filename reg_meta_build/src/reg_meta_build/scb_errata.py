@@ -24,6 +24,7 @@ from ._curation import (
     require_str,
     widen_data_type_classes,
 )
+from .curation_tree import ErrataCuration
 from .edition_bounds import edition_claims
 from .fqid_slugs import _parse_variant_id
 from .normalization import normalize_text
@@ -87,8 +88,16 @@ _DEFAULT_DELIVERED_CLASS = "omitted-column-in-version"
 # The coding declarations a `donor_coding` addition copies with the donor's
 # coding records, so the copy is checked against the donor it names.
 _DONOR_CODING_FIELDS = ("classification_declared", "value_set_declared")
-_RESERVED_CORRECTION_CLASSES = frozenset(
-    {"scoped-attributions", "overlapping-attributions"}
+# The `errata:<class>` heads a `[[delivered]]` `upstream` may not claim: the
+# catalog contract's scoped provenance forms, and the heads the build writes for
+# the errata tables (`curation_compile._curated_head`) and `[[errata.column]]`
+# sources. Readers take a table or source head as the provider's export or a
+# column mint (`succession_candidates._errata_attested`), so a delivered state
+# under one would no longer read as documentation.
+_RESERVED_CORRECTION_CLASSES = (
+    frozenset({"scoped-attributions", "overlapping-attributions"})
+    | frozenset(ErrataCuration.model_fields)
+    | _SOURCES
 )
 
 # `data_type` vocabulary, shared with `curation/scb_canonical/scb_canonical.toml`
@@ -258,15 +267,8 @@ def _state_provenance(class_name: str, evidence: str) -> str:
     ledger. The catalog contract also defines
     `scoped-attributions` and `overlapping-attributions` provenance forms, which
     readers still parse; the build emits neither today, and a curator may not
-    claim either name as a correction class.
+    claim either name as a correction class (`_RESERVED_CORRECTION_CLASSES`).
     """
-    if class_name in _RESERVED_CORRECTION_CLASSES:
-        raise curation_error(
-            _CODE,
-            f"scb_errata correction class {class_name!r} is reserved for "
-            "builder-generated scoped provenance.",
-            "Use a specific upstream correction class instead.",
-        )
     if "\n" in class_name or "\r" in class_name:
         raise curation_error(
             _CODE,
@@ -432,6 +434,14 @@ def resolve_scb_errata(
             )
         delivered_versions.setdefault(key, set()).update(named)
         with located(ctx):
+            if upstream in _RESERVED_CORRECTION_CLASSES:
+                raise curation_error(
+                    _CODE,
+                    f"scb_errata correction class {upstream!r} is reserved for "
+                    "builder-generated provenance (a scoped provenance form, an "
+                    "errata table or an [[errata.column]] source).",
+                    "Use a specific upstream correction class instead.",
+                )
             provenance = _state_provenance(upstream, evidence)
         delivered.append(
             ErrataDelivered(

@@ -29,9 +29,18 @@ from = "scb/suffix/gkod"
 to = "scb/suffix/nkod"
 effective_year = 2020
 
-# GTAL delivers 2020-2021, a two-year dual delivery: allowed at variable grain.
+# GTAL and NTAL are co-delivered 2020-2021, two years in all: a dual-delivery
+# transition, allowed at variable grain.
 [[edge]]
 type = "replaced_by"
 from = "scb/suffix/gtal"
 to = "scb/suffix/ntal"
+effective_year = 2020
+
+# GSUM and NSUM are co-delivered 2019-2021, three years centred on the edge's:
+# contradicted, though neither side alone leaves Y-2..Y+1.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gsum"
+to = "scb/suffix/nsum"
 effective_year = 2020
