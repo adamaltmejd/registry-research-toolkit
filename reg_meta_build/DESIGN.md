@@ -1857,15 +1857,17 @@ shared-label guard; ambiguous collisions remain separate and diagnosed.
 A checked split-sibling pair folds only when no guard keeps it apart. A code column and
 its label column never fold, whether or not their owners co-deliver. The name rule uses
 exact lists, no name patterns: `<stem>`, `<stem>kod`, `<stem>id` or `<stem>nr` beside
-`<stem>namn` or `<stem>beskrivning`, each spelling compared without `_` and without an
-SCB election-kind prefix (`KO_`, `LT_`, `RI_`). A code beside its label in a spelling
-the rule misses is curated: a declared pair, or a curated group that leaves the label
-out (#1790). The numeric/text and length shape guards apply only to co-delivered
-columns, and compare the two columns' shapes within each edition that delivers both: a
-shape one owner delivers in an edition the other never shares does not dispute the pair
-(#1783). The guard holds for the group, not only the edge: when foldable sibling edges
-through a third owner would join a code and its label, the label owner's sibling edges
-are dropped, so the code keeps its own folds (#1760). A shape-disputed pair, a plain
+`<stem>namn`, `<stem>beskrivning`, `<stem>klartext` or `<stem>text`, each spelling
+compared without `_` and without an SCB election-kind prefix (`KO_`, `LT_`, `RI_`). A
+`<stem>text` or `<stem>klartext` is read as a label by name alone, so a coded one is
+kept apart from its stem rather than folded. A code beside its label in a spelling the
+rule misses is curated: a declared pair, or a curated group that leaves the label out
+(#1790). The numeric/text and length shape guards apply only to co-delivered columns,
+and compare the two columns' shapes within each edition that delivers both: a shape one
+owner delivers in an edition the other never shares does not dispute the pair (#1783).
+The guard holds for the group, not only the edge: when foldable sibling edges through a
+third owner would join a code and its label, the label owner's sibling edges are
+dropped, so the code keeps its own folds (#1760). A shape-disputed pair, a plain
 `shape_conflict` or an unresolved one (`ambiguous_sibling_shape`), is kept apart the
 same way (#1885). It has no code side to keep, so of the disputed pairs a group would
 join, the owner on the most of them loses its sibling edges, recounted after each drop:

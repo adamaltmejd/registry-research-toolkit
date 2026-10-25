@@ -3,6 +3,24 @@ provider = "scb"
 slug = "yrkeshogskolan"
 native_id = "377"
 
+# Code/label pairs whose label suffix sits mid-name, out of the name rule's
+# reach (#1790).
+[[code_label_pair]]
+code = "scb/yrkeshogskolan/fa15nr-senaste"
+label = "scb/yrkeshogskolan/fa15namn-senaste"
+
+[[code_label_pair]]
+code = "scb/yrkeshogskolan/fa15nr-start"
+label = "scb/yrkeshogskolan/fa15namn-start"
+
+[[code_label_pair]]
+code = "scb/yrkeshogskolan/studiekommun-utb"
+label = "scb/yrkeshogskolan/studiekommunnamn-utb"
+
+[[code_label_pair]]
+code = "scb/yrkeshogskolan/studielan-utb"
+label = "scb/yrkeshogskolan/studielannamn-utb"
+
 [[variant]]
 native_id = "377.1395"
 slug = "sokande"

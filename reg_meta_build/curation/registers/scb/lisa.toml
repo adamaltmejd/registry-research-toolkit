@@ -364,19 +364,6 @@ noted = "2026-06-25"
 
 [[errata.column]]
 variant = "individer-16plus"
-column = "FortPens_Belopp_MiDAS"
-name = "Förtidspension, ersättningsbelopp (MiDAS)"
-definition = "Utbetalt belopp under året för förtidspension, i relation till utbetalda dagar med förtidspension. Beloppet avser ersättningsperioden och anges i hundratal kronor."
-data_type = "decimal"
-is_sensitive = false
-is_identifier = false
-versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
-source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Belopp_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/FortPens_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-belopp (FortPens_Belopp, is_sensitive=false, is_identifier=false)."
-noted = "2026-06-25"
-
-[[errata.column]]
-variant = "individer-16plus"
 column = "SjukBidr_Bdag_MiDAS"
 name = "Sjukbidrag, antal bruttodagar"
 definition = "Antal utbetalda bruttodagar under året med sjukbidrag. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning."
@@ -399,19 +386,6 @@ is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
 evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-nman (SjukBidr_Nman, is_sensitive=false, is_identifier=false)."
-noted = "2026-06-25"
-
-[[errata.column]]
-variant = "individer-16plus"
-column = "SjukBidr_Belopp_MiDAS"
-name = "Sjukbidrag, ersättningsbelopp (MiDAS)"
-definition = "Utbetalt belopp under året för sjukbidrag, i relation till utbetalda dagar med sjukbidrag. Beloppet avser ersättningsperioden och anges i hundratal kronor."
-data_type = "decimal"
-is_sensitive = false
-is_identifier = false
-versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
-source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Belopp_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-belopp (SjukBidr_Belopp, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -968,7 +942,7 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[enrichment.description]]
 register = "scb/lisa"
-variable = "person-orgnr-2"
+variable = "person-orgnr"
 description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
@@ -1440,10 +1414,9 @@ panel_entity_key = "personnr"
 # `kommun-for-arbetsstalle` → `kommun-for-arbetsstalle-justerad`, …). The MiDAS
 # pension day-counts have no exact sibling (catalog siblings are MONTHS, `*-bman`/
 # `*-nman`) so they take the catalog day-count convention `*-bruttodagar`/
-# `*-nettodagar` on the established `fortpens-`/`sjukbidr-` stem; the MiDAS belopp
-# columns share a NAME with the existing `fortpens-belopp`/`sjukbidr-belopp` rows but
-# are a different measurement basis (MiDAS source/window) → default-to-distinct, a
-# `-midas` discriminator keeps the join keys from conflating. The three SSYK/YSEG J16
+# `*-nettodagar` on the established `fortpens-`/`sjukbidr-` stem. The MiDAS belopp
+# spellings are the exported `fortpens-belopp`/`sjukbidr-belopp` columns for the
+# same years and are not minted (#1907). The three SSYK/YSEG J16
 # härledd columns keep their already-clean code-style J16-family slugs (matching the
 # successors `ssyk{3,4}-2012-j16` / `eseg-j16`): `ssyk3-j16`/`ssyk4-j16` are the
 # `from` endpoints of the relations.toml succession edges, so they are pinned here to
@@ -1472,10 +1445,8 @@ panel_entity_key = "personnr"
 # ── Förtidspension / sjukbidrag (MiDAS), 1994–2002 ──
 "34.FortPens_Bdag_MiDAS" = "fortpens-bruttodagar"
 "34.FortPens_Ndag_MiDAS" = "fortpens-nettodagar"
-"34.FortPens_Belopp_MiDAS" = "fortpens-belopp-midas"
 "34.SjukBidr_Bdag_MiDAS" = "sjukbidr-bruttodagar"
 "34.SjukBidr_Ndag_MiDAS" = "sjukbidr-nettodagar"
-"34.SjukBidr_Belopp_MiDAS" = "sjukbidr-belopp-midas"
 
 # ── Efterlevandeförmånskoder (ATP / folkpension), 1990–2002 ──
 "34.ATPFam" = "atp-efterlevandeforman"
@@ -1596,9 +1567,7 @@ panel_entity_key = "personnr"
 # register 47 (hreg)
 "34.29832" = "lopnummer-bostadshushall"
 "34.30360" = "hushallsid"
-"34.14.cfarnr-lisa" = "cfar-nummer-2"
 "34.14.cfarnrsreg" = "cfar-nummer-3"
-"34.56.peorgnr-lisa" = "person-orgnr-2"
 "34.56.peorgnrsreg" = "person-orgnr-3"
 "34.15" = "civilstand"
 "34.22" = "disponibel-inkomst"
@@ -1828,43 +1797,24 @@ panel_entity_key = "personnr"
 "34.784.sun2000inr" = "sun2000inr"
 "34.784.sun2020inr" = "sun2020inr"
 "34.31512.sjukfall-antal" = "sjukfall-antal"
-"34.31512.sjukfall-antal-midas" = "sjukfall-antal-midas"
 "34.31516.sjukfall-bruttodagar" = "sjukfall-bruttodagar"
-"34.31516.sjukfall-bruttodagar-midas" = "sjukfall-bruttodagar-midas"
 "34.31517.sjukfall-nettodagar" = "sjukfall-nettodagar"
-"34.31517.sjukfall-nettodagar-midas" = "sjukfall-nettodagar-midas"
 "34.31518.sjukfall-ersattningsbelopp" = "sjukfall-ersattningsbelopp"
-"34.31518.sjukfall-ersattningsbelopp-midas" = "sjukfall-ersattningsbelopp-midas"
 "34.31532.sjukpenning-bruttodagar" = "sjukpenning-bruttodagar"
-"34.31532.sjukpenning-bruttodagar-midas" = "sjukpenning-bruttodagar-midas"
 "34.31533.sjukpenning-nettodagar" = "sjukpenning-nettodagar"
-"34.31533.sjukpenning-nettodagar-midas" = "sjukpenning-nettodagar-midas"
 "34.31534.sjukpenning-ersattningsbelopp" = "sjukpenning-ersattningsbelopp"
-"34.31534.sjukpenning-ersattningsbelopp-midas" = "sjukpenning-ersattningsbelopp-midas"
 "34.31535.rehabiliteringspenning-bruttodagar" = "rehabiliteringspenning-bruttodagar"
-"34.31535.rehabiliteringspenning-bruttodagar-midas" = "rehabiliteringspenning-bruttodagar-midas"
 "34.31536.rehabiliteringspenning-nettodagar" = "rehabiliteringspenning-nettodagar"
-"34.31536.rehabiliteringspenning-nettodagar-midas" = "rehabiliteringspenning-nettodagar-midas"
 "34.31537.rehabiliteringspenning-ersattningsbelopp" = "rehabiliteringspenning-ersattningsbelopp"
-"34.31537.rehabiliteringspenning-ersattningsbelopp-midas" = "rehabiliteringspenning-ersattningsbelopp-midas"
 "34.31538.arbetsskadesjukpenning-bruttodagar" = "arbetsskadesjukpenning-bruttodagar"
-"34.31538.arbetsskadesjukpenning-bruttodagar-midas" = "arbetsskadesjukpenning-bruttodagar-midas"
 "34.31539.arbetsskadesjukpenning-nettodagar" = "arbetsskadesjukpenning-nettodagar"
-"34.31539.arbetsskadesjukpenning-nettodagar-midas" = "arbetsskadesjukpenning-nettodagar-midas"
 "34.31540.arbetsskadesjukpenning-ersattningsbelopp" = "arbetsskadesjukpenning-ersattningsbelopp"
-"34.31540.arbetsskadesjukpenning-ersattningsbelopp-midas" = "arbetsskadesjukpenning-ersattningsbelopp-midas"
 "34.31740.sjukersattning-ersattningsbelopp" = "sjukersattning-ersattningsbelopp"
-"34.31740.sjukersattning-ersattningsbelopp-midas" = "sjukersattning-ersattningsbelopp-midas"
 "34.31744.aktivitetsersattning-ersattningsbelopp" = "aktivitetsersattning-ersattningsbelopp"
-"34.31744.aktivitetsersattning-ersattningsbelopp-midas" = "aktivitetsersattning-ersattningsbelopp-midas"
 "34.36228.sjukersattning-bruttodagar" = "sjukersattning-bruttodagar"
-"34.36228.sjukersattning-bruttodagar-midas" = "sjukersattning-bruttodagar-midas"
 "34.36229.sjukersattning-nettodagar" = "sjukersattning-nettodagar"
-"34.36229.sjukersattning-nettodagar-midas" = "sjukersattning-nettodagar-midas"
 "34.36230.aktivitetsersattning-bruttodagar" = "aktivitetsersattning-bruttodagar"
-"34.36230.aktivitetsersattning-bruttodagar-midas" = "aktivitetsersattning-bruttodagar-midas"
 "34.36231.aktivitetsersattning-nettodagar" = "aktivitetsersattning-nettodagar"
-"34.36231.aktivitetsersattning-nettodagar-midas" = "aktivitetsersattning-nettodagar-midas"
 "34.37047.foraldrapenning-antal-bruttodagar" = "foraldrapenning-antal-bruttodagar"
 "34.37047.foraldrapenning-antal-bruttodagar-midas" = "foraldrapenning-antal-bruttodagar-midas"
 "34.37048.foraldrapenning-ersattningsbelopp" = "foraldrapenning-ersattningsbelopp"
@@ -2014,125 +1964,125 @@ panel_entity_key = "personnr"
 "34.45.inv-utvgreg4" = "land-vid-in-utvandring-grupp-eu28"
 "34.AldPens_INKLGP" = "aldpens-inklgp"
 
-# Y-291 2026-09-28: LISA STORE/non-MiDAS and MiDAS source-basis partitions.
-# SCB `lisa-bakgrundsfakta-1990-2017` Bilaga 4 documents STORE as the
-# administrative payment/decision records and MiDAS as analysis data derived
-# from them; the two bases need not agree (see docs/lisa/_appendix-midas.md,
-# Rehab_Belopp_MiDAS.md, SjukP_08_Belopp.md). Each family below is owned by two
-# DISTINCT split keys: the earlier column keeps the canonical concept leaf, the
-# MiDAS column takes the `-midas` discriminator. This is a source-basis
-# distinction, NOT a succession or an equivalent sequential rename; the exact
-# prepared v28 physical periods are the only availability claim.
+# Y-291 2026-09-28, revised #1907 2026-10-25 (maintainer ruling): the LISA
+# sickness and rehabilitation series are one variable each across the 2016
+# header change to `_MiDAS`. SCB names the series `_MiDAS` from 1994 and labels
+# it MiDAS-sourced from 2017; stativ, which takes these columns from LISA, folds
+# them the same way. The STORE/MiDAS notes in `lisa-bakgrundsfakta-1990-2017`
+# Bilaga 4 concern 2008-2011 sub-component sums, not a 2016 break. Föräldrapenning
+# is the exception: Försäkringskassan's MiDAS became its source in 2014, so
+# ForPeng_* and ForPeng_*_MiDAS stay separate with a replaced_by edge at 2014
+# (relations.toml).
 
 [[identity.partition]]
 variable = "34.31512"
-columns = { SjukFall_Antal = "34.31512.sjukfall-antal", SjukFall_Antal_MiDAS = "34.31512.sjukfall-antal-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31512: SjukFall_Antal 1993-2013,2015; SjukFall_Antal_MiDAS 2016-2023."
+columns = { SjukFall_Antal = "34.31512.sjukfall-antal", SjukFall_Antal_MiDAS = "34.31512.sjukfall-antal" }
+columns_ref = "One series under two delivery headers; the header changes to SjukFall_Antal_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31512: SjukFall_Antal 1993-2013,2015; SjukFall_Antal_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31516"
-columns = { SjukSum_Bdag = "34.31516.sjukfall-bruttodagar", SjukSum_Bdag_MiDAS = "34.31516.sjukfall-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31516: SjukSum_Bdag 1993-2015; SjukSum_Bdag_MiDAS 2016-2023."
+columns = { SjukSum_Bdag = "34.31516.sjukfall-bruttodagar", SjukSum_Bdag_MiDAS = "34.31516.sjukfall-bruttodagar" }
+columns_ref = "One series under two delivery headers; the header changes to SjukSum_Bdag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31516: SjukSum_Bdag 1993-2015; SjukSum_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31517"
-columns = { SjukSum_Ndag = "34.31517.sjukfall-nettodagar", SjukSum_Ndag_MiDAS = "34.31517.sjukfall-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31517: SjukSum_Ndag 1993-2015; SjukSum_Ndag_MiDAS 2016-2023."
+columns = { SjukSum_Ndag = "34.31517.sjukfall-nettodagar", SjukSum_Ndag_MiDAS = "34.31517.sjukfall-nettodagar" }
+columns_ref = "One series under two delivery headers; the header changes to SjukSum_Ndag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31517: SjukSum_Ndag 1993-2015; SjukSum_Ndag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31518"
-columns = { SjukSum_Belopp = "34.31518.sjukfall-ersattningsbelopp", SjukSum_Belopp_MiDAS = "34.31518.sjukfall-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31518: SjukSum_Belopp 1993-2015; SjukSum_Belopp_MiDAS 2016-2023."
+columns = { SjukSum_Belopp = "34.31518.sjukfall-ersattningsbelopp", SjukSum_Belopp_MiDAS = "34.31518.sjukfall-ersattningsbelopp" }
+columns_ref = "One series under two delivery headers; the header changes to SjukSum_Belopp_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31518: SjukSum_Belopp 1993-2015; SjukSum_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31532"
-columns = { SjukP_Bdag = "34.31532.sjukpenning-bruttodagar", SjukP_Bdag_MiDAS = "34.31532.sjukpenning-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31532: SjukP_Bdag 1993-2015; SjukP_Bdag_MiDAS 2016-2023."
+columns = { SjukP_Bdag = "34.31532.sjukpenning-bruttodagar", SjukP_Bdag_MiDAS = "34.31532.sjukpenning-bruttodagar" }
+columns_ref = "One series under two delivery headers; the errata.field renames make Individ carry SjukP_Bdag_MiDAS from 1994, and the plain spelling remains only for 1993 (#1907). SCB labels the series MiDAS-sourced from 2017; prepared v28 native family 34.31532: SjukP_Bdag 1993-2015; SjukP_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31533"
-columns = { SjukP_Ndag = "34.31533.sjukpenning-nettodagar", SjukP_Ndag_MiDAS = "34.31533.sjukpenning-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31533: SjukP_Ndag 1993-2015; SjukP_Ndag_MiDAS 2016-2023."
+columns = { SjukP_Ndag = "34.31533.sjukpenning-nettodagar", SjukP_Ndag_MiDAS = "34.31533.sjukpenning-nettodagar" }
+columns_ref = "One series under two delivery headers; the errata.field renames make Individ carry SjukP_Ndag_MiDAS from 1994, and the plain spelling remains only for 1993 (#1907). SCB labels the series MiDAS-sourced from 2017; prepared v28 native family 34.31533: SjukP_Ndag 1993-2015; SjukP_Ndag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31534"
-columns = { SjukP_Belopp = "34.31534.sjukpenning-ersattningsbelopp", SjukP_Belopp_MiDAS = "34.31534.sjukpenning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31534: SjukP_Belopp 1993-2015; SjukP_Belopp_MiDAS 2016-2023."
+columns = { SjukP_Belopp = "34.31534.sjukpenning-ersattningsbelopp", SjukP_Belopp_MiDAS = "34.31534.sjukpenning-ersattningsbelopp" }
+columns_ref = "One series under two delivery headers; the errata.field renames make Individ carry SjukP_Belopp_MiDAS from 1994, and the plain spelling remains only for 1993 (#1907). SCB labels the series MiDAS-sourced from 2017; prepared v28 native family 34.31534: SjukP_Belopp 1993-2015; SjukP_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31535"
-columns = { Rehab_Bdag = "34.31535.rehabiliteringspenning-bruttodagar", Rehab_Bdag_MiDAS = "34.31535.rehabiliteringspenning-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31535: Rehab_Bdag 1993-2015; Rehab_Bdag_MiDAS 2016-2023."
+columns = { Rehab_Bdag = "34.31535.rehabiliteringspenning-bruttodagar", Rehab_Bdag_MiDAS = "34.31535.rehabiliteringspenning-bruttodagar" }
+columns_ref = "One series under two delivery headers; the header changes to Rehab_Bdag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31535: Rehab_Bdag 1993-2015; Rehab_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31536"
-columns = { Rehab_Ndag = "34.31536.rehabiliteringspenning-nettodagar", Rehab_Ndag_MiDAS = "34.31536.rehabiliteringspenning-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31536: Rehab_Ndag 1993-2015; Rehab_Ndag_MiDAS 2016-2023."
+columns = { Rehab_Ndag = "34.31536.rehabiliteringspenning-nettodagar", Rehab_Ndag_MiDAS = "34.31536.rehabiliteringspenning-nettodagar" }
+columns_ref = "One series under two delivery headers; the header changes to Rehab_Ndag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31536: Rehab_Ndag 1993-2015; Rehab_Ndag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31537"
-columns = { Rehab_Belopp = "34.31537.rehabiliteringspenning-ersattningsbelopp", Rehab_Belopp_MiDAS = "34.31537.rehabiliteringspenning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31537: Rehab_Belopp 1993-2015; Rehab_Belopp_MiDAS 2016-2023."
+columns = { Rehab_Belopp = "34.31537.rehabiliteringspenning-ersattningsbelopp", Rehab_Belopp_MiDAS = "34.31537.rehabiliteringspenning-ersattningsbelopp" }
+columns_ref = "One series under two delivery headers; the header changes to Rehab_Belopp_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31537: Rehab_Belopp 1993-2015; Rehab_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31538"
-columns = { ArbSk_Bdag = "34.31538.arbetsskadesjukpenning-bruttodagar", ArbSk_Bdag_MiDAS = "34.31538.arbetsskadesjukpenning-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31538: ArbSk_Bdag 1993-2015; ArbSk_Bdag_MiDAS 2016-2023."
+columns = { ArbSk_Bdag = "34.31538.arbetsskadesjukpenning-bruttodagar", ArbSk_Bdag_MiDAS = "34.31538.arbetsskadesjukpenning-bruttodagar" }
+columns_ref = "One series under two delivery headers; the header changes to ArbSk_Bdag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31538: ArbSk_Bdag 1993-2015; ArbSk_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31539"
-columns = { ArbSk_Ndag = "34.31539.arbetsskadesjukpenning-nettodagar", ArbSk_Ndag_MiDAS = "34.31539.arbetsskadesjukpenning-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31539: ArbSk_Ndag 1993-2015; ArbSk_Ndag_MiDAS 2016-2023."
+columns = { ArbSk_Ndag = "34.31539.arbetsskadesjukpenning-nettodagar", ArbSk_Ndag_MiDAS = "34.31539.arbetsskadesjukpenning-nettodagar" }
+columns_ref = "One series under two delivery headers; the header changes to ArbSk_Ndag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31539: ArbSk_Ndag 1993-2015; ArbSk_Ndag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31540"
-columns = { ArbSk_Belopp = "34.31540.arbetsskadesjukpenning-ersattningsbelopp", ArbSk_Belopp_MiDAS = "34.31540.arbetsskadesjukpenning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31540: ArbSk_Belopp 1993-2015; ArbSk_Belopp_MiDAS 2016-2023."
+columns = { ArbSk_Belopp = "34.31540.arbetsskadesjukpenning-ersattningsbelopp", ArbSk_Belopp_MiDAS = "34.31540.arbetsskadesjukpenning-ersattningsbelopp" }
+columns_ref = "One series under two delivery headers; the header changes to ArbSk_Belopp_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31540: ArbSk_Belopp 1993-2015; ArbSk_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31740"
-columns = { SjukErs_Belopp = "34.31740.sjukersattning-ersattningsbelopp", SjukErs_Belopp_MiDAS = "34.31740.sjukersattning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31740: SjukErs_Belopp 2003-2015; SjukErs_Belopp_MiDAS 2016-2023."
+columns = { SjukErs_Belopp = "34.31740.sjukersattning-ersattningsbelopp", SjukErs_Belopp_MiDAS = "34.31740.sjukersattning-ersattningsbelopp" }
+columns_ref = "One series under two delivery headers; the header changes to SjukErs_Belopp_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31740: SjukErs_Belopp 2003-2015; SjukErs_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.31744"
-columns = { AktErs_Belopp = "34.31744.aktivitetsersattning-ersattningsbelopp", AktErs_Belopp_MiDAS = "34.31744.aktivitetsersattning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.31744: AktErs_Belopp 2003-2015; AktErs_Belopp_MiDAS 2016-2023."
+columns = { AktErs_Belopp = "34.31744.aktivitetsersattning-ersattningsbelopp", AktErs_Belopp_MiDAS = "34.31744.aktivitetsersattning-ersattningsbelopp" }
+columns_ref = "One series under two delivery headers; the header changes to AktErs_Belopp_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.31744: AktErs_Belopp 2003-2015; AktErs_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.36228"
-columns = { SjukErs_Bdag = "34.36228.sjukersattning-bruttodagar", SjukErs_BDag_MiDAS = "34.36228.sjukersattning-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36228: SjukErs_Bdag 2015; SjukErs_BDag_MiDAS 2016-2023."
+columns = { SjukErs_Bdag = "34.36228.sjukersattning-bruttodagar", SjukErs_BDag_MiDAS = "34.36228.sjukersattning-bruttodagar" }
+columns_ref = "One series under two delivery headers; the header changes to SjukErs_BDag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.36228: SjukErs_Bdag 2015; SjukErs_BDag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.36229"
-columns = { SjukErs_Ndag = "34.36229.sjukersattning-nettodagar", SjukErs_NDag_MiDAS = "34.36229.sjukersattning-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36229: SjukErs_Ndag 2015; SjukErs_NDag_MiDAS 2016-2023."
+columns = { SjukErs_Ndag = "34.36229.sjukersattning-nettodagar", SjukErs_NDag_MiDAS = "34.36229.sjukersattning-nettodagar" }
+columns_ref = "One series under two delivery headers; the header changes to SjukErs_NDag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.36229: SjukErs_Ndag 2015; SjukErs_NDag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.36230"
-columns = { AktErs_Bdag = "34.36230.aktivitetsersattning-bruttodagar", AktErs_BDag_MiDAS = "34.36230.aktivitetsersattning-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36230: AktErs_Bdag 2015; AktErs_BDag_MiDAS 2016-2023."
+columns = { AktErs_Bdag = "34.36230.aktivitetsersattning-bruttodagar", AktErs_BDag_MiDAS = "34.36230.aktivitetsersattning-bruttodagar" }
+columns_ref = "One series under two delivery headers; the header changes to AktErs_BDag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.36230: AktErs_Bdag 2015; AktErs_BDag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.36231"
-columns = { AktErs_Ndag = "34.36231.aktivitetsersattning-nettodagar", AktErs_NDag_MiDAS = "34.36231.aktivitetsersattning-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.36231: AktErs_Ndag 2015; AktErs_NDag_MiDAS 2016-2023."
+columns = { AktErs_Ndag = "34.36231.aktivitetsersattning-nettodagar", AktErs_NDag_MiDAS = "34.36231.aktivitetsersattning-nettodagar" }
+columns_ref = "One series under two delivery headers; the header changes to AktErs_NDag_MiDAS from årgång 2016 (#1907). SCB names the series _MiDAS from 1994 and labels it MiDAS-sourced from 2017; prepared v28 native family 34.36231: AktErs_Ndag 2015; AktErs_NDag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.37047"
 columns = { ForPeng_Bdag = "34.37047.foraldrapenning-antal-bruttodagar", ForPeng_Bdag_MiDAS = "34.37047.foraldrapenning-antal-bruttodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
+columns_ref = "Source switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.37048"
 columns = { ForPeng_Belopp = "34.37048.foraldrapenning-ersattningsbelopp", ForPeng_Belopp_MiDAS = "34.37048.foraldrapenning-ersattningsbelopp-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37048: ForPeng_Belopp 1993-2012; ForPeng_Belopp_MiDAS 2016-2023."
+columns_ref = "Source switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37048: ForPeng_Belopp 1993-2012; ForPeng_Belopp_MiDAS 2016-2023."
 
 [[identity.partition]]
 variable = "34.37049"
 columns = { ForPeng_Ndag = "34.37049.foraldrapenning-antal-nettodagar", ForPeng_Ndag_MiDAS = "34.37049.foraldrapenning-antal-nettodagar-midas" }
-columns_ref = "Reviewed MiDAS source-basis split; SCB lisa-bakgrundsfakta-1990-2017 Bilaga 4 STORE-MiDAS; prepared v28 native family 34.37049: ForPeng_Ndag 1993-2012; ForPeng_Ndag_MiDAS 2016-2023."
+columns_ref = "Source switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37049: ForPeng_Ndag 1993-2012; ForPeng_Ndag_MiDAS 2016-2023."
 
 # Y-292 2026-09-29: LISA pension and adult-study loan documented-concept
 # partitions. SCB `lisa-bakgrundsfakta-1990-2017` documents that the earlier
@@ -2394,6 +2344,21 @@ columns_ref = "Reviewed institutional-sector coding-edition and source-basis spl
 variable = "34.17"
 columns = {"AstNr" = "34.17.arbetsstallenummer", "AstNr_LISA" = "34.17.arbetsstallenummer"}
 columns_ref = "Exact definitions identify the same workplace number, combined with organisation number. Individual and workplace variant contexts remain unchanged; identifiers, original widths and provenance are retained."
+
+# #1907: CfarNr/CfarNr_LISA and PeOrgNr/PeOrgNr_LISA are one header each, like
+# AstNr. The plain spelling in LISA Individ 1990-2015 is SCB's documentation
+# spelling; the physical files carry only `_LISA` (errata.field renames below).
+# Arbetsställen and Företag keep the plain headers. The Sysselsättningsregister
+# readings CfarNrSreg/PeOrgNrSreg are co-delivered and stay separate.
+[[identity.partition]]
+variable = "34.14"
+columns = { CfarNr = "34.14.cfarnr", CfarNr_LISA = "34.14.cfarnr", CfarNrSreg = "34.14.cfarnrsreg" }
+columns_ref = "One CFAR workplace number under two delivery headers: CfarNr in Arbetsställen 1990-2023, CfarNr_LISA in Individ 1990-2023 (SCB Dataleverans 2023-2024 Bilaga 2; SWECOV holdings). CfarNrSreg is the co-delivered Sysselsättningsregister reading (Individ 2013-2015) and keeps its own key. Per-variant operational definitions stay on the states."
+
+[[identity.partition]]
+variable = "34.56"
+columns = { PeOrgNr = "34.56.peorgnr", PeOrgNr_LISA = "34.56.peorgnr", PeOrgNrSreg = "34.56.peorgnrsreg" }
+columns_ref = "One person/organisation number under two delivery headers: PeOrgNr in Arbetsställen and Företag 1990-2023, PeOrgNr_LISA in Individ 1990-2023 (SCB Dataleverans 2023-2024 Bilaga 2; SWECOV holdings). PeOrgNrSreg is the co-delivered Sysselsättningsregister reading (Individ 1990-2015) and keeps its own key."
 
 [[identity.partition]]
 variable = "34.33"
@@ -3350,61 +3315,6 @@ native_variable_id = 4963
 
 [[errata.delivered]]
 variant = "individer-15plus"
-column = "CfarNr_LISA"
-data_type = "text"
-versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "45deb98c1048481868a538ab1aa0e0991cf20c71f0b5612b19fc83984385a1bc"
-evidence = "Positive exact-named LISA documentary identity, holdings2010–15 and actual post2016 same-native LISA column establish exactphysical role. Preserve source-role owner scb/lisa/cfar-nummer-2; no generic PeOrg/Cfar sibling merge or copied storage metadata. PrefixP1105 is existing inventory pseudonym representation, not identity inference. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
-noted = "2026-10-01"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 14
-
-[[errata.delivered]]
-variant = "individer-15plus"
-column = "PeOrgNr_LISA"
-data_type = "text"
-versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "ceaafc106ecf8fca843699aec4a6354624f18ca02bdb9cf9938b69e498906e5d"
-evidence = "Positive exact-named LISA documentary identity, holdings2010–15 and actual post2016 same-native LISA column establish exactphysical role. Preserve source-role owner scb/lisa/person-orgnr-2; no generic PeOrg/Cfar sibling merge or copied storage metadata. PrefixP1105 is existing inventory pseudonym representation, not identity inference. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
-noted = "2026-10-01"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 56
-
-[[errata.delivered]]
-variant = "individer-15plus"
-column = "SjukP_Bdag_MiDAS"
-data_type = "integer"
-versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "e3edca754a429eb66821532ac6f1f35bee6c388e711dffb28268ee53de66d391"
-evidence = "Positive documentary distinct MiDAS basis: retarget holding from non-MiDAS owner to scb/lisa/sjukpenning-bruttodagar-midas and add only missing2010–15 physical deliveries with exact source authority; no STORE→MiDAS equivalence or metadata copy Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
-noted = "2026-10-01"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 31532
-
-[[errata.delivered]]
-variant = "individer-15plus"
-column = "SjukP_Belopp_MiDAS"
-data_type = "integer"
-versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0c74c6776d89fc56d2abf4967e394a17f649709a61dbc4f3be158d76ad0ba819"
-evidence = "Positive documentary distinct MiDAS basis: retarget holding from non-MiDAS owner to scb/lisa/sjukpenning-ersattningsbelopp-midas and add only missing2010–15 physical deliveries with exact source authority; no STORE→MiDAS equivalence or metadata copy Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
-noted = "2026-10-01"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 31534
-
-[[errata.delivered]]
-variant = "individer-15plus"
-column = "SjukP_Ndag_MiDAS"
-data_type = "decimal"
-versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "97e68c03a6523c196dabd8c36f86e1fcc238c66871e63826106e1874a4f83500"
-evidence = "Positive documentary distinct MiDAS basis: retarget holding from non-MiDAS owner to scb/lisa/sjukpenning-nettodagar-midas and add only missing2010–15 physical deliveries with exact source authority; no STORE→MiDAS equivalence or metadata copy Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
-noted = "2026-10-01"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 31533
-
-[[errata.delivered]]
-variant = "individer-15plus"
 column = "SsykAr_J16"
 data_type = "text"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
@@ -3559,6 +3469,56 @@ noted = "2026-10-12"
 field = "column_name"
 value = "AstNr_LISA"
 
+# CfarNr/PeOrgNr in LISA Individ 1990-2015: the same correction as AstNr (#1907).
+
+[[errata.field]]
+variable = "34.14"
+variant = "34.153"
+column = "CfarNr"
+editions = ["6053", "7309", "7319", "8612", "8652", "11268"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "CfarNr" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "8" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Identitetsbegrepp för arbetsställen, som används i SCB:s Företagsdatabas (FDB). Numret är helt informationslöst. CFAR-numret följer arbetsstället över tiden, även när företaget byter juridisk identitet." }, { name = "description", status = "value", value = "Numret är helt informationslöst. Består av ett 7-siffrigt löpnummer kompletterat med en kontrollsiffra enl modul-10 metoden." }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "CFAR-Nummer" }, { name = "operational_definition", status = "value", value = "Avser det arbetsställe där personen anses bedrivit sin huvudsakliga sysselsättning och enligt Registerbaserad arbetsmarkndsstatistik (RAMS) är förvärvsarbetande på." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Registerbaserad arbetsmarkn.stat (RAMS) : Arbetsställen" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 6053 = "2013", 7309 = "2012", 7319 = "2011", 8612 = "2014", 8652 = "2010", 11268 = "2015" }
+evidence = "Complete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only P1105_LopNr_CfarNr_LISA for this exact own native quantity; exported CfarNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places CfarNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "CfarNr_LISA"
+
+[[errata.field]]
+variable = "34.14"
+variant = "34.1335"
+column = "CfarNr"
+editions = ["11636", "11637", "11656", "14875", "14882", "15279", "15297", "15302", "15312", "15433", "15434", "15469", "15470", "15471", "15472", "15473", "15512", "15513", "15514", "15515"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "CfarNr" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "8" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Identitetsbegrepp för arbetsställen, som används i SCB:s Företagsdatabas (FDB). Numret är helt informationslöst. CFAR-numret följer arbetsstället över tiden, även när företaget byter juridisk identitet." }, { name = "description", status = "value", value = "Numret är helt informationslöst. Består av ett 7-siffrigt löpnummer kompletterat med en kontrollsiffra enl modul-10 metoden." }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "CFAR-Nummer" }, { name = "operational_definition", status = "value", value = "Avser det arbetsställe där personen anses bedrivit sin huvudsakliga sysselsättning och enligt Registerbaserad arbetsmarkndsstatistik (RAMS) är förvärvsarbetande på." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Registerbaserad arbetsmarkn.stat (RAMS) : Arbetsställen" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 11636 = "2009", 11637 = "2008", 11656 = "2007", 14875 = "2006", 14882 = "2005", 15279 = "2004", 15297 = "2003", 15302 = "2002", 15312 = "2001", 15433 = "2000", 15434 = "1999", 15469 = "1998", 15470 = "1997", 15471 = "1996", 15472 = "1995", 15473 = "1994", 15512 = "1993", 15513 = "1992", 15514 = "1991", 15515 = "1990" }
+evidence = "Complete accepted SWECOV physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) carry only P1105_LopNr_CfarNr_LISA for this exact own native quantity; exported CfarNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places CfarNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "CfarNr_LISA"
+
+[[errata.field]]
+variable = "34.56"
+variant = "34.153"
+column = "PeOrgNr"
+editions = ["6053", "7309", "7319", "8612", "8652", "11268"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "PeOrgNr" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "12" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Person-/organisationsnummer" }, { name = "operational_definition", status = "value", value = "Avser det företag där personen anses bedrivit sin huvudsakliga sysselsättning och enligt Registerbaserad arbetsmarkndsstatistik (RAMS) är förvärvsarbetande på." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Registerbaserad arbetsmarkn.stat (RAMS) : Arbetsställen" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 6053 = "2013", 7309 = "2012", 7319 = "2011", 8612 = "2014", 8652 = "2010", 11268 = "2015" }
+evidence = "Complete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only P1105_LopNr_PeOrgNr_LISA for this exact own native quantity; exported PeOrgNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places PeOrgNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "PeOrgNr_LISA"
+
+[[errata.field]]
+variable = "34.56"
+variant = "34.1335"
+column = "PeOrgNr"
+editions = ["11636", "11637", "11656", "14875", "14882", "15279", "15297", "15302", "15312", "15433", "15434", "15469", "15470", "15471", "15472", "15473", "15512", "15513", "15514", "15515"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "PeOrgNr" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "12" }, { name = "data_type", status = "value", value = "text" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Person-/organisationsnummer" }, { name = "operational_definition", status = "value", value = "Avser det företag där personen anses bedrivit sin huvudsakliga sysselsättning och enligt Registerbaserad arbetsmarkndsstatistik (RAMS) är förvärvsarbetande på." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Registerbaserad arbetsmarkn.stat (RAMS) : Arbetsställen" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 11636 = "2009", 11637 = "2008", 11656 = "2007", 14875 = "2006", 14882 = "2005", 15279 = "2004", 15297 = "2003", 15302 = "2002", 15312 = "2001", 15433 = "2000", 15434 = "1999", 15469 = "1998", 15470 = "1997", 15471 = "1996", 15472 = "1995", 15473 = "1994", 15512 = "1993", 15513 = "1992", 15514 = "1991", 15515 = "1990" }
+evidence = "Complete accepted SWECOV physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) carry only P1105_LopNr_PeOrgNr_LISA for this exact own native quantity; exported PeOrgNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places PeOrgNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "PeOrgNr_LISA"
+
 [[errata.column]]
 variant = "individer-15plus"
 column = "AldPens_INKLGP"
@@ -3572,65 +3532,103 @@ source = "steward-holdings"
 evidence = "SWECOV holds AldPens_INKLGP in Individ_2011 through Individ_2019 (2011-2019); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individer-15plus. holdings_period is the SWECOV holdings range (#1302). Sibling aldpens (AldPens, is_sensitive=false, is_identifier=false); a different definition, so not that variable."
 noted = "2026-10-12"
 
-# SCB documents these LISA Individ columns on individer-15plus only, but delivers
-# them on individer-16plus 1990-2009 (#1516, maintainer-decided 2026-10-13).
+# SjukP_* in LISA Individ 1994-2015: SWECOV's Individ files carry only the
+# `_MiDAS` headers (individer-16plus 1994-2009, individer-15plus 2010-2015), so
+# the exported plain spelling is renamed like AstNr (#1907, Operator ruling
+# 2026-10-25). SCB's 1993 edition stays plain: no holding covers it.
 
-[[errata.delivered]]
-variant = "individer-16plus"
-donor_variant = "individer-15plus"
-column = "CfarNr_LISA"
-data_type = "text"
-versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
-expected_evidence_sha256 = "528554c6edf175e897fa45ad6628a869aa2937f3f281895a7256387d9d645472"
-evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 41 (P1105_LopNr_CfarNr_LISA, 1990-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 149 (CfarNr_LISA, 1990-2021)."
-noted = "2026-10-13"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 14
+[[errata.field]]
+variable = "34.31532"
+variant = "34.153"
+column = "SjukP_Bdag"
+editions = ["6053", "7309", "7319", "8612", "8652", "11268"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Bdag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Antalet utbetalda dagar som avser händelser som skett under året. Alla dagar blir hela dagar under ett år oavsett omfattning." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Sjukpenning, bruttodagar" }, { name = "operational_definition", status = "value", value = "Summan av alla bruttodagar under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 6053 = "2013", 7309 = "2012", 7319 = "2011", 8612 = "2014", 8652 = "2010", 11268 = "2015" }
+evidence = "Complete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Bdag_MiDAS for this exact own native quantity; exported SjukP_Bdag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Bdag_MiDAS"
 
-[[errata.delivered]]
-variant = "individer-16plus"
-donor_variant = "individer-15plus"
-column = "PeOrgNr_LISA"
-data_type = "text"
-versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
-expected_evidence_sha256 = "1a6c03ee5734d2ff99405088fa0e3a9aee7d6b78970b9d4755344e9439a724c9"
-evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 40 (P1105_LopNr_PeOrgNr_LISA, 1990-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 147 (PeOrgNr_LISA, 1990-2021)."
-noted = "2026-10-13"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 56
+[[errata.field]]
+variable = "34.31532"
+variant = "34.1335"
+column = "SjukP_Bdag"
+editions = ["11636", "11637", "11656", "14875", "14882", "15279", "15297", "15302", "15312", "15433", "15434", "15469", "15470", "15471", "15472", "15473"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Bdag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Antalet utbetalda dagar som avser händelser som skett under året. Alla dagar blir hela dagar under ett år oavsett omfattning." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Sjukpenning, bruttodagar" }, { name = "operational_definition", status = "value", value = "Summan av alla bruttodagar under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 11636 = "2009", 11637 = "2008", 11656 = "2007", 14875 = "2006", 14882 = "2005", 15279 = "2004", 15297 = "2003", 15302 = "2002", 15312 = "2001", 15433 = "2000", 15434 = "1999", 15469 = "1998", 15470 = "1997", 15471 = "1996", 15472 = "1995", 15473 = "1994" }
+evidence = "Complete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Bdag_MiDAS for this exact own native quantity; exported SjukP_Bdag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Bdag_MiDAS"
 
-[[errata.delivered]]
-variant = "individer-16plus"
-donor_variant = "individer-15plus"
-column = "SjukP_Bdag_MiDAS"
-data_type = "integer"
-versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
-expected_evidence_sha256 = "4d0fd5f91c3b502ac650704ab0a948c49f7d459f67e90ffb81c6cd5c8656c3a5"
-evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 111 (SjukP_Bdag_MiDAS, 1994-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 491 (1994-2021, FK)."
-noted = "2026-10-13"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 31532
+[[errata.field]]
+variable = "34.31533"
+variant = "34.153"
+column = "SjukP_Ndag"
+editions = ["7319", "8652"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Ndag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "8" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Antalet utbetalda dagar som avser händelser som skett under året. Antalet utbetalda nettodagar är bruttodagar *omfattningen under ett år." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Sjukpenning, nettodagar" }, { name = "operational_definition", status = "value", value = "Summan av alla nettoodagar under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 7319 = "2011", 8652 = "2010" }
+evidence = "Complete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Ndag_MiDAS"
 
-[[errata.delivered]]
-variant = "individer-16plus"
-donor_variant = "individer-15plus"
-column = "SjukP_Ndag_MiDAS"
-data_type = "decimal"
-versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
-expected_evidence_sha256 = "a8adc1af36942227d2d7a027ede8d854ebe308b243e8a42eecb0058264a1dc68"
-evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 112 (SjukP_Ndag_MiDAS, 1994-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 492 (1994-2021, FK)."
-noted = "2026-10-13"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 31533
+[[errata.field]]
+variable = "34.31533"
+variant = "34.153"
+column = "SjukP_Ndag"
+editions = ["6053", "7309", "8612", "11268"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Ndag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "6" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Antalet utbetalda dagar som avser händelser som skett under året. Antalet utbetalda nettodagar är bruttodagar *omfattningen under ett år." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Sjukpenning, nettodagar" }, { name = "operational_definition", status = "value", value = "Summan av alla nettoodagar under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 6053 = "2013", 7309 = "2012", 8612 = "2014", 11268 = "2015" }
+evidence = "Complete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Ndag_MiDAS"
 
-[[errata.delivered]]
-variant = "individer-16plus"
-donor_variant = "individer-15plus"
-column = "SjukP_Belopp_MiDAS"
-data_type = "integer"
-versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
-expected_evidence_sha256 = "8f983bea6ca7f5e662ea19170e2af77823c0f0c9a3d299b9aef80925af018d56"
-evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 113 (SjukP_Belopp_MiDAS, 1994-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 493 (1994-2021, FK)."
-noted = "2026-10-13"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 31534
+[[errata.field]]
+variable = "34.31533"
+variant = "34.1335"
+column = "SjukP_Ndag"
+editions = ["11656", "14875", "14882", "15279", "15297", "15302", "15312", "15433", "15434", "15469", "15470", "15471", "15472", "15473"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Ndag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "6" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Antalet utbetalda dagar som avser händelser som skett under året. Antalet utbetalda nettodagar är bruttodagar *omfattningen under ett år." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Sjukpenning, nettodagar" }, { name = "operational_definition", status = "value", value = "Summan av alla nettoodagar under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 11656 = "2007", 14875 = "2006", 14882 = "2005", 15279 = "2004", 15297 = "2003", 15302 = "2002", 15312 = "2001", 15433 = "2000", 15434 = "1999", 15469 = "1998", 15470 = "1997", 15471 = "1996", 15472 = "1995", 15473 = "1994" }
+evidence = "Complete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Ndag_MiDAS"
+
+[[errata.field]]
+variable = "34.31533"
+variant = "34.1335"
+column = "SjukP_Ndag"
+editions = ["11636", "11637"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Ndag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "8" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Antalet utbetalda dagar som avser händelser som skett under året. Antalet utbetalda nettodagar är bruttodagar *omfattningen under ett år." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }, { name = "name", status = "value", value = "Sjukpenning, nettodagar" }, { name = "operational_definition", status = "value", value = "Summan av alla nettoodagar under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 11636 = "2009", 11637 = "2008" }
+evidence = "Complete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Ndag_MiDAS"
+
+[[errata.field]]
+variable = "34.31534"
+variant = "34.153"
+column = "SjukP_Belopp"
+editions = ["6053", "7309", "7319", "8612", "8652", "11268"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Belopp" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Utbetalt belopp under året relaterat till brutto- och nettodagarna för sjukpenning.\nBeloppet avser händelser som skett under året." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "100-tal kronor" }, { name = "name", status = "value", value = "Sjukpenning, ersättningsbelopp" }, { name = "operational_definition", status = "value", value = "Summan av alla belopp under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 6053 = "2013", 7309 = "2012", 7319 = "2011", 8612 = "2014", 8652 = "2010", 11268 = "2015" }
+evidence = "Complete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Belopp_MiDAS for this exact own native quantity; exported SjukP_Belopp is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Belopp_MiDAS"
+
+[[errata.field]]
+variable = "34.31534"
+variant = "34.1335"
+column = "SjukP_Belopp"
+editions = ["11636", "11637", "11656", "14875", "14882", "15279", "15297", "15302", "15312", "15433", "15434", "15469", "15470", "15471", "15472", "15473"]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "SjukP_Belopp" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Utbetalt belopp under året relaterat till brutto- och nettodagarna för sjukpenning.\nBeloppet avser händelser som skett under året." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "100-tal kronor" }, { name = "name", status = "value", value = "Sjukpenning, ersättningsbelopp" }, { name = "operational_definition", status = "value", value = "Summan av alla belopp under året för ersättningsslaget sjukpenning." }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Försäkringskassan" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
+expected_period_text = { 11636 = "2009", 11637 = "2008", 11656 = "2007", 14875 = "2006", 14882 = "2005", 15279 = "2004", 15297 = "2003", 15302 = "2002", 15312 = "2001", 15433 = "2000", 15434 = "1999", 15469 = "1998", 15470 = "1997", 15471 = "1996", 15472 = "1995", 15473 = "1994" }
+evidence = "Complete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Belopp_MiDAS for this exact own native quantity; exported SjukP_Belopp is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+noted = "2026-10-25"
+field = "column_name"
+value = "SjukP_Belopp_MiDAS"
