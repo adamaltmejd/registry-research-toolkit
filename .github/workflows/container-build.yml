@@ -475,7 +475,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@1.6
         if: steps.head.outputs.skip != 'true'
         with:
-          version: "0.4.101"
+          version: "0.4.122"
       # Two gates guard a bad image: the container entrypoint probes
       # `context`, `search`, docs search and `/mcp` before `reg-meta serve` takes traffic (a
       # bad image exits non-zero), and fly.toml's /api/context HTTP check must
@@ -575,7 +575,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@1.6
         if: steps.head.outputs.skip != 'true'
         with:
-          version: "0.4.101"
+          version: "0.4.122"
       - if: steps.head.outputs.skip != 'true'
         run: >-
           flyctl deploy

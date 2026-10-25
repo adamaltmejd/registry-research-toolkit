@@ -35,7 +35,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Generator, Iterable
+    from collections.abc import Generator, Iterable, Sequence
 
 
 class SentinelCode(BaseModel):
@@ -141,6 +141,17 @@ def display_path(path: Path) -> str:
         with contextlib.suppress(ValueError):
             return path.resolve().relative_to(_REPO_CURATION.parent.parent).as_posix()
     return str(path)
+
+
+def common_prefix(strings: Sequence[str]) -> str:
+    """The longest leading string every one of ``strings`` shares; ``""`` for none."""
+    if not strings:
+        return ""
+    prefix = strings[0]
+    for s in strings[1:]:
+        while not s.startswith(prefix):
+            prefix = prefix[:-1]
+    return prefix
 
 
 @functools.cache

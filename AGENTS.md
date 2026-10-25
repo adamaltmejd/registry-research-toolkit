@@ -164,8 +164,8 @@ below are what an agent must follow when writing, changing or deleting a test. T
 - No minimum release age: `exclude-newer = false` in the root `pyproject.toml`
   `[tool.uv]` and `minimumReleaseAge = 0` in `reg_webapp/frontend/bunfig.toml`. Keep
   both written out: deleting a key inherits the checkout's global waiting period.
-- Python floor `>=3.14` everywhere. The root `.python-version` makes
-  `uv run --no-project` tooling in `scripts/` resolve 3.14 too.
+- Python floor `>=3.15` everywhere. The root `.python-version` makes
+  `uv run --no-project` tooling in `scripts/` resolve 3.15 too.
 
 ## Stack
 

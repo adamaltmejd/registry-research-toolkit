@@ -2,7 +2,7 @@
 
 ## Setup
 
-Prerequisites: **Python 3.14+** and [uv](https://docs.astral.sh/uv/) for the builder and
+Prerequisites: **Python 3.15+** and [uv](https://docs.astral.sh/uv/) for the builder and
 the test tooling, a stable **Rust** toolchain for `crates/` (`uv sync` builds the
 `reg-core-py` extension with it), and [bun](https://bun.sh/) for the frontend.
 

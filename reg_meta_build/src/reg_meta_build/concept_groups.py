@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 from ._curation import (
+    common_prefix,
     curation_error,
     display_path,
     load_curation_entries,
@@ -541,14 +542,6 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
 # ── derivation passes ───────────────────────────────────────────────────────
 
 
-def _common_prefix(strings: list[str]) -> str:
-    prefix = strings[0]
-    for s in strings[1:]:
-        while not s.startswith(prefix):
-            prefix = prefix[:-1]
-    return prefix
-
-
 def _trim_label(prefix: str) -> str:
     """Common label prefix → group label: trim trailing whitespace/punctuation
     and a dangling Swedish connector "i" ("Löne- eller företagarinkomst i
@@ -579,7 +572,7 @@ def _evaluate_month_fold(
     names = [m[2] for m in members]
     if any(n is None for n in names):
         return None
-    label = _trim_label(_common_prefix([n for n in names if n is not None]))
+    label = _trim_label(common_prefix([n for n in names if n is not None]))
     return label if len(label) >= _MIN_LABEL_PREFIX else None
 
 

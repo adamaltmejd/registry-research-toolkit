@@ -11,8 +11,8 @@ Run from the repository root:
     uv run python crates/reg-core/tools/gen_case_folding.py --source CaseFolding.txt
 
 Before writing, the table is checked against Python's `str.casefold()` on every scalar
-Python's UCD assigns. Python (3.14) is on an older UCD, so the scalars it leaves
-unassigned are not checked; `conformance/cases/folds/unicode17.jsonl` covers them.
+Python's UCD assigns. Where Python's UCD is older than the pinned file, the scalars it
+leaves unassigned are not checked; `conformance/cases/folds/unicode17.jsonl` covers them.
 """
 
 from __future__ import annotations
