@@ -8,15 +8,16 @@
         ["2019-01-01", "2019-12-31", "old", "Source classification declaration: 'Source pair'\ncurated:classification_timeline -> old"],
         ["2020-01-01", "2020-12-31", "new", "Source classification declaration: 'Source pair'\ncurated:classification_timeline -> new"]
       ],
-      "note": "One occurrence spans both timeline rows: each row's window binds its own edition."
+      "note": "One occurrence spans both timeline rows: each row's window binds its own edition, though old's book ends 2018."
     },
     {
       "table": "issues",
-      "fields": ["code", "severity", "valid_from", "valid_to"],
+      "fields": ["code", "severity", "valid_from", "valid_to", "case_id"],
       "rows": [
-        ["unresolved_classification_reference", "error", "2018-01-01", "2018-12-31"]
+        ["stale_curation_entry", "error", null, null, "curation/registers/fk/remote.toml#/classification_timeline/1/editions/3"],
+        ["unresolved_classification_reference", "error", "2018-01-01", "2018-12-31", null]
       ],
-      "note": "No row covers 2018, so that window alone stays unresolved, as an uncurated family reference does."
+      "note": "No row covers 2018, so that window alone stays unresolved, as an uncurated family reference does. The 2010 row overlaps no occurrence window: stale at its own row, while the live rows of the same entry are not."
     }
   ]
 }

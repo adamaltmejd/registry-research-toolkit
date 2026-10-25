@@ -1,7 +1,7 @@
 {
-  "fails_if": "`_source_bindings` (source_classification_bindings.py) ignores the register's `[[classification_timeline]]` and looks for one family edition covering the whole 2018-2020 occurrence (none does), or binds a timeline row outside its own window, or binds the 2018 window no row covers instead of reporting it unresolved",
+  "fails_if": "`_source_bindings` (source_classification_bindings.py) ignores the register's `[[classification_timeline]]` and looks for one family edition covering the whole 2018-2020 occurrence (none does), or binds a timeline row outside its own window, or binds the 2018 window no row covers instead of reporting it unresolved, or checks a row against its book's own validity (old ends 2018, its row codes 2019), or lets the 2010 row that overlaps no occurrence window pass instead of reporting it as a row-located stale_curation_entry",
   "sources": {
-    "description": "FK AMOUNT (2018-2020) declares the family alias 'Source pair'; books old (to 2019) and new (from 2020) of family pair; the register's timeline codes 2019 in old and 2020 in new, and leaves 2018 uncurated.",
+    "description": "FK AMOUNT (2018-2020) declares the family alias 'Source pair'; books old (to 2018) and new (from 2020) of family pair; the register's timeline codes 2019 in old (past the book's own validity) and 2020 in new, leaves 2018 uncurated, and has a dead 2010 row before the data starts.",
     "scb": {
       "registerinformation": [
         {"cvid": 1001, "var_id": 101, "colname": "VALUE"}

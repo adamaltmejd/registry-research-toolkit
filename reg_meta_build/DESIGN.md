@@ -1562,7 +1562,10 @@ piece is a resolved source declaration, so the rest composes as before: an
 `[[errata.classification_reference]]` clears the declaration upstream and the timeline
 never sees it; coding windows, label rules, overrides and sentinels apply to the cut
 states unchanged. The register's own curation sets the years; there is no automatic year
-rule, and a row is not checked against its book's `valid_from`/`valid_to`.
+rule, and a row is not checked against its book's `valid_from`/`valid_to`. A timeline is
+register-wide, so it cannot say that parts of a register (regions, say) switched edition
+in different years; curation leaves such a window as a gap, unresolved, until a finer
+grammar is needed.
 
 The loader refuses, as `register_entry_invalid` at the file and entry: a row that is not
 `[slug, from, to]` with ISO dates, overlapping rows (a window has one edition), a family
@@ -1570,7 +1573,9 @@ no classification file declares, an edition that is no curated book, and an edit
 outside the named family. A second timeline for one family in a file is
 `register_duplicate_entry`. A timeline that no source declaration of its register
 reaches, because the register never declares the family, is a `stale_curation_entry`
-error once every selected scope has resolved.
+error once every selected scope has resolved, located at the entry; a row of a reached
+timeline that overlaps no declared window (an ICD-8 row on a register whose data starts
+in 2005) is one located at the row.
 
 A book's code tree comes from its codebook's delivered `parent_code` cells (#1297). A
 parent that names no agreed code of the same book is a located

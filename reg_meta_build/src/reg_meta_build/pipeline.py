@@ -253,8 +253,9 @@ def _classification_timelines(
                     date.fromisoformat(start).toordinal(),
                     date.fromisoformat(end).toordinal(),
                     entry_id,
+                    f"{entry_id}/editions/{row}",
                 )
-                for slug, start, end in entry.editions
+                for row, (slug, start, end) in enumerate(entry.editions, 1)
             )
             for alias in aliases[entry.family]:
                 timelines.setdefault(name, {})[alias] = editions
@@ -1979,7 +1980,8 @@ def _resolve(
                         )
                     )
             # A timeline no source declaration of its register reaches binds
-            # nothing: its family alias is not declared there.
+            # nothing: its family alias is not declared there. A row of a reached
+            # timeline that overlaps no declared window binds nothing either.
             for register in tree.registers:
                 name = (
                     f"{register.register_info.provider}/{register.register_info.slug}"
@@ -1988,19 +1990,37 @@ def _resolve(
                     continue
                 for index, entry in enumerate(register.classification_timeline, 1):
                     case_id = f"{register.source_file}#/classification_timeline/{index}"
-                    if case_id in matched_timelines:
-                        continue
-                    issue(
-                        ResolutionDiagnostic(
-                            code="stale_curation_entry",
-                            severity="error",
-                            case_id=case_id,
-                            subject=name,
-                            detail=f"{case_id}: no source declaration in {name} "
-                            f"names family {entry.family!r} by one of its aliases",
-                            withheld_output=(case_id,),
+                    if case_id not in matched_timelines:
+                        stale = [
+                            (
+                                case_id,
+                                f"no source declaration in {name} names family "
+                                f"{entry.family!r} by one of its aliases",
+                            )
+                        ]
+                    else:
+                        stale = [
+                            (
+                                row_id,
+                                f"edition {slug!r} {start}..{end} overlaps no window "
+                                f"of a declaration of family {entry.family!r} in "
+                                f"{name}",
+                            )
+                            for row, (slug, start, end) in enumerate(entry.editions, 1)
+                            if (row_id := f"{case_id}/editions/{row}")
+                            not in matched_timelines
+                        ]
+                    for stale_id, reason in stale:
+                        issue(
+                            ResolutionDiagnostic(
+                                code="stale_curation_entry",
+                                severity="error",
+                                case_id=stale_id,
+                                subject=name,
+                                detail=f"{stale_id}: {reason}",
+                                withheld_output=(stale_id,),
+                            )
                         )
-                    )
             for binding_issue in finalize_classification_bindings(
                 compiled,
                 tree,

@@ -49,12 +49,13 @@ class ClassificationBindingResolution:
 @dataclass(frozen=True)
 class TimelineEdition:
     """One `[[classification_timeline]]` row: the edition a register codes in over a
-    window (calendar ordinals), and the entry it came from."""
+    window (calendar ordinals), the entry it came from and its own row location."""
 
     classification: str
     start: int
     end: int
     entry: str
+    row: str
 
 
 @dataclass(frozen=True)
@@ -182,16 +183,21 @@ def _source_bindings(
                 raise ValueError("source classification has an unconverted codebook")
         # A timeline's editions are family members, converted (or withheld) per
         # the family check above.
+        cut: list[tuple[int, int, str | None]] = []
+        if bounds is not None:
+            if editions is None:
+                cut = [(lo, hi, slug) for lo, hi in bounds]
+            else:
+                for lo, hi, row in _timeline_pieces(bounds, editions):
+                    if row is not None and matched_timelines is not None:
+                        matched_timelines.add(row.row)
+                    cut.append((lo, hi, None if row is None else row.classification))
         pieces: tuple[tuple[str | None, str | None, str | None], ...] = (
             ((None, None, slug),)
             if bounds is None
             else tuple(
                 (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat(), s)
-                for lo, hi, s in (
-                    _timeline_pieces(bounds, editions)
-                    if editions is not None
-                    else ((lo, hi, slug) for lo, hi in bounds)
-                )
+                for lo, hi, s in cut
             )
         )
         for start, end, book_slug in pieces:
@@ -327,13 +333,13 @@ def _uncovered(
 
 def _timeline_pieces(
     bounds: Iterable[tuple[int, int]], editions: tuple[TimelineEdition, ...]
-) -> list[tuple[int, int, str | None]]:
+) -> list[tuple[int, int, TimelineEdition | None]]:
     """`bounds` cut at the timeline's rows, in order: each piece a row covers with
-    its edition, each piece no row covers with None."""
+    that row, each piece no row covers with None."""
     bounds = tuple(bounds)
     rows = sorted(editions, key=lambda e: e.start)
-    pieces: list[tuple[int, int, str | None]] = [
-        (max(lo, row.start), min(hi, row.end), row.classification)
+    pieces: list[tuple[int, int, TimelineEdition | None]] = [
+        (max(lo, row.start), min(hi, row.end), row)
         for lo, hi in bounds
         for row in rows
         if row.start <= hi and row.end >= lo

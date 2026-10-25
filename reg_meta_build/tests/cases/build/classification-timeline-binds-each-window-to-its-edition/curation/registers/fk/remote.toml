@@ -14,6 +14,7 @@ family = "pair"
 editions = [
   ["new", "2020-01-01", "2020-12-31"],
   ["old", "2019-01-01", "2019-12-31"],
+  ["old", "2010-01-01", "2010-12-31"],
 ]
-evidence = "Fixture: the register codes 2019 in old and 2020 in new."
+evidence = "Fixture: the register codes 2019 in old and 2020 in new; 2010 predates its data."
 noted = "2026-10-25"
