@@ -1718,8 +1718,11 @@ coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
 hard-clamped to the coverage span (#671). A local change writes `?period` only (never
 the global window). That selection is the add window (#1838): an add widens its source
 to the union and never narrows it, so it raises no warning, and a window wider than
-coverage is information (maintainer ruling 2026-10-22). The band names the add window
-only where it differs from the study window inside coverage.
+coverage is information (maintainer ruling 2026-10-22). The add window is drawn, as a
+second band over the always-drawn study window, only where it differs from the study
+window inside coverage (`periodWindowRelation`); the same test drops `?period` when the
+thumbs come to rest on the study window and hides "Clear period" while the applied
+period equals it (#1910).
 
 The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
 (`coverage.to === null`, "still delivered") projects to — the catalog only knows

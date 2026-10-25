@@ -101,8 +101,8 @@ interface Props {
  * column a span in the ColumnChip shape on one shared axis, relations as
  * arrows, solid for succession and dashed for a rename, the window as an
  * `accent-bg` band between `accent` bounds and an add window as a stronger
- * `accent-band` over it. The marks are one decorative SVG; the lanes and spans are
- * HTML over it, so every span is a real checkbox in reading order, named with
+ * `accent-band` over it. The marks are one decorative SVG; the lanes and spans
+ * are HTML over it, so every span is a real checkbox in reading order, named with
  * its column, variable and years. Tab walks the spans lane by lane and Space
  * toggles one. On a variable page a coverage row heads the lanes, so the
  * Timeline and the columns are one drawing on one axis (#1833).
