@@ -34,7 +34,8 @@ grouping is the maintainer's call, made from the filed issues.
 ## Start
 
 1. Create the log `.local/dogfood/<YYYY-MM-DD>-<slug>.md` in the **main checkout**
-   (gitignored; it survives worktree removal and session loss). `<slug>` names the
+   (gitignored; it survives worktree removal and session loss). From a worktree, the
+   main checkout is the first path `git worktree list` prints. `<slug>` names the
    surface if one was given (`webapp`, `mcp`, `builder`), else `session`. If a log for
    today's surface already exists with open entries, ask whether to resume it.
 2. Record the header: date, surface, `git rev-parse --short HEAD` of the checkout under
@@ -114,6 +115,9 @@ body, use the trust gate, which drops non-maintainer content:
 ```bash
 uv run --no-project python scripts/gh_issue.py view <n> --comments
 ```
+
+A refusal (exit 3) means a non-maintainer wrote it: judge from the title alone, do not
+comment on it, and list it in the summary for the maintainer.
 
 Then decide:
 
