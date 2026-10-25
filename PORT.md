@@ -8,23 +8,23 @@ and [crates/DESIGN.md](crates/DESIGN.md) ("The builder model").
 ## Why
 
 `reg_meta_build`'s common form is not common. `subject.variable` is SCB's VarID for SCB
-and the column for every other provider, only SCB has a delivery coordinate, and
-variant and coverage are spelled three ways. Curation compensates with 38 provider
-checks and step 2 has 38 provider-dependent rules. The port rebuilds the builder in Rust
-around one neutral schema, an explicit column → variable link and a neutral verb set,
-and proves each step by a zero dbdiff against the Python builder.
+and the column for every other provider, only SCB has a delivery coordinate, and variant
+and coverage are spelled three ways. Curation compensates with 38 provider checks and
+step 2 has 38 provider-dependent rules. The port rebuilds the builder in Rust around one
+neutral schema, an explicit column → variable link and a neutral verb set, and proves
+each step by a zero dbdiff against the Python builder.
 
 ## Phases
 
-  | Phase | Content                                                                                                                                                                                      | Where         | Proof                                                                                | Status                                     |
-  | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------ | ------------------------------------------ |
-  | 0     | Cross-table `identity.assign` for LOVA, located errors for wrong-provider verbs, #1907 names                                                                                                | Python        | LOVA slice dbdiff, then the next curation real-seed build                            | waits; the LOVA entry waits for evidence   |
-  | 1     | b1 coverage rule, b2 release status in the SCB adapter, b3 literals to curation, b4 SoS register identity in the adapter                                                                    | Python        | slice dbdiff each; one shared real-seed build                                        | not scheduled                              |
-  | 2     | Spec: `reg-build-model`, the verb schema and golden corpus, the converter with per-entry record-set equivalence, the dbdiff ignore list, the slice specs, the design docs, this tracker | Rust + Python | record-set equivalence on slices 1-3; review                                         | in progress                                |
-  | 3     | Rust resolve over the Python-prepared SQLite, slice by slice (below)                                                                                                                        | Rust          | per-slice `--registers` dbdiff = 0                                                    | after phase 2                              |
-  | 4     | Cutover: full Rust build at the phase-1 Python release's pins and tree against that release's `reg_meta.db`; the provenance-head rename; commit the regenerated tree; delete the converter and the Python resolve pipeline | Rust | full dbdiff = 0 under the ignore list, plus conformance | maintainer schedules the run |
-  | 5     | Raw decoders and preparation in Rust, then a new acceptance cycle; `dbdiff` and `build-docs` port                                                                                         | Rust          | prepared-record equivalence on the pinned inputs, then full dbdiff = 0              | —                                          |
-  | 6     | Neutral contract ids (`provider_key`, `register_id`, canonical band), identity across links, role/temporality/unit type, organization-wide definitions                                    | Rust          | reviewed dbdiffs; contract changes with the reader                                   | —                                          |
+  | Phase | Content                                                                                                                                                                                                                    | Where         | Proof                                                                  | Status                                   |
+  | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------- | ---------------------------------------- |
+  | 0     | Cross-table `identity.assign` for LOVA, located errors for wrong-provider verbs, #1907 names                                                                                                                               | Python        | LOVA slice dbdiff, then the next curation real-seed build              | waits; the LOVA entry waits for evidence |
+  | 1     | b1 coverage rule, b2 release status in the SCB adapter, b3 literals to curation, b4 SoS register identity in the adapter                                                                                                   | Python        | slice dbdiff each; one shared real-seed build                          | not scheduled                            |
+  | 2     | Spec: `reg-build-model`, the verb schema and golden corpus, the converter with per-entry record-set equivalence, the dbdiff ignore list, the slice specs, the design docs, this tracker                                    | Rust + Python | record-set equivalence on slices 1-3; review                           | in progress                              |
+  | 3     | Rust resolve over the Python-prepared SQLite, slice by slice (below)                                                                                                                                                       | Rust          | per-slice `--registers` dbdiff = 0                                     | after phase 2                            |
+  | 4     | Cutover: full Rust build at the phase-1 Python release's pins and tree against that release's `reg_meta.db`; the provenance-head rename; commit the regenerated tree; delete the converter and the Python resolve pipeline | Rust          | full dbdiff = 0 under the ignore list, plus conformance                | maintainer schedules the run             |
+  | 5     | Raw decoders and preparation in Rust, then a new acceptance cycle; `dbdiff` and `build-docs` port                                                                                                                          | Rust          | prepared-record equivalence on the pinned inputs, then full dbdiff = 0 | —                                        |
+  | 6     | Neutral contract ids (`provider_key`, `register_id`, canonical band), identity across links, role/temporality/unit type, organization-wide definitions                                                                     | Rust          | reviewed dbdiffs; contract changes with the reader                     | —                                        |
 
 Phase 1 b2 and b4 change the prepared payloads, so they need a new `prepare-sources` run
 and an acceptance cycle; the maintainer schedules them. The normalize mapping targets
@@ -59,30 +59,30 @@ today's v16 shape and names each one's delta in one place
 
 ## Temporary code and its gates
 
-  | Code                                                         | Deleted at                       |
-  | ------------------------------------------------------------ | -------------------------------- |
+  | Code                                                         | Deleted at                             |
+  | ------------------------------------------------------------ | -------------------------------------- |
   | The curation converter (old tree → neutral verbs), in Python | phase 4, after its output is committed |
-  | The converter's record-set equivalence harness               | phase 4                          |
-  | `crates/reg-build-model/tests/digest/generate.py`            | phase 5, with Python preparation |
+  | The converter's record-set equivalence harness               | phase 4                                |
+  | `crates/reg-build-model/tests/digest/generate.py`            | phase 5, with Python preparation       |
 
 ## Phase 2
 
-  | PR | Content                                                              | State |
-  | -- | -------------------------------------------------------------------- | ----- |
-  | A  | this tracker, design docs, `reg-build-model` types and prepared reader | open  |
-  | B  | verb schema and golden corpus                                        | —     |
-  | C  | converter, record-set equivalence on the slices, dbdiff ignore file | —     |
+  | PR  | Content                                                                | State |
+  | --- | ---------------------------------------------------------------------- | ----- |
+  | A   | this tracker, design docs, `reg-build-model` types and prepared reader | open  |
+  | B   | verb schema and golden corpus                                          | —     |
+  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | —     |
 
 ## Phase 3 slices
 
-  | Slice | Scope                 | State |
-  | ----- | --------------------- | ----- |
-  | 1     | thin providers        | —     |
-  | 2     | `scb/rtb`             | —     |
-  | 3     | SoS, 13 registers     | —     |
-  | 4     | the rest of SCB       | —     |
-  | 5     | LISA                  | —     |
-  | 6     | global files          | —     |
-  | 7     | steward extension     | —     |
+  | Slice | Scope             | State |
+  | ----- | ----------------- | ----- |
+  | 1     | thin providers    | —     |
+  | 2     | `scb/rtb`         | —     |
+  | 3     | SoS, 13 registers | —     |
+  | 4     | the rest of SCB   | —     |
+  | 5     | LISA              | —     |
+  | 6     | global files      | —     |
+  | 7     | steward extension | —     |
 
 SLICE_SPECS

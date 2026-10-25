@@ -95,7 +95,8 @@ pub struct StatedField {
 /// [`crate::prepared::FIELD_NAMES`] name. An absent name is unstated.
 pub type StatedFields = BTreeMap<String, StatedField>;
 
-/// A closed or open ISO date interval; a `None` end is open-ended, never unknown.
+/// A closed or open interval; a `None` end is open-ended, never unknown. Bounds are ISO
+/// dates, or four-digit years in a year projection ([`Delivery::period_years`]).
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Interval {
     pub start: String,

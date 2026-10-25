@@ -41,18 +41,20 @@ set, where agents get it too. The deploy image is one static binary plus the bak
 
 Each contract that crosses a language or package boundary has exactly one
 implementation. New code that needs one of these calls its home; it does not add a
-second copy held in step by a parity test.
+second copy held in step by a parity test. The one exception is temporary: during the
+builder port `reg-build-model` reproduces the guard digest, pinned by a golden the
+Python builder writes, until cutover deletes the Python copy ("Guard digest basis").
 
-  | Contract                                | Single home                      | Reached from                                          |
-  | --------------------------------------- | -------------------------------- | ----------------------------------------------------- |
-  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
-  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
-  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
-  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
-  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
+  | Contract                                | Single home                      | Reached from                                                                                     |
+  | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate                                                      |
+  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                                                                       |
+  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`                                                 |
+  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM                                                    |
+  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM                                                    |
   | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; `reg-build-model` reproduces the guard digest during the port ("Guard digest basis") |
-  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
-  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it |
+  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export                                                 |
+  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it                                            |
 
 The SPA never parses period grammar or computes a project period's bounds: it composes
 `reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
@@ -177,15 +179,15 @@ enough while nothing but tests reads the model.
 **Prepared reader.** `PreparedRoot::open` reads the root's `manifest.json` and
 `files/records/manifest.json` strictly (unknown keys refuse), checks the format and
 schema versions (catalog layout 5, records 16), that the records manifest's SHA-256 is
-the one the root states, that the database size is the stated one and its
-`user_version` is 16. Acceptance, the Git blob proofs against the inputs repository,
-stays with the Python build's input selection until preparation ports (phase 5); the
-Rust build runs on an accepted root. `Records::for_each_record` streams occurrences in
-ordinal order and decodes the interned payloads with a bounded cache. Every payload was
-written with Pydantic's `exclude_defaults`, so a missing key is that model's default; the
-serde defaults restate them. The occurrence's `family_payload` (`native_variable_key`)
-is not read: grouping is recomputed from links. On the pinned root of 2026-10-25 the
-reader reads back the manifest's counts exactly (1,078,240 records, 201 evidence tables,
+the one the root states, that the database size is the stated one and its `user_version`
+is 16. Acceptance, the Git blob proofs against the inputs repository, stays with the
+Python build's input selection until preparation ports (phase 5); the Rust build runs on
+an accepted root. `Records::for_each_record` streams occurrences in ordinal order and
+decodes the interned payloads with a bounded cache. Every payload was written with
+Pydantic's `exclude_defaults`, so a missing key is that model's default; the serde
+defaults restate them. The occurrence's `family_payload` (`native_variable_key`) is not
+read: grouping is recomputed from links. On the pinned root of 2026-10-25 the reader
+reads back the manifest's counts exactly (1,078,240 records, 201 evidence tables,
 258,680 table rows, 11,124 evidence lines, 102 value children;
 `examples/prepared_root.rs`).
 
@@ -202,13 +204,13 @@ JSON of the record's full Pydantic dump, with `evidence_position` fields dropped
 instead of re-pinning the guards to a new one:
 
 - The guards stay curation data, unchanged by the port. The converter carries them
-  verbatim, and record-set equivalence (a converted entry selects exactly the records the
-  old one did) then implies digest equivalence, so no second proof is needed.
+  verbatim, and record-set equivalence (a converted entry selects exactly the records
+  the old one did) then implies digest equivalence, so no second proof is needed.
 - Re-pinning would run on every Rust build, because curators keep editing the old tree
   until cutover. Each re-pin would have to check the old guard first in Python, which
-  needs the Python compile's records per entry, and a re-pin that skipped the check would
-  silently refresh a stale guard. It would also need the neutral projection implemented
-  twice, once in the Python converter and once in Rust.
+  needs the Python compile's records per entry, and a re-pin that skipped the check
+  would silently refresh a stale guard. It would also need the neutral projection
+  implemented twice, once in the Python converter and once in Rust.
 - The cost is a second copy of one digest rule during the port. It is pinned by
   `tests/digest_golden.rs`, whose expected values the Python builder writes
   (`tests/digest/generate.py`) through its real preparation writer and reader, and it
