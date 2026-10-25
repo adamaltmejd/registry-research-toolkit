@@ -6,7 +6,7 @@ build-backend = "maturin"
 name = "reg-core-py"
 version = "0.0.0"
 description = "Python bindings to reg-core for the reg_meta build"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 
 [tool.maturin]
 module-name = "reg_core_py"
