@@ -36,8 +36,7 @@ edit nothing. Launch as many at once as the harness allows (Codex runs three chi
 a time) and the rest in waves. Where the harness lets a call choose its model, use the
 family's mid tier (in Claude, Opus). Each prompt carries AGENTS.md, the "Testing
 strategy" section, the tree's conftest and helpers, a scratchpad file name unique to the
-tree, and this section verbatim. The frontend gets two agents, browser tests and the
-rest.
+tree, and this section verbatim.
 
 A tree too large to read whole gets file-level triage instead. Per file: `keep` (already
 at a boundary), `delete` (name the boundary case that covers it), or `gap` (no corpus

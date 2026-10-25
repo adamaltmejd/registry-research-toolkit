@@ -99,8 +99,7 @@ is the pinned commit, and a commit in either folder moves HEAD, so run each pinn
 command against a worktree at its pin
 (`git -C <inputs-checkout> worktree add --detach <dir> <commit>`), never the default
 branch. Paths then sit under that worktree (`<dir>/catalog/bundles/<name>`,
-`<dir>/swecov`). Commits from before the 2026-10-14 move keep their old layout (content
-at the root). Prepared roots stay local acceptance repositories; they are regenerable
+`<dir>/swecov`). Prepared roots stay local acceptance repositories; they are regenerable
 from `catalog/` and the code.
 
 For changed source inputs or provider-format interpretation, capture and prepare a

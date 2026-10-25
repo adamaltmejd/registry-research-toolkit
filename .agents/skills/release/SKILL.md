@@ -151,29 +151,29 @@ Build fresh if **any** is true:
   hit builds fresh.
 
 Otherwise copy forward (8d). Ship the full global catalog only: no `--registers` subset,
-no diagnostic build. A build whose report is not `complete` and `publication_ready` must
-not ship:
+no diagnostic build. Build once, strict, at the committed bump through the real-seed
+cache (build-db skill, "Reuse a cached output first"). The resolve key leaves out
+version numbers, so a candidate's resolve bundle makes this a phased run, and the result
+is the asset. A build whose result is not `complete` and `publication_ready` must not
+ship:
 
 ```sh
 set -euo pipefail
-db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_db.XXXXXX")"
 prepared="/absolute/path/to/accepted-prepared"
 prepared_commit="EXACT_PREPARED_ACCEPTANCE_SHA"
 prepared_manifest_sha256="EXACT_TOP_LEVEL_PREPARED_SHA256"
-uv run reg-meta-build --db "$db_dir/catalog" build-db \
-  --prepared "$prepared" \
+uv run --no-project scripts/real_seed_cache.py build --prepared "$prepared" \
   --input-commit "$prepared_commit" \
-  --input-manifest-sha256 "$prepared_manifest_sha256" \
-  --report-dir "$db_dir/report" --timing
-uv run python -c 'import json,sys; s=json.load(open(sys.argv[1])); assert s["status"] == "complete" and s["publication_ready"] is True' "$db_dir/report/summary.json"
-db="$db_dir/catalog/reg_meta.db"
+  --input-manifest-sha256 "$prepared_manifest_sha256" > build-release.json
+uv run python -c 'import json,sys; s=json.load(open(sys.argv[1])); assert s["status"] == "complete" and s["publication_ready"] is True' build-release.json
+db="$(uv run python -c 'import json,sys; print(json.load(open(sys.argv[1]))["database"])' build-release.json)"
 zstd -3 -T0 "$db" -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
 rm reg_meta.db.zst
 ```
 
-Keep the report and input pins as release evidence; confirm every expected global
-provider is present.
+Keep `build-release.json` (it names the cached `report`) and the input pins as release
+evidence; confirm every expected global provider is present.
 
 #### 8b. Doc DB asset (`reg_meta_docs.db.zst`)
 

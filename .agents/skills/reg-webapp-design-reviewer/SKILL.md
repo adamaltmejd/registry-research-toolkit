@@ -142,13 +142,10 @@ bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
 `--all` captures the four DESIGN.md widths for every rendered change; there is no
-desktop-only exception. Each route × width writes `<name>.png`, `<name>.snapshot.txt`
-(accessibility tree) and `<name>.a11y.txt` (axe), and the run prints axe summaries,
-console errors and uncaught exceptions. `--fixture-db` builds a deterministic synthetic
-catalog; prerequisites are in the [run-reg-webapp skill](../run-reg-webapp/SKILL.md). A
-state no route reaches (an open dialog, a filled form) is driven by hand with
-agent-browser in a named session, as that skill shows, and captured at the four widths
-too. `smoke` is a desktop-only catalog flow; it does not stand in for the four widths.
+desktop-only exception, and `smoke` (desktop only) does not stand in for them. The
+[run-reg-webapp skill](../run-reg-webapp/SKILL.md) owns the rest: prerequisites, what
+each capture writes and prints, and driving a state no route reaches (an open dialog, a
+filled form) in a named agent-browser session, captured at the four widths too.
 
 `dev.sh`'s first line names the checkout, the full HEAD and the invocation's output
 directory (`dev: repo … HEAD … shots /tmp/reg-webapp-shots.XXXXXX`). Quote it. `/tmp` is
@@ -201,9 +198,9 @@ where the evidence in hand establishes a candidate defect with that impact.
 Fill every field of the rendered template and report the routes, states and viewports
 you actually inspected. Say whether captures are author iteration or retained gate
 evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`) covers only its driver
-scenarios (the `/project` error and retry states, catalog-authored draft and period
-flows, the deliberate replacement); every case must pass, and a `check(...)` that was
-weakened is a finding. Approval needs evidence for every surface changed.
+scenarios (the `scenarios` table in `driver.mjs`); every case must pass, and a
+`check(...)` that was weakened is a finding. Approval needs evidence for every surface
+changed.
 
 ## Severity, findings and fixes
 

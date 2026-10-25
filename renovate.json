@@ -105,7 +105,7 @@
       ]
     },
     {
-      "description": "The Python interpreter (.python-version, requires-python) moves with the yard image and the docs: a manual upgrade (upgrade-deps), not a one-file bump.",
+      "description": "The Python interpreter (.python-version, requires-python) moves with the docs: a manual upgrade (upgrade-deps), not a one-file bump.",
       "matchDepNames": [
         "python"
       ],
