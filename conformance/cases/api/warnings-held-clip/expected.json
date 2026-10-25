@@ -66,14 +66,17 @@
     "json": {
       "/data/*/summary": [
         "Example is incomplete for 2015-2017",
-        "Oldname is top-coded"
+        "Oldname is top-coded",
+        "Newname is top-coded"
       ],
       "/data/*/valid_from": [
         "2015-01-01",
-        "2010-01-01"
+        "2010-01-01",
+        "2019-01-01"
       ],
       "/data/*/valid_to": [
         "2017-12-31",
+        "2025-12-31",
         "2025-12-31"
       ]
     }

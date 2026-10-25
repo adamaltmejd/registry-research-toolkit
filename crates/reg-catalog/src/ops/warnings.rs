@@ -238,11 +238,11 @@ struct Narrow<'a> {
 
 /// The held periods one request has read, so warnings on one cell share one read:
 /// the register's held span at the request's variant, and each (variable, variant,
-/// representation) cell's ([`variable_periods`]).
+/// representation) cell's ([`variable_periods`]; `None` where no dated table holds it).
 struct Held {
     register_id: i64,
     register: Option<crate::held::Periods>,
-    cells: BTreeMap<(i64, Option<i64>, Option<String>), crate::held::Periods>,
+    cells: BTreeMap<(i64, Option<i64>, Option<String>), Option<crate::held::Periods>>,
 }
 
 /// The bounds an unset end of a half-open warning window stands for.
@@ -258,7 +258,8 @@ const LAST_DAY: &str = "9999-12-31";
 /// outside them, or whose clipped window misses the requested period, is dropped.
 /// A warning without a window, or one whose cell the steward holds in no dated
 /// table (a year-independent holding), has nothing to clip against and is kept as
-/// stored.
+/// stored; one whose cell a dated table holds, but in none of its spelling's years,
+/// is dropped.
 fn held_window(
     conn: &Connection,
     held: &mut Held,
@@ -282,7 +283,11 @@ fn held_window(
                     narrow.variant,
                 )?);
             }
-            held.register.as_ref().expect("register periods read above")
+            let periods = held.register.as_ref().expect("register periods read above");
+            if periods.is_empty() {
+                return Ok(Some(w));
+            }
+            periods
         }
         Some(variable) => {
             let key = (
@@ -298,12 +303,12 @@ fn held_window(
                 let found = variable_periods(conn, key.0, key.1, key.2.as_deref())?;
                 held.cells.insert(key.clone(), found);
             }
-            &held.cells[&key]
+            let Some(periods) = &held.cells[&key] else {
+                return Ok(Some(w));
+            };
+            periods
         }
     };
-    if periods.is_empty() {
-        return Ok(Some(w));
-    }
     let clipped = crate::held::clip(periods, own, None);
     let (Some((lo, _)), Some((_, hi))) = (clipped.first(), clipped.last()) else {
         return Ok(None);
@@ -325,12 +330,33 @@ fn held_window(
 /// as `states` reads them. A state's own bounds, not the warning's window, decide
 /// whether a table's one representation serves another spelling: a window that
 /// also covers years SCB delivered the mapped spelling would otherwise find none.
+/// `None` where no dated table holds the cell, as the admission predicate ([`held`])
+/// serves it: a year-independent holding, which has nothing to clip against. Empty
+/// where one does, but in none of the spelling's years (a table mapped `Newname`
+/// for a year SCB delivered `Oldname`).
+///
+/// A `base_fallback` row enters over its base state's full bounds, though a request
+/// reads it only for years no source window overlaps; the spelling it shares with
+/// that window is then read over the window's years too. Excluding it would drop the
+/// uncovered years instead, so it stays until a warning shows the difference.
 fn variable_periods(
     conn: &Connection,
     variable: i64,
     variant: Option<i64>,
     rep: Option<&str>,
-) -> Result<crate::held::Periods, Error> {
+) -> Result<Option<crate::held::Periods>, Error> {
+    let dated: bool = conn
+        .prepare_cached(&format!(
+            "SELECT EXISTS (SELECT 1 FROM holding_mapping hm \
+             JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
+             WHERE hm.variable_id = ?1 AND (?2 IS NULL OR hm.variant_id = ?2) \
+             AND ht.scope = 'intervals' AND {})",
+            serves("COALESCE(?3, hm.representation_canonical)")
+        ))?
+        .query_row(params![variable, variant, rep], |row| row.get(0))?;
+    if !dated {
+        return Ok(None);
+    }
     let states: Vec<(i64, String, String, String)> = conn
         .prepare_cached(
             "SELECT DISTINCT register_variant_id, canonical_column, valid_from, valid_to \
@@ -359,7 +385,7 @@ fn variable_periods(
                 .map(|(lo, hi)| (Some(lo), Some(hi))),
         );
     }
-    Ok(periods)
+    Ok(Some(periods))
 }
 
 /// A `data_warning` row joined to what rebuilds its warning (`SELECT … FROM FROM`):
