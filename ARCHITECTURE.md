@@ -367,6 +367,8 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
 `bun run test`, or the pytest line of `gate.py rust`) on a 10-core developer Mac; CI is
 the job's `timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite
 over budget is a finding for the `test-audit` skill, not a reason to raise the number.
+The two R jobs' 20 min covers one timed-out R setup plus its retry; a healthy run takes
+about 6.
 
   | Suite                                     | Local | CI job | Rationale                                                                                                                            |
   | ----------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
