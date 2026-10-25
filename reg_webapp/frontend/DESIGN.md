@@ -368,17 +368,18 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   moves back. Collapsing a group never changes the selection: the detail pane keeps its
   page, and keyboard focus moves to the group row. For a register the second column is
   flat, a concept group folded to one item (#303), its identifier and panel-key
-  variables first and the rest in Swedish collation; inside a group (its page or a
-  member's) it lists the group's members under `mono` facet headers, one per value of
-  the group's first axis. A browse column fills the viewport below the top bar and
-  scrolls its own list. Every item and group carries its in-project mark on the right
-  when it has one. Below the single narrow breakpoint (`breakpoint-narrow`) the columns
-  stack, one at a time; the way back is the breadcrumb's first crumb, "Browse
-  registers", drawn as a `default` button on its own line above the trail so it reads as
-  an action, not a path segment (#1824). Every page's trail leads with it below the
-  breakpoint (and only there: beside the columns it would repeat them), and it opens the
-  register list; while the search holds text it reads "Show matching registers", since
-  the list the search filters is off screen. Do not mint new breakpoints.
+  variables first and the rest in Swedish collation; on a group's page (or a member's,
+  which redirects there) the same list stays and the group's row is selected. The
+  members are lanes on that page, not rows in the column. A browse column fills the
+  viewport below the top bar and scrolls its own list. Every item and group carries its
+  in-project mark on the right when it has one. Below the single narrow breakpoint
+  (`breakpoint-narrow`) the columns stack, one at a time; the way back is the
+  breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its own
+  line above the trail so it reads as an action, not a path segment (#1824). Every
+  page's trail leads with it below the breakpoint (and only there: beside the columns it
+  would repeat them), and it opens the register list; while the search holds text it
+  reads "Show matching registers", since the list the search filters is off screen. Do
+  not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is

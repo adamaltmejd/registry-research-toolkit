@@ -24,8 +24,8 @@ export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
   id: string;
   name: string;
-  /** The option's accessible name where `name` repeats across sections (a
-   * member under its facet header); the visible text stays `name`. */
+  /** The option's accessible name where `name` repeats across sections
+   * (another register's match); the visible text stays `name`. */
   label?: string;
   href: string;
   /** Columns of this item in the open project; 0 shows no mark. */
@@ -36,13 +36,11 @@ export interface ColumnItem {
   leaves?: boolean;
 }
 
-/** A run of items under a facet header (a group's members, DESIGN.md →
- * ColumnList), or under another register's header while the search bar holds
- * text (`register`, #1828). A flat list is one section with no label. */
+/** A run of items under another register's header while the search bar holds
+ * text (#1828). A flat list is one section with no label. */
 export interface ColumnSection {
   id: string;
   label: string | null;
-  register?: boolean;
   items: readonly ColumnItem[];
 }
 
@@ -77,11 +75,10 @@ const OPEN_KEYS = new Set(["Enter", " "]);
 
 /**
  * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
- * items, the current page's selected, under `mono` facet headers when the list
- * is a group's members. Selection follows the arrow keys and a click, and
- * selecting an item opens its page; type-ahead moves focus only. Items are not
- * links (RAC's selectable options are not `<a>`). ← moves back to the register
- * column.
+ * items, the current page's selected. Selection follows the arrow keys and a
+ * click, and selecting an item opens its page; type-ahead moves focus only.
+ * Items are not links (RAC's selectable options are not `<a>`). ← moves back to
+ * the register column.
  */
 export function ColumnList({
   label,
@@ -253,12 +250,7 @@ export function ColumnList({
                 ) : (
                   section.items.length > 0 && (
                     <ListBoxSection key={section.id} id={section.id}>
-                      <Header
-                        className={
-                          section.register ? styles.register : styles.facet
-                        }
-                        title={section.register ? section.label : undefined}
-                      >
+                      <Header className={styles.register} title={section.label}>
                         {section.label}
                       </Header>
                       <Collection
