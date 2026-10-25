@@ -1,0 +1,28 @@
+{
+  "note": "held-unevenly: the catalog delivers value 2010..2025; the steward holds value for 2018..2019 and the register (value and other) for 2017..2021. In holdings scope a dated warning is clipped to the held periods (#1900): value's 'since 2010' (2010..9999-12-31) reads 2018-01-01..2019-12-31, value's 2021 warning lies wholly outside them and is dropped, and the register-wide 2015..2017 warning is clipped to the register's held span, 2017-01-01..2017-12-31. Renamed is delivered as Oldname 2010..2018 and Newname 2019..2025; the steward's 2018 table alone maps it, as Newname, so its one column holds 2018's Oldname. Its Oldname warning (2010..2025) reads 2018-01-01..2018-12-31: the held periods of a spelling are read over each of its states' own bounds, not the warning's window, which also covers Newname's years. Its Newname warning (2019..2025) is dropped: a dated table holds the Newname cell, but in none of Newname's years. Reference scope returns every warning with its stored window. Fails if holdings keeps a warning's reference window (the pre-#1900 reader returned 2010-01-01 and kept the 2021 warning; reading the Oldname cell over the whole warning window found no held period and kept 2010..2025; treating a cell whose dated holdings miss every year of its spelling as year-independent kept the Newname warning as 2019..2025), drops a warning that overlaps the held periods, or clips in reference scope.",
+  "fixture": "held-unevenly",
+  "requests": [
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/value"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/value",
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/renamed"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/renamed",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

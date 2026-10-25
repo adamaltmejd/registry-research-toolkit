@@ -1,5 +1,5 @@
 {
-  "note": "The pin Mitten has a state at 2010 and another at 2020 and misses 2015. A list period 2010,2015,2020 reports one `binding_state_drifts_within_period` naming the whole requested list. The clip itself is `order/clip-pinned-middle-segment`'s. Fails if drift stops being reported across a missed list segment or names another period.",
+  "note": "The pin Mitten has a state at 2010 and another at 2020 and misses 2015, where MittenAlt delivers. A list period 2010,2015,2020 reaches two Mitten states of one column and no value set, which the order emits as one entry, so no `binding_state_drifts_within_period` (#1899: a state boundary counts only where the folded column or value set changes). The clip itself is `order/clip-pinned-middle-segment`'s. Fails if drift counts the unpinned MittenAlt state the pin excludes, or counts a state boundary of an unchanged column across the missed segment.",
   "kind": "catalog",
   "fixture": "semantic",
   "requests": [

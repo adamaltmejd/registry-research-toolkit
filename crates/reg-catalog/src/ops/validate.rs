@@ -509,15 +509,14 @@ impl Semantic<'_> {
                     quoted_list(labels)
                 ),
             );
-        } else if drifts(states) > 1 {
+        } else if let drifts @ 2.. = drifts(states) {
             self.push(
                 IssueLevel::Info,
                 "binding_state_drifts_within_period",
                 path.to_owned(),
                 format!(
-                    "column {variable} spans {} states across a transition within period \
-                     {period}",
-                    drifts(states)
+                    "column {variable} spans {drifts} column/coding versions across a transition within \
+                     period {period}"
                 ),
             );
         }
@@ -621,30 +620,25 @@ pub(super) struct Kept {
     value_set: (Option<i64>, String),
 }
 
-/// How many states a binding spans for `binding_state_drifts_within_period`. `states`
-/// is member-contiguous ([`reach`] walks the family split member by member), and each
-/// state is compared with the one before it: within one member it always counts; the
-/// first state of the next member counts only where its canonical column (by
-/// `fold_identity`, as the order matches it) or value set differs from the previous
-/// member's last state. A member boundary is a transition only where the
-/// representation or coding changes there; a difference in any other fact (the data
-/// type) across it is not counted.
+/// How many representations a binding spans for `binding_state_drifts_within_period`:
+/// the distinct (canonical column by `fold_identity`, value set) pairs among the
+/// states the request reaches. That is the order's partition of the request (its
+/// entries split by column, never by a state boundary the column runs through, a
+/// gap or a family member boundary), refined by coding: a value-set change on a
+/// continuing column still counts, though the order emits one entry across it. A
+/// state boundary that changes neither (LISA's `cfar-nummer`, whose states differ
+/// only in `source_register_text`, #1899) is not a transition.
 fn drifts(states: &[Kept]) -> usize {
-    let carried = |before: &Kept, s: &Kept| {
-        before.emitted.register_variant_id != s.emitted.register_variant_id
-            && before
-                .emitted
-                .canonical_column
-                .as_deref()
-                .map(fold_identity)
-                == s.emitted.canonical_column.as_deref().map(fold_identity)
-            && before.value_set == s.value_set
-    };
     states
         .iter()
-        .enumerate()
-        .filter(|(i, s)| *i == 0 || !carried(&states[i - 1], s))
-        .count()
+        .map(|s| {
+            (
+                s.emitted.canonical_column.as_deref().map(fold_identity),
+                &s.value_set,
+            )
+        })
+        .collect::<BTreeSet<_>>()
+        .len()
 }
 
 /// A window of constant representation: its days, its delivery column and the

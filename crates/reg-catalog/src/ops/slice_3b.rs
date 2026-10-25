@@ -60,7 +60,10 @@ pub const OPERATIONS: &[Operation] = &[
             variable's include its register's unassigned ones. `period`, `variant` and \
             `representation` (a delivery column) keep the warnings that may apply to \
             them; `unassigned_only` keeps the register's unassigned ones. In holdings \
-            scope, a variable's warnings apply only to what is held.",
+            scope, a variable's warnings apply only to what is held, and a dated \
+            warning's window is clipped to the held periods (a register-wide one to the \
+            register's held span, at the requested variant when given); one wholly \
+            outside them is dropped.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("period", Type::Period),

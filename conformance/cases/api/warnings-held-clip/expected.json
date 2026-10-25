@@ -1,0 +1,84 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/*/summary": [
+        "Example is incomplete for 2015-2017",
+        "Value is imputed since 2010"
+      ],
+      "/data/*/variable_fqid": [
+        null,
+        "scb/example/value"
+      ],
+      "/data/*/valid_from": [
+        "2017-01-01",
+        "2018-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31",
+        "2019-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/summary": [
+        "Example is incomplete for 2015-2017",
+        "Value is provisional for 2021",
+        "Value is imputed since 2010"
+      ],
+      "/data/*/valid_from": [
+        "2015-01-01",
+        "2021-01-01",
+        "2010-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31",
+        "2021-12-31",
+        "9999-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/summary": [
+        "Example is incomplete for 2015-2017",
+        "Oldname is top-coded"
+      ],
+      "/data/*/delivery_column_name": [
+        null,
+        "Oldname"
+      ],
+      "/data/*/valid_from": [
+        "2017-01-01",
+        "2018-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31",
+        "2018-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/summary": [
+        "Example is incomplete for 2015-2017",
+        "Oldname is top-coded",
+        "Newname is top-coded"
+      ],
+      "/data/*/valid_from": [
+        "2015-01-01",
+        "2010-01-01",
+        "2019-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31",
+        "2025-12-31",
+        "2025-12-31"
+      ]
+    }
+  }
+]

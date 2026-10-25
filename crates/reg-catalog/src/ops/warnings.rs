@@ -1,9 +1,12 @@
 //! `warnings`: a register's or variable's data warnings (today's
 //! `Catalog.data_warnings` behind `/data_warnings`), filtered by period, variant and
-//! delivery column, and in holdings scope by what is held.
+//! delivery column, and in holdings scope by what is held, a dated warning clipped
+//! to the held periods.
+
+use std::collections::BTreeMap;
 
 use reg_core::Period;
-use rusqlite::ToSql;
+use rusqlite::{Connection, OptionalExtension, ToSql, params};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use utoipa::ToSchema;
@@ -152,21 +155,246 @@ pub fn warnings(server: &Server, scope: Scope, params: &Params) -> Result<Value,
         ));
     }
     let sql = format!(
-        "{SELECT} WHERE {} ORDER BY w.warning_id",
+        "{SELECT}, w.variable_id, w.register_variant_id, {CANONICAL} FROM {FROM} \
+         WHERE {} ORDER BY w.warning_id",
         clauses.join(" AND ")
     );
     let mut stmt = conn.prepare(&sql)?;
     let found = stmt
-        .query_map(args.as_slice(), stored)?
-        .collect::<rusqlite::Result<Vec<DataWarning>>>()?;
+        .query_map(args.as_slice(), |row| {
+            let owner = Owner {
+                variable: row.get(12)?,
+                variant: row.get(13)?,
+                column: row.get(14)?,
+            };
+            Ok((stored(row)?, owner))
+        })?
+        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let found: Vec<DataWarning> = match scope {
+        Scope::Reference => found.into_iter().map(|(w, _)| w).collect(),
+        Scope::Holdings => {
+            let request = bounds.as_ref().map(|(lo, hi)| (lo.as_str(), hi.as_str()));
+            held_windows(&conn, register_id, found, variant, representation, request)?
+        }
+    };
     Ok(serde_json::to_value(found).expect("warnings serialize"))
 }
 
-/// A `data_warning` row joined to what rebuilds its warning: the owner FQIDs and
-/// variant slug from their IDs, and the shared summary and detail text.
+/// [`held_window`] over `found`, under the request's variant slug, representation
+/// and period.
+fn held_windows(
+    conn: &Connection,
+    register_id: i64,
+    found: Vec<(DataWarning, Owner)>,
+    variant: Option<&str>,
+    representation: Option<&str>,
+    request: Option<(&str, &str)>,
+) -> Result<Vec<DataWarning>, Error> {
+    let selected = match variant {
+        None => None,
+        Some(slug) => conn
+            .prepare_cached(
+                "SELECT register_variant_id FROM register_variant \
+                 WHERE register_id = ? AND slug = ?",
+            )?
+            .query_row(params![register_id, slug], |row| row.get(0))
+            .optional()?,
+    };
+    let narrow = Narrow {
+        variant: selected,
+        representation,
+        request,
+    };
+    let mut held = Held {
+        register_id,
+        register: None,
+        cells: BTreeMap::new(),
+    };
+    let mut kept = Vec::new();
+    for (w, owner) in found {
+        if let Some(w) = held_window(conn, &mut held, w, &owner, narrow)? {
+            kept.push(w);
+        }
+    }
+    Ok(kept)
+}
+
+/// What a warning row is attached to, beyond its public fields: its variable and
+/// variant ids and its column's canonical spelling ([`CANONICAL`]).
+struct Owner {
+    variable: Option<i64>,
+    variant: Option<i64>,
+    column: Option<String>,
+}
+
+/// The request's narrowing, which stands in for a warning's unset variant or column
+/// as the SQL [`held`] predicate's does.
+#[derive(Clone, Copy)]
+struct Narrow<'a> {
+    variant: Option<i64>,
+    representation: Option<&'a str>,
+    request: Option<(&'a str, &'a str)>,
+}
+
+/// The held periods one request has read, so warnings on one cell share one read:
+/// the register's held span at the request's variant, and each (variable, variant,
+/// representation) cell's ([`variable_periods`]; `None` where no dated table holds it).
+struct Held {
+    register_id: i64,
+    register: Option<crate::held::Periods>,
+    cells: BTreeMap<(i64, Option<i64>, Option<String>), Option<crate::held::Periods>>,
+}
+
+/// The bounds an unset end of a half-open warning window stands for.
+const FIRST_DAY: &str = "0001-01-01";
+const LAST_DAY: &str = "9999-12-31";
+
+/// A holdings-scope warning's window clipped to what the steward holds (#1900): a
+/// variable's warning to the held periods of its variable at its variant and
+/// representation (else the requested ones, else every held one, as [`held`]
+/// admits it), a register-wide warning to the register's held span at the
+/// requested variant (else at every variant). The window becomes the hull of the
+/// clipped periods, so the warning keeps one row and its id; a warning wholly
+/// outside them, or whose clipped window misses the requested period, is dropped.
+/// A warning without a window, or one whose cell the steward holds in no dated
+/// table (a year-independent holding), has nothing to clip against and is kept as
+/// stored; one whose cell a dated table holds, but in none of its spelling's years,
+/// is dropped.
+fn held_window(
+    conn: &Connection,
+    held: &mut Held,
+    mut w: DataWarning,
+    owner: &Owner,
+    narrow: Narrow,
+) -> Result<Option<DataWarning>, Error> {
+    if w.valid_from.is_none() && w.valid_to.is_none() {
+        return Ok(Some(w));
+    }
+    let own = (
+        w.valid_from.as_deref().unwrap_or(FIRST_DAY),
+        w.valid_to.as_deref().unwrap_or(LAST_DAY),
+    );
+    let periods = match owner.variable {
+        None => {
+            if held.register.is_none() {
+                held.register = Some(crate::held::register_periods(
+                    conn,
+                    held.register_id,
+                    narrow.variant,
+                )?);
+            }
+            let periods = held.register.as_ref().expect("register periods read above");
+            if periods.is_empty() {
+                return Ok(Some(w));
+            }
+            periods
+        }
+        Some(variable) => {
+            let key = (
+                variable,
+                owner.variant.or(narrow.variant),
+                owner
+                    .column
+                    .as_deref()
+                    .or(narrow.representation)
+                    .map(str::to_owned),
+            );
+            if !held.cells.contains_key(&key) {
+                let found = variable_periods(conn, key.0, key.1, key.2.as_deref())?;
+                held.cells.insert(key.clone(), found);
+            }
+            let Some(periods) = &held.cells[&key] else {
+                return Ok(Some(w));
+            };
+            periods
+        }
+    };
+    let clipped = crate::held::clip(periods, own, None);
+    let (Some((lo, _)), Some((_, hi))) = (clipped.first(), clipped.last()) else {
+        return Ok(None);
+    };
+    if narrow
+        .request
+        .is_some_and(|request| crate::held::clip(periods, own, Some(request)).is_empty())
+    {
+        return Ok(None);
+    }
+    w.valid_from = Some(lo.clone());
+    w.valid_to = Some(hi.clone());
+    Ok(Some(w))
+}
+
+/// The dated held periods of `variable` at `variant` (else at every variant) under
+/// `rep` (else under every spelling its states deliver): per dated state of that
+/// spelling, [`crate::held::periods`] over the state's own bounds clipped to them,
+/// as `states` reads them. A state's own bounds, not the warning's window, decide
+/// whether a table's one representation serves another spelling: a window that
+/// also covers years SCB delivered the mapped spelling would otherwise find none.
+/// `None` where no dated table holds the cell, as the admission predicate ([`held`])
+/// serves it: a year-independent holding, which has nothing to clip against. Empty
+/// where one does, but in none of the spelling's years (a table mapped `Newname`
+/// for a year SCB delivered `Oldname`).
+///
+/// A `base_fallback` row enters over its base state's full bounds, though a request
+/// reads it only for years no source window overlaps; the spelling it shares with
+/// that window is then read over the window's years too. Excluding it would drop the
+/// uncovered years instead, so it stays until a warning shows the difference.
+fn variable_periods(
+    conn: &Connection,
+    variable: i64,
+    variant: Option<i64>,
+    rep: Option<&str>,
+) -> Result<Option<crate::held::Periods>, Error> {
+    let dated: bool = conn
+        .prepare_cached(&format!(
+            "SELECT EXISTS (SELECT 1 FROM holding_mapping hm \
+             JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
+             WHERE hm.variable_id = ?1 AND (?2 IS NULL OR hm.variant_id = ?2) \
+             AND ht.scope = 'intervals' AND {})",
+            serves("COALESCE(?3, hm.representation_canonical)")
+        ))?
+        .query_row(params![variable, variant, rep], |row| row.get(0))?;
+    if !dated {
+        return Ok(None);
+    }
+    let states: Vec<(i64, String, String, String)> = conn
+        .prepare_cached(
+            "SELECT DISTINCT register_variant_id, canonical_column, valid_from, valid_to \
+             FROM expanded_state WHERE variable_id = ?1 \
+             AND (?2 IS NULL OR register_variant_id = ?2) \
+             AND (?3 IS NULL OR fold_identity(canonical_column) = fold_identity(?3)) \
+             AND canonical_column IS NOT NULL AND valid_from IS NOT NULL",
+        )?
+        .query_map(params![variable, variant, rep], |row| {
+            Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    let mut periods = Vec::new();
+    for (variant, column, from, to) in states {
+        let found = crate::held::periods(
+            conn,
+            variable,
+            variant,
+            &column,
+            "intervals",
+            (Some(&from), Some(&to)),
+        )?;
+        periods.extend(
+            crate::held::clip(&found, (&from, &to), None)
+                .into_iter()
+                .map(|(lo, hi)| (Some(lo), Some(hi))),
+        );
+    }
+    Ok(Some(periods))
+}
+
+/// A `data_warning` row joined to what rebuilds its warning (`SELECT … FROM FROM`):
+/// the owner FQIDs and variant slug from their IDs, and the shared summary and
+/// detail text.
 const SELECT: &str = "SELECT lower(hex(w.warning_id)), p.slug || '/' || r.slug, v.slug, \
      rv.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.code, w.severity, \
-     st.text, dt.text, w.evidence_json FROM data_warning w \
+     st.text, dt.text, w.evidence_json";
+const FROM: &str = "data_warning w \
      JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
      LEFT JOIN variable v ON v.variable_id = w.variable_id \
      LEFT JOIN register_variant rv ON rv.register_variant_id = w.register_variant_id \

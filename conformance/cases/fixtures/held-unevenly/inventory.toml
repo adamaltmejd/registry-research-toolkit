@@ -26,6 +26,12 @@ name = "Other"
 register_variant = "scb/example/annual"
 variable = "scb/example/other"
 representation = "Other"
+[[table.column]]
+name = "Renamed"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/renamed"
+representation = "Newname"
 
 [[table]]
 id = "Annual2019"

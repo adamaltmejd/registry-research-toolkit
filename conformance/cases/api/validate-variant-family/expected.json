@@ -7,15 +7,8 @@
         {
           "code": "binding_state_drifts_within_period",
           "level": "info",
-          "message": "column 'scb/lisa/syssstat' spans 2 states across a transition within period 2008..2011",
+          "message": "column 'scb/lisa/syssstat' spans 2 column/coding versions across a transition within period 2008..2011",
           "path": "/sources/0/bindings/2/variable",
-          "successor_fqid": null
-        },
-        {
-          "code": "binding_state_drifts_within_period",
-          "level": "info",
-          "message": "column 'scb/lisa/kommun' spans 2 states across a transition within period 2008..2011",
-          "path": "/sources/0/bindings/3/variable",
           "successor_fqid": null
         },
         {

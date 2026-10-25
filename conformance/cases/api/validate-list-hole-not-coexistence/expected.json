@@ -7,7 +7,7 @@
         {
           "code": "binding_state_drifts_within_period",
           "level": "info",
-          "message": "column 'scb/example/overlapp' spans 2 states across a transition within period 2010,2020",
+          "message": "column 'scb/example/overlapp' spans 2 column/coding versions across a transition within period 2010,2020",
           "path": "/sources/0/bindings/0/variable",
           "successor_fqid": null
         },
