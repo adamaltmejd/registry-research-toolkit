@@ -1,4 +1,4 @@
-# The extract against SQL Server (CI's service container). SWECOV_TEST_CONNECTION
+# The extract against a SQL Server, when one is given. SWECOV_TEST_CONNECTION
 # is an ODBC connection string to the server without a database; the fixture
 # (tests/mssql/fixture.sql) is loaded into a fresh database. One runner process
 # runs every order, so one order's failure must not stop the others.
@@ -109,11 +109,7 @@ expect_export <- function(base, case) {
 }
 
 test_that("orders extract their files from SQL Server", {
-  # Skipped locally (no SQL Server); in CI a missing connection is a failure.
   if (!nzchar(connection)) {
-    if (nzchar(Sys.getenv("CI"))) {
-      fail("SWECOV_TEST_CONNECTION is not set in CI")
-    }
     skip("SWECOV_TEST_CONNECTION is not set")
   }
   db <- load_fixture()

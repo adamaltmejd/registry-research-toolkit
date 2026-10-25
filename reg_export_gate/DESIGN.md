@@ -367,8 +367,9 @@ R file version will be pinned to a binary release once the binary ships; until t
 
 ## Case corpus
 
-`tests/cases/<case>/case.json`, one behavior per case, run by `tests/testthat/` and
-later by the Rust binary's tests. It is data: every expectation is in the JSON.
+`tests/cases/<case>/case.json`, one behavior per case, run by hand through
+`tests/testthat/` (neither the gate nor CI runs it) and later by the Rust binary's
+tests. It is data: every expectation is in the JSON.
 
 - `description`: the behavior, and so the regression that breaks it.
 - `schema`, `policy`: paths relative to the case folder (the shipped files are

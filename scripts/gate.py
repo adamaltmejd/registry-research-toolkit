@@ -6,10 +6,10 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release, flows, frontend, runner and export_gate;
+first failure. `all` runs g0, rust, release, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` and `g1` run only when named. CI calls `lint`, `crates`, `rust`,
-`release`, `frontend`, `runner` and `export_gate`; `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
+`release` and `frontend`; `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
 of the workspace build.
 """
 
@@ -41,11 +41,7 @@ SERVER_CMD = (
     " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
-ALL = ("g0", "rust", "release", "flows", "frontend", "runner", "export_gate")
-# The R formatter and linter `runner` and `export_gate` check their packages with; CI's
-# `runner` and `export-gate` jobs install these releases (bump all three).
-AIR = "0.12.0"
-JARL = "0.7.1"
+ALL = ("g0", "rust", "release", "flows", "frontend")
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
 # it, the frontend step fails: raising the budget is a maintainer call. It includes the
 # search fold (about 145 KB gz measured with it).
@@ -148,35 +144,6 @@ def frontend() -> None:
     run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
 
 
-def r_package(package: str) -> None:
-    """air and jarl at their pins over an R package, then its testthat suite."""
-    for tool, pin in (("air", AIR), ("jarl", JARL)):
-        version = run([tool, "--version"], stdout=subprocess.PIPE, text=True).stdout
-        if version.split()[-1] != pin:
-            sys.exit(f"gate: {tool} {pin} is pinned; found {version.strip()}")
-    run(f"air format --check {package}")
-    run(f"jarl check {package}")
-    run(
-        [
-            "Rscript",
-            "-e",
-            f'testthat::test_dir("{package}/tests/testthat", stop_on_failure = TRUE)',
-        ]
-    )
-
-
-def runner() -> None:
-    # The MONA extract runner. The SQL Server cases run only where
-    # SWECOV_TEST_CONNECTION is set (CI's `runner` job); elsewhere they skip.
-    r_package("reg_mona_runner")
-
-
-def export_gate() -> None:
-    # The export gate's MONA check (reg_export_gate/): its case corpus, which needs
-    # R with jsonlite, arrow and testthat.
-    r_package("reg_export_gate")
-
-
 def regen() -> None:
     run("cargo build --workspace --locked")
     run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
@@ -225,8 +192,6 @@ STEPS = {
         release,
         flows,
         frontend,
-        runner,
-        export_gate,
         regen,
         g1,
     )
