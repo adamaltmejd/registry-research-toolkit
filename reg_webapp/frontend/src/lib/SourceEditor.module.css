@@ -89,11 +89,7 @@
   font-size: var(--text-sm);
 }
 
-/* The window finding's line: a jump-link target, clear of the sticky bar, with
-   no ring for a focus the reader did not Tab to. */
+/* The window finding's line: a jump-link target like every finding's. */
 .jumpTarget {
-  scroll-margin-top: calc(var(--top-bar-height, 0px) + var(--space-4));
-}
-.jumpTarget:focus {
-  outline: none;
+  composes: jumpTarget from "./Finding.module.css";
 }

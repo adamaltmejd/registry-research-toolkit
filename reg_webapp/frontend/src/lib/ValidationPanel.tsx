@@ -1,16 +1,13 @@
 import type { ValidationResultModel } from "./api";
 import { FindingList, type NameOf } from "./Finding";
-import {
-  type SafeSource,
-  safeSourceBindings,
-  safeSourceRegisterVariant,
-} from "./project_data";
+import { type SafeSource, safeSourceRegisterVariant } from "./project_data";
 import type { RequestErrorSource, ValidationStatus } from "./project_store";
 import { useRevealFindings } from "./reveal_findings";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
 import styles from "./ValidationPanel.module.css";
 import {
+  bindingVariableAt,
   FINDING_LEVELS,
   type FindingLevel,
   type ProjectFinding,
@@ -80,14 +77,9 @@ function placeOf(
   const rv = safeSourceRegisterVariant(source);
   const sourceName = (rv && nameOf(rv)) || `source ${location.sourceIndex + 1}`;
   if (location.bindingIndex === null) return sourceName;
-  const variable = (
-    safeSourceBindings(source)[location.bindingIndex] as
-      | { variable?: unknown }
-      | undefined
-  )?.variable;
+  const variable = bindingVariableAt(source, location.bindingIndex);
   const column =
-    (typeof variable === "string" && variable && nameOf(variable)) ||
-    `column ${location.bindingIndex + 1}`;
+    (variable && nameOf(variable)) || `column ${location.bindingIndex + 1}`;
   return `${column} in ${sourceName}`;
 }
 

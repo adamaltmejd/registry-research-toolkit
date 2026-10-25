@@ -321,7 +321,7 @@ export function findingLocation(
 }
 
 /** The variable FQID of a source's `index`th binding, or "" when it has none. */
-function bindingVariableAt(source: SafeSource, index: number): string {
+export function bindingVariableAt(source: SafeSource, index: number): string {
   const variable = (
     safeSourceBindings(source)[index] as { variable?: unknown } | undefined
   )?.variable;

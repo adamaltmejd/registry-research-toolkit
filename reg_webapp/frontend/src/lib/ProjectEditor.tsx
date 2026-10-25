@@ -13,8 +13,8 @@ import { fqidSegments, registerPrefixOf } from "./catalog";
 import {
   catalogNames,
   registerRead,
-  variantsByRegister,
   UNASKED,
+  variantsByRegister,
 } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import { dataAxis, yearSegmentsFromWire } from "./period";

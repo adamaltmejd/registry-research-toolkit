@@ -8,13 +8,17 @@
 }
 
 /* A jump-link target: clear of the sticky bar, and no ring for a focus the
-   reader did not move there by Tab. */
-.item {
-  min-width: 0;
+   reader did not move there by Tab. Every finding's line composes it. */
+.jumpTarget {
   scroll-margin-top: calc(var(--top-bar-height, 0px) + var(--space-4));
 }
-.item:focus {
+.jumpTarget:focus {
   outline: none;
+}
+
+.item {
+  composes: jumpTarget;
+  min-width: 0;
 }
 
 .body {
