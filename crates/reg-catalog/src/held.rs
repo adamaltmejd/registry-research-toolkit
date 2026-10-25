@@ -260,18 +260,26 @@ pub(crate) fn periods(
     Ok(found)
 }
 
-/// The dated periods over which the steward holds any variable of `register_id`:
-/// the register's held span, which a register-wide dated warning clips to.
-pub(crate) fn register_periods(conn: &Connection, register_id: i64) -> Result<Periods, Error> {
+/// The dated periods over which the steward holds any variable of `register_id`, at
+/// `variant` when given: the register's (or that variant's) held span, which a
+/// register-wide dated warning clips to.
+pub(crate) fn register_periods(
+    conn: &Connection,
+    register_id: i64,
+    variant: Option<i64>,
+) -> Result<Periods, Error> {
     let mut stmt = conn.prepare_cached(&format!(
         "SELECT {HELD_LO}, {HELD_HI} FROM variable v \
          JOIN holding_mapping hm ON hm.variable_id = v.variable_id \
          JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
          JOIN holding_period hp USING(table_id) \
-         WHERE v.register_id = ? AND ht.scope = 'intervals' ORDER BY 1, 2"
+         WHERE v.register_id = ?1 AND (?2 IS NULL OR hm.variant_id = ?2) \
+         AND ht.scope = 'intervals' ORDER BY 1, 2"
     ))?;
     let found = stmt
-        .query_map([register_id], |row| Ok((row.get(0)?, row.get(1)?)))?
+        .query_map(params![register_id, variant], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        })?
         .collect::<rusqlite::Result<_>>()?;
     Ok(found)
 }

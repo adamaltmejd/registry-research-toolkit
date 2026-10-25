@@ -512,11 +512,16 @@ either scope, but a variable-owned read still needs an admitted owner in holding
 held graph can show reference neighbors that are not selectable. Register warnings in
 holdings show register-wide warnings and those of admitted bindings. A dated warning in
 holdings reads as held (#1900): a variable's window is clipped to the held periods of
-its variable at its variant and representation (`held::periods`, the same periods
-`states` clips to), a register-wide one to the register's held span, and becomes the
-hull of what remains, so the warning keeps one row and its id; a warning wholly outside
-them, or whose clipped window misses the requested period, is dropped. A warning without
-a window, or one whose cell is held in no dated table, has nothing to clip against and
+its variable at its variant and representation (`held::periods` per state of that
+spelling over the state's own bounds, the same periods `states` clips to), a
+register-wide one to the register's held span (the requested variant's when the request
+names one; a register-wide warning has no variant of its own), and becomes the hull of
+what remains, so the warning keeps one row and its id; a warning wholly outside them, or
+whose clipped window misses the requested period, is dropped. The held periods are read
+per state, not over the warning's window: a renamed column's warning (SCB's `DodDat`
+held through a `DodDatum` mapping) would otherwise find none wherever the window also
+covers years the mapped spelling was delivered, and stay unclipped. A warning without a
+window, or one whose cell is held in no dated table, has nothing to clip against and
 stays as stored. Validation and order take no scope; they use the artifact's kind.
 
 ## Order manifest

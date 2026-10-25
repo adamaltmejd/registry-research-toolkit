@@ -39,5 +39,43 @@
         "9999-12-31"
       ]
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/summary": [
+        "Example is incomplete for 2015-2017",
+        "Oldname is top-coded"
+      ],
+      "/data/*/delivery_column_name": [
+        null,
+        "Oldname"
+      ],
+      "/data/*/valid_from": [
+        "2017-01-01",
+        "2018-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31",
+        "2018-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/summary": [
+        "Example is incomplete for 2015-2017",
+        "Oldname is top-coded"
+      ],
+      "/data/*/valid_from": [
+        "2015-01-01",
+        "2010-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31",
+        "2025-12-31"
+      ]
+    }
   }
 ]

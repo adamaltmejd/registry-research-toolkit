@@ -55,5 +55,24 @@
     "withheld_output": [],
     "acknowledged_by": null,
     "case_id": null
+  },
+  {
+    "warning_id": "36e85d0e33dd9dd51227ce7bab2f3510ad3332f55f51ebf3441fc47728c43483",
+    "register_fqid": "scb/example",
+    "variable_fqid": "scb/example/renamed",
+    "variant": "annual",
+    "delivery_column_name": "Oldname",
+    "valid_from": "2010-01-01",
+    "valid_to": "2025-12-31",
+    "code": "source_availability_limitation",
+    "severity": "warning",
+    "summary": "Oldname is top-coded",
+    "detail": "Oldname is top-coded for every year it was delivered.",
+    "diagnostic_detail_sha256": "a146e8088a0f7b6147ea2e292d2a5947598a35022475a0abe9edd717ffef20eb",
+    "fields": [],
+    "refs": [],
+    "withheld_output": [],
+    "acknowledged_by": null,
+    "case_id": null
   }
 ]

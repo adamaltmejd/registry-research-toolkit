@@ -515,7 +515,7 @@ impl Semantic<'_> {
                 "binding_state_drifts_within_period",
                 path.to_owned(),
                 format!(
-                    "column {variable} spans {drifts} states across a transition within \
+                    "column {variable} spans {drifts} column/coding versions across a transition within \
                      period {period}"
                 ),
             );

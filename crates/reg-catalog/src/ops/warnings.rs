@@ -3,7 +3,7 @@
 //! delivery column, and in holdings scope by what is held, a dated warning clipped
 //! to the held periods.
 
-use std::collections::BTreeSet;
+use std::collections::BTreeMap;
 
 use reg_core::Period;
 use rusqlite::{Connection, OptionalExtension, ToSql, params};
@@ -205,9 +205,14 @@ fn held_windows(
         representation,
         request,
     };
+    let mut held = Held {
+        register_id,
+        register: None,
+        cells: BTreeMap::new(),
+    };
     let mut kept = Vec::new();
     for (w, owner) in found {
-        if let Some(w) = held_window(conn, register_id, w, &owner, narrow)? {
+        if let Some(w) = held_window(conn, &mut held, w, &owner, narrow)? {
             kept.push(w);
         }
     }
@@ -231,6 +236,15 @@ struct Narrow<'a> {
     request: Option<(&'a str, &'a str)>,
 }
 
+/// The held periods one request has read, so warnings on one cell share one read:
+/// the register's held span at the request's variant, and each (variable, variant,
+/// representation) cell's ([`variable_periods`]).
+struct Held {
+    register_id: i64,
+    register: Option<crate::held::Periods>,
+    cells: BTreeMap<(i64, Option<i64>, Option<String>), crate::held::Periods>,
+}
+
 /// The bounds an unset end of a half-open warning window stands for.
 const FIRST_DAY: &str = "0001-01-01";
 const LAST_DAY: &str = "9999-12-31";
@@ -238,15 +252,16 @@ const LAST_DAY: &str = "9999-12-31";
 /// A holdings-scope warning's window clipped to what the steward holds (#1900): a
 /// variable's warning to the held periods of its variable at its variant and
 /// representation (else the requested ones, else every held one, as [`held`]
-/// admits it), a register-wide warning to the register's held span. The window
-/// becomes the hull of the clipped periods, so the warning keeps one row and its
-/// id; a warning wholly outside them, or whose clipped window misses the requested
-/// period, is dropped. A warning without a window, or one whose cell the steward
-/// holds in no dated table (a year-independent holding), has nothing to clip
-/// against and is kept as stored.
+/// admits it), a register-wide warning to the register's held span at the
+/// requested variant (else at every variant). The window becomes the hull of the
+/// clipped periods, so the warning keeps one row and its id; a warning wholly
+/// outside them, or whose clipped window misses the requested period, is dropped.
+/// A warning without a window, or one whose cell the steward holds in no dated
+/// table (a year-independent holding), has nothing to clip against and is kept as
+/// stored.
 fn held_window(
     conn: &Connection,
-    register_id: i64,
+    held: &mut Held,
     mut w: DataWarning,
     owner: &Owner,
     narrow: Narrow,
@@ -258,26 +273,44 @@ fn held_window(
         w.valid_from.as_deref().unwrap_or(FIRST_DAY),
         w.valid_to.as_deref().unwrap_or(LAST_DAY),
     );
-    let held = match owner.variable {
-        None => crate::held::register_periods(conn, register_id)?,
-        Some(variable) => variable_periods(
-            conn,
-            variable,
-            owner.variant.or(narrow.variant),
-            owner.column.as_deref().or(narrow.representation),
-            own,
-        )?,
+    let periods = match owner.variable {
+        None => {
+            if held.register.is_none() {
+                held.register = Some(crate::held::register_periods(
+                    conn,
+                    held.register_id,
+                    narrow.variant,
+                )?);
+            }
+            held.register.as_ref().expect("register periods read above")
+        }
+        Some(variable) => {
+            let key = (
+                variable,
+                owner.variant.or(narrow.variant),
+                owner
+                    .column
+                    .as_deref()
+                    .or(narrow.representation)
+                    .map(str::to_owned),
+            );
+            if !held.cells.contains_key(&key) {
+                let found = variable_periods(conn, key.0, key.1, key.2.as_deref())?;
+                held.cells.insert(key.clone(), found);
+            }
+            &held.cells[&key]
+        }
     };
-    if held.is_empty() {
+    if periods.is_empty() {
         return Ok(Some(w));
     }
-    let clipped = crate::held::clip(&held, own, None);
+    let clipped = crate::held::clip(periods, own, None);
     let (Some((lo, _)), Some((_, hi))) = (clipped.first(), clipped.last()) else {
         return Ok(None);
     };
     if narrow
         .request
-        .is_some_and(|request| crate::held::clip(&held, own, Some(request)).is_empty())
+        .is_some_and(|request| crate::held::clip(periods, own, Some(request)).is_empty())
     {
         return Ok(None);
     }
@@ -286,38 +319,45 @@ fn held_window(
     Ok(Some(w))
 }
 
-/// The dated held periods of `variable` at `variant` (else at every variant a dated
-/// table maps it at) under `rep` (else under each such mapping's own
-/// representation), as [`crate::held::periods`] reads them over the window `own`.
+/// The dated held periods of `variable` at `variant` (else at every variant) under
+/// `rep` (else under every spelling its states deliver): per dated state of that
+/// spelling, [`crate::held::periods`] over the state's own bounds clipped to them,
+/// as `states` reads them. A state's own bounds, not the warning's window, decide
+/// whether a table's one representation serves another spelling: a window that
+/// also covers years SCB delivered the mapped spelling would otherwise find none.
 fn variable_periods(
     conn: &Connection,
     variable: i64,
     variant: Option<i64>,
     rep: Option<&str>,
-    own: (&str, &str),
 ) -> Result<crate::held::Periods, Error> {
-    let cells: BTreeSet<(i64, String)> = conn
+    let states: Vec<(i64, String, String, String)> = conn
         .prepare_cached(
-            "SELECT DISTINCT hm.variant_id, hm.representation_canonical FROM holding_mapping hm \
-             JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
-             WHERE hm.variable_id = ?1 AND (?2 IS NULL OR hm.variant_id = ?2) \
-             AND ht.scope = 'intervals'",
+            "SELECT DISTINCT register_variant_id, canonical_column, valid_from, valid_to \
+             FROM expanded_state WHERE variable_id = ?1 \
+             AND (?2 IS NULL OR register_variant_id = ?2) \
+             AND (?3 IS NULL OR fold_identity(canonical_column) = fold_identity(?3)) \
+             AND canonical_column IS NOT NULL AND valid_from IS NOT NULL",
         )?
-        .query_map(params![variable, variant], |row| {
-            let mapped: String = row.get(1)?;
-            Ok((row.get(0)?, rep.map_or(mapped, str::to_owned)))
+        .query_map(params![variable, variant, rep], |row| {
+            Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
         })?
         .collect::<rusqlite::Result<_>>()?;
     let mut periods = Vec::new();
-    for (variant, rep) in cells {
-        periods.extend(crate::held::periods(
+    for (variant, column, from, to) in states {
+        let found = crate::held::periods(
             conn,
             variable,
             variant,
-            &rep,
+            &column,
             "intervals",
-            (Some(own.0), Some(own.1)),
-        )?);
+            (Some(&from), Some(&to)),
+        )?;
+        periods.extend(
+            crate::held::clip(&found, (&from, &to), None)
+                .into_iter()
+                .map(|(lo, hi)| (Some(lo), Some(hi))),
+        );
     }
     Ok(periods)
 }
