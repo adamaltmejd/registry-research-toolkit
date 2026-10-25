@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       # `uv sync` builds the reg-core-py extension (maturin) from crates/.
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.3
@@ -43,12 +43,12 @@ jobs:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2.9.3
       # A prebuilt binary for `crates`' unused-dependency check; never compiled here.
-      - uses: taiki-e/install-action@v2.87.29
+      - uses: taiki-e/install-action@v2.87.31
         with:
           tool: cargo-machete@0.9.2
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       - run: uv sync --frozen
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
@@ -76,9 +76,9 @@ jobs:
             budget: 2
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       # `uv sync` builds the reg-core-py extension (maturin) from crates/.
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.3
@@ -209,9 +209,9 @@ jobs:
           curl -fsSL https://github.com/posit-dev/air/releases/download/0.12.0/air-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
           curl -fsSL https://github.com/etiennebacher/jarl/releases/download/0.7.1/jarl-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       - run: uv run --no-project scripts/gate.py runner
 
   # The export gate's MONA check (reg_export_gate/): `gate.py export_gate` (air, jarl,
@@ -260,9 +260,9 @@ jobs:
           curl -fsSL https://github.com/posit-dev/air/releases/download/0.12.0/air-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
           curl -fsSL https://github.com/etiennebacher/jarl/releases/download/0.7.1/jarl-x86_64-unknown-linux-gnu.tar.gz | tar xz -C "$HOME/.local/bin" --strip-components=1
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       - run: uv run --no-project scripts/gate.py export_gate
 
   reg-webapp-frontend:
@@ -283,10 +283,10 @@ jobs:
       # Pinned to reg_webapp/Dockerfile's version — bump both together.
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "26.12.0"
+          node-version: "26.12.1"
       - uses: oven-sh/setup-bun@v2.2.0
         with:
-          bun-version: "1.4.3"
+          bun-version: "1.4.4"
       # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
       # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
       # both together with container-build.yml's edge-deploy-swecov job; a mismatch fails the
@@ -295,7 +295,7 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2.9.3
-      - uses: taiki-e/install-action@v2.87.29
+      - uses: taiki-e/install-action@v2.87.31
         with:
           tool: wasm-bindgen@0.2.129
       - run: bun install --frozen-lockfile
@@ -319,8 +319,8 @@ jobs:
       # (tsgo), lint, test (`vitest run`, jsdom), build, the codegen drift check (TS types are codegen'd from the
       # committed Rust `openapi.json` snapshot, so regenerating must leave them
       # unchanged) and the built app's bootstrap smoke.
-      - uses: astral-sh/setup-uv@v10.3.0
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       - run: uv run --no-project scripts/gate.py frontend
         working-directory: .
