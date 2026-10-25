@@ -11,8 +11,9 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
 - `crates/` — the Rust runtime, released as `reg_meta`: `reg-core` (the
   `project_data.json` contract and structural validator, the FQID and period grammars),
   `reg-catalog` (the catalog reader and its operations), `reg-meta` (the binary:
-  `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP) and
-  `reg-core-py` (`reg-core` for the Python builder).
+  `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
+  `reg-core-py` (`reg-core` for the Python builder) and `reg-build-model` (the Rust
+  builder port's common-form types and prepared-records reader, [PORT.md](PORT.md)).
 - `reg_meta_build` (CLI `reg-meta-build`) — build the catalog SQLite DBs from SCB
   exports (maintainer-only, Python).
 - `reg_webapp` — React SPA (React Aria Components) over the Rust server
@@ -48,11 +49,12 @@ state.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
-  for cross-PR coordination. There is currently no tracker. Each tracker is **scoped and
-  self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X
-  ships"), gets deleted at that gate, and never outlives the refactor it tracks.
-  Per-package DESIGN.md notes for the same effort are still preferred where the scope is
-  package-local.
+  for cross-PR coordination. The current tracker is [PORT.md](PORT.md), the Rust port of
+  `reg_meta_build`; its gate is "Deleted when phase 4 (cutover) ships". Each tracker is
+  **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted
+  when stage X ships"), gets deleted at that gate, and never outlives the refactor it
+  tracks. Per-package DESIGN.md notes for the same effort are still preferred where the
+  scope is package-local.
 
 # Maturity and compatibility
 

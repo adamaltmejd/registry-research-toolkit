@@ -2,7 +2,8 @@
 
 Design rationale and constraints for the catalog runtime: `reg-core` (grammars, folds,
 interval algebra, the project contract), `reg-catalog` (the reader and its operation
-set) and `reg-meta` (the `serve` and `mcp` run modes). The project contract has its own
+set) and `reg-meta` (the `serve` and `mcp` run modes), plus `reg-build-model`, the first
+crate of the Rust builder port ("The builder model"). The project contract has its own
 note, [reg-core/DESIGN.md](reg-core/DESIGN.md). The artifact these crates read is built
 by `reg_meta_build` ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)), which
 also owns the resolver, holdings compilation and the inventory TOML. Cross-package
@@ -40,18 +41,20 @@ set, where agents get it too. The deploy image is one static binary plus the bak
 
 Each contract that crosses a language or package boundary has exactly one
 implementation. New code that needs one of these calls its home; it does not add a
-second copy held in step by a parity test.
+second copy held in step by a parity test. The one exception is temporary: during the
+builder port `reg-build-model` reproduces the guard digest, pinned by a golden the
+Python builder writes, until cutover deletes the Python copy ("Guard digest basis").
 
-  | Contract                                | Single home                      | Reached from                                          |
-  | --------------------------------------- | -------------------------------- | ----------------------------------------------------- |
-  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
-  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
-  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
-  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
-  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
-  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; no Rust consumer recomputes a build hash  |
-  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
-  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it |
+  | Contract                                | Single home                      | Reached from                                                                                     |
+  | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate                                                      |
+  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                                                                       |
+  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`                                                 |
+  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM                                                    |
+  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM                                                    |
+  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; `reg-build-model` reproduces the guard digest during the port ("Guard digest basis") |
+  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export                                                 |
+  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it                                            |
 
 The SPA never parses period grammar or computes a project period's bounds: it composes
 `reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
@@ -119,6 +122,9 @@ SPA (React) + reg-core-wasm
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
+- `reg-build-model`: the Rust builder's neutral common form, the reader for
+  Python-prepared source records and the guard digest basis ("The builder model"). No
+  runtime crate depends on it.
 - `reg-core-wasm`: thin `wasm-bindgen` glue for the SPA. JSON text crosses the boundary
   (no `serde-wasm-bindgen`), and every export is total: it runs the matching structural
   check before a `reg-core` function that can panic. It is built with
@@ -145,6 +151,80 @@ runs without special effort. The `microdata-tools-se` plugin declares one hosted
 server whose URL is a user setting: the global catalog by default, a hosted steward
 catalog (`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the
 agent's MCP configuration by hand.
+
+## The builder model
+
+`reg-build-model` is the first crate of the Rust port of `reg_meta_build`
+([../PORT.md](../PORT.md)). It holds the types the target design names
+([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Target design: the common
+form") and reads the records the Python builder prepares. It ports no resolve behavior;
+phase 3 adds normalize, rules, the verb engine and the writer on top of it.
+
+- `model`: registers, tables, deliveries, columns, column → variable links and
+  provenance. Keys are neutral strings (`RegisterKey`, `TableKey`, `DeliveryKey`,
+  `ColumnName`, `VariableKey`). A column has one coverage slot and at most one delivery.
+  A link's target is a source claim (`Claim`, opaque, minted only inside the crate), the
+  default rule's register-scoped column literal, a curated owner, or none. There is no
+  `NativeCoordinates` equivalent.
+- `prepared`: the v16 records as delivered (`prepared_sources.py`), including SCB's
+  integer ids and SoS's tokens. Only normalize reads it.
+- `Evidence`: a prepared record behind an opaque handle. Code after normalize can digest
+  and compare it, and name it by record id in an error, but not read its fields.
+
+The intended crate graph is adapters and normalize → model ← rules, curation, writer, so
+that rules and curation never depend on `prepared` (target design, "Stages"). Phase 3
+enforces it by crate split or a lint when the second consumer arrives; one crate is
+enough while nothing but tests reads the model.
+
+**Prepared reader.** `PreparedRoot::open` reads the root's `manifest.json` and
+`files/records/manifest.json` strictly (unknown keys refuse), checks the format and
+schema versions (catalog layout 5, records 16), that the records manifest's SHA-256 is
+the one the root states, that the database size is the stated one and its `user_version`
+is 16. Acceptance, the Git blob proofs against the inputs repository, stays with the
+Python build's input selection until preparation ports (phase 5); the Rust build runs on
+an accepted root. `Records::for_each_record` streams occurrences in ordinal order and
+decodes the interned payloads with a bounded cache. Every payload was written with
+Pydantic's `exclude_defaults`, so a missing key is that model's default; the serde
+defaults restate them. The occurrence's `family_payload` (`native_variable_key`) is not
+read: grouping is recomputed from links. On the pinned root of 2026-10-25 the reader
+reads back the manifest's counts exactly (1,078,240 records, 201 evidence tables,
+258,680 table rows, 11,124 evidence lines, 102 value children;
+`examples/prepared_root.rs`).
+
+**Normalize mapping.** How each provider's v16 records map to the model, the oddities a
+byte-exact port must keep and the payload deltas of phase-1 b2 and b4 are in
+[reg-build-model/DESIGN.md](reg-build-model/DESIGN.md).
+
+### Guard digest basis
+
+Curation guards (`expected_evidence_sha256`, `expected_fields_sha256` and the other
+`expected_*_sha256` keys) pin records by `evidence_sha256`: SHA-256 of Python canonical
+JSON of the record's full Pydantic dump, with `evidence_position` fields dropped and
+`evidence_multiset` lists sorted. The Rust builder **reproduces this basis exactly**
+instead of re-pinning the guards to a new one:
+
+- The guards stay curation data, unchanged by the port. The converter carries them
+  verbatim, and record-set equivalence (a converted entry selects exactly the records
+  the old one did) then implies digest equivalence, so no second proof is needed.
+- Re-pinning would run on every Rust build, because curators keep editing the old tree
+  until cutover. Each re-pin would have to check the old guard first in Python, which
+  needs the Python compile's records per entry, and a re-pin that skipped the check
+  would silently refresh a stale guard. It would also need the neutral projection
+  implemented twice, once in the Python converter and once in Rust.
+- The cost is a second copy of one digest rule during the port. It is pinned by
+  `tests/digest_golden.rs`, whose expected values the Python builder writes
+  (`tests/digest/generate.py`) through its real preparation writer and reader, and it
+  agreed with Python on every record of every source of the pinned 2026-10-25 root. At
+  cutover the Python resolve pipeline is deleted and the Rust copy becomes the only
+  home. Digests of other evidence (coding claims, value associations, classifications)
+  follow the same rule and are added by the slice that first checks them.
+
+Serialization details the golden pins: every default is present (`null` fields,
+`variant_references: []`, all 40 `SourceFields` names); keys serialize by alias
+(`register`); a delivered cell's cached value and type appear only when present; keys
+sort in code-point order and only `"`, `\` and C0 controls are escaped, as Python's
+`json.dumps(ensure_ascii=False, sort_keys=True)` does. `serde_json` must not enable
+`preserve_order`.
 
 ## Agent and web interface
 

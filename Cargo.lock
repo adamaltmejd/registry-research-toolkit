@@ -722,6 +722,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "reg-build-model"
+version = "0.0.0"
+dependencies = [
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "reg-catalog"
 version = "0.0.0"
 dependencies = [
