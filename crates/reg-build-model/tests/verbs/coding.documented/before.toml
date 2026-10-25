@@ -1,0 +1,11 @@
+# case: curation/registers/sos/lova.toml#/coding.documented/8
+[[coding.documented]]
+version_label = "Kategorier enligt egen källtext"
+members = [["LEG", "legitimation"], ["SPEC", "specialitet"]]
+variable = "7847722537922273761.KATEGORI.kategori-legitimation-specialitet"
+variant = "7847722537922273761.5782470112533969966"
+column = "KATEGORI"
+periods = []
+reason = "The physical variable name explicitly supplies every literal category code and meaning. Preserve the closed own-source code domain, every original flag, source field, scope and ordered association. This supplies labels without inferring a category from a control table or changing observed values."
+source = "Accepted LOVA workbook: exact own KATEGORI name, full original fields/parents and bare-code fingerprints; no dictionary-table availability inferred."
+source_authority = { "source_scope" = { "kind" = "intervals", "intervals" = [{ "start" = "1995" }] }, "records_sha256" = "73cd3601179709d7011b749bfed42005f1395575598bdbb82654358eff91ded9", "codings" = ["a54e7207c50d6ce0eb76b3f259da3d201270e597d7e37c5784ffe870b8ae9b58"], "enumeration" = { "field" = "name", "syntax" = "kategori-alpha-equals", "lines" = ["LEG = legitimation", "SPEC = specialitet"] }, "raw_codings" = ["54985bc1dd7a2bcc12b33549e03c87e205171a68926b3d4374e1b939ed995117"], "label_equivalences" = [] }

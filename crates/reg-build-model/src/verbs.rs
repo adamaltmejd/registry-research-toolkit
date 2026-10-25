@@ -1,6 +1,6 @@
 //! The neutral curation verbs as serde types: the register curation file's verb tables
 //! after the port (`reg_meta_build/DESIGN.md`, "The neutral verb set"; the schema and the
-//! per-verb guard table are in `crates/reg-build-model/DESIGN.md`, "Curation verbs").
+//! per-verb guard table are in `crates/reg-build-model/DESIGN.md`, §11).
 //!
 //! An entry addresses records only through [`Member`]: a table slug, a column literal, a
 //! delivery name or a period, and stated field values. No address is a provider integer.
@@ -44,9 +44,10 @@ pub struct Verbs {
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Legacy {
-    /// The old case id root, `curation/registers/<provider>/<file>.toml#/<table>/<n>`.
-    /// The build writes it (with any `/period/<k>` suffix) where Python writes the case
-    /// id today.
+    /// The old case id root, `curation/registers/<provider>/<file>.toml#/<table>/<n>`
+    /// with `<n>` counted from 1 among the file's entries of that table; a CIS matrix
+    /// entry's is `#/matrix/<edition name>`. The build writes it (with any
+    /// `/period/<k>` suffix) where Python writes the case id today.
     #[serde(rename = "ref")]
     pub case_id: String,
     /// The provenance head the old entry's facts publish: `errata:<class>`,
@@ -55,15 +56,21 @@ pub struct Legacy {
 }
 
 /// The member selector `M`: the records an entry acts on. Every given coordinate must
-/// match; an absent one does not restrict. It is literal-scoped, not link-scoped: the
-/// converter writes the loosest selector that selects exactly the old entry's records in
-/// the pinned prepared root.
+/// match; an absent one does not restrict. It is literal-scoped, not link-scoped. The
+/// converter translates the coordinates the old entry names (its variant to `table`, its
+/// editions to `deliveries`, a Deldatamängd to `table`, a bare `SoS` variable to
+/// `column`), drops the provider ids, and adds `where` only where that alone does not
+/// select exactly the old entry's records in the pinned prepared root.
+///
+/// An occurrence whose `column_name` the source states negative (no physical column) has
+/// no literal: only a member without `column` selects it.
 #[derive(Debug, Clone, PartialEq, Eq, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Member {
     /// A table (variant) slug of this register, after `table.assign`.
     pub table: Option<String>,
-    /// A delivered column literal, exactly.
+    /// A delivered column literal, exactly, as the source states it (before any
+    /// `column_name` effect).
     pub column: Option<String>,
     /// Delivery names (whitespace-folded edition names), only where the source has
     /// deliveries. Excludes `period`.
@@ -114,7 +121,8 @@ pub struct Guard {
     pub expected_period: Option<Scope>,
     /// The source's period text per delivery name.
     pub expected_period_text: Option<BTreeMap<String, String>>,
-    /// The full delivery list of the source table (`edition_split`'s complement guard).
+    /// The source table's deliveries a split leaves in place (`edition_split`'s
+    /// `source_editions`, the complement of the split's deliveries).
     pub expected_deliveries: Option<Vec<String>>,
     /// The stated data type, representation, reference and description of the original
     /// (`errata.data_type`, `errata.classification_reference`).
@@ -124,6 +132,8 @@ pub struct Guard {
     pub expected_description: Option<String>,
     /// Month definitions per member (`representation.period_family`).
     pub expected_definitions: Option<BTreeMap<String, String>>,
+    /// The `evidence_sha256` of the coding behind an erratum (`errata.support`).
+    pub expected_coding_sha256: Option<String>,
     /// The CIS matrix selector's provider ids, as the source states them.
     pub expected_selector: Option<Projection>,
 }
@@ -213,7 +223,8 @@ pub struct TableAssign {
     pub tables: Vec<String>,
     #[serde(default)]
     pub members: Vec<Member>,
-    /// The source's own table token, for a route.
+    /// The source's own table token, for a route: it selects the token's records, and
+    /// `members` narrows them.
     pub source_token: Option<String>,
     #[serde(default)]
     pub guard: Guard,
@@ -248,7 +259,9 @@ pub struct ErrataTable {
     pub name: String,
 }
 
-/// `errata.field`: stated fields of one occurrence are wrong; set or clear them.
+/// `errata.field`: stated fields of one occurrence are wrong. Keys are source field
+/// names ([`crate::prepared::FIELD_NAMES`]): `set` states a value, `clear` makes the
+/// field absent, `unknown` states it unreadable.
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ErrataField {
@@ -258,6 +271,8 @@ pub struct ErrataField {
     pub set: BTreeMap<String, Scalar>,
     #[serde(default)]
     pub clear: Vec<String>,
+    #[serde(default)]
+    pub unknown: Vec<String>,
     #[serde(default)]
     pub guard: Guard,
     pub evidence: String,
@@ -292,6 +307,8 @@ pub struct ErrataDelivered {
     /// The documented occurrences it carries, where they are not the member's own table
     /// and column.
     pub donor: Option<Member>,
+    /// The variable the carried column belongs to, where neither member says it.
+    pub owner: Option<String>,
     #[serde(default)]
     pub donor_coding: bool,
     pub data_type: Option<String>,
@@ -400,6 +417,8 @@ pub struct RepresentationParallel {
     pub case_aliases: bool,
     pub column_metadata: Option<String>,
     pub coding_metadata: Option<String>,
+    #[serde(default)]
+    pub guard: Guard,
     pub evidence: String,
     pub noted: String,
 }
@@ -450,6 +469,9 @@ pub struct DeliveryMetadataColumn {
     pub valid_from: String,
     pub valid_to: String,
     pub expected_codings: Option<Vec<String>>,
+    /// The column's coverage after routing and period corrections, in `expected_scope`.
+    #[serde(default)]
+    pub guard: Guard,
 }
 
 /// `representation.matrix`: a CIS evidence file answers this occurrence.
@@ -488,9 +510,9 @@ pub struct Coding {
     pub support: Vec<CodingEntry>,
 }
 
-/// One coding entry: the member, the finite periods, and the verb's own payload
-/// (`keep`, `over`, `list`, `witness`, `members`, `source_authority`, ...) carried
-/// verbatim.
+/// One coding entry: the member, the finite periods, its evidence digest in `guard`, and
+/// the verb's own payload (`keep`, `keep_members_sha256`, `over`, `list`, `witness`,
+/// `members`, `source_authority`, ...) carried verbatim.
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct CodingEntry {
@@ -502,6 +524,8 @@ pub struct CodingEntry {
     pub periods: Vec<Vec<String>>,
     pub reason: String,
     pub source: String,
+    #[serde(default)]
+    pub guard: Guard,
     #[serde(default)]
     pub payload: Projection,
 }

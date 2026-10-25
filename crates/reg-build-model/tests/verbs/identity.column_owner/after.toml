@@ -1,0 +1,12 @@
+[[identity.assign]]
+legacy = { ref = "curation/registers/scb/iot.toml#/identity.column_owner/129", head = "curated:identity.column_owner" }
+ref = "Prepared SCB complete native25.659:2000–2016 AKYRK is explicitly measured in SEK with Skatteverket origin and no supplied operation;2017–2024 AKYRK is explicitly Procent with operation Kyrkoavgiftssats and Svenska kyrkan origin. Generic fee definition does not assert either numeric role. Preserve the amount and rate as distinct supplied concepts, without reconstructing an older formula or changing values. Every original name, generic definition, unit, operation, source attribution, type, width, period and coding remains immutable. Exact enumerated editions only; no unlisted future source ownership."
+
+[identity.assign.guard]
+expected_fields = [{ name = "measurement_unit", status = "value", value = "Kronor (SEK)" }, { name = "operational_definition", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "definition", status = "value", value = "Kyrkoavgift exkl. begravningsavgift." }, { name = "name", status = "value", value = "Kyrkoavgift exkl. begravningsavgift" }]
+
+# The same column in the 2017-2024 deliveries is the rate (`identity.column_owner/130`),
+# so the deliveries are the only discriminator.
+[[identity.assign.link]]
+owner = "akyrk"
+members = [{ table = "individer-och-dodsbon", column = "AKYRK", deliveries = ["2000, slutlig version", "2001, slutlig version", "2002, slutlig version", "2003, slutlig version", "2004, slutlig version", "2005, slutlig version", "2006, slutlig version", "2007, slutlig version", "2008, slutlig version", "2009, slutlig version", "2010, preliminär version", "2010, slutlig version", "2011, preliminär version", "2011, slutlig version", "2012, preliminär version", "2012, slutlig version", "2013, preliminär version", "2013, slutlig version", "2014, preliminär version", "2014, slutlig version", "2015, preliminär version", "2015, slutlig version", "2016, preliminär version", "2016, slutlig version"] }]

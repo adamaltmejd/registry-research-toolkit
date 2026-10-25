@@ -1,0 +1,11 @@
+# `native_variable_id = 29874` has no field: the donor (grundutbildning-1993, LInr) is
+# VarID 29874's own record, so the donor names the owner. See the README.
+[[errata.delivered]]
+legacy = { ref = "curation/registers/scb/hreg.toml#/errata.delivered/5", head = "errata:delivered" }
+member = { table = "grundutbildning-poang", column = "LInr", deliveries = ["Läsåren 1993/1994 - 2024/2025"] }
+donor = { table = "grundutbildning-1993", column = "LInr" }
+data_type = "text"
+upstream = "additional-physical-column-in-version"
+guard = { expected_evidence_sha256 = "45430a2c1b5a9a95120e21f897524eae2ebc72e0ae247b95b629d4af56144ee3" }
+evidence = "SCB P1105 variable lists 2022 / 2023-2024 / 2025, Högskola row 83 (linr on Hreg_Poang, 1993-HT2024)."
+noted = "2026-10-13"

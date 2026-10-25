@@ -1,0 +1,14 @@
+# Edition 11393 is the delivery named "2011 kv2- kv4" (folding changes nothing).
+[[errata.field]]
+legacy = { ref = "curation/registers/scb/ksju.toml#/errata.flags/2", head = "errata:flags" }
+member = { table = "sjukfranvaro-sjukloneperioden", column = "HELANTDAGAR", deliveries = ["2011 kv2- kv4"] }
+set = { sensitivity = true, identifier = false }
+evidence = "SCB states neither flag for scb/ksju/helantdagar and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
+noted = "2026-10-15"
+
+[errata.field.guard]
+expected_fields = [{ name = "definition", status = "value", value = "Alla kalenderdagar i ett sjukfall." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Antal sjukdagar" }, { name = "operational_definition", status = "value", value = "Anger antalet heldagar under ett fall." }, { name = "sensitivity", status = "absent" }]
+expected_period_text = { "2011 kv2- kv4" = "2011 kv2- kv4" }
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-04-01", end = "2011-12-31" }] }
+expected_evidence_sha256 = "f49e4cfd75001a580aab81373aa0912f0f4b423c8efd9b07288cccc4c4c94d86"

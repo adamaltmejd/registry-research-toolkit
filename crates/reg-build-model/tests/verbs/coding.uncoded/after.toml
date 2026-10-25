@@ -1,0 +1,28 @@
+[[coding.uncoded]]
+legacy = { ref = "curation/registers/scb/prisindex.toml#/coding.uncoded/1", head = "curated:coding.uncoded" }
+member = { table = "ppi", column = "KN4Namn" }
+periods = [
+    ["2013-01-01", "2013-12-31"],
+    ["2014-01-01", "2014-12-31"],
+    ["2015-01-01", "2015-12-31"],
+    ["2016-01-01", "2016-12-31"],
+    ["2017-01-01", "2017-12-31"],
+    ["2018-01-01", "2018-12-31"],
+    ["2019-01-01", "2019-12-31"],
+    ["2020-01-01", "2020-12-31"],
+    ["2021-01-01", "2021-12-31"],
+    ["2022-01-01", "2022-12-31"],
+    ["2023-01-01", "2023-12-31"],
+    ["2024-01-01", "2024-12-31"],
+    ["2025-01-01", "2025-12-31"],
+    ["2026-01-01", "2026-12-31"],
+]
+reason = "The source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+source = "Complete original native family and physical-peer review Batch53-six-source-review.json; explicit source operational descriptions of four/eight-digit clear texts or product-group-code descriptions. No response codes are copied into a text field, and no statistical/value equality is asserted."
+
+[coding.uncoded.guard]
+expected_evidence_sha256 = "9c538e750d16168ceccbd4bffbe767acf87c14ed632d47348e9d437921cde0bc"
+
+[coding.uncoded.payload]
+data_warning = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+stored_role = "label"

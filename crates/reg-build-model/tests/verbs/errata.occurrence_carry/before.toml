@@ -1,0 +1,12 @@
+# case: curation/registers/sos/par.toml#/errata.occurrence_carry/1
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_OV"
+column = "DIA"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet\när orsakat av eller relaterat\ntill läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Diagnoskod eller ATC-kod vid skada eller förgiftning" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported diagnosis codes only inside the DIAGNOS string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented DIA."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents DIA as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, diagnosis codes exist only inside DIAGNOS (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
+noted = "2026-10-17"

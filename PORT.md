@@ -67,11 +67,11 @@ today's v16 shape and names each one's delta in one place
 
 ## Phase 2
 
-  | PR  | Content                                                                | State |
-  | --- | ---------------------------------------------------------------------- | ----- |
-  | A   | this tracker, design docs, `reg-build-model` types and prepared reader | open  |
-  | B   | verb schema and golden corpus                                          | —     |
-  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | —     |
+  | PR  | Content                                                                | State          |
+  | --- | ---------------------------------------------------------------------- | -------------- |
+  | A   | this tracker, design docs, `reg-build-model` types and prepared reader | merged (#1935) |
+  | B   | verb schema and golden corpus                                          | open           |
+  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | —              |
 
 ## Phase 3 slices
 

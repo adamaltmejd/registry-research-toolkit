@@ -281,21 +281,21 @@ Deldatamängd token or a bare variable key. The member selector is
 what the source states at the occurrence, as the adapter's normalized projection, so
 SCB's edition guards and SoS's coverage guards become one shape.
 
-  | Verb                               | Fact                                                                                                      | Replaces                                                              |
-  | ---------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-  | `identity.assign`                  | these member columns link to this owner, or to none (`owner = false`)                                     | `identity.partition`, `column_owner`, `unassigned`, `split`, `rename` |
-  | `table.assign`                     | these records or deliveries belong to that table                                                          | `identity.edition_split`, `identity.route` (ambiguous tokens only)    |
-  | `errata.table`                     | a table exists that the source does not list                                                              | `[[variant]].name` in the SCB canonical band                          |
-  | `errata.field`                     | one stated field is wrong; here is the value, or clear; adds `data_type`, `is_sensitive`, `is_identifier` | `errata.field`, `data_type`, `classification_reference`, `flags`      |
-  | `errata.period`                    | the source's coverage for this occurrence was read wrongly                                                | `errata.occurrence_period`, one guard shape                           |
-  | `errata.delivered`                 | the same column with the same meaning was also delivered here; optional donor table                       | `errata.delivered`, `errata.occurrence_carry`                         |
-  | `errata.delivery`                  | the table delivered a delivery the source does not document                                               | `errata.version`                                                      |
-  | `errata.column`                    | an undocumented column was delivered; mint a variable                                                     | `errata.column`, one loader                                           |
-  | `errata.support`                   | this occurrence's assertion is a documented error; keep it as support                                     | `errata.support`, delivery or period instead of a required edition    |
-  | `representation.parallel`          | several columns are forms of one variable per window                                                      | `representation.parallel`, `alias_window`                             |
-  | `representation.period_family`     | columns sharing a stem are one variable, one member per month                                             | unchanged                                                             |
-  | `representation.delivery_metadata` | literal metadata may vary under one owner                                                                 | unchanged                                                             |
-  | `representation.matrix`            | a CIS evidence file answers this occurrence                                                               | unchanged, `M` selector                                               |
+  | Verb                               | Fact                                                                                                | Replaces                                                               |
+  | ---------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+  | `identity.assign`                  | these member columns link to this owner, or to none (`owner = false`)                               | `identity.partition`, `column_owner`, `unassigned`, `split`, `rename`  |
+  | `table.assign`                     | these records or deliveries belong to that table                                                    | `identity.edition_split`, `identity.route` (ambiguous tokens after D7) |
+  | `errata.table`                     | a table exists that the source does not list                                                        | `[[variant]].name` in the SCB canonical band                           |
+  | `errata.field`                     | stated fields are wrong: set, clear or state unknown; adds `data_type`, `sensitivity`, `identifier` | `errata.field`, `data_type`, `classification_reference`, `flags`       |
+  | `errata.period`                    | the source's coverage for this occurrence was read wrongly                                          | `errata.occurrence_period`, one guard shape                            |
+  | `errata.delivered`                 | the same column with the same meaning was also delivered here; optional donor table                 | `errata.delivered`, `errata.occurrence_carry`                          |
+  | `errata.delivery`                  | the table delivered a delivery the source does not document                                         | `errata.version`                                                       |
+  | `errata.column`                    | an undocumented column was delivered; mint a variable                                               | `errata.column`, one loader                                            |
+  | `errata.support`                   | this occurrence's assertion is a documented error; keep it as support                               | `errata.support`, delivery or period instead of a required edition     |
+  | `representation.parallel`          | several columns are forms of one variable per window                                                | `representation.parallel`, `alias_window`                              |
+  | `representation.period_family`     | columns sharing a stem are one variable, one member per month                                       | unchanged                                                              |
+  | `representation.delivery_metadata` | literal metadata may vary under one owner                                                           | unchanged                                                              |
+  | `representation.matrix`            | a CIS evidence file answers this occurrence                                                         | unchanged, `M` selector                                                |
 
 `coding.*`, enrichment, groups, code/label pairs, acknowledgements, classification
 timelines, documentary bindings and the global files keep their verbs; `coding.*` is
@@ -305,8 +305,11 @@ coding families go from 30 to 20.
 `identity.assign` keeps every guard of the verbs it replaces: per-entry and per-member
 `expected_*` digests, delivery scopes, exact literal coverage (partition), complete
 original projections for field-value splits, the `owner = false` competition rule
-(`unassigned` refuses any competing entry), `data_warning` and `ref`. A source link that
-any assign touches must be fully reassigned, as partition requires today. Rename's
+(`unassigned` refuses any competing entry), `data_warning` and `ref`. One entry holds
+several links, each with its own owner and members, because an old entry's guards span
+all its owners: a partition's family digest covers every owner and every unassigned
+literal. So each old entry converts to exactly one new entry. A source link that any
+assign touches must be fully reassigned, as partition requires today. Rename's
 `column_name` rewrite is an effect on the member itself, not an erratum stacked on the
 selector, which would base one decision on another correction's output (step 3).
 
@@ -322,8 +325,10 @@ and `compile_scb_preliminary` becomes supersession over `release_status`.
   merges) rides with the port behind one TOML regeneration.
 - **Verb names are artifact content.** `_curated_head` writes `errata:<class>` or
   `curated:<table>` into `variable_state.provenance`, and alias windows write
-  `curated:alias-window`. The converter keeps each entry's legacy head and Rust writes
-  it verbatim until one reviewed rename after cutover.
+  `curated:alias-window`, and `data_warning.evidence_json` stores each entry's case id
+  (`<file>#/<table>/<n>`, with `/period/<k>` for coding periods). The converter keeps
+  each entry's legacy case id and head, and Rust writes both verbatim until one reviewed
+  rename after cutover.
 - **Guard digests keep their basis.** Rust reproduces `evidence_sha256` over the
   prepared records, so `expected_*_sha256` guards are carried unchanged
   ([../crates/DESIGN.md](../crates/DESIGN.md), "Guard digest basis").

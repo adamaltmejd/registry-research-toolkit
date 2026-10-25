@@ -1,0 +1,8 @@
+# EXAMAR is also delivered on `lova` and `lova-examen`, so the table restricts.
+[[errata.field]]
+legacy = { ref = "curation/registers/sos/lova.toml#/errata.classification_reference/4", head = "errata:classification_reference" }
+member = { table = "lova-hosp", column = "EXAMAR" }
+unknown = ["classification_declared"]
+guard = { expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/", expected_representation = "YYYY" }
+evidence = "Metadata - Variabelnivå row 34 describes the year of the current degree in C/D and YYYY in F; SSYK classifies occupations."
+noted = "2026-09-29"

@@ -1,0 +1,9 @@
+# case: curation/registers/scb/gdb.toml#/variant/4
+[[variant]]
+native_id = "70.2861754316974127173"
+slug = "individer"
+name = "Individer"
+description = "En rad per person och årsversion. Årsversionen ÅÅÅÅ-01-01 beskriver läget den 31 december föregående år."
+panel_entity_key = "personnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"

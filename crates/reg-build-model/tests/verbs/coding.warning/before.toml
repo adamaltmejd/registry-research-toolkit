@@ -1,0 +1,11 @@
+# case: curation/registers/scb/fasit.toml#/coding.warning/1
+[[coding.warning]]
+variable = "371.47"
+variant = "individregister"
+column = "BLAREG"
+periods = [["2015-01-01", "2015-12-31"]]
+fields = ["data_type", "coding"]
+expected_evidence_sha256 = "b4f4e98a561398b7b5ce70e250af81e4c1605c37813a5bba1b7dcfabc0ec3126"
+data_warning = "The source declares integer storage for BLAREG in 2015 but associates the textual LA1501–LA1569 response codes. Both declarations are retained; the physical encoding is unverified."
+reason = "All 69 response associations explicitly name native member 494131 and the LA15 descriptor. The same original declares Datatyp=int and data length 0. Neither the source type nor the response codes can safely be corrected without delivery evidence."
+source = "Accepted prepared SCB registerinformation member 494131, edition 11725, variant 1344, and its complete Vardemangder associations; review-2026-10-03/fixes/fasit-association-trace.json and fasit-warning-guards.json."

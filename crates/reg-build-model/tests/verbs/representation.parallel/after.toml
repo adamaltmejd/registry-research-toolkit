@@ -1,0 +1,18 @@
+[[representation.parallel]]
+legacy = { ref = "curation/registers/scb/klk.toml#/representation.parallel/1", head = "curated:representation.parallel" }
+owner = "manad"
+table = "_default"
+columns = [
+    { column = "Man", deliveries = ["2009"], valid_from = "2009-01-01", valid_to = "2009-12-31", expected_codings = ["2e7ea2c83b40445f9898286e8ab156ccd6e1203255077575c7f93e78121c3252"] },
+    { column = "Manad", deliveries = ["2009"], valid_from = "2009-01-01", valid_to = "2009-12-31", expected_codings = ["2e7ea2c83b40445f9898286e8ab156ccd6e1203255077575c7f93e78121c3252"] },
+]
+valid_from = "2009-01-01"
+valid_to = "2009-12-31"
+co_delivered = true
+column_metadata = "per_column"
+coding_metadata = "per_column"
+evidence = "Complete own-native source explicitly defines this as the same month or sickness-period start-date quantity. These exact simultaneously supplied spellings remain independent delivery representations; retain every original operational wording, raw char/varchar/date/datetime type, scope, code association and literal. No storage/value equivalence is assumed. Proof: Batch48-employment-time-source-proof.json."
+noted = "2026-10-01"
+
+[representation.parallel.guard]
+expected_evidence_sha256 = "7c520eb3c0a1301809443ae146290b11f8a44d90495ccbd97a93e25c6d5ee572"

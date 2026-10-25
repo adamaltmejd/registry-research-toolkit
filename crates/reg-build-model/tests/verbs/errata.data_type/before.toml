@@ -1,0 +1,10 @@
+# case: curation/registers/sos/lova.toml#/errata.data_type/1
+[[errata.data_type]]
+deldatamangd = "A_LOVA_HOSP"
+variable = "DESLEG_DATUM"
+column = "DESLEG_DATUM"
+expected_type = "Decimal"
+expected_representation = "YYYY-MM-DD"
+data_type = "date"
+evidence = "Metadata - Variabelnivå row 28 labels the field 'Datum för beslut: Återkallelse av legitimation', describes 'Datum för beslutet att dra in legitiamation', and declares YYYY-MM-DD; Decimal contradicts this explicit date representation."
+noted = "2026-09-29"

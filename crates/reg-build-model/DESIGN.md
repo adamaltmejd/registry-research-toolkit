@@ -417,9 +417,74 @@ Mapping rows that update:
 - §8 "`source_attribution` has three meanings": becomes one meaning per field.
 - Lineage (`catalog_lineage.py:166-279`) reads the register-source field only.
 
+## 11. Curation verbs (`src/verbs.rs`)
+
+The neutral verb tables of a register curation file, as the converter writes them
+(`reg_meta_build/DESIGN.md`, "The neutral verb set"). The golden corpus (`tests/verbs/`,
+with its README) holds one real entry per old verb at its hardest case and its neutral
+form.
+
+**One old entry, one new entry.** Each converted entry carries `legacy = { ref, head }`:
+the old case id root (`<file>#/<table>/<n>`, `n` counted from 1; a CIS matrix entry's is
+`#/matrix/<edition name>`) and its provenance head. The artifact stores both
+(`data_warning.evidence_json`, `variable_state.provenance`), so the build writes them
+verbatim until the post-cutover rename. A coding entry keeps its `periods` in order,
+because a period's position is the `/period/<k>` suffix of its case id. Because the
+guards of one old entry span all its owners, `identity.assign` holds several links
+(`owner` plus `members`) in one entry rather than one entry per owner.
+
+**Members.** `M = {table?, column?, deliveries? | period?, where?}`:
+
+- `table` is a table slug after `table.assign`; `column` is the delivered literal as the
+  source states it, before any `column_name` effect; `deliveries` are edition names,
+  unique per table in the pinned root (8,608 keys); `period` is the coverage where the
+  source has no deliveries; `where` matches stated fields by their normalized value with
+  status `value`.
+- The converter translates the coordinates the old entry names and drops the provider
+  ids, then adds `where` only where that does not select exactly the old entry's
+  records. VarID families that share a literal on one table and delivery are told apart
+  only by the stated name (`identity.partition`, `identity.unassigned` in the corpus).
+- An occurrence without a physical column (`column_name` negative) is selected only by a
+  member without `column`.
+
+**Rules the schema carries.**
+
+- **`owner = false` competes.** An assign link with `owner = false` refuses any other
+  assign entry that selects the same records, as `identity.unassigned` does today.
+- **A source link is fully reassigned.** Any stated link that an assign entry touches
+  must have every column it joins selected by some assign entry, as a partition's exact
+  literal coverage requires today.
+- **Rename is a member effect.** A link's `column_name` sets the delivered column of the
+  records it selects; it is not an erratum applied on top of the selector.
+
+**Guards.** One `Guard` type carries every pin verbatim; an entry that a guard no longer
+matches is stale. Native ids inside a guard (`expected_records`, `authority`,
+`expected_selector`) are evidence of what the source stated, not addresses.
+
+  | Verb                                               | Guard fields it keeps (from the old verbs)                                                                                                                                                                                                                                                                      |
+  | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `identity.assign`                                  | `expected_evidence_sha256` (partition family, unassigned, column_owner, split), `expected_fields_sha256`, `expected_fields` (column_owner), `expected_records` (split)                                                                                                                                          |
+  | `table.assign`                                     | `expected_deliveries` (edition_split's `source_editions`)                                                                                                                                                                                                                                                       |
+  | `errata.field`                                     | `expected_fields`, `expected_records`, `authority_records`, `expected_evidence_sha256`, `expected_scope`, `expected_period`, `expected_period_text`; `expected_type`, `expected_representation` (data_type); `expected_reference`, `expected_representation`, `expected_description` (classification_reference) |
+  | `errata.period`                                    | `expected_fields`, `expected_scope`, `expected_period`, `expected_period_text`; `authority` projections                                                                                                                                                                                                         |
+  | `errata.delivered`                                 | `expected_evidence_sha256` (delivered); `expected_fields`, `expected_scope`, `expected_period` (occurrence_carry)                                                                                                                                                                                               |
+  | `errata.support`                                   | `expected_fields`, `expected_scope`, `expected_period`, `expected_period_text`, `expected_coding_sha256`; the authority's own guard                                                                                                                                                                             |
+  | `representation.parallel`                          | `expected_evidence_sha256`; per column `expected_codings`                                                                                                                                                                                                                                                       |
+  | `representation.period_family`                     | `expected_definitions`                                                                                                                                                                                                                                                                                          |
+  | `representation.delivery_metadata`                 | `expected_records`, `support` projections; per column `expected_codings` and `expected_scope`                                                                                                                                                                                                                   |
+  | `representation.matrix`                            | `expected_selector`                                                                                                                                                                                                                                                                                             |
+  | `coding.*`                                         | `expected_evidence_sha256` (warning, uncoded, choice, extend); the verb's own pins (`keep_members_sha256`, `source_authority`, association digests) in `payload`                                                                                                                                                |
+  | `errata.column`, `errata.delivery`, `errata.table` | none                                                                                                                                                                                                                                                                                                            |
+
+**Not typed yet.** Nested source projections (`RecordExpectation`,
+`PreparedCodingAuthority`, documented members) are carried as TOML tables. A phase-3
+slice types each one when it first evaluates it.
+
 ## Decided in phase 2
 
 - Delivery carries population and object-type lists and both scopes (§2.1, §8).
 - Delivery.key is the edition name; RegVerID stays in Evidence (§2.2).
+- `identity.assign` holds several links per entry; each old entry converts to exactly
+  one new entry, carrying its legacy case id and head (§11).
 - No compiled slice needs the LISA workbook records (§3). Slice 5 ports SCB register
   34's curation, row pins and validator anchor.

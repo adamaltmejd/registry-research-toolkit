@@ -1,0 +1,9 @@
+# The member is the source literal (`INVARN8`, the upstream typo); `column_name` is the
+# effect on it. The name tells it from the true `INVARN8` in the same table.
+[[identity.assign]]
+legacy = { ref = "curation/registers/sos/lova.toml#/identity.rename/1", head = "curated:identity.rename" }
+
+[[identity.assign.link]]
+owner = "invandringsdatum-9-numerisk"
+members = [{ table = "lova-person", column = "INVARN8", where = { name = "Invandringsdatum 9 numerisk" } }]
+column_name = "INVARN9"

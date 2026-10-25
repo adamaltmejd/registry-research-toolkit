@@ -1,0 +1,14 @@
+[[identity.assign]]
+legacy = { ref = "curation/registers/scb/energi-flerbostad.toml#/identity.unassigned/1", head = "curated:identity.unassigned" }
+evidence = "Complete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+guard = { expected_evidence_sha256 = "a47d7a60d2ab0faea3c8581c9cbd3643584f0451f7aa7b3d08314f25bdf864de" }
+
+# Each literal is also delivered under eight or nine other VarIDs in the same deliveries;
+# the stated name selects VarID 2330's records.
+[[identity.assign.link]]
+owner = false
+members = [
+    { column = "Energiid", where = { name = "Vedanvändning" } },
+    { column = "Kvant", where = { name = "Vedanvändning" } },
+    { column = "Uppvid", where = { name = "Vedanvändning" } },
+]
