@@ -120,7 +120,8 @@ pub struct Variable {
     source_register_text: Option<String>,
     /// The FQIDs of the variables curated as the same variable.
     same_as: Vec<String>,
-    /// The ref of the concept group the variable belongs to.
+    /// The ref of the concept group the variable belongs to, null when no member row
+    /// of it is in scope.
     group: Option<String>,
     tags: Vec<Tag>,
 }

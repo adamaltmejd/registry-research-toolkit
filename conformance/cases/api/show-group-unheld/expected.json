@@ -30,5 +30,13 @@
   {
     "status": 200,
     "json": {"/data/nodes/*/group_key": [null]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/type": ["variable"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/type": ["group"]}
   }
 ]

@@ -56,7 +56,8 @@ pub struct SchemaColumn {
     source_register_text: Option<String>,
     definition: Option<String>,
     measurement_unit: Option<String>,
-    /// The variable's concept group, as a group ref.
+    /// The variable's concept group, as a group ref; null when no member row of it is in
+    /// scope.
     group: Option<String>,
     group_label: Option<String>,
 }

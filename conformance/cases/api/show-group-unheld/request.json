@@ -1,5 +1,5 @@
 {
-  "note": "The graph steps fail if graph draws an unheld group under holdings (the group path in graph.rs) instead of refusing it, or focuses a node for a group in reference. The variable steps fail if a held variable whose group member rows are all unheld names that group under holdings, in show (sending the webapp to a group page with no lane for it), schema or graph (group_key or schema's group column ignoring member_in_scope).",
+  "note": "The graph steps fail if graph draws an unheld group under holdings (the group path in graph.rs) instead of refusing it, or focuses a node for a group in reference. The variable steps fail if a held variable whose group member rows are all unheld names that group under holdings, in show (sending the webapp to a group page with no lane for it), schema or graph (group_key or schema's group column ignoring member_in_scope). The search steps fail if a holdings search returns the group hit (its label or its folded members ignoring member_in_scope) instead of the held variable, or if the reference twin stops returning the group.",
   "fixture": "unheld-group",
   "requests": [
     {"operation": "show", "path": "/api/catalog/group/scb/example/value-family"},
@@ -21,6 +21,12 @@
       "query": {"scope": "reference"}
     },
     {"operation": "schema", "path": "/api/schema/scb/example/value"},
-    {"operation": "graph", "path": "/api/graph/scb/example/value"}
+    {"operation": "graph", "path": "/api/graph/scb/example/value"},
+    {"operation": "search", "path": "/api/search", "query": {"q": "value"}},
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {"q": "value", "scope": "reference"}
+    }
   ]
 }

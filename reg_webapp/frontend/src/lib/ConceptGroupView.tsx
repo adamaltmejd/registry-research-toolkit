@@ -54,7 +54,6 @@ import { Definitions } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
-import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
@@ -462,14 +461,7 @@ export function ConceptGroupView({
           ...(description ? [{ term: "Description", value: description }] : []),
         ]}
       />
-      {group.tags.length > 0 && (
-        <ul className={styles.tags} aria-label="Thematic tags">
-          {group.tags.map((tag) => (
-            <li key={tag.slug} className={styles.tag}>
-              <Tag>{tag.label}</Tag>
-              {tag.starred && tag.note && (
-                <span className={styles.note}>Recommended: {tag.note}</span>
-              )}
+      <VariableTags tags={group.tags} />
             </li>
           ))}
         </ul>

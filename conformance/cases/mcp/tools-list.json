@@ -1701,7 +1701,7 @@
               "type": "string"
             },
             "group": {
-              "description": "The ref of the concept group the variable belongs to.",
+              "description": "The ref of the concept group the variable belongs to, null when no member row\nof it is in scope.",
               "type": [
                 "string",
                 "null"
@@ -3470,7 +3470,7 @@
               ]
             },
             "group": {
-              "description": "The variable's concept group, as a group ref.",
+              "description": "The variable's concept group, as a group ref; null when no member row of it is in\nscope.",
               "type": [
                 "string",
                 "null"
