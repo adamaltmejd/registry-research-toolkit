@@ -1,0 +1,6 @@
+[classification]
+short_name = "OTHER"
+slug = "other"
+name = "OTHER"
+codes_file = "other.csv"
+valid_from = 2020

@@ -1531,6 +1531,52 @@ succession edges. The book keeps its place in a derived edition chain, so no edg
 it. A literal source-reference dictionary or checked declaration establishes a variable
 binding. Code overlap percentages, URL guesses and name similarity cannot.
 
+A family reference binds without curation only where one edition's validity covers the
+whole occurrence. A source that declares a family on one long state (Socialstyrelsen's
+ICD columns, 1960–∞, #1908) needs the edition per window, and that is a register's fact,
+not the book's: the years a register switched edition are documented per register and
+need not match the edition's own validity. A register file states them once, for every
+column that declares the family, in a `[[classification_timeline]]`:
+
+```toml
+[[classification_timeline]]
+family = "icd"
+editions = [
+  ["icd-8-ks68", "1969-01-01", "1986-12-31"],
+  ["icd-9-ks87", "1987-01-01", "1996-12-31"],
+  ["icd-10-se", "1997-01-01", "9999-12-31"],
+]
+evidence = "…"
+noted = "2026-10-25"
+```
+
+A source declaration that names one of the family's aliases, on a column of that
+register, binds each part of its window to the edition of the row covering it, one
+binding per piece, so the state splits at each row boundary. A window no row covers
+keeps the `unresolved_classification_reference` error of an uncurated family reference,
+over that window only, and an acknowledgement of it pins that window. The timeline
+replaces the covering-edition search for that register only. A withheld edition
+withholds only its own rows' windows (`withheld_catalog_dependency`), not the whole
+reference as without a timeline, since the timeline names the edition per window. Each
+piece is a resolved source declaration, so the rest composes as before: an
+`[[errata.classification_reference]]` clears the declaration upstream and the timeline
+never sees it; coding windows, label rules, overrides and sentinels apply to the cut
+states unchanged. The register's own curation sets the years; there is no automatic year
+rule, and a row is not checked against its book's `valid_from`/`valid_to`. A timeline is
+register-wide, so it cannot say that parts of a register (regions, say) switched edition
+in different years; curation leaves such a window as a gap, unresolved, until a finer
+grammar is needed.
+
+The loader refuses, as `register_entry_invalid` at the file and entry: a row that is not
+`[slug, from, to]` with ISO dates, overlapping rows (a window has one edition), a family
+no classification file declares, an edition that is no curated book, and an edition
+outside the named family. A second timeline for one family in a file is
+`register_duplicate_entry`. A timeline that no source declaration of its register
+reaches, because the register never declares the family, is a `stale_curation_entry`
+error once every selected scope has resolved, located at the entry; a row of a reached
+timeline that overlaps no declared window (an ICD-8 row on a register whose data starts
+in 2005) is one located at the row.
+
 A book's code tree comes from its codebook's delivered `parent_code` cells (#1297). A
 parent that names no agreed code of the same book is a located
 `unresolved_classification_parent` error, never dropped silently; a cycle or a parent no

@@ -1,0 +1,28 @@
+{
+  "fails_if": "`_check_classification_timelines` (curation_tree.py) checks only that a timeline row names a curated book, so 'other', a real book outside family pair, loads and binds the 2020 window of a 'Source pair' declaration to a book of another family",
+  "sources": {
+    "description": "FK AMOUNT (2019-2020) declares the family alias 'Source pair'; books old and new of family pair and other of no family; the timeline names other for 2020.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "providers/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2019-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\"",
+        "classification = \"Source pair\""
+      ],
+      "classifications/old.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/new.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/other.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

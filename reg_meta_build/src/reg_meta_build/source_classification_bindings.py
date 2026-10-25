@@ -47,6 +47,18 @@ class ClassificationBindingResolution:
 
 
 @dataclass(frozen=True)
+class TimelineEdition:
+    """One `[[classification_timeline]]` row: the edition a register codes in over a
+    window (calendar ordinals), the entry it came from and its own row location."""
+
+    classification: str
+    start: int
+    end: int
+    entry: str
+    row: str
+
+
+@dataclass(frozen=True)
 class _Binding:
     valid_from: str
     valid_to: str
@@ -71,6 +83,8 @@ def _source_bindings(
     coding: Mapping[NativeKey, CodingResolution],
     classifications: Mapping[str, ResolvedClassification],
     withheld: Collection[str] = (),
+    timeline: Mapping[str, tuple[TimelineEdition, ...]] = {},
+    matched_timelines: set[str] | None = None,
 ) -> tuple[dict[NativeKey, list[_Binding]], list[ResolutionDiagnostic]]:
     """Read explicit declarations; an absent declaration is not a negative claim.
 
@@ -78,6 +92,9 @@ def _source_bindings(
     never by matching code contents or fragments of names/URLs. Corrected scopes
     and fields have already passed occurrence-case checks. They remain attached
     to their original evidence and cannot introduce delivery availability here.
+
+    A family reference the register's curated timeline covers binds each window
+    to the edition its row names; a window no row covers stays unresolved.
     """
     occurrences = tuple(occurrences)
     explicit = _explicit_coverage(occurrences)
@@ -94,6 +111,7 @@ def _source_bindings(
         bounds = _binding_bounds(occurrence, explicit)
         code = None
         slug = None
+        editions: tuple[TimelineEdition, ...] | None = None
         unspecified = (
             field.status == "unknown"
             and "classification_declared" not in occurrence.withheld_fields
@@ -128,39 +146,68 @@ def _source_bindings(
                     raise ValueError(
                         "classification family has an unconverted codebook"
                     )
-                # Which edition covers the occurrence cannot be checked while one
-                # is withheld, so the reference names it and is withheld with it.
-                covering = [member for member in members if member in withheld][:1]
-                for member in () if covering else members:
-                    book = classifications[member]
-                    valid_from, valid_to = book.valid_from, book.valid_to
-                    if all(
-                        (valid_from is None or date.fromordinal(lo).year >= valid_from)
-                        and (valid_to is None or date.fromordinal(hi).year <= valid_to)
-                        for lo, hi in bounds
-                    ):
-                        covering.append(member)
-                if len(covering) == 1:
-                    slug = covering[0]
-            if slug is None:
+                editions = timeline.get(field.value)
+                if editions is not None:
+                    if matched_timelines is not None:
+                        matched_timelines.update(e.entry for e in editions)
+                else:
+                    # Which edition covers the occurrence cannot be checked while
+                    # one is withheld, so the reference names it and is withheld
+                    # with it. A timeline names the edition per window instead, so
+                    # a withheld edition withholds only its own windows.
+                    covering = [m for m in members if m in withheld][:1]
+                    for member in () if covering else members:
+                        book = classifications[member]
+                        valid_from, valid_to = book.valid_from, book.valid_to
+                        if all(
+                            (
+                                valid_from is None
+                                or date.fromordinal(lo).year >= valid_from
+                            )
+                            and (
+                                valid_to is None
+                                or date.fromordinal(hi).year <= valid_to
+                            )
+                            for lo, hi in bounds
+                        ):
+                            covering.append(member)
+                    if len(covering) == 1:
+                        slug = covering[0]
+            if slug is None and editions is None:
                 code = "unresolved_classification_reference"
-            elif slug not in withheld and (
-                slug not in classifications or classifications[slug].slug != slug
+            elif (
+                slug is not None
+                and slug not in withheld
+                and (slug not in classifications or classifications[slug].slug != slug)
             ):
                 raise ValueError("source classification has an unconverted codebook")
-        periods = (
-            tuple(
-                (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
-                for lo, hi in bounds
+        # A timeline's editions are family members, converted (or withheld) per
+        # the family check above.
+        cut: list[tuple[int, int, str | None]] = []
+        if bounds is not None:
+            if editions is None:
+                cut = [(lo, hi, slug) for lo, hi in bounds]
+            else:
+                for lo, hi, row in _timeline_pieces(bounds, editions):
+                    if row is not None and matched_timelines is not None:
+                        matched_timelines.add(row.row)
+                    cut.append((lo, hi, None if row is None else row.classification))
+        pieces: tuple[tuple[str | None, str | None, str | None], ...] = (
+            ((None, None, slug),)
+            if bounds is None
+            else tuple(
+                (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat(), s)
+                for lo, hi, s in cut
             )
-            if bounds is not None
-            else ((None, None),)
         )
-        for start, end in periods:
-            if code is not None:
+        for start, end, book_slug in pieces:
+            # Only a timeline leaves a piece without a book and without a code.
+            gap = code is None and book_slug is None
+            piece_code = "unresolved_classification_reference" if gap else code
+            if piece_code is not None:
                 diagnostics.append(
                     ResolutionDiagnostic(
-                        code=code,
+                        code=piece_code,
                         severity="warning" if unspecified else "error",
                         subject=repr(key or occurrence.variable_key),
                         detail=(
@@ -168,6 +215,11 @@ def _source_bindings(
                             "unspecified; independently supplied declarations "
                             "remain usable."
                             if unspecified
+                            else f"Source classification declaration {field.value!r} "
+                            "cannot be bound in this window: no row of the "
+                            "register's classification timeline covers it, and no "
+                            "edition is inferred."
+                            if gap
                             else f"Source classification declaration {field.value!r} "
                             "cannot be bound at this exact column and scope; no "
                             "classification identity or period was inferred."
@@ -189,17 +241,23 @@ def _source_bindings(
                 _Binding(
                     start,
                     end,
-                    slug,
+                    book_slug,
                     refs,
                     (
                         f"Source classification declaration: {field.value!r}",
+                        # The entry's TOML pointer stays out of published text (#1708).
+                        *(
+                            (f"curated:classification_timeline -> {book_slug}",)
+                            if editions is not None and book_slug is not None
+                            else ()
+                        ),
                         *(
                             c.attribution
                             for c in occurrence.corrections
                             if c.attribution
                         ),
                     ),
-                    unresolved=code is not None,
+                    unresolved=piece_code is not None,
                 )
             )
     # Duplicate physical originals may state one identical unresolved declaration.
@@ -251,6 +309,14 @@ def _binding_bounds(
         if occurrence.column_key is not None
         else ()
     )
+    return _uncovered(bounds, covered)
+
+
+def _uncovered(
+    bounds: Iterable[tuple[int, int]], covered: Iterable[tuple[int, int]]
+) -> tuple[tuple[int, int], ...]:
+    """The parts of `bounds` no window of `covered` (sorted by start) covers."""
+    covered = tuple(covered)
     pieces = []
     for lo, hi in bounds:
         start = lo
@@ -263,6 +329,26 @@ def _binding_bounds(
         if start <= hi:
             pieces.append((start, hi))
     return tuple(pieces)
+
+
+def _timeline_pieces(
+    bounds: Iterable[tuple[int, int]], editions: tuple[TimelineEdition, ...]
+) -> list[tuple[int, int, TimelineEdition | None]]:
+    """`bounds` cut at the timeline's rows, in order: each piece a row covers with
+    that row, each piece no row covers with None."""
+    bounds = tuple(bounds)
+    rows = sorted(editions, key=lambda e: e.start)
+    pieces: list[tuple[int, int, TimelineEdition | None]] = [
+        (max(lo, row.start), min(hi, row.end), row)
+        for lo, hi in bounds
+        for row in rows
+        if row.start <= hi and row.end >= lo
+    ]
+    pieces.extend(
+        (lo, hi, None)
+        for lo, hi in _uncovered(bounds, ((r.start, r.end) for r in rows))
+    )
+    return sorted(pieces, key=lambda piece: piece[:2])
 
 
 def _column_evidence(
@@ -368,6 +454,8 @@ def apply_classification_cases(
     occurrences: Iterable[EffectiveOccurrence] = (),
     references: Mapping[str, str] | None = None,
     family_references: Mapping[str, tuple[str, ...]] = {},
+    timeline: Mapping[str, tuple[TimelineEdition, ...]] = {},
+    matched_timelines: set[str] | None = None,
     label_rules: Mapping[str, str] = {},
     override: tuple[str, str] | None = None,
     matched_labels: set[str] | None = None,
@@ -419,6 +507,8 @@ def apply_classification_cases(
         coding,
         classifications,
         withheld_classifications.keys(),
+        timeline,
+        matched_timelines,
     )
     rule_bindings, rule_diagnostics = _label_rule_bindings(
         coding, occurrences, label_rules
