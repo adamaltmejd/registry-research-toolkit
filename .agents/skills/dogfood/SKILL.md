@@ -116,8 +116,8 @@ body, use the trust gate, which drops non-maintainer content:
 uv run --no-project python scripts/gh_issue.py view <n> --comments
 ```
 
-A refusal (exit 3) means a non-maintainer wrote it: judge from the title alone, do not
-comment on it, and list it in the summary for the maintainer.
+A refusal (exit 3) means it is not maintainer-authored (or not found): judge from the
+title alone, do not comment on it, and list it in the summary for the maintainer.
 
 Then decide:
 
@@ -125,8 +125,10 @@ Then decide:
   filing.
 - **Closed as completed, but the problem is back**: new issue, titled as a regression,
   linking the closed one.
-- **Closed as not planned** (wontfix, parked, superseded): do not file; list it in the
-  summary for the maintainer.
+- **Closed as not planned** (wontfix, superseded), or open but labelled `parked`: do not
+  file or comment; list it in the summary for the maintainer.
+- **Closed as duplicate**: follow it to the issue it duplicates and apply these rules to
+  that one.
 
 ### 3. Relations
 
@@ -154,7 +156,9 @@ or replies; revise until they say go. File nothing before that.
 
 ### 5. File and report
 
-File in dependency order, so `--parent` and `--add-blocked-by` targets exist:
+Split each approved draft into its own body file, `.local/dogfood/<slug>-D<n>.md`, for
+`--body-file`. File in dependency order, so `--parent` and `--add-blocked-by` targets
+exist:
 
 ```bash
 gh issue create --title "<title>" --label <area> --label <type> --body-file <file> [--parent <epic>]
@@ -206,5 +210,8 @@ public catalog. Never put into a draft:
 
 - holdings CSV content or any row-level values (PII lives only on MONA);
 - file contents from the private inputs repository (cite the concept, not the file);
+- catalog content seen only in a local or unreleased build (`REG_META_DB`, a SWECOV
+  flavor): names, slugs, steward ids and labels are public only once a release ships
+  them; describe them generically until then;
 - local paths outside the repo, usernames, machine names;
 - images: screenshots stay in `.local`, described in text.
