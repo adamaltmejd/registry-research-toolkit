@@ -140,7 +140,7 @@ jobs:
     if: needs.changes.outputs.runner == 'true'
     services:
       mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
+        image: mcr.microsoft.com/mssql/server:2025-latest
         env:
           ACCEPT_EULA: "Y"
           # A throwaway container's password, not a secret.
