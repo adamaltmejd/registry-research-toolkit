@@ -27,14 +27,18 @@ shipped together, so neither succeeds the other).
 
 The same run reports two more kinds, also as worklist data only (#1907):
 
-- A CONTRADICTED EDGE is a curated succession edge with an `effective_year` that the
-  built catalog's deliveries disagree with: in the edge's scope (its variant, or
-  every variant when unscoped; its two columns at representation grain) the
-  predecessor still delivers in or after the effective year, or the successor
-  delivers before it. It prevents a page that tells the reader a column was renamed
-  in a year when both columns are listed (the 2016 `CfarNr → CfarNr_LISA` edge after
-  the 2026-10-01 errata delivered `CfarNr_LISA` for 1990–2015). An edge without an
-  `effective_year` makes no year claim and is not checked.
+- A CONTRADICTED EDGE is a curated succession edge (a relations.toml edge, `note`
+  `curated:…`; the builder's derived edges are not the curator's to fix) with an
+  `effective_year` that the built catalog's deliveries disagree with: in the edge's
+  scope (its variant, or every variant when unscoped; its two columns at
+  representation grain) the predecessor still delivers in or after the effective
+  year, or the successor delivers before it. It prevents a page that tells the
+  reader a column was renamed in a year when both columns are listed (the 2016
+  `CfarNr → CfarNr_LISA` edge after the 2026-10-01 errata delivered `CfarNr_LISA`
+  for 1990–2015). A variable-grain edge is allowed a dual-delivery transition: the
+  predecessor delivering in Y and Y+1 at most, the successor in Y-2 and Y-1 at most
+  (`_DUAL_DELIVERY_YEARS`). An edge without an `effective_year` makes no year claim
+  and is not checked.
 - A FOLD CANDIDATE is two variables of one register whose headers differ only by an
   exact provider suffix (`PROVIDER_HEADER_SUFFIXES`: `CfarNr` / `CfarNr_LISA`). The
   succession rule needs the SAME column, so it never pairs them, and an edge is the
@@ -42,8 +46,10 @@ The same run reports two more kinds, also as worklist data only (#1907):
   `AstNr_LISA` partition). A pair is dropped when the two headers were co-delivered
   as the provider exported them (`HushallsID` / `HushallsID_IoT`, 2020–2023), which
   is two quantities. Two overlaps do not count as co-delivery. An overlap where a
-  state is errata-attested (`errata:` provenance: documentation, not the provider's
-  export) is the curator's evidence to settle, and is reported. An overlap of one
+  state is errata-attested (added by an `[[errata.delivered]]` entry:
+  documentation, not the provider's export) is the curator's evidence to settle,
+  and is reported; a correction of an exported state (`errata:field` and the other
+  correction tables) is still the provider's export. An overlap of one
   handover year, the last year of one header and the first of the other
   (`FamTyp` / `Famtyp_BarnReg` in 2014, the shape the curated `FamStall` fold has),
   is a transition. A curated edge does not drop a fold candidate: the edge is the
@@ -58,7 +64,9 @@ from datetime import date, timedelta
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import fold_column, strip_provider_suffix
+from reg_meta_build.curation_tree import ErrataCuration
 from reg_meta_build.fqid_slugs import _toml_comment, _toml_str
+from reg_meta_build.scb_errata import _SOURCES as _COLUMN_SOURCES
 from reg_meta_build.source_files import _progress
 
 if TYPE_CHECKING:
@@ -71,8 +79,8 @@ class Era:
     identity a curator reads. `fqid` is the provider/register/variable slug triple
     (the FQID the emitted edge carries), `variant` the delivering register_variant
     slug, `column` the era's `delivery_column_name`, and `[valid_from, valid_to]`
-    the era window. `errata` marks a state an errata entry corrected or added
-    (an `errata:` provenance section), not the provider's own export."""
+    the era window. `errata` marks a state an `[[errata.delivered]]` entry added
+    (`_errata_attested`), not the provider's own export."""
 
     variable_id: int
     fqid: str
@@ -268,12 +276,28 @@ def _delivered_eras(conn: sqlite3.Connection) -> list[tuple[int, Era]]:
     ]
 
 
+# The `errata:<class>` provenance heads that do NOT add a delivery: a correction
+# table's own name (`curation_compile._curated_head`: `errata:field`,
+# `errata:flags`, ...) on a state the provider exported, and an `[[errata.column]]`
+# source (`errata:scb-docs`, `errata:steward-holdings`). Every other errata head is
+# an `[[errata.delivered]]` entry's `upstream` class, which is free text
+# (`omitted-column-in-version` by default), so the delivered class is what is left.
+_NON_DELIVERED_ERRATA_CLASSES = (
+    frozenset(ErrataCuration.model_fields) - {"delivered"}
+) | _COLUMN_SOURCES
+
+
 def _errata_attested(provenance: str | None) -> bool:
-    """True when an errata entry corrected or added the state: one of its
-    provenance lines opens with an `errata:<class>` head (`db.py` →
-    `variable_state.provenance`)."""
+    """True when an `[[errata.delivered]]` entry added the state: a delivery the
+    curator states from documentation, not one the provider's export lists. A
+    correction of an exported state (`errata:field` relabelling its header, a
+    flag or a storage type) does not count, and neither does a column an
+    `[[errata.column]]` entry minted. Any provenance line can carry the head: a
+    pooled state lists one per decision (`db.py` → `variable_state.provenance`)."""
     return provenance is not None and any(
-        line.startswith("errata:") for line in provenance.splitlines()
+        line.startswith("errata:")
+        and line.removeprefix("errata:") not in _NON_DELIVERED_ERRATA_CLASSES
+        for line in provenance.splitlines()
     )
 
 
@@ -317,13 +341,23 @@ def _codelivered(
     )
 
 
-def _edged_variable_pairs(conn: sqlite3.Connection) -> set[frozenset[str]]:
+# A curated succession edge's `note` provenance head (`curated:slug_toml`): the
+# edges a curator wrote in relations.toml, as opposed to the builder's own
+# (`derived:classification_vintage_lift`, `auto:timeseries_event`), which no
+# relations.toml edit can fix or delete.
+_CURATED_EDGE = "note LIKE 'curated:%'"
+
+
+def _edged_variable_pairs(
+    conn: sqlite3.Connection, *, curated_only: bool = False
+) -> set[frozenset[str]]:
     """The unordered variable-FQID pairs already joined by a succession edge, from
     BOTH `variable_replaced_by` and `representation_replaced_by` (the two grains
     this diagnostic proposes). Direction-blind on purpose: an existing edge either
-    way means the pair is curated, so it is not a candidate. The representation
+    way means the pair is settled, so it is not a candidate. The representation
     table is collapsed to its variable endpoints — a curated column rename between
-    two variables settles the pair whatever columns it names."""
+    two variables settles the pair whatever columns it names. `curated_only`
+    keeps the relations.toml edges alone."""
     # Both tables carry the same predecessor_*/successor_* endpoint columns, so one
     # statement serves both (the table names are literals, not input).
     sql = (
@@ -331,7 +365,7 @@ def _edged_variable_pairs(conn: sqlite3.Connection) -> set[frozenset[str]]:
         "         || predecessor_variable, "
         "       successor_provider || '/' || successor_register || '/' "
         "         || successor_variable "
-        "FROM {}"
+        "FROM {}" + (f" WHERE {_CURATED_EDGE}" if curated_only else "")
     )
     return {
         frozenset(row)
@@ -356,13 +390,31 @@ def _years(era: Era) -> tuple[int, int]:
     return int(era.valid_from[:4]), int(era.valid_to[:4])
 
 
+# Maintainer ruling (PR #1915): a variable that succeeds another can be delivered
+# beside it for a short transition (SUN2000 → SUN2020: both editions ship while
+# users switch). At variable grain an edge is not contradicted when the
+# predecessor's deliveries at or after the effective year Y all fall in
+# Y..Y+DUAL-1 and the successor's deliveries before Y all fall in Y-DUAL..Y-1. A
+# representation-grain edge names one column renamed to another, so it gets no
+# such allowance.
+_DUAL_DELIVERY_YEARS = 2
+
+
+def _dual_delivery(after: list[YearSpan], before: list[YearSpan], year: int) -> bool:
+    return all(hi < year + _DUAL_DELIVERY_YEARS for _, _, hi in after) and all(
+        lo >= year - _DUAL_DELIVERY_YEARS for _, lo, _ in before
+    )
+
+
 def _contradicted_edges(
     conn: sqlite3.Connection, eras: list[Era]
 ) -> list[EdgeContradiction]:
     """Every curated succession edge with an `effective_year` that its endpoints'
-    deliveries contradict, in its scope (module docstring). Errata-attested
-    states count: an errata delivery is what the catalog publishes, so it is what
-    the edge must agree with (#1907)."""
+    deliveries contradict, in its scope (module docstring). Only relations.toml
+    edges (`_CURATED_EDGE`) are read: the fix the worklist names is an edit there.
+    Errata-attested states count: an errata delivery is what the catalog
+    publishes, so it is what the edge must agree with (#1907). A variable-grain
+    dual-delivery transition (`_DUAL_DELIVERY_YEARS`) is not a contradiction."""
     by_fqid: dict[str, list[Era]] = {}
     for era in eras:
         by_fqid.setdefault(era.fqid, []).append(era)
@@ -383,7 +435,8 @@ def _contradicted_edges(
             "         || predecessor_variable, "
             "       successor_provider || '/' || successor_register || '/' "
             "         || successor_variable, effective_year "
-            "FROM variable_replaced_by WHERE effective_year IS NOT NULL"
+            "FROM variable_replaced_by "
+            f"WHERE effective_year IS NOT NULL AND {_CURATED_EDGE}"
         )
     ] + list(
         conn.execute(
@@ -392,7 +445,8 @@ def _contradicted_edges(
             "       successor_provider || '/' || successor_register || '/' "
             "         || successor_variable, "
             "       predecessor_column, successor_column, variant, effective_year "
-            "FROM representation_replaced_by WHERE effective_year IS NOT NULL"
+            "FROM representation_replaced_by "
+            f"WHERE effective_year IS NOT NULL AND {_CURATED_EDGE}"
         )
     )
 
@@ -419,6 +473,8 @@ def _contradicted_edges(
             for lo, hi in (_years(era),)
             if max(lo, since) <= min(hi, year - 1)
         ]
+        if pred_col is None and _dual_delivery(after, before, year):
+            continue
         if after or before:
             out.append(
                 EdgeContradiction(
@@ -623,7 +679,8 @@ def infer_succession_candidates(conn: sqlite3.Connection) -> SuccessionResult:
     )
     per_register_counts = dict(Counter(c.register_fqid for c in candidates))
     contradictions = _contradicted_edges(conn, [era for _, era in delivered])
-    folds = _fold_candidates(by_column, edged)
+    # The fold's "delete the edge" advice is for a relations.toml edge only.
+    folds = _fold_candidates(by_column, _edged_variable_pairs(conn, curated_only=True))
     _progress(
         f"  {len(candidates):,} succession candidate(s) across "
         f"{len(per_register_counts):,} register(s); "
@@ -724,8 +781,11 @@ def _contradiction_lines(contradictions: tuple[EdgeContradiction, ...]) -> list[
         "# A curated replaced_by edge whose effective_year the deliveries disagree",
         "# with, in the edge's scope (its variant, or every variant; its columns at",
         "# representation grain): the predecessor still delivers in or after the",
-        "# year, or the successor delivers before it. Fix or delete the edge in",
-        "# curation/relations.toml; a fold may be the right shape (below).",
+        "# year, or the successor delivers before it. A variable-grain edge may",
+        "# overlap as a dual-delivery transition: the predecessor through year+1,",
+        "# the successor from year-2. Derived edges are not listed. Fix or delete",
+        "# the edge in curation/relations.toml; a fold may be the right shape",
+        "# (below).",
     ]
     for c in contradictions:
         pred = c.predecessor + (
@@ -788,8 +848,8 @@ def _fold_lines(folds: tuple[FoldCandidate, ...]) -> list[str]:
         lines.append(_fold_side_comment("suffixed", f.suffixed))
         if f.errata_overlaps:
             lines.append(
-                "#     overlap attested only by errata (settle the evidence first): "
-                + _spans_text(f.errata_overlaps)
+                "#     overlap attested only by [[errata.delivered]] (settle the "
+                "evidence first): " + _spans_text(f.errata_overlaps)
             )
         if f.handover_years:
             lines.append(

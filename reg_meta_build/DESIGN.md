@@ -2559,12 +2559,23 @@ produce review material; they do not approve or apply new curation during a buil
 loadable TOML (#1907). A contradicted edge is a curated `replaced_by` edge with an
 `effective_year` that the deliveries in its scope disagree with: the predecessor still
 delivers in or after that year, or the successor before it (a reverse edge's years are
-excluded, so a header renamed and renamed back is not flagged). A fold candidate is a
+excluded, so a header renamed and renamed back is not flagged). Only relations.toml
+edges (`note` `curated:…`) are checked: a derived edge
+(`derived:classification_vintage_lift`) cannot be fixed by the edit the report names. A
+variable-grain edge is allowed a dual-delivery transition (maintainer ruling, PR #1915;
+classification-edition successions such as SUN2000 → SUN2020 ship both editions for a
+while): with effective year Y, it is not flagged when every predecessor delivery at or
+after Y falls in Y..Y+1 and every successor delivery before Y falls in Y-2..Y-1. A
+representation-grain edge names one column renamed to another, so any overlap is
+flagged, as is a longer one at variable grain. A fold candidate is a
 bare header and its twin with an exact provider suffix (`PROVIDER_HEADER_SUFFIXES` in
 `_curation.py`) under two variables of one register. The succession rule pairs only one
 column, so it never sees these, and an edge is the wrong shape for one quantity under
 two headers. A pair the provider exported together is two quantities and is dropped. An
-overlap through an errata-attested state is reported for the curator to settle, and a
+overlap through a state an `[[errata.delivered]]` entry added (a delivery stated from
+documentation, `errata:<upstream class>` provenance) is reported for the curator to
+settle; a correction of an exported state (`errata:field` and the other correction
+tables) or an `[[errata.column]]` mint counts as exported. A
 single shared handover year (one header's last, the other's first) is a transition. A
 curator lands a fold as register curation (`[[identity.partition]]` and
 `[[errata.field]]`), as `AstNr` / `AstNr_LISA` are.

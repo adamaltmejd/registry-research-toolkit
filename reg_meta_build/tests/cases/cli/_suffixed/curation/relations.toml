@@ -17,3 +17,21 @@ from_column = "BEL"
 to_column = "BELOPP"
 variant = "individer"
 effective_year = 2021
+
+# No edge for sun2000inr -> sun2020inr: the build chains the two SUN inriktning
+# editions by name and lifts that to the variables
+# (derived:classification_vintage_lift); sun2000inr delivers through 2022.
+
+# GKOD delivers 2020-2022, three years from the edge's: contradicted.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gkod"
+to = "scb/suffix/nkod"
+effective_year = 2020
+
+# GTAL delivers 2020-2021, a two-year dual delivery: allowed at variable grain.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/gtal"
+to = "scb/suffix/ntal"
+effective_year = 2020

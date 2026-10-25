@@ -11,6 +11,16 @@
         "effective_year": 2021,
         "predecessor_after": [],
         "successor_before": [["individer", 2020, 2020]]
+      },
+      {
+        "from": "scb/suffix/gkod",
+        "to": "scb/suffix/nkod",
+        "from_column": null,
+        "to_column": null,
+        "variant": "",
+        "effective_year": 2020,
+        "predecessor_after": [["individer", 2020, 2022]],
+        "successor_before": []
       }
     ]
   }

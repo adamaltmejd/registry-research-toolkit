@@ -1,0 +1,7 @@
+[classification]
+short_name = "SUN2000-INRIKTNING"
+slug = "sun2000-inriktning"
+name = "SUN 2000 inriktning"
+codes_file = "sun2000-inriktning.csv"
+[binding]
+value_set_labels = ["SUN 2000 Inriktning"]
