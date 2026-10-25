@@ -13,6 +13,18 @@
         "errata_overlaps": [],
         "handover_years": [["individer", 2020]],
         "edged": false
+      },
+      {
+        "register": "scb/suffix",
+        "suffix": "_MIDAS",
+        "base": "scb/suffix/famtyp",
+        "base_columns": ["FAMTYP"],
+        "suffixed": "scb/suffix/famtyp-midas",
+        "suffixed_columns": ["FAMTYP_MIDAS"],
+        "native_variable": null,
+        "errata_overlaps": [["individer", 2019, 2020]],
+        "handover_years": [],
+        "edged": false
       }
     ]
   }

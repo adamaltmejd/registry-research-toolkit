@@ -5,7 +5,9 @@
       "toml": {},
       "contains": [
         "#   --- scb/suffix: FAMTYP + _BARNREG",
-        "#     one handover year delivers both headers: individer 2020"
+        "#     one handover year delivers both headers: individer 2020",
+        "#   --- scb/suffix: FAMTYP + _MIDAS",
+        "#     overlap attested only by documentation ([[errata.delivered]] or a scb-docs [[errata.column]]; settle the evidence first): individer 2019..2020"
       ],
       "excludes": [
         "HID_IoT"

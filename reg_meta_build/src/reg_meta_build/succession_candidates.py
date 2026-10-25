@@ -46,13 +46,14 @@ The same run reports two more kinds, also as worklist data only (#1907):
   `AstNr_LISA` partition). A pair is dropped when the two headers were co-delivered
   as the provider exported them (`HushallsID` / `HushallsID_IoT`, 2020–2023), which
   is two quantities. Two overlaps do not count as co-delivery. An overlap where a
-  state is errata-attested (added by an `[[errata.delivered]]` entry:
-  documentation, not the provider's export) is the curator's evidence to settle,
-  and is reported; a correction of an exported state (`errata:field` and the other
-  correction tables) is still the provider's export. An overlap of one
-  handover year, the last year of one header and the first of the other
-  (`FamTyp` / `Famtyp_BarnReg` in 2014, the shape the curated `FamStall` fold has),
-  is a transition. A curated edge does not drop a fold candidate: the edge is the
+  state is errata-attested (documentation, not the provider's export: added by an
+  `[[errata.delivered]]` entry, or minted by an `[[errata.column]]` entry with
+  source `scb-docs`) is the curator's evidence to settle, and is reported; a
+  correction of an exported state (`errata:field` and the other correction tables)
+  is still the provider's export, and so is a `steward-holdings` mint (a steward's
+  physical holdings). An overlap of one handover year, the last year of one header
+  and the first of the other (`FamTyp` / `Famtyp_BarnReg` in 2014, the shape the
+  curated `FamStall` fold has), is a transition. A curated edge does not drop a fold candidate: the edge is the
   shape a fold replaces.
 """
 
@@ -79,7 +80,7 @@ class Era:
     identity a curator reads. `fqid` is the provider/register/variable slug triple
     (the FQID the emitted edge carries), `variant` the delivering register_variant
     slug, `column` the era's `delivery_column_name`, and `[valid_from, valid_to]`
-    the era window. `errata` marks a state an `[[errata.delivered]]` entry added
+    the era window. `errata` marks a state documentation attests
     (`_errata_attested`), not the provider's own export."""
 
     variable_id: int
@@ -276,27 +277,33 @@ def _delivered_eras(conn: sqlite3.Connection) -> list[tuple[int, Era]]:
     ]
 
 
-# The `errata:<class>` provenance heads that do NOT add a delivery: a correction
+# The `[[errata.column]]` sources that are documentation, not a delivery: SCB's
+# own documentation. Every other source (`steward-holdings`, a steward's physical
+# holdings) counts as exported (operator ruling, PR #1915).
+_DOCUMENTATION_COLUMN_SOURCES = frozenset({"scb-docs"})
+
+# The `errata:<class>` provenance heads that count as exported: a correction
 # table's own name (`curation_compile._curated_head`: `errata:field`,
-# `errata:flags`, ...) on a state the provider exported, and an `[[errata.column]]`
-# source (`errata:scb-docs`, `errata:steward-holdings`). Every other errata head is
-# an `[[errata.delivered]]` entry's `upstream` class, which is free text
-# (`omitted-column-in-version` by default), so the delivered class is what is left.
-_NON_DELIVERED_ERRATA_CLASSES = (
-    frozenset(ErrataCuration.model_fields) - {"delivered"}
-) | _COLUMN_SOURCES
+# `errata:flags`, ...) on a state the provider exported, and a non-documentation
+# `[[errata.column]]` source (`errata:steward-holdings`). Every other errata head
+# is documentation: an `[[errata.delivered]]` entry's `upstream` class, which is
+# free text (`omitted-column-in-version` by default), or `errata:scb-docs`.
+_EXPORTED_ERRATA_CLASSES = (frozenset(ErrataCuration.model_fields) - {"delivered"}) | (
+    _COLUMN_SOURCES - _DOCUMENTATION_COLUMN_SOURCES
+)
 
 
 def _errata_attested(provenance: str | None) -> bool:
-    """True when an `[[errata.delivered]]` entry added the state: a delivery the
-    curator states from documentation, not one the provider's export lists. A
-    correction of an exported state (`errata:field` relabelling its header, a
-    flag or a storage type) does not count, and neither does a column an
-    `[[errata.column]]` entry minted. Any provenance line can carry the head: a
-    pooled state lists one per decision (`db.py` → `variable_state.provenance`)."""
+    """True when documentation attests the state, not the provider's export: an
+    `[[errata.delivered]]` entry added it, or an `[[errata.column]]` entry with
+    source `scb-docs` minted it. A correction of an exported state (`errata:field`
+    relabelling its header, a flag or a storage type) does not count, and neither
+    does a `steward-holdings` mint, which a steward physically holds. Any
+    provenance line can carry the head: a pooled state lists one per decision
+    (`db.py` → `variable_state.provenance`)."""
     return provenance is not None and any(
         line.startswith("errata:")
-        and line.removeprefix("errata:") not in _NON_DELIVERED_ERRATA_CLASSES
+        and line.removeprefix("errata:") not in _EXPORTED_ERRATA_CLASSES
         for line in provenance.splitlines()
     )
 
@@ -848,8 +855,9 @@ def _fold_lines(folds: tuple[FoldCandidate, ...]) -> list[str]:
         lines.append(_fold_side_comment("suffixed", f.suffixed))
         if f.errata_overlaps:
             lines.append(
-                "#     overlap attested only by [[errata.delivered]] (settle the "
-                "evidence first): " + _spans_text(f.errata_overlaps)
+                "#     overlap attested only by documentation ([[errata.delivered]] "
+                "or a scb-docs [[errata.column]]; settle the evidence first): "
+                + _spans_text(f.errata_overlaps)
             )
         if f.handover_years:
             lines.append(
