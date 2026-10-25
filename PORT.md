@@ -16,15 +16,15 @@ each step by a zero dbdiff against the Python builder.
 
 ## Phases
 
-  | Phase | Content                                                                                                                                                                                                                    | Where         | Proof                                                                  | Status                                   |
-  | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------- | ---------------------------------------- |
-  | 0     | Cross-table `identity.assign` for LOVA, located errors for wrong-provider verbs, #1907 names                                                                                                                               | Python        | LOVA slice dbdiff, then the next curation real-seed build              | waits; the LOVA entry waits for evidence |
-  | 1     | b1 coverage rule, b2 release status in the SCB adapter, b3 literals to curation, b4 SoS register identity in the adapter                                                                                                   | Python        | slice dbdiff each; one shared real-seed build                          | not scheduled                            |
-  | 2     | Spec: `reg-build-model`, the verb schema and golden corpus, the converter with per-entry record-set equivalence, the dbdiff ignore list, the slice specs, the design docs, this tracker                                    | Rust + Python | record-set equivalence on slices 1-3; review                           | in progress                              |
-  | 3     | Rust resolve over the Python-prepared SQLite, slice by slice (below)                                                                                                                                                       | Rust          | per-slice `--registers` dbdiff = 0                                     | after phase 2                            |
-  | 4     | Cutover: full Rust build at the phase-1 Python release's pins and tree against that release's `reg_meta.db`; the provenance-head rename; commit the regenerated tree; delete the converter and the Python resolve pipeline | Rust          | full dbdiff = 0 under the ignore list, plus conformance                | maintainer schedules the run             |
-  | 5     | Raw decoders and preparation in Rust, then a new acceptance cycle; `dbdiff` and `build-docs` port                                                                                                                          | Rust          | prepared-record equivalence on the pinned inputs, then full dbdiff = 0 | —                                        |
-  | 6     | Neutral contract ids (`provider_key`, `register_id`, canonical band), identity across links, role/temporality/unit type, organization-wide definitions                                                                     | Rust          | reviewed dbdiffs; contract changes with the reader                     | —                                        |
+  | Phase | Content                                                                                                                                                                                                                             | Where         | Proof                                                                  | Status                                   |
+  | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------- | ---------------------------------------- |
+  | 0     | Cross-table `identity.assign` for LOVA, located errors for wrong-provider verbs, #1907 names                                                                                                                                        | Python        | LOVA slice dbdiff, then the next curation real-seed build              | waits; the LOVA entry waits for evidence |
+  | 1     | b1 coverage rule, b2 release status in the SCB adapter, b3 literals to curation, b4 SoS register identity in the adapter                                                                                                            | Python        | slice dbdiff each; one shared real-seed build                          | not scheduled                            |
+  | 2     | Spec: `reg-build-model`, the verb schema and golden corpus, the converter with per-entry record-set equivalence, the dbdiff ignore list, the slice specs, the design docs, this tracker                                             | Rust + Python | record-set equivalence on slices 1-3; review                           | in progress                              |
+  | 3     | Rust resolve over the Python-prepared SQLite, slice by slice (below)                                                                                                                                                                | Rust          | per-slice `--registers` dbdiff = 0                                     | after phase 2                            |
+  | 4     | Cutover: full Rust build at the phase-1 Python release's pins and tree against that release's `reg_meta.db`; the legacy-reference rename (below); commit the regenerated tree; delete the converter and the Python resolve pipeline | Rust          | full dbdiff = 0 under the ignore list, plus conformance                | maintainer schedules the run             |
+  | 5     | Raw decoders and preparation in Rust, then a new acceptance cycle; `dbdiff` and `build-docs` port                                                                                                                                   | Rust          | prepared-record equivalence on the pinned inputs, then full dbdiff = 0 | —                                        |
+  | 6     | Neutral contract ids (`provider_key`, `register_id`, canonical band), identity across links, role/temporality/unit type, organization-wide definitions                                                                              | Rust          | reviewed dbdiffs; contract changes with the reader                     | —                                        |
 
 Phase 1 b2 and b4 change the prepared payloads, so they need a new `prepare-sources` run
 and an acceptance cycle; the maintainer schedules them. The normalize mapping targets
@@ -40,7 +40,7 @@ today's v16 shape and names each one's delta in one place
 - **D3** SCB curation stops addressing by integers, once, at the port; the pin key is
   fixed at first pin and never re-derived from links.
 - **D4** `provider_key`, `register_id` and the canonical band are neutralized after the
-  port, batched with the provenance-head rename.
+  port, batched with the legacy-reference rename.
 - **D5** Identity across source links (a re-minted VarID) stays curation, with the
   succession worklist.
 - **D6** Coverage ⊆ table delivery coverage is a rule (phase-1 b1); the merged
@@ -57,6 +57,32 @@ today's v16 shape and names each one's delta in one place
   `parse-sos` are deleted at cutover; `entity-key-pins` is deleted in slice 7;
   `classification-residue` becomes part of the Rust build report.
 
+## Legacy references in the artifact
+
+The artifact stores old verb names in two places. Provenance heads (`errata:<class>`,
+`errata:<upstream>`, `errata:<source>`, `curated:<table>`, `curated:alias-window`,
+`curated:matrix-answer`; the full table is in
+[crates/reg-build-model/DESIGN.md](crates/reg-build-model/DESIGN.md) §11) are in
+`variable_state.provenance`. Curation case ids (`<file>#/<table>/<n>[/period/<k>]`) are
+in `data_warning.evidence_json`: 745 `case_id` values and 1,418 `acknowledged_by` refs
+in 0.64.0. Converted entries carry both verbatim (`legacy = { ref, head }`). The
+post-cutover rename PR rewrites heads and case ids together, as one reviewed dbdiff, so
+neither stays behind.
+
+## Known non-neutral addresses
+
+Some SCB VarID families share a column literal on the same table and delivery, so only
+SCB's VarID separates them. The converter tells them apart by the stated name
+(`where = { name = ... }`), which is exact today but rests on source wording. Phase 6
+and D5 revisit them. Known so far:
+
+- `scb/lbr.toml#/identity.partition/10`: `Lamm` under VarID 42421 and 42420 (2017).
+- `scb/energi-flerbostad.toml#/identity.unassigned/1`: VarID 2330's literals, also
+  delivered under eight or nine other VarIDs.
+
+PR C's converter writes the complete list (every `where = { name }` it emits to split a
+VarID family) into this section.
+
 ## Temporary code and its gates
 
   | Code                                                         | Deleted at                             |
@@ -67,11 +93,11 @@ today's v16 shape and names each one's delta in one place
 
 ## Phase 2
 
-  | PR  | Content                                                                | State |
-  | --- | ---------------------------------------------------------------------- | ----- |
-  | A   | this tracker, design docs, `reg-build-model` types and prepared reader | open  |
-  | B   | verb schema and golden corpus                                          | —     |
-  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | —     |
+  | PR  | Content                                                                | State          |
+  | --- | ---------------------------------------------------------------------- | -------------- |
+  | A   | this tracker, design docs, `reg-build-model` types and prepared reader | merged (#1935) |
+  | B   | verb schema and golden corpus                                          | open           |
+  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | —              |
 
 ## Phase 3 slices
 

@@ -1,0 +1,6 @@
+# An ambiguous token (D7): its one record (FDDD) belongs to both tables. No table slug
+# addresses it, so the token itself selects and `members` is empty.
+[[table.assign]]
+legacy = { ref = "curation/registers/sos/lmed.toml#/identity.route/1" }
+tables = ["lmed", "lmed-vara"]
+source_token = "LMED VARA/LMED"

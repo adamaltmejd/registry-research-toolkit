@@ -1,0 +1,6 @@
+# case: curation/registers/sos/lova.toml#/identity.rename/1
+[[identity.rename]]
+deldatamangd = "A_LOVA_PERSON"
+variable = "INVARN8"
+name = "Invandringsdatum 9 numerisk"
+column = "INVARN9"

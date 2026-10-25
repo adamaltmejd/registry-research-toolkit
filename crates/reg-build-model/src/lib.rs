@@ -5,11 +5,13 @@
 //! - [`model`]: registers, tables, deliveries, columns and column → variable links. Rules
 //!   and curation see only these.
 //! - [`prepared`]: the v16 prepared records as delivered. Only normalize reads them.
+//! - [`verbs`]: the neutral curation verbs as the converted tree states them.
 //! - [`Evidence`]: a prepared record behind an opaque handle, with its `evidence_sha256`.
 
 mod evidence;
 pub mod model;
 pub mod prepared;
+pub mod verbs;
 
 use std::fmt;
 use std::path::Path;

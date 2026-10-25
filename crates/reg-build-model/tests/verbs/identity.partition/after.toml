@@ -1,0 +1,15 @@
+[[identity.assign]]
+legacy = { ref = "curation/registers/scb/lbr.toml#/identity.partition/10" }
+ref = "Complete family and physical peers. Distinct literal fields preserve their own source name, definition, operation, coding, scope and variant; no shared source text establishes interchangeable meanings. Exact contrary literals are separately retained and only finite supported editions are owned. Batch54-five-collision-source-proof.json."
+data_warning = "The exact same delivered literal has contradictory simultaneous native owners. Retain every original assertion and ordered own coding; no winning meaning is inferred. Only witnessed contested variant/edition/literal windows remain unavailable, and supported other histories retain their original availability."
+guard = { expected_evidence_sha256 = "efa48897931db6dec6227754dfbb93ac68869abfe37e2540778f8a4aff8eb6f9" }
+
+[[identity.assign.link]]
+owner = "majs"
+members = [{ column = "majs" }]
+
+# `Lamm` is also VarID 42420's literal on the same table in the same delivery (2017), so
+# only the stated name tells VarID 42421's record apart.
+[[identity.assign.link]]
+owner = false
+members = [{ column = "Lamm", where = { name = "Majs" } }]

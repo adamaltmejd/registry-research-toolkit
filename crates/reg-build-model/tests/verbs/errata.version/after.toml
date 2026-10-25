@@ -1,0 +1,6 @@
+[[errata.delivery]]
+legacy = { ref = "curation/registers/scb/gdb.toml#/errata.version/1" }
+table = "individer"
+delivery = "1991-01-01"
+evidence = "SCB delivers GDB at person grain (maintainer ruling 2026-10-24, #1855); SWECOV holds the 1990 delivery. Under the GDB year-end rule (maintainer decision 2026-10-16) the GDB delivery for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB's Registerinformation export has no person-grain variant. Named in the YYYY-01-01 token convention of the GDB variants."
+noted = "2026-10-24"
