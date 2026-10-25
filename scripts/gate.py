@@ -87,7 +87,7 @@ def lint() -> None:
     run("uv run ruff format --check")
     run("uvx --from panache-cli==3.17.0 panache format --check .")
     run("uvx --from panache-cli==3.17.0 panache lint .")
-    run("uvx --from ty==0.0.90 ty check")
+    run("uvx --from ty==0.0.91 ty check")
 
 
 def g0(packages: list[str] | None = None) -> None:
