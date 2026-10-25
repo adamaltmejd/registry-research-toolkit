@@ -462,10 +462,6 @@ export function ConceptGroupView({
         ]}
       />
       <VariableTags tags={group.tags} />
-            </li>
-          ))}
-        </ul>
-      )}
       <TechnicalDetails>
         <KeyValue
           rows={[
