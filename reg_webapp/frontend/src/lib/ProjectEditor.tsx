@@ -10,7 +10,12 @@ import {
   Text,
 } from "react-aria-components";
 import { fqidSegments, registerPrefixOf } from "./catalog";
-import { registerRead, UNASKED } from "./catalog_names";
+import {
+  catalogNames,
+  registerRead,
+  UNASKED,
+  variantsByRegister,
+} from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import { dataAxis, yearSegmentsFromWire } from "./period";
 import {
@@ -38,9 +43,13 @@ import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useProject } from "./use_project";
-import { useCatalogRead } from "./use_store_read";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
-import { PROJECT_HEADING_ID, windowDisjointFindings } from "./validation";
+import {
+  PROJECT_HEADING_ID,
+  projectFindings,
+  windowDisjointFindings,
+} from "./validation";
 import type { WindowBounds } from "./window_bounds";
 
 // The /project page — a READ-ONLY data-order CART (#991/#993), not an editor.
@@ -223,6 +232,29 @@ export function ProjectEditor({
   );
   // One axis for every source card, so their periods line up (Q9).
   const axis = dataAxis(sourceYears, studyWindow, [bounds.min, bounds.max]);
+
+  // The sources' registers' variants, which a blocked order may print.
+  const registerVariants = useCatalogRead(
+    variantsByRegister,
+    useDistinct(
+      sources.map((s) => registerPrefixOf(safeSourceRegisterVariant(s))),
+    ),
+  );
+  // Every finding once, located; each renders on its card and the panel links
+  // to it (#1906).
+  const findings = projectFindings({
+    issues: validation?.issues ?? [],
+    orderFindings,
+    windowFindings: windowDisjointFindings(studyWindow, sources),
+    sources,
+    variantsByRegister: registerVariants,
+  });
+  // The coordinates the findings print, said in the catalog's words.
+  const coordinates = useDistinct(
+    findings.flatMap((f) => [...f.fqids, f.location?.catalogFqid ?? ""]),
+  );
+  const names = useCatalogRead(catalogNames, coordinates);
+  const catalogName = (fqid: string) => names[fqid] ?? null;
 
   // A hidden <input type=file> driven by the toolbar "Open" button.
   const fileInput = useRef<HTMLInputElement>(null);
@@ -476,7 +508,10 @@ export function ProjectEditor({
                         key={projectStore.sourceId(i)}
                         sourceIndex={i}
                         source={source}
-                        issues={validation?.issues ?? []}
+                        findings={findings.filter(
+                          (f) => f.location?.sourceIndex === i,
+                        )}
+                        nameOf={catalogName}
                         providerQualified={providerQualified}
                         studyWindow={studyWindow}
                         windowRelation={windowRelations[i] ?? null}
@@ -495,9 +530,9 @@ export function ProjectEditor({
             status={status}
             requestError={requestError}
             requestErrorSource={requestErrorSource}
-            orderFindings={orderFindings}
-            windowFindings={windowDisjointFindings(studyWindow, sources)}
+            findings={findings}
             sources={sources}
+            nameOf={catalogName}
             onRetry={() => void projectStore.validate()}
             onRetryOrder={() => void projectStore.downloadOrder()}
           />

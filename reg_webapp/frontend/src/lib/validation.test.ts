@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   codeLabel,
-  issuesUnderPointer,
   jsonPointer,
   KNOWN_CODES,
   orderFindingPointer,
@@ -52,44 +51,6 @@ describe("jsonPointer (inverse of parseJsonPointer)", () => {
     ]) {
       expect(parseJsonPointer(jsonPointer(tokens))).toEqual(tokens);
     }
-  });
-});
-
-describe("issuesUnderPointer (roll-up)", () => {
-  const issues = [
-    {
-      level: "error" as const,
-      code: "a",
-      path: "/sources/1",
-      message: "exact",
-      successor_fqid: null,
-    },
-    {
-      level: "error" as const,
-      code: "b",
-      path: "/sources/1/bindings/0/type",
-      message: "descendant",
-      successor_fqid: null,
-    },
-    {
-      level: "error" as const,
-      code: "c",
-      path: "/sources/10/name",
-      message: "sibling-10",
-      successor_fqid: null,
-    },
-    {
-      level: "warning" as const,
-      code: "d",
-      path: "",
-      message: "doc",
-      successor_fqid: null,
-    },
-  ];
-
-  it("does NOT false-match /sources/10 when the prefix is /sources/1", () => {
-    const under = issuesUnderPointer(issues, "/sources/1");
-    expect(under.some((i) => i.path.startsWith("/sources/10"))).toBe(false);
   });
 });
 

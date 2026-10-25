@@ -32,6 +32,9 @@ export interface LaneModel {
   /** A control beside the name that acts on this lane alone (the /project
    * source timeline's per-column remove). */
   action?: ReactNode;
+  /** Set directly under the lane's spans, across the whole lane: a /project
+   * column's findings (#1906). The lane grows to hold it. */
+  below?: ReactNode;
 }
 
 export interface LaneSpanModel extends LaneSpanGeometryInput {
@@ -61,6 +64,8 @@ export interface LaneEdgeModel {
   from: string;
   to: string;
   kind: LaneEdgeKind;
+  /** The year the succession takes effect: where an overlap's arrow drops. */
+  year?: number | null;
 }
 
 /** The variable page's coverage row (DESIGN.md → Time → Timeline), drawn
@@ -122,6 +127,20 @@ export function LaneGraph({
 }: Props) {
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
+  // The measured height of each lane's `below` block, so the lanes under it
+  // move down instead of being covered.
+  const [below, setBelow] = useState<ReadonlyMap<string, number>>(
+    () => new Map(),
+  );
+  const onBelowHeight = useCallback((id: string, height: number) => {
+    setBelow((current) => {
+      if (current.get(id) === height) return current;
+      const next = new Map(current);
+      if (height > 0) next.set(id, height);
+      else next.delete(id);
+      return next;
+    });
+  }, []);
   const markerId = useId();
   // The one DOM measurement: the graph's width, which the layout needs to
   // place labels and pack rows.
@@ -147,6 +166,7 @@ export function LaneGraph({
           window: addWindow ?? window,
           width,
           coverageRow: coverage !== undefined,
+          below,
         })
       : null;
   const spansByLane = new Map<string, LaneSpanModel[]>();
@@ -250,6 +270,15 @@ export function LaneGraph({
                         ) : null;
                       })}
                     </ul>
+                    {lane.below && (
+                      <LaneBelow
+                        id={lane.id}
+                        top={placed.height - (below.get(lane.id) ?? 0)}
+                        onHeight={onBelowHeight}
+                      >
+                        {lane.below}
+                      </LaneBelow>
+                    )}
                   </li>
                 );
               })}
@@ -476,6 +505,40 @@ function Marks({
   );
 }
 
+/** A lane's `below` block, reporting its height so the lane grows to hold it.
+ * Unmounting reports zero, which gives the room back. */
+function LaneBelow({
+  id,
+  top,
+  onHeight,
+  children,
+}: {
+  id: string;
+  top: number;
+  onHeight: (id: string, height: number) => void;
+  children: ReactNode;
+}) {
+  const measure = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return;
+      const observer = new ResizeObserver(([entry]) => {
+        onHeight(id, Math.ceil(entry.borderBoxSize[0]?.blockSize ?? 0));
+      });
+      observer.observe(node);
+      return () => {
+        observer.disconnect();
+        onHeight(id, 0);
+      };
+    },
+    [id, onHeight],
+  );
+  return (
+    <div ref={measure} className={styles.below} style={{ top }}>
+      {children}
+    </div>
+  );
+}
+
 /**
  * The lanes' names and actions without the drawing, one plain row each: for a
  * /project source whose period draws no lanes (a token period), so its columns
@@ -493,6 +556,7 @@ export function LaneList({
       {lanes.map((lane) => (
         <li key={lane.id}>
           <LaneName lane={lane} />
+          {lane.below && <div className={styles.listBelow}>{lane.below}</div>}
         </li>
       ))}
     </ol>
@@ -523,14 +587,22 @@ function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
           // The page's own subject (a group's focused member): said in words,
           // not only by the lane's fill.
           aria-current={lane.current ? "page" : undefined}
+          // The name and its line truncate; two lanes can then read alike
+          // (SyssStat11, SyssStat19), so the whole of each is the hover text.
+          title={lane.name}
         >
           {lane.name}
         </a>
       ) : (
-        <span className={styles.nameText}>{lane.name}</span>
+        <span className={styles.nameText} title={lane.name}>
+          {lane.name}
+        </span>
       )}
       {lane.sub && (
-        <span className={`${styles.sub} ${lane.sub.mono ? styles.mono : ""}`}>
+        <span
+          className={`${styles.sub} ${lane.sub.mono ? styles.mono : ""}`}
+          title={lane.sub.text}
+        >
           {lane.sub.text}
         </span>
       )}

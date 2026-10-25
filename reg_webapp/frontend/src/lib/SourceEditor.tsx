@@ -6,6 +6,7 @@ import {
   sourceCardHeading,
 } from "./catalog";
 import { registerRead, sourceNames, UNASKED } from "./catalog_names";
+import { FindingList, type NameOf } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
 import {
   LaneGraph,
@@ -56,11 +57,9 @@ import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
 import { useCatalogRead } from "./use_store_read";
 import {
-  issuesUnderPointer,
-  jsonPointer,
   PROJECT_HEADING_ID,
+  type ProjectFinding,
   sourceAnchorId,
-  type ValidationIssue,
 } from "./validation";
 
 // The source card of the #991 data-order cart: the cart SHOWS what has been picked
@@ -70,13 +69,17 @@ import {
 // (Y-81): it is a field of the source rather than of any pick, and this card is the
 // only surface that shows a source whole — its full coordinate and every binding it
 // carries — which is what a source-wide period rewrite has to be looked at against.
-// The header rolls up all errors under `/sources/{i}` as a badge (fixes are reached
-// via the ValidationPanel's catalog link). See reg_webapp/DESIGN.md.
+// Its findings sit under what they concern (#1906): a column's under its lane, the
+// source's own at the top of the card, and the header counts the errors among
+// them. See reg_webapp/DESIGN.md.
 
 interface Props {
   sourceIndex: number;
   source: SafeSource;
-  issues: readonly ValidationIssue[];
+  /** This source's findings (`projectFindings`), whichever check raised them. */
+  findings: readonly ProjectFinding[];
+  /** The catalog's words for the coordinates the findings print. */
+  nameOf: NameOf;
   /** Whether this deployment serves more than one provider, so the card names the
    * provider that owns the register: a bare register name can stand for two
    * registers there. A deployment fact, read once at the app root. */
@@ -129,7 +132,8 @@ const readUnasked = () => UNASKED;
 export function SourceEditor({
   sourceIndex,
   source,
-  issues,
+  findings,
+  nameOf,
   providerQualified,
   studyWindow,
   windowRelation,
@@ -138,11 +142,7 @@ export function SourceEditor({
 }: Props) {
   const periodLabelId = useId();
 
-  const rolledUp = issuesUnderPointer(
-    [...issues],
-    jsonPointer(["sources", sourceIndex]),
-  );
-  const errorCount = rolledUp.filter((i) => i.level === "error").length;
+  const errorCount = findings.filter((f) => f.level === "error").length;
   const registerVariant = safeSourceRegisterVariant(source);
 
   // The card is HEADED by the REGISTER this source delivers from and qualified by
@@ -167,6 +167,22 @@ export function SourceEditor({
   // Defensive: a malformed opened spec may carry `bindings` as a non-array.
   const bindings = safeSourceBindings(source);
   const bindingsMalformed = sourceBindingsMalformed(source);
+
+  // Where each finding renders: under its column's lane when the card draws
+  // one, else at the top of the card. The window finding is the period's own
+  // line, below.
+  const windowFinding = findings.find((f) => f.check === "window") ?? null;
+  const columnFindings = (j: number) =>
+    findings.filter(
+      (f) => f.check !== "window" && f.location?.bindingIndex === j,
+    );
+  const sourceFindings = findings.filter(
+    (f) =>
+      f.check !== "window" &&
+      (f.location?.bindingIndex == null ||
+        bindingsMalformed ||
+        f.location.bindingIndex >= bindings.length),
+  );
 
   // The panel/order join key (reg_meta `OrderEntry.source`): the one thing that
   // still differs between two sources an imported spec put on ONE register_variant.
@@ -355,10 +371,19 @@ export function SourceEditor({
       (typeof binding.representation === "string" && binding.representation);
     const columnLabel =
       fileColumn || columns[0]?.column || variable || "this column";
+    const laneFindings = bindingsMalformed ? [] : columnFindings(j);
     lanes.push({
       id,
       name: variableName || "(no variable)",
       href: variable ? catalogHref(variable) : null,
+      below:
+        laneFindings.length > 0 ? (
+          <FindingList
+            findings={laneFindings}
+            nameOf={nameOf}
+            label={`Findings on ${variableName || "this column"}`}
+          />
+        ) : null,
       // Removes this binding from THIS source only: a same-family source that
       // carries the column keeps it. Never disabled: a register read that
       // failed must not trap a column in the project.
@@ -444,7 +469,7 @@ export function SourceEditor({
   }
 
   return (
-    // `id` is the click-to-locate anchor the ValidationPanel scrolls to.
+    // `id` is where focus is sent after a removal.
     <section
       className={styles.source}
       id={sourceAnchorId(sourceIndex)}
@@ -482,6 +507,12 @@ export function SourceEditor({
           Remove source
         </Button>
       </header>
+
+      <FindingList
+        findings={sourceFindings}
+        nameOf={nameOf}
+        label={`Findings on ${heading}`}
+      />
 
       <ConfirmDialog
         isOpen={removeOpen}
@@ -617,17 +648,24 @@ export function SourceEditor({
               </StatusRow>
             )}
 
-            {studyWindow && windowRelation === "differs" ? (
+            {studyWindow && (windowFinding || windowRelation === "disjoint") ? (
+              // The one divergence that blocks the order (reg_webapp/DESIGN.md →
+              // "Common study window"). This row is the window finding; the
+              // summary panel's jump link lands on it.
+              <div
+                id={windowFinding?.id}
+                tabIndex={-1}
+                className={styles.jumpTarget}
+              >
+                <StatusRow tone="error">
+                  No years inside the study window{" "}
+                  {yearWindowLabel(studyWindow)}, so the order is blocked. Move
+                  the thumbs to overlap the window, or remove the source.
+                </StatusRow>
+              </div>
+            ) : studyWindow && windowRelation === "differs" ? (
               <StatusRow tone="warn">
                 Differs from study window {yearWindowLabel(studyWindow)}
-              </StatusRow>
-            ) : studyWindow && windowRelation === "disjoint" ? (
-              // The one divergence that blocks the order (reg_webapp/DESIGN.md →
-              // "Common study window").
-              <StatusRow tone="error">
-                No years inside the study window {yearWindowLabel(studyWindow)},
-                so the order is blocked. Move the thumbs to overlap the window,
-                or remove the source.
               </StatusRow>
             ) : null}
           </section>

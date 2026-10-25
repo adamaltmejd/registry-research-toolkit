@@ -88,3 +88,8 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
+
+/* The window finding's line: a jump-link target like every finding's. */
+.jumpTarget {
+  composes: jumpTarget from "./Finding.module.css";
+}

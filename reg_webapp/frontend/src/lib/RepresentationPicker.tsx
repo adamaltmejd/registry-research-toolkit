@@ -5,7 +5,9 @@ import {
   type PickerDimension,
   pickerFilterDimensions,
   pickerRowPasses,
+  registerPrefixOf,
 } from "./catalog";
+import { catalogNames, variantsByRegister } from "./catalog_names";
 import { type LaneCoverage, LaneGraph } from "./LaneGraph";
 import { type PickerBand, pickerLanes } from "./picker_lanes";
 import type { ProjectStudyWindow } from "./project_data";
@@ -21,6 +23,8 @@ import {
 import { Button } from "./ui/Button";
 import { ColumnChip } from "./ui/ColumnChip";
 import { FilterChip } from "./ui/FilterChip";
+import { useProject } from "./use_project";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 
 export type { PickerBand } from "./picker_lanes";
 
@@ -148,6 +152,17 @@ export function RepresentationPicker({
   const removes = new Set(
     [...staging.removes].filter((key) => committedRows.has(key)),
   );
+  const draft = useProject((store) => store.draft);
+  // The registers the lanes can reach, named for their lines: a neighbour in
+  // another register, or two lanes under one name.
+  const registers = useDistinct(
+    [
+      ...bands.map((band) => band.key),
+      ...(graph?.nodes ?? []).map((node) => node.fqid),
+    ].map(registerPrefixOf),
+  );
+  const names = useCatalogRead(catalogNames, registers);
+  const registerVariants = useCatalogRead(variantsByRegister, registers);
   const graphModel = pickerLanes({
     bands: shown,
     axes,
@@ -160,6 +175,9 @@ export function RepresentationPicker({
     drawnYears,
     catalogSpan,
     committed: committedRows,
+    draft,
+    variantsByRegister: registerVariants,
+    names,
     stagedAdds: adds,
     stagedRemoves: removes,
   });

@@ -29,6 +29,7 @@ import {
   type RegisterShow,
   type RootChild,
   type ShowNode,
+  type VariantModel,
 } from "./api";
 import { fqidSegments, registerPrefixOf, variantCardName } from "./catalog";
 
@@ -228,6 +229,22 @@ export function registerRead(registerFqid: string): Read<RegisterShow | null> {
   });
 }
 
+/** The variants of each register in `registers`, by register, from the shared
+ * `registerRead`; a register whose read has not landed (or failed) is absent.
+ * What names a variant family's members: the ones a blocked order's message may
+ * print (#1906) and the ones a neighbour lane's column may be in the project
+ * under (#1901). */
+export function variantsByRegister(
+  registers: readonly string[],
+): Record<string, readonly VariantModel[]> {
+  const out: Record<string, readonly VariantModel[]> = {};
+  for (const register of registers) {
+    const variants = registerRead(register).value?.variants;
+    if (variants) out[register] = variants;
+  }
+  return out;
+}
+
 /** `registerRead` once it has settled: the cached value at once when it has
  * landed, else the same read awaited (one read per register per session, shared
  * with every source card and register page). Null when the read failed or the ref
@@ -248,6 +265,63 @@ export function settledRegisterRead(
       }
     });
   });
+}
+
+/** The registers one provider owns, with their names. The PROVIDER's node names
+ * every register it owns, in one small payload, so a cart on several registers
+ * of one provider reads it once. */
+function providerRegisters(provider: string) {
+  return read(`registers:${provider}`, async () => {
+    const node = await getShow(provider);
+    return node.kind === "provider" ? node.children : [];
+  });
+}
+
+/** The catalog's words for each coordinate in `fqids` that it can name: a
+ * register by its name, a variable by its name, a register variant as its
+ * register and variant ("LISA, Individer 16 år och äldre"). The one helper for
+ * every place that holds a coordinate and would otherwise print it (#1906,
+ * #1901): a finding's message and its catalog link, a lane's register. A
+ * coordinate whose provider the deployment does not serve, or whose reads have
+ * not landed or failed, is absent and the caller prints what it has. Reads are
+ * the ones the source cards already make (one per provider, one per register). */
+export function catalogNames(fqids: readonly string[]): Record<string, string> {
+  const providers = new Set(
+    providersOf(catalogRootChildren()).map((child) => child.fqid),
+  );
+  const out: Record<string, string> = {};
+  for (const fqid of fqids) {
+    const [provider, register, leaf, ...rest] = fqidSegments(fqid);
+    if (!provider || !register || rest.length > 0 || !providers.has(provider)) {
+      continue;
+    }
+    const registerFqid = `${provider}/${register}`;
+    const registerName =
+      (providerRegisters(provider).value ?? [])
+        .find((r) => r.fqid === registerFqid)
+        ?.name?.trim() || null;
+    if (!leaf) {
+      if (registerName) out[fqid] = registerName;
+      continue;
+    }
+    const node = registerRead(registerFqid).value;
+    const variableName = node?.children
+      .find((child) => child.fqid === fqid)
+      ?.name?.trim();
+    if (variableName) {
+      out[fqid] = variableName;
+      continue;
+    }
+    // Not a variable of the register: a register variant, named as a source
+    // card names it (`_default` adds no word, #673).
+    const variantName = node ? variantCardName(node.variants, leaf) : null;
+    if (registerName && variantName !== null) {
+      out[fqid] = variantName
+        ? `${registerName}, ${variantName}`
+        : registerName;
+    }
+  }
+  return out;
 }
 
 /** The display names of one source's `register_variant` coordinate — all null until
@@ -274,12 +348,7 @@ export function sourceNames(registerVariant: string): SourceNames {
   }
   const registerFqid = registerPrefixOf(registerVariant);
   const root = catalogRootChildren();
-  // The PROVIDER's node names every register it owns, in one small payload, so a
-  // cart on several registers of one provider reads it once.
-  const registersRead = read(`registers:${provider}`, async () => {
-    const node = await getShow(provider);
-    return node.kind === "provider" ? node.children : [];
-  });
+  const registersRead = providerRegisters(provider);
   // The variants ride the register's own node, which carries its variables too:
   // one read per register, shared by every source on it.
   const registerNodeRead = registerRead(registerFqid);

@@ -929,7 +929,17 @@ kind:
   dimension surfaces only when it discriminates (≥2 distinct values). Filtering is a
   presentation lens: a hidden-but-selected row still commits, and the footer signals
   this. OR within a dimension, AND across. The binding leaf uses the same picker, with
-  read-only neighbour lanes for variables a succession edge reaches.
+  read-only neighbour lanes for variables a succession edge reaches (#1901). A neighbour
+  lane is not tickable, but its spans still show project membership
+  (`committedPickerRows` over the neighbour bands): selectability and "in project" are
+  separate. A lane never prints its slug, which names neither a column nor a variable;
+  two lanes under one name are told apart by the first of operational definition, facet
+  label, register name or delivery columns that differs across all of them, and a
+  neighbour in another register names that register. The succession arrow carries the
+  edge's `effective_year`: where the two spans overlap it drops at that year (clamped
+  onto both spans), else where the overlap begins. A variant-scoped edge reaches only
+  spans delivered under that variant, so it is drawn only where that variant's lanes are
+  shown.
 
   The **sequential-rename collapse** (#902) is client-side and purely presentational:
 
@@ -1386,7 +1396,7 @@ artifact's own identity, and a `scope` parameter is `invalid_parameter`.
   finding in `fields.findings`, each with its stable `code` and its `source` /
   `variable` / `period` coordinates). Fail-closed is a contract, so the findings ship as
   data: `orderFindingsFromError` narrows them at the HTTP boundary, and the SPA renders
-  each through the SAME per-finding path as a validation issue (`ValidationPanel`;
+  each through the SAME per-finding path as a validation issue (`projectFindings`;
   `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
   the by-POSITION pointer `findingLocation` already locates a card by). The finding
   shape is declared in `api.ts` (the error catalog types `fields` as an open object) and
@@ -1486,9 +1496,25 @@ widens the period); that drift is the **server validator's job** to surface
 study window, `period_outside_state_validity` when nothing is left,
 `binding_state_drifts_within_period` across a transition — see `crates/DESIGN.md` →
 Project semantic validation), and auto-validation surfaces it on every edit (§ "Browser
-storage + project-file persistence" below). `ValidationPanel` carries a "Fix in catalog"
-link on each finding that resolves a catalog coordinate, so the remediation path is
-always back to the catalog, never a cart-side patch.
+storage + project-file persistence" below). Each finding that resolves a catalog
+coordinate carries a "Fix <name> in the catalog" link, so the remediation path is always
+back to the catalog, never a cart-side patch.
+
+**Findings sit under what they concern (#1906).** `projectFindings` folds the three
+checks (a `/validate` issue, a blocked order's finding, the study window's disjoint
+source) into one located shape; `findingLocation` reads the JSON pointer to a source
+card and, for `/sources/i/bindings/j`, the column lane. A binding's finding renders
+under its lane (`LaneModel.below`; `LaneList` for a token period), a source's own at the
+top of its card, and the window finding as the period's error row. The summary panel
+(`ValidationPanel`) keeps the verdict, the count per level, the findings with no card
+(name, study window, schema) in full, and a jump link to each located one; there are no
+locate buttons. The validator keeps printing FQIDs: the UI names them. `catalogNames` is
+the one helper that turns a coordinate into the catalog's words (a register, a variable,
+a register variant as "LISA, Individer 16 år och äldre"), shared by finding messages
+(`plainMessage` replaces only the coordinates a finding is known to carry, as whole
+tokens), the "Fix in the catalog" link and the picker's lane disambiguator. A coordinate
+it cannot name stays as printed. The stable issue code sits in a delayed RAC `Tooltip`
+on the finding's title; pressing the title copies it.
 
 The one field a pick does NOT write is `display_name`, which it leaves **absent**. The
 field is optional — an absent one resolves to the reg_meta default from `variable_alias`
@@ -1804,8 +1830,8 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
 - **A window edit never rewrites a source period.** The slider writes `window` and
   nothing else. A source the new window leaves with no years inside it keeps its period
   and blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder`
-  refuses, the card shows an error row, and the validation panel lists each such source
-  (`windowDisjointFindings`) with the same locate and catalog links a finding gets. The
+  refuses, the card shows an error row, and the validation panel links to each such
+  source's row (`windowDisjointFindings`), as it does for any located finding. The
   banner's project chip says "Order blocked" (the panel's own wording) wherever
   validation alone would read "Draft valid" or "Warnings". The draft itself stays valid
   and downloadable.

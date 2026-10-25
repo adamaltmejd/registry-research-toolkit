@@ -6,11 +6,13 @@
  * returns (`ValidationResultModel`) and maps each `code` to a UI label/severity
  * hint for presentation.
  *
- * Two responsibilities:
+ * Three responsibilities:
  * 1. RFC-6901 JSON-pointer decoding (`parseJsonPointer`) so an issue `path`
- *    (`/sources/0/bindings/0/typ`) can be matched against a draft location — the
- *    A5.3c-ii inline field-highlighting seam (c-i only groups by level).
- * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
+ *    (`/sources/0/bindings/0/typ`) locates the source card and column lane it
+ *    concerns (`findingLocation`), where the finding renders (#1906).
+ * 2. One finding shape for every check (`projectFindings`): a validation issue, a
+ *    blocked order's finding and the study window's disjoint source.
+ * 3. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
  *    sources: structural (`crates/reg-core/src/structural.rs`; see crates/reg-core/DESIGN.md →
  *    Structural rules and issue codes), semantic (see crates/DESIGN.md →
@@ -20,8 +22,9 @@
  *    code + level).
  */
 
+import type { OrderBlocking } from "./api";
 import type { components as RustComponents } from "./api-types-rust";
-import { catalogHref, registerPrefixOf } from "./catalog";
+import { registerPrefixOf } from "./catalog";
 import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
   type ProjectStudyWindow,
@@ -63,8 +66,8 @@ export function parseJsonPointer(ptr: string): string[] | null {
  * later `~`→`~0` pass re-escapes into `~01`. This is the exact inverse of
  * `parseJsonPointer`'s `~1`→`/` then `~0`→`~` decode, so the two round-trip.
  * Numeric tokens (array indices) stringify. An EMPTY token array is the whole
- * document → `""`. Callers build a location's pointer with this and match it
- * against the server's issue list (e.g. `issuesUnderPointer`). */
+ * document → `""`. Callers build a location's pointer with this, so an SPA
+ * finding is located by the same `findingLocation` as a server one. */
 export function jsonPointer(tokens: (string | number)[]): string {
   if (tokens.length === 0) {
     return "";
@@ -72,27 +75,6 @@ export function jsonPointer(tokens: (string | number)[]): string {
   return `/${tokens
     .map((token) => String(token).replace(/~/g, "~0").replace(/\//g, "~1"))
     .join("/")}`;
-}
-
-/**
- * Every issue AT `prefix` OR BELOW it — the ROLL-UP lookup so a source/binding
- * header can badge all errors under its subtree (`/sources/{i}` rolls up
- * `/sources/{i}/bindings/0/type`, `/sources/{i}/name`, …). A descendant is matched
- * by `path === prefix` (exact) OR `path.startsWith(prefix + "/")` — the trailing
- * `/` guard is load-bearing: it stops `/sources/1` from false-matching
- * `/sources/10` (a bare `startsWith(prefix)` would). An empty `prefix` (whole
- * document) rolls up everything. */
-export function issuesUnderPointer(
-  issues: ValidationIssue[],
-  prefix: string,
-): ValidationIssue[] {
-  if (prefix === "") {
-    return issues;
-  }
-  const descendantPrefix = `${prefix}/`;
-  return issues.filter(
-    (issue) => issue.path === prefix || issue.path.startsWith(descendantPrefix),
-  );
 }
 
 /** A hand-maintained registry entry for a stable validation code. `label` is the
@@ -279,37 +261,71 @@ export function codeLabel(code: string): string {
   return KNOWN_CODES[code]?.label ?? code;
 }
 
-/** The DOM-anchor id of a source card. Mirrored by `SourceEditor`'s root
- * `id` so the findings panel's click-to-locate can `scrollIntoView`. */
+/** The DOM-anchor id of a source card: where focus goes after a removal, and
+ * the card a finding of that source renders in. */
 export function sourceAnchorId(sourceIndex: number): string {
   return `loc-source-${sourceIndex}`;
 }
 
-/** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
- * draft's sources — the summary list speaks "Source 'lisa_main', column
- * scb/lisa/adeldag" instead of leaking the raw pointer, carries the DOM-anchor id so
- * a click scrolls to the relevant card, AND — since the cart is read-only and fixes
- * happen in the catalog browser (#991) — an outbound `catalogHref` to the subject
- * page where the offending binding/source can actually be re-picked.
+/** Where a finding sits in the draft, read off its RFC-6901 `path`: the source
+ * card and, for a `/bindings/{j}` path, the column lane inside it. A finding
+ * renders there, under what it concerns (#1906); the summary panel only links to
+ * it. `catalogFqid` is the catalog page where it is fixed, since the cart is
+ * read-only (#991): the binding's variable, else the source's REGISTER (a variant
+ * slug is a query axis, not a browsable node, so a 3-segment link would be dead,
+ * #993). Null when that coordinate is missing or blank (a fresh unpicked row).
  *
- * `anchorId` is the source card the path reaches: a column draws as a lane of
- * its source's timeline, so a `/bindings/{j}` path locates its source. `label` names the source by its
- * authored `name` (falling back to the index when unnamed / out of range) and, for
- * a binding path, appends the binding's `variable` FQID. `catalogHref`/`catalogLabel`
- * point at the catalog subject page: the binding's `variable` FQID for a binding
- * path, the source's `register_variant` for a source path — both omitted (undefined)
- * when the coordinate is missing/blank (a fresh unpicked row) so the panel just
- * skips the link. A whole-document path (`""`) or a non-`/sources/...` path (e.g. a
- * top-level `/name`) has no card to locate → `null`, and the panel falls back to
- * showing the raw pointer. */
+ * Naming the place is the view's job: the words come from catalog reads
+ * (`catalogNames`), which a pure locator cannot make. */
 export interface FindingLocation {
-  label: string;
-  anchorId: string;
-  /** The catalog subject page for the located binding/source, when its
-   * variable/register_variant coordinate is resolvable — the read-only cart's
-   * "fix it in the browser" outbound link (#991). Omitted otherwise. */
-  catalogHref?: string;
-  catalogLabel?: string;
+  sourceIndex: number;
+  /** The column lane, or null for a finding about the source itself. */
+  bindingIndex: number | null;
+  catalogFqid: string | null;
+}
+
+/** A whole-document path (`""`) or a top-level one (`/name`, `/window`) has no
+ * card: null, and the finding stays in the summary panel. */
+export function findingLocation(
+  path: string,
+  sources: readonly SafeSource[],
+): FindingLocation | null {
+  const tokens = parseJsonPointer(path);
+  if (tokens == null || tokens[0] !== "sources" || tokens.length < 2) {
+    return null;
+  }
+  const sIdx = Number(tokens[1]);
+  // A source past the end (edited away since the request) has no card to render
+  // on: the finding stays in the summary panel rather than vanishing.
+  if (!Number.isInteger(sIdx) || sIdx < 0 || sIdx >= sources.length) {
+    return null;
+  }
+  const source = sources[sIdx] ?? null;
+  if (tokens[2] === "bindings" && tokens.length >= 4) {
+    const bIdx = Number(tokens[3]);
+    if (Number.isInteger(bIdx) && bIdx >= 0) {
+      const variable = bindingVariableAt(source, bIdx);
+      return {
+        sourceIndex: sIdx,
+        bindingIndex: bIdx,
+        catalogFqid: variable || null,
+      };
+    }
+  }
+  const rv = safeSourceRegisterVariant(source);
+  return {
+    sourceIndex: sIdx,
+    bindingIndex: null,
+    catalogFqid: (rv.length > 0 && registerPrefixOf(rv)) || null,
+  };
+}
+
+/** The variable FQID of a source's `index`th binding, or "" when it has none. */
+export function bindingVariableAt(source: SafeSource, index: number): string {
+  const variable = (
+    safeSourceBindings(source)[index] as { variable?: unknown } | undefined
+  )?.variable;
+  return typeof variable === "string" ? variable : "";
 }
 
 /** One source whose period has NO years inside the study window: the project's
@@ -323,8 +339,7 @@ export interface WindowDisjointFinding {
  * order download while the source keeps its explicit period. An SPA authoring
  * rule, not a re-implementation of a server one: the backend reads `window` only
  * for `source_period_narrower_than_available`, so this is the one place a disjoint
- * period is enforced. Located through `findingLocation`, so the panel renders it with the
- * same locate + catalog links a validation issue gets. */
+ * period is enforced. Located like any finding, so it renders on its card. */
 export function windowDisjointFindings(
   window: ProjectStudyWindow | null,
   sources: readonly SafeSource[],
@@ -347,67 +362,175 @@ export function windowDisjointFindings(
   return findings;
 }
 
-export function findingLocation(
-  path: string,
-  sources: readonly SafeSource[],
-): FindingLocation | null {
-  const tokens = parseJsonPointer(path);
-  // Only /sources/<i>[/bindings/<j>/...] paths name a locatable card.
-  if (tokens == null || tokens[0] !== "sources" || tokens.length < 2) {
-    return null;
-  }
-  const sIdx = Number(tokens[1]);
-  if (!Number.isInteger(sIdx) || sIdx < 0) {
-    return null;
-  }
-  const source = sources[sIdx] ?? null;
-  const rawName = safeSourceName(source);
-  const sourceLabel =
-    rawName.length > 0 ? `Source '${rawName}'` : `Source ${sIdx + 1}`;
+export type FindingLevel = "error" | "warning" | "info";
+export const FINDING_LEVELS: readonly FindingLevel[] = [
+  "error",
+  "warning",
+  "info",
+];
 
-  if (tokens[2] === "bindings" && tokens.length >= 4) {
-    const bIdx = Number(tokens[3]);
-    if (Number.isInteger(bIdx) && bIdx >= 0) {
-      const bindings = safeSourceBindings(source);
-      const variable = (bindings[bIdx] as { variable?: unknown } | undefined)
-        ?.variable;
-      const columnLabel =
-        typeof variable === "string" && variable.length > 0
-          ? `column ${variable}`
-          : `column ${bIdx + 1}`;
-      // The binding's own variable FQID is its catalog subject page; a fresh row
-      // with no variable yet has no target → omit the link.
-      const catalog =
-        typeof variable === "string" && variable.length > 0
-          ? { catalogHref: catalogHref(variable), catalogLabel: variable }
-          : {};
-      return {
-        label: `${sourceLabel}, ${columnLabel}`,
-        anchorId: sourceAnchorId(sIdx),
-        ...catalog,
-      };
-    }
+/** Every finding on the project in one shape, whichever check raised it: a
+ * `/validate` issue, a blocked order's finding (`/order`'s 422) or the study
+ * window's disjoint source. They differ in how they name their place, not in how
+ * they are shown. */
+export interface ProjectFinding {
+  /** Unique on the page: the DOM id the summary panel links to. */
+  id: string;
+  check: "validation" | "order" | "window";
+  level: FindingLevel;
+  title: string;
+  /** The stable code people cite; null for the SPA's own window finding. */
+  code: string | null;
+  message: string;
+  /** A blocked order's offending subperiod: the one edit that fixes it. */
+  period: string | null;
+  location: FindingLocation | null;
+  /** The catalog coordinates the message may print, so the view can say them in
+   * words (`plainMessage`): the located binding's variable, the source's
+   * register variant, a replacement's successor, an order finding's variable
+   * and every variant of its source's register (the family member it resolved). */
+  fqids: string[];
+}
+
+/** The coordinates of a located finding's card: its source's register variant
+ * and, for a binding, its variable. */
+function locatedFqids(
+  location: FindingLocation | null,
+  sources: readonly SafeSource[],
+): string[] {
+  if (location === null) return [];
+  const source = sources[location.sourceIndex] ?? null;
+  const registerVariant = safeSourceRegisterVariant(source);
+  return [
+    registerVariant,
+    // An unknown variant's message names the register it was looked up in.
+    registerPrefixOf(registerVariant),
+    location.bindingIndex === null
+      ? ""
+      : bindingVariableAt(source, location.bindingIndex),
+  ].filter((fqid) => fqid.length > 0);
+}
+
+/** A DOM id from a finding's content, with an occurrence suffix where two
+ * findings share one (two identical findings). Kept to a plain alphabet: a JSON
+ * pointer's `/` would need escaping in a selector. */
+function findingIds(bases: readonly string[]): string[] {
+  const seen = new Map<string, number>();
+  return bases.map((raw) => {
+    const base = `finding-${raw.replace(/[^A-Za-z0-9_-]/g, "_")}`;
+    const n = seen.get(base) ?? 0;
+    seen.set(base, n + 1);
+    return n === 0 ? base : `${base}-${n}`;
+  });
+}
+
+export function projectFindings({
+  issues,
+  orderFindings,
+  windowFindings,
+  sources,
+  variantsByRegister,
+}: {
+  issues: readonly ValidationIssue[];
+  orderFindings: readonly OrderBlocking[];
+  windowFindings: readonly WindowDisjointFinding[];
+  sources: readonly SafeSource[];
+  /** The sources' registers' variants: a blocked order prints the family
+   * member it resolved, which may not be the source's own variant. */
+  variantsByRegister: Readonly<Record<string, readonly { slug: string }[]>>;
+}): ProjectFinding[] {
+  const order = orderFindings.map((f): Omit<ProjectFinding, "id"> => {
+    const location = findingLocation(orderFindingPointer(f, sources), sources);
+    const register =
+      location === null
+        ? ""
+        : registerPrefixOf(
+            safeSourceRegisterVariant(sources[location.sourceIndex] ?? null),
+          );
+    return {
+      check: "order",
+      level: "error",
+      title: codeLabel(f.code),
+      code: f.code,
+      message: f.message,
+      period: f.period ?? null,
+      location,
+      fqids: [
+        ...locatedFqids(location, sources),
+        ...(variantsByRegister[register] ?? []).map(
+          (variant) => `${register}/${variant.slug}`,
+        ),
+        ...(f.variable ? [f.variable] : []),
+      ],
+    };
+  });
+  const window = windowFindings.map(
+    (f): Omit<ProjectFinding, "id"> => ({
+      check: "window",
+      level: "error",
+      title: "No years inside the study window",
+      code: null,
+      message: f.message,
+      period: null,
+      location: f.location,
+      fqids: [],
+    }),
+  );
+  const validation = issues.map((issue): Omit<ProjectFinding, "id"> => {
+    const location = findingLocation(issue.path, sources);
+    return {
+      check: "validation",
+      // An unknown level (forward-compat) reads as info, so it still shows.
+      level: FINDING_LEVELS.includes(issue.level as FindingLevel)
+        ? (issue.level as FindingLevel)
+        : "info",
+      title: codeLabel(issue.code),
+      code: issue.code,
+      message: issue.message,
+      period: null,
+      location,
+      fqids: [
+        ...locatedFqids(location, sources),
+        ...(issue.successor_fqid ? [issue.successor_fqid] : []),
+      ],
+    };
+  });
+  const all = [...order, ...window, ...validation];
+  const ids = findingIds(
+    all.map((f) =>
+      [
+        f.check,
+        f.code ?? "",
+        f.location?.sourceIndex ?? "",
+        f.location?.bindingIndex ?? "",
+      ].join("-"),
+    ),
+  );
+  return all.map((f, i) => ({ ...f, id: ids[i] }));
+}
+
+/** A finding's message with each catalog coordinate it names said in the
+ * catalog's words: "column 'scb/lisa/cfar-nummer' spans …" reads "column
+ * 'Arbetsställets CFAR-nummer' spans …". Only the coordinates the finding is
+ * known to carry are replaced, never a pattern hunted in the prose, and only as
+ * whole coordinates, so `scb/lisa/kon` leaves `scb/lisa/kon-2` alone. One the
+ * catalog cannot name (an unresolvable FQID) stays: the honest thing to print. */
+export function plainMessage(
+  message: string,
+  fqids: readonly string[],
+  nameOf: (fqid: string) => string | null,
+): string {
+  let out = message;
+  for (const fqid of new Set(fqids)) {
+    const name = nameOf(fqid);
+    if (!name) continue;
+    const escaped = fqid.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    out = out.replace(
+      new RegExp(`(?<![\\w/-])${escaped}(?![\\w/-])`, "g"),
+      () => name,
+    );
   }
-  // A source-level issue points at the source's REGISTER page — the 2-seg
-  // `provider/register` prefix of the `register_variant`, NOT the 3-seg coordinate.
-  // A variant slug is a query axis, not a browsable catalog node, so a 3-seg
-  // `/catalog/<provider>/<register>/<variant>` link would be dead (#993). When the
-  // register_variant has fewer than 2 segments (`registerPrefixOf` → "") there is no
-  // valid register prefix, so the link is omitted (the no-catalog fallback).
-  const rv = safeSourceRegisterVariant(source);
-  const registerPrefix = rv.length > 0 ? registerPrefixOf(rv) : "";
-  const catalog =
-    registerPrefix.length > 0
-      ? {
-          catalogHref: catalogHref(registerPrefix),
-          catalogLabel: registerPrefix,
-        }
-      : {};
-  return {
-    label: sourceLabel,
-    anchorId: sourceAnchorId(sIdx),
-    ...catalog,
-  };
+  return out;
 }
 
 /** The RFC-6901 pointer an ORDER finding names, so a blocked order renders
