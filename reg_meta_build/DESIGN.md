@@ -46,6 +46,15 @@ The builder has four steps:
 Cleaning and input storage below describe step 1. Common curation describes steps 2 and
 3 together. Strict and diagnostic builds describes step 4.
 
+Steps 1 and 2 do not meet their boundaries today. The common form is not common:
+`subject.variable` holds SCB's VarID for SCB and the delivered column for every other
+provider, only SCB has a delivery coordinate (`NativeCoordinates.edition_id` and edition
+parent facts), and variant and coverage are spelled three ways. Curation compensates with
+13 provider gates and 25 provider dispatch sites, and step 2 has 38 provider-dependent
+rules. The fix is the target design below, carried out as the Rust port of the builder
+([../PORT.md](../PORT.md)). Until it lands, the exceptions are listed at the end of this
+section.
+
 The maintained call path is `materialize.build_catalog`, which admits the paths and then
 runs two phases. `pipeline.resolve_catalog` runs
 `prepared_catalog.open_prepared_catalog_sources` → `curation_compile.compile_curation` →
@@ -143,24 +152,180 @@ diagnostic resolution of the same inputs.
   | 1    | `sources/*_records.py`, `sources/*_values.py`, source reference readers                    | Actual-format decoding.                                                                           |
   | 1    | `source_records.py`, `source_values.py`, `source_reference_records.py`, `normalization.py` | Common compact observations, values, literal reference declarations and mechanical normalization. |
   | 1    | `input_snapshot.py`, `prepared_sources.py`, `prepared_values.py`, `prepared_catalog.py`    | Capture, validation, compact storage and pinned prepared-input access.                            |
+  | 1    | `source_periods.py`, `edition_bounds.py`                                                   | SCB's period grammar for edition names, under neutral module names.                               |
   | 2    | `source_intervals.py`, `source_coding.py`, `source_formation.py`                           | Exact periods, membership reconciliation and ordinary variable formation.                         |
   | 2    | `catalog_dependencies.py`, `catalog_lineage.py`, `source_event_resolution.py`              | Supported catalog relationships and exact dependent omissions.                                    |
   | 2, 3 | classification binding modules                                                             | The label binding rule and per-classification overrides.                                          |
   | 3    | `source_curation.py`, `source_effects.py`, `source_naming.py`                              | Applicability, original-evidence corrections and checked naming.                                  |
   | 3    | `source_annotations.py`, `source_representations.py`                                       | Checked aliases and parallel columns.                                                             |
+  | 3    | `scb_errata.py`, `cis2016_matrix.py`                                                       | SCB errata loading and CIS 2016 matrix evidence.                                                  |
   | 3    | `curation_tree.py`, `curation_compile.py`                                                  | Validate tracked entries and compile scoped decisions in memory.                                  |
   | 4    | `materialize.py`, `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                   | Direct materialization, SQL schema, indexes and atomic publication.                               |
   | 4    | `validate.py`, `dbdiff.py`                                                                 | Structural/corpus verification and comparison.                                                    |
   | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
   | —    | `doc_db.py`                                                                                | Document indexing; independent of source fact resolution.                                         |
 
-Builder code still names specific registers or variants in three places. These are
-bounded exceptions to remove, not precedent for new source interpretation:
+Builder code still names specific providers, registers or variants. These are bounded
+exceptions to remove, not precedent for new source interpretation. Phase 1 of the port
+([../PORT.md](../PORT.md)) moves the literals to curation; the rest go with the port.
 
 - `sources/scb_records.py` `_PROJECTION_REGISTERS`, which reads one forecast register's
-  edition names as vintages;
-- the LISA code-membership anchor in `validate.py`;
-- the LISA variant pins in `source_inspection.py`.
+  edition names as vintages, and `LISA_REGISTER_ID = 34`.
+- `sources/lisa.py` pins one workbook layout by about 80 row numbers and literal texts,
+  despite "no custom adapter per SCB register" (Cleaning), and defaults LISA sensitivity
+  to true.
+- `cis2016_matrix.py` is per-survey Python on the build path.
+- `compile_scb_preliminary` (`curation_compile.py`) is an automatic rule, preliminary/
+  final supersession by a regex over SCB edition names, placed in curation compile.
+- `_UNIT_PAIRS` (`source_intervals.py`) holds member-specific unit reconciliations such
+  as `("Dagar", "Antal")`.
+- `PROVIDER_HEADER_SUFFIXES` and `_CODE_LABEL_PREFIXES` (`_curation.py`) are register
+  names inside rule code.
+- `_SWEDISH_MONTHS` (`source_periods.py`) has two entries and `_QUARTER_FROM_RE` matches
+  one exact label.
+- No rule bounds an SoS variable's coverage by its Deldatamängd's coverage, so 102
+  `lova.toml` `errata.occurrence_period` entries state it per member; the thin compile
+  applies the same bound automatically.
+- `{"scb", "sos"}` against every other provider decides which naming fields
+  `prepared_sources.py` reads.
+- `source_attribution` is the source register for SCB and the publisher for SoS.
+- The SoS register identity is parsed from the workbook filename in curation compile.
+- The SoS sanity gates in step 4 and the provider-gated corpus floors in `validate.py`,
+  plus the LISA code-membership anchor there, belong in release-tier conformance.
+- The LISA variant pins in `source_inspection.py`.
+
+## Target design: the common form
+
+This is the design the Rust port builds ([../PORT.md](../PORT.md)); today's Python
+builder does not yet follow it (Responsibilities). Every adapter, SCB's included,
+translates its deliveries into one neutral schema. Rules see only that schema, and
+curation addresses only its coordinates. The schema follows the GSIM-based model of
+Statistics Norway's metadata system ([ssb-datadoc-model], [vardef], [klass]) where it
+fits. The Rust types are `crates/reg-build-model`
+([../crates/DESIGN.md](../crates/DESIGN.md), "The builder model").
+
+[ssb-datadoc-model]: https://github.com/statisticsnorway/ssb-datadoc-model
+[vardef]: https://github.com/statisticsnorway/vardef
+[klass]: https://github.com/statisticsnorway/klass
+
+  | Fact                    | Holds                                                                                                                                                         | Today                                                                       |
+  | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+  | Provider                | the agency                                                                                                                                                    | `provider`                                                                  |
+  | Register                | name, provider, description                                                                                                                                   | `register`                                                                  |
+  | Table                   | register, unit type, population (16+ vs 15+, distinct from unit type), row keys (entity, time), references to other tables                                   | `register_variant`: SCB registervariant, SoS Deldatamängd                  |
+  | Delivery                | table, reference period, release status (preliminary/final), version label; only where the source documents deliveries                                       | only SCB, as `NativeCoordinates.edition_id` and edition parent facts        |
+  | Column                  | delivery (or table plus coverage), physical name, data type, length, unit, value-set binding, sentinels, its own coverage in one slot                         | spread over `SourceRecord` fields; coverage in two slots                    |
+  | Variable                | register, name, definition, unit type, measurement unit, classification, sensitivity                                                                          | `variable`                                                                  |
+  | Column → variable link  | the identity statement, with its source: stated by the provider, the default rule, or curated                                                                | implicit in `subject.variable`: a VarID for SCB, the column for the others |
+  | Classification          | family, versions with validity, items, sentinels, correspondences                                                                                             | classifications and editions                                                |
+  | Relations               | `same_as`, `replaced_by`, derived-from, code/label, concept groups                                                                                            | edges, groups, tags                                                         |
+  | Provenance on each fact | source-stated (with its evidence), rule-derived or curated (with its entry)                                                                                   | `provenance`, errata evidence                                               |
+
+Provider ids (SCB's VarID, RegVarID, RegVerID and CVID; SoS's Deldatamängd token) exist
+only inside opaque evidence. A CVID stays a join key on value associations; it never
+addresses curation. Role, temporality, unit type at variable grain and the meaning-change
+versus correction distinction are agreed facts that land after the port, because they
+change the reader contract too.
+
+### Column → variable links
+
+- **Stated.** An adapter emits a link when the source states identity. SCB's VarID says
+  "these columns, in these deliveries, are one variable". The VarID is evidence for the
+  link, never a catalog key.
+- **Default.** Where no source states identity, the same column literal within the
+  register is one variable. The literal is compared exactly after `normalize_token`, with
+  no case fold. This is today's scope (`native_variable_key` is register-scoped), so one
+  SoS column across several Deldatamängder is one variable with per-table states, and
+  curation splits from there.
+- **Precedence.** A stated link wins over the default, and a default link never merges
+  across stated links. Formation is "group columns by link" for every provider.
+- **Curation edits links** with one verb, `identity.assign`: it adds a link (a fold across
+  tables, such as LOVA's `ARB_MARK_STAT` and `ARB_MARK_STAT_LISA`) or removes one.
+- **A change of meaning is a link decision**: it splits the variable by period. A
+  correction of a stated fact is an erratum. Curators decide calls like FamTyp by asking
+  whether the meaning changed or the documentation was wrong.
+
+The variable stays register-scoped: it is what an FQID names and what an order selects.
+Cross-register identity stays a relation (`same_as`); an organization-wide definition
+layer is optional and comes after the port.
+
+A variable's naming pin key is fixed at first pin and never re-derived from links, so a
+fold's member set can change without moving a slug. A fold keeps the owner's existing
+key. The key belongs to no provider's grammar. The published `provider_key`,
+`register_id` and SCB canonical id band stay SCB's grammar until an explicit contract
+change after the port.
+
+### Stages
+
+  | Stage                                | Owns                                                                                                                         | May not see                                                         |
+  | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+  | 1 Adapter (one per delivered format) | decoding; mapping native ids to common coordinates; its own period grammar and release status; the table tokens it resolves | FQIDs, curation, other providers, any identity merge                |
+  | Common form (the prepared artifact)  | the schema above, with source-stated links; provider ids only in evidence                                                   | —                                                                   |
+  | 2 Rules                              | default links; formation by link; coverage bounded by table coverage; supersession by release status; coding; binding       | evidence, provider literals, register names, native ids             |
+  | 3 Curation                           | validating TOML addressed by common coordinates; resolving each address; guards over normalized projections; effects       | provider branches: no verb is valid for one provider only           |
+  | 4 Build                              | storage ids, naming, writing, derive, validate                                                                              | semantic choices                                                    |
+
+A coordinate a source lacks is a located `stale` or `invalid` entry, never a provider
+gate. If adapters can emit only common coordinates and curation can address nothing else,
+a provider-split verb cannot be written; in Rust the crate graph enforces it.
+
+### The neutral verb set
+
+A verb may name only these coordinates: the `register` (the file), a `table` (variant
+slug), a `delivery` (only where the source has deliveries), a `period` (ISO interval set),
+a `column` literal, `field` guards on what the source states, and an `owner` (a naming id
+or FQID of this register). No verb names a provider integer, an edition id, a
+Deldatamängd token or a bare variable key. The member selector is
+`M = {table?, column, delivery? | period?, where?: {field: value}}`. Each guard pins what
+the source states at the occurrence, as the adapter's normalized projection, so SCB's
+edition guards and SoS's coverage guards become one shape.
+
+  | Verb                                | Fact                                                                                                     | Replaces                                                                                   |
+  | ----------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+  | `identity.assign`                   | these member columns link to this owner, or to none (`owner = false`)                                    | `identity.partition`, `column_owner`, `unassigned`, `split`, `rename`                      |
+  | `table.assign`                      | these records or deliveries belong to that table                                                         | `identity.edition_split`, `identity.route` (ambiguous tokens only)                        |
+  | `errata.table`                      | a table exists that the source does not list                                                             | `[[variant]].name` in the SCB canonical band                                               |
+  | `errata.field`                      | one stated field is wrong; here is the value, or clear; adds `data_type`, `is_sensitive`, `is_identifier` | `errata.field`, `data_type`, `classification_reference`, `flags`                          |
+  | `errata.period`                     | the source's coverage for this occurrence was read wrongly                                               | `errata.occurrence_period`, one guard shape                                                |
+  | `errata.delivered`                  | the same column with the same meaning was also delivered here; optional donor table                     | `errata.delivered`, `errata.occurrence_carry`                                              |
+  | `errata.delivery`                   | the table delivered a delivery the source does not document                                              | `errata.version`                                                                           |
+  | `errata.column`                     | an undocumented column was delivered; mint a variable                                                    | `errata.column`, one loader                                                                |
+  | `errata.support`                    | this occurrence's assertion is a documented error; keep it as support                                    | `errata.support`, delivery or period instead of a required edition                        |
+  | `representation.parallel`           | several columns are forms of one variable per window                                                     | `representation.parallel`, `alias_window`                                                  |
+  | `representation.period_family`      | columns sharing a stem are one variable, one member per month                                           | unchanged                                                                                  |
+  | `representation.delivery_metadata`  | literal metadata may vary under one owner                                                                | unchanged                                                                                  |
+  | `representation.matrix`             | a CIS evidence file answers this occurrence                                                              | unchanged, `M` selector                                                                    |
+
+`coding.*`, enrichment, groups, code/label pairs, acknowledgements, classification
+timelines, documentary bindings and the global files keep their verbs; `coding.*` is
+re-addressed to `M`. The register verbs of the identity, errata, representation and
+coding families go from 30 to 20.
+
+`identity.assign` keeps every guard of the verbs it replaces: per-entry and per-member
+`expected_*` digests, delivery scopes, exact literal coverage (partition), complete
+original projections for field-value splits, the `owner = false` competition rule
+(`unassigned` refuses any competing entry), `data_warning` and `ref`. A source link that
+any assign touches must be fully reassigned, as partition requires today. Rename's
+`column_name` rewrite is an effect on the member itself, not an erratum stacked on the
+selector, which would base one decision on another correction's output (step 3).
+
+Three code-side rules leave Python for curation or neutral rules: `_PROJECTION_REGISTERS`
+becomes a register flag, `_UNIT_PAIRS` becomes curated entries, and
+`compile_scb_preliminary` becomes supersession over `release_status`.
+
+### Port invariants
+
+- **Port proof is a zero dbdiff** against the Python builder at the same pins, under the
+  committed ignore list. Content-changing work lands in Python before the port or in Rust
+  after it; content-neutral restructuring (the new types, re-addressing, verb merges)
+  rides with the port behind one TOML regeneration.
+- **Verb names are artifact content.** `_curated_head` writes `errata:<class>` or
+  `curated:<table>` into `variable_state.provenance`, and alias windows write
+  `curated:alias-window`. The converter keeps each entry's legacy head and Rust writes it
+  verbatim until one reviewed rename after cutover.
+- **Guard digests keep their basis.** Rust reproduces `evidence_sha256` over the prepared
+  records, so `expected_*_sha256` guards are carried unchanged
+  ([../crates/DESIGN.md](../crates/DESIGN.md), "Guard digest basis").
 
 ## Source observations and authority
 
@@ -241,12 +406,17 @@ changed evidence and block its reuse; it must not refresh the decision's expecta
 
 Adapters implement the formats actually delivered. A changed or ambiguous layout fails
 with retained evidence so the adapter can be repaired. There is no speculative parser
-for hypothetical future formats and no custom adapter per SCB register. Each refusal is
-a `SourceFormatError` whose code names the rule it breaks: `source_revision_changed`
-(the bytes differ from the selected revision), `source_file_unreadable`,
+for hypothetical future formats and no custom adapter per SCB register (the LISA
+workbook is the one exception, listed under Responsibilities). Each refusal is a
+`SourceFormatError` whose code names the rule it breaks: `source_revision_changed` (the
+bytes differ from the selected revision), `source_file_unreadable`,
 `code_list_layout_unsupported`, `code_list_name_invalid`, `scb_value_shape_unsupported`,
 `lisa_layout_unsupported`, `lisa_value_unsupported` (an availability period or
-sensitivity cell), `sos_variable_sheet_invalid` and `sos_worksheet_unsupported`.
+sensitivity cell), `sos_variable_sheet_invalid` and `sos_worksheet_unsupported`. A thin
+provider declaration that breaks its contract is `curated_source_invalid` in its adapter
+(`sources/curated_records.py`) and `thin_declaration_invalid` in curation compile.
+`sources/sos_records.py` still raises a plain `ValueError` at four sites; each should be
+a located `SourceFormatError`.
 
 `normalization.py` holds the shared mechanical rules. Normalization is idempotent and
 never replaces the original cells:
