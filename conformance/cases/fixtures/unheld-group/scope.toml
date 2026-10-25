@@ -1,4 +1,4 @@
-census_sha256 = "47194b42d62d6411a3bde97fee38b1385314df3149a2e995189ce44ee04ef670"
+census_sha256 = "fedfc2404a856c3ff39b9c13f4b71cbf9614cb4da9a517f34ce5079f199a6ca2"
 [[retain_unknown]]
 table = "Undated"
 register = "scb/example"

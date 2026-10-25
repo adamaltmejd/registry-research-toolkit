@@ -5,7 +5,7 @@
   },
   {
     "status": 200,
-    "json": {"/data/members/*/delivery_column": ["Unknown", "Unknown2"]}
+    "json": {"/data/members/*/delivery_column": ["Unknown", "Unknown2", "UnknownB"]}
   },
   {
     "status": 404,
@@ -33,7 +33,7 @@
   },
   {
     "status": 200,
-    "json": {"/data/items/*/type": ["variable"]}
+    "json": {"/data/items/*/type": ["variable", "variable"]}
   },
   {
     "status": 200,
