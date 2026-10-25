@@ -106,7 +106,9 @@ to_variant = "individer-15plus"
 #    predecessors, so the derived classification-vintage lift (grouped by register
 #    and variable name) never pairs them. Maintainer decision: curated succession
 #    effective 2019, the first SUN 2020 year, although the SUN 2000 inriktning and
-#    grupp variables are still delivered through 2021.
+#    grupp variables are still delivered through 2021. That three-year dual
+#    delivery is past the two-year allowance, so `succession-candidates` reports the
+#    inr and grp edges as contradicted; they stand (#1907).
 [[edge]]
 type = "replaced_by"
 from = "scb/lisa/sun2000niva"
@@ -134,6 +136,11 @@ note = "Utbildningsgrupp moved from SUN 2000 to SUN 2020"
 #    that are represented by distinct variable FQIDs. Coding changes inside a single
 #    variable's state timeline (for example the base huvudsaklig variables) stay in
 #    `variable_state` and do not get a separate variable-level edge.
+#    SNI 2002 → SNI 2007: LISA codes both editions side by side through 2010
+#    (SNI 2007 from 2007, Företag's Org_Sni2007G from 2008; SNI 2002 through 2010).
+#    Each effective_year is the successor's first year. The dual coding runs 3–4
+#    years, past the two-year co-delivery `succession-candidates` allows, so it
+#    reports these six edges as contradicted; they stand (#1907).
 [[edge]]
 type = "replaced_by"
 from = "scb/lisa/naringsgren-huvud-individ-sni92b"
@@ -194,7 +201,7 @@ note = "Huvudsaklig näringsgren, företag, grov nivå moved from SNI92 to SNI20
 type = "replaced_by"
 from = "scb/lisa/naringsgren-huvud-foretag-sni2002g"
 to = "scb/lisa/naringsgren-huvud-foretag-sni2007g"
-effective_year = 2007
+effective_year = 2008
 note = "Huvudsaklig näringsgren, företag, grov nivå moved from SNI2002 to SNI2007"
 
 [[edge]]
@@ -446,39 +453,6 @@ variant = "individer-15plus"
 effective_year = 2019
 note = "Sysselsättningsstatus, november moved from justerad metod 2011 to justerad metod 2019 when AGI replaced kontrolluppgift as the RAMS source"
 
-# ── LISA 2016 `_LISA` header renames: CfarNr / PeOrgNr (Y-88) ──
-#    Through årgång 2015 the individ variants delivered the workplace and company
-#    keys twice: LISA's own `CfarNr` / `PeOrgNr` beside the CO-DELIVERED
-#    Sysselsättningsregister columns `CfarNrSreg` / `PeOrgNrSreg` — a parallel
-#    reading, so the Sreg → `_LISA` pairings the diagnostic also emits are NOT
-#    renames and are not modeled here. From årgång 2016 the Sreg siblings stop
-#    and the surviving column carries the `_LISA` suffix. The documentation names
-#    the column `CfarNr_LISA` / `PeOrgNr_LISA` across the whole 1990–2017 span
-#    (`inputs:catalog/docs/markdown/lisa/_appendix-year-coverage.md`, Bilaga 9), so the
-#    2016 step is a delivery-header rename, not a new measure. Representation
-#    grain and VARIANT-SCOPED: `arbetsstallen` and `foretag` keep delivering the
-#    unsuffixed headers through 2023, so a variable-grain edge would assert a
-#    rename that never happened there.
-[[edge]]
-type = "replaced_by"
-from = "scb/lisa/cfar-nummer"
-to = "scb/lisa/cfar-nummer-2"
-from_column = "CfarNr"
-to_column = "CfarNr_LISA"
-variant = "individer-15plus"
-effective_year = 2016
-note = "LISA arbetsställe delivery column renamed CfarNr → CfarNr_LISA in the individ variant from årgång 2016"
-
-[[edge]]
-type = "replaced_by"
-from = "scb/lisa/person-orgnr"
-to = "scb/lisa/person-orgnr-2"
-from_column = "PeOrgNr"
-to_column = "PeOrgNr_LISA"
-variant = "individer-15plus"
-effective_year = 2016
-note = "LISA företag delivery column renamed PeOrgNr → PeOrgNr_LISA in the individ variant from årgång 2016"
-
 # ── LISA ESeG: yrkesbaserad → europeisk socioekonomisk gruppering (Y-88) ──
 #    The `ESeG` column is delivered by VarId 29960 ("Yrkesbaserad socioekonomisk
 #    gruppering", 2015) and then by VarId 35848 ("Europeisk socioekonomisk
@@ -495,19 +469,73 @@ to = "scb/lisa/eseg"
 effective_year = 2016
 note = "Yrkesbaserad socioekonomisk gruppering restated as the European ESeG standard (ISCO-08 via SSYK 2012) from årgång 2016"
 
-# ── KSju näringsgren: grouped-SNI 2009 column → NgGr1 (#875) ──
-#    The 2009 `lgrp` sibling is the grouped-SNI predecessor of `NgGr1`
-#    (2010–11). This is representation-grain because the succession is between
-#    delivery columns inside the curated KSju näringsgren concept group, not a
-#    whole-register or cross-register identity relation.
+# ── LISA föräldrapenning: STORE → MiDAS source switch (#1907) ──
+#    SCB: "Sedan 2014 används Försäkringskassans MiDAS som källa". ForPeng_* is
+#    delivered 1993-2012 and ForPeng_*_MiDAS from 2016, never together. Unlike
+#    the other LISA sickness series (one variable each across the 2016 `_MiDAS`
+#    header change, lisa.toml), the source changed, so the two stay separate
+#    variables joined by a succession. Variable grain.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/foraldrapenning-antal-bruttodagar"
+to = "scb/lisa/foraldrapenning-antal-bruttodagar-midas"
+effective_year = 2014
+note = "Föräldrapenning, bruttodagar sourced from Försäkringskassans MiDAS from 2014"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/foraldrapenning-antal-nettodagar"
+to = "scb/lisa/foraldrapenning-antal-nettodagar-midas"
+effective_year = 2014
+note = "Föräldrapenning, nettodagar sourced from Försäkringskassans MiDAS from 2014"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/foraldrapenning-ersattningsbelopp"
+to = "scb/lisa/foraldrapenning-ersattningsbelopp-midas"
+effective_year = 2014
+note = "Föräldrapenning, ersättningsbelopp sourced from Försäkringskassans MiDAS from 2014"
+
+# ── BReg familjetyp: FamTyp → Famtyp_BarnReg redefinition (#1907) ──
+#    Famtyp_BarnReg is delivered from "2014-12-31 enligt ny definition", and
+#    the 2014-12-31 date carries both FamTyp and Famtyp_BarnReg in two of the three
+#    variants (333.1077, 333.1079): a redefinition beside the old column, not a header rename (unlike
+#    FamStall_BarnReg, folded in breg.toml). A fold leaves that date with two
+#    parallel columns and no catalog representation, so the two stay separate
+#    variables joined by a succession. Variable grain.
+[[edge]]
+type = "replaced_by"
+from = "scb/breg/familjetyp"
+to = "scb/breg/famtyp-barnreg"
+effective_year = 2014
+note = "Familjetyp redefined from 2014-12-31 (Famtyp_BarnReg, enligt ny definition)"
+
+# ── KSju näringsgren: NgGr1 → lgrp (2009) → NgGr1 round trip (#875, #1907) ──
+#    The grouped näringsgren is delivered as `NgGr1` in 2006–07, as `lgrp` in
+#    2009 and as `NgGr1` again in 2010–11. This is representation-grain because
+#    the succession is between delivery columns inside the curated KSju
+#    näringsgren concept group, not a whole-register or cross-register identity
+#    relation. The return to `NgGr1` makes the two edges a time-monotone round
+#    trip, so both are scoped to the register's one variant (as FRIDA's firm key).
+[[edge]]
+type = "replaced_by"
+from = "scb/ksju/naringsgren"
+to = "scb/ksju/naringsgren-grupperad-2009"
+from_column = "NgGr1"
+to_column = "lgrp"
+variant = "sjukfranvaro-sjukloneperioden"
+effective_year = 2009
+note = "KSju grouped SNI delivered as lgrp in 2009 (NgGr1 2006–2007)"
+
 [[edge]]
 type = "replaced_by"
 from = "scb/ksju/naringsgren-grupperad-2009"
 to = "scb/ksju/naringsgren"
 from_column = "lgrp"
 to_column = "NgGr1"
+variant = "sjukfranvaro-sjukloneperioden"
 effective_year = 2010
-note = "KSju grouped SNI moved from lgrp (2009) to NgGr1 in 2010"
+note = "KSju grouped SNI moved from lgrp (2009) back to NgGr1 in 2010"
 
 # ── LISA yrke (SSYK): SSYK 96 → SSYK 2012 J16-frame succession (#400) ──
 #    The härledd J16-ram occupation columns recut from SSYK 96 to SSYK 2012 at
@@ -669,25 +697,20 @@ to = "scb/iot/cdisp504kevx"
 effective_year = 2021
 note = "Individbaserad ekvivalerad disponibel inkomst exkl. kapitalvinst (växelvist) recut to 2004 års definition"
 
-# ── RTB subject personnummer: column-era rename PNR → PersonNr (#846/#196) ──
-#    Representation-grain succession (`from_column`/`to_column`, #843). var 57
-#    ("Personnummer", RTB) delivered the subject key as the legacy `PNR` header in
-#    the early `familjer-1990-1997` variant (1990–1997) and as `PersonNr` from the
-#    `familjer-fran-1998` successor variant onward. The two headers NEVER co-occur
-#    (verified against the raw SCB Registerinformation.csv: `PNR` appears only in
-#    the 1990–1997 family variant, `PersonNr` in every other RTB variant). Both
-#    headers are one variable, `personnr` (rtb.toml 2.57 partition; row-key
-#    follow-up to #1849), so this edge records only the column rename within it.
-#    The co-delivered relation columns of var 57 (`PersonNrMor`/`PersonNrAnkn`/
-#    `PersonNrSamh`) are different ROLES and correctly stay split, untouched here.
+# ── RTB family frame: familjer-1990-1997 → familjer-fran-1998 (#846/#196, #1907) ──
+#    var 57 ("Personnummer", RTB) is delivered as the legacy `PNR` header only in
+#    the `familjer-1990-1997` variant and as `PersonNr` in `familjer-fran-1998` and
+#    every other RTB variant, several of them from 1961/1968. Both headers are one
+#    variable, `personnr` (rtb.toml 2.57 partition). The 1998 step is a change of
+#    variant, not a column rename inside one, so it is recorded as a variant
+#    succession; an unscoped column edge was contradicted by the other variants'
+#    pre-1998 `PersonNr` deliveries.
 [[edge]]
 type = "replaced_by"
-from = "scb/rtb/personnr"
-to = "scb/rtb/personnr"
-from_column = "PNR"
-to_column = "PersonNr"
-effective_year = 1998
-note = "RTB subject personnummer delivery column renamed PNR → PersonNr (era rename, never co-occurring)"
+from = "scb/rtb"
+from_variant = "familjer-1990-1997"
+to = "scb/rtb"
+to_variant = "familjer-fran-1998"
 
 # ── FRIDA firm key: variant-local gap-fill borgnr → persorgnr → borgnr (#846) ──
 #    Reg 121 var 56 ("Person-/organisationsnummer"). In the punktskatter-for-energi
