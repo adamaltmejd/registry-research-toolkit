@@ -228,6 +228,18 @@ export function registerRead(registerFqid: string): Read<RegisterShow | null> {
   });
 }
 
+/** Every `register/variant` coordinate of the registers in `registers`, from the
+ * register reads the source cards already make; empty for a read not yet landed.
+ * A blocked order's message names the family member it resolved, not always the
+ * source's own variant (#1906), so the view needs all of them to name it. */
+export function registerVariantFqids(registers: readonly string[]): string[] {
+  return registers.flatMap((register) =>
+    (registerRead(register).value?.variants ?? []).map(
+      (variant) => `${register}/${variant.slug}`,
+    ),
+  );
+}
+
 /** `registerRead` once it has settled: the cached value at once when it has
  * landed, else the same read awaited (one read per register per session, shared
  * with every source card and register page). Null when the read failed or the ref

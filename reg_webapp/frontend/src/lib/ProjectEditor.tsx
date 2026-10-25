@@ -10,7 +10,12 @@ import {
   Text,
 } from "react-aria-components";
 import { fqidSegments, registerPrefixOf } from "./catalog";
-import { catalogNames, registerRead, UNASKED } from "./catalog_names";
+import {
+  catalogNames,
+  registerRead,
+  registerVariantFqids,
+  UNASKED,
+} from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
 import { dataAxis, yearSegmentsFromWire } from "./period";
 import {
@@ -228,6 +233,13 @@ export function ProjectEditor({
   // One axis for every source card, so their periods line up (Q9).
   const axis = dataAxis(sourceYears, studyWindow, [bounds.min, bounds.max]);
 
+  // The sources' registers' variants, which a blocked order may print.
+  const registerVariants = useCatalogRead(
+    registerVariantFqids,
+    useDistinct(
+      sources.map((s) => registerPrefixOf(safeSourceRegisterVariant(s))),
+    ),
+  );
   // Every finding once, located; each renders on its card and the panel links
   // to it (#1906).
   const findings = projectFindings({
@@ -235,6 +247,7 @@ export function ProjectEditor({
     orderFindings,
     windowFindings: windowDisjointFindings(studyWindow, sources),
     sources,
+    registerVariants,
   });
   // The coordinates the findings print, said in the catalog's words.
   const coordinates = useDistinct(

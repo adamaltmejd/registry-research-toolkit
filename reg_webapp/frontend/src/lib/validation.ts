@@ -385,7 +385,8 @@ export interface ProjectFinding {
   location: FindingLocation | null;
   /** The catalog coordinates the message may print, so the view can say them in
    * words (`plainMessage`): the located binding's variable, the source's
-   * register variant, a replacement's successor, an order finding's variable. */
+   * register variant, a replacement's successor, an order finding's variable
+   * and every variant of its source's register (the family member it resolved). */
   fqids: string[];
 }
 
@@ -426,14 +427,25 @@ export function projectFindings({
   orderFindings,
   windowFindings,
   sources,
+  registerVariants,
 }: {
   issues: readonly ValidationIssue[];
   orderFindings: readonly OrderBlocking[];
   windowFindings: readonly WindowDisjointFinding[];
   sources: readonly SafeSource[];
+  /** Every `register/variant` coordinate of the sources' registers: a blocked
+   * order prints the family member it resolved, which may not be the source's
+   * own variant. */
+  registerVariants: readonly string[];
 }): ProjectFinding[] {
   const order = orderFindings.map((f): Omit<ProjectFinding, "id"> => {
     const location = findingLocation(orderFindingPointer(f, sources), sources);
+    const register =
+      location === null
+        ? ""
+        : registerPrefixOf(
+            safeSourceRegisterVariant(sources[location.sourceIndex] ?? null),
+          );
     return {
       check: "order",
       level: "error",
@@ -444,6 +456,9 @@ export function projectFindings({
       location,
       fqids: [
         ...locatedFqids(location, sources),
+        ...(register
+          ? registerVariants.filter((rv) => registerPrefixOf(rv) === register)
+          : []),
         ...(f.variable ? [f.variable] : []),
       ],
     };
