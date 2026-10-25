@@ -88,7 +88,10 @@ def locator(key: tuple[str, ...], file: str, record: str, cells: tuple[str, ...]
 def scb() -> SourceRecord:
     """Native ints, an edition parent with cell positions, unsorted multi-locators."""
     edition = coordinate(18774, "Lisa 2019 (preliminär)")
-    register, variant = coordinate(34, "LISA"), coordinate(1, "Individer 16 år och äldre")
+    register, variant = (
+        coordinate(34, "LISA"),
+        coordinate(1, "Individer 16 år och äldre"),
+    )
     key = ("34", "1", "18774", "3811")
     cells = (cell("Kolumnnamn", "DispInk04"), cell("Registerversionnamn", "Lisa 2019"))
     return SourceRecord.create(
@@ -239,7 +242,10 @@ def main() -> None:
             root,
             records=records,
             revisions=tuple(
-                {record.source_revision_id: revision(record.source) for record in records}.values()
+                {
+                    record.source_revision_id: revision(record.source)
+                    for record in records
+                }.values()
             ),
             scope="digest golden",
         )
@@ -261,7 +267,10 @@ def main() -> None:
             version = conn.execute("PRAGMA user_version").fetchone()[0]
             rows = {
                 table: [
-                    [value.hex() if isinstance(value, bytes) else value for value in row]
+                    [
+                        value.hex() if isinstance(value, bytes) else value
+                        for value in row
+                    ]
                     for row in conn.execute(f"SELECT * FROM {table} ORDER BY rowid")
                 ]
                 if table in {"payload", "occurrence"}

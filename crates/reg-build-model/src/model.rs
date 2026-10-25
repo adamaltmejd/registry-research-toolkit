@@ -41,7 +41,8 @@ key!(
     TableKey
 );
 key!(
-    /// A delivery within its table: SCB's edition name (Registerversionnamn).
+    /// A delivery within its table: SCB's edition name (the edition parent's
+    /// Registerversionnamn, whitespace-folded). The `RegVerID` stays in evidence.
     DeliveryKey
 );
 key!(
@@ -192,13 +193,23 @@ pub struct Table {
 pub struct Delivery {
     pub table: TableRef,
     pub key: DeliveryKey,
+    /// The day-precision period parsed from the delivery's name.
     pub period: Coverage,
+    /// Its year projection. Today's guards and errata read this form on its own
+    /// (`scope_payload` for SCB), so both are kept.
+    pub period_years: Coverage,
     pub release_status: ReleaseStatus,
     pub version_label: Option<String>,
+    /// The populations and object types the source states for this delivery. SCB
+    /// scopes them to the edition, not the table.
+    pub populations: Vec<String>,
+    pub object_types: Vec<String>,
     pub provenance: Provenance,
 }
 
-/// One delivered column: a register × table × (delivery or coverage) × literal.
+/// One delivered column: a register × table × (delivery or coverage) × literal under one
+/// link target. Several records can state it (SCB: one per population and object type
+/// of the delivery), and they may disagree on a field; each claim is kept.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Column {
     pub table: TableRef,
@@ -206,12 +217,12 @@ pub struct Column {
     pub delivery: Option<DeliveryKey>,
     pub coverage: Coverage,
     pub name: ColumnName,
-    pub fields: StatedFields,
+    /// Each stating record's fields, in record order.
+    pub claims: Vec<(StatedFields, Evidence)>,
     /// The token that joins this column to its value associations (SCB's `CVID`, a
     /// workbook value-list pointer). It never addresses curation.
     pub value_join: Option<String>,
     pub link: Link,
-    pub evidence: Evidence,
 }
 
 /// A source's own identity statement for a column, such as SCB's `VarID`. Opaque: it

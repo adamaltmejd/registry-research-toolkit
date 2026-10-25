@@ -29,7 +29,7 @@ and proves each step by a zero dbdiff against the Python builder.
 Phase 1 b2 and b4 change the prepared payloads, so they need a new `prepare-sources` run
 and an acceptance cycle; the maintainer schedules them. The normalize mapping targets
 today's v16 shape and names each one's delta in one place
-([crates/DESIGN.md](crates/DESIGN.md), "Normalize mapping").
+([crates/reg-build-model/DESIGN.md](crates/reg-build-model/DESIGN.md), §9 and §10).
 
 ## Settled decisions
 

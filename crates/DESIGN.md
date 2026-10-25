@@ -189,6 +189,10 @@ reader reads back the manifest's counts exactly (1,078,240 records, 201 evidence
 258,680 table rows, 11,124 evidence lines, 102 value children;
 `examples/prepared_root.rs`).
 
+**Normalize mapping.** How each provider's v16 records map to the model, the oddities a
+byte-exact port must keep and the payload deltas of phase-1 b2 and b4 are in
+[reg-build-model/DESIGN.md](reg-build-model/DESIGN.md).
+
 ### Guard digest basis
 
 Curation guards (`expected_evidence_sha256`, `expected_fields_sha256` and the other
