@@ -367,18 +367,16 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
 `bun run test`, or the pytest line of `gate.py rust`) on a 10-core developer Mac; CI is
 the job's `timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite
 over budget is a finding for the `test-audit` skill, not a reason to raise the number.
-The two R jobs' 20 min covers one timed-out R setup plus its retry; a healthy run takes
-about 6.
+The R packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat
+suites are run by hand, not by the gate or CI.
 
-  | Suite                                     | Local | CI job | Rationale                                                                                                                            |
-  | ----------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-  | `reg_meta_build/tests`                    | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
-  | `scripts/tests`                           | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most.         |
-  | `crates/` (`cargo test --workspace`)      | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
-  | conformance (`scripts/gate.py rust`)      | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
-  | frontend (`bun run test`)                 | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
-  | `reg_mona_runner` (`gate.py runner`)      | 10 s  | 20 min | One `Rscript` run per refusal locally; CI adds one SQL Server run of every extract case, after installing R and the ODBC driver.     |
-  | `reg_export_gate` (`gate.py export_gate`) | 10 s  | 20 min | The case corpus in one R session; the CI job also installs R and the arrow binary.                                                   |
+  | Suite                                | Local | CI job | Rationale                                                                                                                            |
+  | ------------------------------------ | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
+  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most.         |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
+  | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
+  | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
 Three verification gates cut across the tiers. They are named G0–G2 so they are not
 confused with the tiers; `conformance/README.md` ("Verification gates") has the G1

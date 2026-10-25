@@ -197,11 +197,13 @@ Stable; the process exits with the code of the first order, in name order, that 
 
 ## Tests
 
-Process-level, through `scripts/gate.py runner`: the script runs under `Rscript` against
-an export root, and tests read the exit code, the extracted files and logs. Locally (no
-SQL Server) one case per refusal code that fires before the database (2 to 6). In CI a
-SQL Server service container loads `tests/mssql/fixture.sql`, and one run extracts the
-conformance order goldens that cover filters and file topology plus the runner's own
+Process-level, run by hand
+(`Rscript -e 'testthat::test_dir("reg_mona_runner/tests/testthat")'`; neither the gate
+nor CI runs it): the script runs under `Rscript` against an export root, and tests read
+the exit code, the extracted files and logs. Locally (no SQL Server) one case per
+refusal code that fires before the database (2 to 6). Against a SQL Server
+(`SWECOV_TEST_CONNECTION`) that loads `tests/mssql/fixture.sql`, and one run extracts
+the conformance order goldens that cover filters and file topology plus the runner's own
 manifests (`tests/cases/*/order.json`: every encoding and delivery type, schema `P1105`,
 non-ASCII names, compact JSON, and `types-dta`, `types-parquet` and `types-csv` over one
 table of every mapped SQL type) and the refusals 7 and 8. Expected CSVs under

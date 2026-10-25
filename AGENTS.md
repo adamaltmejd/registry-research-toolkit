@@ -202,12 +202,8 @@ below are what an agent must follow when writing, changing or deleting a test. T
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `release`, `flows`, `frontend`, `runner`, `export_gate`).
-- `uv run --no-project scripts/gate.py runner` — `reg_mona_runner`: air, jarl and its
-  testthat suite (needs R with testthat, jsonlite, haven and arrow; the SQL Server cases
-  run only in CI).
-- `uv run --no-project scripts/gate.py export_gate` — `reg_export_gate`: air, jarl and
-  its case corpus (needs R with testthat, jsonlite and arrow).
+  `release`, `flows`, `frontend`). The R packages are not gated: their testthat suites
+  run only by hand (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
 - `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown) and ty only.
 - `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — lint, crates and
   the touched packages' tests, plus the conformance run against the Rust server.
