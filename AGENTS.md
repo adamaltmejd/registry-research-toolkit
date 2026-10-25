@@ -50,11 +50,11 @@ state.
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
   for cross-PR coordination. The current tracker is [PORT.md](PORT.md), the Rust port of
-  `reg_meta_build`; its gate is "Deleted when phase 4 (cutover) ships". Each tracker is **scoped and
-  self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X
-  ships"), gets deleted at that gate, and never outlives the refactor it tracks.
-  Per-package DESIGN.md notes for the same effort are still preferred where the scope is
-  package-local.
+  `reg_meta_build`; its gate is "Deleted when phase 4 (cutover) ships". Each tracker is
+  **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted
+  when stage X ships"), gets deleted at that gate, and never outlives the refactor it
+  tracks. Per-package DESIGN.md notes for the same effort are still preferred where the
+  scope is package-local.
 
 # Maturity and compatibility
 

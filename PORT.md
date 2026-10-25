@@ -168,18 +168,18 @@ authority.
 #### Oracle template
 
 ```sh
-SET='<spec list>'      # quote it: SoS names contain spaces and non-ASCII
+REG=(--registers '<spec>' --registers '<spec>' ...)  # one flag per SPEC; quote SoS names
 P=.local/build-2026-10-25/prepared
 C=6ca9467669b0838c7af6d04576cdb7c99abb48d5
 M=030c470955ff4394e95198ce99d6ddaa1115f898e91aae70242275fb61854008
 W=<scratch dir>
 RUSTUP_TOOLCHAIN=1.99.1 uv run --no-project scripts/real_seed_cache.py build \
   --prepared $P --input-commit $C --input-manifest-sha256 $M \
-  --registers "$SET" > $W/py.json            # add --diagnostic only per rule 5
+  "${REG[@]}" > $W/py.json            # add --diagnostic only per rule 5
 cp "$(jq -r .database $W/py.json)" $W/py.db  # strict: <entry>/catalog/reg_meta.db
-<convert --registers "$SET" --out $W/tree>
+<convert "${REG[@]}" --out $W/tree>
 <rust build-db --prepared $P --input-commit $C --input-manifest-sha256 $M \
-  --curation-dir $W/tree --registers "$SET" --db $W/rust>
+  --curation-dir $W/tree "${REG[@]}" --db $W/rust>
 uv run python -m reg_meta_build.dbdiff $W/py.db $W/rust/reg_meta.db \
   --ignore-file reg_meta_build/port/dbdiff_ignore.json --json > $W/diff.json
 ```
@@ -189,8 +189,9 @@ uv run python -m reg_meta_build.dbdiff $W/py.db $W/rust/reg_meta.db \
 register coordinate, so an SCB integer register id, a thin-provider `native_id` string,
 or an SoS register **name** (SoS coordinates carry no `native_id`), or
 `SOURCE:<that value>`. `[register].slug` and `provider/slug` are not accepted
-(`--registers sos/lova` fails with `pipeline_registers_unknown`). The CLI splits on `,`
-with no escape (`cli.py:1172`).
+(`--registers sos/lova` fails with `pipeline_registers_unknown`). `--registers` is
+repeated once per SPEC, so a name may contain a comma (the CLI fix that precedes slice
+3; it split on commas before).
 
 #### Park criterion (all slices)
 
@@ -291,8 +292,9 @@ Empty, left for later slices: `register_version`, `population`, `object_type`,
   (L408), `slug_dir_curates_canonical_scb` (L132), `validate._check_minted_id_bands`.
 - The common write path (preface).
 
-**Oracle.** Template with the set above; then again with 1b's two ids appended. Strict:
-thin scopes carry no acknowledgements and the full build is strict-clean.
+**Oracle.** Template with the set above, one `--registers` per id; then again with 1b's
+two ids appended. Strict: thin scopes carry no acknowledgements and the full build is
+strict-clean.
 
 **Park.** Common criterion, cap 3 sessions. Slice 1 is the skeleton, so a park here
 blocks every later slice; raise it at once.
@@ -361,7 +363,7 @@ the period verb. Global files as in slice 1, plus `relations.toml` (RTB: 7 `same
 - Value-set and conformance writers: `_write_value_sets`, `_write_conformance`
   (`materialize.py:563`).
 
-**Oracle.** Template with `SET=2`. Strict.
+**Oracle.** Template with `--registers 2`. Strict.
 
 **Park.** Common criterion, cap 3 sessions. A divergence in partition or column_owner
 guard semantics also blocks slice 4; flag it as such.
@@ -370,22 +372,25 @@ guard semantics also blocks slice 4; flag it as such.
 
 ### Slice 3: Socialstyrelsen, 13 registers
 
-**`--registers` set.** SoS SPECs are the register names from the workbooks:
+**`--registers` set.** SoS SPECs are the register names from the workbooks, one
+`--registers` per name:
 
-```
-Läkemedelsregistret,Registret över ekonomiskt bistånd,Cancerregistret,Dödsorsaksregistret,Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA),Insatser enligt lagen om stöd och service till vissa funktionshindrade,Insatser inom kommunal hälso- och sjukvård,Registret över insatser till barn och unga,Medicinska födelseregistret,Patientregistret,Socialtjänstinsatser till äldre och personer med funktionsnedsättning,Tandhälsoregistret
-```
+- Läkemedelsregistret
+- Registret över ekonomiskt bistånd
+- Cancerregistret
+- Dödsorsaksregistret
+- Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)
+- Insatser enligt lagen om stöd och service till vissa funktionshindrade
+- Insatser inom kommunal hälso- och sjukvård
+- Registret över insatser till barn och unga
+- Medicinska födelseregistret
+- Patientregistret
+- Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM
+- Socialtjänstinsatser till äldre och personer med funktionsnedsättning
+- Tandhälsoregistret
 
-That is 12. **LVM cannot be selected today**: its name is "Registret över tvångsvård
-enligt lagen om vård av missbrukare i vissa fall, LVM", the `SOURCE:ID` form contains
-the same comma, and the CLI splits on commas. Resolve before the slice starts, one of:
-
-- phase-1 b4 (SoS register identity in the adapter) gives SoS coordinates a `native_id`
-  without a comma; or
-- a minimal Python CLI change in its own PR (for example a repeatable `--registers`
-  flag), mirrored by the Rust CLI. It changes no content, but it is maintainer-visible.
-
-Until then run the 12 and leave LVM to slice 6.
+LVM's name contains a comma, so the slice needs the repeatable `--registers` flag (a
+separate Python PR, mirrored by the Rust CLI); it does not wait for phase-1 b4.
 
 **Tables populated** (0.64.0 reference for all 13): `register` 13, `register_variant`
 45, `variable` 1,740, `variable_state` 2,404, `source_relationship` 21 (documentary
@@ -428,7 +433,7 @@ LOVA's `identity.assign`. Re-count on the day. Global files as in slice 1, plus
   `source_scope` (`_window_within` L1279, `_windows_meet` L1294).
 - Coding verbs as in slice 2.
 
-**Oracle.** Template with the 12-name set (quoted). Strict.
+**Oracle.** Template with the 13 names, one `--registers` each. Strict.
 
 **Park.** Common criterion, cap 3 sessions.
 
@@ -546,7 +551,7 @@ edges leave LISA).
   behind `corpus`); the Rust validator must keep it until phase-1 b3 moves it to release
   conformance.
 
-**Oracle.** Template with `SET=34`. Strict.
+**Oracle.** Template with `--registers 34`. Strict.
 
 **Park.** Common criterion, cap 3 sessions.
 
@@ -556,8 +561,7 @@ edges leave LISA).
 
 **`--registers` set.** None: a full build of every scope (290 in 0.64.0: 238 SCB, 2
 canonical, 13 SoS, 37 thin). It is publishable, so the Python side needs a clean builder
-checkout at HEAD and the build is a heavy run the maintainer schedules. LVM is first
-compared here if slice 3 could not select it.
+checkout at HEAD and the build is a heavy run the maintainer schedules.
 
 **Tables populated.** All catalog tables except `holding_*`. New relative to slices 1-5:
 `search_pin` (2) and `search_synonym` (0 today), cross-slice edges (`variable_same_as`
