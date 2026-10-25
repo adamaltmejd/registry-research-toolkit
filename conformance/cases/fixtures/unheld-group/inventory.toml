@@ -10,6 +10,12 @@ name = "Observed"
 register_variant = "scb/example/annual"
 variable = "scb/example/value"
 representation = "Value"
+[[table.column]]
+name = "ObservedB"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value-b"
+representation = "ValueB"
 
 [[table]]
 id = "Annual2019"
@@ -20,3 +26,9 @@ name = "Observed"
 register_variant = "scb/example/annual"
 variable = "scb/example/value"
 representation = "Value"
+[[table.column]]
+name = "ObservedB"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/value-b"
+representation = "valueb"

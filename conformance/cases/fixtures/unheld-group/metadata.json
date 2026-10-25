@@ -13,6 +13,10 @@
         {
           "variable": "scb/example/value",
           "delivery_column_name": "Unknown2"
+        },
+        {
+          "variable": "scb/example/value-b",
+          "delivery_column_name": "UnknownB"
         }
       ]
     }

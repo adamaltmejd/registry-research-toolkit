@@ -1011,9 +1011,12 @@ without a tree, so a client fetches a subtree only when a reader opens it. A fil
 researcher looking for that concept in that register should find in one place: the
 variants that differ by unit, household definition, coexisting definitions or source,
 and the source's own components of the concept. To the user the group is the variable.
-They pick columns on the group page; the member variable pages are reference. A group
-never spans registers: disposable income in IoT and disposable income in LISA are two
-groups, and finding the concept across registers is a tag's job.
+The group page is its members' variable page: they pick columns there, and a member's
+own URL opens it focused on that member. A group never spans registers: disposable
+income in IoT and disposable income in LISA are two groups, and finding the concept
+across registers is a tag's job. A group ref (show `group`, schema `group`, graph
+`group_key`, a search group hit) names only a group whose member row for the variable is
+in scope; under holdings, a variable grouped only in reference reads as ungrouped.
 
 Machine-folded families are the narrowest case of the same rule: month-suffixed families
 (`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
@@ -1162,7 +1165,7 @@ renders it as-is and never assembles graph semantics. It composes the existing r
   representation under several columns, not a boundary.
 - **Empty graph means don't render.** A lone variable with no succession, no group
   siblings and one run, or a lone edition with no chain and no group, returns no nodes.
-- **Group ⇄ member.** A member ref roots the graph on its group's members, with
+- **Group ⇄ member.** A member ref roots the graph on its group's members in scope, with
   `focus_id` on the member; a group ref roots on the members with no focus. A member
   page and its group page therefore show the same union. A classification edition adds
   the groups of every edition on its chain, so an older edition shows the family its

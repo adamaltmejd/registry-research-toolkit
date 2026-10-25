@@ -20,7 +20,7 @@ use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
 use super::refs::{self, Target, VAR_ID, fqid, invalid_kind};
-use super::{Params, Server, cursor, states};
+use super::{Params, Server, cursor, show, states};
 use crate::held::{self, HELD_HI, HELD_LO};
 use crate::{Code, Error, Scope, hex};
 
@@ -56,7 +56,8 @@ pub struct SchemaColumn {
     source_register_text: Option<String>,
     definition: Option<String>,
     measurement_unit: Option<String>,
-    /// The variable's concept group, as a group ref.
+    /// The variable's concept group, as a group ref; null when no member row of it is in
+    /// scope.
     group: Option<String>,
     group_label: Option<String>,
 }
@@ -379,7 +380,7 @@ fn representations(
          {}, {}, {}, \
          (SELECT g.group_key || char(0) || g.label FROM concept_group_variable m \
           JOIN concept_group g ON g.group_id = m.group_id \
-          WHERE m.variable_id = v.variable_id ORDER BY g.group_key LIMIT 1) \
+          WHERE m.variable_id = v.variable_id AND {in_scope} ORDER BY g.group_key LIMIT 1) \
          FROM variable v JOIN expanded_state es ON es.variable_id = v.variable_id \
          JOIN variable_state vs ON vs.state_id = es.state_id \
          JOIN register_variant rv ON rv.register_variant_id = es.register_variant_id \
@@ -399,6 +400,9 @@ fn representations(
         per_column("definition"),
         per_column("measurement_unit"),
         states::within_state("es"),
+        // The group a column names is one its variable is a member of in scope,
+        // as `show` lists it.
+        in_scope = show::member_in_scope(scope, "m"),
     );
     let mut stmt = conn.prepare(&sql)?;
     let reps = stmt

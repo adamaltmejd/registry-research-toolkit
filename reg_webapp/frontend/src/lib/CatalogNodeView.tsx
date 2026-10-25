@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   type ClassificationRootShow,
   type ConceptGroup,
@@ -22,6 +23,7 @@ import {
 } from "./catalog";
 import { sharedShow } from "./catalog_names";
 import { RegisterView } from "./RegisterView";
+import { router } from "./router";
 import { DataTable } from "./ui/DataTable";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
@@ -60,8 +62,10 @@ export function CatalogNodeView({ fqidPath, ...period }: Props) {
   // Shared with the variables column, which reads the same register now.
   const resource = useAsyncResource(fqidPath, async (signal) => {
     const node = await sharedShow(fqidPath, signal);
-    // By the CANONICAL fqid: a bare-name ref resolves to it.
-    const states = node.kind === "variable" ? await getStates(node.fqid) : [];
+    // By the CANONICAL fqid: a bare-name ref resolves to it. A grouped
+    // member's page is its group's, which reads the states itself.
+    const states =
+      node.kind === "variable" && !node.group ? await getStates(node.fqid) : [];
     return { node, states };
   });
   const classification = fqidPath.startsWith("class/");
@@ -124,7 +128,12 @@ function NodeView({
     case "register":
       return <RegisterView node={node} {...period} />;
     case "variable":
-      return <BindingLeafView node={node} states={states} {...period} />;
+      // A concept group is its members' variable page (#1909).
+      return node.group ? (
+        <MemberRedirect groupRef={node.group} fqid={node.fqid} />
+      ) : (
+        <BindingLeafView node={node} states={states} {...period} />
+      );
     case "classification_root":
       return <ClassificationRootView node={node} />;
     case "classification": {
@@ -151,6 +160,26 @@ function NodeView({
         </StatusRow>
       );
   }
+}
+
+/** A grouped member's URL opens its group's page focused on it, in place of
+ * this history entry, carrying the URL's query (`?period`) along. History is
+ * the external system the effect syncs with. StrictMode's second run
+ * navigates again, a replace to the URL the first run already wrote, so it
+ * adds no history entry. */
+function MemberRedirect({
+  groupRef,
+  fqid,
+}: {
+  groupRef: string;
+  fqid: string;
+}) {
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    query.set("member", fqid);
+    router.navigate(`${catalogHref(groupRef)}?${query}`, { replace: true });
+  }, [groupRef, fqid]);
+  return null;
 }
 
 type RegisterRow = ProviderShow["children"][number];

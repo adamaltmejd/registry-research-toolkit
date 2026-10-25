@@ -15,7 +15,6 @@ import {
   type ShowNode,
   type VariableChild,
   type VariableDeliveryModel,
-  type VariableGraphNode,
   type VariableStateModel,
   type VariantModel,
 } from "./api";
@@ -289,92 +288,42 @@ export function memberKey(m: {
   return `${m.fqid}::${m.delivery_column ?? ""}`;
 }
 
-// ── Member-distinguishing qualifier (#670, graph-sourced #678) ───────────────
-// A grouped binding leaf (`scb/lisa/naringsgren-storsta-agi-sni2007g`) shares
-// its concept `node.name` with many siblings, so the header alone can't tell
-// members apart.
-// The #670 header qualifier + "member of ⟨group⟩" link now derive from the
-// relationship-graph FOCUS node (the `VariableGraphNode` whose `id === focus_id`)
-// instead of the retired `/dimensions` fetch (#678): the focus node already
-// carries the member's `facets` (axis:value:label) and `group_label`, so the
-// leaf's single graph fetch feeds both the renderer AND the header — no second
-// request. Unlike the old `/dimensions` form there is no MULTI-group canonical
-// ordering: the graph focus carries ONE group membership (the member's own
-// register group), so the facets are unambiguous.
-
-/** A member-distinguishing qualifier and whether it is the facet-label form or
- * the technical-identifier fallback — the discriminant the caller styles on
- * (`facets` → a human label `<span>`, `slug` → a mono `<code>`). */
-export type MemberQualifier = { text: string; kind: "facets" | "slug" };
+// ── Group facets ─────────────────────────────────────────────────────────────
 
 /** Join a faceted member's facet labels into one display string (comma-
- * separated) — the single home for the separator/ordering, shared by the header
- * qualifier (`qualifierFromFocus`) and the picker graph member-lane label. */
+ * separated): the one home for the separator, read by a group lane's title. */
 export function facetLabelJoin(facets: { label: string }[]): string {
   return facets.map((f) => f.label).join(", ");
 }
 
-function singleDeliveryColumnName(focus: VariableGraphNode): string | null {
-  const columns = new Set(
-    focus.states
-      .map((s) => s.delivery_column_name)
-      .filter((col): col is string => col != null && col !== ""),
-  );
-  return columns.size === 1 ? [...columns][0] : null;
+/** A group's axes that tell its lanes apart in bulk (#1904): an axis where
+ * some value is carried by two or more lanes. The filters act on lanes (one
+ * per variable, or per column of a variable split by column), so a value two
+ * members of one lane share still selects one lane. A one-to-one axis (each
+ * value one lane, e.g. DORS's `ordinal` 1…48) only repeats the lane list, so
+ * the group page hides its filter and its header values, and with every axis
+ * hidden titles the lanes by name. Every axis still orders the lanes. The one
+ * read the page's header, filter row and lane titles share. */
+export function informativeAxes(
+  axes: readonly GroupAxisModel[],
+  lanes: readonly { facets: readonly GroupFacetModel[] }[],
+): GroupAxisModel[] {
+  return axes.filter((axis) => {
+    const seen = new Set<string>();
+    return lanes.some((lane) => {
+      const facet = lane.facets.find((f) => f.axis === axis.name);
+      if (!facet) return false;
+      if (seen.has(facet.value)) return true;
+      seen.add(facet.value);
+      return false;
+    });
+  });
 }
 
-/** The member-distinguishing qualifier from the graph FOCUS node (#678): the
- * focus's facet labels joined with ", " (e.g. "AGI, 2007 SNI edition") when it
- * carries facets; else, for a GROUPED member with no facets (an edge group's
- * split siblings — `group_label` set, `facets: []`), a single authoritative
- * delivery column when the graph focus has one (#798), falling back to the leaf
- * slug (`kind: "slug"`); else `null` for an UNGROUPED variable (its `node.name`
- * suffices).
- *
- * `fqid` is the LEAF's own fqid — only a fallback for the focus node's `fqid`,
- * which is itself the slug-fallback source. The focus node's `fqid` is the
- * member's CANONICAL identity (post-same_as), so the slug fallback prefers it
- * (`focus.fqid ?? fqid`) — the alias page and the canonical page then show the
- * SAME technical identifier (#670 Codex-P2 parity, preserved from the retired
- * `memberQualifier`). The discriminated `kind` lets the caller pick a
- * presentation (facet label vs. mono code) without re-scanning. */
-export function qualifierFromFocus(
-  focus: VariableGraphNode | null | undefined,
-  fqid: string,
-): MemberQualifier | null {
-  if (!focus) {
-    return null;
-  }
-  if (focus.facets.length > 0) {
-    return { text: facetLabelJoin(focus.facets), kind: "facets" };
-  }
-  // Grouped (a group label) but facet-less → a technical identifier distinguishes
-  // the split siblings. Prefer the authoritative delivery-column casing when this
-  // member resolves to exactly one column (#798). Otherwise prefer the focus node's
-  // own canonical fqid so an alias page shows the canonical sibling slug, not its
-  // alias; fall back to the leaf arg when the focus carries no fqid. Ungrouped (no
-  // group label) → null.
-  return focus.group_label != null
-    ? {
-        text: singleDeliveryColumnName(focus) ?? leafSlug(focus.fqid ?? fqid),
-        kind: "slug",
-      }
-    : null;
-}
-
-/** The "member of ⟨group label⟩" context link from the graph FOCUS node + the
- * leaf's `node.group` ref (#678). The label comes from the focus node's
- * `group_label`; the HREF comes from the leaf's group ref
- * (`group/<provider>/<register>/<key>`), resolved server-side. `null` when
- * ungrouped (no `group_label`) or when the leaf carries no group ref. */
-export function groupLinkFromFocus(
-  focus: VariableGraphNode | null | undefined,
-  ref: string | null | undefined,
-): { label: string; href: string } | null {
-  if (!focus || focus.group_label == null || !ref) {
-    return null;
-  }
-  return { label: focus.group_label, href: catalogHref(ref) };
+/** A state's identity in a list: its state, column and start, so a column's
+ * renamed spellings of one state stay apart. */
+export function stateKey(state: VariableStateModel): string {
+  return `${state.state_id}|${state.delivery_column_name ?? ""}|${state.valid_from}`;
 }
 
 /** A node's display label — its `name` when present, else its FQID. Groups are
@@ -1772,6 +1721,10 @@ export function pickerFilterDimensions(
   }
 
   if (options.includeRowDimensions !== false) {
+    // Variant and coding are exempt from the group page's one-to-one rule
+    // (`informativeAxes`, #1904): they stay even when each value selects one
+    // member, because they name the unit of observation (the population, the
+    // coding), which a member's title does not say.
     // Variant (population) — a per-ROW dimension keyed on the family key when a
     // curated variant family exists, displayed by its family label.
     const variantSeen = new Map<string, string>();

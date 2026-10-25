@@ -885,7 +885,7 @@ fn admission(q: &str, fts: &str, scope: Scope, years: Option<(u16, u16)>) -> Adm
 }
 
 /// Concept groups of `kind` whose label (folded by `fold_identity`) or key contains
-/// the raw query. A variable group needs a member in scope (and, under `period`, a
+/// the raw query. A variable group needs a member row in scope (and, under `period`, a
 /// member state overlapping it) and sits in the `register` filter's register.
 fn label_hits(
     conn: &Connection,
@@ -904,10 +904,11 @@ fn label_hits(
                 ..Narrow::default()
             },
         );
+        let in_scope = super::show::member_in_scope(scope, "gm");
         write!(
             filters,
             " AND EXISTS (SELECT 1 FROM concept_group_variable gm JOIN variable gv \
-             USING(variable_id) WHERE gm.group_id = g.group_id AND {held})"
+             USING(variable_id) WHERE gm.group_id = g.group_id AND {held} AND {in_scope})"
         )
         .expect("write to String");
         if let Some(register) = request.register {
@@ -981,11 +982,18 @@ fn fold(
         _ => ("concept_group_classification", "classification_id"),
     };
     let ids: Vec<i64> = hits.iter().filter_map(Hit::member_id).collect();
+    // A variable group names only a member row in scope (a reference-only group reads
+    // as ungrouped under holdings, as in show and schema).
+    let in_scope = if kind == "variable" {
+        format!(" AND {}", super::show::member_in_scope(scope, "m"))
+    } else {
+        String::new()
+    };
     let mut stmt = conn.prepare(&format!(
         "SELECT m.{column}, {GROUP_COLUMNS} FROM {table} m \
          JOIN concept_group g ON g.group_id = m.group_id \
          LEFT JOIN register r ON r.register_id = g.register_id \
-         WHERE m.{column} IN (SELECT value FROM json_each(?))"
+         WHERE m.{column} IN (SELECT value FROM json_each(?)){in_scope}"
     ))?;
     // A variable in several groups keys on the last one read, as today.
     let membership: BTreeMap<i64, Group> = stmt

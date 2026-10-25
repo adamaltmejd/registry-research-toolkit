@@ -120,7 +120,8 @@ pub struct Variable {
     source_register_text: Option<String>,
     /// The FQIDs of the variables curated as the same variable.
     same_as: Vec<String>,
-    /// The ref of the concept group the variable belongs to.
+    /// The ref of the concept group the variable belongs to, null when no member row
+    /// of it is in scope.
     group: Option<String>,
     tags: Vec<Tag>,
 }
@@ -537,7 +538,7 @@ fn aggregate_tags(
 /// Today's `_group_member_predicate`: a group member `alias` is in scope when its
 /// variable is, and a representation member when its column is held in some
 /// variant of the register.
-fn member_in_scope(scope: Scope, alias: &str) -> String {
+pub(super) fn member_in_scope(scope: Scope, alias: &str) -> String {
     let variable = held::variable(scope, &format!("{alias}.variable_id"), Narrow::default());
     if scope == Scope::Reference {
         return variable;
@@ -996,7 +997,7 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
         .into_iter()
         .map(|(fqid, _)| fqid)
         .collect();
-    variable.group = group_key(conn, id)?.map(|key| format!("group/{p}/{r}/{key}"));
+    variable.group = group_key(conn, scope, id)?.map(|key| format!("group/{p}/{r}/{key}"));
     // Today's `tags_for_variable`: the variable's own tags, then the tags of its
     // group's members in scope as neutral memberships.
     let own = rows(
@@ -1058,13 +1059,19 @@ pub(super) fn same_as(conn: &Connection, slugs: &[String]) -> Result<Vec<(String
     .collect())
 }
 
-/// The key of a variable's concept group (the first by key).
-pub(super) fn group_key(conn: &Connection, id: i64) -> Result<Option<String>, Error> {
+/// The key of a variable's concept group in `scope` (the first by key): only a
+/// group whose member row for the variable is in scope, as `concept_groups`
+/// lists it, so the ref never names a group without this variable's lane.
+pub(super) fn group_key(conn: &Connection, scope: Scope, id: i64) -> Result<Option<String>, Error> {
     Ok(conn
         .query_row(
-            "SELECT DISTINCT g.group_key FROM concept_group_variable m \
-             JOIN concept_group g ON g.group_id = m.group_id \
-             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
+            &format!(
+                "SELECT DISTINCT g.group_key FROM concept_group_variable m \
+                 JOIN concept_group g ON g.group_id = m.group_id \
+                 WHERE m.variable_id = ? AND g.kind = 'variable' AND {} \
+                 ORDER BY g.group_key",
+                member_in_scope(scope, "m")
+            ),
             [id],
             |row| row.get(0),
         )

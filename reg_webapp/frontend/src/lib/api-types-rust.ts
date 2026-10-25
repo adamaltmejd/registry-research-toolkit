@@ -1448,7 +1448,10 @@ export interface components {
             data_type?: string | null;
             definition?: string | null;
             fqid?: string | null;
-            /** @description The variable's concept group, as a group ref. */
+            /**
+             * @description The variable's concept group, as a group ref; null when no member row of it is in
+             *     scope.
+             */
             group?: string | null;
             group_label?: string | null;
             measurement_unit?: string | null;
@@ -1762,7 +1765,10 @@ export interface components {
             deprecated: boolean;
             description?: string | null;
             fqid: string;
-            /** @description The ref of the concept group the variable belongs to. */
+            /**
+             * @description The ref of the concept group the variable belongs to, null when no member row
+             *     of it is in scope.
+             */
             group?: string | null;
             is_identifier: boolean;
             is_sensitive: boolean;

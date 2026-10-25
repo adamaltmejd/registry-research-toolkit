@@ -40,8 +40,11 @@ export interface PickerTimeline {
 interface Props {
   /** One for the binding leaf; one per member variable on a group page. */
   bands: PickerBand[];
-  /** The group's facet axes: lane order and the facet filters. */
+  /** The group's facet axes: lane order. */
   axes?: readonly GroupAxisModel[];
+  /** The axes offered as facet filters; defaults to `axes`. A group page
+   * passes only its informative ones (`informativeAxes`). */
+  filterAxes?: readonly GroupAxisModel[];
   /** Offer the population and coding filters beside the facet axes. */
   includeRowDimensionFilters?: boolean;
   /** The active window (a `?period`, else the study window) as inclusive
@@ -90,6 +93,7 @@ const EMPTY: Staging = { adds: new Set(), removes: new Set() };
 export function RepresentationPicker({
   bands,
   axes = [],
+  filterAxes = axes,
   includeRowDimensionFilters = true,
   window,
   canAdd,
@@ -111,7 +115,7 @@ export function RepresentationPicker({
   const [filters, setFilters] = useState<Record<string, Set<string>>>({});
   const [applying, setApplying] = useState(false);
 
-  const dimensions = pickerFilterDimensions(bands, axes, {
+  const dimensions = pickerFilterDimensions(bands, filterAxes, {
     includeRowDimensions: includeRowDimensionFilters,
   });
   const filtering = Object.values(filters).some((set) => set.size > 0);
