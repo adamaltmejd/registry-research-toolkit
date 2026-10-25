@@ -1,9 +1,10 @@
 # Curated thematic tags (#311).
 #
-# This first content slice is intentionally small and SCB-heavy. It seeds broad
-# researcher-intent tags with high-confidence register memberships plus a few
-# starred variable picks that can later drive search boosts and recommendation
-# notes. References are exact FQIDs; no pattern inference.
+# Tags are broad, cross-register and search-only (#1794): a topic a researcher types
+# before knowing the register, with members in several registers. One concept's variants
+# within a register are a concept group, not a tag. Comparing one concept across
+# registers goes through the broad tag with one starred member per register, whose note
+# says how it differs. References are exact FQIDs; no pattern inference.
 
 [[tag]]
 slug = "income"
@@ -13,7 +14,7 @@ label = "Income"
 variable = "scb/iot/disponibel-inkomst"
 rank = 0
 starred = true
-note = "Broad IOT disposable-income measure for individual and household income work."
+note = "IOT household (kosthushåll) disposable income, 2004 definition; the IOT disposable-income group holds the other units and definitions."
 
 [[tag.member]]
 variable = "scb/iot/sammanraknad-forvarvsinkomst"
@@ -28,6 +29,24 @@ starred = true
 note = "Long-running LISA cash gross wage measure."
 
 [[tag.member]]
+variable = "scb/lisa/disponibel-inkomst-familj-2004"
+rank = 30
+starred = true
+note = "LISA family disposable income, 2004 definition, from 2004; the LISA disposable-income group holds the other units and definitions."
+
+[[tag.member]]
+variable = "scb/lisa/sammanraknad-forvarvsinkomst"
+rank = 40
+starred = true
+note = "LISA summed earned income."
+
+[[tag.member]]
+variable = "scb/rams/arbink"
+rank = 50
+starred = true
+note = "RAMS earned-income measure."
+
+[[tag.member]]
 register = "scb/iot"
 rank = 100
 
@@ -36,8 +55,8 @@ register = "scb/lisa"
 rank = 110
 
 [[tag]]
-slug = "economic-assistance-amount"
-label = "Economic assistance amount"
+slug = "transfers"
+label = "Transfers"
 
 [[tag.member]]
 variable = "scb/ekonomiskt-bistand/utbetalt-belopp-till-hushallet"
@@ -51,37 +70,17 @@ rank = 10
 starred = true
 note = "SOS EKB economic-assistance amount."
 
-[[tag]]
-slug = "economic-assistance-months"
-label = "Economic assistance months"
-
 [[tag.member]]
 variable = "scb/ekonomiskt-bistand/antmanad"
-rank = 0
+rank = 20
 starred = true
 note = "SCB count of months with economic assistance."
 
 [[tag.member]]
 variable = "sos/ekb/ekbantmanad"
-rank = 10
+rank = 30
 starred = true
 note = "SOS EKB count of months with economic assistance."
-
-[[tag]]
-slug = "earned-income"
-label = "Earned income"
-
-[[tag.member]]
-variable = "scb/lisa/sammanraknad-forvarvsinkomst"
-rank = 0
-starred = true
-note = "LISA summed earned income."
-
-[[tag.member]]
-variable = "scb/rams/arbink"
-rank = 10
-starred = true
-note = "RAMS earned-income measure."
 
 [[tag]]
 slug = "employment"
