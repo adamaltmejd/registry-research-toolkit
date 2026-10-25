@@ -229,6 +229,9 @@ GitHub Issues is the **idea archive, not a build queue**. Before filing, **searc
 AND closed issues** (`gh issue list --state all --search "<keywords>"`) for an existing
 match: extend or comment on it rather than opening a duplicate.
 
+Dogfooding sessions (log findings, file issues at the end) follow the
+[dogfood](.agents/skills/dogfood/SKILL.md) skill.
+
 **Title** — mirror the commit convention: `<type>(<package>): <imperative summary>`
 (e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`).
 
