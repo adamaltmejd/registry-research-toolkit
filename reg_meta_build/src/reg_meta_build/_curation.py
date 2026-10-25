@@ -235,16 +235,19 @@ def _data_type_class(dt: str | None) -> str:
 # Code/label column-pair detection for source sibling checks
 # (`source_siblings.py`). The build checks it BEFORE the shape-conflict heuristic:
 # a `<stem>` code + its `<stem>namn` label is a representation pair, NOT a
-# mis-typed delivery. A label column carries a label suffix (`namn`, or
-# `beskrivning` for a description); its partner code column is either the bare
-# stem (`Kommun`/`Kommunnamn`) or carries a code suffix (`Lid`/`LNamn`,
-# `Sun2000Kod`/`Sun2000Namn`, `Kgruppnr`/`Kgruppnamn`, `KN8Kod`/`KN8Beskrivning`).
-# Each spelling is compared without an exact SCB election-kind prefix
-# (`RI_valkretskod`/`Valkretsnamn`) and without `_` (`regso`/`regso_namn`).
-# Exact lists only, no name patterns (#1790). `fold_column` (above) is the only
-# dependency, so these leaves live with it.
+# mis-typed delivery. A label column carries a label suffix (`namn`,
+# `beskrivning` for a description, or `text`/`klartext` for a text label); its
+# partner code column is either the bare stem (`Kommun`/`Kommunnamn`,
+# `SkolKommun`/`SkolKommun_text`) or carries a code suffix (`Lid`/`LNamn`,
+# `Sun2000Kod`/`Sun2000Namn`, `Kgruppnr`/`Kgruppnamn`, `KN8Kod`/`KN8Beskrivning`,
+# `Hkurs_kod`/`Hkurs_text`). Each spelling is compared without an exact SCB
+# election-kind prefix (`RI_valkretskod`/`Valkretsnamn`) and without `_`
+# (`regso`/`regso_namn`). Exact lists only, no name patterns (#1790). The first
+# matching suffix wins, so `klartext` precedes `text`: `Gymnasiebakgrund_klartext`
+# must strip to `gymnasiebakgrund`, not `gymnasiebakgrundklar`. `fold_column`
+# (above) is the only dependency, so these leaves live with it.
 _CODE_SUFFIXES = ("kod", "id", "nr")
-_LABEL_SUFFIXES = ("namn", "beskrivning")
+_LABEL_SUFFIXES = ("namn", "beskrivning", "klartext", "text")
 _CODE_LABEL_PREFIXES = ("ko_", "lt_", "ri_")
 
 
@@ -285,7 +288,7 @@ def _code_label_key(folded: str) -> str:
 
 def _is_code_then_label(code: str, label: str) -> bool:
     """True when `code` is a code column and `label` its matching label column:
-    `label` is `<stem>namn` or `<stem>beskrivning` and `code` is either the bare
+    `label` is `<stem>` plus a `_LABEL_SUFFIXES` entry and `code` is either the bare
     `<stem>` or `<stem>kod`/`<stem>id`/`<stem>nr` on the SAME stem. Both args are
     already `fold_column`-folded."""
     code, label = _code_label_key(code), _code_label_key(label)

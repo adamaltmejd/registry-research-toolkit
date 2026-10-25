@@ -11,7 +11,7 @@ slug = "people"
 "1.100.lnamn" = "lnamn"
 "1.200.kommun" = "kommun"
 "1.200.kommun2020" = "kommun-2020"
-"1.200.kommuntext" = "kommuntext"
+"1.200.hemkommun" = "hemkommun"
 "1.200.kommunnamn" = "kommunnamn"
 "1.300.fornamn" = "fornamn"
 "1.300.efternamn" = "efternamn"
@@ -20,7 +20,7 @@ slug = "people"
 "1.500.dag" = "dag"
 "1.500.dagtxt" = "dagtxt"
 "1.600.sun2000kod" = "sun-kod"
-"1.600.sun2000namn" = "namn-sun"
+"1.600.sun2000klartext" = "namn-sun"
 "1.700.antal" = "antal"
 "1.700.antaltxt" = "antaltxt"
 "1.800.x" = "x"
@@ -30,7 +30,7 @@ slug = "people"
 
 [[identity.partition]]
 variable = "1.200"
-columns = { KOMMUN = "1.200.kommun", KOMMUNNAMN = "1.200.kommunnamn", KOMMUNTEXT = "1.200.kommuntext" }
+columns = { KOMMUN = "1.200.kommun", KOMMUNNAMN = "1.200.kommunnamn", HEMKOMMUN = "1.200.hemkommun" }
 columns_ref = "fixture"
 
 [[identity.column_owner]]

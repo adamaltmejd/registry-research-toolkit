@@ -10,7 +10,7 @@
         ["lnamn"],
         ["kommun"],
         ["kommun-2020"],
-        ["kommuntext"],
+        ["hemkommun"],
         ["kommunnamn"],
         ["fornamn"],
         ["efternamn"],
@@ -36,7 +36,7 @@
           ["efternamn", "fornamn"]
         ],
         [
-          ["kommun", "kommun-2020", "kommuntext"]
+          ["hemkommun", "kommun", "kommun-2020"]
         ]
       ]
     }
