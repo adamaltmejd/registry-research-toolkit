@@ -177,14 +177,22 @@ function Drawing({ axis, band, covered, years }: DrawingProps) {
   );
 }
 
-/** The years the drawn windows span: the study window and an add window that
- * may reach past it. Its uncovered years are the data's narrowing. */
-function drawnSpan(study: Years | null, add: Years | null): Years | null {
-  if (study === null || add === null) return study ?? add;
-  return {
-    from: Math.min(study.from, add.from),
-    to: Math.max(study.to, add.to),
-  };
+/** The drawn windows' years outside coverage, merged: each window's own
+ * uncovered years, so the gap between two disjoint windows is not painted. */
+function uncoveredByWindows(
+  windows: readonly (Years | null)[],
+  covered: Years | null,
+): Years[] {
+  const all = windows
+    .flatMap((w) => (w ? uncoveredYears(w, covered) : []))
+    .sort((a, b) => a.from - b.from);
+  const merged: Years[] = [];
+  for (const r of all) {
+    const last = merged[merged.length - 1];
+    if (last && r.from <= last.to + 1) last.to = Math.max(last.to, r.to);
+    else merged.push({ ...r });
+  }
+  return merged;
 }
 
 interface HeadProps {
@@ -196,18 +204,40 @@ interface HeadProps {
   /** The band's years outside coverage. The drawing shows them in `info-bg`;
    * the header names them for a screen reader only (#1833). */
   outside: readonly Years[];
+  /** The windows drawn, named for a screen reader only: the legend is hidden
+   * from assistive technology. */
+  study?: Years | null;
+  add?: Years | null;
   /** Clear, while an add window differs from the study window (variable
    * page). */
   action?: ReactNode;
 }
 
 /** The `label` header: "Coverage", then the covered years. */
-function Head({ id, quietLabel = false, covered, outside, action }: HeadProps) {
+function Head({
+  id,
+  quietLabel = false,
+  covered,
+  outside,
+  study = null,
+  add = null,
+  action,
+}: HeadProps) {
   return (
     <div className={styles.head}>
       <span id={id} className={quietLabel ? "visually-hidden" : "micro-label"}>
         Coverage
       </span>
+      {(study || add) && (
+        <span className="visually-hidden">
+          {[
+            study && `Study window ${span(study)}`,
+            add && `Add window ${span(add)}`,
+          ]
+            .filter(Boolean)
+            .join("; ")}
+        </span>
+      )}
       {action}
       {covered && (
         <span className={styles.covered}>
@@ -272,10 +302,10 @@ export function Timeline({
 }: TimelineProps) {
   const covered = coverageBandEdges(coverage, axis.from, axis.to, vintageYear);
   const band = window ? clampYearWindow(window, axis.from, axis.to) : null;
-  const outside = band ? uncoveredYears(band, covered) : [];
+  const outside = uncoveredByWindows([band], covered);
   return (
     <section className={styles.timeline} aria-label="Coverage">
-      <Head covered={covered} outside={outside} />
+      <Head covered={covered} outside={outside} study={band} />
       <Drawing axis={axis} band={band} covered={covered} years={years} />
       <Legend band={band && "Study window"} />
     </section>
@@ -333,9 +363,8 @@ export function CoverageTimeline({
     windowMaxYear,
     windowMaxYear,
   );
-  const reach = drawnSpan(study, add);
-  const outside = reach ? uncoveredYears(reach, covered) : [];
-  const drawn = reach ? [reach.from, reach.to] : [];
+  const outside = uncoveredByWindows([study, add], covered);
+  const drawn = [study, add].flatMap((w) => (w ? [w.from, w.to] : []));
   if (covered) drawn.push(covered.from, covered.to);
   return (
     <section aria-labelledby={labelId}>
@@ -346,7 +375,14 @@ export function CoverageTimeline({
         catalogSpan={[windowMinYear, windowMaxYear]}
         timeline={{
           head: (
-            <Head id={labelId} quietLabel covered={covered} outside={outside} />
+            <Head
+              id={labelId}
+              quietLabel
+              covered={covered}
+              outside={outside}
+              study={study}
+              add={add}
+            />
           ),
           study: study && [study.from, study.to],
           add: add && [add.from, add.to],
@@ -523,8 +559,7 @@ export function VariableTimeline({
     subAnnualPeriod === null && userChosen && !matchesWindow(selection)
       ? selection
       : null;
-  const reach = drawnSpan(study, add);
-  const outside = reach ? uncoveredYears(reach, covered) : [];
+  const outside = uncoveredByWindows([study, add], covered);
   // Clear shows while the applied period differs from the study window: a
   // period resting on the window is the same as none.
   const canClear =
@@ -581,6 +616,8 @@ export function VariableTimeline({
               quietLabel
               covered={covered}
               outside={outside}
+              study={study}
+              add={add}
               action={
                 canClear && (
                   <Button variant="ghost" onPress={onClear}>
