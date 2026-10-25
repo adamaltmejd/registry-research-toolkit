@@ -75,10 +75,10 @@ const OPEN_KEYS = new Set(["Enter", " "]);
 
 /**
  * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
- * items, the current page's selected. Selection follows the arrow keys and a click, and
- * selecting an item opens its page; type-ahead moves focus only. Items are not
- * links (RAC's selectable options are not `<a>`). ← moves back to the register
- * column.
+ * items, the current page's selected. Selection follows the arrow keys and a
+ * click, and selecting an item opens its page; type-ahead moves focus only.
+ * Items are not links (RAC's selectable options are not `<a>`). ← moves back to
+ * the register column.
  */
 export function ColumnList({
   label,
