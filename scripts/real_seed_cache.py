@@ -4,7 +4,7 @@
     uv run --no-project scripts/real_seed_cache.py prepare --input-bundle DIR \\
         --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR
     uv run --no-project scripts/real_seed_cache.py build --prepared DIR \\
-        --input-commit SHA --input-manifest-sha256 SHA256 [--diagnostic] [--registers SPEC]
+        --input-commit SHA --input-manifest-sha256 SHA256 [--diagnostic] [--registers SPEC]...
 
 Each command looks its key up and prints one JSON object on stdout. A hit returns the
 stored output without running anything. A miss runs the real `reg-meta-build` command
@@ -743,7 +743,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         sys.exit(EXIT_CONFIG)
     resolve_code = facts.pop("resolve_code_sha256")
     shared = {
-        "registers": sorted(set(args.registers.split(","))) if args.registers else [],
+        "registers": sorted(set(args.registers)) if args.registers else [],
         "prepared_commit": args.input_commit,
         "prepared_manifest_sha256": args.input_manifest_sha256,
         "curation_tree_sha256": facts.pop("curation_tree_sha256"),
@@ -858,7 +858,8 @@ def run_build(
     if args.diagnostic:
         argv += ["--diagnostic", "--diagnostic-db-path", str(run_dir / "diagnostic.db")]
     if args.registers:
-        argv += ["--registers", args.registers]
+        for spec in args.registers:
+            argv += ["--registers", spec]
     sys.stderr.write(f"real-seed-cache: running in {run_dir}\n")
     with (run_dir / "result.json").open("w") as out:
         code = subprocess.run(argv, cwd=ROOT, stdout=out, check=False).returncode
@@ -1138,7 +1139,7 @@ def main() -> int:
         help="prepared top-level manifest.json digest",
     )
     build.add_argument("--diagnostic", action="store_true")
-    build.add_argument("--registers", metavar="SPEC[,SPEC...]")
+    build.add_argument("--registers", action="append", metavar="SPEC")
     build.add_argument("--curation-dir")
     build.add_argument(
         "--workers",

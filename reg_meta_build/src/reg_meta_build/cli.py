@@ -210,7 +210,9 @@ def write_json(
 
 
 class NoRepeatParser(argparse.ArgumentParser):
-    """ArgumentParser that rejects repeated optional flags."""
+    """ArgumentParser that rejects repeated optional flags, except `REPEATABLE` ones."""
+
+    REPEATABLE = frozenset({"--registers"})
 
     def parse_known_args(self, args=None, namespace=None):
         if args is None:
@@ -218,7 +220,7 @@ class NoRepeatParser(argparse.ArgumentParser):
         seen: dict[str, str] = {}
         for token in args:
             if token.startswith("-") and "=" not in token:
-                if token in seen:
+                if token in seen and token not in self.REPEATABLE:
                     self.error(f"{token} may only be specified once")
                 seen[token] = token
         return super().parse_known_args(args, namespace)
@@ -431,9 +433,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     build_p.add_argument(
         "--registers",
-        metavar="SPEC[,SPEC...]",
+        action="append",
+        metavar="SPEC",
         help=(
-            "Form only these prepared scopes. SPEC is an SCB register id (258), "
+            "SPEC; repeat the flag for several scopes. Form only these prepared scopes. SPEC is an SCB register id (258), "
             "an SOS or thin-provider register name (Patientregistret, aktivitetsstod), "
             "or SOURCE:ID (scb-registerinformation:258) to qualify a register. "
             "Shared inputs stay complete; curation "
@@ -483,8 +486,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     materialize_p.add_argument(
         "--registers",
-        metavar="SPEC[,SPEC...]",
-        help="The register subset the bundle was resolved for, as given to build-db.",
+        action="append",
+        metavar="SPEC",
+        help="SPEC; repeat the flag for several scopes. The register subset the bundle was resolved for, as given to build-db.",
     )
     materialize_p.add_argument(
         "--timing",
@@ -507,8 +511,9 @@ def _build_parser() -> argparse.ArgumentParser:
     check_p.add_argument(
         "--registers",
         required=True,
-        metavar="SPEC[,SPEC...]",
-        help="Complete register scopes to check; uses build-db selector syntax.",
+        action="append",
+        metavar="SPEC",
+        help="SPEC; repeat the flag for several scopes. Complete register scopes to check; uses build-db selector syntax.",
     )
 
     prepare_sources_p = sub.add_parser(
@@ -1169,14 +1174,14 @@ def _catalog_request(args: argparse.Namespace) -> tuple[Path, tuple[str, ...]]:
             message="Diagnostic mode requires a separate explicit --diagnostic-db-path and excludes --db.",
             remediation="Use both --diagnostic and --diagnostic-db-path, or omit both for a strict build.",
         )
-    registers = () if args.registers is None else tuple(args.registers.split(","))
+    registers = () if args.registers is None else tuple(args.registers)
     if not all(registers) or (registers and not args.diagnostic and args.db is None):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
             code="pipeline_options_invalid",
             error_class="usage",
-            message="--registers needs nonempty comma-separated scope names and never writes the active catalog.",
-            remediation="Name each scope once between commas; give a strict register subset its own new --db DIR.",
+            message="--registers needs nonempty scope names and never writes the active catalog.",
+            remediation="Pass each scope once as its own --registers SPEC; give a strict register subset its own new --db DIR.",
         )
     output = (
         Path(args.diagnostic_db_path)
@@ -1269,14 +1274,14 @@ def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             message="check-curation accepts no database destination, including --db.",
             remediation="Omit --db; use --report-dir for the local check report.",
         )
-    registers = tuple(args.registers.split(","))
+    registers = tuple(args.registers)
     if not all(registers):
         raise RegMetaError(
             exit_code=EXIT_USAGE,
             code="pipeline_options_invalid",
             error_class="usage",
-            message="--registers needs nonempty comma-separated scope names.",
-            remediation="Name each complete register scope once between commas.",
+            message="--registers needs nonempty scope names.",
+            remediation="Pass each complete register scope once as its own --registers SPEC.",
         )
     workers = _pipeline_workers(args)
     try:
@@ -2421,16 +2426,16 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     ),
     (
         "build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
-        "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR] [--resolved-out DIR] [--workers N]",
+        "[--registers SPEC]... [--curation-dir DIR] [--dump-decisions DIR] [--resolved-out DIR] [--workers N]",
         "Build from prepared sources and common curation; strict publication is the default.",
     ),
     (
         "materialize-db --resolved DIR --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
-        "[--registers SPEC[,SPEC...]]",
+        "[--registers SPEC]...",
         "Place the catalog from a build-db --resolved-out bundle.",
     ),
     (
-        "check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir DIR",
+        "check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC [--registers SPEC]... --report-dir DIR",
         "Check selected curation locally; catalog checks are not run. Use build-db for approval.",
     ),
     (
