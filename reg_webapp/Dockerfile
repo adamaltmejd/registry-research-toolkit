@@ -87,7 +87,7 @@ RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
 # workspace manifest names every crate under crates/ as a member, so all of them
 # are copied; only `reg-meta` and its dependencies are built (`reg-core-py`'s PyO3
 # extension is not). `--locked` asserts Cargo.lock is current (CI parity).
-FROM rust:1.99.1-slim-trixie@sha256:00544ccc9431a2fe93e65185d21381b0a039342f5cefcf84fbddac273c9e573d AS server
+FROM rust:1.99.1-slim-trixie@sha256:1a939748a7cbab172de91a014e3804a97af1394a8c844faa67fce9401c4e40fb AS server
 WORKDIR /build
 COPY Cargo.toml Cargo.lock ./
 COPY crates/ ./crates/

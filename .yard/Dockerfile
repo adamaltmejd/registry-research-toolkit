@@ -4,11 +4,11 @@
 # time; uv, the interpreter .python-version names and the Rust toolchain are
 # baked in. Rust and a C linker are needed because `uv sync` builds the
 # editable crates/reg-core-py member with maturin.
-FROM ghcr.io/astral-sh/uv:0.13.4 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.5 AS uv
 
 # The toolchain reg_webapp/Dockerfile pins; copied out of rustup because boxes
 # set their own HOME and PATH.
-FROM rust:1.99.1-slim-trixie@sha256:00544ccc9431a2fe93e65185d21381b0a039342f5cefcf84fbddac273c9e573d AS rust
+FROM rust:1.99.1-slim-trixie@sha256:1a939748a7cbab172de91a014e3804a97af1394a8c844faa67fce9401c4e40fb AS rust
 RUN cp -a "$(rustc --print sysroot)" /toolchain
 
 FROM pinfold/profile-default:latest

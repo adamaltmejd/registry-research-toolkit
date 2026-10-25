@@ -15,7 +15,7 @@ doctest = false
 [dependencies]
 # No `extension-module` feature (deprecated in PyO3 0.29): maturin sets
 # `PYO3_BUILD_EXTENSION_MODULE` for its builds, and plain cargo builds link normally.
-pyo3 = "0.29.3"
+pyo3 = "0.30.1"
 reg-core = { path = "../reg-core" }
 
 [lints]
