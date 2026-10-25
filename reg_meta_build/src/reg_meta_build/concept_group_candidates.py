@@ -42,7 +42,8 @@ import statistics
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from .concept_groups import _VINTAGE_YEARS, _common_prefix, _trim_label
+from ._curation import common_prefix
+from .concept_groups import _VINTAGE_YEARS, _trim_label
 from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
@@ -180,7 +181,7 @@ def _evaluate_fold(
     # Case-insensitive prefix scores AGREEMENT only (so "Ålder"/"ålder" agree); it
     # must NOT be sliced back onto an original name, since `casefold()` can change
     # length (e.g. German ß → "ss").
-    ci_prefix = _common_prefix([s.casefold() for s in stripped])
+    ci_prefix = common_prefix([s.casefold() for s in stripped])
     mean_len = statistics.mean(len(s) for s in stripped)
     agreement = len(ci_prefix) / mean_len if mean_len > 0 else 0.0
     if not (agreement >= min_agreement and len(ci_prefix) >= min_label_prefix):
@@ -566,7 +567,7 @@ def infer_concept_group_candidates(
         # Case-insensitive prefix scores AGREEMENT only (so "Ålder"/"ålder" agree);
         # it must NOT be sliced back onto an original name, since `casefold()` can
         # change length (e.g. German ß → "ss").
-        ci_prefix = _common_prefix([s.casefold() for s in stripped])
+        ci_prefix = common_prefix([s.casefold() for s in stripped])
         mean_len = statistics.mean(len(s) for s in stripped)
         agreement = len(ci_prefix) / mean_len if mean_len > 0 else 0.0
 
@@ -581,7 +582,7 @@ def infer_concept_group_candidates(
         # for presentation), falling back to the family stem when `_trim_label` strips
         # the prefix to empty (e.g. an all-punctuation prefix at --min-label-prefix 0)
         # — the loader rejects an empty `label` on round-trip.
-        group_label = _trim_label(_common_prefix(present_names)) or stem
+        group_label = _trim_label(common_prefix(present_names)) or stem
 
         # Sort by (suffix, slug); member tuples are (raw_stem, suffix, var).
         ordered = sorted(members, key=lambda m: (m[1], m[2].slug))
