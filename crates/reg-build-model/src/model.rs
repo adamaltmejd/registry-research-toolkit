@@ -55,6 +55,12 @@ key!(
     VariableKey
 );
 key!(
+    /// A legacy case id root, `curation/registers/<provider>/<file>.toml#/<table>/<n>`:
+    /// the artifact stores it (`data_warning.evidence_json`), so it is written verbatim
+    /// until the post-cutover rename.
+    CaseId
+);
+key!(
     /// A legacy provenance head (`errata:<class>`, `curated:<table>`,
     /// `curated:alias-window`), written verbatim until the post-cutover rename.
     ProvenanceHead
@@ -146,20 +152,9 @@ pub enum Provenance {
     Source { evidence: Vec<Evidence> },
     /// A neutral rule derived it (the default link, supersession by release status).
     Rule { rule: &'static str },
-    /// A curation entry states it. `head` is the entry's legacy provenance head.
-    Curated {
-        head: ProvenanceHead,
-        entry: EntryRef,
-    },
-}
-
-/// A curation entry: its file relative to the curation root, its verb table and its
-/// position among that file's entries of the verb.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct EntryRef {
-    pub file: String,
-    pub verb: String,
-    pub index: u32,
+    /// A curation entry states it, by the case id and provenance head of the entry it
+    /// was converted from ([`crate::verbs::Legacy`]).
+    Curated { head: ProvenanceHead, case: CaseId },
 }
 
 /// A register: name and description as its provider states them.
