@@ -18,7 +18,10 @@ from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.source_annotations import apply_alias_cases
-from reg_meta_build.source_classification_bindings import apply_classification_cases
+from reg_meta_build.source_classification_bindings import (
+    TimelineEdition,
+    apply_classification_cases,
+)
 from reg_meta_build.source_coding_choices import (
     apply_coding_choices,
 )
@@ -166,6 +169,11 @@ def resolve_source_scope(
     withheld_classifications: Mapping[str, tuple[ResolutionDiagnostic, ...]] = {},
     classification_references: Mapping[str, str],
     classification_family_references: Mapping[str, tuple[str, ...]] = {},
+    # Per register FQID: each family alias its timeline covers, to its rows.
+    classification_timelines: Mapping[
+        str, Mapping[str, tuple[TimelineEdition, ...]]
+    ] = {},
+    matched_timelines: set[str] | None = None,
     label_rules: Mapping[str, str] = {},
     classification_overrides: Mapping[str, tuple[str, str]] = {},
     matched_labels: set[str] | None = None,
@@ -800,6 +808,8 @@ def resolve_source_scope(
             occurrences=occurrences,
             references=classification_references,
             family_references=classification_family_references,
+            timeline=classification_timelines.get(register_fqid or "", {}),
+            matched_timelines=matched_timelines,
             label_rules=label_rules,
             override=(
                 classification_overrides.get(fqid)

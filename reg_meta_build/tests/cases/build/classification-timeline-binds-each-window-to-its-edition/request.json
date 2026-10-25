@@ -1,0 +1,27 @@
+{
+  "fails_if": "`_source_bindings` (source_classification_bindings.py) ignores the register's `[[classification_timeline]]` and looks for one family edition covering the whole 2018-2020 occurrence (none does), or binds a timeline row outside its own window, or binds the 2018 window no row covers instead of reporting it unresolved",
+  "sources": {
+    "description": "FK AMOUNT (2018-2020) declares the family alias 'Source pair'; books old (to 2019) and new (from 2020) of family pair; the register's timeline codes 2019 in old and 2020 in new, and leaves 2018 uncurated.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "providers/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2018-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\"",
+        "classification = \"Source pair\""
+      ],
+      "classifications/old.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/new.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

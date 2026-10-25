@@ -95,6 +95,10 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
         for path in families
         if not any(_field(register, path) for register in tree.registers)
     }
+    # The grammar landed before its first content: #1908's DORS curation declares the
+    # first timeline. Asserted undeclared so that PR must delete this exemption.
+    assert "classification_timeline" in undeclared
+    undeclared.discard("classification_timeline")
     assert not undeclared, sorted(undeclared)
 
     slug_dir = repo_slug_dir()

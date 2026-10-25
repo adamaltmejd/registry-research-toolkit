@@ -14,7 +14,7 @@ from collections import Counter, defaultdict, deque
 from concurrent.futures import ProcessPoolExecutor
 from contextlib import ExitStack, closing
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from io import TextIOWrapper
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -79,6 +79,7 @@ from reg_meta_build.resolved_metadata import (
     ResolvedMetadata,
     RetainedDocumentaryRelationship,
 )
+from reg_meta_build.source_classification_bindings import TimelineEdition
 from reg_meta_build.source_classifications import resolve_canonical_codes
 from reg_meta_build.source_coordinates import (
     NativeKey,
@@ -230,6 +231,34 @@ def _classification_references(
         for alias in family.aliases
     }
     return references, families
+
+
+def _classification_timelines(
+    tree: CurationTree,
+) -> dict[str, dict[str, tuple[TimelineEdition, ...]]]:
+    """Each register's timelines, keyed by the family aliases a source declares.
+
+    `load_curation_tree` has checked each entry's family and editions."""
+    aliases = {
+        family.key: family.aliases for family in tree.classification_families.family
+    }
+    timelines: dict[str, dict[str, tuple[TimelineEdition, ...]]] = {}
+    for register in tree.registers:
+        name = f"{register.register_info.provider}/{register.register_info.slug}"
+        for index, entry in enumerate(register.classification_timeline, 1):
+            entry_id = f"{register.source_file}#/classification_timeline/{index}"
+            editions = tuple(
+                TimelineEdition(
+                    slug,
+                    date.fromisoformat(start).toordinal(),
+                    date.fromisoformat(end).toordinal(),
+                    entry_id,
+                )
+                for slug, start, end in entry.editions
+            )
+            for alias in aliases[entry.family]:
+                timelines.setdefault(name, {})[alias] = editions
+    return timelines
 
 
 def _selected_scopes(
@@ -399,6 +428,7 @@ class _ScopeContext:
     withheld_books: dict[str, tuple[ResolutionDiagnostic, ...]]
     references: dict[str, str]
     family_references: dict[str, tuple[str, ...]]
+    classification_timelines: dict[str, dict[str, tuple[TimelineEdition, ...]]]
     label_rules: dict[str, str]
     classification_overrides: dict[str, tuple[str, str]]
     support: SourceSupportBindings
@@ -481,6 +511,7 @@ class ScopeOutcome:
     records: int = 0
     strict_refusals: int = 0
     matched_labels: frozenset[str] = frozenset()
+    matched_timelines: frozenset[str] = frozenset()
     duplicate_overrides: frozenset[str] = frozenset()
     data_warnings: tuple[DataWarning, ...] = ()
     acknowledged: dict[str, int] = field(default_factory=dict)
@@ -610,6 +641,7 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
 
     resolution_started = time.perf_counter()
     matched_labels: set[str] = set()
+    matched_timelines: set[str] = set()
     duplicate_overrides: set[str] = set()
     result = resolve_source_scope(
         originals,
@@ -629,6 +661,8 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
         withheld_classifications=context.withheld_books,
         classification_references=context.references,
         classification_family_references=context.family_references,
+        classification_timelines=context.classification_timelines,
+        matched_timelines=matched_timelines,
         label_rules=context.label_rules,
         classification_overrides=context.classification_overrides,
         matched_labels=matched_labels,
@@ -708,6 +742,7 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
         records=len(originals),
         strict_refusals=result.strict_refusals,
         matched_labels=frozenset(matched_labels),
+        matched_timelines=frozenset(matched_timelines),
         duplicate_overrides=frozenset(duplicate_overrides),
         data_warnings=data_warnings,
         acknowledged=dict(result.acknowledged),
@@ -1165,6 +1200,7 @@ def _resolve(
     search_pins = load_search_pins(curation_dir / SEARCH_PINS_FILE)
     search_synonyms = load_search_synonyms(curation_dir / SEARCH_SYNONYMS_FILE)
     references, family_references = _classification_references(tree)
+    classification_timelines = _classification_timelines(tree)
     label_rules = {
         label: entry.classification.slug
         for entry in tree.classifications
@@ -1292,6 +1328,7 @@ def _resolve(
             },
         )["entries_read"].extend(ids)
     matched_labels: set[str] = set()
+    matched_timelines: set[str] = set()
     duplicate_overrides: set[str] = set()
     curation_hash = tree_sha256(curation_dir)
     if dump_decisions is not None:
@@ -1807,6 +1844,7 @@ def _resolve(
                     else:
                         _raise_scope_failure(action)
                 matched_labels.update(outcome.matched_labels)
+                matched_timelines.update(outcome.matched_timelines)
                 duplicate_overrides.update(outcome.duplicate_overrides)
                 pending_source_issues.pop(key, None)
                 seen_scopes.add(outcome.key)
@@ -1898,6 +1936,7 @@ def _resolve(
                 withheld_books=withheld_books,
                 references=references,
                 family_references=family_references,
+                classification_timelines=classification_timelines,
                 label_rules=label_rules,
                 classification_overrides=classification_overrides,
                 support=support,
@@ -1936,6 +1975,29 @@ def _resolve(
                             case_id=case_id,
                             subject=name,
                             detail=f"{case_id} matches no selected source scope",
+                            withheld_output=(case_id,),
+                        )
+                    )
+            # A timeline no source declaration of its register reaches binds
+            # nothing: its family alias is not declared there.
+            for register in tree.registers:
+                name = (
+                    f"{register.register_info.provider}/{register.register_info.slug}"
+                )
+                if registers and name not in selected_coding_names:
+                    continue
+                for index, entry in enumerate(register.classification_timeline, 1):
+                    case_id = f"{register.source_file}#/classification_timeline/{index}"
+                    if case_id in matched_timelines:
+                        continue
+                    issue(
+                        ResolutionDiagnostic(
+                            code="stale_curation_entry",
+                            severity="error",
+                            case_id=case_id,
+                            subject=name,
+                            detail=f"{case_id}: no source declaration in {name} "
+                            f"names family {entry.family!r} by one of its aliases",
                             withheld_output=(case_id,),
                         )
                     )

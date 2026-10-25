@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "register_entry_invalid",
+    "message_contains": [
+      "curation/registers/fk/remote.toml [[classification_timeline]] entry 1: edition 'other' is not an edition of family 'pair'."
+    ]
+  }
+}

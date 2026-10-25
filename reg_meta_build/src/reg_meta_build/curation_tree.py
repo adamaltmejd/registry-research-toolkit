@@ -18,6 +18,7 @@ import json
 import tomllib
 from dataclasses import dataclass
 from datetime import date
+from itertools import pairwise
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
@@ -2089,6 +2090,47 @@ class CodingCuration(_CurationModel):
     support: list[CodingSupportEntry] = Field(default_factory=list)
 
 
+class ClassificationTimelineEntry(_CurationModel):
+    """``[[classification_timeline]]``: which edition of a classification family the
+    register codes in over each window, for a source that declares only the family.
+
+    Each ``editions`` row is ``[edition slug, from, to]`` with ISO-date bounds; rows
+    may leave gaps but never overlap. The years are this register's curated fact,
+    not the book's own validity, which is not cross-checked.
+    """
+
+    family: str
+    editions: list[list[str]] = Field(min_length=1)
+    evidence: str
+    noted: str
+
+    _evidence = field_validator("evidence")(_require_trimmed)
+    _noted = field_validator("noted")(ErrataClassificationReferenceEntry._noted)
+
+    @field_validator("family")
+    @classmethod
+    def _family(cls, value: str) -> str:
+        validate_slug(value, "classification family")
+        return value
+
+    @field_validator("editions")
+    @classmethod
+    def _editions(cls, value: list[list[str]]) -> list[list[str]]:
+        for row in value:
+            if len(row) != 3:
+                raise ValueError("each edition row must be [edition slug, from, to]")
+            validate_slug(row[0], "classification")
+            _coding_window(row[1:])
+        ordered = sorted(value, key=lambda row: row[1])
+        for before, after in pairwise(ordered):
+            if after[1] <= before[2]:
+                raise ValueError(
+                    f"edition rows {before!r} and {after!r} overlap; a window has "
+                    "one edition"
+                )
+        return value
+
+
 class AcknowledgeEntry(_CurationModel):
     code: str
     subject: str
@@ -2213,6 +2255,9 @@ class RegisterCuration(_CurationModel):
     identity: IdentityCuration = Field(default_factory=IdentityCuration)
     coding: CodingCuration = Field(default_factory=CodingCuration)
     documentary: DocumentaryCuration = Field(default_factory=DocumentaryCuration)
+    classification_timeline: list[ClassificationTimelineEntry] = Field(
+        default_factory=list
+    )
     acknowledge: list[AcknowledgeEntry] = Field(default_factory=list)
 
     _source_file: str = PrivateAttr(default="")
@@ -2426,6 +2471,7 @@ def _register_arrays(
         ("coding.extend", entry.coding.extend),
         ("coding.documented", entry.coding.documented),
         ("coding.support", entry.coding.support),
+        ("classification_timeline", entry.classification_timeline),
         ("acknowledge", entry.acknowledge),
     )
 
@@ -2715,6 +2761,12 @@ _UNIQUE_TARGETS: tuple[tuple[type, Callable[[Any], object], str, str], ...] = (
         "group key",
         "Keep each [[group]] key once per register.",
     ),
+    (
+        ClassificationTimelineEntry,
+        lambda row: row.family,
+        "classification timeline family",
+        "Keep one timeline per family, with every edition row in it.",
+    ),
 )
 
 
@@ -2935,14 +2987,52 @@ def load_classification_groups(root: Path) -> ClassificationGroups:
     return groups
 
 
+def _check_classification_timelines(
+    registers: tuple[RegisterCuration, ...],
+    classifications: tuple[CuratedClassification, ...],
+    families: ClassificationFamilies,
+) -> None:
+    """Refuse a timeline whose family or edition rows name no curated book of it."""
+    slugs = {entry.classification.slug for entry in classifications}
+    members = {family.key: family.members for family in families.family}
+    for register in registers:
+        for index, entry in enumerate(register.classification_timeline, 1):
+            where = f"{register.source_file} [[classification_timeline]] entry {index}"
+            if entry.family not in members:
+                raise curation_error(
+                    _REGISTER_INVALID,
+                    f"{where}: family {entry.family!r} is no classification family.",
+                    "Name a family that two or more classification files declare "
+                    "with `family`.",
+                )
+            for slug, _, _ in entry.editions:
+                if slug not in slugs:
+                    raise curation_error(
+                        _REGISTER_INVALID,
+                        f"{where}: edition {slug!r} is no curated classification.",
+                        "Name the slug of a file under classifications/.",
+                    )
+                if slug not in members[entry.family]:
+                    raise curation_error(
+                        _REGISTER_INVALID,
+                        f"{where}: edition {slug!r} is not an edition of family "
+                        f"{entry.family!r}.",
+                        f"Name one of {list(members[entry.family])!r}, or declare "
+                        f"`family = {entry.family!r}` on the book.",
+                    )
+
+
 def load_curation_tree(root: Path) -> CurationTree:
     """Read the classification files and the global files under ``root``."""
     lineage = load_lineage_config(root / "lineage.toml")
     classifications = load_classifications(root)
+    families = load_classification_families(classifications)
+    registers = load_register_files(root)
+    _check_classification_timelines(registers, classifications, families)
     return CurationTree(
         classifications=classifications,
-        classification_families=load_classification_families(classifications),
-        registers=load_register_files(root),
+        classification_families=families,
+        registers=registers,
         classification_groups=load_classification_groups(root),
         relations=load_relations(root / "relations.toml"),
         tags=load_tags(root / "tags.toml"),
