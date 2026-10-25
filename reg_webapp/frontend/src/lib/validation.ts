@@ -429,16 +429,15 @@ export function projectFindings({
   orderFindings,
   windowFindings,
   sources,
-  registerVariants,
+  variantsByRegister,
 }: {
   issues: readonly ValidationIssue[];
   orderFindings: readonly OrderBlocking[];
   windowFindings: readonly WindowDisjointFinding[];
   sources: readonly SafeSource[];
-  /** Every `register/variant` coordinate of the sources' registers: a blocked
-   * order prints the family member it resolved, which may not be the source's
-   * own variant. */
-  registerVariants: readonly string[];
+  /** The sources' registers' variants: a blocked order prints the family
+   * member it resolved, which may not be the source's own variant. */
+  variantsByRegister: Readonly<Record<string, readonly { slug: string }[]>>;
 }): ProjectFinding[] {
   const order = orderFindings.map((f): Omit<ProjectFinding, "id"> => {
     const location = findingLocation(orderFindingPointer(f, sources), sources);
@@ -458,9 +457,9 @@ export function projectFindings({
       location,
       fqids: [
         ...locatedFqids(location, sources),
-        ...(register
-          ? registerVariants.filter((rv) => registerPrefixOf(rv) === register)
-          : []),
+        ...(variantsByRegister[register] ?? []).map(
+          (variant) => `${register}/${variant.slug}`,
+        ),
         ...(f.variable ? [f.variable] : []),
       ],
     };

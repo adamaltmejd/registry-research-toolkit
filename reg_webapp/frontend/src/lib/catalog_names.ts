@@ -29,6 +29,7 @@ import {
   type RegisterShow,
   type RootChild,
   type ShowNode,
+  type VariantModel,
 } from "./api";
 import { fqidSegments, registerPrefixOf, variantCardName } from "./catalog";
 
@@ -228,16 +229,20 @@ export function registerRead(registerFqid: string): Read<RegisterShow | null> {
   });
 }
 
-/** Every `register/variant` coordinate of the registers in `registers`, from the
- * register reads the source cards already make; empty for a read not yet landed.
- * A blocked order's message names the family member it resolved, not always the
- * source's own variant (#1906), so the view needs all of them to name it. */
-export function registerVariantFqids(registers: readonly string[]): string[] {
-  return registers.flatMap((register) =>
-    (registerRead(register).value?.variants ?? []).map(
-      (variant) => `${register}/${variant.slug}`,
-    ),
-  );
+/** The variants of each register in `registers`, by register, from the shared
+ * `registerRead`; a register whose read has not landed (or failed) is absent.
+ * What names a variant family's members: the ones a blocked order's message may
+ * print (#1906) and the ones a neighbour lane's column may be in the project
+ * under (#1901). */
+export function variantsByRegister(
+  registers: readonly string[],
+): Record<string, readonly VariantModel[]> {
+  const out: Record<string, readonly VariantModel[]> = {};
+  for (const register of registers) {
+    const variants = registerRead(register).value?.variants;
+    if (variants) out[register] = variants;
+  }
+  return out;
 }
 
 /** `registerRead` once it has settled: the cached value at once when it has

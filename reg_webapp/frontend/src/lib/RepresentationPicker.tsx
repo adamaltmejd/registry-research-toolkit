@@ -7,7 +7,7 @@ import {
   pickerRowPasses,
   registerPrefixOf,
 } from "./catalog";
-import { catalogNames } from "./catalog_names";
+import { catalogNames, variantsByRegister } from "./catalog_names";
 import { type LaneCoverage, LaneGraph } from "./LaneGraph";
 import { type PickerBand, pickerLanes } from "./picker_lanes";
 import type { ProjectStudyWindow } from "./project_data";
@@ -162,6 +162,7 @@ export function RepresentationPicker({
     ].map(registerPrefixOf),
   );
   const names = useCatalogRead(catalogNames, registers);
+  const registerVariants = useCatalogRead(variantsByRegister, registers);
   const graphModel = pickerLanes({
     bands: shown,
     axes,
@@ -175,6 +176,7 @@ export function RepresentationPicker({
     catalogSpan,
     committed: committedRows,
     draft,
+    variantsByRegister: registerVariants,
     names,
     stagedAdds: adds,
     stagedRemoves: removes,

@@ -12,6 +12,7 @@ import type {
   GroupFacetModel,
   RelationshipGraph,
   VariableGraphNode,
+  VariantModel,
 } from "./api";
 import {
   catalogHref,
@@ -89,6 +90,9 @@ export interface PickerLaneInput {
    * neighbour is read, not picked, but a column of it already in the project
    * says so (#1901). */
   draft: RawDraft | null;
+  /** The variants of the neighbours' registers (`variantsByRegister`): the
+   * family members a neighbour's column may be in the project under. */
+  variantsByRegister: Readonly<Record<string, readonly VariantModel[]>>;
   /** The catalog's names for the lanes' registers (`catalogNames`): what tells
    * a neighbour in another register, or two lanes under one name, apart. */
   names: Readonly<Record<string, string>>;
@@ -365,12 +369,17 @@ export function pickerLanes(input: PickerLaneInput): PickerLanes {
     lanesOfFqid.set(node.fqid, [lane.id]);
   }
   // A neighbour is in the project the way a band is, through a source of its
-  // family; it is still only read here, never ticked.
-  const neighbourCommitted = committedPickerRows(
-    input.draft,
-    neighbourBands,
-    [],
-  );
+  // family, whose members its register's variants name; it is still only read
+  // here, never ticked.
+  const neighbourCommitted = new Map<string, PickerCommittedRow>();
+  for (const register of new Set(neighbourBands.map((b) => b.registerPrefix))) {
+    const rows = committedPickerRows(
+      input.draft,
+      neighbourBands.filter((b) => b.registerPrefix === register),
+      input.variantsByRegister[register] ?? [],
+    );
+    for (const [key, row] of rows) neighbourCommitted.set(key, row);
+  }
   const committedOf = (key: string) =>
     input.committed.get(key) ?? neighbourCommitted.get(key);
 

@@ -13,7 +13,7 @@ import { fqidSegments, registerPrefixOf } from "./catalog";
 import {
   catalogNames,
   registerRead,
-  registerVariantFqids,
+  variantsByRegister,
   UNASKED,
 } from "./catalog_names";
 import styles from "./ProjectEditor.module.css";
@@ -235,7 +235,7 @@ export function ProjectEditor({
 
   // The sources' registers' variants, which a blocked order may print.
   const registerVariants = useCatalogRead(
-    registerVariantFqids,
+    variantsByRegister,
     useDistinct(
       sources.map((s) => registerPrefixOf(safeSourceRegisterVariant(s))),
     ),
@@ -247,7 +247,7 @@ export function ProjectEditor({
     orderFindings,
     windowFindings: windowDisjointFindings(studyWindow, sources),
     sources,
-    registerVariants,
+    variantsByRegister: registerVariants,
   });
   // The coordinates the findings print, said in the catalog's words.
   const coordinates = useDistinct(
