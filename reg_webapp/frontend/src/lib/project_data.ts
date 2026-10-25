@@ -211,6 +211,36 @@ export function defaultSourceName(registerVariant: string): string {
   return parts.join("_").replaceAll("-", "_").toUpperCase();
 }
 
+/** The order sources are kept in (#1905): by register slug, then variant slug,
+ * so a register's variants sit together on the page and in project_data.json.
+ * The full coordinate (its provider) breaks a tie. Sources on one coordinate
+ * keep their order (the sorts are stable): an add never makes a second one, so
+ * only the file or the researcher ordered them. Code-unit order, not a
+ * collator: slugs are identifiers, and the saved file must not depend on the
+ * browser's locale. */
+export function compareSources(a: unknown, b: unknown): number {
+  const key = (s: unknown) => {
+    const rv = safeSourceRegisterVariant(s);
+    const [, register = "", variant = ""] = rv.split("/");
+    return [register, variant, rv];
+  };
+  const ka = key(a);
+  const kb = key(b);
+  for (let i = 0; i < ka.length; i += 1) {
+    if (ka[i] !== kb[i]) return ka[i] < kb[i] ? -1 : 1;
+  }
+  return 0;
+}
+
+/** `draft` with its sources in `compareSources` order — applied once where a
+ * draft enters the store (open, restore), so an out-of-order file reads sorted.
+ * A malformed (non-array) `sources` is left for the structural check to report. */
+export function withSortedSources(draft: RawDraft): RawDraft {
+  return Array.isArray(draft.sources)
+    ? { ...draft, sources: draft.sources.toSorted(compareSources) }
+    : draft;
+}
+
 /** `base` if no OTHER source (case-sensitive, as the schema compares) already
  * uses it, else the first free `base_2`, `base_3`, … The source at
  * `excludeIndex` is ignored (it's the one being named). */

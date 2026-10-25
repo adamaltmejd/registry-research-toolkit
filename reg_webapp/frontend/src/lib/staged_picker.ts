@@ -217,6 +217,25 @@ export function rowDeliversInScope(
   );
 }
 
+/** Could an Add commit this row under `scope`? Its delivery column's own eras
+ * for the row's variant (`nameWindows`: a rename chain folds into one row, so
+ * only the NAME's windows say whether the window reaches the years that name was
+ * delivered in, Y-104) must meet the add window, and the row must deliver in
+ * scope. The one gate both a register list's Add sweep and its "in project"
+ * marker read, so a column the Add stages fully reads as added (#1903). */
+export function rowAddable(
+  row: PickerRepresentation,
+  scope: PickerCommitScope,
+  nameWindows: readonly { from: string; to: string }[],
+): boolean {
+  return (
+    windowsOverlapWindow(
+      nameWindows,
+      addWindowBounds(scope.period, scope.window ?? null),
+    ) && rowDeliversInScope(row, scope)
+  );
+}
+
 /** The one add an Apply stages for a (folded or plain) picker row (#1840): its
  * family's source, written at the family head, over the row's delivery windows —
  * every member's — clipped to the add window. `resolveVariants` are the members

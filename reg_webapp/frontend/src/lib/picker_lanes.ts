@@ -21,6 +21,7 @@ import {
   pickerRepresentations,
   representationInWindow,
   rowCoversColumn,
+  valueSetKey,
   YEARLESS_VALID_FROM,
   yearOf,
 } from "./catalog";
@@ -192,7 +193,7 @@ function codingChanges(
       .filter((s) => s.delivery_column_name === column && s.valid_from)
       .sort((a, b) => (a.valid_from ?? "").localeCompare(b.valid_from ?? ""));
     for (let i = 1; i < states.length; i += 1) {
-      if (states[i].value_set_id !== states[i - 1].value_set_id) {
+      if (valueSetKey(states[i]) !== valueSetKey(states[i - 1])) {
         const year = yearOf(states[i].valid_from);
         if (year !== null) years.add(year);
       }

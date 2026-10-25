@@ -11,6 +11,7 @@ import {
   matchesFilter,
   type StateConformance,
   type ValueSetTechnicalChange,
+  valueSetKey,
   windowRunLabels,
   windowTitle,
 } from "./catalog";
@@ -248,7 +249,11 @@ export function ValueSetView({
     !(narrowed && scopeStates !== null && scopeStates.length === 0)
       ? states[0]
       : null;
-  const valueSets = distinctValueSets(states);
+  const folded = distinctValueSets(states);
+  // The uncoded states are usage lines, never a value set to title, count,
+  // filter or isolate (#1902).
+  const uncoded = folded.find((vs) => vs.uncoded) ?? null;
+  const valueSets = folded.filter((vs) => !vs.uncoded);
   const scopedValueSets =
     scopeStates === null ? null : distinctValueSets(scopeStates);
   const scopeKeys =
@@ -278,6 +283,12 @@ export function ValueSetView({
     scopeKeys === null ? [] : matching.filter((vs) => !inPeriod(vs));
   // Before the text filter (#905): whether the period delivered any value set.
   const hasInPeriodValueSets = scopeKeys === null || valueSets.some(inPeriod);
+  const shownUncoded = uncoded !== null && inPeriod(uncoded) ? uncoded : null;
+  const collapsedUncoded =
+    uncoded !== null && !inPeriod(uncoded) ? uncoded : null;
+  const codedStateCount =
+    states.length -
+    (uncoded?.usages.reduce((n, u) => n + u.states.length, 0) ?? 0);
 
   const panel = (key: string) => ({
     open: openPanels[key] ?? false,
@@ -311,7 +322,7 @@ export function ValueSetView({
 
   // Any state of a distinct value set answers the same codes.
   const stateOf = (vs: DistinctValueSet) =>
-    states.find((s) => s.value_set_id === vs.valueSetId);
+    states.find((s) => valueSetKey(s) === vs.valueSetId);
 
   /** One stored conformance verdict. `scope` says which coding, period and
    * variants it speaks for where an entry groups several; null where the
@@ -577,6 +588,36 @@ export function ValueSetView({
     );
   }
 
+  // Value sets and uncoded usage lines the period did not deliver, collapsed
+  // together. The uncoded lines step aside while a text filter is set.
+  const collapsedUncodedShown = filter === "" ? collapsedUncoded : null;
+  const outOfPeriod =
+    collapsedValueSets.length > 0 || collapsedUncodedShown !== null ? (
+      <details className={styles.outOfPeriod}>
+        <summary className={styles.summary}>
+          {[
+            collapsedValueSets.length > 0 &&
+              `${collapsedValueSets.length} ${collapsedValueSets.length === 1 ? "value set" : "value sets"}`,
+            collapsedUncodedShown !== null && "no-value-set usage",
+          ]
+            .filter(Boolean)
+            .join(" and ")}{" "}
+          outside this period
+        </summary>
+        {collapsedValueSets.length > 0 && (
+          <ul className={styles.list}>{collapsedValueSets.map(valueSetRow)}</ul>
+        )}
+        {collapsedUncodedShown !== null && (
+          <>
+            <h3 className={`micro-label ${styles.usageHeading}`}>
+              No value set
+            </h3>
+            {usage(collapsedUncodedShown)}
+          </>
+        )}
+      </details>
+    ) : null;
+
   if (states.length === 0) {
     return (
       <p className="muted">
@@ -684,10 +725,19 @@ export function ValueSetView({
   return (
     <div className={styles.multi}>
       <p className="muted">
-        {narrowed && scopeKeys !== null && !hasInPeriodValueSets
-          ? "No state delivered for this period. Historical value sets outside this period are collapsed below."
-          : `${valueSets.length} ${valueSets.length === 1 ? "value set" : "value sets"} across ${states.length} states over time.`}
+        {narrowed &&
+        scopeKeys !== null &&
+        !hasInPeriodValueSets &&
+        shownUncoded === null
+          ? valueSets.length > 0 || collapsedUncoded !== null
+            ? "No state delivered for this period. Historical states outside this period are collapsed below."
+            : "No state delivered for this period."
+          : valueSets.length === 0
+            ? "No value set."
+            : `${valueSets.length} ${valueSets.length === 1 ? "value set" : "value sets"} across ${codedStateCount} ${codedStateCount === 1 ? "state" : "states"} over time.`}
       </p>
+      {valueSets.length === 0 && shownUncoded !== null && usage(shownUncoded)}
+      {valueSets.length === 0 && outOfPeriod}
       {isolated ? (
         <div>
           <Button onPress={() => setIsolatedKey(null)}>All value sets</Button>
@@ -718,7 +768,7 @@ export function ValueSetView({
           <h4 className={`micro-label ${styles.usageHeading}`}>Used by</h4>
           {usage(isolated)}
         </div>
-      ) : (
+      ) : valueSets.length === 0 ? null : (
         <>
           {valueSets.length > 1 && (
             <FilterInput
@@ -734,17 +784,19 @@ export function ValueSetView({
             <p className="muted">No value set matches the filter.</p>
           )}
           <ul className={styles.list}>{shownValueSets.map(valueSetRow)}</ul>
-          {collapsedValueSets.length > 0 && (
-            <details className={styles.outOfPeriod}>
-              <summary className={styles.summary}>
-                {collapsedValueSets.length}{" "}
-                {collapsedValueSets.length === 1 ? "value set" : "value sets"}{" "}
-                outside this period
-              </summary>
-              <ul className={styles.list}>
-                {collapsedValueSets.map(valueSetRow)}
-              </ul>
-            </details>
+          {outOfPeriod}
+          {/* A text filter narrows the value sets; the uncoded lines are not
+              one, so they step aside while it is set. */}
+          {shownUncoded !== null && filter === "" && (
+            <>
+              {/* h3, the level of the single-state "Value set" heading and the
+                  isolated title. List rows are spans, so no title sits beside
+                  this one. */}
+              <h3 className={`micro-label ${styles.usageHeading}`}>
+                No value set
+              </h3>
+              {usage(shownUncoded)}
+            </>
           )}
         </>
       )}
