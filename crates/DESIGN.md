@@ -1097,25 +1097,33 @@ concept's variants, is a group, not a tag. Comparing one concept across register
 the broad tag: one starred member per register, each note saying how it differs (unit,
 definition vintage, population).
 
-**The narrow tags fold into broad ones.** `earned-income` folds into `income`.
-`economic-assistance-amount` and `economic-assistance-months` fold into a new
-`transfers` tag. Their starred members and notes carry over; the narrow slugs are
-deleted.
+The vocabulary is broad: `earned-income` folded into `income`, and
+`economic-assistance-amount` and `economic-assistance-months` into `transfers`, with
+their starred members and notes (#1794).
 
 ### Worked example: disposable income
 
 Each register below gets one `disponibel-inkomst` group.
 
-- **IoT** already has it: 46 members, components included, axes `enhet`,
-  `hushallsbegrepp` and `kapitalvinst`. Membership and axes stay. The 1991 and 2004
-  definitions (`CDISP` and `CDISP04` share every coordinate) are not an axis: the
-  vintage rides the period slider and `replaced_by` succession (see `iot.toml`).
-- **LISA** has none. The group takes the DispInk family: individual components, family,
-  per consumption unit, individualised from family and household, with axes `enhet`,
-  `hushallsbegrepp` and `definition` (1991, 2004). Unlike IoT, LISA keeps `definition`
-  as an axis: `DispInkKE` and its 2004 twin `DispInkKE04` are co-delivered in the same
-  years (SWECOV's Individ_2010 to Individ_2012), so the definitions coexist and are not
-  a succession.
+- **IoT** has it: 49 members, components included, axes `enhet`, `hushallsbegrepp`,
+  `kapitalvinst`, `definition` and `nordisk-lon`. This reverses #1872, which kept IoT at
+  three axes with the 1991/2004 vintage off them: both definitions are delivered side by
+  side in 2005-2024, so a user must choose one in the picker. Every 2004-definition
+  column is co-delivered with its 1991 twin from its first year through 2024
+  (`CDISP`/`CDISP04` 2005-2024), and `succession-candidates` reported each of the seven
+  `replaced_by` edges between them as contradicted, so the edges were removed. The
+  `definition` values read as SCB labels them: "1991 års definition", "2004 års
+  definition" and "Före 1991". The pre-1991 `DIN*` columns share `fore-1991`, and some
+  of them overlap in time (`DIN86`/`DIN88K` in 1990, the `DINPP` family 1981-1987).
+  `hushallsbegrepp` = `hushall` is SCB's register household in both IoT and LISA, not
+  HEK's kosthushåll. `nordisk-lon` holds the #1302 `_INKLGP` columns (2015-2019,
+  including wage earned in another Nordic country) beside their base twins, which
+  include that wage only from income year 2020.
+- **LISA** has the DispInk family: individual component, family and household total, per
+  consumption unit, and individualised from family, with axes `enhet`, `hushallsbegrepp`
+  and `definition` (1991, 2004). `DispInkKE` and its 2004 twin `DispInkKE04` are
+  co-delivered 2005-2023, so the definitions coexist. LISA's `DispInk*_INKLGP` columns
+  are not yet curated as variables, so LISA has no `nordisk-lon` axis.
 - **FASIT** has two machine-folded pairs, each a TRIF copy beside the FASIT-derived
   variable. The group absorbs both, adds the household, per-unit and
   alternating-residence variables, and declares a `kalla` axis (TRIF, FASIT). The weight

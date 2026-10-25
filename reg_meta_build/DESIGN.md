@@ -863,6 +863,13 @@ presentation, not identity or bindings. `[[code_label_pair]]` is also register-l
 both FQIDs belong to the same register, and the pair only folds matching code and label
 concepts.
 
+Curated concept groups and tags follow the group rubric in `crates/DESIGN.md` ("Concept
+groups and tags"). One curation rule sits on top of it: a `replaced_by` edge that
+`succession-candidates` reports as contradicted, because its predecessor is still
+delivered after the successor starts, joins co-delivered definitions. The edge is
+deleted and the pair becomes `definition` coordinates in the group (#1794: the seven IoT
+1991 → 2004 disposable-income edges).
+
 Delivery descriptions are enrichment, not source facts: they fill an empty description
 only when an exact delivery-column match grounds the text. The worklist generator drops
 generic helper codes, version-axis variables handled by the vintage fold, overloaded
