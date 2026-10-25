@@ -1044,6 +1044,12 @@ def _build_parser() -> argparse.ArgumentParser:
             "pooling across var_ids, so a never-co-delivered rename becomes two\n"
             "unrelated browse rows for one column. The designed fix is a curated\n"
             "replaced_by edge; this is the diagnostic that finds the candidates.\n\n"
+            "The same run reports two more kinds, as comments in the TOML and as\n"
+            "lists in the JSON: CONTRADICTED curated edges (an effective_year the\n"
+            "deliveries in the edge's scope disagree with) and provider-suffix FOLD\n"
+            "candidates (a header and its `_LISA`/`_MiDAS`/... twin under two\n"
+            "variables, never co-delivered as exported), to curate as an\n"
+            "[[identity.partition]] fold, not an edge.\n\n"
             "The JSON summary reports the total plus per-register counts.\n"
             "-o/--output-toml writes the candidates as variable-grain `[[edge]]`\n"
             "tables in the EXACT curation/relations.toml grammar, preceded by\n"
@@ -2286,6 +2292,34 @@ def _cmd_succession_candidates(
     data: dict[str, Any] = {
         "total": result.total,
         "per_register_counts": result.per_register_counts,
+        "contradicted_edges": [
+            {
+                "from": c.predecessor,
+                "to": c.successor,
+                "from_column": c.predecessor_column,
+                "to_column": c.successor_column,
+                "variant": c.variant,
+                "effective_year": c.effective_year,
+                "predecessor_after": [list(s) for s in c.predecessor_after],
+                "successor_before": [list(s) for s in c.successor_before],
+            }
+            for c in result.contradictions
+        ],
+        "fold_candidates": [
+            {
+                "register": f.register_fqid,
+                "suffix": f.suffix,
+                "base": f.base.fqid,
+                "base_columns": list(f.base.columns),
+                "suffixed": f.suffixed.fqid,
+                "suffixed_columns": list(f.suffixed.columns),
+                "native_variable": f.native_variable,
+                "errata_overlaps": [list(s) for s in f.errata_overlaps],
+                "handover_years": [list(h) for h in f.handover_years],
+                "edged": f.edged,
+            }
+            for f in result.folds
+        ],
     }
     _emit_toml(args.output_toml, toml, data)
 

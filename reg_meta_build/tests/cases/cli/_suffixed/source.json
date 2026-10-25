@@ -1,0 +1,22 @@
+{
+  "description": "The artifact of the succession-candidates cases on provider-suffixed headers and contradicted edges. One register, Suffix (8), with one variant, 8.80 `individer`, and editions 2019, 2020 and 2021. Fold pairs, a bare header and its exact provider-suffixed twin under two var_ids: FAMTYP (81) in 2019-2020 beside FAMTYP_BARNREG (82) in 2020-2021, sharing only 2020, the last year of one and the first of the other; HID (83) in 2019-2021 beside HID_IoT (84) in 2020 only, sharing 2020 while HID keeps delivering in 2021. Edge pairs, named by the edges in curation/relations.toml: ANT (85) in 2019, then ANTAL (86) in 2020-2021; BEL (87) in 2019-2020 beside BELOPP (88) in 2020-2021.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 8101, "var_id": 81, "colname": "FAMTYP", "varname": "Familjetyp", "year": "2019", "regver_id": 2019, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8102, "var_id": 81, "colname": "FAMTYP", "varname": "Familjetyp", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8201, "var_id": 82, "colname": "FAMTYP_BARNREG", "varname": "Familjetyp enligt Barnregistret", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8202, "var_id": 82, "colname": "FAMTYP_BARNREG", "varname": "Familjetyp enligt Barnregistret", "year": "2021", "regver_id": 2021, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8301, "var_id": 83, "colname": "HID", "varname": "Hushållsidentitet", "year": "2019", "regver_id": 2019, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8302, "var_id": 83, "colname": "HID", "varname": "Hushållsidentitet", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8303, "var_id": 83, "colname": "HID", "varname": "Hushållsidentitet", "year": "2021", "regver_id": 2021, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8401, "var_id": 84, "colname": "HID_IoT", "varname": "Hushållsidentitet enligt IoT", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8501, "var_id": 85, "colname": "ANT", "varname": "Antal", "year": "2019", "regver_id": 2019, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8601, "var_id": 86, "colname": "ANTAL", "varname": "Antal, ny", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8602, "var_id": 86, "colname": "ANTAL", "varname": "Antal, ny", "year": "2021", "regver_id": 2021, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8701, "var_id": 87, "colname": "BEL", "varname": "Belopp", "year": "2019", "regver_id": 2019, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8702, "var_id": 87, "colname": "BEL", "varname": "Belopp", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8801, "var_id": 88, "colname": "BELOPP", "varname": "Belopp, ny", "year": "2020", "regver_id": 2020, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}},
+      {"cvid": 8802, "var_id": 88, "colname": "BELOPP", "varname": "Belopp, ny", "year": "2021", "regver_id": 2021, "register": ["Suffix", 8, 80], "cells": {"Registervariantnamn": "Individer"}}
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "suffix"
+native_id = "8"
+
+[[variant]]
+native_id = "8.80"
+slug = "individer"
+
+[variable]
+"8.81" = "famtyp"
+"8.82" = "famtyp-barnreg"
+"8.83" = "hid"
+"8.84" = "hid-iot"
+"8.85" = "ant"
+"8.86" = "antal"
+"8.87" = "bel"
+"8.88" = "belopp"

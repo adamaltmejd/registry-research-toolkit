@@ -256,6 +256,24 @@ def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
     return None
 
 
+# Provider-suffixed delivery headers (#1907): a register can re-deliver one of its
+# columns under `<column>_<source>` (`AstNr_LISA`, `SjukP_Bdag_MiDAS`,
+# `Famtyp_BarnReg`). `succession_candidates` pairs such a header with its bare
+# twin as a fold candidate. Exact folded suffixes only, no name patterns; extend
+# the tuple when a new provider suffix is found.
+PROVIDER_HEADER_SUFFIXES = ("_lisa", "_midas", "_iot", "_barnreg", "_scb", "_bast")
+
+
+def strip_provider_suffix(folded: str) -> tuple[str, str] | None:
+    """`(stem, suffix)` when the `fold_column`-folded header ends with one of
+    `PROVIDER_HEADER_SUFFIXES` after a non-empty stem, else None."""
+    for suf in PROVIDER_HEADER_SUFFIXES:
+        stem = _strip_suffix(folded, (suf,))
+        if stem is not None:
+            return stem, suf
+    return None
+
+
 def _code_label_key(folded: str) -> str:
     """A `fold_column`-folded spelling as the code/label rule compares it."""
     for prefix in _CODE_LABEL_PREFIXES:

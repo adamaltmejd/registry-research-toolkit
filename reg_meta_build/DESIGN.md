@@ -2555,6 +2555,20 @@ explicit new `--db` directory: it never replaces the active catalog. Naming,
 classification, group, succession, same-as and document-coverage worklist commands
 produce review material; they do not approve or apply new curation during a build.
 
+`succession-candidates` also reports two kinds as comments and JSON lists, never as
+loadable TOML (#1907). A contradicted edge is a curated `replaced_by` edge with an
+`effective_year` that the deliveries in its scope disagree with: the predecessor still
+delivers in or after that year, or the successor before it (a reverse edge's years are
+excluded, so a header renamed and renamed back is not flagged). A fold candidate is a
+bare header and its twin with an exact provider suffix (`PROVIDER_HEADER_SUFFIXES` in
+`_curation.py`) under two variables of one register. The succession rule pairs only one
+column, so it never sees these, and an edge is the wrong shape for one quantity under
+two headers. A pair the provider exported together is two quantities and is dropped. An
+overlap through an errata-attested state is reported for the curator to settle, and a
+single shared handover year (one header's last, the other's first) is a transition. A
+curator lands a fold as register curation (`[[identity.partition]]` and
+`[[errata.field]]`), as `AstNr` / `AstNr_LISA` are.
+
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated

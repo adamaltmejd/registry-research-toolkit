@@ -1,0 +1,13 @@
+{
+  "replaces": "none: new behavior (#1907)",
+  "fails_if": "succession-candidates stops reporting a curated variant-scoped column edge whose successor already delivers before the effective year, or reports an edge whose successor starts exactly in the effective year",
+  "note": "From `_suffixed/curation/relations.toml` and `_suffixed/source.json`: both edges are representation grain in variant `individer`. ANT (2019) -> ANTAL (2020-2021) at effective_year 2020 agrees with the deliveries. BEL (2019-2020) -> BELOPP (2020-2021) at effective_year 2021 is the #1907 shape: the successor already delivers in 2020, the year before; the predecessor stops in 2020, so nothing is delivered after. Neither pair shares a column or a provider suffix, so the run proposes no succession or fold.",
+  "artifact": "_suffixed",
+  "argv": [
+    "--db",
+    "{db}",
+    "succession-candidates",
+    "-o",
+    "{work}/succession.toml"
+  ]
+}

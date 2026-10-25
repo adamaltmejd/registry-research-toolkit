@@ -1,0 +1,19 @@
+# ANTAL starts delivering in the edge's effective year: the edge agrees.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/ant"
+to = "scb/suffix/antal"
+from_column = "ANT"
+to_column = "ANTAL"
+variant = "individer"
+effective_year = 2020
+
+# BELOPP already delivers in 2020, the year before the edge's: contradicted.
+[[edge]]
+type = "replaced_by"
+from = "scb/suffix/bel"
+to = "scb/suffix/belopp"
+from_column = "BEL"
+to_column = "BELOPP"
+variant = "individer"
+effective_year = 2021

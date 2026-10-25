@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "files": {
+    "succession.toml": {
+      "toml": {},
+      "contains": [
+        "#   --- scb/suffix: FAMTYP + _BARNREG",
+        "#     one handover year delivers both headers: individer 2020"
+      ],
+      "excludes": [
+        "HID_IoT"
+      ]
+    }
+  }
+}

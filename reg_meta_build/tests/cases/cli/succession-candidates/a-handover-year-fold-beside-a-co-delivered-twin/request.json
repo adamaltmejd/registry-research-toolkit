@@ -1,0 +1,13 @@
+{
+  "replaces": "none: new behavior (#1907)",
+  "fails_if": "succession-candidates stops proposing a bare header and its exact provider-suffixed twin whose only shared year ends one and starts the other, or proposes a twin the provider exported beside its bare header in a year that is not a handover",
+  "note": "From `_suffixed/source.json`, all in variant `individer`. FAMTYP (var 81, 2019-2020) and FAMTYP_BARNREG (var 82, 2020-2021) share only 2020, FAMTYP's last year and FAMTYP_BARNREG's first: a handover, so the pair is the one fold candidate (the breg FamTyp / Famtyp_BarnReg shape). HID (var 83, 2019-2021) and HID_IoT (var 84, 2020) also share one year, but HID keeps delivering in 2021, so the two were co-delivered and are not proposed (the LISA HushallsID / HushallsID_IoT shape). The two var_ids differ, so the candidate names no shared native variable.",
+  "artifact": "_suffixed",
+  "argv": [
+    "--db",
+    "{db}",
+    "succession-candidates",
+    "-o",
+    "{work}/succession.toml"
+  ]
+}

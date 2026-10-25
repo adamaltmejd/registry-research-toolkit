@@ -1,0 +1,19 @@
+{
+  "total": 0,
+  "fold_candidates": {
+    "$exact": [
+      {
+        "register": "scb/suffix",
+        "suffix": "_BARNREG",
+        "base": "scb/suffix/famtyp",
+        "base_columns": ["FAMTYP"],
+        "suffixed": "scb/suffix/famtyp-barnreg",
+        "suffixed_columns": ["FAMTYP_BARNREG"],
+        "native_variable": null,
+        "errata_overlaps": [],
+        "handover_years": [["individer", 2020]],
+        "edged": false
+      }
+    ]
+  }
+}

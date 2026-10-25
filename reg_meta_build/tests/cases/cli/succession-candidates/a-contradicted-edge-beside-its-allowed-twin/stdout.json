@@ -1,0 +1,17 @@
+{
+  "total": 0,
+  "contradicted_edges": {
+    "$exact": [
+      {
+        "from": "scb/suffix/bel",
+        "to": "scb/suffix/belopp",
+        "from_column": "BEL",
+        "to_column": "BELOPP",
+        "variant": "individer",
+        "effective_year": 2021,
+        "predecessor_after": [],
+        "successor_before": [["individer", 2020, 2020]]
+      }
+    ]
+  }
+}

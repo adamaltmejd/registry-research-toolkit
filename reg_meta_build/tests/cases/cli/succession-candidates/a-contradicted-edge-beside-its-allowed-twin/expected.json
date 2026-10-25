@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "files": {
+    "succession.toml": {
+      "toml": {},
+      "contains": [
+        "#   edge: scb/suffix/bel [BEL] -> scb/suffix/belopp [BELOPP], variant individer, effective_year 2021",
+        "#     successor delivered before the effective year: individer 2020..2020"
+      ],
+      "excludes": [
+        "scb/suffix/ant [ANT]"
+      ]
+    }
+  }
+}
