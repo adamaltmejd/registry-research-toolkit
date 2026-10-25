@@ -258,9 +258,9 @@ interface TimelineProps {
 
 /**
  * The read-only Timeline (DESIGN.md → Time): one axis over the page's data
- * and the study window, the study window as the window band (`accent-bg` between
- * `accent` bounds), coverage as an ink bar with edition ticks, a year without a delivery left empty, and the window's uncovered part
- * in `info-bg`. For the register pane; the variable page's is
+ * and the study window, the study window as the window band (`accent-bg`
+ * between `accent` bounds), coverage as an ink bar with edition ticks, a year
+ * without a delivery left empty, and the window's uncovered part in `info-bg`. For the register pane; the variable page's is
  * `VariableTimeline`, a group's `CoverageTimeline`.
  */
 export function Timeline({

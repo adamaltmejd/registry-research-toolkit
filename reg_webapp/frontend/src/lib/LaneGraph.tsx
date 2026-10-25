@@ -141,7 +141,9 @@ export function LaneGraph({
           spans,
           edges,
           axis,
-          // The axis labels the bounds of the window being moved.
+          // The axis labels the add window's bounds when one is drawn; the
+          // study window's keep their rules. Labelling both needs
+          // `laneGeometry` to take both windows.
           window: addWindow ?? window,
           width,
           coverageRow: coverage !== undefined,
@@ -709,13 +711,13 @@ function Legend({
       {succession && (
         <li>
           <i className={styles.keySuccession} />
-          succeeded by (definition change)
+          Succeeded by (definition change)
         </li>
       )}
       {rename && (
         <li>
           <i className={styles.keyRename} />
-          renamed, same definition
+          Renamed, same definition
         </li>
       )}
       {selectable && (
@@ -730,7 +732,7 @@ function Legend({
       )}
       {blocked && (
         <li>
-          <span className={styles.keyBlocked}>✕</span> in project, outside the
+          <span className={styles.keyBlocked}>✕</span> In project, outside the
           study window
         </li>
       )}
