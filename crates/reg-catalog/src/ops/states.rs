@@ -16,7 +16,6 @@ use super::refs::{self, Target};
 use super::show::variant_families;
 use super::values::ScopedSentinel;
 use super::{Params, Server, cursor};
-use crate::held::{HELD_HI, HELD_LO, serves_at};
 use crate::{Code, Error, Scope, hex};
 
 /// The open-ended `valid_to` sentinel, which has no finite period token.
@@ -220,14 +219,6 @@ fn held(
     // Per representation and its own bounds: a table's one representation serves
     // another spelling only where its own is not delivered beside it.
     type Key = (i64, String, String, Option<String>, Option<String>);
-    let mut stmt = conn.prepare_cached(&format!(
-        "SELECT {HELD_LO}, {HELD_HI} FROM holding_mapping hm \
-         JOIN holding_column hc USING(column_id) \
-         JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
-         WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND {} \
-         AND ht.scope = ?4 ORDER BY 1, 2",
-        serves_at("?3", "?5", "?6"),
-    ))?;
     let mut periods: BTreeMap<Key, crate::held::Periods> = BTreeMap::new();
     let mut out = Vec::new();
     for e in emitted {
@@ -242,12 +233,14 @@ fn held(
             e.valid_to.clone(),
         );
         if !periods.contains_key(&key) {
-            let found = stmt
-                .query_map(
-                    params![variable_id, key.0, key.1, key.2, key.3, key.4],
-                    |row| Ok((row.get(0)?, row.get(1)?)),
-                )?
-                .collect::<rusqlite::Result<_>>()?;
+            let found = crate::held::periods(
+                conn,
+                variable_id,
+                key.0,
+                &key.1,
+                &key.2,
+                (key.3.as_deref(), key.4.as_deref()),
+            )?;
             periods.insert(key.clone(), found);
         }
         let held = &periods[&key];

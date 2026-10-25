@@ -1,0 +1,17 @@
+{
+  "note": "held-unevenly: the catalog delivers value 2010..2025; the steward holds value for 2018..2019 and the register (value and other) for 2017..2021. In holdings scope a dated warning is clipped to the held periods (#1900): value's 'since 2010' (2010..9999-12-31) reads 2018-01-01..2019-12-31, value's 2021 warning lies wholly outside them and is dropped, and the register-wide 2015..2017 warning is clipped to the register's held span, 2017-01-01..2017-12-31. Reference scope returns all three with their stored windows. Fails if holdings keeps a warning's reference window (the pre-#1900 reader returned 2010-01-01 and kept the 2021 warning), drops a warning that overlaps the held periods, or clips in reference scope.",
+  "fixture": "held-unevenly",
+  "requests": [
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/value"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/value",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

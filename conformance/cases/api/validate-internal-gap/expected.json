@@ -3,22 +3,7 @@
     "status": 200,
     "json": {
       "/data/ok": true,
-      "/data/issues": [
-        {
-          "code": "binding_state_drifts_within_period",
-          "level": "info",
-          "message": "column 'scb/example/avbrott' spans 2 states across a transition within period 2010..2018",
-          "path": "/sources/0/bindings/0/variable",
-          "successor_fqid": null
-        },
-        {
-          "code": "binding_state_drifts_within_period",
-          "level": "info",
-          "message": "column 'scb/example/avbrott' spans 2 states across a transition within period 2010..2012,2016..2018",
-          "path": "/sources/2/bindings/0/variable",
-          "successor_fqid": null
-        }
-      ]
+      "/data/issues": []
     }
   }
 ]

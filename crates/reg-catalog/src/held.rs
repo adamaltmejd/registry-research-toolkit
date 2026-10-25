@@ -6,8 +6,9 @@
 use std::fmt::Write as _;
 
 use reg_core::merge;
+use rusqlite::{Connection, params};
 
-use crate::Scope;
+use crate::{Error, Scope};
 
 /// Narrows a variable's holdings: to tables of `years` (intervals tables whose
 /// periods overlap them), to one variant, and to one delivery column's
@@ -98,7 +99,7 @@ pub(crate) fn serves_at(rep: &str, lo: &str, hi: &str) -> String {
 
 /// [`serves_at`] at any time: `rep` has a state or window the mapping holds (a dated
 /// one over its held periods, a year-independent one in a year-independent table)
-/// that it serves. A read that clips to held periods uses [`serves_at`] per
+/// that it serves. A read that clips to held periods uses [`periods`] per
 /// representation instead.
 pub(crate) fn serves(rep: &str) -> String {
     format!(
@@ -227,6 +228,53 @@ pub(crate) fn shown_column(scope: Scope, alias: &str) -> String {
 /// A held representation's periods, as `holding_period` rows; `(None, None)` is a
 /// table without periods (a year-independent one).
 pub(crate) type Periods = Vec<(Option<String>, Option<String>)>;
+
+/// The periods over which the steward holds `variable_id`'s representation `rep` at
+/// `variant`, in tables of `period_scope`, read from the mappings that serve it
+/// ([`serves_at`]) over its own bounds `own` (both None for a year-independent one):
+/// the one statement of "held periods of (variable, variant, representation)" that
+/// `states` clips to and `warnings` clips a dated warning to. Unclipped and
+/// unmerged; [`clip`] narrows them.
+pub(crate) fn periods(
+    conn: &Connection,
+    variable_id: i64,
+    variant: i64,
+    rep: &str,
+    period_scope: &str,
+    own: (Option<&str>, Option<&str>),
+) -> Result<Periods, Error> {
+    let mut stmt = conn.prepare_cached(&format!(
+        "SELECT {HELD_LO}, {HELD_HI} FROM holding_mapping hm \
+         JOIN holding_column hc USING(column_id) \
+         JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
+         WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND {} \
+         AND ht.scope = ?4 ORDER BY 1, 2",
+        serves_at("?3", "?5", "?6"),
+    ))?;
+    let found = stmt
+        .query_map(
+            params![variable_id, variant, rep, period_scope, own.0, own.1],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok(found)
+}
+
+/// The dated periods over which the steward holds any variable of `register_id`:
+/// the register's held span, which a register-wide dated warning clips to.
+pub(crate) fn register_periods(conn: &Connection, register_id: i64) -> Result<Periods, Error> {
+    let mut stmt = conn.prepare_cached(&format!(
+        "SELECT {HELD_LO}, {HELD_HI} FROM variable v \
+         JOIN holding_mapping hm ON hm.variable_id = v.variable_id \
+         JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
+         JOIN holding_period hp USING(table_id) \
+         WHERE v.register_id = ? AND ht.scope = 'intervals' ORDER BY 1, 2"
+    ))?;
+    let found = stmt
+        .query_map([register_id], |row| Ok((row.get(0)?, row.get(1)?)))?
+        .collect::<rusqlite::Result<_>>()?;
+    Ok(found)
+}
 
 /// Today's `_scope_states` clip: `held`'s dated periods clipped to a dated
 /// representation's `own` bounds and the `request`'s (ISO dates), sorted, with

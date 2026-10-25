@@ -1,5 +1,5 @@
 {
-  "note": "avbrott has two states, delivered 2010..2012 and 2016..2018. Each binding whose request reaches both reports one `binding_state_drifts_within_period` naming its requested period, whether a range over the gap or a list period that skips it; a request inside one run reports nothing. The clip itself is `order/clip-internal-gap`'s. Fails if drift is reported for a one-state request, missed across the gap, or names another period.",
+  "note": "avbrott has two states, delivered 2010..2012 and 2016..2018, with one column and no value set. The order emits one entry for each binding, whether its request is a range over the gap, a list period that skips it, or inside one run, so none reports `binding_state_drifts_within_period` (#1899: a state boundary counts only where the folded column or value set changes). The clip itself is `order/clip-internal-gap`'s. Fails if drift counts the windows of an unchanged column on either side of a gap (the order's slices) or its states as transitions.",
   "kind": "catalog",
   "fixture": "semantic",
   "requests": [

@@ -1,0 +1,74 @@
+[
+  {
+    "register": {"provider": "scb", "slug": "example", "name": "Example"},
+    "slug": "cfar-nummer",
+    "provider_key": "1",
+    "name": "CFAR-nummer",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2021-12-31",
+        "delivery_column_name": "CfarNr",
+        "data_type": "varchar",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "source_register_text": "RAMS"
+      },
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "delivery_column_name": "CfarNr",
+        "data_type": "varchar",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "source_register_text": "BAS"
+      }
+    ]
+  },
+  {
+    "register": {"provider": "scb", "slug": "example", "name": "Example"},
+    "slug": "arbetsstalle",
+    "provider_key": "2",
+    "name": "Arbetsställe",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2021-12-31",
+        "delivery_column_name": "ArbstId",
+        "data_type": "varchar",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "source_register_text": "RAMS"
+      },
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "delivery_column_name": "ArbstNr",
+        "data_type": "varchar",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "source_register_text": "BAS"
+      }
+    ]
+  }
+]

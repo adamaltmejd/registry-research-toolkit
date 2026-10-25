@@ -510,8 +510,14 @@ can inspect the same node without making it selectable.
 Exceptions: classifications, value sets, codes, documents and lineage stay reference in
 either scope, but a variable-owned read still needs an admitted owner in holdings. A
 held graph can show reference neighbors that are not selectable. Register warnings in
-holdings show register-wide warnings and those of admitted bindings. Validation and
-order take no scope; they use the artifact's kind.
+holdings show register-wide warnings and those of admitted bindings. A dated warning in
+holdings reads as held (#1900): a variable's window is clipped to the held periods of
+its variable at its variant and representation (`held::periods`, the same periods
+`states` clips to), a register-wide one to the register's held span, and becomes the
+hull of what remains, so the warning keeps one row and its id; a warning wholly outside
+them, or whose clipped window misses the requested period, is dropped. A warning without
+a window, or one whose cell is held in no dated table, has nothing to clip against and
+stays as stored. Validation and order take no scope; they use the artifact's kind.
 
 ## Order manifest
 
@@ -837,13 +843,15 @@ variant itself under `_default`; "Order manifest", step 1) and binding:
   runs once over the family, never per member with a merge: a member that does not
   deliver a column would otherwise block it for that member's years.
   `binding_state_drifts_within_period` (info) reports a sequential state transition
-  inside the request. It counts the states the request reaches: every state of one
-  member, and the first state of the next member only where its canonical column (by
-  `fold_identity`) or value set differs from the previous member's last state. So a
-  member boundary is a transition only where the representation or value set changes
-  across it (LISA's `SyssStat` → `SyssStat11`), not where one column simply continues in
-  the next member; a difference in any other fact across the boundary, such as the data
-  type, is not reported, while the same difference between two states of one member is.
+  inside the request. It counts the distinct (canonical column by `fold_identity`, value
+  set) pairs among the states the request reaches: the order's partition of the request
+  by column, refined by coding (#1899). So a boundary is a transition only where the
+  representation or value set changes across it (LISA's `SyssStat` → `SyssStat11`),
+  inside one member as well as between members; a state boundary, gap or member boundary
+  one column simply runs through is not, and neither is a difference in any other fact,
+  such as the data type or the `source_register_text` (LISA's `cfar-nummer`, RAMS →
+  BAS), for which the order emits one entry. A value-set change on a continuing column
+  still counts, though the order emits one entry across it.
 - `source_period_narrower_than_available` (warning, at `/sources/<i>/period`) is the one
   period finding, the reverse of a clip. It names the days inside the study window a
   period widened into them would order, across the whole family, minus the source
