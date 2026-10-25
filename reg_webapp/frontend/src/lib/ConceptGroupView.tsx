@@ -6,6 +6,7 @@ import {
   type GroupFacetModel,
   getGraph,
   getShow,
+  getStates,
   type VariableGraphNode,
 } from "./api";
 import type { PeriodProps } from "./CatalogNodeView";
@@ -14,6 +15,8 @@ import {
   catalogHref,
   deliveredYears,
   facetLabelJoin,
+  groupHref,
+  informativeAxes,
   leafSlug,
   nodeLabel,
   type PickerRepresentation,
@@ -26,17 +29,16 @@ import {
   clampYearPeriodWire,
   clampYearWindow,
   coverageBandEdges,
-  dataAxis,
   periodWindowRelation,
   periodWireValid,
   yearWindowFromWire,
 } from "./period";
-import { bandAxisYears, type PickerBand } from "./picker_lanes";
-import { RepresentationPicker } from "./RepresentationPicker";
+import type { PickerBand } from "./picker_lanes";
 import { studyWindowInterval } from "./reg_core";
 import { router } from "./router";
+import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { StagedAddStatus } from "./StagedAddStatus";
-import { TechnicalDetails } from "./SubjectView";
+import { SubjectSection, TechnicalDetails } from "./SubjectView";
 import {
   ADD_PERIOD_REQUIRED_MESSAGE,
   applyStagedPicks,
@@ -45,17 +47,19 @@ import {
   type StagedApplyPayload,
   stagedApplyRefusal,
 } from "./staged_picker";
-import { Timeline } from "./Timeline";
+import { CoverageTimeline } from "./Timeline";
 import { Button } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { Tag } from "./ui/Tag";
+import type { KeyValueRow } from "./ui/types";
 import { useAsyncResource } from "./use_async_resource";
 import { useProject, useStudyWindow } from "./use_project";
 import { useQueryParam } from "./use_router";
 import { useCatalogRead } from "./use_store_read";
+import { ValueSetView } from "./ValueSetView";
 
 interface Props extends PeriodProps {
   provider: string;
@@ -108,6 +112,7 @@ function groupBands(
   group: ConceptGroupShow,
   nodes: ReadonlyMap<string, VariableGraphNode>,
   memberHref: (fqid: string) => string,
+  titledByFacets: boolean,
 ): PickerBand[] {
   const byFqid = new Map<string, ConceptGroupMember[]>();
   for (const member of group.members) {
@@ -165,7 +170,12 @@ function groupBands(
       laneKey,
       name: lead.name ?? leafSlug(fqid),
       registerPrefix: registerPrefixOf(fqid),
-      facetLabel: lead.facets.length > 0 ? facetLabelJoin(lead.facets) : null,
+      // With every axis one-to-one the facets only number the members: the
+      // lane is titled by the variable's name (#1904).
+      facetLabel:
+        titledByFacets && lead.facets.length > 0
+          ? facetLabelJoin(lead.facets)
+          : null,
       facetsByColumn,
       facets: wholeFacets,
       operationalDefinition: node?.operational_definition ?? null,
@@ -330,14 +340,19 @@ export function ConceptGroupView({
     nodes.set(node.fqid, node);
     for (const alias of node.same_as) nodes.set(alias.fqid, node);
   }
-  // Opening a member keeps the period the group was narrowed to.
-  const memberHref = (fqid: string) =>
-    period
-      ? `${catalogHref(fqid)}?period=${encodeURIComponent(period)}`
-      : catalogHref(fqid);
-  const bands = groupBands(group, nodes, memberHref);
-  const focusKey =
-    bands.find((band) => leafSlug(band.key) === memberHint)?.key ?? null;
+  // The axes that tell members apart in bulk: the header's facet values, the
+  // filter row and the member titles all read this one list (#1904).
+  const shownAxes = informativeAxes(group);
+  // A member is this page focused on it (#1909): its link keeps the period
+  // the group was narrowed to.
+  const memberHref = (fqid: string) => {
+    const query = new URLSearchParams();
+    if (period) query.set("period", period);
+    query.set("member", fqid);
+    return `${groupHref(registerFqid, groupKey)}?${query}`;
+  };
+  const bands = groupBands(group, nodes, memberHref, shownAxes.length > 0);
+  const focusKey = bands.find((band) => band.key === memberHint)?.key ?? null;
   const committedRows = committedPickerRows(
     draft,
     bands,
@@ -365,15 +380,6 @@ export function ConceptGroupView({
     windowMaxYear,
     windowMaxYear,
   );
-  // One axis for the Timeline and the lanes (DESIGN.md → Time): every
-  // member's columns as the lanes draw them, the coverage, the active window
-  // and the study window, rounded out. The lanes get it as drawn years, so
-  // they round to the same axis.
-  const drawn = bandAxisYears(bands, windowMinYear, vintageYear);
-  if (covered) drawn.push(covered.from, covered.to);
-  if (band) drawn.push(band.from, band.to);
-  if (pickerWindow) drawn.push(...pickerWindow);
-  const axis = dataAxis(drawn, projectWindow, [windowMinYear, windowMaxYear]);
   // A `?period` that is not the project window: with a window it differs
   // from it (a warning), without one it is only a narrowing (information).
   // Judged inside the group's coverage, as the variable page judges its
@@ -392,7 +398,7 @@ export function ConceptGroupView({
     );
   const definition = sharedText(group, nodes, "definition");
   const description = sharedText(group, nodes, "description");
-  const facetValues = group.axes.map((axis) => ({
+  const facetValues = shownAxes.map((axis) => ({
     axis,
     values: [
       ...new Set(
@@ -452,67 +458,143 @@ export function ConceptGroupView({
         />
       </TechnicalDetails>
 
-      <Timeline
-        axis={{ from: axis[0], to: axis[1] }}
-        window={band}
-        windowKind={periodYears === null ? "study" : "add"}
-        coverage={covered}
-        years={coverageYears}
-        vintageYear={windowMaxYear}
-      />
-      {/* The group page draws the period; it does not set one. A `?period`
-          it was opened with is the exception, cleared back to the window. */}
-      {periodNarrows && (
-        <StatusRow
-          tone={projectWindow ? "warn" : "info"}
-          action={
-            <Button variant="ghost" onPress={() => writePeriod(null)}>
-              {projectWindow ? "Reset" : "Clear"}
-            </Button>
-          }
-        >
-          {projectWindow
-            ? `Differs from the project window (${projectWindow.from}–${projectWindow.to}).`
-            : `Narrowed to ${activePeriod}.`}
-        </StatusRow>
-      )}
       {graphResource.loading ? (
         <Skeleton variant="block" />
       ) : graphResource.error ? (
         <StatusRow tone="error" live="alert">
           The members' columns did not load ({graphResource.error}). Reload the
-          page to try again, or open a member from the list.
+          page to try again.
         </StatusRow>
       ) : (
-        <RepresentationPicker
+        // The variable page's one drawing (#1909): coverage heads the members'
+        // lanes on one axis, the filters between them as on a variable.
+        <CoverageTimeline
+          band={band}
+          bandKind={periodYears === null ? "study" : "add"}
+          pickerWindow={pickerWindow}
+          coverage={coverage}
+          years={coverageYears}
+          windowMinYear={windowMinYear}
+          windowMaxYear={windowMaxYear}
           bands={bands}
+          // Every axis orders the lanes; only an informative one filters.
           axes={group.axes}
+          filterAxes={shownAxes}
           // A curated group's axes are its browse facets; without them the row
           // dimensions are the only filters the page has.
           includeRowDimensionFilters={
             !(group.source === "curated" && group.axes.length > 0)
           }
-          window={pickerWindow}
           canAdd={regMetaVersion !== "" && steward !== ""}
           committedRows={committedRows}
           studyWindow={projectWindow}
           focusKey={focusKey}
           graph={graphResource.data}
           vintageYear={vintageYear}
-          drawnYears={axis}
-          catalogSpan={[windowMinYear, windowMaxYear]}
           onApply={onApply}
           onStageChange={(hasDiff) => {
             setRefusal(null);
             if (hasDiff) setOutcome(null);
           }}
+          foot={
+            // The group page draws the period; it does not set one. A
+            // `?period` it was opened with is the exception, cleared back to
+            // the window.
+            periodNarrows && (
+              <StatusRow
+                tone={projectWindow ? "warn" : "info"}
+                action={
+                  <Button variant="ghost" onPress={() => writePeriod(null)}>
+                    {projectWindow ? "Reset" : "Clear"}
+                  </Button>
+                }
+              >
+                {projectWindow
+                  ? `Differs from the project window (${projectWindow.from}–${projectWindow.to}).`
+                  : `Narrowed to ${activePeriod}.`}
+              </StatusRow>
+            )
+          }
         />
       )}
       <StagedAddStatus
         outcome={outcome?.under === resolutionKey ? outcome.value : null}
         blocked={refusal?.under === refusalKey ? refusal.message : null}
       />
+      {focusKey && (
+        <MemberDetails
+          key={focusKey}
+          fqid={focusKey}
+          shared={{ definition, description }}
+        />
+      )}
     </article>
+  );
+}
+
+/** The focused member's own text (#1909): what its variable page showed under
+ * the head, now on the group page that is its page. Facts the group's head
+ * already shows as shared are not repeated. */
+function MemberDetails({
+  fqid,
+  shared,
+}: {
+  fqid: string;
+  shared: { definition: string | null; description: string | null };
+}) {
+  const resource = useAsyncResource(fqid, async (signal) => {
+    const node = await getShow(fqid, { signal });
+    if (node.kind !== "variable") {
+      throw new Error(`${fqid} is not a variable`);
+    }
+    return { node, states: await getStates(node.fqid) };
+  });
+  if (resource.loading) {
+    return (
+      <section aria-busy="true">
+        <Skeleton width="min(16rem, 50%)" />
+        <Skeleton variant="block" />
+      </section>
+    );
+  }
+  if (resource.error || !resource.data) {
+    return (
+      <StatusRow tone="error" live="alert">
+        This member's details did not load ({resource.error}). Reload the page
+        to try again.
+      </StatusRow>
+    );
+  }
+  const { node, states } = resource.data;
+  const own = (value: string | null | undefined, groupValue: string | null) =>
+    value && value.trim() !== groupValue ? value : null;
+  const facts: KeyValueRow[] = (
+    [
+      ["Definition", own(node.definition, shared.definition)],
+      ["Description", own(node.description, shared.description)],
+      ["Operational definition", node.operational_definition],
+      ["Unit", node.measurement_unit],
+    ] as const
+  ).flatMap(([label, value]) => (value ? [{ label, value }] : []));
+  return (
+    <SubjectSection title={nodeLabel(node)}>
+      <div className={styles.member}>
+        {facts.length > 0 && <KeyValue rows={facts} />}
+        <ScopedDataWarnings fqid={node.fqid} />
+        <ValueSetView
+          fqid={node.fqid}
+          states={states}
+          narrowed={false}
+          scopeStates={null}
+          common={{
+            name: node.name ?? null,
+            description: node.description ?? null,
+            definition: node.definition ?? null,
+            unit: node.measurement_unit ?? null,
+          }}
+        />
+      </div>
+    </SubjectSection>
   );
 }
 

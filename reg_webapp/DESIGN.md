@@ -844,17 +844,17 @@ over a hairline) is the section wrapper and `TechnicalDetails` the bottom disclo
 `ClassificationView.tsx` and `ConceptGroupView.tsx` use the same two directly, under
 their own `Definitions` head. A kind with nothing for a section simply renders no node
 for it (no empty wrapper, no "none found" wall). The under-title fqid line shows only
-when the leaf passes `fqid` to `Definitions`. The variable leaf passes it only for a
-grouped member whose qualifier is a slug (its breadcrumb otherwise ends in the slug,
-which would make the line redundant). A concept group has no single fqid (its key lives
-in the description's Technical details), so it passes none.
+when the leaf passes `fqid` to `Definitions`; neither the variable leaf (its breadcrumb
+ends in the slug) nor a concept group (no single fqid; its key lives in the
+description's Technical details) passes one.
 
 **Dispatch.** `CatalogNodeView.tsx` resolves a node by FQID (a no-query browse fetch, so
 the response is always a `kind`-tagged node) and switches on `kind`. The **list/browse**
 nodes — `provider`, `register`, `classification-root` — are NOT subjects: they render
 their child lists inline (with #303/#516 concept-group folding), not through
 `SubjectView`. The three **leaf** kinds each delegate to a per-kind view that renders
-the head and sections: `binding` → `BindingLeafView`; ungrouped `classification` →
+the head and sections: `binding` → `BindingLeafView`, except a grouped member, whose
+URL redirects (history replace) to its group's page with `?member=<fqid>` (#1909); ungrouped `classification` →
 `ClassificationLeafView`; grouped or family `classification` → `ClassificationGroupView`
 with the requested edition tab active; and the `concept-group` (served by the fixed
 `/catalog/group/{provider}/{register}/{key}` route, see Catalog router structure above)
@@ -867,22 +867,19 @@ Per-kind mapping into the six sections:
   | Section       | Variable (`BindingLeafView`)                                                                                                                             | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
   | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
   | description   | definition / description / unit `<dl>`                                                                                                                   | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `VariableTimeline`: one `RepresentationPicker` graph headed by the coverage row and period slider, + add-to-project                                      | `ClassificationEditionGraph` compact edition DAG (#906)          | `Timeline` (read-only coverage) + `RepresentationPicker` (list or graph/time-band)                                                            |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | —                                                                                                                                             |
+  | picker        | `VariableTimeline`: one `RepresentationPicker` graph headed by the coverage row and period slider, + add-to-project                                      | `ClassificationEditionGraph` compact edition DAG (#906)          | `CoverageTimeline`: the variable page's graph headed by the coverage row, without the slider (#1909)                                          |
+  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | the `?member`'s own definitions, data warnings and `ValueSetView`                                                                             |
   | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
   | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | —                                                                                                                                             |
   | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, single-state data type / column, and corrected delivery intervals with class/evidence) | —                                                                | —                                                                                                                                             |
 
-**#670 — member identity and fetch ownership.** For a grouped variable,
-`BindingLeafView` renders a member-distinguishing qualifier (facet labels, e.g. "AGI ·
-2007 SNI edition", falling back to the slug for edge-group split siblings) and a "member
-of ⟨group⟩" context link directly under the header — both additive and gated on a
-resolved `/graph` fetch. The fetch itself is owned by `BindingLeafView`, which derives
-the qualifier (`qualifierFromFocus`) and group link (`groupLinkFromFocus`) from the
-graph focus node's `facets` / `group_label` — no separate `/dimensions` request. The
-same `/graph` fetch feeds `RepresentationPicker`'s graph/time-band mode; failure domain
-is unchanged — a graph error omits the header qualifier and falls the picker back to the
-compact list without affecting the rest of the leaf.
+**A concept group is its members' variable page (#1909, ruling #1794).** A grouped
+member has no page of its own: `CatalogNodeView` sends its URL, with the query, to
+`group/<provider>/<register>/<key>?member=<fqid>`, history-replaced. The group page
+marks that member's lane current and shows its own definition, operational definition,
+data warnings and states below the picker; a lane's name links to the same page with
+that `?member`, a query-only move. `BindingLeafView` therefore only ever shows an
+ungrouped variable, and its `/graph` read feeds the picker's neighbour lanes only.
 
 ### The picker — slice axis × time axis
 
@@ -908,14 +905,18 @@ kind:
   ordered by facet, each delivery column a span on one shared year axis. Spans are
   native checkboxes named column-first; succession edges between drawn lanes are solid
   arrows, a #902 rename fold a dashed hop inside one span, and the active window an
-  `accent-bg` band. The modules split by concern: `lane_graph.ts` (pure layout),
+  `accent-bg` band. A one-to-one axis (no value selects two or more members, e.g. an
+  `ordinal` 1…48) still orders the lanes but offers no filter and no header values;
+  with every axis hidden the lanes are titled by variable name (`informativeAxes` in
+  `catalog.ts`, #1904). The Variant and coding filters are exempt: they name the unit
+  of observation. The modules split by concern: `lane_graph.ts` (pure layout),
   `picker_lanes.ts` (catalog rows → lanes, spans, edges), `LaneGraph.tsx` (rendering),
   `RepresentationPicker.tsx` (filters, staging, the sticky footer). One shared staged
   diff footer labels the action by diff shape ("Add to project", "Remove from project",
   or "Apply changes"); the register list's add bar uses the same words. A committed
-  column whose source and the study window disagree is listed in words under the graph;
-  on the variable page only one outside the window is, since the Timeline's ▲ row speaks
-  for differing years there (#1833). A **per-dimension filter strip** narrows a large
+  column whose source and the study window disagree is listed in words under the graph
+  only when it is outside the window: under the Timeline the coverage row speaks for
+  differing years, and the span's name carries the rest (#1833). A **per-dimension filter strip** narrows a large
   multi-axis group to one axis value (#908, `pickerFilterDimensions` / `pickerRowPasses`
   / `PickerDimension` in `catalog.ts`); a dimension surfaces only when it discriminates
   (≥2 distinct values). Filtering is a presentation lens: a hidden-but-selected row
@@ -963,11 +964,12 @@ control does a different job per kind:
   deep-link state; one that is not a span of whole years is reported in a warning row,
   the drawing shows the project window, Clear drops it, and it is not rewritten unless
   the user moves a thumb.
-- On the **concept group** it is the read-only `Timeline`: the page draws the period and
-  does not set one. `getConceptGroup` takes no period, so `?period` drives **no
-  refetch**; it sets the band (a member link carries the active `?period` into the leaf
-  for continuity). A `?period` the page was opened with that differs from the project
-  window shows a status row with Reset (or Clear when no window is set).
+- On the **concept group** it is `CoverageTimeline`, the same drawing without the
+  slider: the coverage row heads the members' lanes on one axis, and the page draws the
+  period and does not set one. `getConceptGroup` takes no period, so `?period` drives **no
+  refetch**; it sets the band (a member link keeps the active `?period`). A `?period` the
+  page was opened with that differs from the project window shows a status row under
+  the graph with Reset (or Clear when no window is set).
 - The **classification** leaf has no time axis (a classification edition is
   period-less).
 
@@ -1720,8 +1722,8 @@ past it reads as not covered. `windowBounds` (`window_bounds.ts`) derives it fro
 the leaf views. It is NOT a floor on the axis: a FINITE coverage keeps its real end
 (never extended to the vintage), and a window or selection past the vintage still widens
 the axis (the thumb renders the real value) without extending coverage. Wall-clock is
-the pre-context fallback only. The concept-group page draws the same coverage on the
-read-only `Timeline` and drives no refetch (`getConceptGroup` takes no period
+the pre-context fallback only. The concept-group page draws the same coverage row without the
+slider (`CoverageTimeline`) and drives no refetch (`getConceptGroup` takes no period
 parameter).
 
 Precedence — two backing stores, one source of truth:

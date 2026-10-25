@@ -998,7 +998,8 @@ without a tree, so a client fetches a subtree only when a reader opens it. A fil
 researcher looking for that concept in that register should find in one place: the
 variants that differ by unit, household definition, coexisting definitions or source,
 and the source's own components of the concept. To the user the group is the variable.
-They pick columns on the group page; the member variable pages are reference. A group
+The group page is its members' variable page: they pick columns there, and a member's
+own URL opens it focused on that member. A group
 never spans registers: disposable income in IoT and disposable income in LISA are two
 groups, and finding the concept across registers is a tag's job.
 

@@ -258,8 +258,8 @@ interface TimelineProps {
  * The read-only Timeline (DESIGN.md → Time): one axis over the page's data
  * and the study window, the active window as an `accent-bg` band, coverage as an ink bar with
  * edition ticks, a year without a delivery left empty, and the window's uncovered part
- * in `info-bg`. For register and group panes; the variable page's is
- * `VariableTimeline`.
+ * in `info-bg`. For the register pane; the variable page's is
+ * `VariableTimeline`, a group's `CoverageTimeline`.
  */
 export function Timeline({
   axis,
@@ -291,6 +291,89 @@ type PickerProps = Omit<
   ComponentProps<typeof RepresentationPicker>,
   "window" | "timeline" | "drawnYears" | "catalogSpan"
 >;
+
+interface CoverageTimelineProps extends PickerProps {
+  /** The active window drawn as the band: a `?period` narrowing, else the
+   * project window; null draws none. */
+  band: Years | null;
+  /** Says what the band is: the project's study window or an add window. */
+  bandKind: "study" | "add";
+  /** The window the columns are read against (`pickerWindowYears`). */
+  pickerWindow: [number, number] | null;
+  /** The subject's coverage (a union over its members), or null. */
+  coverage: Coverage | null;
+  /** Delivered years, or null to draw coverage solid. */
+  years: readonly number[] | null;
+  /** The catalog's first year: where an unknown coverage start is drawn. */
+  windowMinYear: number;
+  /** The catalog's last year: the open-ended coverage end. */
+  windowMaxYear: number;
+  /** Words under the graph (the page's period notice). */
+  foot?: ReactNode;
+}
+
+/**
+ * The concept group's Timeline (#1909): the variable page's one drawing, its
+ * coverage row heading the members' lanes on one axis, without the slider. A
+ * group page draws the period and does not set one.
+ */
+export function CoverageTimeline({
+  band,
+  bandKind,
+  pickerWindow,
+  coverage,
+  years,
+  windowMinYear,
+  windowMaxYear,
+  foot,
+  ...picker
+}: CoverageTimelineProps) {
+  const labelId = useId();
+  // Coverage as drawn: an unknown start at the catalog's first year, an open
+  // end at its last (DESIGN.md → Time).
+  const covered = coverageBandEdges(
+    coverage,
+    windowMinYear,
+    windowMaxYear,
+    windowMaxYear,
+  );
+  const outside = band ? uncoveredYears(band, covered) : [];
+  const drawn = band ? [band.from, band.to] : [];
+  if (covered) drawn.push(covered.from, covered.to);
+  return (
+    <section aria-labelledby={labelId}>
+      <RepresentationPicker
+        {...picker}
+        window={pickerWindow}
+        drawnYears={drawn}
+        catalogSpan={[windowMinYear, windowMaxYear]}
+        timeline={{
+          head: (
+            <Head
+              id={labelId}
+              label={headLabel(band !== null, bandKind === "add")}
+              covered={covered}
+              outside={outside}
+            />
+          ),
+          band: band && [band.from, band.to],
+          coverage: {
+            covered,
+            years,
+            outside,
+            bandName:
+              band === null
+                ? null
+                : bandKind === "add"
+                  ? "Add window"
+                  : "Study window",
+          },
+          foot,
+        }}
+      />
+    </section>
+  );
+}
 
 interface VariableTimelineProps extends PickerProps {
   /** The active `?period` from the URL (null = full history). */

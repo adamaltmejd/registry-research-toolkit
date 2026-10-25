@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { RegisterFacet, RegisterShow } from "./api";
+import type { RegisterFacet } from "./api";
 import {
   useBrowseFilter,
   useOtherRegisterMatches,
@@ -7,7 +7,6 @@ import {
 } from "./browse_filter";
 import {
   catalogHref,
-  facetLabelJoin,
   foldGroupedRows,
   groupFilterKeys,
   groupHref,
@@ -34,8 +33,6 @@ export type VariableListFocus =
   | { kind: "variable"; fqid: string }
   | { kind: "group"; key: string };
 
-type Group = RegisterShow["groups"][number];
-
 /** Columns in the open project, per variable FQID. */
 function readVariableCounts(): Record<string, number> {
   const counts: Record<string, number> = {};
@@ -47,65 +44,6 @@ function readVariableCounts(): Record<string, number> {
     }
   }
   return counts;
-}
-
-/** A concept group's members as sections under its first axis's facet value,
- * in member order, each member named by its remaining facets (DESIGN.md →
- * ColumnList: on a group page the members are grouped by facet). A group with
- * no axes is one unlabelled run. The filter keeps a member by its name, facets,
- * slug or column, or by the server's match once the query settles. */
-function memberSections(
-  group: Group,
-  needle: string,
-  serverMatches: ReadonlySet<string> | null,
-  counts: Record<string, number>,
-): ColumnSection[] {
-  const axis = group.axes[0]?.name ?? null;
-  const sections = new Map<string, ColumnSection & { items: ColumnItem[] }>();
-  // One variable can be several members (one per facet combination it
-  // delivers, e.g. a monthly wage per month): each is its own row, keyed by
-  // the member's place, and every one opens the variable.
-  for (const [index, member] of group.members.entries()) {
-    const head =
-      axis === null ? null : member.facets.find((f) => f.axis === axis);
-    const rest = member.facets.filter((f) => f !== head);
-    // Under its facet header a member is named by its other facets, else by
-    // the variable's own name (the header already says the facet).
-    const name =
-      facetLabelJoin(rest) ||
-      member.name ||
-      head?.label ||
-      member.delivery_column ||
-      leafSlug(member.fqid);
-    const keys = [
-      name,
-      member.name ?? "",
-      leafSlug(member.fqid),
-      member.delivery_column ?? "",
-      ...member.facets.map((f) => f.label),
-    ];
-    const kept =
-      needle.trim() === "" ||
-      (serverMatches?.has(member.fqid) ?? false) ||
-      keys.some((key) => matchesFilter(needle, key));
-    if (!kept) continue;
-    const id = `facet:${head?.value ?? ""}`;
-    const section = sections.get(id) ?? {
-      id,
-      label: head?.label ?? null,
-      items: [],
-    };
-    section.items.push({
-      id: `member:${index}`,
-      name,
-      // The same variable name can sit under several facet headers.
-      label: head ? `${head.label}, ${name}` : undefined,
-      href: catalogHref(member.fqid),
-      inProject: counts[member.fqid] ?? 0,
-    });
-    sections.set(id, section);
-  }
-  return [...sections.values()];
 }
 
 const MORE = "more:";
@@ -147,8 +85,8 @@ function otherRegisterSections(
 /**
  * The second browse column (DESIGN.md → Layout): the selected register's
  * variables, a concept group folded to one item that opens the group's page
- * (#303); inside a group (its page or a member's) the group's members, grouped
- * by facet. The search bar's text filters it in place: by the server's match
+ * (#303), also on the group's page, where that row is selected (#1909). The
+ * search bar's text filters it in place: by the server's match
  * set once the query settles, as on the register page, by names until then.
  */
 export function VariableList({
@@ -228,38 +166,25 @@ export function VariableList({
         },
   );
 
-  const group =
-    focus?.kind === "group"
-      ? node?.groups.find((g) => g.key === focus.key)
-      : focus?.kind === "variable"
-        ? node?.groups.find((g) => g.members.some((m) => m.fqid === focus.fqid))
-        : undefined;
-  const own: ColumnSection[] = group
-    ? memberSections(group, needle, serverMatches, counts)
-    : [{ id: "variables", label: null, items }];
   const others = otherRegisterSections(otherMatches, counts);
-  const sections = [...own, ...others];
-  const ownItems = own.reduce((n, section) => n + section.items.length, 0);
+  const sections = [{ id: "variables", label: null, items }, ...others];
+  const ownItems = items.length;
   // Other registers match but this one does not: say so above their runs.
   const ownEmpty = others.length > 0 && ownItems === 0;
-  // A variable's page selects its row (its first, where it is several
-  // members); the group's own page selects nothing in its member list.
-  const variableHref =
-    focus?.kind === "variable" ? catalogHref(focus.fqid) : null;
+  // The open page's row: a variable's own, or its group's folded row (a group
+  // is its members' page, #1909).
   const selectedId =
-    variableHref !== null
-      ? (sections
-          .flatMap((s) => s.items)
-          .find((item) => item.href === variableHref)?.id ?? null)
-      : focus?.kind === "group" && !group
-        ? `group:${focus.key}`
+    focus?.kind === "group"
+      ? `group:${focus.key}`
+      : focus?.kind === "variable"
+        ? (items.find((item) => item.href === catalogHref(focus.fqid))?.id ??
+          null)
         : null;
 
   return (
     <ColumnList
       label="Variables"
-      // A group's members are listed under the group's name (#1825).
-      subject={group?.label ?? (node ? nodeLabel(node) : undefined)}
+      subject={node ? nodeLabel(node) : undefined}
       root={registerFqid}
       className={className}
       // With nothing of its own to show, the column waits for the other
@@ -279,7 +204,7 @@ export function VariableList({
       }
       notice={
         ownEmpty
-          ? `No variables in ${group?.label ?? (node ? nodeLabel(node) : "this register")} match “${needle.trim()}”.`
+          ? `No variables in ${node ? nodeLabel(node) : "this register"} match “${needle.trim()}”.`
           : null
       }
       error={

@@ -14,11 +14,9 @@ import {
   deliveredYears,
   formatDataType,
   formatStateWindow,
-  groupLinkFromFocus,
   narrowStatesByModifier,
   pickerRepresentations,
   pickerWindowYears,
-  qualifierFromFocus,
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
@@ -52,7 +50,7 @@ import {
 } from "./staged_picker";
 import { VariableTimeline } from "./Timeline";
 import { ColumnChip } from "./ui/ColumnChip";
-import type { Definition, MemberOf } from "./ui/Definitions";
+import type { Definition } from "./ui/Definitions";
 import { KeyValue } from "./ui/KeyValue";
 import { Tag } from "./ui/Tag";
 import type { KeyValueRow } from "./ui/types";
@@ -164,11 +162,6 @@ function valueSetViewKey(
 ): string {
   const ids = (list: VariableStateModel[]) => list.map(stateKey).join(",");
   return [ids(states), scope === null ? "-" : ids(scope)].join("\u0000");
-}
-
-/** A facet's axis as a sentence-case term ("enhet" → "Enhet"). */
-function facetTerm(axis: string | null | undefined): string {
-  return axis ? axis.charAt(0).toUpperCase() + axis.slice(1) : "Facet";
 }
 
 /**
@@ -299,17 +292,14 @@ export function BindingLeafView({
     (signal) => getRelatedDocuments(registerPrefix, { signal }),
   );
 
-  // One `/graph` read (#761/#792) feeds the Timeline's related-variable lanes
-  // and the #670 header identity. Its own failure domain: an error leaves the
-  // Timeline on this variable's lane and the header on `node.name`.
+  // One `/graph` read (#761/#792) feeds the Timeline's related-variable lanes.
+  // Its own failure domain: an error leaves the Timeline on this variable's
+  // lane. A grouped member never renders here: its page is its group's
+  // (#1909).
   const graphResource = useAsyncResource(node.fqid, (signal) =>
     getGraph(node.fqid, { signal }),
   );
   const graph = graphResource.data;
-  const focus = graph?.nodes.find((n) => n.id === graph.focus_id);
-  const focusNode = focus?.kind === "variable" ? focus : null;
-  const qualifier = qualifierFromFocus(focusNode, node.fqid);
-  const groupLink = groupLinkFromFocus(focusNode, node.group);
 
   function setResolution(
     next: {
@@ -467,18 +457,6 @@ export function BindingLeafView({
 
   const narrowedLabel = (boundedPeriod ?? "").split(",").join(" + ");
   const hasMatrixSources = matrixSources.size > 0;
-  // #670: the group this member belongs to, once the graph says so. The
-  // register is not repeated here: the breadcrumb already names it.
-  const memberOf: MemberOf[] = groupLink
-    ? [{ relation: "Member of", ...groupLink }]
-    : [];
-  const facets =
-    qualifier?.kind === "facets"
-      ? (focusNode?.facets ?? []).map((f) => ({
-          label: facetTerm(f.axis),
-          value: f.label,
-        }))
-      : [];
   const definitions: Definition[] = [
     ...(node.definition
       ? [{ term: "Definition", value: node.definition }]
@@ -498,11 +476,6 @@ export function BindingLeafView({
     <SubjectView
       kind="variable"
       title={node.name ?? node.fqid}
-      // A grouped member with no facets: its slug or column is the only
-      // differentiator, an identifier, so the mono line under the title.
-      fqid={qualifier?.kind === "slug" ? qualifier.text : undefined}
-      memberOf={memberOf}
-      facets={facets}
       definitions={definitions}
     >
       {node.tags && node.tags.length > 0 && (

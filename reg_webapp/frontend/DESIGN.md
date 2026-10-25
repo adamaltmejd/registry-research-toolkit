@@ -615,7 +615,7 @@ not grow new visual language meanwhile.
   leading bar, holding a `default` "Create a project" Button, which starts a project and
   opens it, and nothing in the catalog is tinted.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
-  Aktivitetsstöd", or the group's name on a group page; one line, truncated with an
+  Aktivitetsstöd", on a group page too, where the group's folded row is selected; one line, truncated with an
   ellipsis, the whole of it as hover text) (#1825), then items on `bg`, one selected (2
   px `accent` bar on `surface-sunken` at weight 600; the column's one bar translates
   between items); in the first column, items grouped under sticky collapsible group

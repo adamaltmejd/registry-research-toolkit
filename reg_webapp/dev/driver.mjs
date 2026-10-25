@@ -1,5 +1,5 @@
-// The reg_webapp project flows, in Playwright: fourteen scenarios (three /project
-// error+retry, two /project period, one /project column removal, seven catalog, one deliberate replacement) × four viewports, each
+// The reg_webapp project flows, in Playwright: fifteen scenarios (three /project
+// error+retry, two /project period, one /project column removal, eight catalog, one deliberate replacement) × four viewports, each
 // in a fresh context against the real servers. Playwright, not agent-browser
 // (which drives `dev.sh smoke`/`shot`): the cases inject request failures, hold
 // requests open and count them per case, and that routing surface is
@@ -13,7 +13,7 @@
 //   bun ../dev/driver.mjs <out-dir> [scenario...]
 //
 // The PNGs land in <out-dir>. Named scenarios run just those; no names runs all
-// fourteen.
+// fifteen.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -148,14 +148,14 @@ function check(condition, message) {
 
 // ── `flows`: the project error/retry + catalog flows ────────────────────────
 //
-// Thirteen scenarios × four viewports = 52 cases, each in a FRESH context against
+// Fifteen scenarios × four viewports = 60 cases, each in a FRESH context against
 // the REAL backend (the caller points it at a synthetic catalog DB through
 // REG_META_DB — see dev.sh --fixture-db). The three error scenarios inject
-// exactly one failing request and the other ten inject none: everything else
+// exactly one failing request and the other twelve inject none: everything else
 // is the actual app answering — including the browser's own IndexedDB, which the
 // catalog cases read back.
 //
-// These write 84 PNGs. A bare `<out-dir>` runs all fourteen scenarios;
+// These write 92 PNGs. A bare `<out-dir>` runs all fifteen scenarios;
 // scenario arguments select a subset for focused verification.
 //
 // The filenames carry the size — so the sizes are the VIEWPORTS above,
@@ -769,6 +769,36 @@ async function browseTreeStaysTabbable(page) {
     landed.startsWith("Statistiska"),
     `Tab after "Collapse all" must reach the collapsed group's row, landed on ${landed}`,
   );
+}
+
+/** A grouped member has no page of its own (#1909): its URL opens its group's
+ * page focused on it, the query carried along, in place of the member's
+ * history entry. The webapp-dev fixture's `scb/rams/inkfeb` is a member of
+ * the token group `ink` ("Inkomst"). Each check fails on the behavior it
+ * names: a member that renders its own variable page stays on its path; a
+ * redirect that rebuilds the query drops `?period`; a Variables column that
+ * swaps to the group's members selects no "Inkomst" row; a group page that
+ * ignores `?member` shows no "Inkomst februari" section. */
+async function memberRedirectCase(page, _counts, shoot) {
+  await page.waitForURL(/\/catalog\/group\/scb\/rams\/ink\?/, { timeout: 10_000 });
+  await settled(page);
+  const query = new URLSearchParams(new URL(page.url()).search);
+  check(
+    query.get("member") === "scb/rams/inkfeb",
+    `the redirect focused member ${JSON.stringify(query.get("member"))}`,
+  );
+  check(query.get("period") === "2018", `the redirect dropped ?period: ${page.url()}`);
+  const selected = await page.evaluate(
+    () =>
+      document
+        .querySelector('[data-browse-column="variables"] [aria-current="page"]')
+        ?.textContent?.trim() ?? null,
+  );
+  check(selected === "Inkomst", `the Variables column selected ${JSON.stringify(selected)}`);
+  await page
+    .getByRole("heading", { level: 2, name: "Inkomst februari", exact: true })
+    .waitFor({ timeout: 10_000 });
+  await shoot("catalog-member-redirect");
 }
 
 /** The browse search (DESIGN.md → Search filters in place). On LISA's page, a
@@ -1510,6 +1540,12 @@ try {
       shots: 1,
       route: "/catalog/scb/lisa/dispinkfam04?period=2008..2012",
       run: catalogVariantFamilyCase,
+    },
+    // A grouped member's URL, as a shared link reaches it, with a period.
+    "catalog-member-redirect": {
+      shots: 1,
+      route: "/catalog/scb/rams/inkfeb?period=2018",
+      run: memberRedirectCase,
     },
     // The browse search on a register page, and the narrow way back to the
     // register list.

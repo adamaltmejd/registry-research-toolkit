@@ -23,3 +23,11 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
+
+/* The focused member's facts, warnings and value sets, one gap apart. */
+.member {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
