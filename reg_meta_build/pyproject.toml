@@ -18,8 +18,8 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "openpyxl>=3.1",
-    "pydantic>=2.13.4",
+    "openpyxl>=3.1.5",
+    "pydantic>=2.14.1",
     "reg-core-py",
 ]
 
