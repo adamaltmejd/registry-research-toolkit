@@ -387,20 +387,22 @@ function replaceDraft(next: RawDraft): void {
  * can't leave a malformed draft loaded while `lastDownloaded` / `validation` /
  * `openError` still describe the previous document (a stale `validatedClean`
  * would keep the order download enabled). `buildIds` is guarded never to throw,
- * but the order is the durable invariant. The dirty baseline is `next`
+ * but the order is the durable invariant. The dirty baseline is `opened`
  * re-serialized through OUR serializer — never an opened file's raw text — so a
  * freshly loaded, unedited draft is CLEAN even when the file's own formatting
- * differs from our pretty-print. */
+ * differs from our pretty-print (but not when sorting reordered its sources). */
 function loadProject(opened: RawDraft): void {
-  // Sorted once on entry (#1905); the baseline below is the sorted draft, so an
-  // out-of-order file opens clean, as one in another formatting does.
+  // Sorted once on entry (#1905). The baseline is the file as opened, so a
+  // reorder reads as an unsaved change: the sorted order has its own
+  // project_hash, and no saved file may lack the hash a downloaded order carries.
+  // A file already in order serializes identically and opens clean.
   const next = withSortedSources(opened);
   const ids = buildIds(next);
   replaceDraft(next);
   setRequestError(null);
   replacementGeneration += 1;
   sourceIds = ids;
-  lastDownloaded = serializeProjectData(next);
+  lastDownloaded = serializeProjectData(opened);
   openError = null;
   notify();
 }

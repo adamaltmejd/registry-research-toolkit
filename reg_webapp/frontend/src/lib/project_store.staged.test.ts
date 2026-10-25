@@ -42,13 +42,28 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
   it("keeps sources ordered by register, then variant, on open and on add (#1905)", () => {
     // The register slug decides before the provider (`sos/akut` before
     // `scb/lisa`), the variant slug next. Fails if an open keeps the file's
-    // order or an add appends.
+    // order or an add appends, or if a reordering open reads clean (the sorted
+    // file has a new project_hash, so the researcher must be prompted to save it).
     const source = (register_variant: string) => ({
       name: register_variant.replaceAll("/", "_"),
       register_variant,
       period: 2018,
       bindings: [{ variable: `${register_variant}/x`, type: "categorical" }],
     });
+    openFile(
+      JSON.stringify({
+        ...newProjectData(SEED),
+        sources: [source("scb/lisa/v2"), source("sos/akut/v1")],
+      }),
+    );
+    expect(projectStore.dirty).toBe(true);
+    openFile(
+      JSON.stringify({
+        ...newProjectData(SEED),
+        sources: [source("sos/akut/v1"), source("scb/lisa/v2")],
+      }),
+    );
+    expect(projectStore.dirty).toBe(false);
     openFile(
       JSON.stringify({
         ...newProjectData(SEED),

@@ -1968,9 +1968,9 @@ export interface ValueSetVariantUsage {
 }
 
 /** One distinct value set across a variable's states — the dedup unit of the
- * value-set-centric leaf view (#668). `key` is the STABLE dedup identity (a
- * `class/<slug>` for a classification edition, an `id/<value_set_id>` otherwise —
- * the `null` "no value set" bucket is `id/none`); the view keys its `{#each}` and
+ * value-set-centric leaf view (#668). `key` is the STABLE dedup identity (`id/<value_set_id>`;
+ * the uncoded states' group is the sentinel `none`, which no `id/…` key can
+ * equal); the view keys its `{#each}` and
  * its local isolation on it (NOT a list index, which a FilterInput's filtered
  * slice would invalidate). `classificationSlug`, when set, makes this value set a
  * known classification (link out instead of dumping codes — and the dedup is by
@@ -2173,7 +2173,7 @@ export function valueSetKey(s: { value_set_id: string | null }): string | null {
 
 /** The fold's group key: the uncoded states form one group, so their per-variant
  * usage lines still render, but never as a value set (`uncoded`). */
-const UNCODED_GROUP_KEY = "uncoded";
+const UNCODED_GROUP_KEY = "none";
 
 /** Source-local codes need a notice even though the declared book stays linked. */
 export function conformanceNeedsNotice(
@@ -2248,7 +2248,9 @@ export function distinctValueSets(
 ): DistinctValueSet[] {
   const byKey = new Map<string, VariableStateModel[]>();
   for (const s of states) {
-    const k = valueSetKey(s) ?? UNCODED_GROUP_KEY;
+    const id = valueSetKey(s);
+    // The `id/` prefix keeps every real id apart from the sentinel.
+    const k = id === null ? UNCODED_GROUP_KEY : `id/${id}`;
     const group = byKey.get(k);
     if (group) {
       group.push(s);
