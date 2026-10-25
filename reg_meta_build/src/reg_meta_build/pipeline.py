@@ -47,6 +47,7 @@ from reg_meta_build.curation_compile import (
     compile_curation,
     compile_deferred_naming,
     finalize_classification_bindings,
+    register_status,
     source_event_id,
     tree_sha256,
     validate_sentinels,
@@ -1298,21 +1299,6 @@ def _resolve(
         )
     }
 
-    def register_report(name: str) -> dict[str, list[str]]:
-        return compiled.report.setdefault(
-            name,
-            {
-                key: []
-                for key in (
-                    "entries_read",
-                    "entries_matched",
-                    "stale",
-                    "over_broad",
-                    "not_evaluated_in_subset",
-                )
-            },
-        )
-
     coding_ids = {}
     for name, register in coding_registers.items():
         ids = tuple(
@@ -1331,7 +1317,7 @@ def _resolve(
             for period_index, _ in enumerate(coding_entry_windows(entry), 1)
         )
         coding_ids[name] = ids
-        register_report(name)["entries_read"].extend(ids)
+        register_status(compiled.report, name)["entries_read"].extend(ids)
     # Each timeline entry and each of its rows, as the stale check below locates them.
     timeline_ids: dict[str, dict[str, tuple[str, ...]]] = {}
     for register in tree.registers:
@@ -1342,7 +1328,9 @@ def _resolve(
                 f"{case_id}/editions/{row}" for row in range(1, len(entry.editions) + 1)
             )
             timeline_ids.setdefault(name, {})[case_id] = rows
-            register_report(name)["entries_read"].extend((case_id, *rows))
+            register_status(compiled.report, name)["entries_read"].extend(
+                (case_id, *rows)
+            )
     matched_labels: set[str] = set()
     matched_timelines: set[str] = set()
     duplicate_overrides: set[str] = set()
@@ -2002,7 +1990,7 @@ def _resolve(
                     f"{register.register_info.provider}/{register.register_info.slug}"
                 )
                 entries = timeline_ids.get(name, {})
-                report = register_report(name) if entries else None
+                report = register_status(compiled.report, name) if entries else None
                 if registers and name not in selected_coding_names:
                     if report is not None:
                         report["not_evaluated_in_subset"].extend(

@@ -290,9 +290,10 @@ family = "icd"
 editions = [
   ["icd-8-ks68", "1969-01-01", "1986-12-31"],
   ["icd-9-ks87", "1987-01-01", "1996-12-31"],
-  ["icd-10-se", "1997-01-01", "9999-12-31"],
+  ["icd-10-se", "1997-01-01", "2026-12-31"],
+  ["icd-11-se", "2027-01-01", "9999-12-31"],
 ]
-evidence = "Socialstyrelsen, Dödsorsaker 2008 (art.nr 2010-4-31, https://www.socialstyrelsen.se/contentassets/f9e7f32bb38b448280a3259028b563f9/2010-4-31.pdf): p.64 the eighth ICD revision was used in Sweden from 1969; p.68-69 years 1987-1996 are coded in ICD-9 and 1997 onward in ICD-10; p.6 causes are coded and classified by ICD-10 from 1997. The DORS metadata workbook (Metadata_Dödsorsaksregistret (DORS)_webb.xlsx, Metadata - Variabelnivå) agrees: KAP17 (ICD-9 and earlier) ends 1996, KAP19 (ICD-10 chapter 19) and MORSAK13-48 start 1997, UBASIC (ICD-9 Basic Tabulation List) and OFULLST ('last year before the switch to ICD-10') cover 1987-1996, and Kodlista_ALKOHOL/DIABETES give ICD-9 codes to 1996 and ICD-10 codes from 1997. The rows name Socialstyrelsen's Swedish editions; the workbook notes (ULORSAK) that DORS does not use the Swedish ICD-10 extension codes, so its ICD-10 codes are WHO base codes, a subset of ICD-10-SE. ICD-11 (KAP22, 2027-) declares a different link and is not bound here."
+evidence = "Socialstyrelsen, Dödsorsaker 2008 (art.nr 2010-4-31, https://www.socialstyrelsen.se/contentassets/f9e7f32bb38b448280a3259028b563f9/2010-4-31.pdf): p.64 the eighth ICD revision was used in Sweden from 1969; p.68-69 years 1987-1996 are coded in ICD-9 and 1997 onward in ICD-10; p.6 causes are coded and classified by ICD-10 from 1997. The DORS metadata workbook (Metadata_Dödsorsaksregistret (DORS)_webb.xlsx, Metadata - Variabelnivå) agrees: KAP17 (ICD-9 and earlier) ends 1996, KAP19 (ICD-10 chapter 19) and MORSAK13-48 start 1997, UBASIC (ICD-9 Basic Tabulation List) and OFULLST ('last year before the switch to ICD-10') cover 1987-1996, and Kodlista_ALKOHOL/DIABETES give ICD-9 codes to 1996 and ICD-10 codes from 1997. The rows name Socialstyrelsen's Swedish editions; the workbook notes (ULORSAK) that DORS does not use the Swedish ICD-10 extension codes, so its ICD-10 codes are WHO base codes, a subset of ICD-10-SE. The workbook's KAP22 (ICD-11 chapter 22) starts 2027-01-01, the same kind of switch as KAP17 to KAP19 in 1996/1997, so ICD-11-SE takes over from 2027. KAP19 is still declared ICD-10 open-ended in the source; re-check the 2027 boundary when DORS first delivers 2027."
 noted = "2026-10-25"
 
 # Batch47: exact unresolved dictionary links remain visible limitations.
