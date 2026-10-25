@@ -22,7 +22,7 @@ built. The Rust binary is not (#1803). Trial steps for MONA are in
   a policy file beside it, in `schemas/`. Choosing or adding a schema is a deliberate
   user configuration step. An agent never writes or edits a schema or a policy.
 - **MONA check file.** `export_gate.R`: one fixed, version-pinned R file of check
-  functions, for MONA, where only `.R` and `.py` uploads are accepted (see "MONA mode").
+  functions that runs in MONA's R environment (see "MONA mode").
 
 ## Trust boundaries
 

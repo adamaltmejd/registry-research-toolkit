@@ -20,10 +20,9 @@ schemas/trial.schema.json      which files and columns the export may hold
 schemas/trial.policy.json      the disclosure rule: counts >= 5 or null
 ```
 
-Upload all three unchanged. If MONA's upload accepts only `.R` and `.py`, upload the two
-JSON files with `.R` appended (`trial.schema.json.R`) and remove the `.R` on MONA. Do
-not paste their contents into a new file: the receipt records each file's SHA-256, and
-pasting can change the bytes (line endings).
+Upload all three unchanged; MONA's upload accepts `.json`. Do not paste their contents
+into a new file: the receipt records each file's SHA-256, and pasting can change the
+bytes (line endings).
 
 ## 2. Folders on MONA
 
