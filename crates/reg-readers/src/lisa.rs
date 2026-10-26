@@ -4,17 +4,19 @@
 //!
 //! Each sheet has a header row (the first whose first cell is a column alias) and then
 //! data rows: a column, its description, its years and, on some sheets, a sensitivity
-//! flag. A row with only its first cell filled is a section heading and is skipped.
-//! A year cell holds years and ranges (`1990-2024`, `2003-2008\n2013`); each range is
-//! one occurrence of the column. A sheet with no year column, or a blank year cell,
-//! leaves the bounds unstated.
+//! flag. A row without a column or a label is a section heading or a note and is
+//! skipped (with a warning when it states years or sensitivity). A year cell holds
+//! years and ranges (`1990-2024`, `2003-2008\n2013`); each range is one occurrence of
+//! the column. A sheet with no year column, or a blank year cell, leaves the bounds
+//! unstated. A blank-year row on a sheet with years that repeats a column of a sheet
+//! without years (`Individ`'s year-independent block) is left to that sheet.
 //!
 //! Table handles are the sheet names and source keys the folded column name.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
-use calamine::{Data, Reader, Xlsx, open_workbook};
+use calamine::{Data, Range, Reader, Xlsx, open_workbook};
 use reg_frame::{Frame, Locator, Occurrence, Record, Register, Table};
 use serde::Deserialize;
 
@@ -28,6 +30,8 @@ pub struct Config {
     headers: Headers,
     /// A sensitivity cell, lowercased → whether the column is sensitive.
     sensitive: BTreeMap<String, bool>,
+    /// Sheets that must have a sensitivity column.
+    sensitive_sheets: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -47,11 +51,28 @@ impl Config {
     }
 }
 
+/// A data row: its 1-based sheet row, column, label, year cell and sensitivity flag.
+struct Entry {
+    row: usize,
+    column: String,
+    label: String,
+    years: Option<String>,
+    sensitive: Option<bool>,
+}
+
+/// A sheet: its title cell, whether it has a year column, and its data rows.
+struct Sheet {
+    name: String,
+    title: Option<String>,
+    years: bool,
+    entries: Vec<Entry>,
+}
+
 /// Read the workbook at `rel` as register `register` of `provider`.
 ///
 /// # Errors
-/// An unreadable workbook, or a sheet with no header row.
-#[allow(clippy::too_many_lines)]
+/// An unreadable workbook, a sheet with no header row, or a sheet `lisa.toml` names
+/// as stating sensitivity that has no sensitivity column.
 pub fn read(
     root: &Path,
     rel: &str,
@@ -63,6 +84,21 @@ pub fn read(
         .map_err(|e: calamine::XlsxError| error(rel, e.to_string()))?;
     let mut out = ReadOutput::default();
     out.files.push(rel.to_owned());
+    let mut sheets = Vec::new();
+    for name in workbook.sheet_names() {
+        let range = workbook
+            .worksheet_range(&name)
+            .map_err(|e| error(rel, format!("sheet {name:?}: {e}")))?;
+        sheets.push(sheet(rel, name, &range, config, &mut out.warnings)?);
+    }
+    // A sheet with years lists some year-independent columns again with a blank year
+    // cell; the sheet without years is where they belong.
+    let timeless: BTreeSet<String> = sheets
+        .iter()
+        .filter(|s| !s.years)
+        .flat_map(|s| s.entries.iter().map(|e| name_key(&e.column)))
+        .collect();
+    let mut repeated = 0;
     let mut records = vec![Record::Register(Register {
         provider: provider.to_owned(),
         register: register.to_owned(),
@@ -75,68 +111,33 @@ pub fn read(
             at: String::new(),
         },
     })];
-    for sheet in workbook.sheet_names() {
-        let range = workbook
-            .worksheet_range(&sheet)
-            .map_err(|e| error(rel, format!("sheet {sheet:?}: {e}")))?;
-        let rows: Vec<&[Data]> = range.rows().collect();
-        let alias = |c: Option<String>, aliases: &[String]| {
-            c.is_some_and(|c| aliases.iter().any(|a| a.eq_ignore_ascii_case(&c)))
-        };
-        let header = rows
-            .iter()
-            .position(|r| {
-                alias(
-                    cell(r, Some(0)).map(|c| c.to_lowercase()),
-                    &config.headers.column,
-                )
-            })
-            .ok_or_else(|| error(rel, format!("sheet {sheet:?}: no header row")))?;
-        let col = |aliases: &[String]| {
-            rows[header]
-                .iter()
-                .position(|c| alias(text(c).map(|c| c.to_lowercase()), aliases))
-        };
-        let (label, years, sensitive) = (
-            col(&config.headers.label),
-            col(&config.headers.years),
-            col(&config.headers.sensitive),
-        );
+    for sheet in sheets {
         let at = |row: usize| Locator {
             input: rel.to_owned(),
-            at: format!("{sheet}!A{}", row + 1),
+            at: format!("{}!A{row}", sheet.name),
         };
         records.push(Record::Table(Table {
             provider: provider.to_owned(),
             register: register.to_owned(),
-            table: sheet.clone(),
-            name: rows.first().and_then(|r| cell(r, Some(0))),
+            table: sheet.name.clone(),
+            name: sheet.title.clone(),
             description: None,
             from: None,
             to: None,
             cadence: None,
-            locator: at(0),
+            locator: at(1),
         }));
-        for (i, row) in rows.iter().enumerate().skip(header + 1) {
-            let (Some(column), Some(label)) = (cell(row, Some(0)), cell(row, label)) else {
+        for entry in sheet.entries {
+            if sheet.years && entry.years.is_none() && timeless.contains(&name_key(&entry.column)) {
+                repeated += 1;
                 continue;
-            };
-            let stated = cell(row, sensitive).map(|s| s.to_lowercase());
-            let flag = stated
-                .as_ref()
-                .and_then(|s| config.sensitive.get(s).copied());
-            if let (Some(s), None) = (&stated, flag) {
-                out.warnings.push(format!(
-                    "{sheet}!A{}: sensitivity {s:?} is not in lisa.toml",
-                    i + 1
-                ));
             }
-            let stated_years = cell(row, years);
-            let periods = bounds(stated_years.as_deref()).unwrap_or_else(|| {
+            let periods = bounds(entry.years.as_deref()).unwrap_or_else(|| {
                 out.warnings.push(format!(
-                    "{sheet}!A{}: years {:?} are not years or ranges; bounds left unstated",
-                    i + 1,
-                    stated_years.unwrap_or_default()
+                    "{}!A{}: years {:?} are not years or ranges; bounds left unstated",
+                    sheet.name,
+                    entry.row,
+                    entry.years.clone().unwrap_or_default()
                 ));
                 vec![(None, None)]
             });
@@ -144,13 +145,13 @@ pub fn read(
                 records.push(Record::Occurrence(Occurrence {
                     provider: provider.to_owned(),
                     register: register.to_owned(),
-                    table: sheet.clone(),
+                    table: sheet.name.clone(),
                     release: None,
-                    column: column.clone(),
-                    source_key: name_key(&column),
+                    column: entry.column.clone(),
+                    source_key: name_key(&entry.column),
                     from,
                     to,
-                    label: Some(label.clone()),
+                    label: Some(entry.label.clone()),
                     definition: None,
                     operational_definition: None,
                     unit: None,
@@ -160,16 +161,83 @@ pub fn read(
                     population_valuesets: Vec::new(),
                     coded: None,
                     code_system: None,
-                    sensitive: flag,
+                    sensitive: entry.sensitive,
                     identifier: None,
-                    locator: at(i),
+                    locator: at(entry.row),
                     also: Vec::new(),
                 }));
             }
         }
     }
+    if repeated > 0 {
+        out.warnings.push(format!(
+            "{repeated} rows with a blank year cell repeat a column a sheet without years lists; that sheet's row stands"
+        ));
+    }
     out.frame = Frame::new(records);
     Ok(out)
+}
+
+/// One sheet's header and data rows.
+fn sheet(
+    rel: &str,
+    name: String,
+    range: &Range<Data>,
+    config: &Config,
+    warnings: &mut Vec<String>,
+) -> Result<Sheet, ReadError> {
+    // Row numbers count from the sheet's first row, not the used range's.
+    let offset = range.start().map_or(0, |(r, _)| r as usize) + 1;
+    let rows: Vec<&[Data]> = range.rows().collect();
+    let alias = |c: Option<String>, aliases: &[String]| {
+        c.is_some_and(|c| aliases.iter().any(|a| a.to_lowercase() == c.to_lowercase()))
+    };
+    let header = rows
+        .iter()
+        .position(|r| alias(cell(r, Some(0)), &config.headers.column))
+        .ok_or_else(|| error(rel, format!("sheet {name:?}: no header row")))?;
+    let col = |aliases: &[String]| rows[header].iter().position(|c| alias(text(c), aliases));
+    let (label, years, sensitive) = (
+        col(&config.headers.label),
+        col(&config.headers.years),
+        col(&config.headers.sensitive),
+    );
+    if sensitive.is_none() && alias(Some(name.clone()), &config.sensitive_sheets) {
+        return Err(error(rel, format!("sheet {name:?}: no sensitivity column")));
+    }
+    let mut entries = Vec::new();
+    for (i, row) in rows.iter().enumerate().skip(header + 1) {
+        let at = i + offset;
+        let (Some(column), Some(label)) = (cell(row, Some(0)), cell(row, label)) else {
+            // Headings and notes state no years and no sensitivity.
+            if cell(row, years).is_some() || cell(row, sensitive).is_some() {
+                warnings.push(format!("{name}!A{at}: a row with years or sensitivity but no column or label is skipped"));
+            }
+            continue;
+        };
+        let stated = cell(row, sensitive).map(|s| s.to_lowercase());
+        let flag = stated
+            .as_ref()
+            .and_then(|s| config.sensitive.get(s).copied());
+        if let (Some(s), None) = (&stated, flag) {
+            warnings.push(format!(
+                "{name}!A{at}: sensitivity {s:?} is not in lisa.toml"
+            ));
+        }
+        entries.push(Entry {
+            row: at,
+            column,
+            label,
+            years: cell(row, years),
+            sensitive: flag,
+        });
+    }
+    Ok(Sheet {
+        title: rows.first().and_then(|r| cell(r, Some(0))),
+        years: years.is_some(),
+        name,
+        entries,
+    })
 }
 
 /// The bounds a year cell states: one pair per year or range, a pair of unstated

@@ -367,9 +367,13 @@ tracks the milestones. This section holds the design decisions that outlive the 
   manifest's `register`: attaching its sheets to the export's LISA tables, by period
   where needed, is D's `bind`, since a workbook column keyed by name beside the export's
   `v<VarId>` would otherwise be a rival or a second variable. Section headings (group
-  hints) wait for D's sets, `Grundregister` for C's `derived-from` links. Labels keep
-  their footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told
-  from a name's own (`SNI92`), and the footnotes are not read.
+  hints) wait for D's sets, `Grundregister` for C's `derived-from` links. `Individ`
+  repeats the year-independent columns with blank year cells; the year-less sheet's row
+  stands, so `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables
+  (birth country, deaths, migration) under headings, each keyed by `PersonNr`; the
+  reader keeps the sheet as one table and splitting it is D's `bind`. Labels keep their
+  footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a
+  name's own (`SNI92`), and the footnotes are not read.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
