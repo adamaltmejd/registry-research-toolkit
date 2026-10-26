@@ -323,18 +323,19 @@ tracks the milestones. This section holds the design decisions that outlive the 
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items
   are interned by `ItemId`; the export's rows without one are told apart by their text
-  and are always valid. An item is kept when any of its `VardemangderValidDates`
-  intervals overlaps its release's period; an item with none, or in an unplaced release,
-  is kept. The value set is the content of the items kept, so CVIDs with equal content
-  are one value set; a row whose validity keeps no item keeps them all, since such dates
-  record when the item entered SCB's metadata (a 1996 survey's codes "valid from" 2008),
-  counted in one warning. A code repeated across levels keeps its first item, counted in
-  one warning. A CVID whose every item has version, level and code all equal to one of
-  the config's `sentinels` (`Tal`, `Beskrivande text`) marks the column as not coded
-  when every row's CVID does; otherwise a sentinel population simply has no value set.
-  Population rows naming different value sets give the occurrence one per population (F6
-  in resolve); rows of one population naming different value sets keep the first row's,
-  counted in one warning.
+  and are undated. `VardemangderValidDates` filters a set only when every item is dated
+  and some item has an interval overlapping its placed release's period; then the items
+  with such an interval are kept. Otherwise the whole set stands, since such dates
+  record when an item entered SCB's metadata (a 1996 survey's codes "valid from" 2008);
+  a set left empty by its dates is counted in one warning. The value set is the content
+  of the items kept, so CVIDs with equal content are one value set. A code repeated
+  across levels keeps its first item, counted in one warning. A CVID whose every item
+  has version, level and code all equal to one of the config's `sentinels` (`Tal`,
+  `Beskrivande text`) marks the column as not coded when every row's CVID does;
+  otherwise a sentinel population simply has no value set. Population rows naming
+  different value sets give the occurrence one per population (F6 in resolve); rows of
+  one population naming different value sets keep the first row's, counted in one
+  warning.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

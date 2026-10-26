@@ -312,25 +312,28 @@ pub fn read(
                 hashes.push((population, None));
                 continue;
             }
-            let mut valid: Vec<u32> = members
+            // Validity filters a set only when every item is dated and some item is
+            // kept in a placed release. Otherwise the dates record when items entered the
+            // metadata, not the codes (a 1996 survey's codes "valid from" 2008), and the
+            // whole set stands.
+            let stated: Option<Vec<&Vec<Validity>>> = members
                 .iter()
-                .copied()
-                .filter(|&m| {
-                    // An item with no stated validity, or in an unplaced release, stays.
-                    let Some(stated) = lists.items[m as usize].id.and_then(|id| validity.get(&id))
-                    else {
-                        return true;
-                    };
-                    period.is_none_or(|(lo, hi)| {
-                        stated.iter().any(|(from, to)| {
+                .map(|&m| lists.items[m as usize].id.and_then(|id| validity.get(&id)))
+                .collect();
+            let mut valid: Vec<u32> = match (stated, period) {
+                (Some(stated), Some((lo, hi))) => members
+                    .iter()
+                    .zip(stated)
+                    .filter(|(_, intervals)| {
+                        intervals.iter().any(|(from, to)| {
                             from.as_deref().is_none_or(|f| f <= hi.as_str())
                                 && to.as_deref().is_none_or(|t| t >= lo.as_str())
                         })
                     })
-                })
-                .collect();
-            // Validity that leaves no item dates the metadata entry, not the codes
-            // (a 1996 survey's codes "valid from" 2008): the whole set stands.
+                    .map(|(&m, _)| m)
+                    .collect(),
+                _ => members.to_vec(),
+            };
             if valid.is_empty() && !members.is_empty() {
                 expired += 1;
                 valid = members.to_vec();
@@ -508,7 +511,7 @@ fn valid_dates(
     }
     if unreadable > 0 {
         out.warnings.push(format!(
-            "{input}: {unreadable} rows state a validity that is not an ISO day and are skipped; an item with no other row is always valid"
+            "{input}: {unreadable} rows state a validity that is not an ISO day and are skipped; an item with no other row is undated"
         ));
     }
     Ok(dates)
@@ -613,7 +616,7 @@ fn members(
     }
     if without_id > 0 {
         out.warnings.push(format!(
-            "{input}: {without_id} rows have no ItemId; their items are told apart by text and always valid"
+            "{input}: {without_id} rows have no ItemId; their items are told apart by text and undated"
         ));
     }
     let missing = needed
