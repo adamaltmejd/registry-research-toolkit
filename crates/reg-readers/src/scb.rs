@@ -11,8 +11,9 @@
 //! - `Vardemangder.csv`: the value sets, one row per (`CVID`, item); an item
 //!   (`ItemId`) is a code and label of a value-set version (`Värdemängdsversion`) at a
 //!   level. Each row of `Registerinformation` names its `CVID`.
-//! - `VardemangderValidDates.csv`: validity per item; an item without one is always
-//!   valid. An occurrence's value set keeps the items valid in its release's period.
+//! - `VardemangderValidDates.csv`: validity intervals per item. A set whose items are
+//!   all dated keeps those valid in its release's period, unless that leaves none; any
+//!   other set stands whole.
 //!
 //! An occurrence whose populations name different value sets states them per
 //! population. A `CVID` holding only a sentinel (an item whose code, version and level
