@@ -14,6 +14,9 @@
 //! - `VardemangderValidDates.csv`: validity intervals per item. A set whose items are
 //!   all dated keeps those valid in its release's period, unless that leaves none; any
 //!   other set stands whole.
+//! - `UnikaRegisterOchVariabler.csv`: per register, variant, variable and column name,
+//!   whether the column is sensitive (always or sometimes) and an identifier.
+//! - `Identifierare.csv`: the `VarId`s that are identifiers wherever they occur.
 //!
 //! An occurrence whose rows name different value sets states them per population, as
 //! alternatives where one population's rows disagree; fields other rows disagree on are
@@ -40,6 +43,8 @@ use crate::{ReadError, ReadOutput, config, error, nonblank};
 
 const REGISTERINFORMATION: &str = "Registerinformation.csv";
 const VARDEMANGDER: &str = "Vardemangder.csv";
+const UNIKA: &str = "UnikaRegisterOchVariabler.csv";
+const IDENTIFIERS: &str = "Identifierare.csv";
 const VALID_DATES: &str = "VardemangderValidDates.csv";
 
 /// `curation/readers/scb.toml`.
@@ -437,6 +442,7 @@ pub fn read(
     }
     out.files.push(vs_input);
     out.files.push(format!("{name}/{VALID_DATES}"));
+    flags(&mut archive, name, &registers, &mut occurrences, &mut out)?;
 
     let records = registers
         .into_values()
@@ -448,6 +454,145 @@ pub fn read(
         .collect();
     out.frame = Frame::new(records);
     Ok(out)
+}
+
+/// The sensitivity and identifier flags. `UnikaRegisterOchVariabler` states them per
+/// register, variant, variable and column by name: a column is sensitive when it is
+/// always or sometimes so. `Identifierare` adds its identifiers.
+fn flags(
+    archive: &mut zip::ZipArchive<std::fs::File>,
+    name: &str,
+    registers: &BTreeMap<String, Register>,
+    occurrences: &mut BTreeMap<(String, String, String), Occurrence>,
+    out: &mut ReadOutput,
+) -> Result<(), ReadError> {
+    type Key = (String, String, String, String);
+    let names: BTreeMap<&str, &str> = registers
+        .values()
+        .filter_map(|r| Some((r.register.as_str(), r.name.as_deref()?)))
+        .collect();
+    let mut by_name: BTreeMap<Key, Vec<(String, String, String)>> = BTreeMap::new();
+    for (k, o) in occurrences.iter() {
+        if let (Some(&register), Some(label)) = (names.get(o.register.as_str()), &o.label) {
+            let key = (
+                register.to_owned(),
+                reg_core::fold_identity(&o.table),
+                label.clone(),
+                reg_core::fold_identity(&o.column),
+            );
+            by_name.entry(key).or_default().push(k.clone());
+        }
+    }
+
+    let input = format!("{name}/{UNIKA}");
+    let member = archive
+        .by_name(UNIKA)
+        .map_err(|e| error(&input, e.to_string()))?;
+    let (mut reader, col) = open(member, &input)?;
+    let (register, variant, variable, column) = (
+        col("Registernamn")?,
+        col("Registervariantnamn")?,
+        col("Variabelnamn")?,
+        col("Kolumnnamn")?,
+    );
+    let (always, sometimes, identity) = (
+        col("KansligVariabel")?,
+        col("KansligVariabelIbland")?,
+        col("Identitetsvariabel")?,
+    );
+    let (mut unmatched, mut conflicting) = (0, 0);
+    let mut record = ::csv::ByteRecord::new();
+    while reader
+        .read_byte_record(&mut record)
+        .map_err(|e| error(&input, e.to_string()))?
+    {
+        let text = |c: usize| nonblank(&decode(&record[c]));
+        let flag = |c: usize| match text(c).as_deref() {
+            Some("1") => Some(true),
+            Some("0") => Some(false),
+            _ => None,
+        };
+        let sensitive = match (flag(always), flag(sometimes)) {
+            (None, None) => None,
+            (a, b) => Some(a == Some(true) || b == Some(true)),
+        };
+        let identifier = flag(identity);
+        let key = (
+            text(register).unwrap_or_default(),
+            reg_core::fold_identity(&text(variant).unwrap_or_default()),
+            text(variable).unwrap_or_default(),
+            reg_core::fold_identity(&text(column).unwrap_or_default()),
+        );
+        let Some(keys) = by_name.get(&key) else {
+            unmatched += 1;
+            continue;
+        };
+        for k in keys {
+            let o = occurrences.get_mut(k).expect("indexed occurrence");
+            // A column stated twice keeps its first statement.
+            if o.sensitive.is_some() || o.identifier.is_some() {
+                conflicting += usize::from((o.sensitive, o.identifier) != (sensitive, identifier));
+                continue;
+            }
+            o.sensitive = sensitive;
+            o.identifier = identifier;
+        }
+    }
+    drop(reader);
+    out.files.push(input.clone());
+    if unmatched > 0 {
+        out.warnings.push(format!(
+            "{input}: {unmatched} rows name no documented column; their flags are left out"
+        ));
+    }
+    if conflicting > 0 {
+        out.warnings.push(format!(
+            "{input}: {conflicting} columns are stated again with other flags; the first statement stands"
+        ));
+    }
+
+    identifiers(archive, name, occurrences, out)
+}
+
+/// `Identifierare`: the `VarId`s that are identifiers wherever they occur.
+fn identifiers(
+    archive: &mut zip::ZipArchive<std::fs::File>,
+    name: &str,
+    occurrences: &mut BTreeMap<(String, String, String), Occurrence>,
+    out: &mut ReadOutput,
+) -> Result<(), ReadError> {
+    let input = format!("{name}/{IDENTIFIERS}");
+    let member = archive
+        .by_name(IDENTIFIERS)
+        .map_err(|e| error(&input, e.to_string()))?;
+    let (mut reader, col) = open(member, &input)?;
+    let var = col("VarID")?;
+    let mut keys = BTreeSet::new();
+    let mut record = ::csv::ByteRecord::new();
+    let mut row = 1;
+    while reader
+        .read_byte_record(&mut record)
+        .map_err(|e| error(&input, e.to_string()))?
+    {
+        row += 1;
+        let id = number(&record[var]).ok_or_else(|| error(&input, format!("row={row}: VarID")))?;
+        keys.insert(format!("v{id}"));
+    }
+    let mut found = BTreeSet::new();
+    for o in occurrences.values_mut() {
+        if keys.contains(&o.source_key) {
+            o.identifier = Some(true);
+            found.insert(o.source_key.clone());
+        }
+    }
+    out.files.push(input.clone());
+    if found.len() < keys.len() {
+        out.warnings.push(format!(
+            "{input}: {} VarIDs Registerinformation does not document",
+            keys.len() - found.len()
+        ));
+    }
+    Ok(())
 }
 
 /// An item's validity: inclusive ISO days, unstated where blank.
