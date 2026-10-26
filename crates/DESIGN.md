@@ -269,9 +269,10 @@ tracks the milestones. This section holds the design decisions that outlive the 
   register's, and the namespace check covers explicit tables only.
 - **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps
   a table handle to its id, `[variables]` an id to anchors `<table>: <spelling>` (a bare
-  spelling names the implicit table), matched by fold. A variable no anchor reaches gets
-  a proposed id from its fold, clear of the register's table ids. When two ids reach one
-  variable, the first in id order wins and the other is reported.
+  spelling names the implicit table), matched by fold. An anchor may end in `@ <day>`:
+  it then reaches only the variables placed at that spelling on that day. A variable no
+  anchor reaches gets a proposed id from its fold, clear of the register's table ids.
+  When two ids reach one variable, the first in id order wins and the other is reported.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.
@@ -375,6 +376,17 @@ tracks the milestones. This section holds the design decisions that outlive the 
   reader keeps the sheet as one table and splitting it is D's `bind`. Labels keep their
   footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a
   name's own (`SNI92`), and the footnotes are not read.
+- **Dated ledger anchors.** SCB reuses a column name in one table for different VarIds,
+  in turn (`V714_65`: one VarId 2007–2009, another 2014–2016) or at once (`Kolumn2` in
+  `Gasföretag` names some 90). A spelling alone then reaches several variables, and the
+  first in index order took the id: 5,291 of the SCB ids. An anchor now carries a day
+  where its spelling is shared, which keeps the ledger free of source keys and survives
+  renumbering. The SCB ledgers (generated from today's `<RegisterId>.<VarId>` pins) date
+  an anchor only where another key shares its spelling, on the first day its key covers
+  and no rival does; a pin no day separates (1,164, spellings shared at once) is left
+  out and its variable gets a proposed id. An anchor splits at its last `: `, since ten
+  SCB table names contain one. Where a ledger variable id equals a table id of its
+  register (two cases: today's catalog kept the namespaces apart), the table keeps it.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
