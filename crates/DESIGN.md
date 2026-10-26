@@ -182,17 +182,17 @@ the rebuild.
   `preliminary` or `unstated`) and a free-text qualifier, both parsed from its name by
   the reader's grammar.
 - A name the grammar cannot place is `unparsed`: a finding, with no period.
-- Overlapping deliveries of different periods cover their union; no primary is chosen
-  between them.
+- Within one period, the final edition is preferred over the preliminary one.
+  Overlapping deliveries of different periods cover their union; neither is preferred.
 
 **Identity.**
 
 - Each occurrence carries an opaque *source key*: the provider's variable id where one
   exists, otherwise the folded column name, scoped to the register.
 - Occurrences with one key in one register are one variable. The exception is a key that
-  covers two folded spellings in overlapping periods anywhere in the register. Only each
-  period's primary delivery counts, so a preliminary and a final delivery of one year
-  never split a key. That key splits by spelling.
+  covers two folded spellings in overlapping periods anywhere in the register. The
+  comparison uses the preferred edition of each period, so a preliminary and a final
+  delivery of one year never split a key. That key splits by spelling.
 - Case never distinguishes columns.
 - A variable has at most one spelling per table at a time.
 - A shared name under different keys is a review proposal, never a merge.
@@ -234,8 +234,8 @@ the rebuild.
 
 **Agnosticism is enforced.**
 
-- Only `reg-readers` may name a provider or a format. A CI scan of the other builder
-  crates for provider vocabulary fails on any hit.
+- Only `reg-readers` may name a provider or a format. A lint step in the gate scans the
+  other builder crates for provider vocabulary and fails on any hit.
 - A new provider is a reader or a transcription, plus curation in the existing kinds.
 
 **Storage and determinism.**

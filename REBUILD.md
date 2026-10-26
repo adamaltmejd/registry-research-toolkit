@@ -90,8 +90,8 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
 **Exit:**
 
 - CI builds a small committed input twice and the bytes are identical;
-- the provider-vocabulary scan of `reg-frame`, `reg-resolve` and `reg-build` passes in
-  the gate;
+- the provider-vocabulary scan of `reg-frame`, `reg-resolve` and `reg-build` passes. It
+  is a lint step in the gate, not a test;
 - a real build of the thin providers and Socialstyrelsen, and a comparison report that
   classifies every difference. The dry run's figures are the expectation:
   - Socialstyrelsen: 23 ambiguous column pairs, 329 names in several tables (60 of them
@@ -222,13 +222,10 @@ The full SCB read is a heavy run.
 - `reg_meta_build`: the package, its curation tree, the prepared stage, the steward
   extension and the real-seed cache (`scripts/real_seed_cache.py` and its tests);
 - `crates/reg-core-py`;
-- `scripts/keyed_cache.py`, unless the conformance suite still uses it;
 - `scripts/rebuild_compare.py`;
 - the old builder's CI, container and release workflow steps;
-- its other dependents: `scripts/parse_lisa_docs.py`, `scripts/prototype_scb_inputs.py`
-  and its test, `reg_webapp/dev/dev.sh`, `reg_webapp/stewards/swecov/build_catalog.py`,
-  the root `pyproject.toml` member and `uv.lock`, and the `renovate.json` and
-  `.panache.toml` entries;
+- builder-only scripts such as `scripts/prototype_scb_inputs.py` and its test, and
+  `reg_webapp/stewards/swecov/build_catalog.py`, once E replaces it;
 - this tracker.
 
 **Rewritten:**
@@ -236,7 +233,11 @@ The full SCB read is a heavy run.
 - the `build-db`, `code-cleanup` and `dogfood` skills;
 - the testing policy in `AGENTS.md`: a few black-box tests for the key guarantees, and
   the release `dbdiff` as the main release check;
-- `AGENTS.md`, `ARCHITECTURE.md` and `README.md`.
+- `AGENTS.md`, `ARCHITECTURE.md` and `README.md`;
+- every other file that names `reg_meta_build`, edited to drop it: among others
+  `scripts/gate.py`, `scripts/parse_lisa_docs.py`, `reg_webapp/dev/dev.sh`, the root
+  `pyproject.toml` and `uv.lock`, `renovate.json`, `.panache.toml`, `.dockerignore`,
+  `.gitignore`, `reg_webapp/`, `conformance/` and `scripts/tests/`.
 
 **Exit:** `git grep reg_meta_build` finds nothing, `scripts/gate.py all` is green, and a
 release is built by the new builder.
