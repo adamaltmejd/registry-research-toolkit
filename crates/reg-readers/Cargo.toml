@@ -1,0 +1,16 @@
+[package]
+name = "reg-readers"
+version = "0.0.0"
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+calamine = "0.37.0"
+csv = "1.4.0"
+reg-core = { path = "../reg-core" }
+reg-frame = { path = "../reg-frame" }
+serde = { version = "1.0.229", features = ["derive"] }
+toml = "1.1.8"
+
+[lints]
+workspace = true

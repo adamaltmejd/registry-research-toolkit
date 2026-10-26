@@ -134,7 +134,9 @@ SPA (React) + reg-core-wasm
   a maintainer decision.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
-decision, not an implementation detail; `toml` stays a dev dependency.
+decision, not an implementation detail. `toml` is a runtime dependency only of
+`reg-readers`, which reads curation for the builder; the runtime keeps it a dev
+dependency.
 
 **Distribution.** The server image is one static binary plus the baked DBs, fetched in
 the Dockerfile with `curl`, SHA-256 verification against GitHub's asset digests, and
@@ -245,6 +247,39 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - CI builds twice and compares bytes.
 - The period grammar, interval algebra and text folds come from `reg-core`, as
   everything else does ("One implementation per contract").
+
+**Decisions taken in milestone A.**
+
+- **Days.** Readers, frames and resolve work in inclusive ISO days through `reg-core`'s
+  interval algebra; the emitter writes half-open day numbers. Open time is
+  `0001-01-01..9999-12-31`, so `open_end` is the day after `9999-12-31`.
+- **Unstated bounds.** An occurrence's unstated bound is its table's stated bound, else
+  the register's, else open. The T1 clamp cuts only a stated bound that reaches past
+  them, so T1 records what a source claimed, never what it left silent. A table with no
+  stated bound and no dated occurrence is timeless, and the register's coverage is the
+  hull of its dated tables. An occurrence wholly outside its table's coverage is
+  `rejected`, and a variable left with no used occurrence is withheld with its T1
+  notices, since a variable needs a segment. An occurrence documented to end before it
+  starts is refused, located at its source row.
+- **Segments hold whole occurrences.** The variable's overlapping occurrences in one
+  table form one segment; adjacent ones of one form join. A segment is ambiguous when
+  its occurrences disagree on label, type or value set, or when another variable claims
+  its folded spelling there. Labels compare ignoring case and spacing.
+- **The implicit table** takes its register's id, so `ident` holds that id once, as the
+  register's, and the namespace check covers explicit tables only.
+- **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps
+  a table handle to its id, `[variables]` an id to anchors `<table>: <spelling>` (a bare
+  spelling names the implicit table), matched by fold. A variable no anchor reaches gets
+  a proposed id from its fold, clear of the register's table ids. When two ids reach one
+  variable, the first in id order wins and the other is reported.
+- **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
+  for readers that need them, provider and register. A reader's config is
+  `curation/readers/<reader>.toml`. An input row covers every file its reader read.
+- **The transcription format** (`reg-readers/src/transcription.rs`) is how a provider
+  without a machine-readable export enters: per provider, `registers.csv`, optional
+  `tables.csv`, one CSV per register with one row per column, and `codes/` lists.
+- **The fold** is `reg-core`'s `fold_identity` of the trimmed name; the v4 schema says
+  NFC. The A inputs hold no string that NFC changes, so the question stays open for B.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

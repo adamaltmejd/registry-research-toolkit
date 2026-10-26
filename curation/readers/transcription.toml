@@ -1,0 +1,8 @@
+# The transcription CSV (crates/reg-readers/src/transcription.rs): transcribed
+# `data_type` → the frame's type.
+[types]
+text = "char"
+integer = "int"
+decimal = "decimal"
+date = "date"
+datetime = "datetime"

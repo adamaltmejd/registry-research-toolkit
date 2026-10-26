@@ -1,0 +1,22 @@
+# The CI fixture: a synthetic provider, built twice and compared byte for byte
+# (scripts/gate.py, `rust`). Each input exercises one default rule: a case-only
+# spelling change (ALDER/Alder), a rename (Inkomst/DispInk), an ambiguous window (Typ),
+# a T1 clamp (Typ beyond hushall's end), a key in two tables (LopNr) and a timeless
+# table (kod).
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "demo"
+reader = "transcription"
+path = "demo"
+provider = "demo"
+
+[[input]]
+name = "classifications"
+reader = "classification-csv"
+path = "classifications"

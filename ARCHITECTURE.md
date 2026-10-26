@@ -91,6 +91,11 @@ registry-research-toolkit/
     reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
     reg-core-py/    # PyO3 bindings of reg-core for the builder
     reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
+    reg-frame/      # the new builder (REBUILD.md): source frame records
+    reg-readers/    #   one reader per input format
+    reg-resolve/    #   per-register resolution
+    reg-build/      #   link, emit and the CLI (binary: reg-build)
+  curation/         # the new builder's reader config and id ledgers
   reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
@@ -109,6 +114,7 @@ Dependency graph (acyclic):
 reg-meta       → reg-catalog → reg-core
 reg-core-py    → reg-core
 reg-core-wasm  → reg-core
+reg-build      → reg-resolve, reg-readers → reg-frame, reg-core
 reg_meta_build → reg-core-py
 reg_webapp     → reg-meta (HTTP, through the codegen'd OpenAPI types)
 reg_webapp     → reg-core-wasm (built into the SPA by `bun run gen:wasm`)

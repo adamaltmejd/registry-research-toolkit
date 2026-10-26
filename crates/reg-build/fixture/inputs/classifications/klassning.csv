@@ -1,0 +1,4 @@
+code,label,parent_code
+A,Grupp A,
+A1,Undergrupp A1,A
+B,Grupp B,

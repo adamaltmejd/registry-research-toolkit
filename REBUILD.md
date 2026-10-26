@@ -33,6 +33,10 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   Reader, server and conformance tests (`crates/`, `conformance/`) stay as the black-box
   check that the new catalog works for readers. The Python builder's tests stay while it
   ships releases and go with it at F.
+- **Review loop.** A PR that adds or changes design (crates, frame records, resolver
+  rules, curation layout, reader config) merges only after an independent review and the
+  tracker session's drift review; the Operator routes it. Mechanical PRs skip the
+  tracker. The tracker audits the whole milestone diff before the milestone is done.
 
 ## Milestones
 
@@ -75,6 +79,14 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
 - **The new curation root `curation/`** holds reader config (`readers/`) and the
   per-register id ledgers (`registers/<provider>/<register>/ids.toml`), generated from
   today's slug pins. It holds no statements before D.
+
+- **Left out of A**, each added by the milestone that needs it: the resolve cache and
+  zstd intermediates (frames stay in memory; `reg-build read` dumps them as JSONL),
+  releases and gaps (B), search and documents (C), classification binding, unit types
+  and roles beyond the defaults (D). Known reader limits: calamine exposes no number
+  formats, so a zero-padded numeric code loses its padding; the inline value-set reader
+  accepts only plain `code=label` or bare-code lists; a code-list period it cannot read
+  (`1990/91-1994`) applies to every period (reported).
 
 - **Inputs.** Today's six thin-provider TOML files and `scb_canonical.toml` are
   transcribed once into the transcription format and committed to the inputs repository.

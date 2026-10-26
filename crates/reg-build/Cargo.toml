@@ -1,0 +1,18 @@
+[package]
+name = "reg-build"
+version = "0.0.0"
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+reg-core = { path = "../reg-core" }
+reg-frame = { path = "../reg-frame" }
+reg-readers = { path = "../reg-readers" }
+reg-resolve = { path = "../reg-resolve" }
+rusqlite = { version = "0.41.0", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+
+[lints]
+workspace = true

@@ -1,0 +1,13 @@
+# Public ids of demo/hush. `gammal` anchors nothing (reported unplaced); DispInk, Kod
+# and Text have none (reported unminted).
+[tables]
+individ = "individ"
+hushall = "hushall"
+
+[variables]
+alder = ["individ: ALDER"]
+gammal = ["individ: Gammal"]
+inkomst = ["individ: Inkomst"]
+kon = ["individ: Kon"]
+lopnr = ["individ: LopNr"]
+typ = ["hushall: Typ"]

@@ -1,0 +1,81 @@
+# The Socialstyrelsen metadata template (crates/reg-readers/src/workbook.rs). Every
+# name is matched case-insensitively after trimming.
+
+# Sheet roles. A sheet takes a role when its name, lowercased with spaces, `_`, `-`
+# and parentheses removed, contains every token of one alternative; alternatives are
+# tried in order, roles in the order variables, tables, dataset, each over the sheets
+# no earlier role took.
+[sheets]
+variables = [["variabelnivå"], ["metadata", "variabler"]]
+tables = [["deldatamängder"]]
+dataset = [["datamängd", "dcat"], ["metadata", "datamängd"]]
+# Sheets whose name starts with this hold code lists.
+codelist_prefix = "kodlista"
+
+# The dataset sheet: attribute rows, the attribute in the first column and its value
+# under `value_header`.
+[dataset]
+value_header = "svenska"
+name = "titel"
+description = "beskrivning"
+
+# Header aliases of the tables sheet.
+[tables]
+table = ["deldatamängdsnamn"]
+name = ["deldatamängdsetikett"]
+description = [
+  "deldatamängdsbeskrivning",
+  "deldatamängbeskrivning",
+  "deldatamängdbeskrivning",
+  "deldatamängsbeskrivning",
+]
+from = ["data från"]
+to = ["data till"]
+cadence = ["uppdateringsfrekvens"]
+
+# Header aliases of the variables sheet. A non-blank `identifier` cell marks a
+# linkage variable; a blank one states it is not.
+[variables]
+table = ["deldatamängdsnamn", "datavynamn"]
+column = ["variabelnamn"]
+label = ["variabeletikett"]
+definition = ["variabelbeskrivning"]
+codes = ["värdemängd"]
+link = ["länk kodverk"]
+dtype = ["datatyp"]
+identifier = ["kopplingsvariabel"]
+from = ["data från"]
+to = ["data till"]
+
+# Code-list sheets: the header row is the first with a `code` cell. Label and period
+# columns are matched by prefix.
+[codelists]
+code = ["kod", "kodat till", "sjukhuskod"]
+label = ["beskrivning", "behandlingsmetod", "sjukhusnamn"]
+period = ["tidsperiod"]
+column = ["variabelnamn"]
+
+# A `link` cell naming a sheet of the same workbook, after one of these prefixes and
+# before an optional `!A1` cell reference, binds that sheet's codes.
+[links]
+prefixes = ["Se "]
+
+[types]
+"sträng (text)" = "char"
+"char" = "char"
+"heltal" = "int"
+"decimal" = "decimal"
+"datum" = "date"
+"datum och klockslag" = "datetime"
+
+# Stated frequencies. A frequency stating that no further deliveries come
+# ("ingen") carries no cadence and is listed as "".
+[cadence]
+"årligen" = "year"
+"årlig" = "year"
+"en gång per år" = "year"
+"halvårsvis" = "half"
+"månatligen" = "month"
+"dagligen" = "day"
+"ingen" = ""
+"uppdateras inte längre" = ""

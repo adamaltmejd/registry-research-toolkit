@@ -1,0 +1,5 @@
+# Classification CSVs (crates/reg-readers/src/classification.rs): accepted header
+# names of the code, label and parent columns.
+code = ["code", "vardekod"]
+label = ["label", "vardebenamning"]
+parent = ["parent_code"]
