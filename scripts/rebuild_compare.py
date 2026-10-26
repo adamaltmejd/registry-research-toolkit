@@ -9,6 +9,10 @@ For every register of the given providers (default: every provider in the new ca
 it compares tables, the columns each documents and their periods, the column-to-variable
 mapping, labels, value-set codes, flags and coverage, and puts each difference in one
 class. Prints Markdown: a summary per class and register, then examples.
+
+SCB registers are `scb/r<RegisterId>` in the new catalog until D binds their names; the
+old catalog's are matched to them by the RegisterId of their slug pins in
+`reg_meta_build/curation/registers/scb/`.
 """
 
 from __future__ import annotations
@@ -16,12 +20,14 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
+import tomllib
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from pathlib import Path
 
 EXAMPLES = 8
+PINS = Path(__file__).resolve().parents[1] / "reg_meta_build/curation/registers/scb"
 # The old catalog's name for a register's one unnamed table, the new implicit table.
 OLD_IMPLICIT = "_default"
 
@@ -221,6 +227,17 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
             add(cls, f"{var}: {old.years[var]} -> {new.years[var]}")
 
 
+def scb_handles() -> dict[str, str]:
+    """`scb/<old slug>` -> `scb/r<RegisterId>`, from the RegisterId its pins are keyed by."""
+    out = {}
+    for path in sorted(PINS.glob("*.auto.toml")):
+        pins = tomllib.loads(path.read_text(encoding="utf-8")).get("variable", {})
+        ids = {key.split(".")[0] for key in pins if key.split(".")[0].isdigit()}
+        if len(ids) == 1:
+            out[f"scb/{path.name.removesuffix('.auto.toml')}"] = f"scb/r{ids.pop()}"
+    return out
+
+
 def main() -> int:
     old_path, new_path, report_path, *wanted = sys.argv[1:]
     old_db, new_db = sqlite3.connect(old_path), sqlite3.connect(new_path)
@@ -228,7 +245,12 @@ def main() -> int:
     providers = set(wanted) or {
         p for (p,) in new_db.execute("SELECT pid FROM provider")
     }
-    old, new = old_views(old_db, providers), new_views(new_db, providers)
+    handles = scb_handles()
+    old = {
+        handles.get(reg, reg): view
+        for reg, view in old_views(old_db, providers).items()
+    }
+    new = new_views(new_db, providers)
     status = statuses(new_db)
     diffs: dict[str, list[tuple[str, str]]] = defaultdict(list)
     for reg in sorted(old.keys() | new.keys()):
