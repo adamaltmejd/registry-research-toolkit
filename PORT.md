@@ -83,14 +83,14 @@ and D5 revisit them. Known so far:
 The converter lists every member it narrows with `where` in its report
 (`convert-report.json`, `non_neutral`, in conversion order, byte-identical across runs),
 so the complete list is generated with each conversion rather than kept here. To
-regenerate it: `uv run python -m reg_meta_build.port.convert --prepared P
---input-commit C --input-manifest-sha256 M --registers <id> ... --out DIR`, then read
-`DIR/convert-report.json`. Over the 67 registers converted for PR C (slices 1-3
-and the golden corpus's registers) it emits 1,047, almost all `where = { name }`:
+regenerate it:
+`uv run python -m reg_meta_build.port.convert --prepared P --input-commit C --input-manifest-sha256 M --registers <id> ... --out DIR`,
+then read `DIR/convert-report.json`. Over the 67 registers converted for PR C (slices
+1-3 and the golden corpus's registers) it emits 1,047, almost all `where = { name }`:
 `scb/it-anvandning` 737, `iot` 117, `fasit` 55, `innovation-foretag` 34,
-`energi-flerbostad` 23, `hreg` 15, `prisindex` 15, `rtb` 13, `lbr` 9, `fou` 8,
-`ksju` 5, `gdb` 4, `komvux` 3, `lisa` 1, `sos/lova` 4, `sos/bu` 2, `sos/par` 2. Two
-further cases are not VarID families:
+`energi-flerbostad` 23, `hreg` 15, `prisindex` 15, `rtb` 13, `lbr` 9, `fou` 8, `ksju` 5,
+`gdb` 4, `komvux` 3, `lisa` 1, `sos/lova` 4, `sos/bu` 2, `sos/par` 2. Two further cases
+are not VarID families:
 
 - alternative records that share one source ref (SoS `INVARN8` on `lova-person`, PAR's
   `ATC` by data type), where `where` picks the alternative the old entry's
@@ -108,12 +108,12 @@ inference into data, computed with Python's own rule, so the Rust build infers n
   `identity.partition` entry still re-keys it today: each literal whose derived slug
   (`derive_variable_slug`) is the split's suffix goes to that owner
   (`curation_compile._column_partition_plan`). The converter writes one
-  `identity.assign` per such family with the exact literals, `legacy.ref =
-  <file>#/variable/<reg>.<var>` and no head. A Rust split-pin rule was rejected:
-  ownership by spelling is inference. Size: the tree has 2,593 such families with 9,830
-  split pins in 159 SCB registers (an upper bound; families with only `column_owner`
-  splits bind no literal). The 67 registers converted so far give 191 families and 622
-  members.
+  `identity.assign` per such family with the exact literals,
+  `legacy.ref = <file>#/variable/<reg>.<var>` and no head. A Rust split-pin rule was
+  rejected: ownership by spelling is inference. Size: the tree has 2,593 such families
+  with 9,830 split pins in 159 SCB registers (an upper bound; families with only
+  `column_owner` splits bind no literal). The 67 registers converted so far give 191
+  families and 622 members.
 - **Consequence after cutover.** Once the converted tree is committed, a new delivery
   that brings a new literal into a split family gets no owner: it lands unassigned and
   must be curated. That is the intended behavior, an exact list with nothing inferred,
@@ -127,25 +127,25 @@ inference into data, computed with Python's own rule, so the Rust build infers n
 - **Delivered owners.** An `errata.delivered` entry with no `donor` copies its own
   table's documented column, and states `owner` only where that column is documented
   under several native variables. Without `owner`, the added occurrences belong to the
-  owner that column has after `identity.assign` (fou `errata.delivered/6`: `Stratum`
-  on `foretagssektorn` belongs to `stratum`, a split of VarID 462), so phase 3 resolves
-  it after the assign stage.
+  owner that column has after `identity.assign` (fou `errata.delivered/6`: `Stratum` on
+  `foretagssektorn` belongs to `stratum`, a split of VarID 462), so phase 3 resolves it
+  after the assign stage.
 - **Old defaults.** `errata.support` without `kind` states `contradictory_question`.
 - **Coding on added occurrences.** Three coding entries address occurrences that only an
   `errata.column` or `errata.delivered` entry creates (`scb/fou` `coding.documented/1`
-  and `/2`, `scb/gdb` `coding.extend/1`). They have no prepared record, so the
-  converter names them as stated (`table`, `column`) and the record-set check cannot
-  reach them; the report lists them (`added`). Phase 3 must select coding members after
-  the additions.
+  and `/2`, `scb/gdb` `coding.extend/1`). They have no prepared record, so the converter
+  names them as stated (`table`, `column`) and the record-set check cannot reach them;
+  the report lists them (`added`). Phase 3 must select coding members after the
+  additions.
 
 ## Temporary code and its gates
 
-  | Code                                                         | Deleted at                             |
-  | ------------------------------------------------------------ | -------------------------------------- |
+  | Code                                                                                                                                  | Deleted at                             |
+  | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
   | The curation converter (old tree → neutral verbs), in Python: `reg_meta_build/src/reg_meta_build/port/` (`convert`, `select`, `emit`) | phase 4, after its output is committed |
-  | The converter's record-set equivalence harness and golden check: `port/equivalence.py`, `port/golden.py` | phase 4 |
-  | `crates/reg-build-model/examples/parse_verbs.rs` (reads converted files with the verb types) | phase 4 |
-  | `crates/reg-build-model/tests/digest/generate.py`            | phase 5, with Python preparation       |
+  | The converter's record-set equivalence harness and golden check: `port/equivalence.py`, `port/golden.py`                              | phase 4                                |
+  | `crates/reg-build-model/examples/parse_verbs.rs` (reads converted files with the verb types)                                          | phase 4                                |
+  | `crates/reg-build-model/tests/digest/generate.py`                                                                                     | phase 5, with Python preparation       |
 
 ## Phase 2
 
@@ -172,11 +172,11 @@ It reads this checkout's curation tree (`--curation-dir`). Its `reg_meta_build/s
 differs from main only by #1930, in two places that change no output:
 
 - `concept_groups._common_prefix` instead of `_curation.common_prefix`: the same
-  character-wise longest common prefix, differing only on an empty list, which no
-  caller passes.
+  character-wise longest common prefix, differing only on an empty list, which no caller
+  passes.
 - `prepared_sources._locator_values` calls `os.path.commonprefix` instead of
-  `common_prefix`: the same result on a list of strings, and only `prepare-sources`
-  runs it.
+  `common_prefix`: the same result on a list of strings, and only `prepare-sources` runs
+  it.
 
 ### PR C results (provisional)
 
@@ -184,11 +184,11 @@ On the pinned root, with the oracle above. Each converted entry's selection equa
 record set its old case acts on in Python's `check-curation --dump-decisions`, and its
 `legacy.head` equals the provenance head Python publishes:
 
-  | Slice                 | Registers | Converted entries | Equal | Python run | Peak RSS |
-  | --------------------- | --------- | ----------------- | ----- | ---------- | -------- |
-  | 1 (thin + canonical)  | 39        | 1                 | all   | 48 s       | 1.7 GB   |
-  | 2 (`scb/rtb`)         | 1         | 147               | all   | 179 s      | 8.8 GB   |
-  | 3 (Socialstyrelsen)   | 13        | 385               | all   | 56 s       | 1.7 GB   |
+  | Slice                | Registers | Converted entries | Equal | Python run | Peak RSS |
+  | -------------------- | --------- | ----------------- | ----- | ---------- | -------- |
+  | 1 (thin + canonical) | 39        | 1                 | all   | 48 s       | 1.7 GB   |
+  | 2 (`scb/rtb`)        | 1         | 147               | all   | 179 s      | 8.8 GB   |
+  | 3 (Socialstyrelsen)  | 13        | 385               | all   | 56 s       | 1.7 GB   |
 
 Identity is compared per record: every record Python re-keys is covered, each owner
 matches Python's (SCB by naming id, SoS by a one-to-one grouping, since SoS keys by
@@ -198,36 +198,36 @@ discriminator). All 33 golden pairs equal the converter's output as parsed value
 slice 3 are byte-identical. The full-tree conversion and its equivalence run are
 scheduled with the maintainer; they re-run with slices 1-3 on the next accepted root.
 
-**Cutover blocker: verbs no record-set oracle has reached.** Slices 1-3 hold no entry
-of these, so only their golden pair checks them. The scheduled full equivalence run must
+**Cutover blocker: verbs no record-set oracle has reached.** Slices 1-3 hold no entry of
+these, so only their golden pair checks them. The scheduled full equivalence run must
 reach every one before phase 4. Counts are entries in today's tree (a TOML scan); no old
 verb has zero entries, so none is deleted instead of converted:
 
-  | Old verb                                  | Entries | Files |
-  | ----------------------------------------- | ------- | ----- |
-  | `representation.parallel`                 | 592     | 41    |
-  | `coding.choice`                           | 162     | 14    |
-  | `errata.version` (→ `errata.delivery`)    | 155     | 11    |
-  | `identity.edition_split`                  | 37      | 8     |
-  | `errata.support`                          | 35      | 3     |
-  | `identity.split` by Deldatamängd          | 25      | 5     |
-  | `coding.uncoded`                          | 22      | 9     |
-  | `representation.period_family`            | 8       | 4     |
-  | `representation.matrix`                   | 7       | 1     |
-  | `coding.omit`                             | 5       | 1     |
-  | `representation.alias_window`             | 4       | 1     |
-  | `[[variant]]` `name` (→ `errata.table`)   | 3       | 1     |
-  | `coding.warning`                          | 1       | 1     |
+  | Old verb                                | Entries | Files |
+  | --------------------------------------- | ------- | ----- |
+  | `representation.parallel`               | 592     | 41    |
+  | `coding.choice`                         | 162     | 14    |
+  | `errata.version` (→ `errata.delivery`)  | 155     | 11    |
+  | `identity.edition_split`                | 37      | 8     |
+  | `errata.support`                        | 35      | 3     |
+  | `identity.split` by Deldatamängd        | 25      | 5     |
+  | `coding.uncoded`                        | 22      | 9     |
+  | `representation.period_family`          | 8       | 4     |
+  | `representation.matrix`                 | 7       | 1     |
+  | `coding.omit`                           | 5       | 1     |
+  | `representation.alias_window`           | 4       | 1     |
+  | `[[variant]]` `name` (→ `errata.table`) | 3       | 1     |
+  | `coding.warning`                        | 1       | 1     |
 
 `errata.delivery`, `errata.table`, `representation.parallel` and
 `representation.period_family` have no harness check yet: the harness needs an oracle
 for each before the run (Python's added edition, variant name, parallel-group and
-period-family effects). They are recorded as failures (`no oracle yet`)
-until then. The same holds for the three coding entries on added occurrences, recorded
-as failures (`selects_source: false`): their oracle is that Python's coding case
-targets exactly the occurrences the `errata.column` or `errata.delivered` entry on the
-same table and column adds, so the harness is to compare the member's (table, column)
-and the case's deliveries with that addition's.
+period-family effects). They are recorded as failures (`no oracle yet`) until then. The
+same holds for the three coding entries on added occurrences, recorded as failures
+(`selects_source: false`): their oracle is that Python's coding case targets exactly the
+occurrences the `errata.column` or `errata.delivered` entry on the same table and column
+adds, so the harness is to compare the member's (table, column) and the case's
+deliveries with that addition's.
 
 Entries whose Python case carries field or period effects are compared per record, not
 per ref: alternative records share a ref, and Python's effect reaches each alternative
@@ -250,8 +250,7 @@ the harness does not make yet, each a gap the full run closes or names:
 
 To re-run a slice: `check-curation --dump-decisions DUMP --registers ...` in the oracle
 tree, `python -m reg_meta_build.port.convert ... --registers ... --out DIR`, then
-`python -m reg_meta_build.port.equivalence ... --registers ... --converted DIR --dump
-DUMP`.
+`python -m reg_meta_build.port.equivalence ... --registers ... --converted DIR --dump DUMP`.
 
 ## Phase 3 slices
 
