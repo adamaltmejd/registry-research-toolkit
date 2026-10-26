@@ -1025,7 +1025,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     })
 }
 
-/// The smallest interval holding every one of `spans`.
 /// A table's cadence in months: the greatest common step between its primary releases'
 /// starts, when every start is a whole number of months after the one before on the
 /// same day of the month (or month end). `None` with fewer than two starts.
@@ -1087,6 +1086,7 @@ fn gcd(a: u32, b: u32) -> u32 {
     if b == 0 { a } else { gcd(b, a % b) }
 }
 
+/// The smallest interval holding every one of `spans`.
 fn hull(spans: &[Interval]) -> Option<Interval> {
     let from = spans.iter().map(|s| &s.0).min()?;
     let to = spans.iter().map(|s| &s.1).max()?;
