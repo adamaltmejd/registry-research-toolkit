@@ -211,6 +211,9 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
                 if not n
                 else "codes only in new"
                 if not o
+                # The blank code is SCB's "Uppgift saknas" item; D marks it a sentinel.
+                else "codes: expected, the old catalog dropped the blank code"
+                if n == o | {""}
                 else "codes differ"
             )
             add(cls, f"{var}: {len(o)} -> {len(n)} codes, {len(o & n)} shared")
