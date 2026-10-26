@@ -1,5 +1,9 @@
 # The SCB export (crates/reg-readers/src/scb.rs).
 
+# Value-set versions whose one item (code, version and level all this name) marks a
+# column as carrying no codes.
+sentinels = ["Tal", "Beskrivande text"]
+
 # `Datatyp` → the frame's type. A literal missing here stays as stated.
 [types]
 int = "int"

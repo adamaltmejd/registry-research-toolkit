@@ -8,21 +8,36 @@
 //!   occurrence: the release lists its populations, the occurrence every row. A row
 //!   with no `Kolumnnamn` documents the variable in that version without a column (a
 //!   gap marker).
+//! - `Vardemangder.csv`: the value sets, one row per (`CVID`, item); an item
+//!   (`ItemId`) is a code and label of a value-set version (`Värdemängdsversion`) at a
+//!   level. Each row of `Registerinformation` names its `CVID`.
+//! - `VardemangderValidDates.csv`: validity per item; an item without one is always
+//!   valid. An occurrence's value set keeps the items valid in its release's period.
+//!
+//! An occurrence whose populations name different value sets states them per
+//! population. A `CVID` holding only a sentinel (an item whose code, version and level
+//! are one of the config's `sentinels`) states that the column carries no codes.
 //!
 //! Register handles are `r<RegisterId>`, release handles `r<RegVerID>`, table handles
 //! the variant's name and source keys `v<VarId>`. A register's public name is a curated
 //! `bind`, not reader config.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
+use std::io::Read;
 use std::path::Path;
 
-use reg_frame::{Frame, Locator, Occurrence, Population, Record, Register, Release, Table};
+use reg_frame::{
+    Frame, Item, Locator, Occurrence, Population, PopulationValueSet, Record, Register, Release,
+    Table, ValueSet,
+};
 use serde::Deserialize;
 
 use crate::names::Grammar;
 use crate::{ReadError, ReadOutput, config, error, nonblank};
 
 const REGISTERINFORMATION: &str = "Registerinformation.csv";
+const VARDEMANGDER: &str = "Vardemangder.csv";
+const VALID_DATES: &str = "VardemangderValidDates.csv";
 
 /// `curation/readers/scb.toml`.
 #[derive(Debug, Deserialize)]
@@ -30,6 +45,9 @@ const REGISTERINFORMATION: &str = "Registerinformation.csv";
 pub struct Config {
     /// `Datatyp` → the frame's normalized type.
     pub types: BTreeMap<String, String>,
+    /// Value-set versions that mark a column as carrying no codes (a number, free
+    /// text) rather than listing any.
+    pub sentinels: BTreeSet<String>,
     pub names: Grammar,
 }
 
@@ -47,6 +65,9 @@ impl Config {
 /// An unreadable archive, a missing member or column, a malformed CSV row, or a
 /// variant name two variants of one register share, each located at its member and
 /// row.
+///
+/// # Panics
+/// Never: every `CVID` row belongs to an occurrence read before it.
 #[allow(clippy::too_many_lines)]
 pub fn read(
     path: &Path,
@@ -61,22 +82,8 @@ pub fn read(
     let member = archive
         .by_name(REGISTERINFORMATION)
         .map_err(|e| error(&input, e.to_string()))?;
-    let mut reader = ::csv::ReaderBuilder::new()
-        .delimiter(b'|')
-        .from_reader(member);
-    let header: Vec<String> = reader
-        .byte_headers()
-        .map_err(|e| error(&input, e.to_string()))?
-        .iter()
-        .map(decode)
-        .collect();
+    let (mut reader, col) = open(member, &input)?;
     out.files.push(input.clone());
-    let col = |name: &str| {
-        header
-            .iter()
-            .position(|h| h == name)
-            .ok_or_else(|| error(&input, format!("no column {name:?}")))
-    };
     let register_id = col("RegisterId")?;
     let register_name = col("Registernamn")?;
     let register_purpose = col("Registersyfte")?;
@@ -105,6 +112,8 @@ pub fn read(
     let mut variant_names: BTreeMap<(String, String), String> = BTreeMap::new();
     let mut releases: BTreeMap<String, Release> = BTreeMap::new();
     let mut occurrences: BTreeMap<(String, String, String), Occurrence> = BTreeMap::new();
+    let mut cvids: BTreeMap<(String, String, String), Rows> = BTreeMap::new();
+    let cvid = col("CVID")?;
     for (i, record) in reader.byte_records().enumerate() {
         let row: Vec<String> = record
             .map_err(|e| error(&input, e.to_string()))?
@@ -195,17 +204,20 @@ pub fn read(
                 locator: locator.clone(),
             }
         });
-        if let Some(name) = get(population_name) {
+        let population = get(population_name).map(|name| {
             let population = Population {
                 name,
                 definition: get(population_definition),
                 // A range or no date states no one reference day.
                 day: get(population_day).filter(|d| reg_core::iso_day_number(d).is_some()),
             };
-            if !release.populations.contains(&population) {
+            if let Some(i) = release.populations.iter().position(|p| *p == population) {
+                i
+            } else {
                 release.populations.push(population);
+                release.populations.len() - 1
             }
-        }
+        });
         let key = format!("v{}", field(var_id, "VarId")?);
         let spelling = row[column].trim().to_owned();
         let literal = get(dtype);
@@ -236,6 +248,15 @@ pub fn read(
             locator,
             also: Vec::new(),
         };
+        if let Some(c) = get(cvid) {
+            let c = c
+                .parse()
+                .map_err(|_| error(&input, format!("{}: CVID {c:?}", occurrence.locator.at)))?;
+            cvids
+                .entry((version.clone(), key.clone(), spelling.clone()))
+                .or_default()
+                .push((population, c));
+        }
         match occurrences.entry((version, key, spelling)) {
             std::collections::btree_map::Entry::Occupied(mut o) => {
                 // Another population's row: one occurrence, so the first row's text
@@ -265,15 +286,334 @@ pub fn read(
         }
     }
 
+    drop(reader);
+
+    let needed: BTreeSet<u64> = cvids.values().flatten().map(|&(_, c)| c).collect();
+    let validity = valid_dates(&mut archive, name, &mut out)?;
+    let lists = members(&mut archive, name, &needed, &mut out)?;
+    let vs_input = format!("{name}/{VARDEMANGDER}");
+    let mut sets: BTreeMap<Vec<u32>, Option<ValueSet>> = BTreeMap::new();
+    let mut duplicated = 0;
+    let mut contested = 0;
+    for (k, rows) in &cvids {
+        let release = &releases[&k.0];
+        let period = release.from.as_ref().zip(release.to.as_ref());
+        let mut hashes: Vec<(Option<usize>, Option<String>)> = Vec::new();
+        let mut sentinel = true;
+        for &(population, c) in rows {
+            let members = lists.cvids.get(&c).map_or(&[][..], Vec::as_slice);
+            let marks_no_codes = !members.is_empty()
+                && members
+                    .iter()
+                    .all(|&m| lists.items[m as usize].sentinel(&config.sentinels));
+            sentinel &= marks_no_codes;
+            if marks_no_codes {
+                hashes.push((population, None));
+                continue;
+            }
+            let valid: Vec<u32> = members
+                .iter()
+                .copied()
+                .filter(|&m| {
+                    let (from, to) = lists.items[m as usize]
+                        .id
+                        .and_then(|id| validity.get(&id))
+                        .map_or((None, None), |(f, t)| (f.as_deref(), t.as_deref()));
+                    period.is_none_or(|(lo, hi)| {
+                        from.is_none_or(|f| f <= hi.as_str()) && to.is_none_or(|t| t >= lo.as_str())
+                    })
+                })
+                .collect();
+            let set = sets.entry(valid.clone()).or_insert_with(|| {
+                if valid.is_empty() {
+                    return None;
+                }
+                let items: Vec<Item> = valid
+                    .iter()
+                    .map(|&m| {
+                        let item = &lists.items[m as usize];
+                        Item {
+                            code: item.code.clone(),
+                            label: item.label.clone(),
+                            parent: None,
+                        }
+                    })
+                    .collect();
+                let codes: BTreeSet<&str> = items.iter().map(|i| i.code.as_str()).collect();
+                if codes.len() < items.len() {
+                    duplicated += 1;
+                }
+                Some(ValueSet::new(
+                    items,
+                    Some(lists.items[valid[0] as usize].version.clone()),
+                    Locator {
+                        input: vs_input.clone(),
+                        at: format!("CVID={c}"),
+                    },
+                ))
+            });
+            hashes.push((population, set.as_ref().map(|s| s.hash.clone())));
+        }
+        let o = occurrences
+            .get_mut(k)
+            .expect("every CVID row has its occurrence");
+        if sentinel {
+            o.coded = Some(false);
+            continue;
+        }
+        // Rows of one population may name several CVIDs; the first row's set stands.
+        let mut by_population: BTreeMap<Option<usize>, Option<String>> = BTreeMap::new();
+        let mut conflict = false;
+        for (population, hash) in hashes {
+            let first = by_population
+                .entry(population)
+                .or_insert_with(|| hash.clone());
+            conflict |= *first != hash;
+        }
+        contested += usize::from(conflict);
+        let distinct: BTreeSet<&Option<String>> = by_population.values().collect();
+        if distinct.len() == 1 {
+            o.valueset = by_population.into_values().next().flatten();
+        } else {
+            for (population, hash) in by_population {
+                match (population, hash) {
+                    (Some(population), Some(valueset)) => {
+                        o.population_valuesets.push(PopulationValueSet {
+                            population,
+                            valueset,
+                        });
+                    }
+                    (None, Some(_)) => out.warnings.push(format!(
+                        "{}: {} names a value set for a row without a population; left out",
+                        o.locator.at, o.column
+                    )),
+                    // A population whose rows name no codes has no value set.
+                    (_, None) => {}
+                }
+            }
+        }
+    }
+    if contested > 0 {
+        out.warnings.push(format!(
+            "{vs_input}: {contested} occurrences name differing value sets for one population; the first row's stands"
+        ));
+    }
+    if duplicated > 0 {
+        out.warnings.push(format!(
+            "{vs_input}: {duplicated} value sets repeat a code across levels; the first item of each code stands"
+        ));
+    }
+    out.files.push(vs_input);
+    out.files.push(format!("{name}/{VALID_DATES}"));
+
     let records = registers
         .into_values()
         .map(Record::Register)
         .chain(tables.into_values().map(Record::Table))
         .chain(releases.into_values().map(Record::Release))
+        .chain(sets.into_values().flatten().map(Record::ValueSet))
         .chain(occurrences.into_values().map(Record::Occurrence))
         .collect();
     out.frame = Frame::new(records);
     Ok(out)
+}
+
+/// An item's validity: inclusive ISO days, unstated where blank.
+type Validity = (Option<String>, Option<String>);
+
+/// An occurrence's rows: each one's population (an index into its release's) and CVID.
+type Rows = Vec<(Option<usize>, u64)>;
+
+type Columns<'a> = Box<dyn Fn(&str) -> Result<usize, ReadError> + 'a>;
+
+/// A CSV reader over an export member, and its column lookup by header name.
+fn open<R: Read>(member: R, input: &str) -> Result<(::csv::Reader<R>, Columns<'_>), ReadError> {
+    let mut reader = ::csv::ReaderBuilder::new()
+        .delimiter(b'|')
+        .from_reader(member);
+    let header: Vec<String> = reader
+        .byte_headers()
+        .map_err(|e| error(input, e.to_string()))?
+        .iter()
+        .map(decode)
+        .collect();
+    let col = move |name: &str| {
+        header
+            .iter()
+            .position(|h| h == name)
+            .ok_or_else(|| error(input, format!("no column {name:?}")))
+    };
+    Ok((reader, Box::new(col)))
+}
+
+/// `ItemId` → its validity, inclusive ISO days, unstated where blank.
+fn valid_dates(
+    archive: &mut zip::ZipArchive<std::fs::File>,
+    name: &str,
+    out: &mut ReadOutput,
+) -> Result<BTreeMap<u64, Validity>, ReadError> {
+    let input = format!("{name}/{VALID_DATES}");
+    let member = archive
+        .by_name(VALID_DATES)
+        .map_err(|e| error(&input, e.to_string()))?;
+    let (mut reader, col) = open(member, &input)?;
+    let (item, from, to) = (col("ItemID")?, col("ValidFrom")?, col("ValidTo")?);
+    let mut dates = BTreeMap::new();
+    let mut unreadable = 0;
+    let mut record = ::csv::ByteRecord::new();
+    let mut row = 1;
+    while reader
+        .read_byte_record(&mut record)
+        .map_err(|e| error(&input, e.to_string()))?
+    {
+        row += 1;
+        let id =
+            number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemID")))?;
+        let day = |c: usize| {
+            let text = decode(&record[c]);
+            let text = text.trim();
+            (!text.is_empty()).then(|| text.to_owned())
+        };
+        let (lo, hi) = (day(from), day(to));
+        let valid = |d: &Option<String>| {
+            d.as_deref()
+                .is_none_or(|d| reg_core::iso_day_number(d).is_some())
+        };
+        if valid(&lo) && valid(&hi) {
+            dates.insert(id, (lo, hi));
+        } else {
+            unreadable += 1;
+        }
+    }
+    if unreadable > 0 {
+        out.warnings.push(format!(
+            "{input}: {unreadable} rows state a validity that is not an ISO day; those items are always valid"
+        ));
+    }
+    Ok(dates)
+}
+
+/// One value-set item, interned by its `ItemId`, or by its text when it has none.
+struct ItemText {
+    id: Option<u64>,
+    version: String,
+    level: String,
+    code: String,
+    label: Option<String>,
+}
+
+impl ItemText {
+    fn sentinel(&self, sentinels: &BTreeSet<String>) -> bool {
+        self.code == self.version && self.code == self.level && sentinels.contains(&self.code)
+    }
+}
+
+/// The items of the needed `CVID`s, each kept once, and each `CVID`'s item indices.
+struct Lists {
+    items: Vec<ItemText>,
+    cvids: BTreeMap<u64, Vec<u32>>,
+}
+
+/// Stream `Vardemangder`, keeping the rows of the `needed` `CVID`s. Text is decoded
+/// once per item.
+fn members(
+    archive: &mut zip::ZipArchive<std::fs::File>,
+    name: &str,
+    needed: &BTreeSet<u64>,
+    out: &mut ReadOutput,
+) -> Result<Lists, ReadError> {
+    let input = format!("{name}/{VARDEMANGDER}");
+    let member = archive
+        .by_name(VARDEMANGDER)
+        .map_err(|e| error(&input, e.to_string()))?;
+    let (mut reader, col) = open(member, &input)?;
+    let (version, level, code, label, cvid, item) = (
+        col("Värdemängdsversion")?,
+        col("Värdemängdsnivå")?,
+        col("Värdekod")?,
+        col("Värdebenämning")?,
+        col("CVID")?,
+        col("ItemId")?,
+    );
+    let mut lists = Lists {
+        items: Vec::new(),
+        cvids: BTreeMap::new(),
+    };
+    let mut index: BTreeMap<u64, u32> = BTreeMap::new();
+    let mut unnumbered: BTreeMap<[String; 4], u32> = BTreeMap::new();
+    let mut without_id = 0;
+    let mut record = ::csv::ByteRecord::new();
+    let mut row = 1;
+    while reader
+        .read_byte_record(&mut record)
+        .map_err(|e| error(&input, e.to_string()))?
+    {
+        row += 1;
+        let c = number(&record[cvid]).ok_or_else(|| error(&input, format!("row={row}: CVID")))?;
+        if !needed.contains(&c) {
+            continue;
+        }
+        let text = |c: usize| decode(&record[c]).trim().to_owned();
+        let mut push = |id: Option<u64>, [version, level, code, label]: [String; 4]| {
+            lists.items.push(ItemText {
+                id,
+                version,
+                level,
+                code,
+                label: nonblank(&label),
+            });
+            u32::try_from(lists.items.len() - 1).expect("items fit in u32")
+        };
+        let m = if record[item].iter().all(u8::is_ascii_whitespace) {
+            without_id += 1;
+            let texts = [text(version), text(level), text(code), text(label)];
+            if let Some(&m) = unnumbered.get(&texts) {
+                m
+            } else {
+                let m = push(None, texts.clone());
+                unnumbered.insert(texts, m);
+                m
+            }
+        } else {
+            let id =
+                number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemId")))?;
+            if let Some(&m) = index.get(&id) {
+                m
+            } else {
+                let m = push(
+                    Some(id),
+                    [text(version), text(level), text(code), text(label)],
+                );
+                index.insert(id, m);
+                m
+            }
+        };
+        lists.cvids.entry(c).or_default().push(m);
+    }
+    if without_id > 0 {
+        out.warnings.push(format!(
+            "{input}: {without_id} rows have no ItemId; their items are told apart by text and always valid"
+        ));
+    }
+    let missing = needed
+        .iter()
+        .filter(|c| !lists.cvids.contains_key(c))
+        .count();
+    if missing > 0 {
+        out.warnings.push(format!(
+            "{input}: {missing} CVIDs Registerinformation names have no rows"
+        ));
+    }
+    for members in lists.cvids.values_mut() {
+        members.sort_unstable();
+        members.dedup();
+    }
+    Ok(lists)
+}
+
+/// An unsigned decimal field.
+fn number(bytes: &[u8]) -> Option<u64> {
+    std::str::from_utf8(bytes).ok()?.trim().parse().ok()
 }
 
 /// CP1252 bytes as text. The five bytes CP1252 leaves undefined occur in the export as
