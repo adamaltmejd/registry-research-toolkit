@@ -992,7 +992,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         }
     }
 
-    let gaps = gaps(&releases, &variables, &resolved);
+    let gaps = gaps(&mut tables, &releases, &variables, &resolved);
     report.gaps = gaps.len();
 
     assign_ids(&mut variables, &resolved, &tables, ledger, &mut report)?;
@@ -1045,6 +1045,28 @@ fn cadence(releases: &[Interval]) -> Option<u32> {
     step
 }
 
+/// A cadence name's step in months; `None` for `day` and `irregular`.
+fn months(cadence: &str) -> Option<u32> {
+    match cadence {
+        "year" => Some(12),
+        "half" => Some(6),
+        "quarter" => Some(3),
+        "month" => Some(1),
+        _ => None,
+    }
+}
+
+/// The cadence name of a step in months; a step no name fits is `irregular`.
+fn cadence_name(step: u32) -> &'static str {
+    match step {
+        12 => "year",
+        6 => "half",
+        3 => "quarter",
+        1 => "month",
+        _ => "irregular",
+    }
+}
+
 /// Each span widened to cover at least its cadence step from its start.
 fn stretch(step: Option<u32>, spans: Vec<Interval>) -> Vec<Interval> {
     let Some(step) = step else {
@@ -1078,6 +1100,7 @@ fn hull(spans: &[Interval]) -> Option<Interval> {
 /// covers its whole cadence step, so a gap is a missing step.
 #[allow(clippy::too_many_lines)]
 fn gaps(
+    tables: &mut [ResolvedTable],
     releases: &[ResolvedRelease],
     variables: &[Variable],
     resolved: &[ResolvedOccurrence],
@@ -1091,9 +1114,19 @@ fn gaps(
                 .extend(placed(&r.release));
         }
     }
+    // A stated cadence stands; otherwise the inferred one is recorded on the table.
     let steps: BTreeMap<usize, u32> = delivered
         .iter()
-        .filter_map(|(&t, r)| Some((t, cadence(r)?)))
+        .filter_map(|(&t, r)| {
+            let step = if let Some(stated) = tables[t].table.cadence.as_deref() {
+                months(stated)?
+            } else {
+                let step = cadence(r)?;
+                tables[t].table.cadence = Some(cadence_name(step).to_owned());
+                step
+            };
+            Some((t, step))
+        })
         .collect();
     let stretch = |t: usize, spans: Vec<Interval>| stretch(steps.get(&t).copied(), spans);
     let delivered: BTreeMap<usize, Vec<Interval>> = delivered

@@ -298,18 +298,19 @@ tracks the milestones. This section holds the design decisions that outlive the 
   key's variable when the key is one variable. A key that never has a column is no
   variable: one F5 notice per key.
 - **Gaps (T5)** are computed only in tables with a placed primary release. A table's
-  cadence is the greatest common step, in months, between its primary releases' starts
-  when each start is a whole number of months after the one before on the same day (or
-  month end); with a cadence, every column, release and marker covers its whole step
-  from its start, so a reference-day stock table released yearly has no gap between
-  deliveries and a gap is a missing step. Without one, gaps are the holes between stated
-  periods. A day between the table's used columns and primary releases that no used
-  column covers is a table gap: `release_without_column` under a primary release that
-  delivers no column, else `no_release`. Inside a variable's hull in that table, an
-  uncovered day under a marker is `documented_without_column` and under a primary
-  release `release_without_column`; a day no release covers is stored once, as the
-  table's gap. Reader contract: a variable's gaps are its own plus its table's gaps
-  inside its span.
+  cadence is its stated one, else the greatest common step, in months, between its
+  primary releases' starts when each start is a whole number of months after the one
+  before on the same day (or month end); an inferred cadence is recorded on the table
+  (`irregular` for a step with no name). With a cadence, every column, release and
+  marker covers its whole step from its start, so a reference-day stock table released
+  yearly has no gap between deliveries and a gap is a missing step. Without one, gaps
+  are the holes between stated periods. A day between the table's used columns and
+  primary releases that no used column covers is a table gap: `release_without_column`
+  under a primary release that delivers no column, else `no_release`. Inside a
+  variable's hull in that table, an uncovered day under a marker is
+  `documented_without_column` and under a primary release `release_without_column`; a
+  day no release covers is stored once, as the table's gap. Reader contract: a
+  variable's gaps are its own plus its table's gaps inside its span.
 - **Unplaced wins.** A column-less row of an unparsed release is `unplaced`, not a gap
   marker: with no period it marks no gap.
 - **SCB handles.** Source keys are `v<VarId>`, release handles `r<RegVerID>`, table
