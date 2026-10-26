@@ -1,0 +1,177 @@
+repo = "adamaltmejd/registry-catalog-inputs"
+commit = "99887987dcdc37141d0ebad33fc725e48c509a0c"
+
+[[provider]]
+pid = "scb"
+name = "Statistiska Centralbyrån"
+
+[[provider]]
+pid = "fohm"
+name = "Folkhälsomyndigheten"
+
+[[provider]]
+pid = "fk"
+name = "Försäkringskassan"
+
+[[provider]]
+pid = "lakemedelsverket"
+name = "Läkemedelsverket"
+
+[[provider]]
+pid = "pliktverket"
+name = "Pliktverket"
+
+[[provider]]
+pid = "riksarkivet"
+name = "Riksarkivet"
+
+[[provider]]
+pid = "umu"
+name = "Umeå universitet"
+
+[[provider]]
+pid = "sos"
+name = "Socialstyrelsen"
+
+[[input]]
+name = "fk-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/fk"
+provider = "fk"
+
+[[input]]
+name = "fohm-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/fohm"
+provider = "fohm"
+
+[[input]]
+name = "lakemedelsverket-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/lakemedelsverket"
+provider = "lakemedelsverket"
+
+[[input]]
+name = "pliktverket-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/pliktverket"
+provider = "pliktverket"
+
+[[input]]
+name = "riksarkivet-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/riksarkivet"
+provider = "riksarkivet"
+
+[[input]]
+name = "umu-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/umu"
+provider = "umu"
+
+[[input]]
+name = "scb-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/scb"
+provider = "scb"
+
+[[input]]
+name = "sos-lmed"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx"
+provider = "sos"
+register = "lmed"
+
+[[input]]
+name = "sos-ekb"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx"
+provider = "sos"
+register = "ekb"
+
+[[input]]
+name = "sos-can"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Cancerregistret_(CAN)_webb.xlsx"
+provider = "sos"
+register = "can"
+
+[[input]]
+name = "sos-dors"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx"
+provider = "sos"
+register = "dors"
+
+[[input]]
+name = "sos-lova"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx"
+provider = "sos"
+register = "lova"
+
+[[input]]
+name = "sos-lss"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx"
+provider = "sos"
+register = "lss"
+
+[[input]]
+name = "sos-hsl"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Insatser inom kommunal hälso- och sjukvård (HSL)_webb.xlsx"
+provider = "sos"
+register = "hsl"
+
+[[input]]
+name = "sos-bu"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx"
+provider = "sos"
+register = "bu"
+
+[[input]]
+name = "sos-mfr"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx"
+provider = "sos"
+register = "mfr"
+
+[[input]]
+name = "sos-par"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx"
+provider = "sos"
+register = "par"
+
+[[input]]
+name = "sos-lvm"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx"
+provider = "sos"
+register = "lvm"
+
+[[input]]
+name = "sos-sol"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx"
+provider = "sos"
+register = "sol"
+
+[[input]]
+name = "sos-thr"
+reader = "sos-workbook"
+path = "catalog/source/Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx"
+provider = "sos"
+register = "thr"
+
+[[input]]
+name = "classifications"
+reader = "classification-csv"
+path = "catalog/source/classifications"
+
+[[input]]
+name = "classifications-sos"
+reader = "classification-csv"
+path = "catalog/source/classifications/sos"

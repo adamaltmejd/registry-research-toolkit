@@ -1,0 +1,23 @@
+# Public ids of lakemedelsverket/biverkningar, from the slug pins at 9e28ba5b2.
+[tables]
+"arbetsflode" = "arbetsflode"
+"handlagda" = "handlagda"
+
+[variables]
+"allvarlig" = ["arbetsflode: Allvarlig"]
+"atc-kod-4-pos" = ["arbetsflode: atc4pos"]
+"daystoonset" = ["arbetsflode: DaysToOnset"]
+"event-reported-term" = ["arbetsflode: Event_Reported_Term"]
+"firstname" = ["arbetsflode: FirstName"]
+"fodelsedatum" = ["arbetsflode: DateOfBirth"]
+"initreceivedate" = ["arbetsflode: InitReceiveDate"]
+"lastname" = ["arbetsflode: LastName"]
+"lopnr-personnr" = ["arbetsflode: IdNumber"]
+"meddra-hlgt" = ["arbetsflode: Hlgt"]
+"meddra-hlt" = ["arbetsflode: Hlt"]
+"meddra-pt" = ["arbetsflode: Pt"]
+"meddra-soc" = ["arbetsflode: Soc"]
+"outcome" = ["arbetsflode: Outcome"]
+"reportertype" = ["arbetsflode: ReporterType"]
+"seqrpt" = ["arbetsflode: SeqRpt"]
+"vaccin" = ["arbetsflode: Vaccin"]

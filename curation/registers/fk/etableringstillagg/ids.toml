@@ -1,0 +1,9 @@
+# Public ids of fk/etableringstillagg, from the slug pins at 9e28ba5b2.
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["UTTAG_MANAD"]
+"utbetalningsperiod-from" = ["ERSATTNING_FROM"]
+"utbetalningsperiod-tom" = ["ERSATTNING_TOM"]

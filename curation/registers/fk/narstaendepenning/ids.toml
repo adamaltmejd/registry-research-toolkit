@@ -1,0 +1,9 @@
+# Public ids of fk/narstaendepenning, from the slug pins at 9e28ba5b2.
+[tables]
+
+[variables]
+"belopp" = ["utbetalt_belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["utbetalningsmanad"]
+"utbetalningsperiod-from" = ["Utbetalningsperiod_fromdat"]
+"utbetalningsperiod-tom" = ["utbetalningsperiod_tomdat"]

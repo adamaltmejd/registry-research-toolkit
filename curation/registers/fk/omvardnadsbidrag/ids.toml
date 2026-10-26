@@ -1,0 +1,23 @@
+# Public ids of fk/omvardnadsbidrag, from the slug pins at 9e28ba5b2.
+[tables]
+"avslag" = "avslag"
+"barn" = "barn"
+"beviljanden" = "beviljanden"
+"mottagare" = "mottagare"
+
+[variables]
+"antal-barn" = ["barn: Antal_barn"]
+"belopp" = ["mottagare: Belopp"]
+"beslutsdatum" = ["avslag: Beslutsdatum"]
+"diagnoskod" = ["barn: Diagnoskod"]
+"ersattningsperiod-fromdat" = ["barn: Ersattningsperiod_fromdat"]
+"ersattningsperiod-tomdat" = ["barn: Ersattningsperiod_tomdat"]
+"formansperiod-from" = ["beviljanden: Formansperiod_from"]
+"formansperiod-tom" = ["beviljanden: Formansperiod_tom"]
+"lopnr" = ["avslag: Lopnr"]
+"lopnr-barn" = ["avslag: Lopnr_barn"]
+"niva" = ["barn: Niva"]
+"periodbeslut-from" = ["beviljanden: Periodbeslut_from"]
+"periodbeslut-tom" = ["beviljanden: Periodbeslut_tom"]
+"skattat-belopp" = ["barn: Skattat_belopp"]
+"utbetalningsmanad" = ["barn: Utbetalningsmanad"]

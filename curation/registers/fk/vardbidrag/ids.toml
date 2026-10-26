@@ -1,0 +1,12 @@
+# Public ids of fk/vardbidrag, from the slug pins at 9e28ba5b2.
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"lopnr-personnr-barn" = ["personnummer_barn"]
+"niva-merkost" = ["NIVA_MERKOST"]
+"omfattning" = ["omfattning"]
+"utbetalningsmanad" = ["utbetalningsmanad"]
+"utbetalningsperiod-from" = ["Utbetalningsperiod_fromdat"]
+"utbetalningsperiod-tom" = ["Utbetalningsperiod_tomdat"]

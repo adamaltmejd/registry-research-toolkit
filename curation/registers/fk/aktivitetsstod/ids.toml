@@ -1,0 +1,9 @@
+# Public ids of fk/aktivitetsstod, from the slug pins at 9e28ba5b2.
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["UTTAGET_MANAD"]
+"utbetalningsperiod-from" = ["FROM_DATUM"]
+"utbetalningsperiod-tom" = ["TOM_DATUM"]

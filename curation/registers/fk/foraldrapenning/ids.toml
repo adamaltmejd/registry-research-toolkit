@@ -1,0 +1,27 @@
+# Public ids of fk/foraldrapenning, from the slug pins at 9e28ba5b2.
+[tables]
+"fl-delfall1" = "fl-delfall1"
+"fl-fall" = "fl-fall"
+"fp-delfall1" = "fp-delfall1"
+"fp-fall" = "fp-fall"
+
+[variables]
+"dagtyp" = ["fl-delfall1: DAGTYP"]
+"del-from-datum" = ["fl-delfall1: DEL_FROM_DATUM"]
+"del-tom-datum" = ["fl-delfall1: DEL_TOM_DATUM"]
+"delfall-belopp" = ["fl-delfall1: DELFALL_BELOPP"]
+"delfall-bruttodagar" = ["fl-delfall1: DELFALL_BRUTTODAGAR"]
+"delfall-dagar-lo-so" = ["fl-delfall1: DELFALL_DAGAR_LO_SO"]
+"delfall-dagar-tot" = ["fl-delfall1: DELFALL_DAGAR_TOT"]
+"delfall-nettodagar" = ["fl-delfall1: DELFALL_NETTODAGAR"]
+"fall-belopp" = ["fl-delfall1: FALL_BELOPP"]
+"fall-bruttodagar" = ["fl-delfall1: FALL_BRUTTODAGAR"]
+"fall-dagar-tot" = ["fl-delfall1: FALL_DAGAR_TOT"]
+"fall-from-datum" = ["fl-delfall1: FALL_FROM_DATUM"]
+"fall-nettodagar" = ["fl-delfall1: FALL_NETTODAGAR"]
+"fall-tom-datum" = ["fl-delfall1: FALL_TOM_DATUM"]
+"foddat-barn" = ["fl-delfall1: FODDAT_BARN"]
+"niva" = ["fl-delfall1: NIVA"]
+"omfattning" = ["fl-delfall1: OMFATTNING"]
+"persid" = ["fl-delfall1: PERSID"]
+"persid-barn" = ["fl-delfall1: PERSID_BARN"]

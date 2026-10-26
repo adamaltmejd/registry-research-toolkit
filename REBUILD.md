@@ -234,7 +234,8 @@ The full SCB read is a heavy run.
 - `reg_meta_build`: the package, its curation tree, the prepared stage, the steward
   extension and the real-seed cache (`scripts/real_seed_cache.py` and its tests);
 - `crates/reg-core-py`;
-- `scripts/rebuild_compare.py`;
+- `scripts/rebuild_compare.py` and `scripts/rebuild_ledger.py` (B reuses it for the SCB
+  ledgers);
 - the old builder's CI, container and release workflow steps;
 - builder-only scripts such as `scripts/prototype_scb_inputs.py` and its test, and
   `reg_webapp/stewards/swecov/build_catalog.py`, once E replaces it;
