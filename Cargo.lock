@@ -953,10 +953,13 @@ version = "0.0.0"
 dependencies = [
  "calamine",
  "csv",
+ "encoding_rs",
  "reg-core",
  "reg-frame",
  "serde",
+ "sha2",
  "toml",
+ "zip",
 ]
 
 [[package]]

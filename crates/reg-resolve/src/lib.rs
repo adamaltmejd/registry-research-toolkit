@@ -660,17 +660,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         keep
     });
 
-    // The used occurrences of each (table, fold), for the rival claimant test.
-    let mut claims: BTreeMap<(usize, String), Vec<usize>> = BTreeMap::new();
-    for (i, r) in resolved.iter().enumerate() {
-        if r.status == "used" {
-            claims
-                .entry((r.table, fold_identity(&r.occurrence.column)))
-                .or_default()
-                .push(i);
-        }
-    }
-
     // Variables and their segments.
     let mut variables: Vec<Variable> = Vec::new();
     let mut population_keys = BTreeSet::new();
@@ -678,7 +667,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         for &i in members {
             resolved[i].variable = Some(v);
         }
-        let member_set: BTreeSet<usize> = members.iter().copied().collect();
 
         let last = latest(&resolved, members).expect("a variable has an occurrence");
         let used: Vec<usize> = members
@@ -738,16 +726,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 .copied()
                 .filter(|&i| resolved[i].table == t)
                 .collect();
-            let f = fold_identity(&resolved[last].occurrence.column);
-            let rivals: Vec<usize> = claims
-                .get(&(t, f))
-                .map(|c| {
-                    c.iter()
-                        .copied()
-                        .filter(|i| !member_set.contains(i))
-                        .collect()
-                })
-                .unwrap_or_default();
             // A segment holds whole occurrences: the variable's occurrences that
             // overlap form one component, and adjacent components of one form join.
             let mut sorted = own.clone();
@@ -769,9 +747,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             for (period, covering) in components {
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms: BTreeSet<Form> = covering.iter().map(|&i| form(&resolved[i])).collect();
-                let contested = rivals
-                    .iter()
-                    .any(|&i| intersect(span(&resolved[i]), &period).is_some());
                 let o = &resolved[top].occurrence;
                 let agree = forms.len() == 1;
                 // A form field is stated only where every occurrence agrees on it.
@@ -782,7 +757,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                         _ => None,
                     }
                 };
-                let state = if !agree || contested {
+                let state = if !agree {
                     "ambiguous"
                 } else if covering.iter().all(|&i| resolved[i].preliminary) {
                     "preliminary"
@@ -829,25 +804,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 }
             }
             segments.extend(runs);
-        }
-        for (s, segment) in segments.iter().enumerate() {
-            match segment.state {
-                "ambiguous" => {
-                    report.ambiguous_segments += 1;
-                    findings.push(Finding {
-                        code: "F2:ambiguous",
-                        severity: "review",
-                        subject: Subject::Segment(v, s),
-                        period: Some(segment.period.clone()),
-                        message: format!(
-                            "{} cannot be placed on one variable form here",
-                            segment.spelling
-                        ),
-                    });
-                }
-                "preliminary" => report.preliminary_segments += 1,
-                _ => {}
-            }
         }
 
         // Descriptive text over time: the latest occurrence of each piece.
@@ -921,6 +877,59 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             segments,
             texts,
         });
+    }
+    // Rival claimants: segments of two variables under one folded spelling, in one
+    // table, that overlap are both ambiguous.
+    let mut by_fold: BTreeMap<(usize, String), Vec<(usize, usize)>> = BTreeMap::new();
+    for (v, variable) in variables.iter().enumerate() {
+        for (s, segment) in variable.segments.iter().enumerate() {
+            by_fold
+                .entry((segment.table, fold_identity(&segment.spelling)))
+                .or_default()
+                .push((v, s));
+        }
+    }
+    let mut contested = BTreeSet::new();
+    for members in by_fold.values() {
+        for (a, &(va, sa)) in members.iter().enumerate() {
+            for &(vb, sb) in &members[a + 1..] {
+                if va != vb
+                    && intersect(
+                        &variables[va].segments[sa].period,
+                        &variables[vb].segments[sb].period,
+                    )
+                    .is_some()
+                {
+                    contested.insert((va, sa));
+                    contested.insert((vb, sb));
+                }
+            }
+        }
+    }
+    for &(v, s) in &contested {
+        variables[v].segments[s].state = "ambiguous";
+    }
+    for (v, variable) in variables.iter().enumerate() {
+        let segments = &variable.segments;
+        for (s, segment) in segments.iter().enumerate() {
+            match segment.state {
+                "ambiguous" => {
+                    report.ambiguous_segments += 1;
+                    findings.push(Finding {
+                        code: "F2:ambiguous",
+                        severity: "review",
+                        subject: Subject::Segment(v, s),
+                        period: Some(segment.period.clone()),
+                        message: format!(
+                            "{} cannot be placed on one variable form here",
+                            segment.spelling
+                        ),
+                    });
+                }
+                "preliminary" => report.preliminary_segments += 1,
+                _ => {}
+            }
+        }
     }
     report.variables = variables.len();
 
@@ -1261,23 +1270,24 @@ fn form(r: &ResolvedOccurrence) -> Form {
 }
 
 fn same_form(a: &Segment, b: &Segment) -> bool {
-    (
-        a.state,
-        &a.dtype,
-        &a.valueset,
-        a.coded,
-        a.sensitive,
-        a.identifier,
-        a.role,
-    ) == (
-        b.state,
-        &b.dtype,
-        &b.valueset,
-        b.coded,
-        b.sensitive,
-        b.identifier,
-        b.role,
-    )
+    fold_identity(&a.spelling) == fold_identity(&b.spelling)
+        && (
+            a.state,
+            &a.dtype,
+            &a.valueset,
+            a.coded,
+            a.sensitive,
+            a.identifier,
+            a.role,
+        ) == (
+            b.state,
+            &b.dtype,
+            &b.valueset,
+            b.coded,
+            b.sensitive,
+            b.identifier,
+            b.role,
+        )
 }
 
 /// Labels compare case- and spacing-insensitively.

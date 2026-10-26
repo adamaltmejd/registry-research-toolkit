@@ -1,5 +1,5 @@
-//! The SCB metadata export: one directory of pipe-delimited, double-quoted CSVs in
-//! CP1252, each with a header row.
+//! The SCB metadata export: a zip of pipe-delimited, double-quoted CSVs in CP1252,
+//! each with a header row, read from the archive as pinned.
 //!
 //! - `Registerinformation.csv`: one row per register version (a delivery), population
 //!   and variable. A register (`RegisterId`) has variants (`RegVarID`, the tables) and
@@ -44,24 +44,29 @@ impl Config {
     }
 }
 
-/// Read the export directory `dir` (`rel`, relative to the inputs root) of `provider`.
+/// Read the export archive at `path` (named `name` in locators) of `provider`.
 ///
 /// # Errors
-/// A missing file or column, a malformed CSV row, or a variant name two variants of
-/// one register share, each located at its file and row.
+/// An unreadable archive, a missing member or column, a malformed CSV row, or a
+/// variant name two variants of one register share, each located at its member and
+/// row.
 #[allow(clippy::too_many_lines)]
 pub fn read(
-    root: &Path,
-    rel: &str,
+    path: &Path,
+    name: &str,
     provider: &str,
     config: &Config,
 ) -> Result<ReadOutput, ReadError> {
     let mut out = ReadOutput::default();
-    let input = format!("{rel}/{REGISTERINFORMATION}");
+    let input = format!("{name}/{REGISTERINFORMATION}");
+    let file = std::fs::File::open(path).map_err(|e| error(name, e.to_string()))?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|e| error(name, e.to_string()))?;
+    let member = archive
+        .by_name(REGISTERINFORMATION)
+        .map_err(|e| error(&input, e.to_string()))?;
     let mut reader = ::csv::ReaderBuilder::new()
         .delimiter(b'|')
-        .from_path(root.join(&input))
-        .map_err(|e| error(&input, e.to_string()))?;
+        .from_reader(member);
     let header: Vec<String> = reader
         .byte_headers()
         .map_err(|e| error(&input, e.to_string()))?
@@ -255,15 +260,15 @@ pub fn read(
 /// CP1252 bytes as text. The five bytes CP1252 leaves undefined occur in the export as
 /// DOS CP850 remnants and decode as CP850.
 fn decode(bytes: &[u8]) -> String {
-    const HIGH: [char; 32] = [
-        '€', 'ü', '‚', 'ƒ', '„', '…', '†', '‡', 'ˆ', '‰', 'Š', '‹', 'Œ', 'ì', 'Ž', 'Å', 'É', '‘',
-        '’', '“', '”', '•', '–', '—', '˜', '™', 'š', '›', 'œ', 'Ø', 'ž', 'Ÿ',
-    ];
-    bytes
-        .iter()
-        .map(|&b| match b {
-            0x80..=0x9F => HIGH[usize::from(b - 0x80)],
-            _ => char::from(b),
+    let (text, _) = encoding_rs::WINDOWS_1252.decode_without_bom_handling(bytes);
+    text.chars()
+        .map(|c| match c {
+            '\u{81}' => 'ü',
+            '\u{8D}' => 'ì',
+            '\u{8F}' => 'Å',
+            '\u{90}' => 'É',
+            '\u{9D}' => 'Ø',
+            c => c,
         })
         .collect()
 }

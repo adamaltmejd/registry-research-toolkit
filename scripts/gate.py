@@ -133,7 +133,8 @@ def rust() -> None:
         for db in builds:
             run(
                 f"target/debug/reg-build build --inputs {FIXTURE / 'inputs'}"
-                f" --curation {FIXTURE / 'curation'} --out {db}"
+                f" --curation {FIXTURE / 'curation'} --assets {FIXTURE / 'assets'}"
+                f" --out {db}"
             )
         if not filecmp.cmp(*builds, shallow=False):
             raise subprocess.CalledProcessError(1, ["cmp", *builds])

@@ -1,12 +1,14 @@
 //! `reg-build`: the catalog builder (`crates/DESIGN.md`, "The catalog builder").
 //!
 //! ```text
-//! reg-build read  --inputs DIR --curation DIR --out DIR
-//! reg-build build --inputs DIR --curation DIR --out FILE [--report FILE]
+//! reg-build read  --inputs DIR --curation DIR --out DIR [--assets DIR]
+//! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
 //!                 [--catalog-version V] [--release]
 //! ```
 //!
 //! Both run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
+//! An input that is a release asset of the inputs repository is read from
+//! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).
 //! `read` writes each input's frame as `<name>.jsonl` and its warnings as
 //! `<name>.warnings` under `--out`. `build` resolves each register with its ledger
 //! `<curation>/registers/<provider>/<register>/ids.toml` and writes the catalog file to `--out`
@@ -48,6 +50,7 @@ struct Args {
     inputs: PathBuf,
     curation: PathBuf,
     out: PathBuf,
+    assets: Option<PathBuf>,
     report: Option<PathBuf>,
     catalog_version: String,
     release: bool,
@@ -57,14 +60,15 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
     let command = args
         .next()
         .ok_or("usage: reg-build read|build --inputs DIR --curation DIR --out PATH")?;
-    let (mut inputs, mut curation, mut out, mut report, mut version) =
-        (None, None, None, None, None);
+    let (mut inputs, mut curation, mut out, mut assets, mut report, mut version) =
+        (None, None, None, None, None, None);
     let mut release = false;
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--inputs" => &mut inputs,
             "--curation" => &mut curation,
             "--out" => &mut out,
+            "--assets" => &mut assets,
             "--report" => &mut report,
             "--catalog-version" => &mut version,
             "--release" => {
@@ -82,6 +86,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
         inputs: need(inputs, "--inputs")?,
         curation: need(curation, "--curation")?,
         out: need(out, "--out")?,
+        assets: assets.map(PathBuf::from),
         report: report.map(PathBuf::from),
         catalog_version: version.unwrap_or_else(|| "dev".to_owned()),
         release,
@@ -98,7 +103,10 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
     manifest
         .input
         .iter()
-        .map(|input| reg_readers::read(&args.inputs, &readers, input).map_err(|e| e.to_string()))
+        .map(|input| {
+            reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
+                .map_err(|e| e.to_string())
+        })
         .collect()
 }
 
@@ -175,12 +183,27 @@ fn build(args: &Args) -> Result<(), String> {
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
     for (input, output) in manifest.input.iter().zip(&outputs) {
-        let files: BTreeSet<String> = output.files.iter().cloned().collect();
-        let (sha256, bytes) = digest(&args.inputs, &files)?;
+        // A release asset is its pin (the reader verified it); its locators name
+        // archive members, not files under the inputs root.
+        let (sha256, bytes) = match (&input.release, &input.sha256) {
+            (Some(_), Some(pin)) => {
+                let path = input
+                    .locate(&args.inputs, args.assets.as_deref())
+                    .map_err(|e| e.to_string())?;
+                let len = std::fs::metadata(&path)
+                    .map_err(|e| format!("{}: {e}", path.display()))?
+                    .len();
+                (pin.clone(), i64::try_from(len).map_err(|e| e.to_string())?)
+            }
+            _ => digest(&args.inputs, &output.files.iter().cloned().collect())?,
+        };
         inputs.push(emit::InputRow {
             name: input.name.clone(),
             repo: manifest.repo.clone(),
-            commit: manifest.commit.clone(),
+            commit: input
+                .release
+                .clone()
+                .unwrap_or_else(|| manifest.commit.clone()),
             path: input.path.clone(),
             sha256,
             bytes,
