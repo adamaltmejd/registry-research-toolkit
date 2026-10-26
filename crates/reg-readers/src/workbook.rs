@@ -9,8 +9,9 @@
 //! - Code-list sheets state codes; a variable binds one when its link cell names a
 //!   code-list sheet with codes exactly, else the one such sheet named after the
 //!   variable or naming it in its variable column (the sheet's rows for the variable
-//!   when it has a variable column), else an inline enumeration in its value-set cell
-//!   is read conservatively, else the link text is kept as code-system evidence.
+//!   when it has a variable column; reported, since its link does not name it), else
+//!   an inline enumeration in its value-set cell is read conservatively, else the link
+//!   text is kept as code-system evidence.
 //!
 //! Bounds are year (`2001`), month (`200101`), day (`20010101`, an ISO date or a date
 //! cell) or a start with a trailing dash (`1999-`). A blank bound stays unstated
@@ -29,7 +30,9 @@ use std::path::Path;
 
 use calamine::{Data, Range, Reader, Xlsx, open_workbook};
 use reg_core::fold_identity;
-use reg_frame::{Frame, Item, Locator, Occurrence, Record, Register, Table, ValueSet};
+use reg_frame::{
+    Frame, Item, Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Table, ValueSet,
+};
 use serde::Deserialize;
 
 use crate::{ReadError, ReadOutput, config, error, month_end, name_key, nonblank};
@@ -408,7 +411,16 @@ impl Context<'_> {
             let bound = link_text
                 .as_deref()
                 .and_then(|t| self.pointer(t, codelists))
-                .or_else(|| self.named(&column_name, codelists))
+                .or_else(|| {
+                    // A binding the link does not name is a guess: reported, so D can
+                    // confirm it or curate another.
+                    let sheet = self.named(&column_name, codelists)?;
+                    self.warn(&format!(
+                        "{}: {column_name} binds {sheet:?} by name, not by its link",
+                        at.at
+                    ));
+                    Some(sheet)
+                })
                 .and_then(|target| {
                     let span = (lo.as_deref(), hi.as_deref());
                     self.bind(&target, &codelists[&target], &column_name, span, &at)
@@ -519,7 +531,7 @@ impl Context<'_> {
     ) -> Option<String> {
         let key = fold_identity(column);
         let named = rows.iter().any(|r| r.column.is_some());
-        let (lo, hi) = (lo.unwrap_or("0001-01-01"), hi.unwrap_or("9999-12-31"));
+        let (lo, hi) = (lo.unwrap_or(OPEN_START), hi.unwrap_or(OPEN_END));
         let items: Vec<Item> = rows
             .iter()
             .filter(|r| !named || r.column.as_deref() == Some(key.as_str()))
@@ -586,7 +598,7 @@ fn code_period(text: &str) -> Option<(String, String)> {
     }
     let (from, to) = text.split_once('-').unwrap_or((text, text));
     let to = match to.trim() {
-        "" => "9999-12-31".to_owned(),
+        "" => OPEN_END.to_owned(),
         to => bound(to, true)?,
     };
     Some((bound(from.trim(), false)?, to))

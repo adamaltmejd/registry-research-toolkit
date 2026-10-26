@@ -20,12 +20,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{Interval, fold_identity, intersect, merge, next_iso_day, prev_iso_day};
-use reg_frame::{Locator, Occurrence, Record, Register, Table};
+use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Table};
 use serde::{Deserialize, Serialize};
-
-/// The first and last day of open time.
-pub const OPEN_START: &str = "0001-01-01";
-pub const OPEN_END: &str = "9999-12-31";
 
 /// A register's `ids.toml`: public ids of its tables and variables. An anchor is
 /// `<table>: <spelling>`, or a bare spelling for the implicit table, matched by fold.

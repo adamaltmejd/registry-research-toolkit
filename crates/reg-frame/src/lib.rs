@@ -13,6 +13,10 @@
 use serde::Serialize;
 use sha2::{Digest, Sha256};
 
+/// The first and last day of open time: an unstated bound, once a stage must name one.
+pub const OPEN_START: &str = "0001-01-01";
+pub const OPEN_END: &str = "9999-12-31";
+
 /// Where a fact was stated: the input (a path relative to the inputs root) and a
 /// position inside it, both opaque to everything but the reader that wrote them.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]

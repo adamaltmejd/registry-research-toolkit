@@ -5,7 +5,8 @@
         <curation dir> <pins commit> <provider>...
 
 Temporary (REBUILD.md): milestone A ran it, B runs it for the SCB ledgers, and it is
-deleted at F. Writes `<curation dir>/registers/<provider>/<register>/ids.toml` for
+deleted when B ends: after that, D's statements replace the slug pins it reads.
+Writes `<curation dir>/registers/<provider>/<register>/ids.toml` for
 every register of the named providers in the frames `reg-build read` wrote to
 `<frames dir>`, from:
 
