@@ -120,7 +120,7 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   - `Registerinformation`, with the population collapse and gap markers;
   - `Vardemangder`, streamed into the content-addressed value-set store (102M rows);
   - `VardemangderValidDates`, applied at read time;
-  - `UnikaRegisterOchVariabler`, `Identifierare` and `Timeseries`.
+  - `UnikaRegisterOchVariabler` and `Identifierare` (the flags). `Timeseries` moves to C.
 - **The delivery-name grammar** in `curation/readers/scb.toml`.
 - **The LISA workbook reader.**
 - **SCB ledgers** generated from today's slug pins.
@@ -147,6 +147,8 @@ The full SCB read is a heavy run.
 
 - **The link stage:**
   - cross-register `continues` and `derived-from` links;
+  - the SCB export's `Timeseries` events (series breaks, ends, replacements) and release
+    notices;
   - tags;
   - the search index with code search;
   - parsed documents.
