@@ -784,8 +784,18 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     dtype: agreed(|f| &f.1),
                     valueset: agreed(|f| &f.2),
                     coded: coded(o),
-                    sensitive: o.sensitive,
-                    identifier: o.identifier,
+                    // Flags hold if any covering occurrence states them: under-flagging is
+                    // the dangerous direction.
+                    sensitive: covering
+                        .iter()
+                        .map(|&i| resolved[i].occurrence.sensitive)
+                        .max()
+                        .flatten(),
+                    identifier: covering
+                        .iter()
+                        .map(|&i| resolved[i].occurrence.identifier)
+                        .max()
+                        .flatten(),
                     role: role(o),
                     state,
                 };

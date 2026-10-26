@@ -500,7 +500,7 @@ fn flags(
         col("KansligVariabelIbland")?,
         col("Identitetsvariabel")?,
     );
-    let (mut unmatched, mut conflicting) = (0, 0);
+    let mut unmatched = 0;
     let mut record = ::csv::ByteRecord::new();
     while reader
         .read_byte_record(&mut record)
@@ -512,10 +512,9 @@ fn flags(
             Some("0") => Some(false),
             _ => None,
         };
-        let sensitive = match (flag(always), flag(sometimes)) {
-            (None, None) => None,
-            (a, b) => Some(a == Some(true) || b == Some(true)),
-        };
+        // `Option<bool>` orders None < Some(false) < Some(true): `max` lets a stated
+        // flag win over an unstated one and `true` over `false`.
+        let sensitive = flag(always).max(flag(sometimes));
         let identifier = flag(identity);
         let key = (
             text(register).unwrap_or_default(),
@@ -529,13 +528,9 @@ fn flags(
         };
         for k in keys {
             let o = occurrences.get_mut(k).expect("indexed occurrence");
-            // A column stated twice keeps its first statement.
-            if o.sensitive.is_some() || o.identifier.is_some() {
-                conflicting += usize::from((o.sensitive, o.identifier) != (sensitive, identifier));
-                continue;
-            }
-            o.sensitive = sensitive;
-            o.identifier = identifier;
+            // A column stated twice is flagged if either statement flags it.
+            o.sensitive = o.sensitive.max(sensitive);
+            o.identifier = o.identifier.max(identifier);
         }
     }
     drop(reader);
@@ -543,11 +538,6 @@ fn flags(
     if unmatched > 0 {
         out.warnings.push(format!(
             "{input}: {unmatched} rows name no documented column; their flags are left out"
-        ));
-    }
-    if conflicting > 0 {
-        out.warnings.push(format!(
-            "{input}: {conflicting} columns are stated again with other flags; the first statement stands"
         ));
     }
 

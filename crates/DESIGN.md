@@ -347,12 +347,13 @@ tracks the milestones. This section holds the design decisions that outlive the 
   out with a warning.
 - **SCB flags.** `UnikaRegisterOchVariabler` states a column's flags by register,
   variant, variable and column name (register names are one-to-one with `RegisterId`);
-  they apply to every occurrence of that column, whatever its release, since the export
-  never states two flag sets for one column. Its version range is not used. A column is
-  sensitive when it is always or sometimes so (`KansligVariabel`,
+  they apply to every occurrence of that column, whatever its release (its version range
+  is not used), and a column stated twice is flagged if either statement flags it. A
+  column is sensitive when it is always or sometimes so (`KansligVariabel`,
   `KansligVariabelIbland`); a stated `0` is a statement, an unstated flag stays unknown.
   `Identifierare` makes every occurrence of a listed `VarId` an identifier, beside the
-  summary's own identifiers.
+  summary's own identifiers. In any provider, a segment is sensitive or an identifier if
+  any occurrence covering it says so; under-flagging is the dangerous direction.
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
   no B table holds. The link stage reads them.
