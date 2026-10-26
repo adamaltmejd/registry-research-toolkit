@@ -19,7 +19,7 @@
 //!   key's spellings or types are F7.
 //! - **Identity.** Occurrences with one source key are one variable, unless the key
 //!   covers two folded spellings in overlapping periods anywhere in the register, among
-//!   primary editions: then it splits by spelling. A key documented only without a
+//!   used occurrences (after shadowing): then it splits by spelling. A key documented only without a
 //!   column is no variable (F5).
 //! - **Segments.** Per variable and table, maximal runs of one form. A run where the
 //!   variable's own occurrences disagree on label, type or value set, or where another
@@ -599,10 +599,11 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     }
 
     // Identity: a key splits by fold when two folds overlap anywhere in the register,
-    // among primary editions.
+    // among used rows. Shadowing leaves a worse edition's row only where the primary
+    // lacks its key, so a preliminary and a final edition of one period never split it.
     let mut by_key: BTreeMap<&str, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
     for r in &resolved {
-        if r.status == "used" && !r.preliminary {
+        if r.status == "used" {
             by_key
                 .entry(r.occurrence.source_key.as_str())
                 .or_default()
@@ -1024,9 +1025,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     })
 }
 
-/// T5 in the tables with placed releases: the holes in the table's coverage (under a
-/// release with no columns, or no release), and each variable's days inside its hull there that a release
-/// covers without its column.
+/// T5 in the tables with placed releases: the days inside a table's coverage hull no
+/// used column covers (under a release with no columns, or no release), and each
+/// variable's days inside its hull there that a release covers without its column.
 fn gaps(
     tables: &[ResolvedTable],
     releases: &[ResolvedRelease],
@@ -1044,28 +1045,37 @@ fn gaps(
     }
     let mut out = Vec::new();
     for (&t, releases) in &delivered {
-        for pair in tables[t].spans.windows(2) {
-            let hole = (next_iso_day(&pair[0].1), prev_iso_day(&pair[1].0));
-            let mut all = vec![hole.clone()];
-            all.extend(releases.iter().cloned());
-            out.extend(
-                runs(pieces(&all).into_iter().filter_map(|piece| {
-                    let reason = if releases.iter().any(|r| covers(r, &piece)) {
-                        "release_without_column"
-                    } else {
-                        "no_release"
-                    };
-                    covers(&hole, &piece).then_some((piece, reason))
-                }))
-                .into_iter()
-                .map(|(period, reason)| Gap {
-                    variable: None,
-                    table: t,
-                    period,
-                    reason,
-                }),
-            );
-        }
+        // The table's days inside its coverage hull no used column covers.
+        let spans = &tables[t].spans;
+        let hull = (
+            spans[0].0.clone(),
+            spans.last().expect("a table has a span").1.clone(),
+        );
+        let covered: Vec<Interval> = resolved
+            .iter()
+            .filter(|r| r.table == t && r.status == "used")
+            .map(|r| span(r).clone())
+            .collect();
+        let mut all = vec![hull.clone()];
+        all.extend(covered.iter().cloned());
+        all.extend(releases.iter().cloned());
+        let holes = runs(pieces(&all).into_iter().filter_map(|piece| {
+            if !covers(&hull, &piece) || covered.iter().any(|c| covers(c, &piece)) {
+                return None;
+            }
+            let reason = if releases.iter().any(|r| covers(r, &piece)) {
+                "release_without_column"
+            } else {
+                "no_release"
+            };
+            Some((piece, reason))
+        }));
+        out.extend(holes.into_iter().map(|(period, reason)| Gap {
+            variable: None,
+            table: t,
+            period,
+            reason,
+        }));
     }
     let mut marked: BTreeMap<(usize, usize), Vec<Interval>> = BTreeMap::new();
     for r in resolved {

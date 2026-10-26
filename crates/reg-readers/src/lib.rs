@@ -88,29 +88,55 @@ pub fn read(
             )
         })
     };
+    // A release asset is verified before any reader sees it; a reader of the inputs
+    // root takes none, and the scb reader takes nothing else.
+    let asset = match (&input.release, &input.sha256) {
+        (Some(_), Some(pin)) => Some(verified(input, pin, &input.locate(root, assets)?)?),
+        (None, None) => None,
+        _ => return Err(error(&input.name, "release and sha256 are stated together")),
+    };
+    let in_root = || match asset {
+        Some(_) => Err(error(
+            &input.name,
+            format!(
+                "reader {} reads the inputs root, not a release asset",
+                input.reader
+            ),
+        )),
+        None => Ok(()),
+    };
     match input.reader.as_str() {
-        "transcription" => transcription::read(
-            root,
-            &input.path,
-            &need(&input.provider, "provider")?,
-            &transcription::Config::load(&config)?,
-        ),
-        "sos-workbook" => workbook::read(
-            root,
-            &input.path,
-            &need(&input.provider, "provider")?,
-            &need(&input.register, "register")?,
-            &workbook::Config::load(&config)?,
-        ),
+        "transcription" => in_root().and_then(|()| {
+            transcription::read(
+                root,
+                &input.path,
+                &need(&input.provider, "provider")?,
+                &transcription::Config::load(&config)?,
+            )
+        }),
+        "sos-workbook" => in_root().and_then(|()| {
+            workbook::read(
+                root,
+                &input.path,
+                &need(&input.provider, "provider")?,
+                &need(&input.register, "register")?,
+                &workbook::Config::load(&config)?,
+            )
+        }),
         "scb" => scb::read(
-            &verified(input, &input.locate(root, assets)?)?,
+            &asset.clone().ok_or_else(|| {
+                error(
+                    &input.name,
+                    "reader scb reads a release asset with a sha256 pin",
+                )
+            })?,
             &input.path,
             &need(&input.provider, "provider")?,
             &scb::Config::load(&config)?,
         ),
-        "classification-csv" => {
+        "classification-csv" => in_root().and_then(|()| {
             classification::read(root, &input.path, &classification::Config::load(&config)?)
-        }
+        }),
         other => Err(error(&input.name, format!("unknown reader {other:?}"))),
     }
 }
@@ -142,13 +168,7 @@ impl std::fmt::Display for ReadError {
 impl std::error::Error for ReadError {}
 
 /// `path`, once its bytes match the input's pin.
-fn verified(input: &Input, path: &Path) -> Result<PathBuf, ReadError> {
-    let Some(pin) = &input.sha256 else {
-        return Err(error(
-            &input.name,
-            "reader needs a release asset with a sha256 pin",
-        ));
-    };
+fn verified(input: &Input, pin: &str, path: &Path) -> Result<PathBuf, ReadError> {
     let mut file = std::fs::File::open(path)
         .map_err(|e| error(&input.name, format!("{}: {e}", path.display())))?;
     let mut hasher = Sha256::new();
@@ -162,7 +182,7 @@ fn verified(input: &Input, path: &Path) -> Result<PathBuf, ReadError> {
         hasher.update(&buffer[..n]);
     }
     let actual = reg_frame::hex(&hasher.finalize());
-    if actual != *pin {
+    if actual != pin {
         return Err(error(
             &input.name,
             format!("{} has sha256 {actual}, pinned {pin}", path.display()),

@@ -174,7 +174,7 @@ pub fn read(
                 cadence: None,
                 locator: locator.clone(),
             });
-        if stated.table != table {
+        if reg_core::fold_identity(&stated.table) != reg_core::fold_identity(&table) {
             return Err(error(
                 &input,
                 format!(
