@@ -325,26 +325,27 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items
-  are interned by `ItemId`; the export's rows without one are told apart by their text
-  and are undated. `VardemangderValidDates` filters a set only when every item is dated
-  and some item has an interval overlapping its placed release's period; then the items
-  with such an interval are kept. Otherwise the whole set stands, since such dates
-  record when an item entered SCB's metadata (a 1996 survey's codes "valid from" 2008);
-  a set left empty by its dates is counted in one warning. The condition that every item
-  be dated is measured, not cautious: keeping the undated items and filtering only the
-  dated ones gives the same 11,320 whole-set rows but changes 131,796 more, and in
-  59,473 of them it drops every dated item; in 38,690 of those, every dated item starts
-  after the release ends, the same entry-date pattern. The value set is the content of
-  the items kept, so CVIDs with equal content are one value set, named by every
-  `Värdemängdsversion` its items carry. A code repeated across levels keeps its first
-  item, counted in one warning. A CVID whose every item has version, level and code all
-  equal to one of the config's `uncoded` names (`Tal`, `Beskrivande text`) marks the
-  column as not coded when every row's CVID does; otherwise such a population simply has
-  no value set. Rows naming different value sets give the occurrence its sets per
-  population, and a population whose rows disagree gets each as an alternative; resolve
-  reports either as F6. A row's "no codes" beside another row's set is not an
-  alternative (the set stands), and a set named by a row without a population is left
-  out with a warning.
+  are interned by `ItemId` and text: the export reuses one `ItemId` for different codes,
+  even within one `CVID` (a third of its ids carry more than one text). Rows without an
+  `ItemId` are told apart by their text and are undated. `VardemangderValidDates`
+  filters a set only when every item is dated and some item has an interval overlapping
+  its placed release's period; then the items with such an interval are kept. Otherwise
+  the whole set stands, since such dates record when an item entered SCB's metadata (a
+  1996 survey's codes "valid from" 2008); a set left empty by its dates is counted in
+  one warning. The condition that every item be dated is measured, not cautious: keeping
+  the undated items and filtering only the dated ones gives the same 11,320 whole-set
+  rows but changes 131,796 more, and in 59,473 of them it drops every dated item; in
+  38,690 of those, every dated item starts after the release ends, the same entry-date
+  pattern. The value set is the content of the items kept, so CVIDs with equal content
+  are one value set, named by every `Värdemängdsversion` its items carry. A code
+  repeated across levels keeps its first item, counted in one warning. A CVID whose
+  every item has version, level and code all equal to one of the config's `uncoded`
+  names (`Tal`, `Beskrivande text`) marks the column as not coded when every row's CVID
+  does; otherwise such a population simply has no value set. Rows naming different value
+  sets give the occurrence its sets per population, and a population whose rows disagree
+  gets each as an alternative; resolve reports either as F6. A row's "no codes" beside
+  another row's set is not an alternative (the set stands), and a set named by a row
+  without a population is left out with a warning.
 - **SCB flags.** `UnikaRegisterOchVariabler` states a column's flags by register,
   variant, variable and column name (register names are one-to-one with `RegisterId`);
   they apply to every occurrence of that column, whatever its release (its version range

@@ -28,7 +28,7 @@
 //! the variant's name and source keys `v<VarId>`. A register's public name is a curated
 //! `bind`, not reader config.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::io::Read;
 use std::path::Path;
 
@@ -656,7 +656,8 @@ fn valid_dates(
     Ok(dates)
 }
 
-/// One value-set item, interned by its `ItemId`, or by its text when it has none.
+/// One value-set item, interned by its `ItemId` and text: the export reuses an `ItemId`
+/// for different codes, even within one `CVID`.
 struct ItemText {
     id: Option<u64>,
     version: String,
@@ -677,8 +678,7 @@ struct Lists {
     cvids: BTreeMap<u64, Vec<u32>>,
 }
 
-/// Stream `Vardemangder`, keeping the rows of the `needed` `CVID`s. Text is decoded
-/// once per item.
+/// Stream `Vardemangder`, keeping the rows of the `needed` `CVID`s.
 fn members(
     archive: &mut zip::ZipArchive<std::fs::File>,
     name: &str,
@@ -702,8 +702,9 @@ fn members(
         items: Vec::new(),
         cvids: BTreeMap::new(),
     };
-    let mut index: BTreeMap<u64, u32> = BTreeMap::new();
-    let mut unnumbered: BTreeMap<[String; 4], u32> = BTreeMap::new();
+    // Keyed by the row's raw `ItemId` and text bytes, so text is decoded once per item.
+    let mut index: HashMap<Vec<u8>, u32> = HashMap::new();
+    let mut key = Vec::new();
     let mut without_id = 0;
     let mut record = ::csv::ByteRecord::new();
     let mut row = 1;
@@ -717,39 +718,30 @@ fn members(
             continue;
         }
         let text = |c: usize| decode(&record[c]).trim().to_owned();
-        let mut push = |id: Option<u64>, [version, level, code, label]: [String; 4]| {
+        let id = if record[item].iter().all(u8::is_ascii_whitespace) {
+            without_id += 1;
+            None
+        } else {
+            Some(number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemId")))?)
+        };
+        key.clear();
+        for c in [item, version, level, code, label] {
+            key.extend_from_slice(record[c].trim_ascii());
+            key.push(0);
+        }
+        let m = if let Some(&m) = index.get(key.as_slice()) {
+            m
+        } else {
             lists.items.push(ItemText {
                 id,
-                version,
-                level,
-                code,
-                label: nonblank(&label),
+                version: text(version),
+                level: text(level),
+                code: text(code),
+                label: nonblank(&text(label)),
             });
-            u32::try_from(lists.items.len() - 1).expect("items fit in u32")
-        };
-        let m = if record[item].iter().all(u8::is_ascii_whitespace) {
-            without_id += 1;
-            let texts = [text(version), text(level), text(code), text(label)];
-            if let Some(&m) = unnumbered.get(&texts) {
-                m
-            } else {
-                let m = push(None, texts.clone());
-                unnumbered.insert(texts, m);
-                m
-            }
-        } else {
-            let id =
-                number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemId")))?;
-            if let Some(&m) = index.get(&id) {
-                m
-            } else {
-                let m = push(
-                    Some(id),
-                    [text(version), text(level), text(code), text(label)],
-                );
-                index.insert(id, m);
-                m
-            }
+            let m = u32::try_from(lists.items.len() - 1).expect("items fit in u32");
+            index.insert(key.clone(), m);
+            m
         };
         lists.cvids.entry(c).or_default().push(m);
     }
