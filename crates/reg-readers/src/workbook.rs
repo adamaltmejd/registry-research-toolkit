@@ -7,9 +7,10 @@
 //! - The variables sheet states one occurrence per row: the column, its table, label,
 //!   definition, type, linkage flag, bounds and code list.
 //! - Code-list sheets state codes; a variable binds one when its link cell names a
-//!   code-list sheet with codes exactly (the sheet's rows for the variable when it has
-//!   a variable column), else an inline enumeration in its value-set cell is read
-//!   conservatively, else the link text is kept as code-system evidence.
+//!   code-list sheet with codes exactly, else the one such sheet named after the
+//!   variable or naming it in its variable column (the sheet's rows for the variable
+//!   when it has a variable column), else an inline enumeration in its value-set cell
+//!   is read conservatively, else the link text is kept as code-system evidence.
 //!
 //! Bounds are year (`2001`), month (`200101`), day (`20010101`, an ISO date or a date
 //! cell) or a start with a trailing dash (`1999-`). A blank bound stays unstated
@@ -401,6 +402,7 @@ impl Context<'_> {
             let bound = link_text
                 .as_deref()
                 .and_then(|t| self.pointer(t, codelists))
+                .or_else(|| self.named(&column_name, codelists))
                 .and_then(|target| self.bind(&target, &codelists[&target], &column_name, &at));
             let (valueset, code_system) = if bound.is_some() {
                 (bound, None)
@@ -469,6 +471,29 @@ impl Context<'_> {
             .iter()
             .find(|(s, rows)| is_reference && !rows.is_empty() && s.to_lowercase() == name)
             .map(|(s, _)| s.clone())
+    }
+
+    /// The one code-list sheet with codes that names `column` without a link: by its
+    /// name (`<prefix>_<column>`) or its variable column. Two candidates name none.
+    fn named(&self, column: &str, codelists: &BTreeMap<String, Vec<CodeRow>>) -> Option<String> {
+        let key = fold_identity(column);
+        let prefix = self.config.sheets.codelist_prefix.to_lowercase();
+        let mut found = codelists.iter().filter(|(sheet, rows)| {
+            let lower = sheet.to_lowercase();
+            let suffix = lower
+                .strip_prefix(&prefix)
+                .unwrap_or(&lower)
+                .trim_start_matches(['_', ' ']);
+            !rows.is_empty()
+                && (suffix == key
+                    || rows
+                        .iter()
+                        .any(|r| r.column.as_deref() == Some(key.as_str())))
+        });
+        match (found.next(), found.next()) {
+            (Some((sheet, _)), None) => Some(sheet.clone()),
+            _ => None,
+        }
     }
 
     /// The value set a variable binds from a code-list sheet: the rows naming the
@@ -575,8 +600,10 @@ fn bound(text: &str, end: bool) -> Option<String> {
 /// prose and yields `None`: a wrong reject leaves the variable without codes, a wrong
 /// accept would state false ones.
 fn inline_codes(text: &str) -> Option<Vec<Item>> {
+    // Sources pad a cell with spaces to fake a line break: three or more break too.
     let segments: Vec<&str> = text
         .split([';', '\n'])
+        .flat_map(|s| s.split("   "))
         .map(str::trim)
         .filter(|s| !s.is_empty())
         .collect();

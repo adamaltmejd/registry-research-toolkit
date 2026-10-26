@@ -50,8 +50,8 @@ to = ["data till"]
 # Code-list sheets: the header row is the first with a `code` cell. Label and period
 # columns are matched by prefix.
 [codelists]
-code = ["kod"]
-label = ["beskrivning", "behandlingsmetod"]
+code = ["kod", "kodat till", "sjukhuskod"]
+label = ["beskrivning", "behandlingsmetod", "sjukhusnamn"]
 period = ["tidsperiod"]
 column = ["variabelnamn"]
 
