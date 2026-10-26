@@ -107,16 +107,17 @@ def ledger(
 
 
 def main() -> int:
+    if len(sys.argv) < 7:
+        sys.exit(
+            "usage: rebuild_ledger.py <pins dir> <frames dir> <catalog db> <curation dir>"
+            " <pins commit> <provider>...; the other providers' ledgers are hand-edited"
+        )
     pin_dir, frame_dir, db, curation = map(Path, sys.argv[1:5])
     commit, providers = sys.argv[5], set(sys.argv[6:])
-    if not providers:
-        sys.exit(
-            "name the providers whose ledgers to write; the others are hand-edited"
-        )
     slugs = table_slugs(db)
-    for (provider, register), tables in sorted(frames(frame_dir).items()):
-        if provider not in providers:
-            continue
+    found = frames(frame_dir)
+    for provider, register in sorted(k for k in found if k[0] in providers):
+        tables = found[(provider, register)]
         pinned = pins(pin_dir, provider, register)
         if not pinned:
             print(f"{provider}/{register}: no pins")
