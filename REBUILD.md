@@ -33,6 +33,10 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   Reader, server and conformance tests (`crates/`, `conformance/`) stay as the black-box
   check that the new catalog works for readers. The Python builder's tests stay while it
   ships releases and go with it at F.
+- **Review loop.** A PR that adds or changes design (crates, frame records, resolver
+  rules, curation layout, reader config) merges only after an independent review and the
+  tracker session's drift review; the Operator routes it. Mechanical PRs skip the
+  tracker. The tracker audits the whole milestone diff before the milestone is done.
 
 ## Milestones
 
