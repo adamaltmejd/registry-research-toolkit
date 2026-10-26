@@ -91,7 +91,7 @@ registry-research-toolkit/
     reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
     reg-core-py/    # PyO3 bindings of reg-core for the builder
     reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
-    reg-build-model/ # Rust builder port: common-form types, prepared reader (PORT.md)
+    reg-build-model/ # stopped port's model; deleted in the rebuild's first PR (REBUILD.md)
   reg_mona_runner/  # MONA extract runner: order.json -> CSVs inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
@@ -110,7 +110,7 @@ Dependency graph (acyclic):
 reg-meta       → reg-catalog → reg-core
 reg-core-py    → reg-core
 reg-core-wasm  → reg-core
-reg-build-model (no workspace dependency; reads Python-prepared SQLite)
+reg-build-model (no workspace dependency; deleted in the rebuild's first PR)
 reg_meta_build → reg-core-py
 reg_webapp     → reg-meta (HTTP, through the codegen'd OpenAPI types)
 reg_webapp     → reg-core-wasm (built into the SPA by `bun run gen:wasm`)
