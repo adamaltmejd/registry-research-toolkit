@@ -28,9 +28,11 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   attached in D.
 - **Heavy runs** (the full SCB read, full builds, real-artifact conformance) are
   scheduled by the Operator with the maintainer.
-- **Tests** follow AGENTS.md: goldens per behavior at the stage boundaries (reader
-  frames, resolved registers, the published catalog, the order check), proptest for the
-  period and name grammars, and a build-twice byte comparison.
+- **No new tests until cutover.** Proof is the comparison script and the dry-run
+  figures. CI keeps one check for the new builder: build twice and compare bytes.
+  Reader, server and conformance tests (`crates/`, `conformance/`) stay as the black-box
+  check that the new catalog works for readers. The Python builder's tests stay while it
+  ships releases and go with it at F.
 
 ## Milestones
 
@@ -86,9 +88,8 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
 
 **Exit:**
 
-- reader and resolve goldens for every behavior these readers reach;
-- two builds of the synthetic corpus are byte-identical, in CI;
-- the provider-vocabulary scan of the core crates and the twin-frame test pass;
+- CI builds a small committed input twice and the bytes are identical;
+- the provider-vocabulary scan of the core crates passes in the gate;
 - a real build of the thin providers and Socialstyrelsen, and a comparison report that
   classifies every difference. The dry run's figures are the expectation:
   - Socialstyrelsen: 23 ambiguous column pairs, 329 names in several tables (60 of them
@@ -136,6 +137,9 @@ The full SCB read is a heavy run.
 - **The order check**, which returns the logical order or its findings. An ambiguous
   window and an unnamed preliminary window block.
 - **The conformance fixtures** are built by the new builder from readable sources.
+- **A Rust `dbdiff` for the new schema,** grown from the comparison script. From the
+  switch on, each release is checked by its `dbdiff` against the previous release, read
+  by the builder agent to confirm that only intended changes occurred.
 - **The server switch.** reg-meta.vqv.uk serves the new artifact. SWECOV's hosted
   catalog stays on the last old-schema release until E, so no reader handles both
   schemas.
@@ -216,6 +220,8 @@ The full SCB read is a heavy run.
 **Rewritten:**
 
 - the `build-db` and `release` skills;
+- the testing policy in `AGENTS.md`: a few black-box tests for the key guarantees, and
+  the release `dbdiff` as the main release check;
 - `AGENTS.md`, `ARCHITECTURE.md`, and the contract table in `crates/DESIGN.md`.
 
 **Exit:** `scripts/gate.py all` is green, and a release is built by the new builder.

@@ -235,8 +235,6 @@ the rebuild.
 
 - Only `reg-readers` may name a provider or a format. A CI scan of the other builder
   crates for provider vocabulary fails on any hit.
-- A twin-frame test runs a case through a keyed and an unkeyed frame and expects the
-  same findings.
 - A new provider is a reader or a transcription, plus curation in the existing kinds.
 
 **Storage and determinism.**
