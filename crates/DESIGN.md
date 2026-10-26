@@ -298,8 +298,8 @@ tracks the milestones. This section holds the design decisions that outlive the 
   key's variable when the key is one variable. A key that never has a column is no
   variable: one F5 notice per key.
 - **Gaps (T5)** are computed only in tables with a placed primary release. A day between
-  the table's used columns that no used column covers is a table gap:
-  `release_without_column` under a primary release that delivers no column, else
+  the table's used columns and primary releases that no used column covers is a table
+  gap: `release_without_column` under a primary release that delivers no column, else
   `no_release`. Inside a variable's hull in that table, an uncovered day under a marker
   is `documented_without_column`, under a primary release `release_without_column`; a
   day no release covers is the table's gap only, since a stock table released on one

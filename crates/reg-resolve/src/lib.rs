@@ -1032,8 +1032,8 @@ fn hull(spans: &[Interval]) -> Option<Interval> {
     Some((from.clone(), to.clone()))
 }
 
-/// T5 in the tables with placed releases: the days inside a table's coverage hull no
-/// used column covers (under a release with no columns, or no release), and each
+/// T5 in the tables with placed releases: the days between a table's used columns and
+/// primary releases that no used column covers (under a release with no columns, or no release), and each
 /// variable's days inside its hull there that a release covers without its column.
 fn gaps(
     releases: &[ResolvedRelease],
@@ -1051,14 +1051,15 @@ fn gaps(
     }
     let mut out = Vec::new();
     for (&t, releases) in &delivered {
-        // The table's days between its used columns that no used column covers. The hull
-        // is the columns', not the table's bound: a bound may be open on a side.
+        // The table's days between its used columns and primary releases that no used
+        // column covers. The hull is theirs, not the table's bound: a bound may be open on
+        // a side, while a placed release is bounded.
         let covered: Vec<Interval> = resolved
             .iter()
             .filter(|r| r.table == t && r.status == "used")
             .map(|r| span(r).clone())
             .collect();
-        let Some(hull) = hull(&covered) else {
+        let Some(hull) = hull(&[covered.as_slice(), releases].concat()) else {
             continue;
         };
         let mut all = vec![hull.clone()];
