@@ -150,7 +150,7 @@ inference into data, computed with Python's own rule, so the Rust build infers n
   | --- | ---------------------------------------------------------------------- | -------------- |
   | A   | this tracker, design docs, `reg-build-model` types and prepared reader | merged (#1935) |
   | B   | verb schema and golden corpus                                          | merged (#1937) |
-  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | open           |
+  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | open (#1938)   |
 
 ### The equivalence oracle (provisional)
 
