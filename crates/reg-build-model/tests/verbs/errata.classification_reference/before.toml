@@ -1,9 +1,0 @@
-# case: curation/registers/sos/lova.toml#/errata.classification_reference/4
-[[errata.classification_reference]]
-deldatamangd = "A_LOVA_HOSP"
-variable = "EXAMAR"
-column = "EXAMAR"
-expected_reference = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
-expected_representation = "YYYY"
-evidence = "Metadata - Variabelnivå row 34 describes the year of the current degree in C/D and YYYY in F; SSYK classifies occupations."
-noted = "2026-09-29"

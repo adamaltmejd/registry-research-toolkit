@@ -1,8 +1,0 @@
-# case: curation/registers/scb/lbr.toml#/identity.partition/10
-[[identity.partition]]
-data_warning = "The exact same delivered literal has contradictory simultaneous native owners. Retain every original assertion and ordered own coding; no winning meaning is inferred. Only witnessed contested variant/edition/literal windows remain unavailable, and supported other histories retain their original availability."
-variable = "10.42421"
-columns = { "majs" = "10.42421.majs" }
-unassigned_columns = ["Lamm"]
-columns_ref = "Complete family and physical peers. Distinct literal fields preserve their own source name, definition, operation, coding, scope and variant; no shared source text establishes interchangeable meanings. Exact contrary literals are separately retained and only finite supported editions are owned. Batch54-five-collision-source-proof.json."
-expected_evidence_sha256 = "efa48897931db6dec6227754dfbb93ac68869abfe37e2540778f8a4aff8eb6f9"

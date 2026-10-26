@@ -1,5 +1,0 @@
-# case: curation/registers/sos/par.toml#/identity.split/14
-[[identity.split]]
-variable = "TYP"
-by = "name"
-parts = [{ name = "Psykiatrisk vårdform", owner = "5891427617861710725.TYP.typ" }, { name = "Markör för yttre orsakskod", owner = "5891427617861710725.TYP.markor-yttre-orsakskod" }, { name = "Markör för avvikning", owner = "5891427617861710725.TYP.markor-avvikning" }, { name = "Markör för permission", owner = "5891427617861710725.TYP.markor-permission" }]

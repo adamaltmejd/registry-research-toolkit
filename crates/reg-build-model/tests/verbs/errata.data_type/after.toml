@@ -1,7 +1,0 @@
-[[errata.field]]
-legacy = { ref = "curation/registers/sos/lova.toml#/errata.data_type/1", head = "errata:data_type" }
-member = { table = "lova-hosp", column = "DESLEG_DATUM" }
-set = { data_type = "date" }
-guard = { expected_type = "Decimal", expected_representation = "YYYY-MM-DD" }
-evidence = "Metadata - Variabelnivå row 28 labels the field 'Datum för beslut: Återkallelse av legitimation', describes 'Datum för beslutet att dra in legitiamation', and declares YYYY-MM-DD; Decimal contradicts this explicit date representation."
-noted = "2026-09-29"

@@ -1,8 +1,0 @@
-[[representation.parallel]]
-legacy = { ref = "curation/registers/scb/it-anvandning.toml#/representation.alias_window/1", head = "curated:alias-window" }
-owner = "bestallde-varor-tjanster-webb-app"
-table = "it-anvandning-i-foretag"
-columns = [{ column = "AEBUY", deliveries = ["2018"] }]
-alias_window = true
-evidence = "SWECOV table ITftg_Mikro_2018 holds AEBUY. SCB VarId 30000 documents AEBUY in 2015 and E_AWBUY in 2018 with the same variable name, definition, empty operational definition, and varchar type."
-noted = "2026-09-13"

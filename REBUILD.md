@@ -38,7 +38,7 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
 
   | M   | Content                                                                                            | Proves                                                                                            | Status      |
   | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
-  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | not started |
+  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | in progress |
   | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | —           |
   | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | —           |
   | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the six statement kinds                                              | —           |
