@@ -2,8 +2,8 @@
 
 Design rationale and constraints for the catalog runtime: `reg-core` (grammars, folds,
 interval algebra, the project contract), `reg-catalog` (the reader and its operation
-set) and `reg-meta` (the `serve` and `mcp` run modes), plus `reg-build-model`, the first
-crate of the Rust builder port ("The builder model"). The project contract has its own
+set) and `reg-meta` (the `serve` and `mcp` run modes), plus the design of the builder
+that replaces `reg_meta_build` ("The catalog builder"). The project contract has its own
 note, [reg-core/DESIGN.md](reg-core/DESIGN.md). The artifact these crates read is built
 by `reg_meta_build` ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)), which
 also owns the resolver, holdings compilation and the inventory TOML. Cross-package
@@ -41,20 +41,18 @@ set, where agents get it too. The deploy image is one static binary plus the bak
 
 Each contract that crosses a language or package boundary has exactly one
 implementation. New code that needs one of these calls its home; it does not add a
-second copy held in step by a parity test. The one exception is temporary: during the
-builder port `reg-build-model` reproduces the guard digest, pinned by a golden the
-Python builder writes, until cutover deletes the Python copy ("Guard digest basis").
+second copy held in step by a parity test.
 
-  | Contract                                | Single home                      | Reached from                                                                                     |
-  | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------ |
-  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate                                                      |
-  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                                                                       |
-  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`                                                 |
-  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM                                                    |
-  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM                                                    |
-  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; `reg-build-model` reproduces the guard digest during the port ("Guard digest basis") |
-  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export                                                 |
-  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it                                            |
+  | Contract                                | Single home                      | Reached from                                          |
+  | --------------------------------------- | -------------------------------- | ----------------------------------------------------- |
+  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
+  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
+  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
+  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
+  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
+  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only                                            |
+  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
+  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it |
 
 The SPA never parses period grammar or computes a project period's bounds: it composes
 `reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
@@ -122,9 +120,8 @@ SPA (React) + reg-core-wasm
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
-- `reg-build-model`: the Rust builder's neutral common form, the reader for
-  Python-prepared source records and the guard digest basis ("The builder model"). No
-  runtime crate depends on it.
+- `reg-build-model`: the stopped port's model of Python-prepared records. No runtime
+  crate depends on it; the rebuild's first PR deletes it ("The catalog builder").
 - `reg-core-wasm`: thin `wasm-bindgen` glue for the SPA. JSON text crosses the boundary
   (no `serde-wasm-bindgen`), and every export is total: it runs the matching structural
   check before a `reg-core` function that can panic. It is built with
@@ -152,79 +149,111 @@ server whose URL is a user setting: the global catalog by default, a hosted stew
 catalog (`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the
 agent's MCP configuration by hand.
 
-## The builder model
+## The catalog builder
 
-`reg-build-model` is the first crate of the Rust port of `reg_meta_build`
-([../PORT.md](../PORT.md)). It holds the types the target design names
-([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Target design: the common
-form") and reads the records the Python builder prepares. It ports no resolve behavior;
-phase 3 adds normalize, rules, the verb engine and the writer on top of it.
+The builder that replaces `reg_meta_build` is being written beside it, as new crates
+(`reg-frame`, `reg-readers`, `reg-resolve`, `reg-build`). [../REBUILD.md](../REBUILD.md)
+tracks the milestones. `reg-build-model`, the model of the stopped byte-exact port, is
+deleted in the rebuild's first PR. This section holds the design decisions that outlive
+the rebuild.
 
-- `model`: registers, tables, deliveries, columns, column → variable links and
-  provenance. Keys are neutral strings (`RegisterKey`, `TableKey`, `DeliveryKey`,
-  `ColumnName`, `VariableKey`). A column has one coverage slot and at most one delivery.
-  A link's target is a source claim (`Claim`, opaque, minted only inside the crate), the
-  default rule's register-scoped column literal, a curated owner, or none. There is no
-  `NativeCoordinates` equivalent.
-- `prepared`: the v16 records as delivered (`prepared_sources.py`), including SCB's
-  integer ids and SoS's tokens. Only normalize reads it.
-- `Evidence`: a prepared record behind an opaque handle. Code after normalize can digest
-  and compare it, and name it by record id in an error, but not read its fields.
+**Three stages, each seeing only its inputs.**
 
-The intended crate graph is adapters and normalize → model ← rules, curation, writer, so
-that rules and curation never depend on `prepared` (target design, "Stages"). Phase 3
-enforces it by crate split or a lint when the second consumer arrives; one crate is
-enough while nothing but tests reads the model.
+1. **Read.** A reader turns one pinned input into a *source frame*. The frame has one
+   record shape for every provider: registers, tables, stated deliveries (releases),
+   documented columns (occurrences, each with a period), value sets and source-side
+   links. Every fact keeps a locator back to its input. Readers are the only code that
+   names a provider or a file format. Their config (header aliases, type tables, the
+   delivery-name grammar) is data under `curation/readers/`.
+2. **Resolve.** One register's frame plus that register's curation becomes a resolved
+   register: variables, segments, coverage, findings and provenance. Resolve is a pure
+   function per register, run in parallel and cached by content hash. It never sees
+   another register's frame.
+3. **Link and emit.** Cross-register links are checked once over all resolved registers.
+   The emitter writes one SQLite file and decides nothing.
 
-**Prepared reader.** `PreparedRoot::open` reads the root's `manifest.json` and
-`files/records/manifest.json` strictly (unknown keys refuse), checks the format and
-schema versions (catalog layout 5, records 16), that the records manifest's SHA-256 is
-the one the root states, that the database size is the stated one and its `user_version`
-is 16. Acceptance, the Git blob proofs against the inputs repository, stays with the
-Python build's input selection until preparation ports (phase 5); the Rust build runs on
-an accepted root. `Records::for_each_record` streams occurrences in ordinal order and
-decodes the interned payloads with a bounded cache. Every payload was written with
-Pydantic's `exclude_defaults`, so a missing key is that model's default; the serde
-defaults restate them. The occurrence's `family_payload` (`native_variable_key`) is not
-read: grouping is recomputed from links. On the pinned root of 2026-10-25 the reader
-reads back the manifest's counts exactly (1,078,240 records, 201 evidence tables,
-258,680 table rows, 11,124 evidence lines, 102 value children;
-`examples/prepared_root.rs`).
+**Time.**
 
-**Normalize mapping.** How each provider's v16 records map to the model, the oddities a
-byte-exact port must keep and the payload deltas of phase-1 b2 and b4 are in
-[reg-build-model/DESIGN.md](reg-build-model/DESIGN.md).
+- Periods are half-open day intervals with a display grain: year, half, quarter, month,
+  day, span or `none`.
+- Readers convert inclusive source ends. An unstated end stays open.
+- A timeless table has one `none`-grain period, addressed as `_default`.
+- Releases are optional and never synthesized. A release has an edition (`final`,
+  `preliminary` or `unstated`) and a free-text qualifier, both parsed from its name by
+  the reader's grammar.
+- A name the grammar cannot place is `unparsed`: a finding, with no period.
+- Overlapping deliveries of different periods cover their union; no primary is chosen
+  between them.
 
-### Guard digest basis
+**Identity.**
 
-Curation guards (`expected_evidence_sha256`, `expected_fields_sha256` and the other
-`expected_*_sha256` keys) pin records by `evidence_sha256`: SHA-256 of Python canonical
-JSON of the record's full Pydantic dump, with `evidence_position` fields dropped and
-`evidence_multiset` lists sorted. The Rust builder **reproduces this basis exactly**
-instead of re-pinning the guards to a new one:
+- Each occurrence carries an opaque *source key*: the provider's variable id where one
+  exists, otherwise the folded column name, scoped to the register.
+- Occurrences with one key in one register are one variable. The exception is a key that
+  covers two folded spellings in overlapping periods anywhere in the register, comparing
+  primary editions only. That key splits by spelling.
+- Case never distinguishes columns.
+- A variable has at most one spelling per table at a time.
+- A shared name under different keys is a review proposal, never a merge.
+- A column the source cannot place on one variable is ambiguous. Orders over that window
+  are blocked; nothing is guessed.
+- Variables never span registers. Cross-register relations are `continues` and
+  `derived-from` links, identifier kinds, and tags.
 
-- The guards stay curation data, unchanged by the port. The converter carries them
-  verbatim, and record-set equivalence (a converted entry selects exactly the records
-  the old one did) then implies digest equivalence, so no second proof is needed.
-- Re-pinning would run on every Rust build, because curators keep editing the old tree
-  until cutover. Each re-pin would have to check the old guard first in Python, which
-  needs the Python compile's records per entry, and a re-pin that skipped the check
-  would silently refresh a stale guard. It would also need the neutral projection
-  implemented twice, once in the Python converter and once in Rust.
-- The cost is a second copy of one digest rule during the port. It is pinned by
-  `tests/digest_golden.rs`, whose expected values the Python builder writes
-  (`tests/digest/generate.py`) through its real preparation writer and reader, and it
-  agreed with Python on every record of every source of the pinned 2026-10-25 root. At
-  cutover the Python resolve pipeline is deleted and the Rust copy becomes the only
-  home. Digests of other evidence (coding claims, value associations, classifications)
-  follow the same rule and are added by the slice that first checks them.
+**Three identifiers.**
 
-Serialization details the golden pins: every default is present (`null` fields,
-`variant_references: []`, all 40 `SourceFields` names); keys serialize by alias
-(`register`); a delivered cell's cached value and type appear only when present; keys
-sort in code-point order and only `"`, `\` and C0 controls are escaped, as Python's
-`json.dumps(ensure_ascii=False, sort_keys=True)` does. `serde_json` must not enable
-`preserve_order`.
+- **Source key:** evidence only.
+- **Public id** (`provider/register/variable`): stable through a per-register ledger
+  (`ids.toml`) that maps each id to an anchor occurrence, so ids survive renames and
+  splits. The first ledger is generated from today's slug pins. A release build refuses
+  a variable without an id.
+- **Row id:** renumbered every build and never exposed.
+
+**Curation.**
+
+- Six statement kinds: `bind`, `assert`, `assign`, `set`, `link` and `ack`.
+- Each statement's premise is recorded in a generated `curation.lock`. When the source
+  changes under a statement, the build refuses it at its file and line.
+- Every published value has one provenance: source, rule or curated, with curated over
+  rule over source. Losing values are kept as evidence.
+- Rules only propose. Merges, classification references and other enrichment are always
+  curated.
+
+**Value sets, populations and series.**
+
+- Value sets are content-addressed.
+- Per-code validity dates are applied at read time, keeping the codes valid in each
+  occurrence's period, and are not published.
+- Populations are not a segment dimension. A value set that differs by population is
+  kept as population-labelled alternatives, with one review finding per key.
+- There is no series entity. Each column of a wide series is a variable. A curated `set`
+  groups related columns within a register for picking.
+- How a series or a table sits in delivered files is the holdings layer's job. That
+  layer is separate from the catalog and reads it by public id.
+
+**Agnosticism is enforced.**
+
+- Only `reg-readers` may name a provider or a format. A CI scan of the other builder
+  crates for provider vocabulary fails on any hit.
+- A twin-frame test runs a case through a keyed and an unkeyed frame and expects the
+  same findings.
+- A new provider is a reader or a transcription, plus curation in the existing kinds.
+
+**Storage and determinism.**
+
+- The published catalog is SQLite.
+- Build state is Rust structures plus a content-addressed file cache.
+- Intermediates are canonical zstd JSONL.
+- No DuckDB, no dataframe engine, no Python bridge.
+- Iteration is sorted, row ids follow natural-key order, and nothing reads the clock or
+  the host.
+- CI builds twice and compares bytes.
+- The period grammar, interval algebra and text folds come from `reg-core`, as
+  everything else does ("One implementation per contract").
+
+**What the rebuild is checked against.** Not today's artifact byte for byte. It is
+checked against what users see (tables, columns, variables, labels, value sets) and
+against random full-register orders, with every difference classified.
 
 ## Agent and web interface
 
