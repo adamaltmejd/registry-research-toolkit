@@ -1,0 +1,9 @@
+# Public ids of scb/r292 (today's scb/finansiella-foretag), from the slug pins at fe08cf2a9.
+[tables]
+"Indata" = "finansiella-foretag-indata"
+
+[variables]
+"belopp" = ["Indata: Belopp"]
+"institut" = ["Indata: Institut"]
+"kontopost" = ["Indata: Kontopost"]
+"kvartal-och-ar" = ["Indata: Tid"]

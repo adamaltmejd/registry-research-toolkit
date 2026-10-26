@@ -1,0 +1,36 @@
+# Public ids of scb/r246 (today's scb/ses), from the slug pins at fe08cf2a9.
+[tables]
+"Företag" = "foretag"
+"Företag/Organisationer" = "foretag-organisationer"
+"Individer" = "individer"
+"Individer i privat sektor" = "individer-i-privat-sektor"
+
+[variables]
+"agarkontroll" = ["Företag: A14"]
+"alder" = ["Individer i privat sektor: B22"]
+"anstallningsform" = ["Individer: B27"]
+"antal-overtidstimmar" = ["Individer: B321"]
+"antal-veckor" = ["Individer: B31"]
+"b210" = ["Individer i privat sektor: B210"]
+"b25" = ["Individer: B25"]
+"bonusar" = ["Individer: B411"]
+"formaner" = ["Individer: B412"]
+"individnyckel" = ["Individer: Key_Ex"]
+"kon" = ["Individer: B21"]
+"koncerntillhorighet" = ["Företag/Organisationer: A17"]
+"kontant-bruttolon-mm" = ["Individer: B41"]
+"lon-referensmanaden" = ["Individer: B42"]
+"lonesumma-skift-ob" = ["Individer: B422"]
+"medborgarskap" = ["Individer: B29"]
+"naringsgren" = ["Företag: A13"]
+"nuts" = ["Företag: A11"]
+"nyckel" = ["Företag: key_lx"]
+"overtidsersattning" = ["Individer: B421"]
+"referensar" = ["Företag: Year"]
+"storleksklass-pa-foretag-eu" = ["Företag: A12"]
+"tabell" = ["Företag: Tabell"]
+"timlon" = ["Individer: B43"]
+"timmar" = ["Individer: B32"]
+"tjanstgoringsomfattning" = ["Individer: B271"]
+"upprakningstal" = ["Företag: A41"]
+"yrkesuppgift" = ["Individer: B23"]

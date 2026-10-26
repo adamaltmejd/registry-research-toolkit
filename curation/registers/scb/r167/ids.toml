@@ -1,0 +1,15 @@
+# Public ids of scb/r167 (today's scb/konkurser), from the slug pins at fe08cf2a9.
+[tables]
+"Konkurser o offentliga ackord" = "konkurser-offentliga-ackord"
+
+[variables]
+"aktuellt-antal-anstallda" = ["Konkurser o offentliga ackord: anst"]
+"ar" = ["Konkurser o offentliga ackord: ar"]
+"foretagsenhetens-startar" = ["Konkurser o offentliga ackord: startar"]
+"juridisk-form" = ["Konkurser o offentliga ackord: fform"]
+"kommun" = ["Konkurser o offentliga ackord: kommun"]
+"lan" = ["Konkurser o offentliga ackord: lan"]
+"objekttyp" = ["Konkurser o offentliga ackord: obtyp"]
+"person-orgnr" = ["Konkurser o offentliga ackord: opnr"]
+"referensmanad" = ["Konkurser o offentliga ackord: beslutstid"]
+"sni2007-5siffror" = ["Konkurser o offentliga ackord: bransch"]

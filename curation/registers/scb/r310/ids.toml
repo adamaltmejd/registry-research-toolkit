@@ -1,0 +1,9 @@
+# Public ids of scb/r310 (today's scb/befolkningsframskrivningar), from the slug pins at fe08cf2a9.
+[tables]
+"Framskrivning av antal döda och dödstal" = "framskrivning-doda"
+"Framskrivning av antal födda och summerad fruktsamhet" = "framskrivning-fodda-fruktsamhet"
+"Framskrivning av antal invandrare/immigranter" = "framskrivning-invandrare"
+"Framskrivning av befolkningen" = "framskrivning-befolkning"
+"antal utvandrade och utflyttartal" = "framskrivning-utvandrade"
+
+[variables]

@@ -1,0 +1,13 @@
+# Public ids of scb/r360 (today's scb/korstrackor), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"avreg" = ["Körsträckor: avreg"]
+"avstalld" = ["Körsträckor: AVSTALLD"]
+"fordon" = ["Körsträckor: fordon"]
+"foregaendears-stracka" = ["Körsträckor: foregaendears_stracka"]
+"korstdagartrafik" = ["Körsträckor: korstdagartrafik"]
+"korstracka" = ["Körsträckor: KORSTRACKA"]
+"modellkategori" = ["Körsträckor: modellkategori"]
+"modellskatt" = ["Körsträckor: MODELLSKATT"]
+"regnr" = ["Körsträckor: REGNR"]

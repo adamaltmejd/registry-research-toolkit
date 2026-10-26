@@ -1,0 +1,17 @@
+# Public ids of scb/r369 (today's scb/internationella-foretag), from the slug pins at fe08cf2a9.
+[tables]
+"Svenska koncerner med dotterbolag i utlandet" = "svenska-koncerner"
+
+[variables]
+"ant-fe" = ["Svenska koncerner med dotterbolag i utlandet: Ant_FE"]
+"antal-anstallda-per-land" = ["Svenska koncerner med dotterbolag i utlandet: Ant_Anst"]
+"antal-foretag-per-land" = ["Svenska koncerner med dotterbolag i utlandet: Ant_Ftg"]
+"bransch" = ["Svenska koncerner med dotterbolag i utlandet: Sni2002_Text"]
+"foretagsnamn" = ["Svenska koncerner med dotterbolag i utlandet: Namn"]
+"land" = ["Svenska koncerner med dotterbolag i utlandet: Land"]
+"land-text" = ["Svenska koncerner med dotterbolag i utlandet: Land_Text"]
+"naringsgren" = ["Svenska koncerner med dotterbolag i utlandet: Sni2002"]
+"oms" = ["Svenska koncerner med dotterbolag i utlandet: Oms"]
+"orgnr" = ["Svenska koncerner med dotterbolag i utlandet: Peorgnr"]
+"referensar" = ["Svenska koncerner med dotterbolag i utlandet: Period"]
+"svarskod" = ["Svenska koncerner med dotterbolag i utlandet: svarskod"]

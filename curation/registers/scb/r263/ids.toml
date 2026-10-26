@@ -1,0 +1,17 @@
+# Public ids of scb/r263 (today's scb/bki), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"ar" = ["Byggkostnadsindex (BKI): Ar"]
+"beskrivnsv" = ["Byggkostnadsindex (BKI): BeskrivnSV"]
+"ib1968" = ["Byggkostnadsindex (BKI): IB1968"]
+"ib2015" = ["Byggkostnadsindex (BKI): IB2015"]
+"id" = ["Byggkostnadsindex (BKI): ID"]
+"indexbas1980" = ["Byggkostnadsindex (BKI): IndexBas1980"]
+"klass" = ["Byggkostnadsindex (BKI): Klass"]
+"lokalvariant" = ["Byggkostnadsindex (BKI): LokalVariant"]
+"manad" = ["Byggkostnadsindex (BKI): Period"]
+"namnsv" = ["Byggkostnadsindex (BKI): NamnSV"]
+"prodgrpkod" = ["Byggkostnadsindex (BKI): ProdGrpKod"]
+"prodkod" = ["Byggkostnadsindex (BKI): ProdKod"]
+"produktgruppsvikt" = ["Byggkostnadsindex (BKI): EStatProdGrpVikt"]

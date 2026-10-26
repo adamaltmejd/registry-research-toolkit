@@ -1,0 +1,11 @@
+# Public ids of scb/r393 (today's scb/transport-energianvandning), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"ar" = ["Transportsektorns energianvändning (inrikes sjöfart): ar"]
+"bransle" = ["Transportsektorns energianvändning (inrikes sjöfart): Bransle"]
+"bransleforbrukning" = ["Transportsektorns energianvändning (inrikes sjöfart): Forbr"]
+"enhet" = ["Transportsektorns energianvändning (inrikes sjöfart): Enhet"]
+"fartygets-namn" = ["Transportsektorns energianvändning (inrikes sjöfart): Fartyg"]
+"scbid" = ["Transportsektorns energianvändning (inrikes sjöfart): SCBId"]
+"svavelhalt" = ["Transportsektorns energianvändning (inrikes sjöfart): Svavelhalt"]

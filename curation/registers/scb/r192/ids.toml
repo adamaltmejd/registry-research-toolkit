@@ -1,0 +1,46 @@
+# Public ids of scb/r192 (today's scb/svenska-utlandsskolor), from the slug pins at fe08cf2a9.
+[tables]
+"Distansundervisning, elever" = "distansundervisning"
+"Grundskolan, elever" = "grundskolan-elever"
+"Gymnasieskolan, elever" = "gymnasieskolan-elever"
+"Kompletterande undervisning, elever" = "kompletterande-undervisning"
+"Lärare" = "larare"
+"Skolledning och undervisningsvolym" = "skolledning"
+"Skolor" = "skolor"
+
+[variables]
+"antal-ovriga-skolledare" = ["Skolledning och undervisningsvolym: SkollMan @ 1999-10-15"]
+"antal-ovriga-skolledare-man" = ["Skolledning och undervisningsvolym: SkollMan @ 2004-10-15"]
+"antal-rektorer" = ["Skolledning och undervisningsvolym: RektMan @ 1999-10-15"]
+"antal-rektorer-man" = ["Skolledning och undervisningsvolym: RektMan @ 2004-10-15"]
+"arskurs" = ["Grundskolan, elever: Ak"]
+"beh" = ["Grundskolan, elever: Beh"]
+"dist-und" = ["Skolor: Dist_Und"]
+"fkl-skola" = ["Skolor: Fkl_Skola"]
+"fodelsear" = ["Grundskolan, elever: FAr"]
+"gr-skola" = ["Skolor: Gr_Skola"]
+"grbeh" = ["Distansundervisning, elever: GrBeh"]
+"grovr" = ["Distansundervisning, elever: GrOvr"]
+"gy-skola" = ["Skolor: Gy_Skola"]
+"gybeh" = ["Distansundervisning, elever: GyBeh"]
+"gyovr" = ["Distansundervisning, elever: GyOvr"]
+"komp-und" = ["Skolor: Komp_Und"]
+"kon" = ["Grundskolan, elever: Kon"]
+"landsnamn-utland" = ["Skolor: Land"]
+"larkat" = ["Lärare: LarKat"]
+"larutb" = ["Lärare: LarUtb"]
+"lopnummer-for-individ" = ["Grundskolan, elever: LopNr"]
+"nat" = ["Grundskolan, elever: Nat"]
+"ort" = ["Skolor: Ort"]
+"rektkv" = ["Skolledning och undervisningsvolym: RektKv"]
+"skolenhetskod" = ["Lärare: Kod @ 2013-10-15"]
+"skolkod" = ["Distansundervisning, elever: Kod"]
+"skollkv" = ["Skolledning och undervisningsvolym: SkollKv"]
+"studievag-gymnasieskolan" = ["Gymnasieskolan, elever: StvKod"]
+"tjanstgoringsomfattning" = ["Lärare: TjOmf"]
+"unddist" = ["Skolledning och undervisningsvolym: UndDist"]
+"undfklass" = ["Skolledning och undervisningsvolym: UndFklass"]
+"undgrund" = ["Skolledning och undervisningsvolym: UndGrund"]
+"undgymn" = ["Skolledning och undervisningsvolym: UndGymn"]
+"undkomp" = ["Skolledning och undervisningsvolym: UndKomp"]
+"utl-skola" = ["Skolor: Utl_Skola"]

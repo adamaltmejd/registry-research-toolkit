@@ -1,0 +1,15 @@
+# Public ids of scb/r283 (today's scb/elpriser-elavtal), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"antal" = ["Elpriser och elavtal: Antal"]
+"ar" = ["Elpriser och elavtal: Ar"]
+"fastavgift" = ["Elpriser och elavtal: FastAvgift"]
+"forsaljningstyp" = ["Elpriser och elavtal: ForsaljningsTyp"]
+"omfavtalhushall" = ["Elpriser och elavtal: OmfAvtalHushall"]
+"omfavtalovriga" = ["Elpriser och elavtal: OmfAvtalOvriga"]
+"orgnr-foretaget" = ["Elpriser och elavtal: Orgnr"]
+"rad" = ["Elpriser och elavtal: Rad"]
+"referensmanad" = ["Elpriser och elavtal: Manad"]
+"rorligavgift" = ["Elpriser och elavtal: RorligAvgift"]
+"scbid" = ["Elpriser och elavtal: SCBid"]

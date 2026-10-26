@@ -1,0 +1,14 @@
+# Public ids of scb/r318 (today's scb/produktionsindex-naringsliv), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"arsmanadslank-fast-kal" = ["Produktionsindex över näringslivet: TixUtvFastKal"]
+"kortnamn" = ["Produktionsindex över näringslivet: Kortnamn"]
+"periodindikator" = ["Produktionsindex över näringslivet: Period"]
+"taggbranschgr" = ["Produktionsindex över näringslivet: TAggBranschgr"]
+"taggbranschgrn" = ["Produktionsindex över näringslivet: TAggBranschgrN"]
+"tixfast" = ["Produktionsindex över näringslivet: TixFast"]
+"tixfastkal" = ["Produktionsindex över näringslivet: TixFastKal"]
+"tixsasongsrensad" = ["Produktionsindex över näringslivet: Tixsasongsrensad"]
+"tixtrend" = ["Produktionsindex över näringslivet: Tixtrend"]
+"tutvixfast" = ["Produktionsindex över näringslivet: TUtvIxFast @ 2013-01-01"]

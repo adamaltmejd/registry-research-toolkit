@@ -1,0 +1,33 @@
+# Public ids of scb/r133 (today's scb/rego), from the slug pins at fe08cf2a9.
+[tables]
+"Arbetsställe, månad" = "arbetsstalle-manad"
+"Arbetsställe, år" = "arbetsstalle-ar"
+"Bransch, kommun, månad" = "bransch-kommun-manad"
+"Bransch, kommun, år" = "bransch-kommun-ar"
+
+[variables]
+"antal-anstallda" = ["Arbetsställe, månad: AEAnst"]
+"antal-anstallda-foretaget" = ["Arbetsställe, månad: jeanst"]
+"antal-arbetsstallen" = ["Arbetsställe, månad: aeantje"]
+"antal-manader" = ["Arbetsställe, år: antal_manader"]
+"ar" = ["Arbetsställe, månad: RedAr"]
+"avdragsgill-ingaende-moms" = ["Arbetsställe, månad: iskatt"]
+"belagenhetsadress-postnr" = ["Arbetsställe, månad: bpostnr"]
+"cfar-nummer" = ["Arbetsställe, månad: cfarnr"]
+"euexport" = ["Arbetsställe, månad: euexport"]
+"export" = ["Arbetsställe, månad: export"]
+"export-oms" = ["Arbetsställe, år: export_oms"]
+"export-varor-eg-land" = ["Arbetsställe, månad: omsvareg"]
+"inrikes-oms-exkl-moms" = ["Arbetsställe, år: inrikes_oms_exkl_moms"]
+"kommun" = ["Arbetsställe, månad: kommun"]
+"m12-utgaende-moms-6" = ["Arbetsställe, månad: MomsTur"]
+"moms" = ["Arbetsställe, år: moms"]
+"momsfri-omsattning" = ["Arbetsställe, månad: skfoms"]
+"naringsgren-arbetsstalle" = ["Arbetsställe, månad: Ng1"]
+"naringsgren-foretag" = ["Arbetsställe, månad: JEng1"]
+"omssverige" = ["Arbetsställe, månad: omssverige"]
+"person-orgnr" = ["Arbetsställe, månad: peorgnr"]
+"redman" = ["Arbetsställe, månad: RedMan"]
+"summa-utgaende-moms" = ["Arbetsställe, månad: uskatt"]
+"utgaende-moms-12-m11" = ["Arbetsställe, månad: MomsMat"]
+"utgaende-moms-25-m10" = ["Arbetsställe, månad: MomsFull"]
