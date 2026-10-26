@@ -219,9 +219,10 @@ verb has zero entries, so none is deleted instead of converted:
   | `[[variant]]` `name` (→ `errata.table`)   | 3       | 1     |
   | `coding.warning`                          | 1       | 1     |
 
-`errata.delivery`, `errata.table` and `representation.parallel` cases carry no record
-targets, so the harness needs an oracle for each before the run: Python's added edition,
-variant name and parallel-group effects. They are recorded as failures (`no oracle yet`)
+`errata.delivery`, `errata.table`, `representation.parallel` and
+`representation.period_family` have no harness check yet: the harness needs an oracle
+for each before the run (Python's added edition, variant name, parallel-group and
+period-family effects). They are recorded as failures (`no oracle yet`)
 until then. The same holds for the three coding entries on added occurrences: their
 oracle is that Python's coding case targets exactly the occurrences the `errata.column`
 or `errata.delivered` entry on the same table and column adds. The harness compares the
