@@ -122,7 +122,7 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   - `VardemangderValidDates`, applied at read time;
   - `UnikaRegisterOchVariabler` and `Identifierare` (the flags). `Timeseries` moves to C.
 - **The delivery-name grammar** in `curation/readers/scb.toml`.
-- **The LISA workbook reader.**
+- **The LISA workbook reader**, its rows a register of their own until D binds them.
 - **SCB ledgers** generated from today's slug pins.
 
 **Exit:**

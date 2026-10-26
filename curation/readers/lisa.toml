@@ -1,0 +1,16 @@
+# SCB's LISA variable list (crates/reg-readers/src/lisa.rs). Names are matched
+# case-insensitively after trimming.
+
+# Header aliases: a sheet's header row is the first whose first cell is a `column` alias.
+[headers]
+column = ["kolumnnamn", "kolumnamn", "variabelnamn"]
+label = ["beskrivning", "variabel i klartext"]
+years = ["år", "årgång"]
+sensitive = ["känslig1"]
+
+# Sensitivity cells. "I vissa fall" (in some cases) is sensitive, as SCB's
+# KansligVariabelIbland is.
+[sensitive]
+"ja" = true
+"i vissa fall" = true
+"nej" = false
