@@ -252,11 +252,14 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **Days.** Readers, frames and resolve work in inclusive ISO days through `reg-core`'s
   interval algebra; the emitter writes half-open day numbers. Open time is
   `0001-01-01..9999-12-31`, so `open_end` is the day after `9999-12-31`.
-- **Unstated bounds.** An occurrence's unstated bound is open; the T1 clamp then limits
-  it to its table's stated bounds, else the register's. A table with neither and no
-  dated occurrence is timeless. An occurrence wholly outside its table's coverage is
+- **Unstated bounds.** An occurrence's unstated bound is its table's stated bound, else
+  the register's, else open. The T1 clamp cuts only a stated bound that reaches past
+  them, so T1 records what a source claimed, never what it left silent. A table with no
+  stated bound and no dated occurrence is timeless, and the register's coverage is the
+  hull of its dated tables. An occurrence wholly outside its table's coverage is
   `rejected`, and a variable left with no used occurrence is withheld with its T1
-  notices, since a variable needs a segment.
+  notices, since a variable needs a segment. An occurrence documented to end before it
+  starts is refused, located at its source row.
 - **Segments hold whole occurrences.** The variable's overlapping occurrences in one
   table form one segment; adjacent ones of one form join. A segment is ambiguous when
   its occurrences disagree on label, type or value set, or when another variable claims

@@ -105,13 +105,7 @@ pub(crate) fn error(input: &str, message: impl Into<String>) -> ReadError {
 /// frame scopes keys to their register.
 #[must_use]
 pub fn name_key(column: &str) -> String {
-    format!("n:{}", fold(column))
-}
-
-/// The column identity fold: `reg-core`'s `fold_identity` of the trimmed name.
-#[must_use]
-pub fn fold(column: &str) -> String {
-    reg_core::fold_identity(column.trim())
+    format!("n:{}", reg_core::fold_identity(column))
 }
 
 /// A reader config file, parsed with unknown keys refused.

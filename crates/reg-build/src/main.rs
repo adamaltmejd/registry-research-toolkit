@@ -145,11 +145,15 @@ fn digest(root: &Path, files: &BTreeSet<String>) -> Result<(String, i64), String
     Ok((reg_frame::hex(&hasher.finalize()), total))
 }
 
-/// Every file under `dir`, relative to it, `/`-separated; symlinks are followed.
+/// Every file under `dir`, relative to it, `/`-separated; symlinks are followed and
+/// dotfiles (host litter such as `.DS_Store`) skipped.
 fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), String> {
     for entry in std::fs::read_dir(dir).map_err(|e| format!("{}: {e}", dir.display()))? {
         let entry = entry.map_err(|e| e.to_string())?;
         let name = entry.file_name().to_string_lossy().into_owned();
+        if name.starts_with('.') {
+            continue;
+        }
         let rel = if prefix.is_empty() {
             name
         } else {

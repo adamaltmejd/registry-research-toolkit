@@ -6,8 +6,9 @@
 //! - The tables sheet states tables (deldatamängder) with their bounds and frequency.
 //! - The variables sheet states one occurrence per row: the column, its table, label,
 //!   definition, type, linkage flag, bounds and code list.
-//! - Code-list sheets state codes; a variable binds one when its link cell names the
-//!   sheet exactly, else an inline enumeration in its value-set cell is read
+//! - Code-list sheets state codes; a variable binds one when its link cell names a
+//!   code-list sheet with codes exactly (the sheet's rows for the variable when it has
+//!   a variable column), else an inline enumeration in its value-set cell is read
 //!   conservatively, else the link text is kept as code-system evidence.
 //!
 //! Bounds are year (`2001`), month (`200101`), day (`20010101`, an ISO date or a date
@@ -24,10 +25,11 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use calamine::{Data, Range, Reader, Xlsx, open_workbook};
+use reg_core::fold_identity;
 use reg_frame::{Frame, Item, Locator, Occurrence, Record, Register, Table, ValueSet};
 use serde::Deserialize;
 
-use crate::{ReadError, ReadOutput, config, error, fold, month_end, name_key, nonblank};
+use crate::{ReadError, ReadOutput, config, error, month_end, name_key, nonblank};
 
 /// `curation/readers/sos-workbook.toml`.
 #[derive(Debug, Deserialize)]
@@ -202,8 +204,7 @@ pub fn read(
         let rows = cx.codelist(name, &sheet(name)?);
         codelists.insert(name.clone(), rows);
     }
-    let sheets: BTreeSet<String> = names.iter().cloned().collect();
-    cx.variables(&variables, &sheet(&variables)?, &codelists, &sheets)?;
+    cx.variables(&variables, &sheet(&variables)?, &codelists)?;
 
     let mut out = cx.out;
     out.frame = Frame::new(cx.records);
@@ -325,7 +326,7 @@ impl Context<'_> {
                 continue;
             };
             out.push(CodeRow {
-                column: cell(row, variable).map(|c| fold(&c)),
+                column: cell(row, variable).map(|c| fold_identity(&c)),
                 item: Item {
                     code,
                     label: cell(row, label),
@@ -355,7 +356,6 @@ impl Context<'_> {
         sheet: &str,
         range: &Range<Data>,
         codelists: &BTreeMap<String, Vec<CodeRow>>,
-        sheets: &BTreeSet<String>,
     ) -> Result<(), ReadError> {
         let h = &self.config.variables;
         let Some((header, body)) = split_header(range) else {
@@ -371,18 +371,39 @@ impl Context<'_> {
         let (table_col, label, definition) = (col(&h.table), col(&h.label), col(&h.definition));
         let (codes, link, dtype) = (col(&h.codes), col(&h.link), col(&h.dtype));
         let (identifier, from, to) = (col(&h.identifier), col(&h.from), col(&h.to));
+        // A table cell names its tables-sheet row by the fold of its name or its label:
+        // sources cite `lvm_utskr` for the row labelled `LVM_UTSKR`. Names win.
+        let tables: Vec<&Table> = self
+            .records
+            .iter()
+            .filter_map(|r| match r {
+                Record::Table(t) => Some(t),
+                _ => None,
+            })
+            .collect();
+        let mut declared: BTreeMap<String, String> = BTreeMap::new();
+        let keys = tables.iter().map(|t| (&t.table, t));
+        for (key, t) in keys.chain(tables.iter().filter_map(|t| Some((t.name.as_ref()?, t)))) {
+            declared
+                .entry(fold_identity(key))
+                .or_insert_with(|| t.table.clone());
+        }
         for (row_number, row) in body {
             let Some(column_name) = cell(row, Some(name_col)) else {
                 continue;
             };
             let at = self.locator(sheet, row_number);
-            let table = cell(row, table_col).unwrap_or_default();
+            let table = cell(row, table_col).map_or_else(String::new, |t| {
+                declared.get(&fold_identity(&t)).cloned().unwrap_or(t)
+            });
             let (lo, hi) = self.bounds(row, from, to, &at);
             let link_text = cell(row, link);
-            let pointer = link_text.as_deref().and_then(|t| self.pointer(t, sheets));
-            let (valueset, code_system) = if let Some(target) = pointer {
-                let rows = codelists.get(&target).map_or(&[][..], Vec::as_slice);
-                (self.bind(&target, rows, &column_name), None)
+            let bound = link_text
+                .as_deref()
+                .and_then(|t| self.pointer(t, codelists))
+                .and_then(|target| self.bind(&target, &codelists[&target], &column_name, &at));
+            let (valueset, code_system) = if bound.is_some() {
+                (bound, None)
             } else {
                 let inline = cell(row, codes).and_then(|t| inline_codes(&t));
                 let hash = inline.map(|items| {
@@ -422,15 +443,18 @@ impl Context<'_> {
         Ok(())
     }
 
-    /// The sheet a link cell names exactly: a configured prefix, the sheet name, then
-    /// nothing, `!` or a cell reference.
-    fn pointer(&self, link: &str, sheets: &BTreeSet<String>) -> Option<String> {
+    /// The code-list sheet with codes a link cell names exactly: a configured prefix,
+    /// the sheet name, then nothing, `!` or a cell reference.
+    fn pointer(&self, link: &str, codelists: &BTreeMap<String, Vec<CodeRow>>) -> Option<String> {
         let stripped = self
             .config
             .links
             .prefixes
             .iter()
-            .find_map(|p| link.strip_prefix(p.as_str()))
+            .find_map(|p| {
+                let head = link.get(..p.len())?;
+                (head.to_lowercase() == p.to_lowercase()).then(|| &link[p.len()..])
+            })
             .unwrap_or(link)
             .trim();
         let (name, reference) = stripped.split_once('!').unwrap_or((stripped, ""));
@@ -441,29 +465,39 @@ impl Context<'_> {
                 .all(|c| c.is_ascii_digit())
                 && reference.starts_with(|c: char| c.is_ascii_alphabetic());
         let name = name.trim().to_lowercase();
-        sheets
+        codelists
             .iter()
-            .find(|s| is_reference && s.to_lowercase() == name)
-            .cloned()
+            .find(|(s, rows)| is_reference && !rows.is_empty() && s.to_lowercase() == name)
+            .map(|(s, _)| s.clone())
     }
 
     /// The value set a variable binds from a code-list sheet: the rows naming the
-    /// variable when any do, else the whole sheet.
-    fn bind(&mut self, sheet: &str, rows: &[CodeRow], column: &str) -> Option<String> {
-        if rows.is_empty() {
+    /// variable when the sheet has a variable column, else the whole sheet. A sheet
+    /// whose variable column never names the variable binds nothing: its codes belong
+    /// to other variables.
+    fn bind(
+        &mut self,
+        sheet: &str,
+        rows: &[CodeRow],
+        column: &str,
+        at: &Locator,
+    ) -> Option<String> {
+        let key = fold_identity(column);
+        let items: Vec<Item> = if rows.iter().any(|r| r.column.is_some()) {
+            rows.iter()
+                .filter(|r| r.column.as_deref() == Some(key.as_str()))
+                .map(|r| r.item.clone())
+                .collect()
+        } else {
+            rows.iter().map(|r| r.item.clone()).collect()
+        };
+        if items.is_empty() {
+            self.warn(&format!(
+                "{}: {column} links {sheet:?}, which states codes only for other variables",
+                at.at
+            ));
             return None;
         }
-        let key = fold(column);
-        let named: Vec<Item> = rows
-            .iter()
-            .filter(|r| r.column.as_deref() == Some(key.as_str()))
-            .map(|r| r.item.clone())
-            .collect();
-        let items = if named.is_empty() {
-            rows.iter().map(|r| r.item.clone()).collect()
-        } else {
-            named
-        };
         let set = ValueSet::new(
             items,
             Some(sheet.to_owned()),

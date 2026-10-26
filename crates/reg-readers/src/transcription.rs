@@ -21,6 +21,24 @@ use serde::Deserialize;
 
 use crate::{ReadError, ReadOutput, config, error, name_key, nonblank};
 
+const REGISTERS: &[&str] = &["register", "name", "description", "from", "to"];
+const TABLES: &[&str] = &["register", "table", "name", "description", "from", "to"];
+const COLUMNS: &[&str] = &[
+    "table",
+    "column",
+    "label",
+    "definition",
+    "data_type",
+    "unit",
+    "codes",
+    "code_system",
+    "sensitive",
+    "identifier",
+    "from",
+    "to",
+];
+const CODES: &[&str] = &["code", "label"];
+
 /// `curation/readers/transcription.toml`.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -51,10 +69,10 @@ pub fn read(
 ) -> Result<ReadOutput, ReadError> {
     let mut out = ReadOutput::default();
     let mut records = Vec::new();
-    let registers = rows(root, &format!("{rel}/registers.csv"), &mut out)?;
+    let registers = rows(root, &format!("{rel}/registers.csv"), REGISTERS, &mut out)?;
     let tables_path = format!("{rel}/tables.csv");
     let tables = if root.join(&tables_path).is_file() {
-        rows(root, &tables_path, &mut out)?
+        rows(root, &tables_path, TABLES, &mut out)?
     } else {
         Vec::new()
     };
@@ -92,7 +110,7 @@ pub fn read(
         let empty = Vec::new();
         let tables = declared.get(&register).unwrap_or(&empty);
         let path = format!("{rel}/{register}.csv");
-        for (at, row) in rows(root, &path, &mut out)? {
+        for (at, row) in rows(root, &path, COLUMNS, &mut out)? {
             let column = required(&row, "column", &at)?;
             let valueset = codes(root, rel, &row, &at, &mut out, &mut records)?;
             let targets: Vec<String> = match field(&row, "table") {
@@ -100,6 +118,12 @@ pub fn read(
                 Some(list) => list.split(';').map(|t| t.trim().to_owned()).collect(),
             };
             for table in targets {
+                if table.is_empty() && field(&row, "table").is_some() {
+                    return Err(error(
+                        &at.input,
+                        format!("{}: the table list has an empty entry", at.at),
+                    ));
+                }
                 if !table.is_empty() && !tables.contains(&table) {
                     return Err(error(
                         &at.input,
@@ -135,14 +159,26 @@ pub fn read(
 
 type Row = BTreeMap<String, String>;
 
-/// The data rows of one CSV, each with its locator (`row=N`, the header is row 1).
-fn rows(root: &Path, rel: &str, out: &mut ReadOutput) -> Result<Vec<(Locator, Row)>, ReadError> {
+/// The data rows of one CSV, each with its locator (`row=N`, the header is row 1). A
+/// header outside `known` is refused, so a misspelled column is not silently lost.
+fn rows(
+    root: &Path,
+    rel: &str,
+    known: &[&str],
+    out: &mut ReadOutput,
+) -> Result<Vec<(Locator, Row)>, ReadError> {
     let mut reader =
         csv::Reader::from_path(root.join(rel)).map_err(|e| error(rel, e.to_string()))?;
     let headers = reader
         .headers()
         .map_err(|e| error(rel, e.to_string()))?
         .clone();
+    if let Some(unknown) = headers.iter().find(|h| !known.contains(h)) {
+        return Err(error(
+            rel,
+            format!("unknown column {unknown:?}; expected {}", known.join(", ")),
+        ));
+    }
     if !out.files.iter().any(|f| f == rel) {
         out.files.push(rel.to_owned());
     }
@@ -210,7 +246,7 @@ fn codes(
     let (items, name, locator) = if let Some(name) = text.strip_prefix('@') {
         let path = format!("{rel}/codes/{name}.csv");
         let mut items = Vec::new();
-        for (at, row) in rows(root, &path, out)? {
+        for (at, row) in rows(root, &path, CODES, out)? {
             items.push(Item {
                 code: required(&row, "code", &at)?,
                 label: field(&row, "label"),
@@ -231,14 +267,27 @@ fn codes(
                     format!("{}: codes entry {pair:?} is not code=label", at.at),
                 ));
             };
+            let Some(code) = nonblank(code) else {
+                return Err(error(
+                    &at.input,
+                    format!("{}: codes entry {pair:?} has no code", at.at),
+                ));
+            };
             items.push(Item {
-                code: code.trim().to_owned(),
+                code,
                 label: nonblank(label),
                 parent: None,
             });
         }
         (items, None, at.clone())
     };
+    let mut seen = std::collections::BTreeSet::new();
+    if let Some(dup) = items.iter().find(|i| !seen.insert(&i.code)) {
+        return Err(error(
+            &locator.input,
+            format!("{}: code {:?} is stated twice", at.at, dup.code),
+        ));
+    }
     let set = ValueSet::new(items, name, locator);
     let hash = set.hash.clone();
     records.push(Record::ValueSet(set));

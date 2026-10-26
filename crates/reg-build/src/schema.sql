@@ -32,7 +32,8 @@ CREATE TABLE text (
   body TEXT NOT NULL
 ) STRICT;
 
--- Folded column names: NFC + lower case + trim. Identity and header lookup use these.
+-- Folded column names (reg-core fold_identity; NFC is open, crates/DESIGN.md).
+-- Identity and header lookup use these.
 CREATE TABLE name_fold (
   id     INTEGER PRIMARY KEY,
   folded TEXT NOT NULL UNIQUE
@@ -265,7 +266,7 @@ CREATE TABLE corr_map (
   PRIMARY KEY (correspondence_id, source_code_text, target_code_text)
 ) STRICT, WITHOUT ROWID;
 
--- Segments: maximal runs of one form of a variable in one table (§1.2). One folded
+-- Segments: maximal runs of one form of a variable in one table. One folded
 -- spelling per (variable, table) at a time. spelling_id = exact spelling of the latest
 -- primary occurrence.
 -- Form fields are NULL where the state is 'ambiguous' and the claimants disagree.
@@ -431,7 +432,7 @@ CREATE TABLE var_set_member (
 CREATE INDEX var_set_member_variable ON var_set_member(variable_id);
 
 -- Findings shown to readers: open review items and notices (including acked caveats).
--- code is a rule code from design §4.5 plus its sub-kind: 'F1:type-change',
+-- code is a rule code plus its sub-kind: 'F1:type-change',
 -- 'F2:ambiguous', 'F7:edition-disagreement', 'F9:unparsed-delivery', 'T1:clamp'.
 CREATE TABLE finding (
   id               INTEGER PRIMARY KEY,

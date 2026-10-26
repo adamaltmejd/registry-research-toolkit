@@ -102,10 +102,6 @@ fn end(iso: &str) -> i64 {
     start(iso) + 1
 }
 
-fn fold(s: &str) -> String {
-    reg_core::fold_identity(s.trim())
-}
-
 #[derive(Default)]
 struct Rows {
     tables: BTreeMap<&'static str, Vec<Vec<Cell>>>,
@@ -142,13 +138,33 @@ const KEYS: &[(&str, &[usize])] = &[
     ("alias", &[0, 1]),
 ];
 
-/// Write `catalog` to `out` through a scratch file next to it, then run the
-/// schema's post-write checks on the result.
+/// Write `catalog` to `out`: build a scratch file next to it, compact it into a staged
+/// file, run the schema's post-write checks on that and only then replace `out`. A
+/// failed build leaves `out` as it was.
 ///
 /// # Errors
 /// A SQLite failure, or a post-write check that returns rows.
-#[allow(clippy::too_many_lines)]
 pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
+    let name = out
+        .file_name()
+        .map_or_else(String::new, |n| n.to_string_lossy().into_owned());
+    let scratch = out.with_file_name(format!(".{name}.scratch"));
+    let staged = out.with_file_name(format!(".{name}.staged"));
+    let result = stage(catalog, &scratch, &staged)
+        .and_then(|()| check(&staged))
+        .and_then(|()| {
+            std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))
+        });
+    for path in [&scratch, &staged] {
+        if path.exists() {
+            let _ = std::fs::remove_file(path);
+        }
+    }
+    result
+}
+
+#[allow(clippy::too_many_lines)]
+fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String> {
     let mut rows = Rows::default();
     let sql = |e: rusqlite::Error| e.to_string();
 
@@ -214,8 +230,8 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
             occurrence_keys.push((
                 (
                     pid_of_table(r, occ.table),
-                    occ.period.as_ref().map(|p| start(&p.0)),
-                    fold(&x.column),
+                    start(&occ.period.0),
+                    reg_core::fold_identity(&x.column),
                     x.source_key.clone(),
                     x.label.clone(),
                     x.locator.clone(),
@@ -248,7 +264,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                 Cell::Str("provider".into()),
                 Cell::Int(pid),
                 Cell::Null,
-                Cell::Str(fold(&p.pid)),
+                Cell::Str(reg_core::fold_identity(&p.pid)),
             ],
         );
     }
@@ -266,17 +282,16 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                 (lo.min(start(&p.0)), hi.max(end(&p.1)))
             })
         };
-        let (rlo, rhi) = hull(&mut r.tables.iter().flat_map(|t| &t.spans));
         rows.push(
             "register",
             vec![
                 Cell::Int(register_row),
                 Cell::Int(pid),
                 Cell::Str(reg_pid.clone()),
-                Cell::Text(reg.name.clone().unwrap_or_else(|| reg.register.clone())),
+                opt_text(reg.name.as_ref()),
                 opt_text(reg.description.as_ref()),
-                Cell::Int(rlo),
-                Cell::Int(rhi),
+                Cell::Int(start(&r.coverage.0)),
+                Cell::Int(end(&r.coverage.1)),
             ],
         );
         rows.push(
@@ -286,27 +301,20 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                 Cell::Str("register".into()),
                 Cell::Int(register_row),
                 Cell::Null,
-                Cell::Str(fold(&reg.register)),
+                Cell::Str(reg_core::fold_identity(&reg.register)),
             ],
         );
 
         for (t, table) in r.tables.iter().enumerate() {
             let tid = table_id[&(ri, t)];
             let (lo, hi) = hull(&mut table.spans.iter());
-            let name = table.table.name.clone().or_else(|| {
-                if table.slug.is_none() {
-                    Some(reg.name.clone().unwrap_or_else(|| reg.register.clone()))
-                } else {
-                    Some(table.table.table.clone())
-                }
-            });
             rows.push(
                 "tbl",
                 vec![
                     Cell::Int(tid),
                     Cell::Int(register_row),
                     Cell::Str(pid_of_table(r, t)),
-                    opt_text(name.as_ref()),
+                    opt_text(table.table.name.as_ref()),
                     opt_text(table.table.description.as_ref()),
                     Cell::Str("data".into()),
                     Cell::Int(i64::from(table.slug.is_none())),
@@ -340,7 +348,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                         Cell::Str("table".into()),
                         Cell::Int(tid),
                         Cell::Int(register_row),
-                        Cell::Str(fold(slug)),
+                        Cell::Str(reg_core::fold_identity(slug)),
                     ],
                 );
             }
@@ -367,7 +375,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                     Cell::Str("variable".into()),
                     Cell::Int(vid),
                     Cell::Int(register_row),
-                    Cell::Str(fold(&variable.slug)),
+                    Cell::Str(reg_core::fold_identity(&variable.slug)),
                 ],
             );
             for run in &variable.texts {
@@ -384,7 +392,11 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                     ],
                 );
             }
-            let folds: BTreeSet<String> = variable.spellings.iter().map(|s| fold(s)).collect();
+            let folds: BTreeSet<String> = variable
+                .spellings
+                .iter()
+                .map(|s| reg_core::fold_identity(s))
+                .collect();
             for f in folds {
                 rows.push(
                     "alias",
@@ -398,7 +410,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                         Cell::Int(segment_id[&(ri, v, s)]),
                         Cell::Int(vid),
                         Cell::Int(table_id[&(ri, segment.table)]),
-                        Cell::Fold(fold(&segment.spelling)),
+                        Cell::Fold(reg_core::fold_identity(&segment.spelling)),
                         Cell::Int(start(&segment.period.0)),
                         Cell::Int(end(&segment.period.1)),
                         Cell::Spelling(segment.spelling.clone()),
@@ -436,8 +448,8 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                     Cell::Int(oid),
                     Cell::Int(table_id[&(ri, occ.table)]),
                     Cell::Null,
-                    opt_int(occ.period.as_ref().map(|p| start(&p.0))),
-                    opt_int(occ.period.as_ref().map(|p| end(&p.1))),
+                    Cell::Int(start(&occ.period.0)),
+                    Cell::Int(end(&occ.period.1)),
                     Cell::Spelling(x.column.clone()),
                     Cell::Str(x.source_key.clone()),
                     opt_text(x.label.as_ref()),
@@ -449,27 +461,11 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                     Cell::Null,
                     opt_int(x.valueset.as_deref().map(|h| valueset_id[h])),
                     Cell::Null,
-                    Cell::Str(
-                        if x.valueset.is_some() || x.code_system.is_some() {
-                            "yes"
-                        } else {
-                            "unknown"
-                        }
-                        .into(),
-                    ),
+                    Cell::Str(reg_resolve::coded(x).into()),
                     flag(x.sensitive),
                     flag(x.identifier),
                     Cell::Null,
-                    Cell::Str(
-                        if x.identifier == Some(true) {
-                            "row_key"
-                        } else if x.valueset.is_some() {
-                            "code"
-                        } else {
-                            "measure"
-                        }
-                        .into(),
-                    ),
+                    Cell::Str(reg_resolve::role(x).into()),
                     Cell::Str("unknown".into()),
                     opt_int(occ.variable.map(|v| variable_id[&(ri, v)])),
                     opt_int(
@@ -504,7 +500,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                         Cell::Str("rule".into()),
                         Cell::Null,
                         Cell::Str("T1".into()),
-                        opt_str(occ.period.as_ref().map(render).as_ref()),
+                        Cell::Str(render(&occ.period)),
                         opt_str(occ.stated.as_ref().map(render).as_ref()),
                     ],
                 );
@@ -513,7 +509,6 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
 
         for f in &r.findings {
             let (kind, subject) = match f.subject {
-                Subject::Table(t) => ("table", table_id[&(ri, t)]),
                 Subject::Variable(v) => ("variable", variable_id[&(ri, v)]),
                 Subject::Segment(v, s) => ("segment", segment_id[&(ri, v, s)]),
                 Subject::Occurrence(o) => ("occurrence", occurrence_id[&(ri, o)]),
@@ -623,7 +618,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
                 folds.insert(s.clone());
             }
             Cell::Spelling(s) => {
-                folds.insert(fold(s));
+                folds.insert(reg_core::fold_identity(s));
                 spellings.insert(s.clone());
             }
             _ => {}
@@ -654,19 +649,18 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
             vec![
                 Cell::Int(*i),
                 Cell::Str((*exact).to_owned()),
-                Cell::Int(fold_id[fold(exact).as_str()]),
+                Cell::Int(fold_id[reg_core::fold_identity(exact).as_str()]),
             ],
         );
     }
 
     // Write.
-    let scratch = out.with_extension("scratch");
-    for path in [&scratch, &out.to_path_buf()] {
+    for path in [scratch, staged] {
         if path.exists() {
             std::fs::remove_file(path).map_err(|e| format!("{}: {e}", path.display()))?;
         }
     }
-    let mut db = Connection::open(&scratch).map_err(sql)?;
+    let mut db = Connection::open(scratch).map_err(sql)?;
     db.execute_batch(
         "PRAGMA journal_mode = OFF; PRAGMA synchronous = OFF; PRAGMA auto_vacuum = NONE;",
     )
@@ -727,11 +721,9 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
         db.execute_batch(statement).map_err(sql)?;
     }
     db.execute_batch("ANALYZE;").map_err(sql)?;
-    db.execute("VACUUM INTO ?1", [out.to_string_lossy().as_ref()])
+    db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])
         .map_err(sql)?;
-    drop(db);
-    std::fs::remove_file(&scratch).map_err(|e| format!("{}: {e}", scratch.display()))?;
-    check(out)
+    Ok(())
 }
 
 /// The schema's post-write checks (`checks.sql`): each must return no rows.

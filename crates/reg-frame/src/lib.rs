@@ -10,8 +10,6 @@
 //! Frames serialize as canonical JSONL: one record per line, keys sorted, no floats,
 //! records sorted. Two pins of one input give two diffable frames.
 
-use std::collections::BTreeMap;
-
 use serde::Serialize;
 use sha2::{Digest, Sha256};
 
@@ -155,51 +153,15 @@ impl Frame {
 }
 
 /// `value` as one line of canonical JSON: object keys sorted, no insignificant
-/// whitespace. Keys are sorted here rather than trusted to `serde_json::Map`, whose
-/// order depends on a feature another workspace crate may enable.
+/// whitespace. Frame types hold no floats (`crates/DESIGN.md`).
 ///
 /// # Panics
-/// On a float, which a canonical payload never holds (`crates/DESIGN.md`).
+/// Never: frame types serialize to JSON.
 #[must_use]
 pub fn canonical_line<T: Serialize>(value: &T) -> String {
-    fn write(value: &serde_json::Value, out: &mut String) {
-        match value {
-            serde_json::Value::Object(map) => {
-                let sorted: BTreeMap<&String, &serde_json::Value> = map.iter().collect();
-                out.push('{');
-                for (i, (key, value)) in sorted.into_iter().enumerate() {
-                    if i > 0 {
-                        out.push(',');
-                    }
-                    out.push_str(&serde_json::to_string(key).expect("a string serializes"));
-                    out.push(':');
-                    write(value, out);
-                }
-                out.push('}');
-            }
-            serde_json::Value::Array(items) => {
-                out.push('[');
-                for (i, item) in items.iter().enumerate() {
-                    if i > 0 {
-                        out.push(',');
-                    }
-                    write(item, out);
-                }
-                out.push(']');
-            }
-            serde_json::Value::Number(n) => {
-                assert!(!n.is_f64(), "canonical JSON holds no floats");
-                out.push_str(&n.to_string());
-            }
-            scalar => out.push_str(&serde_json::to_string(scalar).expect("a scalar serializes")),
-        }
-    }
-    let mut out = String::new();
-    write(
-        &serde_json::to_value(value).expect("frame records serialize"),
-        &mut out,
-    );
-    out
+    let mut tree = serde_json::to_value(value).expect("frame records serialize");
+    tree.sort_all_objects();
+    tree.to_string()
 }
 
 /// Lowercase hex of `bytes`.

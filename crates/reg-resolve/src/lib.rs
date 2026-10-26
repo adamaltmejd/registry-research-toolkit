@@ -19,7 +19,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{Interval, intersect, merge, next_iso_day, prev_iso_day};
+use reg_core::{Interval, fold_identity, intersect, merge, next_iso_day, prev_iso_day};
 use reg_frame::{Locator, Occurrence, Record, Register, Table};
 use serde::{Deserialize, Serialize};
 
@@ -40,7 +40,10 @@ pub struct Ledger {
 
 #[derive(Debug)]
 pub struct Resolved {
+    /// The register, named: its handle when the source gives no name.
     pub register: Register,
+    /// The hull of its dated tables' coverage; open when every table is timeless.
+    pub coverage: Interval,
     pub tables: Vec<ResolvedTable>,
     pub variables: Vec<Variable>,
     pub occurrences: Vec<ResolvedOccurrence>,
@@ -50,6 +53,7 @@ pub struct Resolved {
 
 #[derive(Debug)]
 pub struct ResolvedTable {
+    /// The table, named: the implicit one by its register, an implied one by its handle.
     pub table: Table,
     /// The table's id segment; `None` for the implicit table, which takes the
     /// register's id.
@@ -62,7 +66,7 @@ pub struct ResolvedTable {
 #[derive(Debug)]
 pub struct Variable {
     pub slug: String,
-    pub minted: bool,
+    pub pinned: bool,
     pub source_key: String,
     pub fold: String,
     /// Every exact spelling the variable was documented under.
@@ -102,8 +106,7 @@ pub struct ResolvedOccurrence {
     pub occurrence: Occurrence,
     /// Index into [`Resolved::tables`].
     pub table: usize,
-    /// The placed period; `None` when unplaced.
-    pub period: Option<Interval>,
+    pub period: Interval,
     /// The period before the T1 clamp, when the clamp changed it.
     pub stated: Option<Interval>,
     pub variable: Option<usize>,
@@ -114,7 +117,6 @@ pub struct ResolvedOccurrence {
 
 #[derive(Debug)]
 pub enum Subject {
-    Table(usize),
     Variable(usize),
     Segment(usize, usize),
     Occurrence(usize),
@@ -133,10 +135,10 @@ pub struct Finding {
 #[derive(Debug, Default, Serialize)]
 pub struct Report {
     pub tables: usize,
+    /// Named tables only occurrences cite; the implicit table is not one.
     pub implied_tables: usize,
     pub timeless_tables: usize,
     pub occurrences: usize,
-    pub unplaced: usize,
     pub clamped: usize,
     pub rejected: usize,
     pub withheld_variables: usize,
@@ -150,25 +152,38 @@ pub struct Report {
     pub unminted: Vec<String>,
     pub unplaced_ids: Vec<String>,
     pub merged_ids: Vec<String>,
+    /// Ledger ids whose anchors reach several variables; the first free one takes it.
+    pub split_ids: Vec<String>,
 }
 
 /// Resolve one register from its records (the register, its tables and occurrences)
 /// and its ledger.
 ///
 /// # Errors
-/// No register record among `records`, or a ledger variable id equal to a table id.
+/// No register record or two, no occurrence, an occurrence documented to end before
+/// it starts, an id that is not a slug, or a ledger variable id equal to a table id.
 ///
 /// # Panics
-/// Never: every variable is built from at least one placed occurrence.
+/// Never: every variable is built from at least one used occurrence.
 #[allow(clippy::too_many_lines)]
 pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> {
-    let register = records
+    let registers: Vec<&Register> = records
         .iter()
-        .find_map(|r| match r {
-            Record::Register(r) => Some(r.clone()),
+        .filter_map(|r| match r {
+            Record::Register(r) => Some(r),
             _ => None,
         })
-        .ok_or("no register record")?;
+        .collect();
+    let mut register = match registers[..] {
+        [r] => r.clone(),
+        [] => return Err("no register record".to_owned()),
+        [a, b, ..] => {
+            return Err(format!(
+                "stated twice, at {}:{} and {}:{}",
+                a.locator.input, a.locator.at, b.locator.input, b.locator.at
+            ));
+        }
+    };
     let mut report = Report::default();
     let mut findings = Vec::new();
     let occurrences: Vec<&Occurrence> = records
@@ -178,6 +193,15 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             _ => None,
         })
         .collect();
+    register
+        .name
+        .get_or_insert_with(|| register.register.clone());
+    if occurrences.is_empty() {
+        return Err(format!(
+            "states no columns ({}:{})",
+            register.locator.input, register.locator.at
+        ));
+    }
 
     // Tables: stated ones, then those only occurrences name (the implicit one included).
     let mut stated: BTreeMap<&str, &Table> = BTreeMap::new();
@@ -194,9 +218,11 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     let mut tables: Vec<ResolvedTable> = Vec::new();
     let mut table_index = BTreeMap::new();
     for handle in handles {
-        let table = stated.get(handle).map_or_else(
+        let mut table = stated.get(handle).map_or_else(
             || {
-                report.implied_tables += 1;
+                if !handle.is_empty() {
+                    report.implied_tables += 1;
+                }
                 Table {
                     provider: register.provider.clone(),
                     register: register.register.clone(),
@@ -211,6 +237,13 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             },
             |t| (*t).clone(),
         );
+        table.name.get_or_insert_with(|| {
+            if handle.is_empty() {
+                register.name.clone().unwrap_or_default()
+            } else {
+                handle.to_owned()
+            }
+        });
         let slug = (!handle.is_empty()).then(|| {
             ledger
                 .tables
@@ -242,27 +275,37 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     for o in &occurrences {
         let t = table_index[&o.table];
         let limit = bound(&tables[t].table);
-        let period = (
+        let stated = (
             o.from.clone().unwrap_or_else(|| OPEN_START.to_owned()),
             o.to.clone().unwrap_or_else(|| OPEN_END.to_owned()),
         );
-        let (period, stated_period, status) = if period.0 > period.1 {
-            report.unplaced += 1;
-            (None, None, "unplaced")
-        } else {
-            match limit.as_ref().map(|l| intersect(&period, l)) {
-                None => (Some(period), None, "used"),
-                Some(Some(clamped)) if clamped == period => (Some(period), None, "used"),
-                Some(Some(clamped)) => {
-                    report.clamped += 1;
-                    (Some(clamped), Some(period), "used")
-                }
-                Some(None) => {
+        if stated.0 > stated.1 {
+            return Err(format!(
+                "{}:{}: {} is documented from {} to the earlier {}",
+                o.locator.input, o.locator.at, o.column, stated.0, stated.1
+            ));
+        }
+        let (period, stated_period, status) =
+            match limit.as_ref().map(|l| (l, intersect(&stated, l))) {
+                None => (stated, None, "used"),
+                Some((_, None)) => {
                     report.rejected += 1;
-                    (Some(period.clone()), Some(period), "rejected")
+                    (stated.clone(), Some(stated), "rejected")
                 }
-            }
-        };
+                // An unstated bound takes the table's; only a stated one is clamped.
+                Some((l, Some(clamped))) => {
+                    let inherited = (
+                        o.from.clone().unwrap_or_else(|| l.0.clone()),
+                        o.to.clone().unwrap_or_else(|| l.1.clone()),
+                    );
+                    if clamped == inherited {
+                        (clamped, None, "used")
+                    } else {
+                        report.clamped += 1;
+                        (clamped, Some(inherited), "used")
+                    }
+                }
+            };
         resolved.push(ResolvedOccurrence {
             occurrence: (*o).clone(),
             table: t,
@@ -283,7 +326,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 resolved
                     .iter()
                     .filter(|r| r.table == i && r.status == "used")
-                    .filter_map(|r| r.period.clone())
+                    .map(|r| r.period.clone())
                     .collect(),
             ),
         };
@@ -295,13 +338,13 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
 
     // Identity: a key splits by fold when two folds overlap anywhere in the register.
     let mut by_key: BTreeMap<&str, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
-    for r in resolved.iter().filter(|r| r.status != "unplaced") {
+    for r in &resolved {
         by_key
             .entry(r.occurrence.source_key.as_str())
             .or_default()
-            .entry(fold(&r.occurrence.column))
+            .entry(fold_identity(&r.occurrence.column))
             .or_default()
-            .extend(r.period.clone());
+            .push(r.period.clone());
     }
     let mut split = BTreeSet::new();
     for (key, folds) in &by_key {
@@ -319,11 +362,8 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     report.split_keys = split.len();
     let mut variable_keys: BTreeMap<(String, String), Vec<usize>> = BTreeMap::new();
     for (i, r) in resolved.iter().enumerate() {
-        if r.status == "unplaced" {
-            continue;
-        }
         let key = r.occurrence.source_key.clone();
-        let f = fold(&r.occurrence.column);
+        let f = fold_identity(&r.occurrence.column);
         let sub = if split.contains(key.as_str()) {
             f
         } else {
@@ -392,7 +432,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 .copied()
                 .filter(|&i| resolved[i].table == t)
                 .collect();
-            let f = fold(&resolved[last].occurrence.column);
+            let f = fold_identity(&resolved[last].occurrence.column);
             // simplify: a scan of the register per (variable, table); index occurrences
             // by (table, fold) if a register passes a few thousand occurrences.
             let rivals: Vec<usize> = (0..resolved.len())
@@ -401,7 +441,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     r.table == t
                         && r.status == "used"
                         && !members.contains(&i)
-                        && fold(&r.occurrence.column) == f
+                        && fold_identity(&r.occurrence.column) == f
                 })
                 .collect();
             // A segment holds whole occurrences: the variable's occurrences that
@@ -410,10 +450,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             sorted.sort_by(|&a, &b| resolved[a].period.cmp(&resolved[b].period));
             let mut components: Vec<(Interval, Vec<usize>)> = Vec::new();
             for i in sorted {
-                let p = resolved[i]
-                    .period
-                    .clone()
-                    .expect("used occurrences are placed");
+                let p = resolved[i].period.clone();
                 match components.last_mut() {
                     Some((span, members)) if p.0 <= span.1 => {
                         if p.1 > span.1 {
@@ -428,34 +465,29 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             for (span, covering) in components {
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms: BTreeSet<Form> = covering.iter().map(|&i| form(&resolved[i])).collect();
-                let contested = rivals.iter().any(|&i| {
-                    resolved[i]
-                        .period
-                        .as_ref()
-                        .is_some_and(|p| intersect(p, &span).is_some())
-                });
+                let contested = rivals
+                    .iter()
+                    .any(|&i| intersect(&resolved[i].period, &span).is_some());
                 let o = &resolved[top].occurrence;
                 let agree = forms.len() == 1;
+                // A form field is stated only where every occurrence agrees on it.
+                let agreed = |field: fn(&Form) -> &Option<String>| {
+                    let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
+                    match values.len() {
+                        1 => values.into_iter().next().cloned().flatten(),
+                        _ => None,
+                    }
+                };
                 let segment = Segment {
                     table: t,
                     period: span,
                     spelling: o.column.clone(),
-                    dtype: o.dtype.clone().filter(|_| agree),
-                    valueset: o.valueset.clone().filter(|_| agree),
-                    coded: if o.valueset.is_some() || o.code_system.is_some() {
-                        "yes"
-                    } else {
-                        "unknown"
-                    },
+                    dtype: agreed(|f| &f.1),
+                    valueset: agreed(|f| &f.2),
+                    coded: coded(o),
                     sensitive: o.sensitive,
                     identifier: o.identifier,
-                    role: if o.identifier == Some(true) {
-                        "row_key"
-                    } else if o.valueset.is_some() {
-                        "code"
-                    } else {
-                        "measure"
-                    },
+                    role: role(o),
                     ambiguous: !agree || contested,
                 };
                 let index = match runs.last_mut() {
@@ -479,11 +511,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             // Pairs of the variable's own occurrences that disagree where they overlap.
             for (a, &x) in own.iter().enumerate() {
                 for &y in &own[a + 1..] {
-                    let (px, py) = (&resolved[x].period, &resolved[y].period);
-                    let overlap = px
-                        .as_ref()
-                        .zip(py.as_ref())
-                        .is_some_and(|(p, q)| intersect(p, q).is_some());
+                    let overlap = intersect(&resolved[x].period, &resolved[y].period).is_some();
                     if overlap && form(&resolved[x]) != form(&resolved[y]) {
                         report.ambiguous_pairs += 1;
                     }
@@ -509,15 +537,12 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
 
         // Descriptive text over time: the latest occurrence of each piece.
         let mut texts: Vec<TextRun> = Vec::new();
-        let periods: Vec<Interval> = used
-            .iter()
-            .filter_map(|&i| resolved[i].period.clone())
-            .collect();
+        let periods: Vec<Interval> = used.iter().map(|&i| resolved[i].period.clone()).collect();
         for piece in pieces(&periods) {
             let covering: Vec<usize> = used
                 .iter()
                 .copied()
-                .filter(|&i| covers(resolved[i].period.as_ref(), &piece))
+                .filter(|&i| covers(&resolved[i].period, &piece))
                 .collect();
             let Some(top) = latest(&resolved, &covering) else {
                 continue;
@@ -542,20 +567,23 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         }
 
         let o = &resolved[last].occurrence;
-        let hull_of = if used.is_empty() { members } else { &used };
-        let all: Vec<Interval> = hull_of
-            .iter()
-            .filter_map(|&i| resolved[i].period.clone())
-            .collect();
         let hull = (
-            all.iter().map(|p| p.0.clone()).min().expect("placed"),
-            all.iter().map(|p| p.1.clone()).max().expect("placed"),
+            periods
+                .iter()
+                .map(|p| p.0.clone())
+                .min()
+                .expect("a variable is used"),
+            periods
+                .iter()
+                .map(|p| p.1.clone())
+                .max()
+                .expect("a variable is used"),
         );
         variables.push(Variable {
             slug: String::new(),
-            minted: false,
+            pinned: false,
             source_key: key.clone(),
-            fold: fold(&o.column),
+            fold: fold_identity(&o.column),
             spellings,
             label: texts.last().map_or_else(
                 || o.label.clone().unwrap_or_else(|| o.column.clone()),
@@ -578,7 +606,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 code: "T1:clamp",
                 severity: "notice",
                 subject: Subject::Occurrence(i),
-                period: r.period.clone(),
+                period: Some(r.period.clone()),
                 message: if r.status == "used" {
                     "documented beyond its table's coverage; clamped".to_owned()
                 } else {
@@ -593,8 +621,21 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     report.tables = tables.len();
     report.timeless_tables = tables.iter().filter(|t| t.timeless).count();
     report.occurrences = resolved.len();
+    let dated: Vec<&Interval> = tables
+        .iter()
+        .filter(|t| !t.timeless)
+        .flat_map(|t| &t.spans)
+        .collect();
+    let coverage = match (
+        dated.iter().map(|p| &p.0).min(),
+        dated.iter().map(|p| &p.1).max(),
+    ) {
+        (Some(lo), Some(hi)) => (lo.clone(), hi.clone()),
+        _ => (OPEN_START.to_owned(), OPEN_END.to_owned()),
+    };
     Ok(Resolved {
         register,
+        coverage,
         tables,
         variables,
         occurrences: resolved,
@@ -611,41 +652,53 @@ fn assign_ids(
     ledger: &Ledger,
     report: &mut Report,
 ) -> Result<(), String> {
-    // Tables and variables share the register's namespace.
-    let mut taken: BTreeSet<String> = tables.iter().filter_map(|t| t.slug.clone()).collect();
-    for (id, anchors) in &ledger.variables {
-        if taken.contains(id) {
+    // Tables and variables share the register's namespace, and a ledger id stays
+    // reserved even where it anchors nothing.
+    let table_ids: BTreeSet<String> = tables.iter().filter_map(|t| t.slug.clone()).collect();
+    for id in table_ids.iter().chain(ledger.variables.keys()) {
+        if !reg_core::is_slug(id) {
+            return Err(format!("id {id:?} is not a slug"));
+        }
+    }
+    let mut taken = table_ids.clone();
+    for id in ledger.variables.keys() {
+        if !taken.insert(id.clone()) {
             return Err(format!("ledger id {id:?} is also a table id"));
         }
+    }
+    for (id, anchors) in &ledger.variables {
         let targets: BTreeSet<usize> = anchors
             .iter()
             .flat_map(|anchor| {
                 let (table, spelling) = anchor.split_once(": ").unwrap_or(("", anchor));
-                let f = fold(spelling);
+                let f = fold_identity(spelling.trim());
                 resolved.iter().filter_map(move |r| {
-                    (tables[r.table].table.table == table && fold(&r.occurrence.column) == f)
+                    (tables[r.table].table.table == table.trim()
+                        && fold_identity(&r.occurrence.column) == f)
                         .then_some(r.variable)
                         .flatten()
                 })
             })
             .collect();
-        let Some(&target) = targets.iter().next() else {
-            report.unplaced_ids.push(id.clone());
+        if targets.len() > 1 {
+            report.split_ids.push(id.clone());
+        }
+        let Some(&target) = targets.iter().find(|&&v| !variables[v].pinned) else {
+            if targets.is_empty() {
+                report.unplaced_ids.push(id.clone());
+            } else {
+                report.merged_ids.push(id.clone());
+            }
             continue;
         };
-        if variables[target].minted {
-            report.merged_ids.push(id.clone());
-            continue;
-        }
         variables[target].slug.clone_from(id);
-        variables[target].minted = true;
-        taken.insert(id.clone());
+        variables[target].pinned = true;
     }
-    for v in variables.iter_mut().filter(|v| !v.minted) {
+    for v in variables.iter_mut().filter(|v| !v.pinned) {
         let base = slugify(&v.fold);
         let mut slug = base.clone();
         let mut n = 2;
-        while taken.contains(&slug) {
+        while taken.contains(&slug) || !reg_core::is_slug(&slug) {
             slug = format!("{base}-{n}");
             n += 1;
         }
@@ -654,6 +707,28 @@ fn assign_ids(
         v.slug = slug;
     }
     Ok(())
+}
+
+/// The default coded state: `yes` when the source binds codes or names a code system.
+#[must_use]
+pub fn coded(o: &Occurrence) -> &'static str {
+    if o.valueset.is_some() || o.code_system.is_some() {
+        "yes"
+    } else {
+        "unknown"
+    }
+}
+
+/// The default role: identifiers are row keys, coded columns codes, the rest measures.
+#[must_use]
+pub fn role(o: &Occurrence) -> &'static str {
+    if o.identifier == Some(true) {
+        "row_key"
+    } else if o.valueset.is_some() {
+        "code"
+    } else {
+        "measure"
+    }
 }
 
 /// The latest of `set`, by [`order`].
@@ -665,8 +740,8 @@ fn latest(resolved: &[ResolvedOccurrence], set: &[usize]) -> Option<usize> {
 
 /// The ordering that makes an occurrence "latest": later start, then later end, then
 /// its locator.
-fn order(r: &ResolvedOccurrence) -> (Option<&Interval>, &Locator) {
-    (r.period.as_ref(), &r.occurrence.locator)
+fn order(r: &ResolvedOccurrence) -> (&Interval, &Locator) {
+    (&r.period, &r.occurrence.locator)
 }
 
 type Form = (Option<String>, Option<String>, Option<String>);
@@ -706,13 +781,8 @@ fn label_key(label: &str) -> String {
     reg_core::fold_identity(&label.split_whitespace().collect::<Vec<_>>().join(" "))
 }
 
-/// The column identity fold.
-fn fold(column: &str) -> String {
-    reg_core::fold_identity(column.trim())
-}
-
-fn covers(period: Option<&Interval>, piece: &Interval) -> bool {
-    period.is_some_and(|p| p.0 <= piece.0 && piece.1 <= p.1)
+fn covers(p: &Interval, piece: &Interval) -> bool {
+    p.0 <= piece.0 && piece.1 <= p.1
 }
 
 /// The elementary partition of `intervals`: the ascending pieces between every start
@@ -735,7 +805,7 @@ fn pieces(intervals: &[Interval]) -> Vec<Interval> {
                 .map_or_else(|| OPEN_END.to_owned(), |next| prev_iso_day(next));
             (lo.clone(), hi)
         })
-        .filter(|piece| intervals.iter().any(|p| covers(Some(p), piece)))
+        .filter(|piece| intervals.iter().any(|p| covers(p, piece)))
         .collect()
 }
 
