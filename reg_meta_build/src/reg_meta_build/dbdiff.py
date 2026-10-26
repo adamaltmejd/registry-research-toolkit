@@ -1254,10 +1254,21 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="N",
         help="max differing rows to dump per direction per table (default: 10)",
     )
-    parser.add_argument(
+    ignores = parser.add_mutually_exclusive_group()
+    ignores.add_argument(
         "--no-default-ignore",
         action="store_true",
         help="compare every column/row, including import_manifest.import_date",
+    )
+    # The Rust port's gate (PORT.md); deleted with the port at cutover.
+    ignores.add_argument(
+        "--ignore-file",
+        type=Path,
+        metavar="JSON",
+        help=(
+            "instead of the default, ignore the import_manifest keys a file lists as "
+            '{"import_manifest": {"<key>": "<reason>", ...}}'
+        ),
     )
     parser.add_argument(
         "--json",
@@ -1267,10 +1278,32 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _load_ignore_file(path: Path) -> dict[str, TableIgnore]:
+    """The `import_manifest` keys a port ignore file lists, each with its reason."""
+    document = json.loads(path.read_text(encoding="utf-8"))
+    keys = document.get("import_manifest") if isinstance(document, dict) else None
+    if (
+        not isinstance(keys, dict)
+        or set(document) != {"import_manifest"}
+        or not keys
+        or not all(
+            isinstance(key, str) and key and isinstance(reason, str) and reason.strip()
+            for key, reason in keys.items()
+        )
+    ):
+        raise ValueError(
+            f'{path}: expected {{"import_manifest": {{"<key>": "<reason>", ...}}}}'
+        )
+    quoted = ", ".join("'" + key.replace("'", "''") + "'" for key in sorted(keys))
+    return {"import_manifest": TableIgnore(skip_where=f"key IN ({quoted})")}
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     ignore: dict[str, TableIgnore] = {} if args.no_default_ignore else DEFAULT_IGNORE
     try:
+        if args.ignore_file is not None:
+            ignore = _load_ignore_file(args.ignore_file)
         report = diff_db_content(
             args.db_a, args.db_b, ignore=ignore, sample_rows=args.sample_rows
         )
