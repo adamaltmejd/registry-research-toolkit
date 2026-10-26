@@ -213,6 +213,9 @@ The full SCB read is a heavy run.
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
   - LVM `besdatumn`: an `assign`, or a second ledger anchor.
 
+- **LISA section headings** become `set` group hints from the reader's output (a heading
+  → rows map, added to the LISA reader when D lands), not typed by hand.
+
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.
 

@@ -2,9 +2,9 @@
 //! year-independent individual, firm, workplace). Header aliases and the sensitivity
 //! vocabulary come from `curation/readers/lisa.toml`.
 //!
-//! Each sheet has a header row (the first whose first cell is a column alias) and then
+//! Each sheet has a header row (the first with a column alias in any cell) and then
 //! data rows: a column, its description, its years and, on some sheets, a sensitivity
-//! flag. A row without a column or a label is a section heading or a note and is
+//! flag, each column found by its header alias. A row without a column or a label is a section heading or a note and is
 //! skipped (with a warning when it states years or sensitivity). A year cell holds
 //! years and ranges (`1990-2024`, `2003-2008\n2013`); each range is one occurrence of
 //! the column. A sheet with no year column, or a blank year cell, leaves the bounds
@@ -60,12 +60,13 @@ struct Entry {
     sensitive: Option<bool>,
 }
 
-/// A sheet: its title cell and that cell's 1-based row, whether it has a year column,
-/// and its data rows.
+/// A sheet: its title cell and that cell's address, the column-name column's letter,
+/// whether it has a year column, and its data rows.
 struct Sheet {
     name: String,
     title: Option<String>,
-    title_row: usize,
+    title_at: String,
+    column: String,
     years: bool,
     entries: Vec<Entry>,
 }
@@ -100,7 +101,7 @@ pub fn read(
         .filter(|s| !s.years)
         .flat_map(|s| s.entries.iter().map(|e| name_key(&e.column)))
         .collect();
-    let mut repeated = 0;
+    let mut repeated: BTreeMap<String, usize> = BTreeMap::new();
     let mut records = vec![Record::Register(Register {
         provider: provider.to_owned(),
         register: register.to_owned(),
@@ -116,7 +117,7 @@ pub fn read(
     for sheet in sheets {
         let at = |row: usize| Locator {
             input: rel.to_owned(),
-            at: format!("{}!A{row}", sheet.name),
+            at: format!("{}!{}{row}", sheet.name, sheet.column),
         };
         records.push(Record::Table(Table {
             provider: provider.to_owned(),
@@ -127,11 +128,14 @@ pub fn read(
             from: None,
             to: None,
             cadence: None,
-            locator: at(sheet.title_row),
+            locator: Locator {
+                input: rel.to_owned(),
+                at: format!("{}!{}", sheet.name, sheet.title_at),
+            },
         }));
         for entry in sheet.entries {
             if sheet.years && entry.years.is_none() && timeless.contains(&name_key(&entry.column)) {
-                repeated += 1;
+                *repeated.entry(sheet.name.clone()).or_default() += 1;
                 continue;
             }
             let periods = bounds(entry.years.as_deref()).unwrap_or_else(|| {
@@ -172,9 +176,11 @@ pub fn read(
             }
         }
     }
-    if repeated > 0 {
+    if !repeated.is_empty() {
+        let counts: Vec<String> = repeated.iter().map(|(s, n)| format!("{s} {n}")).collect();
         out.warnings.push(format!(
-            "{repeated} rows with a blank year cell repeat a column a sheet without years lists; that sheet's row stands"
+            "rows with a blank year cell repeat a column a sheet without years lists; that sheet's row stands ({})",
+            counts.join(", ")
         ));
     }
     out.frame = Frame::new(records);
@@ -189,8 +195,11 @@ fn sheet(
     config: &Config,
     warnings: &mut Vec<String>,
 ) -> Result<Sheet, ReadError> {
-    // Row numbers count from the sheet's first row, not the used range's.
-    let offset = range.start().map_or(0, |(r, _)| r as usize) + 1;
+    // Rows and columns count from the sheet's first, not the used range's.
+    let (first_row, first_col) = range
+        .start()
+        .map_or((0, 0), |(r, c)| (r as usize, c as usize));
+    let offset = first_row + 1;
     let rows: Vec<&[Data]> = range.rows().collect();
     let alias = |c: Option<String>, aliases: &[String]| {
         c.is_some_and(|c| {
@@ -199,9 +208,14 @@ fn sheet(
                 .any(|a| a.trim().to_lowercase() == c.trim().to_lowercase())
         })
     };
-    let header = rows
+    let (header, column) = rows
         .iter()
-        .position(|r| alias(cell(r, Some(0)), &config.headers.column))
+        .enumerate()
+        .find_map(|(i, r)| {
+            r.iter()
+                .position(|c| alias(text(c), &config.headers.column))
+                .map(|c| (i, c))
+        })
         .ok_or_else(|| error(rel, format!("sheet {name:?}: no header row")))?;
     let col = |aliases: &[String]| rows[header].iter().position(|c| alias(text(c), aliases));
     let (label, years, sensitive) = (
@@ -215,7 +229,7 @@ fn sheet(
     let mut entries = Vec::new();
     for (i, row) in rows.iter().enumerate().skip(header + 1) {
         let at = i + offset;
-        let (Some(column), Some(label)) = (cell(row, Some(0)), cell(row, label)) else {
+        let (Some(column), Some(label)) = (cell(row, Some(column)), cell(row, label)) else {
             // Headings and notes state no years and no sensitivity.
             if cell(row, years).is_some() || cell(row, sensitive).is_some() {
                 warnings.push(format!("{name}!A{at}: a row with years or sensitivity but no column or label is skipped"));
@@ -241,11 +255,26 @@ fn sheet(
     }
     Ok(Sheet {
         title: rows.first().and_then(|r| cell(r, Some(0))),
-        title_row: offset,
+        title_at: format!("{}{offset}", letter(first_col)),
+        column: letter(first_col + column),
         years: years.is_some(),
         name,
         entries,
     })
+}
+
+/// A 0-based column index as its spreadsheet letters (0 → `A`, 26 → `AA`).
+fn letter(mut index: usize) -> String {
+    let mut out = Vec::new();
+    loop {
+        out.push(b'A' + u8::try_from(index % 26).expect("below 26"));
+        if index < 26 {
+            break;
+        }
+        index = index / 26 - 1;
+    }
+    out.reverse();
+    String::from_utf8(out).expect("ASCII")
 }
 
 /// The bounds a year cell states: one pair per year or range, a pair of unstated
