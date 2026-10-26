@@ -1,0 +1,13 @@
+[package]
+name = "reg-resolve"
+version = "0.0.0"
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+reg-core = { path = "../reg-core" }
+reg-frame = { path = "../reg-frame" }
+serde = { version = "1.0.229", features = ["derive"] }
+
+[lints]
+workspace = true

@@ -301,6 +301,23 @@ fn iso_date(text: &str) -> Option<Date> {
     Some((year, month, day))
 }
 
+/// Days from 1970-01-01 to an ISO date (negative before it), the catalog's day number
+/// (`crates/DESIGN.md`, "The catalog builder"); `None` for a string that is not a
+/// calendar date. The builder computes over inclusive ISO intervals and writes
+/// half-open day numbers: `start` as is, `end` as the day after.
+#[must_use]
+pub fn iso_day_number(s: &str) -> Option<i64> {
+    let (y, m, d) = iso_date(s)?;
+    // Howard Hinnant's days_from_civil, with March as the first month of the year.
+    let y = i64::from(y) - i64::from(m <= 2);
+    let era = y.div_euclid(400);
+    let yoe = y - era * 400;
+    let mp = (i64::from(m) + 9) % 12;
+    let doy = (153 * mp + 2) / 5 + i64::from(d) - 1;
+    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    Some(era * 146_097 + doe - 719_468)
+}
+
 /// The day after an inclusive ISO upper bound. The open-ended `9999-12-31` and a
 /// string that is not a calendar date are returned as is.
 #[must_use]

@@ -1,0 +1,11 @@
+table,column,label,definition,data_type,unit,codes,code_system,sensitive,identifier,from,to
+individ;hushall,LopNr,Löpnummer,Personens löpnummer.,text,,,,true,true,,
+individ,Kon,Kön,,text,,M=Man; K=Kvinna,,false,false,,
+individ,ALDER,Ålder,Ålder vid årets slut.,integer,år,,,false,false,2000-01-01,2009-12-31
+individ,Alder,Ålder,Ålder vid årets slut.,integer,år,,,false,false,2010-01-01,
+individ,Inkomst,Inkomst,,integer,kr,,,,,2000-01-01,2012-12-31
+individ,DispInk,Disponibel inkomst,,integer,kr,,,,,2013-01-01,
+hushall,Typ,Hushållstyp,,integer,,@hushtyp,,,,2005-01-01,2010-12-31
+hushall,Typ,Typ av hushåll,,integer,,@hushtyp,,,,2008-01-01,
+kod,Kod,Kod,,text,,,klassning,,,,
+kod,Text,Benämning,,text,,,,,,,

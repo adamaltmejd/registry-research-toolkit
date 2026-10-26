@@ -76,6 +76,14 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   per-register id ledgers (`registers/<provider>/<register>/ids.toml`), generated from
   today's slug pins. It holds no statements before D.
 
+- **Left out of A**, each added by the milestone that needs it: the resolve cache and
+  zstd intermediates (frames stay in memory; `reg-build read` dumps them as JSONL),
+  releases and gaps (B), search and documents (C), classification binding, unit types
+  and roles beyond the defaults (D). Known reader limits: a code list stated per period
+  is read as the union of its periods (reported); calamine exposes no number formats, so
+  a zero-padded numeric code loses its padding; the inline value-set reader accepts only
+  plain `code=label` or bare-code lists.
+
 - **Inputs.** Today's six thin-provider TOML files and `scb_canonical.toml` are
   transcribed once into the transcription format and committed to the inputs repository.
   The maintainer approves the pin.

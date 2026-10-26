@@ -1,0 +1,4 @@
+register,table,name,description,from,to
+hush,individ,Individer,En rad per person och år.,2000-01-01,
+hush,hushall,Hushåll,En rad per hushåll och år.,2005-01-01,2015-12-31
+hush,kod,Kodtabell,Utan tidsangivelse.,,

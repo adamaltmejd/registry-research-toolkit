@@ -1,0 +1,796 @@
+//! Link and emit: resolved registers into one SQLite file, schema v4 (`schema.sql`).
+//! The emitter decides nothing. Row ids follow natural-key order, rows go in in
+//! primary-key order, indexes come after data, and the file is written with
+//! `VACUUM INTO`, so two builds from the same pins give the same bytes.
+//!
+//! Milestone A fills the identity, coverage, variable, segment, occurrence, value-set
+//! and finding tables; releases, gaps, classifications, documents, search and
+//! curation statements stay empty.
+
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::Path;
+
+use reg_frame::ValueSet;
+use reg_resolve::{Resolved, Subject};
+use rusqlite::Connection;
+use rusqlite::types::{ToSql, ToSqlOutput};
+
+const SCHEMA: &str = include_str!("schema.sql");
+const CHECKS: &str = include_str!("checks.sql");
+
+/// One row of the input table.
+pub struct InputRow {
+    pub name: String,
+    pub repo: String,
+    pub commit: String,
+    pub path: String,
+    pub sha256: String,
+    pub bytes: i64,
+}
+
+pub struct ProviderRow {
+    pub pid: String,
+    pub name: String,
+    pub url: Option<String>,
+}
+
+/// Everything the file holds, linked.
+pub struct Catalog {
+    pub meta: BTreeMap<&'static str, String>,
+    /// Sorted by name.
+    pub inputs: Vec<InputRow>,
+    pub providers: Vec<ProviderRow>,
+    pub registers: Vec<Resolved>,
+    /// Value sets by hash, with the (input index, name) pairs that named them.
+    pub valuesets: BTreeMap<String, (ValueSet, BTreeSet<(usize, String)>)>,
+    /// A frame file (locator input) → its input index.
+    pub file_input: BTreeMap<String, usize>,
+}
+
+/// A cell before interning: text, folded names and spellings are resolved to row ids
+/// once every body is known, so their ids too follow sort order.
+#[derive(Clone)]
+enum Cell {
+    Null,
+    Int(i64),
+    Str(String),
+    Text(String),
+    Fold(String),
+    Spelling(String),
+}
+
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+enum Value {
+    Null,
+    Int(i64),
+    Str(String),
+}
+
+impl ToSql for Value {
+    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
+        match self {
+            Value::Null => Ok(ToSqlOutput::from(rusqlite::types::Null)),
+            Value::Int(i) => Ok(ToSqlOutput::from(*i)),
+            Value::Str(s) => Ok(ToSqlOutput::from(s.as_str())),
+        }
+    }
+}
+
+fn opt_text(s: Option<&String>) -> Cell {
+    s.map_or(Cell::Null, |s| Cell::Text(s.clone()))
+}
+
+fn opt_int(v: Option<i64>) -> Cell {
+    v.map_or(Cell::Null, Cell::Int)
+}
+
+fn opt_str(s: Option<&String>) -> Cell {
+    s.map_or(Cell::Null, |s| Cell::Str(s.clone()))
+}
+
+fn flag(b: Option<bool>) -> Cell {
+    opt_int(b.map(i64::from))
+}
+
+/// The day number of an inclusive start.
+fn start(iso: &str) -> i64 {
+    reg_core::iso_day_number(iso).expect("resolved periods are ISO days")
+}
+
+/// The half-open end of an inclusive end: the day after.
+fn end(iso: &str) -> i64 {
+    start(iso) + 1
+}
+
+fn fold(s: &str) -> String {
+    reg_core::fold_identity(s.trim())
+}
+
+#[derive(Default)]
+struct Rows {
+    tables: BTreeMap<&'static str, Vec<Vec<Cell>>>,
+}
+
+impl Rows {
+    fn push(&mut self, table: &'static str, row: Vec<Cell>) {
+        self.tables.entry(table).or_default().push(row);
+    }
+}
+
+/// Primary-key columns of each filled table, for insert order.
+const KEYS: &[(&str, &[usize])] = &[
+    ("meta", &[0]),
+    ("input", &[0]),
+    ("text", &[0]),
+    ("name_fold", &[0]),
+    ("spelling", &[0]),
+    ("provider", &[0]),
+    ("register", &[0]),
+    ("tbl", &[0]),
+    ("tbl_span", &[0, 1]),
+    ("variable", &[0]),
+    ("variable_text", &[0, 1]),
+    ("valueset", &[0]),
+    ("valueset_name", &[0, 1, 2]),
+    ("vs_item", &[0, 1]),
+    ("segment", &[0]),
+    ("occurrence", &[0]),
+    ("occurrence_locator", &[0, 1, 2]),
+    ("override", &[0, 1, 2]),
+    ("finding", &[0]),
+    ("ident", &[0]),
+    ("alias", &[0, 1]),
+];
+
+/// Write `catalog` to `out` through a scratch file next to it, then run the
+/// schema's post-write checks on the result.
+///
+/// # Errors
+/// A SQLite failure, or a post-write check that returns rows.
+#[allow(clippy::too_many_lines)]
+pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
+    let mut rows = Rows::default();
+    let sql = |e: rusqlite::Error| e.to_string();
+
+    for (key, value) in &catalog.meta {
+        rows.push(
+            "meta",
+            vec![Cell::Str((*key).to_owned()), Cell::Str(value.clone())],
+        );
+    }
+    for (i, input) in catalog.inputs.iter().enumerate() {
+        rows.push(
+            "input",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str(input.name.clone()),
+                Cell::Str(input.repo.clone()),
+                Cell::Str(input.commit.clone()),
+                Cell::Str(input.path.clone()),
+                Cell::Str(input.sha256.clone()),
+                Cell::Int(input.bytes),
+            ],
+        );
+    }
+
+    // Row ids by natural key.
+    let provider_id: BTreeMap<&str, i64> =
+        sorted_ids(catalog.providers.iter().map(|p| p.pid.as_str()));
+    let pid_of_register = |r: &Resolved| format!("{}/{}", r.register.provider, r.register.register);
+    let register_id: BTreeMap<String, i64> =
+        sorted_ids(catalog.registers.iter().map(pid_of_register));
+    let pid_of_table = |r: &Resolved, t: usize| {
+        let base = pid_of_register(r);
+        match &r.tables[t].slug {
+            Some(slug) => format!("{base}/{slug}"),
+            None => base,
+        }
+    };
+    let pid_of_variable =
+        |r: &Resolved, v: usize| format!("{}/{}", pid_of_register(r), r.variables[v].slug);
+    let mut table_keys = Vec::new();
+    let mut variable_keys = Vec::new();
+    let mut segment_keys = Vec::new();
+    let mut occurrence_keys = Vec::new();
+    for (ri, r) in catalog.registers.iter().enumerate() {
+        for t in 0..r.tables.len() {
+            table_keys.push((pid_of_table(r, t), (ri, t)));
+        }
+        for (v, variable) in r.variables.iter().enumerate() {
+            variable_keys.push((pid_of_variable(r, v), (ri, v)));
+            for (s, segment) in variable.segments.iter().enumerate() {
+                segment_keys.push((
+                    (
+                        pid_of_variable(r, v),
+                        pid_of_table(r, segment.table),
+                        start(&segment.period.0),
+                    ),
+                    (ri, v, s),
+                ));
+            }
+        }
+        for (o, occ) in r.occurrences.iter().enumerate() {
+            let x = &occ.occurrence;
+            occurrence_keys.push((
+                (
+                    pid_of_table(r, occ.table),
+                    occ.period.as_ref().map(|p| start(&p.0)),
+                    fold(&x.column),
+                    x.source_key.clone(),
+                    x.label.clone(),
+                    x.locator.clone(),
+                ),
+                (ri, o),
+            ));
+        }
+    }
+    let table_id = index(table_keys, "table ids")?;
+    let variable_id = index(variable_keys, "variable ids")?;
+    let segment_id = index(segment_keys, "segment keys")?;
+    let occurrence_id = index(occurrence_keys, "occurrence keys")?;
+    let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
+
+    for p in &catalog.providers {
+        let pid = provider_id[p.pid.as_str()];
+        rows.push(
+            "provider",
+            vec![
+                Cell::Int(pid),
+                Cell::Str(p.pid.clone()),
+                Cell::Text(p.name.clone()),
+                opt_str(p.url.as_ref()),
+            ],
+        );
+        rows.push(
+            "ident",
+            vec![
+                Cell::Str(p.pid.clone()),
+                Cell::Str("provider".into()),
+                Cell::Int(pid),
+                Cell::Null,
+                Cell::Str(fold(&p.pid)),
+            ],
+        );
+    }
+
+    let mut findings = Vec::new();
+    for (ri, r) in catalog.registers.iter().enumerate() {
+        let reg = &r.register;
+        let reg_pid = pid_of_register(r);
+        let register_row = register_id[&reg_pid];
+        let pid = *provider_id
+            .get(reg.provider.as_str())
+            .ok_or_else(|| format!("provider {:?} is not in the manifest", reg.provider))?;
+        let hull = |spans: &mut dyn Iterator<Item = &reg_core::Interval>| {
+            spans.fold((i64::MAX, i64::MIN), |(lo, hi), p| {
+                (lo.min(start(&p.0)), hi.max(end(&p.1)))
+            })
+        };
+        let (rlo, rhi) = hull(&mut r.tables.iter().flat_map(|t| &t.spans));
+        rows.push(
+            "register",
+            vec![
+                Cell::Int(register_row),
+                Cell::Int(pid),
+                Cell::Str(reg_pid.clone()),
+                Cell::Text(reg.name.clone().unwrap_or_else(|| reg.register.clone())),
+                opt_text(reg.description.as_ref()),
+                Cell::Int(rlo),
+                Cell::Int(rhi),
+            ],
+        );
+        rows.push(
+            "ident",
+            vec![
+                Cell::Str(reg_pid.clone()),
+                Cell::Str("register".into()),
+                Cell::Int(register_row),
+                Cell::Null,
+                Cell::Str(fold(&reg.register)),
+            ],
+        );
+
+        for (t, table) in r.tables.iter().enumerate() {
+            let tid = table_id[&(ri, t)];
+            let (lo, hi) = hull(&mut table.spans.iter());
+            let name = table.table.name.clone().or_else(|| {
+                if table.slug.is_none() {
+                    Some(reg.name.clone().unwrap_or_else(|| reg.register.clone()))
+                } else {
+                    Some(table.table.table.clone())
+                }
+            });
+            rows.push(
+                "tbl",
+                vec![
+                    Cell::Int(tid),
+                    Cell::Int(register_row),
+                    Cell::Str(pid_of_table(r, t)),
+                    opt_text(name.as_ref()),
+                    opt_text(table.table.description.as_ref()),
+                    Cell::Str("data".into()),
+                    Cell::Int(i64::from(table.slug.is_none())),
+                    Cell::Int(i64::from(table.timeless)),
+                    Cell::Null,
+                    if table.timeless {
+                        Cell::Null
+                    } else {
+                        opt_str(table.table.cadence.as_ref())
+                    },
+                    Cell::Int(lo),
+                    Cell::Int(hi),
+                ],
+            );
+            for span in &table.spans {
+                rows.push(
+                    "tbl_span",
+                    vec![
+                        Cell::Int(tid),
+                        Cell::Int(start(&span.0)),
+                        Cell::Int(end(&span.1)),
+                    ],
+                );
+            }
+            // The implicit table shares the register's id, which `ident` already holds.
+            if let Some(slug) = &table.slug {
+                rows.push(
+                    "ident",
+                    vec![
+                        Cell::Str(pid_of_table(r, t)),
+                        Cell::Str("table".into()),
+                        Cell::Int(tid),
+                        Cell::Int(register_row),
+                        Cell::Str(fold(slug)),
+                    ],
+                );
+            }
+        }
+
+        for (v, variable) in r.variables.iter().enumerate() {
+            let vid = variable_id[&(ri, v)];
+            rows.push(
+                "variable",
+                vec![
+                    Cell::Int(vid),
+                    Cell::Int(register_row),
+                    Cell::Str(pid_of_variable(r, v)),
+                    Cell::Text(variable.label.clone()),
+                    opt_text(variable.definition.as_ref()),
+                    Cell::Int(start(&variable.hull.0)),
+                    Cell::Int(end(&variable.hull.1)),
+                ],
+            );
+            rows.push(
+                "ident",
+                vec![
+                    Cell::Str(pid_of_variable(r, v)),
+                    Cell::Str("variable".into()),
+                    Cell::Int(vid),
+                    Cell::Int(register_row),
+                    Cell::Str(fold(&variable.slug)),
+                ],
+            );
+            for run in &variable.texts {
+                rows.push(
+                    "variable_text",
+                    vec![
+                        Cell::Int(vid),
+                        Cell::Int(start(&run.period.0)),
+                        Cell::Int(end(&run.period.1)),
+                        Cell::Text(run.label.clone()),
+                        opt_text(run.definition.as_ref()),
+                        Cell::Null,
+                        opt_text(run.unit.as_ref()),
+                    ],
+                );
+            }
+            let folds: BTreeSet<String> = variable.spellings.iter().map(|s| fold(s)).collect();
+            for f in folds {
+                rows.push(
+                    "alias",
+                    vec![Cell::Fold(f), Cell::Int(vid), Cell::Str("delivered".into())],
+                );
+            }
+            for (s, segment) in variable.segments.iter().enumerate() {
+                rows.push(
+                    "segment",
+                    vec![
+                        Cell::Int(segment_id[&(ri, v, s)]),
+                        Cell::Int(vid),
+                        Cell::Int(table_id[&(ri, segment.table)]),
+                        Cell::Fold(fold(&segment.spelling)),
+                        Cell::Int(start(&segment.period.0)),
+                        Cell::Int(end(&segment.period.1)),
+                        Cell::Spelling(segment.spelling.clone()),
+                        opt_str(segment.dtype.as_ref()),
+                        Cell::Null,
+                        Cell::Null,
+                        opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
+                        Cell::Null,
+                        Cell::Str(segment.coded.into()),
+                        flag(segment.sensitive),
+                        flag(segment.identifier),
+                        Cell::Null,
+                        Cell::Str(segment.role.into()),
+                        Cell::Str("unknown".into()),
+                        Cell::Str(
+                            if segment.ambiguous {
+                                "ambiguous"
+                            } else {
+                                "clear"
+                            }
+                            .into(),
+                        ),
+                    ],
+                );
+            }
+        }
+
+        for (o, occ) in r.occurrences.iter().enumerate() {
+            let oid = occurrence_id[&(ri, o)];
+            let x = &occ.occurrence;
+            let clamped = occ.stated.is_some() && occ.status == "used";
+            rows.push(
+                "occurrence",
+                vec![
+                    Cell::Int(oid),
+                    Cell::Int(table_id[&(ri, occ.table)]),
+                    Cell::Null,
+                    opt_int(occ.period.as_ref().map(|p| start(&p.0))),
+                    opt_int(occ.period.as_ref().map(|p| end(&p.1))),
+                    Cell::Spelling(x.column.clone()),
+                    Cell::Str(x.source_key.clone()),
+                    opt_text(x.label.as_ref()),
+                    opt_text(x.definition.as_ref()),
+                    Cell::Null,
+                    opt_text(x.unit.as_ref()),
+                    opt_str(x.dtype.as_ref()),
+                    opt_int(x.length),
+                    Cell::Null,
+                    opt_int(x.valueset.as_deref().map(|h| valueset_id[h])),
+                    Cell::Null,
+                    Cell::Str(
+                        if x.valueset.is_some() || x.code_system.is_some() {
+                            "yes"
+                        } else {
+                            "unknown"
+                        }
+                        .into(),
+                    ),
+                    flag(x.sensitive),
+                    flag(x.identifier),
+                    Cell::Null,
+                    Cell::Str(
+                        if x.identifier == Some(true) {
+                            "row_key"
+                        } else if x.valueset.is_some() {
+                            "code"
+                        } else {
+                            "measure"
+                        }
+                        .into(),
+                    ),
+                    Cell::Str("unknown".into()),
+                    opt_int(occ.variable.map(|v| variable_id[&(ri, v)])),
+                    opt_int(
+                        occ.variable
+                            .zip(occ.segment)
+                            .map(|(v, s)| segment_id[&(ri, v, s)]),
+                    ),
+                    Cell::Str(occ.status.into()),
+                    Cell::Int(if clamped { 1 << 16 } else { 0 }),
+                ],
+            );
+            let input = *catalog
+                .file_input
+                .get(&x.locator.input)
+                .ok_or_else(|| format!("{}: no manifest input read this file", x.locator.input))?;
+            rows.push(
+                "occurrence_locator",
+                vec![
+                    Cell::Int(oid),
+                    Cell::Int(id(input)),
+                    Cell::Str(format!("{}:{}", x.locator.input, x.locator.at)),
+                ],
+            );
+            if clamped {
+                let render = |p: &reg_core::Interval| reg_core::render(std::slice::from_ref(p));
+                rows.push(
+                    "override",
+                    vec![
+                        Cell::Str("occurrence".into()),
+                        Cell::Int(oid),
+                        Cell::Str("period".into()),
+                        Cell::Str("rule".into()),
+                        Cell::Null,
+                        Cell::Str("T1".into()),
+                        opt_str(occ.period.as_ref().map(render).as_ref()),
+                        opt_str(occ.stated.as_ref().map(render).as_ref()),
+                    ],
+                );
+            }
+        }
+
+        for f in &r.findings {
+            let (kind, subject) = match f.subject {
+                Subject::Table(t) => ("table", table_id[&(ri, t)]),
+                Subject::Variable(v) => ("variable", variable_id[&(ri, v)]),
+                Subject::Segment(v, s) => ("segment", segment_id[&(ri, v, s)]),
+                Subject::Occurrence(o) => ("occurrence", occurrence_id[&(ri, o)]),
+            };
+            let period = f.period.as_ref().map(|p| (start(&p.0), end(&p.1)));
+            findings.push((
+                (reg_pid.clone(), f.code, kind, subject, period),
+                (register_row, f.severity, f.message.clone()),
+            ));
+        }
+    }
+    findings.sort();
+    for (i, ((_, code, kind, subject, period), (register_row, severity, message))) in
+        findings.into_iter().enumerate()
+    {
+        rows.push(
+            "finding",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str(code.into()),
+                Cell::Str(severity.into()),
+                Cell::Str(kind.into()),
+                Cell::Int(subject),
+                Cell::Int(register_row),
+                opt_int(period.map(|p| p.0)),
+                opt_int(period.map(|p| p.1)),
+                Cell::Text(message),
+                Cell::Null,
+                Cell::Null,
+            ],
+        );
+    }
+
+    for (hash, (set, names)) in &catalog.valuesets {
+        let vid = valueset_id[hash.as_str()];
+        let ord: BTreeMap<&str, usize> = set
+            .items
+            .iter()
+            .enumerate()
+            .map(|(i, item)| (item.code.as_str(), i))
+            .collect();
+        let parent = |i: usize| {
+            set.items[i]
+                .parent
+                .as_deref()
+                .and_then(|p| ord.get(p).copied())
+        };
+        let level = |mut i: usize| {
+            let mut depth = 1;
+            while let Some(p) = parent(i) {
+                depth += 1;
+                i = p;
+                if depth > set.items.len() {
+                    break;
+                }
+            }
+            depth
+        };
+        let hierarchical = (0..set.items.len()).any(|i| parent(i).is_some());
+        rows.push(
+            "valueset",
+            vec![
+                Cell::Int(vid),
+                Cell::Str(hash.clone()),
+                Cell::Int(count(set.items.len())),
+                Cell::Int(i64::from(hierarchical)),
+                Cell::Null,
+                Cell::Null,
+            ],
+        );
+        for (i, item) in set.items.iter().enumerate() {
+            rows.push(
+                "vs_item",
+                vec![
+                    Cell::Int(vid),
+                    Cell::Int(count(i)),
+                    Cell::Text(item.code.clone()),
+                    opt_text(item.label.as_ref()),
+                    Cell::Int(count(level(i))),
+                    opt_int(parent(i).map(count)),
+                    Cell::Int(0),
+                ],
+            );
+        }
+        for (input, name) in names {
+            rows.push(
+                "valueset_name",
+                vec![
+                    Cell::Int(vid),
+                    Cell::Int(id(*input)),
+                    Cell::Text(name.clone()),
+                ],
+            );
+        }
+    }
+
+    // Interning, in sort order.
+    let mut texts = BTreeSet::new();
+    let mut folds = BTreeSet::new();
+    let mut spellings = BTreeSet::new();
+    for cell in rows.tables.values().flatten().flatten() {
+        match cell {
+            Cell::Text(s) => {
+                texts.insert(s.clone());
+            }
+            Cell::Fold(s) => {
+                folds.insert(s.clone());
+            }
+            Cell::Spelling(s) => {
+                folds.insert(fold(s));
+                spellings.insert(s.clone());
+            }
+            _ => {}
+        }
+    }
+    let text_id: BTreeMap<&str, i64> = sorted_ids(texts.iter().map(String::as_str));
+    let fold_id: BTreeMap<&str, i64> = sorted_ids(folds.iter().map(String::as_str));
+    let spelling_id: BTreeMap<&str, i64> = sorted_ids(spellings.iter().map(String::as_str));
+    for (body, i) in &text_id {
+        rows.push(
+            "text",
+            vec![
+                Cell::Int(*i),
+                Cell::Str("sv".into()),
+                Cell::Str((*body).to_owned()),
+            ],
+        );
+    }
+    for (folded, i) in &fold_id {
+        rows.push(
+            "name_fold",
+            vec![Cell::Int(*i), Cell::Str((*folded).to_owned())],
+        );
+    }
+    for (exact, i) in &spelling_id {
+        rows.push(
+            "spelling",
+            vec![
+                Cell::Int(*i),
+                Cell::Str((*exact).to_owned()),
+                Cell::Int(fold_id[fold(exact).as_str()]),
+            ],
+        );
+    }
+
+    // Write.
+    let scratch = out.with_extension("scratch");
+    for path in [&scratch, &out.to_path_buf()] {
+        if path.exists() {
+            std::fs::remove_file(path).map_err(|e| format!("{}: {e}", path.display()))?;
+        }
+    }
+    let mut db = Connection::open(&scratch).map_err(sql)?;
+    db.execute_batch(
+        "PRAGMA journal_mode = OFF; PRAGMA synchronous = OFF; PRAGMA auto_vacuum = NONE;",
+    )
+    .map_err(sql)?;
+    let statements: Vec<String> = SCHEMA
+        .lines()
+        .map(|line| line.split_once("--").map_or(line, |(code, _)| code))
+        .collect::<Vec<_>>()
+        .join("\n")
+        .split(';')
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect();
+    let (indexes, others): (Vec<&String>, Vec<&String>) = statements
+        .iter()
+        .partition(|s| s.starts_with("CREATE INDEX") || s.starts_with("CREATE UNIQUE INDEX"));
+    for statement in others {
+        db.execute_batch(statement)
+            .map_err(|e| format!("{statement}: {e}"))?;
+    }
+    for (table, key) in KEYS {
+        let Some(table_rows) = rows.tables.get(table) else {
+            continue;
+        };
+        let mut values: Vec<Vec<Value>> = table_rows
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .map(|cell| match cell {
+                        Cell::Null => Value::Null,
+                        Cell::Int(i) => Value::Int(*i),
+                        Cell::Str(s) => Value::Str(s.clone()),
+                        Cell::Text(s) => Value::Int(text_id[s.as_str()]),
+                        Cell::Fold(s) => Value::Int(fold_id[s.as_str()]),
+                        Cell::Spelling(s) => Value::Int(spelling_id[s.as_str()]),
+                    })
+                    .collect()
+            })
+            .collect();
+        values.sort_by(|a, b| key.iter().map(|&k| &a[k]).cmp(key.iter().map(|&k| &b[k])));
+        let width = values[0].len();
+        let tx = db.transaction().map_err(sql)?;
+        {
+            let placeholders = vec!["?"; width].join(",");
+            let mut insert = tx
+                .prepare(&format!("INSERT INTO {table} VALUES ({placeholders})"))
+                .map_err(sql)?;
+            for row in &values {
+                insert
+                    .execute(rusqlite::params_from_iter(row))
+                    .map_err(|e| format!("{table}: {e}"))?;
+            }
+        }
+        tx.commit().map_err(sql)?;
+    }
+    for statement in indexes {
+        db.execute_batch(statement).map_err(sql)?;
+    }
+    db.execute_batch("ANALYZE;").map_err(sql)?;
+    db.execute("VACUUM INTO ?1", [out.to_string_lossy().as_ref()])
+        .map_err(sql)?;
+    drop(db);
+    std::fs::remove_file(&scratch).map_err(|e| format!("{}: {e}", scratch.display()))?;
+    check(out)
+}
+
+/// The schema's post-write checks (`checks.sql`): each must return no rows.
+fn check(path: &Path) -> Result<(), String> {
+    let db = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)
+        .map_err(|e| e.to_string())?;
+    let integrity: String = db
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .map_err(|e| e.to_string())?;
+    if integrity != "ok" {
+        return Err(format!("integrity_check: {integrity}"));
+    }
+    let checks = CHECKS
+        .lines()
+        .filter(|line| !line.trim_start().starts_with("--"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    for statement in checks.split(';').map(str::trim).filter(|s| !s.is_empty()) {
+        let mut stmt = db
+            .prepare(statement)
+            .map_err(|e| format!("{statement}: {e}"))?;
+        let mut found = stmt.query([]).map_err(|e| e.to_string())?;
+        if found.next().map_err(|e| e.to_string())?.is_some() {
+            return Err(format!("post-write check failed:\n{statement}"));
+        }
+    }
+    Ok(())
+}
+
+/// Row ids 1.. for `keys` in sort order.
+fn sorted_ids<K: Ord, I: IntoIterator<Item = K>>(keys: I) -> BTreeMap<K, i64> {
+    let set: BTreeSet<K> = keys.into_iter().collect();
+    set.into_iter()
+        .enumerate()
+        .map(|(i, k)| (k, id(i)))
+        .collect()
+}
+
+/// Row ids 1.. for entities in sort order of their natural keys, which must be
+/// unique.
+fn index<K: Ord + std::fmt::Debug, E: Ord + Copy>(
+    mut keys: Vec<(K, E)>,
+    what: &str,
+) -> Result<BTreeMap<E, i64>, String> {
+    keys.sort();
+    if let Some(w) = keys.windows(2).find(|w| w[0].0 == w[1].0) {
+        return Err(format!("duplicate {what}: {:?}", w[0].0));
+    }
+    Ok(keys
+        .into_iter()
+        .enumerate()
+        .map(|(i, (_, e))| (e, id(i)))
+        .collect())
+}
+
+fn id(index: usize) -> i64 {
+    count(index) + 1
+}
+
+fn count(n: usize) -> i64 {
+    i64::try_from(n).expect("row counts fit in i64")
+}
