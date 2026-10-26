@@ -169,6 +169,21 @@ class Checker:
         by_ref: dict[Ref, list[Any]] = defaultdict(list)
         for rec in self.index.records:
             by_ref[rec.ref].append(rec)
+        # An effect without `when` on a ref of several alternatives does not say which
+        # one Python's guard picked (`_occurrence_correction_matches` checks
+        # `expected_fields` per record): compare by ref, and say so.
+        if any(
+            not effect.get("when") and len(by_ref[_ref(effect["ref"])]) > 1
+            for effect in effects
+        ):
+            self.compare(
+                verb,
+                entry,
+                self.select(members),
+                _targets(cases),
+                alternative_by_ref=True,
+            )
+            return
         old = {
             id(rec)
             for effect in effects

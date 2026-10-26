@@ -230,7 +230,11 @@ same table and column adds, so the harness is to compare the member's (table, co
 and the case's deliveries with that addition's.
 
 Occurrence entries are compared per record, not per ref: alternative records share a
-ref, and Python's effect reaches each alternative its `when` describes. An
+ref, and Python's effect reaches each alternative its `when` describes. A period effect
+carries no `when`, and Python's guard picks the alternative (`expected_fields`, checked
+per record), so on a ref with several alternatives the harness compares by ref and
+reports `alternative_by_ref` (two slice-3 entries, `lova.toml`
+`errata.occurrence_period/25` and `/26`). An
 `errata.delivered` donor must select exactly Python's donor records. Without a donor,
 Python's donors must be the member column's own records on that table. Checks the
 harness does not make yet, each a gap the full run closes or names:
