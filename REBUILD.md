@@ -238,6 +238,9 @@ The full SCB read is a heavy run.
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
   - LVM `besdatumn`: an `assign`, or a second ledger anchor.
 
+- **Release builds refuse unplaced and split ledger ids** once D's curation exists;
+  until then they are only counted in the build report.
+
 - **LISA section headings** become `set` group hints from the reader's output (a heading
   → rows map, added to the LISA reader when D lands), not typed by hand.
 
