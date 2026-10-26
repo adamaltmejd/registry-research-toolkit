@@ -120,8 +120,6 @@ SPA (React) + reg-core-wasm
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
-- `reg-build-model`: the stopped port's model of Python-prepared records. No runtime
-  crate depends on it; the rebuild's first PR deletes it ("The catalog builder").
 - `reg-core-wasm`: thin `wasm-bindgen` glue for the SPA. JSON text crosses the boundary
   (no `serde-wasm-bindgen`), and every export is total: it runs the matching structural
   check before a `reg-core` function that can panic. It is built with
@@ -153,9 +151,7 @@ agent's MCP configuration by hand.
 
 The builder that replaces `reg_meta_build` is being written beside it, as new crates
 (`reg-frame`, `reg-readers`, `reg-resolve`, `reg-build`). [../REBUILD.md](../REBUILD.md)
-tracks the milestones. `reg-build-model`, the model of the stopped byte-exact port, is
-deleted in the rebuild's first PR. This section holds the design decisions that outlive
-the rebuild.
+tracks the milestones. This section holds the design decisions that outlive the rebuild.
 
 **Three stages, each seeing only its inputs.**
 

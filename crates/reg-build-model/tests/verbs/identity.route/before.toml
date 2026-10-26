@@ -1,4 +1,0 @@
-# case: curation/registers/sos/lmed.toml#/identity.route/1
-[[identity.route]]
-deldatamangd = "LMED VARA/LMED"
-variants = ["LMED", "LMED VARA"] # v18: 1 row (FDDD)

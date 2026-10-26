@@ -1,8 +1,0 @@
-{
-  "import_manifest": {
-    "import_date": "wall clock of the build",
-    "builder_commit": "the Rust and Python builders are different commits; absent from a --registers build",
-    "curation_tree_sha256": "Rust reads the converted tree, Python the tracked one",
-    "generation_id": "derived from builder_commit and curation_tree_sha256; absent from a --registers build"
-  }
-}

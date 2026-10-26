@@ -11,9 +11,8 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
 - `crates/` — the Rust runtime, released as `reg_meta`: `reg-core` (the
   `project_data.json` contract and structural validator, the FQID and period grammars),
   `reg-catalog` (the catalog reader and its operations), `reg-meta` (the binary:
-  `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
-  `reg-core-py` (`reg-core` for the Python builder) and `reg-build-model` (the stopped
-  port's model, deleted in the rebuild's first PR, [REBUILD.md](REBUILD.md)).
+  `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP), and
+  `reg-core-py` (`reg-core` for the Python builder).
 - `reg_meta_build` (CLI `reg-meta-build`) — build the catalog SQLite DBs from SCB
   exports (maintainer-only, Python).
 - `reg_webapp` — React SPA (React Aria Components) over the Rust server
