@@ -17,10 +17,12 @@
 //! (resolve reads it as the table's bound); one the reader cannot interpret is left
 //! unstated and reported.
 //!
-//! Known gaps: calamine exposes no number formats, so a zero-padded numeric code
-//! (`001` stored as 1) loses its padding, undetected; a code list stated per period
-//! is read as the union of its periods, keeping the first label of a repeated code,
-//! and reported.
+//! A code list stated per period (`1982-1990`, `1991-`, `2004`) binds each occurrence
+//! to the rows whose period overlaps the occurrence's bounds; a row with no period, or
+//! one the reader cannot interpret (reported), applies to every period.
+//!
+//! Known gap: calamine exposes no number formats, so a zero-padded numeric code (`001`
+//! stored as 1) loses its padding, undetected.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -115,6 +117,8 @@ impl Config {
 /// One code row of a code-list sheet: the variable it names, if any, and the code.
 struct CodeRow {
     column: Option<String>,
+    /// Inclusive ISO days; `None` for every period.
+    period: Option<(String, String)>,
     item: Item,
 }
 
@@ -317,17 +321,20 @@ impl Context<'_> {
             prefixed(&h.period),
             column(&header, &h.column),
         );
-        let mut periods = BTreeSet::new();
         let mut out = Vec::new();
+        let mut unread = BTreeSet::new();
         for row in rows {
-            if let Some(p) = cell(row, period) {
-                periods.insert(p);
-            }
             let Some(code) = cell(row, Some(code)) else {
                 continue;
             };
+            let stated = cell(row, period);
+            let parsed = stated.as_deref().and_then(code_period);
+            if let (Some(text), None) = (&stated, &parsed) {
+                unread.insert(text.clone());
+            }
             out.push(CodeRow {
                 column: cell(row, variable).map(|c| fold_identity(&c)),
+                period: parsed,
                 item: Item {
                     code,
                     label: cell(row, label),
@@ -335,10 +342,9 @@ impl Context<'_> {
                 },
             });
         }
-        if periods.len() > 1 {
+        for text in unread {
             self.warn(&format!(
-                "sheet {sheet:?} states codes for {} periods; read as their union",
-                periods.len()
+                "sheet {sheet:?}: period {text:?} is not read; its codes apply to every period"
             ));
         }
         self.records.push(Record::ValueSet(ValueSet::new(
@@ -403,7 +409,10 @@ impl Context<'_> {
                 .as_deref()
                 .and_then(|t| self.pointer(t, codelists))
                 .or_else(|| self.named(&column_name, codelists))
-                .and_then(|target| self.bind(&target, &codelists[&target], &column_name, &at));
+                .and_then(|target| {
+                    let span = (lo.as_deref(), hi.as_deref());
+                    self.bind(&target, &codelists[&target], &column_name, span, &at)
+                });
             let (valueset, code_system) = if bound.is_some() {
                 (bound, None)
             } else {
@@ -505,17 +514,22 @@ impl Context<'_> {
         sheet: &str,
         rows: &[CodeRow],
         column: &str,
+        (lo, hi): (Option<&str>, Option<&str>),
         at: &Locator,
     ) -> Option<String> {
         let key = fold_identity(column);
-        let items: Vec<Item> = if rows.iter().any(|r| r.column.is_some()) {
-            rows.iter()
-                .filter(|r| r.column.as_deref() == Some(key.as_str()))
-                .map(|r| r.item.clone())
-                .collect()
-        } else {
-            rows.iter().map(|r| r.item.clone()).collect()
-        };
+        let named = rows.iter().any(|r| r.column.is_some());
+        let (lo, hi) = (lo.unwrap_or("0001-01-01"), hi.unwrap_or("9999-12-31"));
+        let items: Vec<Item> = rows
+            .iter()
+            .filter(|r| !named || r.column.as_deref() == Some(key.as_str()))
+            .filter(|r| {
+                r.period
+                    .as_ref()
+                    .is_none_or(|(a, b)| a.as_str() <= hi && lo <= b.as_str())
+            })
+            .map(|r| r.item.clone())
+            .collect();
         if items.is_empty() {
             self.warn(&format!(
                 "{}: {column} links {sheet:?}, which states codes only for other variables",
@@ -564,6 +578,19 @@ impl Context<'_> {
 
 /// A year, month or day bound as an ISO day: the first day of the stated period for a
 /// start, the last for an end.
+/// A code-list period: `1982-1990`, an open end `1991-`, or one bound `2004`.
+fn code_period(text: &str) -> Option<(String, String)> {
+    if reg_core::iso_day_number(text).is_some() {
+        return Some((text.to_owned(), text.to_owned()));
+    }
+    let (from, to) = text.split_once('-').unwrap_or((text, text));
+    let to = match to.trim() {
+        "" => "9999-12-31".to_owned(),
+        to => bound(to, true)?,
+    };
+    Some((bound(from.trim(), false)?, to))
+}
+
 fn bound(text: &str, end: bool) -> Option<String> {
     if reg_core::iso_day_number(text).is_some() {
         return Some(text.to_owned());
