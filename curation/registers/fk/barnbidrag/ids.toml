@@ -1,0 +1,7 @@
+# Public ids of fk/barnbidrag, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["Utb_manad"]

@@ -1,0 +1,11 @@
+# Public ids of fk/bostadsbidrag, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"medsokande" = ["Medsokande_PersonNr"]
+"tillaggsbidrag" = ["BELOPP_TILLAGGSBIDRAG"]
+"utbetalningsmanad" = ["utbetalningsmanad"]
+"utbetalningsperiod-from" = ["UTBETALNINGSPERIOD_FROMDAT"]
+"utbetalningsperiod-tom" = ["UTBETALNINGSPERIOD_TOMDAT"]

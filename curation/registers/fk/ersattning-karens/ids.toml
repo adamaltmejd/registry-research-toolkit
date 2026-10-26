@@ -1,0 +1,9 @@
+# Public ids of fk/ersattning-karens, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["utbmanad"]
+"utbetalningsperiod-from" = ["Utbetalningsperiod_fromdat"]
+"utbetalningsperiod-tom" = ["utbetalningsperiod_tomdat"]

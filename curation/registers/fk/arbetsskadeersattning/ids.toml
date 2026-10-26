@@ -1,0 +1,29 @@
+# Public ids of fk/arbetsskadeersattning, from the slug pins (rebuild A).
+[tables]
+"arbetsskadelivranta-manadsdata" = "arbetsskadelivranta-manadsdata"
+"beslut" = "beslut"
+"yrkesskadelivranta-manadsdata" = "yrkesskadelivranta-manadsdata"
+
+[variables]
+"alder" = ["arbetsskadelivranta-manadsdata: Alder"]
+"ar-manad" = ["arbetsskadelivranta-manadsdata: Ar_manad"]
+"avslutsanledning" = ["beslut: Avslutsanledning"]
+"beslutsar" = ["beslut: Beslutsår"]
+"diagnoskod" = ["beslut: Diagnoskod"]
+"ersattningsslag" = ["beslut: Ersattningsslag"]
+"fodd-efter-1937" = ["arbetsskadelivranta-manadsdata: Fodd_efter_1937"]
+"kommun" = ["arbetsskadelivranta-manadsdata: Kommun"]
+"kon" = ["arbetsskadelivranta-manadsdata: Kon"]
+"lag" = ["beslut: Lag"]
+"lan" = ["arbetsskadelivranta-manadsdata: Lan"]
+"livranteorsak" = ["arbetsskadelivranta-manadsdata: Livranteorsak"]
+"livrantetyp" = ["arbetsskadelivranta-manadsdata: Livrantetyp"]
+"lopnr" = ["arbetsskadelivranta-manadsdata: Lopnr"]
+"manadsbelopp-asl-es" = ["arbetsskadelivranta-manadsdata: Manadsbelopp_ASL_es"]
+"manadsbelopp-asl-fs" = ["arbetsskadelivranta-manadsdata: Manadsbelopp_ASL_fs"]
+"manadsbelopp-yfl" = ["yrkesskadelivranta-manadsdata: Manadsbelopp_YFL"]
+"skadedatum" = ["arbetsskadelivranta-manadsdata: Skadedatum"]
+"skadetyp" = ["beslut: Skadetyp"]
+"skadlig-inverkan" = ["beslut: Skadlig_inverkan"]
+"slutdatum" = ["beslut: Slutdatum"]
+"startdatum" = ["beslut: Startdatum"]

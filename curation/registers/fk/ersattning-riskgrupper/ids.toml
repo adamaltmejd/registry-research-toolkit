@@ -1,0 +1,9 @@
+# Public ids of fk/ersattning-riskgrupper, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["utbetalt_belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["utbetalningsmanad"]
+"utbetalningsperiod-from" = ["Utbetalningsperiod_fromdat"]
+"utbetalningsperiod-tom" = ["utbetalningsperiod_tomdat"]

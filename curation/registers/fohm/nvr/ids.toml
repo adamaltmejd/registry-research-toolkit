@@ -1,0 +1,17 @@
+# Public ids of fohm/nvr, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"care-giver-name" = ["care_giver_name"]
+"dosnummer" = ["dosnummer"]
+"fodelsedatum" = ["fodelsedatum"]
+"folkbokforingsort" = ["folkbokforingsort"]
+"kon" = ["kon"]
+"nplid" = ["nplid"]
+"personnr" = ["personnummer"]
+"satsnummer" = ["satsnummer"]
+"vaccin" = ["vaccin"]
+"vaccinationsdatum" = ["vaccinationsdatum"]
+"vaccintyp" = ["vaccintyp"]
+"vardenhet" = ["vardenhet"]
+"vardgivare" = ["vardgivare"]

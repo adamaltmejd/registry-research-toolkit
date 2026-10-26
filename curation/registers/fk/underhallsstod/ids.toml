@@ -1,0 +1,43 @@
+# Public ids of fk/underhallsstod, from the slug pins (rebuild A).
+[tables]
+"beslut" = "beslut"
+"beslut-bidragsskyldig" = "beslut-bidragsskyldig"
+"inbetalningar" = "inbetalningar"
+"utbetalningar-barn" = "utbetalningar-barn"
+"utbetalningar-manad" = "utbetalningar-manad"
+
+[variables]
+"alder-barn" = ["beslut-bidragsskyldig: ALDER_BARN"]
+"alder-bs" = ["beslut-bidragsskyldig: ALDER_BS"]
+"anstand-beslut" = ["beslut: ANSTAND_BESLUT"]
+"arende-status" = ["beslut: ARENDE_STATUS"]
+"belopp" = ["beslut: BELOPP"]
+"belopp-barn" = ["utbetalningar-manad: BELOPP_BARN"]
+"belopp-bm" = ["utbetalningar-manad: BELOPP_BM"]
+"belopp-retro" = ["utbetalningar-manad: BELOPP_RETRO"]
+"betalningsdatum" = ["utbetalningar-barn: BETALNINGSDATUM"]
+"datum" = ["beslut: DATUM"]
+"datum-avr" = ["inbetalningar: DATUM_AVR"]
+"datum-inbet" = ["inbetalningar: DATUM_INBET"]
+"eftergift-beslut" = ["beslut: EFTERGIFT_BESLUT"]
+"ersattningperiod-from" = ["utbetalningar-barn: ERSATTNINGPERIOD_FROM"]
+"ersattningperiod-tom" = ["utbetalningar-barn: ERSATTNINGPERIOD_TOM"]
+"fodelsemanad-barn" = ["utbetalningar-manad: FODELSEMANAD_BARN"]
+"fodelsemanad-bm" = ["beslut: FODELSEMANAD_BM"]
+"fodelsemanad-bs" = ["beslut: FODELSEMANAD_BS"]
+"fodringsagare" = ["inbetalningar: FODRINGSAGARE"]
+"forman" = ["utbetalningar-barn: FORMAN"]
+"kommun-bs" = ["beslut-bidragsskyldig: KOMMUN_BS"]
+"kon-bm" = ["utbetalningar-manad: KON_BM"]
+"kon-bs" = ["beslut-bidragsskyldig: KON_BS"]
+"lokalkontor-bs" = ["inbetalningar: LOKALKONTOR_BS"]
+"lopnr-barn" = ["beslut: LOPNR_BARN"]
+"lopnr-bm" = ["beslut: LOPNR_BM"]
+"lopnr-bs" = ["beslut: LOPNR_BS"]
+"lopnr-d85" = ["beslut: LOPNR_D85"]
+"nettobelopp" = ["beslut: NETTOBELOPP"]
+"skuld" = ["inbetalningar: SKULD"]
+"typ" = ["beslut: TYP"]
+"typ-beslut" = ["beslut-bidragsskyldig: TYP_BESLUT"]
+"typ-inbet" = ["inbetalningar: TYP_INBET"]
+"utbetalningsmanad" = ["utbetalningar-barn: Utbetalningsmanad"]

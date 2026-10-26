@@ -1,0 +1,10 @@
+# Public ids of fk/graviditetspenning, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"omfattning" = ["omfattning"]
+"utbetalningsmanad" = ["utbetalningsmanad"]
+"utbetalningsperiod-from" = ["Utbetalningsperiod_fromdat"]
+"utbetalningsperiod-tom" = ["utbetalningsperiod_tomdat"]

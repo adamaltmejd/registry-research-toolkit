@@ -1,0 +1,9 @@
+# Public ids of fk/etableringsersattning, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"utbetalningsmanad" = ["UTTAG_MANAD"]
+"utbetalningsperiod-from" = ["ERSATTNING_FROM"]
+"utbetalningsperiod-tom" = ["ERSATTNING_TOM"]

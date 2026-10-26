@@ -1,0 +1,13 @@
+# Public ids of scb/utrikeshandel-tjanster, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"intakt-export" = ["Intakt"]
+"kostnad-import" = ["Kostnad"]
+"kvartal" = ["Kvartal"]
+"landkod" = ["Landkod"]
+"person-orgnr" = ["Peorgnr"]
+"redovisningsar" = ["Ar"]
+"riktning" = ["Riktning"]
+"scbkod" = ["Scbkod"]
+"varde" = ["Varde"]

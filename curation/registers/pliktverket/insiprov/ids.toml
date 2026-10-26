@@ -1,0 +1,11 @@
+# Public ids of pliktverket/insiprov, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"batteri" = ["batteri"]
+"g-faktor" = ["gkap"]
+"personnr" = ["penr"]
+"pkapdat" = ["pkapdat"]
+"provtyp" = ["provtyp"]
+"spatial-formaga" = ["gvkap"]
+"verbal-formaga" = ["gckap"]

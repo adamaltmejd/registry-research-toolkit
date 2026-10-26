@@ -1,0 +1,10 @@
+# Public ids of pliktverket/diagnos, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"diagnosdatum" = ["diagdat"]
+"diahand" = ["diahand"]
+"grader" = ["grader"]
+"kapitelnummer-sjukdom" = ["kap"]
+"personnr" = ["penr"]
+"sjukdomsnummer" = ["sjnr"]

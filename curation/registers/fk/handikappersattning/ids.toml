@@ -1,0 +1,10 @@
+# Public ids of fk/handikappersattning, from the slug pins (rebuild A).
+[tables]
+
+[variables]
+"belopp" = ["belopp"]
+"lopnr-personnr" = ["personnummer"]
+"omfattning" = ["omfattning"]
+"utbetalningsmanad" = ["utbetalningsmanad"]
+"utbetalningsperiod-from" = ["Utbetalningsperiod_fromdat"]
+"utbetalningsperiod-tom" = ["Utbetalningsperiod_tomdat"]
