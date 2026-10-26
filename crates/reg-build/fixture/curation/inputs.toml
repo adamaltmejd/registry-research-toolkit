@@ -2,7 +2,10 @@
 # (scripts/gate.py, `rust`). Each input exercises one default rule: a case-only
 # spelling change (ALDER/Alder), a rename (Inkomst/DispInk), an ambiguous window (Typ),
 # a T1 clamp (Typ beyond hushall's end), a key in two tables (LopNr) and a timeless
-# table (kod).
+# table (kod). The SCB export (scb/) exercises releases: a final and a preliminary
+# edition of 2020 (Kon shadowed and typed differently, PrelInk only preliminary), a
+# collision (two 2021 deliveries), an unparsed name, a population collapse (2022), gap
+# markers (Alder in 2021; Utbildning, never a column) and a hole (Alder in 2020).
 repo = "fixture"
 commit = "fixture"
 
@@ -20,3 +23,9 @@ provider = "demo"
 name = "classifications"
 reader = "classification-csv"
 path = "classifications"
+
+[[input]]
+name = "scb"
+reader = "scb"
+path = "scb"
+provider = "demo"

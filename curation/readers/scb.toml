@@ -1,0 +1,185 @@
+# The SCB export (crates/reg-readers/src/scb.rs).
+
+# `RegisterId` → register handle. A register missing here is read as `r<RegisterId>`.
+[registers]
+
+# `Datatyp` → the frame's type. A literal missing here stays as stated.
+[types]
+int = "int"
+tinyint = "int"
+smallint = "int"
+bigint = "int"
+Heltal = "int"
+numeric = "decimal"
+Numeric = "decimal"
+numerisk = "decimal"
+decimal = "decimal"
+Decimaltal = "decimal"
+float = "decimal"
+real = "decimal"
+money = "decimal"
+char = "char"
+nchar = "char"
+varchar = "char"
+nvarchar = "char"
+Character = "char"
+alfanumerisk = "char"
+text = "char"
+Text = "char"
+ntext = "char"
+date = "date"
+smalldatetime = "datetime"
+datetime = "datetime"
+datetime2 = "datetime"
+
+# The delivery-name grammar (crates/reg-readers/src/names.rs): Registerversionnamn into
+# a period, an edition and a qualifier. Words are matched case-insensitively. A form's
+# pattern matches the whole name, token for token; spaces between tokens do not matter
+# (`2019V` matches `{year} {term}`). The first matching form wins.
+[names.editions]
+"slutlig version" = "final"
+"preliminär version" = "preliminary"
+"preliminära" = "preliminary"
+"preliminär" = "preliminary"
+
+[names.months]
+januari = 1
+jan = 1
+februari = 2
+feb = 2
+mars = 3
+mar = 3
+april = 4
+apr = 4
+maj = 5
+juni = 6
+jun = 6
+juli = 7
+jul = 7
+augusti = 8
+aug = 8
+september = 9
+sep = 9
+oktober = 10
+okt = 10
+november = 11
+nov = 11
+december = 12
+dec = 12
+
+[names.terms]
+"vårterminen" = "spring"
+"vårtermin" = "spring"
+"våren" = "spring"
+vt = "spring"
+v = "spring"
+"höstterminen" = "autumn"
+"hösttermin" = "autumn"
+"hösten" = "autumn"
+ht = "autumn"
+h = "autumn"
+sommarterminen = "summer"
+
+[[names.forms]]
+pattern = "{year}"
+period = "year"
+
+[[names.forms]]
+pattern = "{year}-{mm}-{dd}"
+period = "day"
+
+[[names.forms]]
+pattern = "{year}-{year_to}"
+period = "years"
+
+[[names.forms]]
+pattern = "{year}-{mm}-{dd} - {year_to}-{mm_to}-{dd_to}"
+period = "days"
+
+[[names.forms]]
+pattern = "{year}-{mm} - {year_to}-{mm_to}"
+period = "months"
+
+[[names.forms]]
+pattern = "{year}/{yy}"
+period = "school-year"
+
+[[names.forms]]
+pattern = "{year}/{year_to}"
+period = "school-year"
+
+[[names.forms]]
+pattern = "läsåret {year}/{yy}"
+period = "school-year"
+
+[[names.forms]]
+pattern = "läsåret {year}/{year_to}"
+period = "school-year"
+
+[[names.forms]]
+pattern = "{year} {term}"
+period = "term"
+
+[[names.forms]]
+pattern = "{term} {year}"
+period = "term"
+
+[[names.forms]]
+pattern = "{term} {year} - {term_to} {year_to}"
+period = "terms"
+
+[[names.forms]]
+pattern = "första halvåret {year}"
+period = "first-half"
+
+[[names.forms]]
+pattern = "andra halvåret {year}"
+period = "second-half"
+
+[[names.forms]]
+pattern = "{year} januari - juni"
+period = "first-half"
+
+[[names.forms]]
+pattern = "{year} juli - december"
+period = "second-half"
+
+[[names.forms]]
+pattern = "{year} kv {q}"
+period = "quarter"
+
+[[names.forms]]
+pattern = "{year} kvartal {q}"
+period = "quarter"
+
+[[names.forms]]
+pattern = "{year} kv {q} - kv {q_to}"
+period = "quarter"
+
+[[names.forms]]
+pattern = "{year} kvartal {q} - {q_to}"
+period = "quarter"
+
+[[names.forms]]
+pattern = "{year} {month}"
+period = "month"
+
+[[names.forms]]
+pattern = "{month} {year}"
+period = "month"
+
+[[names.forms]]
+pattern = "{dd} {month} {year}"
+period = "day"
+
+[[names.forms]]
+pattern = "hela året {year}"
+period = "year"
+
+[[names.forms]]
+pattern = "taxeringsår {year}"
+period = "year"
+
+[[names.forms]]
+pattern = "utjämningsår {year}"
+period = "year"

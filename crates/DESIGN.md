@@ -281,6 +281,33 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **The fold** is `reg-core`'s `fold_identity` of the trimmed name; the v4 schema says
   NFC. The A inputs hold no string that NFC changes, so the question stays open for B.
 
+**Decisions taken in milestone B.**
+
+- **Editions.** Among a table's releases of one period and qualifier, the primary is
+  final, then unstated, then preliminary. Two of the best edition are a collision (F8):
+  the first by release handle stays primary, since the schema keeps one primary per
+  period, and the twin is neither preferred nor preliminary, so its own columns stay
+  `clear` and count in the split test. An occurrence of a non-primary release is
+  `shadowed` where the primary documents the same key and fold; otherwise it is used,
+  and a segment made only of worse-edition occurrences is `preliminary`. A non-primary
+  release whose spellings or types for a key differ from the primary's is F7. An
+  unparsed release (F9) leaves its occurrences `unplaced`.
+- **Gap markers.** A row documenting a key in a release without a column attaches to the
+  key's variable when the key is one variable. A key that never has a column is no
+  variable: one F5 notice per key.
+- **Gaps (T5)** are computed only in tables with a placed primary release: inside a
+  variable's hull in that table, an uncovered day is `documented_without_column` under a
+  marker, `release_without_column` under a primary release, else `no_release`; holes
+  between the table's spans are table gaps.
+- **SCB handles.** Source keys are `v<VarId>`, release handles `r<RegVerID>`, table
+  handles the variant's name (unique per register in the export). A register's handle
+  comes from `[registers]` in `curation/readers/scb.toml`, else `r<RegisterId>`,
+  reported. Rows that differ only by population are one occurrence with every row as a
+  locator; the release lists its populations, with a reference day when one date is
+  stated.
+- **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
+  normalization step for the SCB export.
+
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
 against random full-register orders, with every difference classified.

@@ -208,6 +208,7 @@ fn build(args: &Args) -> Result<(), String> {
             let key = match record {
                 Record::Register(r) => (r.provider.clone(), r.register.clone()),
                 Record::Table(t) => (t.provider.clone(), t.register.clone()),
+                Record::Release(r) => (r.provider.clone(), r.register.clone()),
                 Record::Occurrence(o) => (o.provider.clone(), o.register.clone()),
                 Record::ValueSet(v) => {
                     let entry = valuesets

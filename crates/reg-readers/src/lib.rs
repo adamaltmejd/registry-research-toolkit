@@ -7,9 +7,12 @@
 //! - [`transcription`]: the transcription CSV, the interchange format thin providers
 //!   are entered in;
 //! - [`workbook`]: the Socialstyrelsen metadata template (XLSX, through calamine);
+//! - [`scb`]: the SCB metadata export (pipe-delimited CP1252 CSVs);
 //! - [`classification`]: classification CSVs, read as value sets.
 
 pub mod classification;
+pub mod names;
+pub mod scb;
 pub mod transcription;
 pub mod workbook;
 
@@ -60,6 +63,12 @@ pub fn read(root: &Path, readers: &Path, input: &Input) -> Result<ReadOutput, Re
             &need(&input.provider, "provider")?,
             &need(&input.register, "register")?,
             &workbook::Config::load(&config)?,
+        ),
+        "scb" => scb::read(
+            root,
+            &input.path,
+            &need(&input.provider, "provider")?,
+            &scb::Config::load(&config)?,
         ),
         "classification-csv" => {
             classification::read(root, &input.path, &classification::Config::load(&config)?)

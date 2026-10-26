@@ -1,8 +1,8 @@
 //! `reg-frame`: the source frame, the one record shape every reader produces
 //! (`crates/DESIGN.md`, "The catalog builder").
 //!
-//! A frame states registers, tables, documented columns (occurrences) and value sets,
-//! each with a locator back to its input. Nothing here names a provider or a file
+//! A frame states registers, tables, stated deliveries (releases), documented columns
+//! (occurrences) and value sets, each with a locator back to its input. Nothing here names a provider or a file
 //! format: provider coordinates survive only as opaque strings (source keys, handles,
 //! locators). Dates are inclusive ISO days, the convention of `reg-core`'s interval
 //! algebra; an absent bound is unstated, never invented.
@@ -55,20 +55,65 @@ pub struct Table {
     pub locator: Locator,
 }
 
-/// One column as documented over one stated period. `column` is the exact spelling.
-/// `source_key` is the reader's opaque identity evidence: the provider's variable id,
-/// else the folded name.
+/// A population a release states, in the source's order.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+pub struct Population {
+    pub name: String,
+    pub definition: Option<String>,
+    /// The stated reference day, when the source gives one day.
+    pub day: Option<String>,
+}
+
+/// A delivery of one table as its source states it. Never synthesized. `release` is
+/// the source handle. The reader's name grammar places `name` in time: `from`, `to`
+/// and `grain` are all stated or, for a name it cannot place, all absent.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+pub struct Release {
+    pub provider: String,
+    pub register: String,
+    pub table: String,
+    pub release: String,
+    pub name: String,
+    pub description: Option<String>,
+    pub from: Option<String>,
+    pub to: Option<String>,
+    /// `year`, `half`, `quarter`, `month`, `day` or `span`.
+    pub grain: Option<String>,
+    /// `final`, `preliminary` or `unstated`.
+    pub edition: String,
+    /// Words of the name beside its period, which tell same-period deliveries apart.
+    pub qualifier: Option<String>,
+    pub populations: Vec<Population>,
+    pub locator: Locator,
+}
+
+/// A value set an occurrence states for one of its release's populations, when its
+/// populations disagree (`population` indexes [`Release::populations`]).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+pub struct PopulationValueSet {
+    pub population: usize,
+    pub valueset: String,
+}
+
+/// One column as documented over one stated period. `column` is the exact spelling;
+/// empty, the source documents the variable in this period without a column (a gap
+/// marker). `source_key` is the reader's opaque identity evidence: the provider's
+/// variable id, else the folded name.
+///
+/// An occurrence of a release takes the release's period and states no bounds.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub struct Occurrence {
     pub provider: String,
     pub register: String,
     pub table: String,
+    pub release: Option<String>,
     pub column: String,
     pub source_key: String,
     pub from: Option<String>,
     pub to: Option<String>,
     pub label: Option<String>,
     pub definition: Option<String>,
+    pub operational_definition: Option<String>,
     pub unit: Option<String>,
     /// Normalized by the reader's type table: `int`, `decimal`, `char`, `date`,
     /// `datetime`; the literal when the table has no entry.
@@ -76,12 +121,19 @@ pub struct Occurrence {
     pub length: Option<i64>,
     /// The content hash of a value set stated in the same frame.
     pub valueset: Option<String>,
+    /// Value sets that differ by population, in place of `valueset`.
+    pub population_valuesets: Vec<PopulationValueSet>,
+    /// `false` when the source states the column carries no codes (a number or free
+    /// text); unstated otherwise.
+    pub coded: Option<bool>,
     /// A code system the source names but the frame cannot resolve (a link, a
     /// classification name). Evidence only: classification references are curated.
     pub code_system: Option<String>,
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
     pub locator: Locator,
+    /// Other input rows stating the same occurrence, sorted.
+    pub also: Vec<Locator>,
 }
 
 /// One code of a value set; `parent` is another item's code.
@@ -125,6 +177,7 @@ impl ValueSet {
 pub enum Record {
     Register(Register),
     Table(Table),
+    Release(Release),
     ValueSet(ValueSet),
     Occurrence(Occurrence),
 }
