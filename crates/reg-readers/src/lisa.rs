@@ -6,11 +6,11 @@
 //! data rows: a column, its description, its years and, on some sheets, a sensitivity
 //! flag, each column found by its header alias. A row without a column or a label is a
 //! section heading or a note and is skipped (with a warning when it states years or
-//! sensitivity). A year cell holds
-//! years and ranges (`1990-2024`, `2003-2008\n2013`); each range is one occurrence of
-//! the column. A sheet with no year column, or a blank year cell, leaves the bounds
-//! unstated. A blank-year row on a sheet with years that repeats a column of a sheet
-//! without years (`Individ`'s year-independent block) is left to that sheet.
+//! sensitivity). A year cell holds years and ranges (`1990-2024`, `2003-2008\n2013`);
+//! each range is one occurrence of the column. A sheet with no year column, or a blank
+//! year cell, leaves the bounds unstated. A blank-year row on a sheet with years that
+//! repeats a column of a sheet without years (`Individ`'s year-independent block) is
+//! left to that sheet.
 //!
 //! Table handles are the sheet names and source keys the folded column name.
 
