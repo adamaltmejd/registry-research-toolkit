@@ -121,14 +121,15 @@ title alone, do not comment on it, and list it in the summary for the maintainer
 
 Then decide:
 
+- **Labelled `parked`** (open or closed), or **closed as not planned** (wontfix,
+  superseded): do not file or comment; list it in the summary for the maintainer.
 - **Open issue covering the same fix**: comment on it with the new evidence instead of
   filing.
 - **Closed as completed, but the problem is back**: new issue, titled as a regression,
   linking the closed one.
-- **Closed as not planned** (wontfix, superseded), or open but labelled `parked`: do not
-  file or comment; list it in the summary for the maintainer.
-- **Closed as duplicate**: follow it to the issue it duplicates and apply these rules to
-  that one.
+- **Closed as duplicate** (`stateReason` from the search): the body or closing comment
+  names the issue it duplicates; apply these rules to that one. If neither names it,
+  list it for the maintainer.
 
 ### 3. Relations
 
@@ -150,15 +151,16 @@ in chat:
   | D1    | fix(reg_webapp): … | reg_webapp, bug | new              | F1, F4   | parent #707 |
   | D2    | —                  | —               | comment on #1234 | F2       | —           |
 
-Below it, list: findings not filed and why (not reproduced, withdrawn, closed as not
-planned), suggested epics, suggested PR groupings. The maintainer edits the drafts file
-or replies; revise until they say go. File nothing before that.
+Below it, list: findings not filed and why (not reproduced, withdrawn, matched a parked
+or not-planned issue, an unresolved duplicate or an issue the trust gate refused),
+suggested epics, suggested PR groupings. The maintainer edits the drafts file or
+replies; revise until they say go. File nothing before that.
 
 ### 5. File and report
 
-Split each approved draft into its own body file, `.local/dogfood/<slug>-D<n>.md`, for
-`--body-file`. File in dependency order, so `--parent` and `--add-blocked-by` targets
-exist:
+Split each approved draft into its own body file,
+`.local/dogfood/<YYYY-MM-DD>-<slug>-D<n>.md`, for `--body-file`. File in dependency
+order, so `--parent` and `--add-blocked-by` targets exist:
 
 ```bash
 gh issue create --title "<title>" --label <area> --label <type> --body-file <file> [--parent <epic>]
