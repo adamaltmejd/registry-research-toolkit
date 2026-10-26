@@ -44,7 +44,6 @@
 "objekttyp" = ["Fastigheter: OTYP"]
 "popularnamn" = ["Adresser: Popularnamn"]
 "postnr" = ["Adresser: POSTNR"]
-"postnromrade" = ["Adresser: Postnromrade"]
 "postnromrade-58" = ["Adresser: Postnromrade"]
 "postnromrade-old" = ["Fastigheter: Postnromrade_Old @ 2013-01-01"]
 "postnummeromrade-gammalt" = ["Fastigheter: PostNrOmradeOld"]

@@ -4,6 +4,7 @@
 [variables]
 "alder" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): AGE_R"]
 "alder-avslutad-utbildning" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01c1"]
+"arbetsplats-larande" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): D_Q12c # v32908"]
 "avbruten-utbildning-vilket-ar-slutade-du-att-studera-pa-utbildningen" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q03c2"]
 "b-q01a3" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01a3"]
 "b-q01b" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01b"]
@@ -453,3 +454,4 @@
 "u23x000s" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): U23x000S"]
 "utbildningens-niva" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01a"]
 "utbildningens-niva-2" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01a_T"]
+"utbildningsniva-krav" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): D_Q12c # v32906"]

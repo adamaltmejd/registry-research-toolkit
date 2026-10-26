@@ -10,7 +10,6 @@
 "lan" = ["Småorter: LAN"]
 "lannamn" = ["Småorter: LANNAMN"]
 "objectid" = ["Småorter: OBJECTID"]
-"objekt-id" = ["Småorter: OBJECTID"]
 "registreringsar" = ["Småorter: AR"]
 "slutdatum" = ["Småorter: ValidTo"]
 "smaort-kod" = ["Småorter: SMAORT"]

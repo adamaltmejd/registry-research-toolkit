@@ -102,7 +102,6 @@
 "logiersattning" = ["Anställningar - nattbefolkning: LogiErs"]
 "loneink" = ["Anställningar - dagbefolkning: Lon"]
 "medborgarskapsland" = ["Anställningar - dagbefolkning: MedbLandNamn"]
-"naringsgren-arbetsstalle" = ["Arbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST): AstSni2002 @ 2009-01-01"]
 "naringsgren-huvudsaklig" = ["Företag - Uppgifter aggregerade till företagsnivå (KUAGG): FtgSni92"]
 "ovrersforskskatt" = ["Anställningar - nattbefolkning: OvrErsForskSkatt"]
 "ovriga-ersattningar" = ["Anställningar - nattbefolkning: OvrErs"]

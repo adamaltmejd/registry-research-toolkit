@@ -13,6 +13,7 @@
 "antal-veckor" = ["Individer: B31"]
 "b210" = ["Individer i privat sektor: B210"]
 "b25" = ["Individer: B25"]
+"bilforman" = ["Individer i privat sektor: B36 # v6087"]
 "bonusar" = ["Individer: B411"]
 "formaner" = ["Individer: B412"]
 "individnyckel" = ["Individer: Key_Ex"]

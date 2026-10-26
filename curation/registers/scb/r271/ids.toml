@@ -5,6 +5,9 @@
 "Namngivna nyfödda" = "namngivna-nyfodda"
 
 [variables]
+"antal-efternamn" = ["Folkbokförda - namn: Antal # v16400"]
+"antal-fornamn" = ["Folkbokförda - namn: Antal # v16398"]
+"antal-tilltalsnamn" = ["Folkbokförda - namn: Antal # v16399"]
 "efternamn" = ["Folkbokförda - namn: Efternamn"]
 "fornamn" = ["Folkbokförda - namn: FNamn"]
 "forsamling" = ["Folkbokförda - personer: Forsamling"]
