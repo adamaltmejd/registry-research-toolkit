@@ -1,4 +1,4 @@
-# Public ids of sos/thr, from the slug pins (rebuild A).
+# Public ids of sos/thr, from the slug pins at 9e28ba5b2 (rebuild A).
 [tables]
 "THR_BESOK" = "thr-besok"
 "THR_BESOK_LANDSTING" = "thr-besok-landsting"

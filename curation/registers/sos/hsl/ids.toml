@@ -1,4 +1,4 @@
-# Public ids of sos/hsl, from the slug pins (rebuild A).
+# Public ids of sos/hsl, from the slug pins at 9e28ba5b2 (rebuild A).
 [tables]
 "HSL" = "hsl"
 "HSL2" = "hsl2"

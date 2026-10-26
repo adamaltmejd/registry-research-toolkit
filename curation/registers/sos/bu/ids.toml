@@ -1,4 +1,4 @@
-# Public ids of sos/bu, from the slug pins (rebuild A).
+# Public ids of sos/bu, from the slug pins at 9e28ba5b2 (rebuild A).
 [tables]
 "bu_barn_19602013" = "bu-barn-19602013"
 "bu_barn_endastxnr" = "bu-barn-endastxnr"

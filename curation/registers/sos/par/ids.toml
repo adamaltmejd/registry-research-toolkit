@@ -1,4 +1,4 @@
-# Public ids of sos/par, from the slug pins (rebuild A).
+# Public ids of sos/par, from the slug pins at 9e28ba5b2 (rebuild A).
 [tables]
 "PAR_OV" = "par-ov"
 "PAR_SV" = "par-sv"
