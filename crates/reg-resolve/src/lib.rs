@@ -693,24 +693,12 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 ),
             });
         }
-        let conflicts: BTreeSet<&str> = members
+        // Fields the key's merged source rows disagree on, and flags its covering
+        // occurrences state differently (the segment keeps the max): one F6 per key.
+        let mut conflicts: BTreeSet<String> = members
             .iter()
-            .flat_map(|&i| resolved[i].occurrence.conflicts.iter().map(String::as_str))
+            .flat_map(|&i| resolved[i].occurrence.conflicts.iter().cloned())
             .collect();
-        if !conflicts.is_empty() {
-            report.row_conflict_keys += 1;
-            findings.push(Finding {
-                code: "F6:source-conflict",
-                severity: "review",
-                subject: Subject::Variable(v),
-                period: None,
-                message: format!(
-                    "{}: its source rows disagree on {}",
-                    resolved[last].occurrence.column,
-                    conflicts.into_iter().collect::<Vec<_>>().join(", ")
-                ),
-            });
-        }
         let tables_used: BTreeSet<usize> = members.iter().map(|&i| resolved[i].table).collect();
         if tables_used.len() > 1 {
             report.keys_in_several_tables += 1;
@@ -787,6 +775,21 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                         .flatten()
                 };
                 let identifier = flag(|o| o.identifier);
+                for (name, f) in [
+                    (
+                        "sensitive",
+                        (|o| o.sensitive) as fn(&Occurrence) -> Option<bool>,
+                    ),
+                    ("identifier", |o| o.identifier),
+                ] {
+                    let stated: BTreeSet<bool> = covering
+                        .iter()
+                        .filter_map(|&i| f(&resolved[i].occurrence))
+                        .collect();
+                    if stated.len() > 1 {
+                        conflicts.insert(name.to_owned());
+                    }
+                }
                 let segment = Segment {
                     table: t,
                     period,
@@ -796,11 +799,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
-                    role: if identifier == Some(true) {
-                        "row_key"
-                    } else {
-                        role(o)
-                    },
+                    role: role(o, identifier),
                     state,
                 };
                 let index = match runs.last_mut() {
@@ -831,6 +830,20 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 }
             }
             segments.extend(runs);
+        }
+        if !conflicts.is_empty() {
+            report.row_conflict_keys += 1;
+            findings.push(Finding {
+                code: "F6:source-conflict",
+                severity: "review",
+                subject: Subject::Variable(v),
+                period: None,
+                message: format!(
+                    "{}: its source rows disagree on {}",
+                    resolved[last].occurrence.column,
+                    conflicts.into_iter().collect::<Vec<_>>().join(", ")
+                ),
+            });
         }
 
         // Descriptive text over time: the latest occurrence of each piece.
@@ -1362,8 +1375,8 @@ pub fn coded(o: &Occurrence) -> &'static str {
 
 /// The default role: identifiers are row keys, coded columns codes, the rest measures.
 #[must_use]
-pub fn role(o: &Occurrence) -> &'static str {
-    if o.identifier == Some(true) {
+pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
+    if identifier == Some(true) {
         "row_key"
     } else if o.valueset.is_some() || !o.population_valuesets.is_empty() {
         "code"

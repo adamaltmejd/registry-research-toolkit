@@ -147,7 +147,8 @@ The full SCB read is a heavy run.
 
 - **The link stage:**
   - cross-register `continues` and `derived-from` links;
-  - the SCB export's `Timeseries` events (series breaks, ends, replacements);
+  - the SCB export's `Timeseries` events (series breaks, ends, replacements) and release
+    notices;
   - tags;
   - the search index with code search;
   - parsed documents.

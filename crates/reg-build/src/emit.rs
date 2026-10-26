@@ -499,7 +499,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     flag(x.sensitive),
                     flag(x.identifier),
                     Cell::Null,
-                    Cell::Str(reg_resolve::role(x).into()),
+                    Cell::Str(reg_resolve::role(x, x.identifier).into()),
                     Cell::Str("unknown".into()),
                     opt_int(occ.variable.map(|v| variable_id[&(ri, v)])),
                     opt_int(

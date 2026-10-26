@@ -354,7 +354,8 @@ tracks the milestones. This section holds the design decisions that outlive the 
   `Identifierare` makes every occurrence of a listed `VarId` an identifier, beside the
   summary's own identifiers. In any provider, a segment is sensitive or an identifier if
   any occurrence covering it says so, and an identifier segment is a row key;
-  under-flagging is the dangerous direction.
+  under-flagging is the dangerous direction. Occurrences that state a flag differently
+  raise one F6 per key.
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
   no B table holds. The link stage reads them.
