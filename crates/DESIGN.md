@@ -380,16 +380,23 @@ tracks the milestones. This section holds the design decisions that outlive the 
   in turn (`V714_65`: one VarId 2007–2009, another 2014–2016) or at once (`Kolumn2` in
   `Gasföretag` names some 90). A spelling alone then reaches several variables, and the
   first in index order took the id: 5,299 SCB ids reached several variables. An anchor
-  now carries a day where its spelling is shared, which keeps the ledger free of source
-  keys and survives renumbering. The SCB ledgers (generated from today's
+  now carries a day where its spelling is shared, which keeps source keys out of most
+  anchors and survives renumbering. The SCB ledgers (generated from today's
   `<RegisterId>.<VarId>` pins) date an anchor only where another key shares its
   spelling, on the first day its key covers and no rival does (a start of its own period
-  or the day after a rival's end). A pin no day separates is left out and its variable
-  gets a proposed id: 1,183, spellings shared at once, including pins keyed by column
-  (`<RegisterId>.<column>`) whose spelling several keys share. An anchor splits at its
-  last `: `, since ten SCB table names contain one. Where a ledger variable id equals a
-  table id of its register (two cases: today's catalog kept the namespaces apart), the
-  table keeps it.
+  or the day after a rival's end). Where no day separates them (spellings shared at
+  once, such as the long-format `RadNr` columns), the anchor names the source key
+  instead: `<table>: <spelling> # <source key>`. The key suffix is allowed only where
+  the spelling is shared in that table, counting every occurrence, placed or not; a
+  suffix on an unshared spelling is refused (`ledger-anchor-key-unneeded`), so ledgers
+  name keys only where they must. Two ids on one anchor are refused at load
+  (`ledger-anchor-shared`) rather than left to key order. Generating the SCB ledgers, a
+  pin keyed by column gives way to one keyed by VarId, a pin of a whole VarId to its
+  split parts, and pins of different VarIds take the key suffix; 582 pins were left out
+  this way. Pins keyed by column whose spelling several keys share are left out. An
+  anchor splits at its last `: `, since ten SCB table names contain one. Where a ledger
+  variable id equals a table id of its register (two cases: today's catalog kept the
+  namespaces apart), the table keeps it.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

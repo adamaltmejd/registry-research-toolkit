@@ -38,6 +38,8 @@ use serde::{Deserialize, Serialize};
 
 /// A register's `ids.toml`: public ids of its tables and variables. An anchor is
 /// `<table>: <spelling>`, or a bare spelling for the implicit table, matched by fold.
+/// Where several source keys share the spelling in that table, `# <source key>` names
+/// one and `@ <day>` one day (`<table>: <spelling> # <key> @ <day>`).
 #[derive(Debug, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Ledger {
@@ -1281,6 +1283,40 @@ fn runs(
     out
 }
 
+/// A ledger anchor, parsed: table, folded spelling, source key and day.
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
+struct Anchor<'a> {
+    table: &'a str,
+    spelling: String,
+    key: Option<&'a str>,
+    day: Option<&'a str>,
+}
+
+impl<'a> Anchor<'a> {
+    /// `None` when its `@` part is not a day.
+    fn parse(text: &'a str) -> Option<Self> {
+        let (rest, day) = match text.rsplit_once(" @ ") {
+            Some((rest, day)) => {
+                let day = day.trim();
+                reg_core::iso_day_number(day)?;
+                (rest, Some(day))
+            }
+            None => (text, None),
+        };
+        let (rest, key) = match rest.rsplit_once(" # ") {
+            Some((rest, key)) => (rest, Some(key.trim())),
+            None => (rest, None),
+        };
+        let (table, spelling) = rest.rsplit_once(": ").unwrap_or(("", rest));
+        Some(Self {
+            table: table.trim(),
+            spelling: fold_identity(spelling.trim()),
+            key,
+            day,
+        })
+    }
+}
+
 /// Ledger ids onto variables by anchor; proposed ids for the rest.
 fn assign_ids(
     variables: &mut [Variable],
@@ -1303,44 +1339,59 @@ fn assign_ids(
             return Err(format!("ledger id {id:?} is also a table id"));
         }
     }
-    // Anchors match the folded spellings of each table's placed columns; a dated anchor
-    // only the variables placed there on that day.
+    // Anchors match the folded spellings of each table's placed columns; a keyed anchor
+    // only that source key's variables, a dated one only those placed there that day.
+    // A spelling's source keys count every occurrence, placed or not.
     let mut by_anchor: BTreeMap<(&str, String), Vec<_>> = BTreeMap::new();
-    for r in resolved {
-        if let Some(v) = r.variable
-            && !r.occurrence.column.is_empty()
-        {
-            by_anchor
-                .entry((
-                    tables[r.table].table.table.as_str(),
-                    fold_identity(&r.occurrence.column),
-                ))
-                .or_default()
-                .push((v, r.period.as_ref()));
+    let mut keys: BTreeMap<(&str, String), BTreeSet<&str>> = BTreeMap::new();
+    for r in resolved.iter().filter(|r| !r.occurrence.column.is_empty()) {
+        let at = (
+            tables[r.table].table.table.as_str(),
+            fold_identity(&r.occurrence.column),
+        );
+        keys.entry(at.clone())
+            .or_default()
+            .insert(r.occurrence.source_key.as_str());
+        if let Some(v) = r.variable {
+            by_anchor.entry(at).or_default().push((
+                v,
+                r.period.as_ref(),
+                r.occurrence.source_key.as_str(),
+            ));
         }
     }
+    // Two ids on one anchor would leave the id to key order: refused, as is a key where
+    // the spelling has only one.
+    let mut anchored: BTreeMap<Anchor, &str> = BTreeMap::new();
     for (id, anchors) in &ledger.variables {
         let mut targets = BTreeSet::new();
-        for anchor in anchors {
-            let (anchor, day) = match anchor.rsplit_once(" @ ") {
-                Some((anchor, day)) if reg_core::iso_day_number(day.trim()).is_some() => {
-                    (anchor, Some(day.trim()))
-                }
-                Some(_) => return Err(format!("ledger id {id:?}: anchor {anchor:?} names no day")),
-                None => (anchor.as_str(), None),
-            };
-            let (table, spelling) = anchor.rsplit_once(": ").unwrap_or(("", anchor));
+        for text in anchors {
+            let anchor = Anchor::parse(text)
+                .ok_or_else(|| format!("ledger id {id:?}: anchor {text:?} names no day"))?;
+            let (key, day) = (anchor.key, anchor.day);
+            let at = (anchor.table, anchor.spelling.clone());
+            let placed = by_anchor.get(&at).map_or(&[][..], Vec::as_slice);
+            let shared = keys.get(&at).is_some_and(|k| k.len() > 1);
+            if let Some(other) = anchored.insert(anchor, id) {
+                return Err(format!(
+                    "ledger-anchor-shared: ledger ids {other:?} and {id:?} both anchor {text:?}"
+                ));
+            }
+            if key.is_some() && !shared {
+                return Err(format!(
+                    "ledger-anchor-key-unneeded: ledger id {id:?}: anchor {text:?} names a source key where one key has the spelling"
+                ));
+            }
             targets.extend(
-                by_anchor
-                    .get(&(table.trim(), fold_identity(spelling.trim())))
-                    .into_iter()
-                    .flatten()
-                    .filter(|(_, period)| {
-                        day.is_none_or(|d| {
-                            period.is_some_and(|p| p.0.as_str() <= d && d <= p.1.as_str())
-                        })
+                placed
+                    .iter()
+                    .filter(|&&(_, period, k)| {
+                        key.is_none_or(|key| key == k)
+                            && day.is_none_or(|d| {
+                                period.is_some_and(|p| p.0.as_str() <= d && d <= p.1.as_str())
+                            })
                     })
-                    .map(|&(v, _)| v),
+                    .map(|&(v, _, _)| v),
             );
         }
         if targets.len() > 1 {

@@ -3,10 +3,8 @@
 "Privat och offentlig sektor" = "privat-offentlig"
 
 [variables]
-"aktuellt-antal-anstallda" = ["Privat och offentlig sektor: SyssA"]
 "ar-och-kvartal" = ["Privat och offentlig sektor: Kvartal @ 2005-01-01"]
 "avgkvar" = ["Privat och offentlig sektor: AvgKvar"]
-"bemforetag" = ["Privat och offentlig sektor: BemForetag"]
 "bemforetag-4924" = ["Privat och offentlig sektor: BemForetag"]
 "bemftg" = ["Privat och offentlig sektor: BemFtg"]
 "cfar-nummer" = ["Privat och offentlig sektor: CFarNr"]
@@ -15,11 +13,9 @@
 "komobem" = ["Privat och offentlig sektor: KomOBem"]
 "kvartal" = ["Privat och offentlig sektor: Kvartal @ 2007-01-01"]
 "lan-arbetsstalle" = ["Privat och offentlig sektor: Lan"]
-"lediga-jobb-arbetsstalle" = ["Privat och offentlig sektor: Tot"]
 "lediga-jobb-obemannade" = ["Privat och offentlig sektor: OBem"]
 "lediga-jobb-vikarie" = ["Privat och offentlig sektor: Vikarie"]
 "manad" = ["Privat och offentlig sektor: Manad"]
-"naringsgren" = ["Privat och offentlig sektor: NgS1"]
 "ngs1" = ["Privat och offentlig sektor: NgS1"]
 "snia" = ["Privat och offentlig sektor: Snia"]
 "syssa" = ["Privat och offentlig sektor: SyssA"]

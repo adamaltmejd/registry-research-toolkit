@@ -11,7 +11,6 @@
 "lannamn" = ["Tätorter: LANNAMN"]
 "nordlig-koordinat-sweref" = ["Tätorter: Y_koord"]
 "objectid" = ["Tätorter: OBJECTID"]
-"objekt-id" = ["Tätorter: OBJECTID"]
 "ostlig-koordinat-sweref" = ["Tätorter: X_koord"]
 "tatort" = ["Tätorter: TATORT"]
 "tatortskod" = ["Tätorter: TATORTSKOD"]

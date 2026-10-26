@@ -202,6 +202,8 @@
 "person-orgnr" = ["Inskrivningsinformation: IDNUMMER"]
 "pfnr" = ["Planinformation: PFNR"]
 "pkttyp" = ["Fastighetsinformation: PKTTYP"]
+"planforkortning" = ["Planinformation: PLANFK # v35349"]
+"planforkortning-naturvard" = ["Planinformation: PLANFK # v35356"]
 "plnamn" = ["Planinformation: PLNAMN"]
 "popnamndat" = ["Adressplatsinformation: POPNAMNDAT"]
 "popnamnursp" = ["Adressplatsinformation: POPNAMNURSP"]

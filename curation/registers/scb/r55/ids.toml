@@ -95,7 +95,6 @@
 "personnr" = ["Förvärvsarbetande: PersonNr"]
 "sektor-huvud" = ["Förvärvsarbetande: Sektor"]
 "sektor-ku1" = ["Grundregister (Yrkesreg): KU1SektorKod @ 2016-01-01"]
-"sektorkod" = ["Grundregister (Yrkesreg): SektorKod @ 2001-01-01"]
 "sektorkod-1819" = ["Grundregister (Yrkesreg): SektorKod @ 2001-01-01"]
 "sektorkod-2" = ["Förvärvsarbetande: SektorKod"]
 "sektorkod-storsta-forvarvskalla" = ["Grundregister (Yrkesreg): KU1SektorKod @ 2009-01-01"]

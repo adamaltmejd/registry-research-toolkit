@@ -66,6 +66,7 @@
 "region" = ["Förtroendevalda i regioner/landsting: regionnamn"]
 "regionkod" = ["Förtroendevalda i regioner/landsting: rk"]
 "sammanraknad-forvarvs-och-kapitalinkomst" = ["Förtroendevalda i regioner/landsting: CFVIKI"]
+"sammanraknad-forvarvsinkomst" = ["Förtroendevalda i kommuner: cfviki # v99"]
 "sammanraknad-forvarvsinkomst-2" = ["Förtroendevalda i kommuner: CSFVI"]
 "sektor" = ["Förtroendevalda i kommuner: Sektorkod @ 2011-01-01"]
 "senaste-invandringsar" = ["Förtroendevalda i kommuner: ArInv @ 2019-01-01"]

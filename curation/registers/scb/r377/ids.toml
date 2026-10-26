@@ -88,6 +88,8 @@
 "startdatum-kurs" = ["Avklarade poäng: Startdatumforkurs"]
 "startdatum-utbildningsomgang" = ["Avklarade poäng: Omgang_startdatum"]
 "startmanad-utb" = ["Studerande och examinerade: StartManad_Utb"]
+"studerande-utbildningsform" = ["Studerande och examinerade: Studerande # v38237"]
+"studerande-yh" = ["Studerande och examinerade: Studerande # v49786"]
 "studieform" = ["Studerande kurser: StudieForm_Utb"]
 "studiekommun-senaste" = ["Studerande och examinerade: StudieKommun_senaste"]
 "studiekommun-senaste-kod" = ["Studerande och examinerade: StudieKommun_senaste_kod"]

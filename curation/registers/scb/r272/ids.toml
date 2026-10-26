@@ -4,7 +4,6 @@
 
 [variables]
 "andring-av-elavtal" = ["Omförhandling  och byten av elavtal: F08"]
-"anledning-byte-elleverantor" = ["Omförhandling  och byten av elavtal: F07b_txt"]
 "anledning-ej-byte-elleverantor" = ["Omförhandling  och byten av elavtal: F7c"]
 "antal-barn-i-hushallet" = ["Omförhandling  och byten av elavtal: F01_barn"]
 "antal-vuxna-i-hushallet" = ["Omförhandling  och byten av elavtal: F01_vuxna"]
@@ -25,6 +24,4 @@
 "f9a" = ["Omförhandling  och byten av elavtal: F9a"]
 "f9b" = ["Omförhandling  och byten av elavtal: F9b"]
 "fodar" = ["Omförhandling  och byten av elavtal: FodAr"]
-"gemensam-faktura-elnattjanst" = ["Omförhandling  och byten av elavtal: F09a"]
 "minst-tre-manader-pa-adress" = ["Omförhandling  och byten av elavtal: F03"]
-"typ-av-elavtal" = ["Omförhandling  och byten av elavtal: F05"]
