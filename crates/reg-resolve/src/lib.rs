@@ -197,7 +197,7 @@ pub struct Report {
     pub ambiguous_segments: usize,
     pub ambiguous_pairs: usize,
     pub preliminary_segments: usize,
-    pub population_conflict_keys: usize,
+    pub valueset_conflict_keys: usize,
     /// Keys whose merged source rows disagree on a field.
     pub row_conflict_keys: usize,
     pub gaps: usize,
@@ -681,7 +681,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             .any(|&i| !resolved[i].occurrence.population_valuesets.is_empty())
             && population_keys.insert(key.clone())
         {
-            report.population_conflict_keys += 1;
+            report.valueset_conflict_keys += 1;
             findings.push(Finding {
                 code: "F6:source-conflict",
                 severity: "review",

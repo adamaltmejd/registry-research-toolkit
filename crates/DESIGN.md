@@ -319,9 +319,9 @@ tracks the milestones. This section holds the design decisions that outlive the 
   reader config, and ledgers live under the `r<RegisterId>` handle. Rows that differ
   only by population are one occurrence with every row as a locator; the release lists
   its populations, with a reference day when one date is stated. A label, definition,
-  unit or type the rows disagree on keeps the first row's as provisional and names the
-  field in the occurrence's `conflicts`, which resolve reports as F6 (source conflict),
-  once per variable.
+  operational definition, unit, type or length the rows disagree on keeps the first
+  row's as provisional and names the field in the occurrence's `conflicts`, which
+  resolve reports as F6 (source conflict), once per variable.
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items
@@ -342,7 +342,9 @@ tracks the milestones. This section holds the design decisions that outlive the 
   column as not coded when every row's CVID does; otherwise such a population simply has
   no value set. Rows naming different value sets give the occurrence its sets per
   population, and a population whose rows disagree gets each as an alternative; resolve
-  reports either as F6.
+  reports either as F6. A row's "no codes" beside another row's set is not an
+  alternative (the set stands), and a set named by a row without a population is left
+  out with a warning.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
