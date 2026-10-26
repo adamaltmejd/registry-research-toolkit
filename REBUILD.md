@@ -47,8 +47,8 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   | M   | Content                                                                                            | Proves                                                                                            | Status      |
   | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
   | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done        |
-  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | in progress |
-  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | —           |
+  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done        |
+  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | in progress |
   | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the six statement kinds                                              | —           |
   | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —           |
   | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —           |
@@ -170,6 +170,22 @@ The full SCB read is a heavy run.
 
 ### C: link stage, published catalog, server switch
 
+- **Carried from B's audit:**
+  - B2: before the server switch, one sampled pass over the value-set differences the
+    comparison still leaves unexplained (920 "codes differ", 70 only in the old catalog,
+    74 only in the new one). Take about 30 of the 920 plus the 70 and bucket them by
+    cause: the ValidDates filter or its whole-set fallback; curation in the old catalog;
+    a reused ItemId's dates; other. Record the buckets here. Re-open a rule only if a
+    bucket is large and wrong. Also check r118 kommun codes 0197 and 0199 per segment;
+  - B3: when `reg-catalog` is rewritten, slim the resolve `Report`
+    (`crates/reg-resolve/src/lib.rs`, 26 counters) to what the catalog cannot answer:
+    the ledger lists and `split_keys`. The comparison script derives the rest with SQL;
+  - B4: when C or D next changes `crates/reg-resolve/src/lib.rs` (1,569 lines), move
+    gaps, cadence and stretch into `gaps.rs` and `assign_ids` and `Anchor` into
+    `ledger.rs`. Code move only, no behaviour change, not a standalone PR;
+  - for `reg-catalog` and the SPA: a blank code (`""`, SCB's "Uppgift saknas") is a real
+    item until D marks it a sentinel. It must render and be searchable, and never be
+    confused with "no value set".
 - **The link stage:**
   - cross-register `continues` and `derived-from` links;
   - the SCB export's `Timeseries` events (series breaks, ends, replacements) and release
@@ -319,6 +335,9 @@ Recorded with their sources by the maintainer:
 - per-code validity dates applied at read time only;
 - populations not a segment dimension;
 - no series entity in the catalog;
-- holdings as a separate layer.
+- holdings as a separate layer;
+- sensitivity follows the source per segment (design v4 §4.6), not a variable-wide
+  ratchet (maintainer yes, 2026-10-26). 73 variables become sensitive only in some
+  segments (57 in LISA r34); D corrects source errors with `set sensitive`.
 
 The durable parts are in [crates/DESIGN.md](crates/DESIGN.md).

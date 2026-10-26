@@ -308,7 +308,8 @@ fn build(args: &Args) -> Result<(), String> {
         ("open_end", (day(reg_frame::OPEN_END) + 1).to_string()),
         ("curation_digest", curation_digest),
         ("period_grammar", "reg-core".to_owned()),
-        ("delivery_name_grammar", "none".to_owned()),
+        // The grammar is the readers' `[names]` tables, inside the digested curation tree.
+        ("delivery_name_grammar", "curation_digest".to_owned()),
     ]);
 
     let mut providers: Vec<emit::ProviderRow> = manifest
