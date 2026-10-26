@@ -1,4 +1,4 @@
-# Public ids of sos/sol, from the slug pins at 9e28ba5b2 (rebuild A).
+# Public ids of sos/sol, from the slug pins at 9e28ba5b2.
 [tables]
 "SOL" = "sol"
 "SOL_2007_2012" = "sol-2007-2012"

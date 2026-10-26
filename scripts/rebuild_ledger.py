@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """rebuild_ledger — today's slug pins into the rebuild's id ledgers.
 
-    uv run --no-project scripts/rebuild_ledger.py <pins dir> <frames dir> <catalog db> <curation dir>
+    uv run --no-project scripts/rebuild_ledger.py <pins dir> <frames dir> <catalog db> \
+        <curation dir> <pins commit> <provider>...
 
 Temporary (REBUILD.md): milestone A ran it, B runs it for the SCB ledgers, and it is
 deleted at F. Writes `<curation dir>/registers/<provider>/<register>/ids.toml` for
-every register in the frames `reg-build read` wrote to `<frames dir>`, from:
+every register of the named providers in the frames `reg-build read` wrote to
+`<frames dir>`, from:
 
 - the variable pins in `<pins dir>/<provider>/<register>.auto.toml`, shadowed by the
   hand file `<register>.toml` (`[variable]`, `"<native id>.<column>" = slug`);
@@ -106,9 +108,14 @@ def ledger(
 
 def main() -> int:
     pin_dir, frame_dir, db, curation = map(Path, sys.argv[1:5])
+    commit, providers = sys.argv[5], set(sys.argv[6:])
+    if not providers:
+        sys.exit(
+            "name the providers whose ledgers to write; the others are hand-edited"
+        )
     slugs = table_slugs(db)
     for (provider, register), tables in sorted(frames(frame_dir).items()):
-        if provider is None:
+        if provider not in providers:
             continue
         pinned = pins(pin_dir, provider, register)
         if not pinned:
@@ -120,7 +127,7 @@ def main() -> int:
         path = curation / "registers" / provider / register / "ids.toml"
         path.parent.mkdir(parents=True, exist_ok=True)
         header = (
-            f"# Public ids of {provider}/{register}, from the slug pins (rebuild A).\n"
+            f"# Public ids of {provider}/{register}, from the slug pins at {commit}.\n"
         )
         path.write_text(header + "\n".join(lines) + "\n", encoding="utf-8")
     return 0

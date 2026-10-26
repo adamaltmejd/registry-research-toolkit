@@ -1,4 +1,4 @@
-# Public ids of sos/lvm, from the slug pins at 9e28ba5b2 (rebuild A).
+# Public ids of sos/lvm, from the slug pins at 9e28ba5b2.
 [tables]
 "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM" = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM" = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"

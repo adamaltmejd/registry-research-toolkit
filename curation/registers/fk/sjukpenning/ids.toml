@@ -1,4 +1,4 @@
-# Public ids of fk/sjukpenning, from the slug pins at 9e28ba5b2 (rebuild A).
+# Public ids of fk/sjukpenning, from the slug pins at 9e28ba5b2.
 [tables]
 "delfall-1-1" = "delfall-1-1"
 "delfall-2-1" = "delfall-2-1"

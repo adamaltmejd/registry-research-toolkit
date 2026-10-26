@@ -49,7 +49,9 @@ class View:
     )
     labels: dict[str, str] = field(default_factory=dict)
     codes: dict[str, set[str]] = field(default_factory=lambda: defaultdict(set))
-    flags: dict[str, tuple] = field(default_factory=dict)
+    # variable -> the sensitive and identifier values its rows state
+    sensitive: dict[str, set] = field(default_factory=lambda: defaultdict(set))
+    identifier: dict[str, set] = field(default_factory=lambda: defaultdict(set))
     years: dict[str, tuple[int, int]] = field(default_factory=dict)
 
 
@@ -78,7 +80,8 @@ def old_views(db: sqlite3.Connection, providers: set[str]) -> dict[str, View]:
         view.columns[fold(column)].add(var)
         view.placed[(fold(column), var)].add(table)
         view.labels[var] = label or ""
-        view.flags[var] = (bool(sens), bool(ident))
+        view.sensitive[var].add(bool(sens))
+        view.identifier[var].add(bool(ident))
         # An unstated old bound is open.
         lo, hi = int((lo or "0001")[:4]), int((hi or "9999")[:4])
         old = view.years.get(var, (lo, hi))
@@ -124,7 +127,8 @@ def new_views(db: sqlite3.Connection, providers: set[str]) -> dict[str, View]:
         view.columns[fold(column)].add(var)
         view.placed[(fold(column), var)].add(table)
         view.labels[var] = label
-        view.flags[var] = (sens, ident)
+        view.sensitive[var].add(None if sens is None else bool(sens))
+        view.identifier[var].add(bool(ident))
         span = (year(lo, False), min(year(hi, True), 9999))
         old = view.years.get(var, span)
         view.years[var] = (min(old[0], span[0]), max(old[1], span[1]))
@@ -149,7 +153,7 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
         diffs[cls].append((reg, detail))
 
     for t in sorted(old.tables - new.tables):
-        add("table only in old", t)
+        add("table only in old", t or "(implicit)")
     for t in sorted(new.tables - old.tables):
         add("table only in new", t or "(implicit)")
     shared: set[tuple[str, str]] = set()
@@ -194,16 +198,17 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
                 else "codes differ"
             )
             add(cls, f"{var}: {len(o)} -> {len(n)} codes, {len(o & n)} shared")
-        (os, oi), (ns, ni) = old.flags[var], new.flags[var]
-        if ns is None and os is not None:
+        os, stated = old.sensitive[var], new.sensitive[var] - {None}
+        if not stated:
             add(
                 "sensitive: unstated in the source, the old catalog defaulted it",
-                f"{var}: {os}",
+                f"{var}: {sorted(os)}",
             )
-        elif ns is not None and bool(ns) != os:
-            add("sensitive differs", f"{var}: {os} -> {bool(ns)}")
-        if bool(ni) != oi:
-            add("identifier differs", f"{var}: {oi} -> {bool(ni)}")
+        elif stated != os:
+            add("sensitive differs", f"{var}: {sorted(os)} -> {sorted(stated)}")
+        oi, ni = old.identifier[var], new.identifier[var]
+        if oi != ni:
+            add("identifier differs", f"{var}: {sorted(oi)} -> {sorted(ni)}")
         if old.years[var] != new.years[var]:
             olo, nlo = old.years[var][0], new.years[var][0]
             cls = (
