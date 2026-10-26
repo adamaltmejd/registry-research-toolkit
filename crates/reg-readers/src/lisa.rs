@@ -60,10 +60,12 @@ struct Entry {
     sensitive: Option<bool>,
 }
 
-/// A sheet: its title cell, whether it has a year column, and its data rows.
+/// A sheet: its title cell and that cell's 1-based row, whether it has a year column,
+/// and its data rows.
 struct Sheet {
     name: String,
     title: Option<String>,
+    title_row: usize,
     years: bool,
     entries: Vec<Entry>,
 }
@@ -125,7 +127,7 @@ pub fn read(
             from: None,
             to: None,
             cadence: None,
-            locator: at(1),
+            locator: at(sheet.title_row),
         }));
         for entry in sheet.entries {
             if sheet.years && entry.years.is_none() && timeless.contains(&name_key(&entry.column)) {
@@ -190,7 +192,11 @@ fn sheet(
     let offset = range.start().map_or(0, |(r, _)| r as usize) + 1;
     let rows: Vec<&[Data]> = range.rows().collect();
     let alias = |c: Option<String>, aliases: &[String]| {
-        c.is_some_and(|c| aliases.iter().any(|a| a.to_lowercase() == c.to_lowercase()))
+        c.is_some_and(|c| {
+            aliases
+                .iter()
+                .any(|a| a.trim().to_lowercase() == c.trim().to_lowercase())
+        })
     };
     let header = rows
         .iter()
@@ -234,6 +240,7 @@ fn sheet(
     }
     Ok(Sheet {
         title: rows.first().and_then(|r| cell(r, Some(0))),
+        title_row: offset,
         years: years.is_some(),
         name,
         entries,
