@@ -80,15 +80,62 @@ and D5 revisit them. Known so far:
 - `scb/energi-flerbostad.toml#/identity.unassigned/1`: VarID 2330's literals, also
   delivered under eight or nine other VarIDs.
 
-PR C's converter writes the complete list (every `where = { name }` it emits to split a
-VarID family) into this section.
+The converter lists every member it narrows with `where` in its report
+(`convert-report.json`, `non_neutral`), so the complete list is generated with each
+conversion rather than kept here. Over the 67 registers converted for PR C (slices 1-3
+and the golden corpus's registers) it emits 1,047, almost all `where = { name }`:
+`scb/it-anvandning` 737, `iot` 117, `fasit` 55, `innovation-foretag` 34,
+`energi-flerbostad` 23, `hreg` 15, `prisindex` 15, `rtb` 13, `lbr` 9, `fou` 8,
+`ksju` 5, `gdb` 4, `komvux` 3, `lisa` 1, `sos/lova` 4, `sos/bu` 2, `sos/par` 2. Two
+further cases are not VarID families:
+
+- alternative records that share one source ref (SoS `INVARN8` on `lova-person`, PAR's
+  `ATC` by data type), where `where` picks the alternative the old entry's
+  `expected_fields` describe;
+- a column delivered under several case spellings on one table (gdb `fastigheter`
+  `Kommun`/`kommun`/`KOMMUN`), which Python folds: the member drops `column` and is
+  narrowed by `where` instead, since `column` is an exact literal.
+
+## What the conversion makes explicit
+
+Python infers some addresses that the neutral verbs state. The converter freezes each
+inference into data, computed with Python's own rule, so the Rust build infers none:
+
+- **Split pins.** A `[variable]` pin `<reg>.<var>.<split>` on an SCB family with no
+  `identity.partition` entry still re-keys it today: each literal whose derived slug
+  (`derive_variable_slug`) is the split's suffix goes to that owner
+  (`curation_compile._column_partition_plan`). The converter writes one
+  `identity.assign` per such family with the exact literals, `legacy.ref =
+  <file>#/variable/<reg>.<var>` and no head. A Rust split-pin rule was rejected:
+  ownership by spelling is inference. Size: the tree has 2,593 such families with 9,830
+  split pins in 159 SCB registers (an upper bound; families with only `column_owner`
+  splits bind no literal). The 67 registers converted so far give 191 families and 622
+  members.
+- **Consequence after cutover.** Once the converted tree is committed, a new delivery
+  that brings a new literal into a split family gets no owner: it lands unassigned and
+  must be curated. That is the intended behavior, an exact list with nothing inferred,
+  but it adds curation work. The Rust build report and `check-curation` must list those
+  unassigned literals per family (phase 3, slice 4).
+- **Literals a column owner already owns.** A partition's `unassigned_columns` literal
+  whose records an `identity.column_owner` entry owns (RTB `Personnr`) is owned in
+  Python, so the `owner = false` link leaves those records out.
+- **SoS lookup sheets.** A Deldatamängd routed into a variant with no `[[variant]]` pin
+  (LOVA's `A_LOVA_STYR_*`) is support-only in Python: its rows are on no table.
+- **Old defaults.** `errata.support` without `kind` states `contradictory_question`.
+- **Coding on added occurrences.** Three coding entries address occurrences that only an
+  `errata.column` or `errata.delivered` entry creates (`scb/fou` `coding.documented/1`
+  and `/2`, `scb/gdb` `coding.extend/1`). They have no prepared record, so the
+  converter names them as stated (`table`, `column`) and the record-set check cannot
+  reach them; the report lists them (`added`). Phase 3 must select coding members after
+  the additions.
 
 ## Temporary code and its gates
 
   | Code                                                         | Deleted at                             |
   | ------------------------------------------------------------ | -------------------------------------- |
-  | The curation converter (old tree → neutral verbs), in Python | phase 4, after its output is committed |
-  | The converter's record-set equivalence harness               | phase 4                                |
+  | The curation converter (old tree → neutral verbs), in Python: `reg_meta_build/src/reg_meta_build/port/` (`convert`, `select`, `emit`) | phase 4, after its output is committed |
+  | The converter's record-set equivalence harness and golden check: `port/equivalence.py`, `port/golden.py` | phase 4 |
+  | `crates/reg-build-model/examples/parse_verbs.rs` (reads converted files with the verb types) | phase 4 |
   | `crates/reg-build-model/tests/digest/generate.py`            | phase 5, with Python preparation       |
 
 ## Phase 2
@@ -96,8 +143,56 @@ VarID family) into this section.
   | PR  | Content                                                                | State          |
   | --- | ---------------------------------------------------------------------- | -------------- |
   | A   | this tracker, design docs, `reg-build-model` types and prepared reader | merged (#1935) |
-  | B   | verb schema and golden corpus                                          | open           |
-  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | —              |
+  | B   | verb schema and golden corpus                                          | merged (#1937) |
+  | C   | converter, record-set equivalence on the slices, dbdiff ignore file    | open           |
+
+### The equivalence oracle (provisional)
+
+The slice 1-3 equivalence result is provisional: it re-runs on the next accepted
+prepared root. The pinned root records `prepare_code_sha256` `3aac71fe…`, and main's
+builder refuses it (`prepared_code_stale`) since #1926 changed the `Cargo.toml` pins of
+`reg-core` and `reg-core-py`, which the prepare fingerprint hashes. So the Python side
+of the check runs from a scratch tree whose prepare fingerprint is still `3aac71fe…`:
+
+- base `dda9b72f5` (`b6b87c2ff^`, the commit before #1926);
+- cherry-pick `82c563689` (#1936, repeatable `--registers`, which slice 3 needs);
+- all of `1a08ff362` (#1930) excluded, because `_curation.py`, which it touches, is in
+  the prepare fingerprint.
+
+It reads this checkout's curation tree (`--curation-dir`). Its `reg_meta_build/src`
+differs from main only by #1930, in two places that change no output:
+
+- `concept_groups._common_prefix` instead of `_curation.common_prefix`: the same
+  character-wise longest common prefix, differing only on an empty list, which no
+  caller passes.
+- `prepared_sources._locator_values` calls `os.path.commonprefix` instead of
+  `common_prefix`: the same result on a list of strings, and only `prepare-sources`
+  runs it.
+
+### PR C results (provisional)
+
+On the pinned root, with the oracle above. Each converted entry's selection equals the
+record set its old case acts on in Python's `check-curation --dump-decisions`, and its
+`legacy.head` equals the provenance head Python publishes:
+
+  | Slice                 | Registers | Converted entries | Equal | Python run | Peak RSS |
+  | --------------------- | --------- | ----------------- | ----- | ---------- | -------- |
+  | 1 (thin + canonical)  | 39        | 1                 | all   | 48 s       | 1.7 GB   |
+  | 2 (`scb/rtb`)         | 1         | 147               | all   | 179 s      | 8.8 GB   |
+  | 3 (Socialstyrelsen)   | 13        | 385               | all   | 56 s       | 1.7 GB   |
+
+Identity is compared per record: every record Python re-keys is covered, each owner
+matches Python's (SCB by naming id, SoS by a one-to-one grouping, since SoS keys by
+discriminator). All 33 golden pairs equal the converter's output as parsed values
+(`python -m reg_meta_build.port.golden`), every converted file parses with
+`reg_build_model::verbs::Verbs` (`examples/parse_verbs.rs`), and two conversions of
+slice 3 are byte-identical. The full-tree conversion and its equivalence run are
+scheduled with the maintainer; they re-run with slices 1-3 on the next accepted root.
+
+To re-run a slice: `check-curation --dump-decisions DUMP --registers ...` in the oracle
+tree, `python -m reg_meta_build.port.convert ... --registers ... --out DIR`, then
+`python -m reg_meta_build.port.equivalence ... --registers ... --converted DIR --dump
+DUMP`.
 
 ## Phase 3 slices
 
