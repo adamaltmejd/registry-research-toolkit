@@ -9,8 +9,9 @@
 //! - Code-list sheets state codes; a variable binds one when its link cell names a
 //!   code-list sheet with codes exactly, else the one such sheet named after the
 //!   variable or naming it in its variable column (the sheet's rows for the variable
-//!   when it has a variable column; reported, since the source never linked it), else an inline enumeration in its value-set cell
-//!   is read conservatively, else the link text is kept as code-system evidence.
+//!   when it has a variable column; reported, since its link does not name it), else
+//!   an inline enumeration in its value-set cell is read conservatively, else the link
+//!   text is kept as code-system evidence.
 //!
 //! Bounds are year (`2001`), month (`200101`), day (`20010101`, an ISO date or a date
 //! cell) or a start with a trailing dash (`1999-`). A blank bound stays unstated
@@ -411,11 +412,11 @@ impl Context<'_> {
                 .as_deref()
                 .and_then(|t| self.pointer(t, codelists))
                 .or_else(|| {
-                    // A binding the source never linked is a guess: reported, so D can
+                    // A binding the link does not name is a guess: reported, so D can
                     // confirm it or curate another.
                     let sheet = self.named(&column_name, codelists)?;
                     self.warn(&format!(
-                        "{}: {column_name} binds {sheet:?} by name, without a link",
+                        "{}: {column_name} binds {sheet:?} by name, not by its link",
                         at.at
                     ));
                     Some(sheet)
