@@ -992,7 +992,7 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         }
     }
 
-    let gaps = gaps(&tables, &releases, &variables, &resolved);
+    let gaps = gaps(&releases, &variables, &resolved);
     report.gaps = gaps.len();
 
     assign_ids(&mut variables, &resolved, &tables, ledger, &mut report)?;
@@ -1025,11 +1025,17 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     })
 }
 
+/// The smallest interval holding every one of `spans`.
+fn hull(spans: &[Interval]) -> Option<Interval> {
+    let from = spans.iter().map(|s| &s.0).min()?;
+    let to = spans.iter().map(|s| &s.1).max()?;
+    Some((from.clone(), to.clone()))
+}
+
 /// T5 in the tables with placed releases: the days inside a table's coverage hull no
 /// used column covers (under a release with no columns, or no release), and each
 /// variable's days inside its hull there that a release covers without its column.
 fn gaps(
-    tables: &[ResolvedTable],
     releases: &[ResolvedRelease],
     variables: &[Variable],
     resolved: &[ResolvedOccurrence],
@@ -1045,17 +1051,16 @@ fn gaps(
     }
     let mut out = Vec::new();
     for (&t, releases) in &delivered {
-        // The table's days inside its coverage hull no used column covers.
-        let spans = &tables[t].spans;
-        let hull = (
-            spans[0].0.clone(),
-            spans.last().expect("a table has a span").1.clone(),
-        );
+        // The table's days between its used columns that no used column covers. The hull
+        // is the columns', not the table's bound: a bound may be open on a side.
         let covered: Vec<Interval> = resolved
             .iter()
             .filter(|r| r.table == t && r.status == "used")
             .map(|r| span(r).clone())
             .collect();
+        let Some(hull) = hull(&covered) else {
+            continue;
+        };
         let mut all = vec![hull.clone()];
         all.extend(covered.iter().cloned());
         all.extend(releases.iter().cloned());
@@ -1097,18 +1102,7 @@ fn gaps(
                 .filter(|s| s.table == t)
                 .map(|s| s.period.clone())
                 .collect();
-            let hull = (
-                segments
-                    .iter()
-                    .map(|p| p.0.clone())
-                    .min()
-                    .expect("a segment"),
-                segments
-                    .iter()
-                    .map(|p| p.1.clone())
-                    .max()
-                    .expect("a segment"),
-            );
+            let hull = hull(&segments).expect("a segment");
             let marks = marked.get(&(v, t)).cloned().unwrap_or_default();
             let mut all = vec![hull.clone()];
             all.extend(segments.iter().cloned());
