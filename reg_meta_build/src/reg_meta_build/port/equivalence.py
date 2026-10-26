@@ -25,7 +25,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from reg_meta_build._curation import fold_column, repo_curation_dir
+from reg_meta_build._curation import repo_curation_dir
 from reg_meta_build.curation_compile import _naming_source_id
 from reg_meta_build.port import convert
 from reg_meta_build.port.select import Member, Ref, scope
@@ -164,7 +164,13 @@ class Checker:
             if "ref" in effect and effect.get("kind") in ("field", "period")
         ]
         if not effects:
-            self.compare(verb, entry, self.select(members), _targets(cases))
+            # Coding cases carry no effects. A member that selects no source record
+            # targets an occurrence only an addition creates (`PORT.md`): no oracle
+            # yet, so never an ok.
+            new_refs = self.select(members)
+            self.compare(
+                verb, entry, new_refs, _targets(cases), selects_source=bool(new_refs)
+            )
             return
         by_ref: dict[Ref, list[Any]] = defaultdict(list)
         for rec in self.index.records:
@@ -201,8 +207,6 @@ class Checker:
             for rec in self.index.records
             if any(self.index.matches(member, rec) for member in chosen)
         }
-        # A member that selects no source record targets an occurrence only an
-        # addition creates (`PORT.md`): no oracle yet, so never an ok.
         self.compare(verb, entry, new, old, selects_source=bool(new))
 
     def addition(self, verb: str, entry: dict) -> None:
@@ -261,21 +265,13 @@ class Checker:
         if verb != "errata.delivered":
             self.compare(verb, entry, new, old)
             return
-        # The donor: the converted one selects exactly Python's; without one, Python's
-        # donors are the member column's own documented records on that table.
+        # Python names a donor only where it copies the coding (`donor_coding`): one
+        # same-edition record per added edition, each within the converted donor.
+        if not entry.get("donor_coding"):
+            self.compare(verb, entry, new, old)
+            return
         donors = {_ref(effect["donor"]) for effect in effects if effect.get("donor")}
-        if entry.get("donor"):
-            donor_ok = self.select([entry["donor"]]) == donors
-        else:
-            column = fold_column(member["column"])
-            documented = {
-                rec.ref
-                for rec in self.index.records
-                if member["table"] in self.index.tables(rec)
-                and rec.column is not None
-                and fold_column(rec.column) == column
-            }
-            donor_ok = donors <= documented
+        donor_ok = bool(donors) and donors <= self.select([entry["donor"]])
         self.compare(verb, entry, new, old, donor=donor_ok)
 
     def assignments(self) -> None:

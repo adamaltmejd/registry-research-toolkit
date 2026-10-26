@@ -229,15 +229,17 @@ targets exactly the occurrences the `errata.column` or `errata.delivered` entry 
 same table and column adds, so the harness is to compare the member's (table, column)
 and the case's deliveries with that addition's.
 
-Occurrence entries are compared per record, not per ref: alternative records share a
-ref, and Python's effect reaches each alternative its `when` describes. A period effect
-carries no `when`, and Python's guard picks the alternative (`expected_fields`, checked
-per record), so on a ref with several alternatives the harness compares by ref and
-reports `alternative_by_ref` (two slice-3 entries, `lova.toml`
-`errata.occurrence_period/25` and `/26`). An
-`errata.delivered` donor must select exactly Python's donor records. Without a donor,
-Python's donors must be the member column's own records on that table. Checks the
-harness does not make yet, each a gap the full run closes or names:
+Entries whose Python case carries field or period effects are compared per record, not
+per ref: alternative records share a ref, and Python's effect reaches each alternative
+its `when` describes (field values only; `when_scope` and `when_period` are not read). A
+period effect carries no `when`, and Python's guard picks the alternative
+(`expected_fields`, checked per record), so on a ref with several alternatives the
+harness compares by ref and reports `alternative_by_ref` (two slice-3 entries,
+`lova.toml` `errata.occurrence_period/25` and `/26`). Coding cases and other effects are
+compared by ref. Any occurrence entry that selects no source record fails. An
+`errata.delivered` entry with `donor_coding` must name Python's per-edition donors
+within its donor member; Python names no donor otherwise, so nothing is checked. Checks
+the harness does not make yet, each a gap the full run closes or names:
 
 - `errata.delivered` `owner` against the effect's `variable_key`;
 - `errata.support` `authority.member`;
