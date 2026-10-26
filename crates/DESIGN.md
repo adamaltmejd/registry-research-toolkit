@@ -297,21 +297,27 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **Gap markers.** A row documenting a key in a release without a column attaches to the
   key's variable when the key is one variable. A key that never has a column is no
   variable: one F5 notice per key.
-- **Gaps (T5)** are computed only in tables with a placed primary release. A day between
-  the table's used columns and primary releases that no used column covers is a table
-  gap: `release_without_column` under a primary release that delivers no column, else
-  `no_release`. Inside a variable's hull in that table, an uncovered day under a marker
-  is `documented_without_column`, under a primary release `release_without_column`; a
-  day no release covers is the table's gap only, since a stock table released on one
-  reference day a year would otherwise give every variable a gap per year.
+- **Gaps (T5)** are computed only in tables with a placed primary release. A table's
+  cadence is the greatest common step, in months, between its primary releases' starts
+  when each start is a whole number of months after the one before on the same day (or
+  month end); with a cadence, every column, release and marker covers its whole step
+  from its start, so a reference-day stock table released yearly has no gap between
+  deliveries and a gap is a missing step. Without one, gaps are the holes between stated
+  periods. A day between the table's used columns and primary releases that no used
+  column covers is a table gap: `release_without_column` under a primary release that
+  delivers no column, else `no_release`. Inside a variable's hull in that table, an
+  uncovered day under a marker is `documented_without_column` and under a primary
+  release `release_without_column`; a day no release covers is stored once, as the
+  table's gap. Reader contract: a variable's gaps are its own plus its table's gaps
+  inside its span.
 - **Unplaced wins.** A column-less row of an unparsed release is `unplaced`, not a gap
   marker: with no period it marks no gap.
 - **SCB handles.** Source keys are `v<VarId>`, release handles `r<RegVerID>`, table
-  handles the variant's name (unique per register in the export). A register's handle
-  comes from `[registers]` in `curation/readers/scb.toml`, else `r<RegisterId>`,
-  reported. Rows that differ only by population are one occurrence with every row as a
-  locator; the release lists its populations, with a reference day when one date is
-  stated.
+  handles the variant's name (unique per register in the export). Register handles are
+  `r<RegisterId>` through C: a register's public name is a D `bind` statement, not
+  reader config, and ledgers live under the `r<RegisterId>` handle. Rows that differ
+  only by population are one occurrence with every row as a locator; the release lists
+  its populations, with a reference day when one date is stated.
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 

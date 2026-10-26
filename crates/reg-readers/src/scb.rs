@@ -9,9 +9,9 @@
 //!   with no `Kolumnnamn` documents the variable in that version without a column (a
 //!   gap marker).
 //!
-//! Source keys are `v<VarId>`; release handles `r<RegVerID>`; table handles the
-//! variant's name. A register's handle is its entry in the config's `[registers]`,
-//! else `r<RegisterId>`, reported.
+//! Register handles are `r<RegisterId>`, release handles `r<RegVerID>`, table handles
+//! the variant's name and source keys `v<VarId>`. A register's public name is a curated
+//! `bind`, not reader config.
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -28,9 +28,6 @@ const REGISTERINFORMATION: &str = "Registerinformation.csv";
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
-    /// `RegisterId` → register handle.
-    #[serde(default)]
-    pub registers: BTreeMap<String, String>,
     /// `Datatyp` → the frame's normalized type.
     pub types: BTreeMap<String, String>,
     pub names: Grammar,
@@ -123,17 +120,8 @@ pub fn read(
             get(c).ok_or_else(|| error(&input, format!("{}: no {what}", locator.at)))
         };
         let rid = field(register_id, "RegisterId")?;
-        let handle = match config.registers.get(&rid) {
-            Some(h) => h.clone(),
-            None => format!("r{rid}"),
-        };
+        let handle = format!("r{rid}");
         if !registers.contains_key(&rid) {
-            if !config.registers.contains_key(&rid) {
-                out.warnings.push(format!(
-                    "{}: RegisterId {rid} has no handle in [registers]; read as {handle}",
-                    locator.at
-                ));
-            }
             registers.insert(
                 rid.clone(),
                 Register {

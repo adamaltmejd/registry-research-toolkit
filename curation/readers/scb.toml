@@ -1,8 +1,5 @@
 # The SCB export (crates/reg-readers/src/scb.rs).
 
-# `RegisterId` → register handle. A register missing here is read as `r<RegisterId>`.
-[registers]
-
 # `Datatyp` → the frame's type. A literal missing here stays as stated.
 [types]
 int = "int"

@@ -1026,6 +1026,45 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
 }
 
 /// The smallest interval holding every one of `spans`.
+/// A table's cadence in months: the greatest common step between its primary releases'
+/// starts, when every start is a whole number of months after the one before on the
+/// same day of the month (or month end). `None` with fewer than two starts.
+fn cadence(releases: &[Interval]) -> Option<u32> {
+    let starts: BTreeSet<&str> = releases.iter().map(|r| r.0.as_str()).collect();
+    let month = |s: &str| -> Option<u32> {
+        Some(s.get(..4)?.parse::<u32>().ok()? * 12 + s.get(5..7)?.parse::<u32>().ok()?)
+    };
+    let mut step: Option<u32> = None;
+    for (a, b) in starts.iter().zip(starts.iter().skip(1)) {
+        let months = month(b)? - month(a)?;
+        if months == 0 || reg_core::add_iso_months(a, months).as_deref() != Some(*b) {
+            return None;
+        }
+        step = Some(step.map_or(months, |g| gcd(g, months)));
+    }
+    step
+}
+
+/// Each span widened to cover at least its cadence step from its start.
+fn stretch(step: Option<u32>, spans: Vec<Interval>) -> Vec<Interval> {
+    let Some(step) = step else {
+        return spans;
+    };
+    spans
+        .into_iter()
+        .map(|(from, to)| {
+            let end = reg_core::add_iso_months(&from, step)
+                .map_or_else(|| to.clone(), |next| reg_core::prev_iso_day(&next));
+            let to = to.max(end);
+            (from, to)
+        })
+        .collect()
+}
+
+fn gcd(a: u32, b: u32) -> u32 {
+    if b == 0 { a } else { gcd(b, a % b) }
+}
+
 fn hull(spans: &[Interval]) -> Option<Interval> {
     let from = spans.iter().map(|s| &s.0).min()?;
     let to = spans.iter().map(|s| &s.1).max()?;
@@ -1033,8 +1072,11 @@ fn hull(spans: &[Interval]) -> Option<Interval> {
 }
 
 /// T5 in the tables with placed releases: the days between a table's used columns and
-/// primary releases that no used column covers (under a release with no columns, or no release), and each
-/// variable's days inside its hull there that a release covers without its column.
+/// primary releases that no used column covers (under a release with no columns, or no
+/// release), and each variable's days inside its hull there that a release covers
+/// without its column. Where the table has a cadence, every column, release and marker
+/// covers its whole cadence step, so a gap is a missing step.
+#[allow(clippy::too_many_lines)]
 fn gaps(
     releases: &[ResolvedRelease],
     variables: &[Variable],
@@ -1049,16 +1091,28 @@ fn gaps(
                 .extend(placed(&r.release));
         }
     }
+    let steps: BTreeMap<usize, u32> = delivered
+        .iter()
+        .filter_map(|(&t, r)| Some((t, cadence(r)?)))
+        .collect();
+    let stretch = |t: usize, spans: Vec<Interval>| stretch(steps.get(&t).copied(), spans);
+    let delivered: BTreeMap<usize, Vec<Interval>> = delivered
+        .into_iter()
+        .map(|(t, r)| (t, stretch(t, r)))
+        .collect();
     let mut out = Vec::new();
     for (&t, releases) in &delivered {
         // The table's days between its used columns and primary releases that no used
         // column covers. The hull is theirs, not the table's bound: a bound may be open on
         // a side, while a placed release is bounded.
-        let covered: Vec<Interval> = resolved
-            .iter()
-            .filter(|r| r.table == t && r.status == "used")
-            .map(|r| span(r).clone())
-            .collect();
+        let covered = stretch(
+            t,
+            resolved
+                .iter()
+                .filter(|r| r.table == t && r.status == "used")
+                .map(|r| span(r).clone())
+                .collect(),
+        );
         let Some(hull) = hull(&[covered.as_slice(), releases].concat()) else {
             continue;
         };
@@ -1097,14 +1151,17 @@ fn gaps(
             let Some(delivered) = delivered.get(&t) else {
                 continue;
             };
-            let segments: Vec<Interval> = variable
-                .segments
-                .iter()
-                .filter(|s| s.table == t)
-                .map(|s| s.period.clone())
-                .collect();
+            let segments = stretch(
+                t,
+                variable
+                    .segments
+                    .iter()
+                    .filter(|s| s.table == t)
+                    .map(|s| s.period.clone())
+                    .collect(),
+            );
             let hull = hull(&segments).expect("a segment");
-            let marks = marked.get(&(v, t)).cloned().unwrap_or_default();
+            let marks = stretch(t, marked.get(&(v, t)).cloned().unwrap_or_default());
             let mut all = vec![hull.clone()];
             all.extend(segments.iter().cloned());
             all.extend(delivered.iter().cloned());

@@ -330,6 +330,24 @@ pub fn next_iso_day(s: &str) -> String {
     }
 }
 
+/// The ISO date `months` calendar months after `s`. The day is kept, clamped to the
+/// target month, and a month's last day maps to the target month's last day. `None` for
+/// a string that is not a calendar date or a result past year 9999.
+#[must_use]
+pub fn add_iso_months(s: &str, months: u32) -> Option<String> {
+    let (y, m, d) = iso_date(s)?;
+    let total = u32::from(y) * 12 + u32::from(m) - 1 + months;
+    let year = u16::try_from(total / 12).ok().filter(|&y| y <= 9999)?;
+    let month = u8::try_from(total % 12 + 1).ok()?;
+    let last = last_day(year, month);
+    let day = if d == last_day(y, m) {
+        last
+    } else {
+        d.min(last)
+    };
+    Some(iso((year, month, day)))
+}
+
 /// The day before an ISO date; a string that is not a calendar date is returned as
 /// is.
 #[must_use]
