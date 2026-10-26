@@ -79,6 +79,15 @@ path = "current-scb-inputs.zip"
 sha256 = "a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff"
 provider = "scb"
 
+# The LISA variable list. Its register handle holds through C; D's `bind` attaches its
+# sheets to the export's LISA tables.
+[[input]]
+name = "scb-lisa"
+reader = "lisa"
+path = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx"
+provider = "scb"
+register = "lisa-workbook"
+
 [[input]]
 name = "scb-transcription"
 reader = "transcription"

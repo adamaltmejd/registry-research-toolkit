@@ -122,7 +122,7 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   - `VardemangderValidDates`, applied at read time;
   - `UnikaRegisterOchVariabler` and `Identifierare` (the flags). `Timeseries` moves to C.
 - **The delivery-name grammar** in `curation/readers/scb.toml`.
-- **The LISA workbook reader.**
+- **The LISA workbook reader**, its rows a register of their own until D binds them.
 - **SCB ledgers** generated from today's slug pins.
 
 **Exit:**
@@ -212,6 +212,9 @@ The full SCB read is a heavy run.
   - `set` value set (or `assert`) for the six code lists the reader leaves unbound: BU
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
   - LVM `besdatumn`: an `assign`, or a second ledger anchor.
+
+- **LISA section headings** become `set` group hints from the reader's output (a heading
+  → rows map, added to the LISA reader when D lands), not typed by hand.
 
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.

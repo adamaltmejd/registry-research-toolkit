@@ -723,13 +723,13 @@ fn column(header: &[String], aliases: &[String]) -> Option<usize> {
     header.iter().position(|h| aliases.iter().any(|a| a == h))
 }
 
-fn cell(row: &[Data], index: Option<usize>) -> Option<String> {
+pub(crate) fn cell(row: &[Data], index: Option<usize>) -> Option<String> {
     row.get(index?).and_then(text)
 }
 
 /// A cell as trimmed text: integral numbers without a decimal point, date cells as
 /// ISO days (with the time when it is not midnight), errors and blanks as `None`.
-fn text(cell: &Data) -> Option<String> {
+pub(crate) fn text(cell: &Data) -> Option<String> {
     match cell {
         Data::String(s) | Data::DateTimeIso(s) => nonblank(s),
         Data::Int(i) => Some(i.to_string()),

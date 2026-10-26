@@ -360,6 +360,21 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
   no B table holds. The link stage reads them.
+- **The LISA workbook** is its own reader (`lisa`), not the Socialstyrelsen template's:
+  a sheet is a table named by the sheet, a data row an occurrence keyed by its folded
+  column name, a year cell one occurrence per year or range, and `Känslig1` the
+  sensitivity flag ("I vissa fall" is sensitive, like SCB's `KansligVariabelIbland`).
+  Through C its rows stay a register of their own, `scb/lisa-workbook` from the
+  manifest's `register`: attaching its sheets to the export's LISA tables, by period
+  where needed, is D's `bind`, since a workbook column keyed by name beside the export's
+  `v<VarId>` would otherwise be a rival or a second variable. Section headings (group
+  hints) wait for D's sets, `Grundregister` for C's `derived-from` links. `Individ`
+  repeats the year-independent columns with blank year cells; the year-less sheet's row
+  stands, so `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables
+  (birth country, deaths, migration) under headings, each keyed by `PersonNr`; the
+  reader keeps the sheet as one table and splitting it is D's `bind`. Labels keep their
+  footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a
+  name's own (`SNI92`), and the footnotes are not read.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

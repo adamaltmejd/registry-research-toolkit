@@ -11,6 +11,7 @@
 //! - [`classification`]: classification CSVs, read as value sets.
 
 pub mod classification;
+pub mod lisa;
 pub mod names;
 pub mod scb;
 pub mod transcription;
@@ -121,6 +122,15 @@ pub fn read(
                 &need(&input.provider, "provider")?,
                 &need(&input.register, "register")?,
                 &workbook::Config::load(&config)?,
+            )
+        }),
+        "lisa" => in_root().and_then(|()| {
+            lisa::read(
+                root,
+                &input.path,
+                &need(&input.provider, "provider")?,
+                &need(&input.register, "register")?,
+                &lisa::Config::load(&config)?,
             )
         }),
         "scb" => scb::read(
