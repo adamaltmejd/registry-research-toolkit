@@ -52,22 +52,22 @@ impl Config {
     }
 }
 
-/// A data row: its 1-based sheet row, column, label, year cell and sensitivity flag.
+/// A data row: its column-name cell's address, column, label, year cell and sensitivity
+/// flag.
 struct Entry {
-    row: usize,
+    at: String,
     column: String,
     label: String,
     years: Option<String>,
     sensitive: Option<bool>,
 }
 
-/// A sheet: its title cell and that cell's address, the column-name column's letter,
-/// whether it has a year column, and its data rows.
+/// A sheet: its title cell and that cell's address, whether it has a year column, and
+/// its data rows.
 struct Sheet {
     name: String,
     title: Option<String>,
     title_at: String,
-    column: String,
     years: bool,
     entries: Vec<Entry>,
 }
@@ -116,9 +116,9 @@ pub fn read(
         },
     })];
     for sheet in sheets {
-        let at = |row: usize| Locator {
+        let at = |at: &str| Locator {
             input: rel.to_owned(),
-            at: format!("{}!{}{row}", sheet.name, sheet.column),
+            at: at.to_owned(),
         };
         records.push(Record::Table(Table {
             provider: provider.to_owned(),
@@ -129,10 +129,7 @@ pub fn read(
             from: None,
             to: None,
             cadence: None,
-            locator: Locator {
-                input: rel.to_owned(),
-                at: format!("{}!{}", sheet.name, sheet.title_at),
-            },
+            locator: at(&sheet.title_at),
         }));
         for entry in sheet.entries {
             if sheet.years && entry.years.is_none() && timeless.contains(&name_key(&entry.column)) {
@@ -141,10 +138,8 @@ pub fn read(
             }
             let periods = bounds(entry.years.as_deref()).unwrap_or_else(|| {
                 out.warnings.push(format!(
-                    "{}!{}{}: years {:?} are not years or ranges; bounds left unstated",
-                    sheet.name,
-                    sheet.column,
-                    entry.row,
+                    "{}: years {:?} are not years or ranges; bounds left unstated",
+                    entry.at,
                     entry.years.clone().unwrap_or_default()
                 ));
                 vec![(None, None)]
@@ -171,7 +166,7 @@ pub fn read(
                     code_system: None,
                     sensitive: entry.sensitive,
                     identifier: None,
-                    locator: at(entry.row),
+                    locator: at(&entry.at),
                     also: Vec::new(),
                     conflicts: Vec::new(),
                 }));
@@ -249,7 +244,7 @@ fn sheet(
             ));
         }
         entries.push(Entry {
-            row: at,
+            at: format!("{name}!{at_column}{at}"),
             column,
             label,
             years: cell(row, years),
@@ -258,8 +253,7 @@ fn sheet(
     }
     Ok(Sheet {
         title: rows.first().and_then(|r| cell(r, Some(0))),
-        title_at: format!("{}{offset}", letter(first_col)),
-        column: at_column,
+        title_at: format!("{name}!{}{offset}", letter(first_col)),
         years: years.is_some(),
         name,
         entries,
