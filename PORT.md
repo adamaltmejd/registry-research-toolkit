@@ -81,8 +81,11 @@ and D5 revisit them. Known so far:
   delivered under eight or nine other VarIDs.
 
 The converter lists every member it narrows with `where` in its report
-(`convert-report.json`, `non_neutral`), so the complete list is generated with each
-conversion rather than kept here. Over the 67 registers converted for PR C (slices 1-3
+(`convert-report.json`, `non_neutral`, in conversion order, byte-identical across runs),
+so the complete list is generated with each conversion rather than kept here. To
+regenerate it: `uv run python -m reg_meta_build.port.convert --prepared P
+--input-commit C --input-manifest-sha256 M --registers <id> ... --out DIR`, then read
+`DIR/convert-report.json`. Over the 67 registers converted for PR C (slices 1-3
 and the golden corpus's registers) it emits 1,047, almost all `where = { name }`:
 `scb/it-anvandning` 737, `iot` 117, `fasit` 55, `innovation-foretag` 34,
 `energi-flerbostad` 23, `hreg` 15, `prisindex` 15, `rtb` 13, `lbr` 9, `fou` 8,
@@ -194,6 +197,35 @@ discriminator). All 33 golden pairs equal the converter's output as parsed value
 `reg_build_model::verbs::Verbs` (`examples/parse_verbs.rs`), and two conversions of
 slice 3 are byte-identical. The full-tree conversion and its equivalence run are
 scheduled with the maintainer; they re-run with slices 1-3 on the next accepted root.
+
+**Cutover blocker: verbs no record-set oracle has reached.** Slices 1-3 hold no entry
+of these, so only their golden pair checks them. The scheduled full equivalence run must
+reach every one before phase 4. Counts are entries in today's tree (a TOML scan); no old
+verb has zero entries, so none is deleted instead of converted:
+
+  | Old verb                                  | Entries | Files |
+  | ----------------------------------------- | ------- | ----- |
+  | `representation.parallel`                 | 592     | 41    |
+  | `coding.choice`                           | 162     | 14    |
+  | `errata.version` (→ `errata.delivery`)    | 155     | 11    |
+  | `identity.edition_split`                  | 37      | 8     |
+  | `errata.support`                          | 35      | 3     |
+  | `identity.split` by Deldatamängd          | 25      | 5     |
+  | `coding.uncoded`                          | 22      | 9     |
+  | `representation.period_family`            | 8       | 4     |
+  | `representation.matrix`                   | 7       | 1     |
+  | `coding.omit`                             | 5       | 1     |
+  | `representation.alias_window`             | 4       | 1     |
+  | `[[variant]]` `name` (→ `errata.table`)   | 3       | 1     |
+  | `coding.warning`                          | 1       | 1     |
+
+`errata.delivery`, `errata.table` and `representation.parallel` cases carry no record
+targets, so the harness needs an oracle for each before the run: Python's added edition,
+variant name and parallel-group effects. They are recorded as failures (`no oracle yet`)
+until then. The same holds for the three coding entries on added occurrences: their
+oracle is that Python's coding case targets exactly the occurrences the `errata.column`
+or `errata.delivered` entry on the same table and column adds. The harness compares the
+member's (table, column) and the case's deliveries with that addition's.
 
 To re-run a slice: `check-curation --dump-decisions DUMP --registers ...` in the oracle
 tree, `python -m reg_meta_build.port.convert ... --registers ... --out DIR`, then
