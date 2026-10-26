@@ -121,6 +121,12 @@ inference into data, computed with Python's own rule, so the Rust build infers n
   Python, so the `owner = false` link leaves those records out.
 - **SoS lookup sheets.** A Deldatamängd routed into a variant with no `[[variant]]` pin
   (LOVA's `A_LOVA_STYR_*`) is support-only in Python: its rows are on no table.
+- **Delivered owners.** An `errata.delivered` entry with no `donor` copies its own
+  table's documented column, and states `owner` only where that column is documented
+  under several native variables. Without `owner`, the added occurrences belong to the
+  owner that column has after `identity.assign` (fou `errata.delivered/6`: `Stratum`
+  on `foretagssektorn` belongs to `stratum`, a split of VarID 462), so phase 3 resolves
+  it after the assign stage.
 - **Old defaults.** `errata.support` without `kind` states `contradictory_question`.
 - **Coding on added occurrences.** Three coding entries address occurrences that only an
   `errata.column` or `errata.delivered` entry creates (`scb/fou` `coding.documented/1`
