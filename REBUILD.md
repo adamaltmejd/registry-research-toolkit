@@ -53,11 +53,12 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
 
 - **The first PR deletes the port's code**: `crates/reg-build-model` (the model of
   Python-prepared v16 records, the prepared reader, the guard digest golden and the verb
-  types with their golden corpus, #1935 and #1937) and `reg_meta_build/port/` (the
-  converter, its member selector, emitter, equivalence harness and golden check, #1938),
-  with `dbdiff`'s `--ignore-file`. The rebuild reads raw inputs, has no prepared stage
-  and has six statement kinds, so none of it is reused. D writes a new converter. The
-  old converter's selection rules (an exact member, narrowed by `where = { name }` where
+  types with their golden corpus, #1935 and #1937) and
+  `reg_meta_build/src/reg_meta_build/port/` plus `reg_meta_build/port/` (the converter,
+  its member selector, emitter, equivalence harness and golden check, #1938), with
+  `dbdiff`'s `--ignore-file`. The rebuild reads raw inputs, has no prepared stage and
+  has six statement kinds, so none of it is reused. D writes a new converter. The old
+  converter's selection rules (an exact member, narrowed by `where = { name }` where
   only SCB's VarID separates two families) are its reference, read from git at
   `d51dcf1ce`.
 
@@ -75,7 +76,7 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   per-register id ledgers (`registers/<provider>/<register>/ids.toml`), generated from
   today's slug pins. It holds no statements before D.
 
-- **Inputs.** Today's six thin-provider TOML files and the `scb_canonical` pair are
+- **Inputs.** Today's six thin-provider TOML files and `scb_canonical.toml` are
   transcribed once into the transcription format and committed to the inputs repository.
   The maintainer approves the pin.
 
@@ -89,7 +90,8 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
 **Exit:**
 
 - CI builds a small committed input twice and the bytes are identical;
-- the provider-vocabulary scan of the core crates passes in the gate;
+- the provider-vocabulary scan of `reg-frame`, `reg-resolve` and `reg-build` passes in
+  the gate;
 - a real build of the thin providers and Socialstyrelsen, and a comparison report that
   classifies every difference. The dry run's figures are the expectation:
   - Socialstyrelsen: 23 ambiguous column pairs, 329 names in several tables (60 of them
@@ -119,8 +121,8 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   - 4,481 variables without an existing id;
 - the 43 uncurated keys where today's build has more variables are checked by hand, with
   the outcome recorded here;
-- the time and memory of each stage measured against the design's targets: the SCB read
-  in 2-4 minutes, the resolve of all registers in under 60 s.
+- the time and memory of each stage measured against these targets: the SCB read in 2-4
+  minutes, the resolve of all registers in under 60 s.
 
 The full SCB read is a heavy run.
 
@@ -136,7 +138,15 @@ The full SCB read is a heavy run.
   allows. Each contract change is reviewed and the SPA types are regenerated.
 - **The order check**, which returns the logical order or its findings. An ambiguous
   window and an unnamed preliminary window block.
-- **The conformance fixtures** are built by the new builder from readable sources.
+- **The conformance harness moves off `reg_meta_build`.** Fixtures are built by the new
+  builder's CLI from readable sources. Artifact validation (the schema invariants) moves
+  into `reg-build`, which becomes its single authority. The holdings and steward cases
+  need the old builder; they leave the run in C and return, rewritten, in E.
+- **Documents move into the catalog file.** The separate docs DB and its schema gate in
+  `reg-catalog` go.
+- **Release plumbing.** The release and container workflows read the new builder's
+  schema versions, and the `release` skill is rewritten. The contract table in
+  `crates/DESIGN.md` names the new homes.
 - **A Rust `dbdiff` for the new schema,** grown from the comparison script. From the
   switch on, each release is checked by its `dbdiff` against the previous release, read
   by the builder agent to confirm that only intended changes occurred.
@@ -146,8 +156,8 @@ The full SCB read is a heavy run.
 
 **Exit:**
 
-- the conformance suite is green against the new server, on the synthetic artifacts and
-  on the real one (the `release` step);
+- the conformance suite, without the holdings and steward cases, is green against the
+  new server on the synthetic artifacts and on the real one (the `release` step);
 - random full-register orders are compared with today's server, and the differences
   classified;
 - the SPA flows are green;
@@ -215,20 +225,25 @@ The full SCB read is a heavy run.
 - `scripts/keyed_cache.py`, unless the conformance suite still uses it;
 - `scripts/rebuild_compare.py`;
 - the old builder's CI, container and release workflow steps;
+- its other dependents: `scripts/parse_lisa_docs.py`, `scripts/prototype_scb_inputs.py`
+  and its test, `reg_webapp/dev/dev.sh`, `reg_webapp/stewards/swecov/build_catalog.py`,
+  the root `pyproject.toml` member and `uv.lock`, and the `renovate.json` and
+  `.panache.toml` entries;
 - this tracker.
 
 **Rewritten:**
 
-- the `build-db` and `release` skills;
+- the `build-db`, `code-cleanup` and `dogfood` skills;
 - the testing policy in `AGENTS.md`: a few black-box tests for the key guarantees, and
   the release `dbdiff` as the main release check;
-- `AGENTS.md`, `ARCHITECTURE.md`, and the contract table in `crates/DESIGN.md`.
+- `AGENTS.md`, `ARCHITECTURE.md` and `README.md`.
 
-**Exit:** `scripts/gate.py all` is green, and a release is built by the new builder.
+**Exit:** `git grep reg_meta_build` finds nothing, `scripts/gate.py all` is green, and a
+release is built by the new builder.
 
 ## Decisions already made
 
-Recorded with their sources in the maintainer's design log:
+Recorded with their sources by the maintainer:
 
 - one identity rule for every provider;
 - variables register-scoped;

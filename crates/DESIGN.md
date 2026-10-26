@@ -170,7 +170,7 @@ the rebuild.
    function per register, run in parallel and cached by content hash. It never sees
    another register's frame.
 3. **Link and emit.** Cross-register links are checked once over all resolved registers.
-   The emitter writes one SQLite file and decides nothing.
+   The emitter writes one SQLite file, documents included, and decides nothing.
 
 **Time.**
 
@@ -190,8 +190,9 @@ the rebuild.
 - Each occurrence carries an opaque *source key*: the provider's variable id where one
   exists, otherwise the folded column name, scoped to the register.
 - Occurrences with one key in one register are one variable. The exception is a key that
-  covers two folded spellings in overlapping periods anywhere in the register, comparing
-  primary editions only. That key splits by spelling.
+  covers two folded spellings in overlapping periods anywhere in the register. Only each
+  period's primary delivery counts, so a preliminary and a final delivery of one year
+  never split a key. That key splits by spelling.
 - Case never distinguishes columns.
 - A variable has at most one spelling per table at a time.
 - A shared name under different keys is a review proposal, never a merge.
@@ -216,7 +217,7 @@ the rebuild.
   changes under a statement, the build refuses it at its file and line.
 - Every published value has one provenance: source, rule or curated, with curated over
   rule over source. Losing values are kept as evidence.
-- Rules only propose. Merges, classification references and other enrichment are always
+- Rules never merge across keys, bind classifications or enrich; those are always
   curated.
 
 **Value sets, populations and series.**
