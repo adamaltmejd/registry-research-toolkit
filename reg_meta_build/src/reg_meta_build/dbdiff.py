@@ -1283,8 +1283,8 @@ def _load_ignore_file(path: Path) -> dict[str, TableIgnore]:
     document = json.loads(path.read_text(encoding="utf-8"))
     keys = document.get("import_manifest") if isinstance(document, dict) else None
     if (
-        set(document) != {"import_manifest"}
-        or not isinstance(keys, dict)
+        not isinstance(keys, dict)
+        or set(document) != {"import_manifest"}
         or not keys
         or not all(
             isinstance(key, str) and key and isinstance(reason, str) and reason.strip()

@@ -25,7 +25,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from reg_meta_build._curation import repo_curation_dir
+from reg_meta_build._curation import fold_column, repo_curation_dir
 from reg_meta_build.curation_compile import _naming_source_id
 from reg_meta_build.port import convert
 from reg_meta_build.port.select import Member, Ref, scope
@@ -129,7 +129,10 @@ class Checker:
         new: set[Any],
         old: set[Any],
         cases: list[dict] | None = None,
+        **check: bool,
     ) -> None:
+        """Equal sets and heads, plus every named `check` (a detail that is also
+        reported)."""
         case = entry["legacy"]["ref"]
         cases = self.dump.of(case) if cases is None else cases
         head = entry["legacy"].get("head")
@@ -137,7 +140,7 @@ class Checker:
         self.record(
             verb,
             case,
-            bool(cases) and new == old and heads == {head},
+            bool(cases) and new == old and heads == {head} and all(check.values()),
             cases=len(cases),
             new=len(new),
             old=len(old),
@@ -145,13 +148,47 @@ class Checker:
             extra=len(new - old),
             head=head,
             published=sorted(h or "" for h in heads),
+            **check,
         )
 
     # ── per verb ───────────────────────────────────────────────────────────────
 
     def occurrence(self, verb: str, entry: dict, members: list[dict]) -> None:
+        """Per record where Python's effects name their refs: alternative records
+        share a ref, and an effect reaches each alternative its `when` describes."""
         cases = self.dump.of(entry["legacy"]["ref"])
-        self.compare(verb, entry, self.select(members), _targets(cases))
+        effects = [
+            effect
+            for case in cases
+            for effect in case["decision"].get("effects", ())
+            if "ref" in effect and effect.get("kind") in ("field", "period")
+        ]
+        if not effects:
+            self.compare(verb, entry, self.select(members), _targets(cases))
+            return
+        by_ref: dict[Ref, list[Any]] = defaultdict(list)
+        for rec in self.index.records:
+            by_ref[rec.ref].append(rec)
+        old = {
+            id(rec)
+            for effect in effects
+            for rec in by_ref[_ref(effect["ref"])]
+            if all(
+                rec.stated(item["name"])
+                == (item.get("value") if item["status"] == "value" else None)
+                for item in effect.get("when") or ()
+                if item["name"] in rec.FIELDS
+            )
+        }
+        chosen = [_member(member) for member in members]
+        new = {
+            id(rec)
+            for rec in self.index.records
+            if any(self.index.matches(member, rec) for member in chosen)
+        }
+        # A member that selects no source record targets an occurrence only an
+        # addition creates (`PORT.md`): no oracle yet, so never an ok.
+        self.compare(verb, entry, new, old, selects_source=bool(new))
 
     def addition(self, verb: str, entry: dict) -> None:
         """An addition lands in deliveries the source does not have: compare the
@@ -206,7 +243,25 @@ class Checker:
                         ),
                     )
                 )
-        self.compare(verb, entry, new, old)
+        if verb != "errata.delivered":
+            self.compare(verb, entry, new, old)
+            return
+        # The donor: the converted one selects exactly Python's; without one, Python's
+        # donors are the member column's own documented records on that table.
+        donors = {_ref(effect["donor"]) for effect in effects if effect.get("donor")}
+        if entry.get("donor"):
+            donor_ok = self.select([entry["donor"]]) == donors
+        else:
+            column = fold_column(member["column"])
+            documented = {
+                rec.ref
+                for rec in self.index.records
+                if member["table"] in self.index.tables(rec)
+                and rec.column is not None
+                and fold_column(rec.column) == column
+            }
+            donor_ok = donors <= documented
+        self.compare(verb, entry, new, old, donor=donor_ok)
 
     def assignments(self) -> None:
         """Owner per record: the converted `identity.assign` links against Python's

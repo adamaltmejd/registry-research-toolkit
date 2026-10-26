@@ -223,10 +223,24 @@ verb has zero entries, so none is deleted instead of converted:
 `representation.period_family` have no harness check yet: the harness needs an oracle
 for each before the run (Python's added edition, variant name, parallel-group and
 period-family effects). They are recorded as failures (`no oracle yet`)
-until then. The same holds for the three coding entries on added occurrences: their
-oracle is that Python's coding case targets exactly the occurrences the `errata.column`
-or `errata.delivered` entry on the same table and column adds. The harness compares the
-member's (table, column) and the case's deliveries with that addition's.
+until then. The same holds for the three coding entries on added occurrences, recorded
+as failures (`selects_source: false`): their oracle is that Python's coding case
+targets exactly the occurrences the `errata.column` or `errata.delivered` entry on the
+same table and column adds, so the harness is to compare the member's (table, column)
+and the case's deliveries with that addition's.
+
+Occurrence entries are compared per record, not per ref: alternative records share a
+ref, and Python's effect reaches each alternative its `when` describes. An
+`errata.delivered` donor must select exactly Python's donor records. Without a donor,
+Python's donors must be the member column's own records on that table. Checks the
+harness does not make yet, each a gap the full run closes or names:
+
+- `errata.delivered` `owner` against the effect's `variable_key`;
+- `errata.support` `authority.member`;
+- `representation.delivery_metadata` per column (it compares the union of the columns'
+  records);
+- SoS owners swapped between two groups of the same size (the one-to-one grouping does
+  not see it).
 
 To re-run a slice: `check-curation --dump-decisions DUMP --registers ...` in the oracle
 tree, `python -m reg_meta_build.port.convert ... --registers ... --out DIR`, then
