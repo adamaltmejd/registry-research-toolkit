@@ -134,8 +134,9 @@ SPA (React) + reg-core-wasm
   a maintainer decision.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
-decision, not an implementation detail. `toml` is a runtime dependency only of the
-builder crates, which read curation; the runtime keeps it a dev dependency.
+decision, not an implementation detail. `toml` is a runtime dependency only of
+`reg-readers`, which reads curation for the builder; the runtime keeps it a dev
+dependency.
 
 **Distribution.** The server image is one static binary plus the baked DBs, fetched in
 the Dockerfile with `curl`, SHA-256 verification against GitHub's asset digests, and

@@ -89,8 +89,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
 }
 
 fn toml_file<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, String> {
-    let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    toml::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))
+    reg_readers::config(path).map_err(|e| e.to_string())
 }
 
 /// Every input read, in manifest order.

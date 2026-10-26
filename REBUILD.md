@@ -79,10 +79,10 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
 - **Left out of A**, each added by the milestone that needs it: the resolve cache and
   zstd intermediates (frames stay in memory; `reg-build read` dumps them as JSONL),
   releases and gaps (B), search and documents (C), classification binding, unit types
-  and roles beyond the defaults (D). Known reader limits: a code list stated per period
-  is read as the union of its periods (reported); calamine exposes no number formats, so
-  a zero-padded numeric code loses its padding; the inline value-set reader accepts only
-  plain `code=label` or bare-code lists.
+  and roles beyond the defaults (D). Known reader limits: calamine exposes no number
+  formats, so a zero-padded numeric code loses its padding; the inline value-set reader
+  accepts only plain `code=label` or bare-code lists; a code-list period it cannot read
+  (`1990/91-1994`) applies to every period (reported).
 
 - **Inputs.** Today's six thin-provider TOML files and `scb_canonical.toml` are
   transcribed once into the transcription format and committed to the inputs repository.

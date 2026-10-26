@@ -1,7 +1,6 @@
 //! Link and emit: resolved registers into one SQLite file, schema v4 (`schema.sql`).
-//! The emitter decides nothing. Row ids follow natural-key order, rows go in in
-//! primary-key order, indexes come after data, and the file is written with
-//! `VACUUM INTO`, so two builds from the same pins give the same bytes.
+//! The emitter decides nothing. Row ids follow natural-key order, indexes come after
+//! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
 //! Milestone A fills the identity, coverage, variable, segment, occurrence, value-set
 //! and finding tables; releases, gaps, classifications, documents, search and
@@ -112,31 +111,6 @@ impl Rows {
         self.tables.entry(table).or_default().push(row);
     }
 }
-
-/// Primary-key columns of each filled table, for insert order.
-const KEYS: &[(&str, &[usize])] = &[
-    ("meta", &[0]),
-    ("input", &[0]),
-    ("text", &[0]),
-    ("name_fold", &[0]),
-    ("spelling", &[0]),
-    ("provider", &[0]),
-    ("register", &[0]),
-    ("tbl", &[0]),
-    ("tbl_span", &[0, 1]),
-    ("variable", &[0]),
-    ("variable_text", &[0, 1]),
-    ("valueset", &[0]),
-    ("valueset_name", &[0, 1, 2]),
-    ("vs_item", &[0, 1]),
-    ("segment", &[0]),
-    ("occurrence", &[0]),
-    ("occurrence_locator", &[0, 1, 2]),
-    ("override", &[0, 1, 2]),
-    ("finding", &[0]),
-    ("ident", &[0]),
-    ("alias", &[0, 1]),
-];
 
 /// Write `catalog` to `out`: build a scratch file next to it, compact it into a staged
 /// file, run the schema's post-write checks on that and only then replace `out`. A
@@ -678,15 +652,25 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let (indexes, others): (Vec<&String>, Vec<&String>) = statements
         .iter()
         .partition(|s| s.starts_with("CREATE INDEX") || s.starts_with("CREATE UNIQUE INDEX"));
-    for statement in others {
+    for statement in &others {
         db.execute_batch(statement)
             .map_err(|e| format!("{statement}: {e}"))?;
     }
-    for (table, key) in KEYS {
+    // Tables fill in schema order, which declares each table after those it references.
+    // Row order within a table does not reach the file: `VACUUM INTO` rewrites every
+    // table in key order.
+    let order: Vec<&str> = others
+        .iter()
+        .filter_map(|s| s.strip_prefix("CREATE TABLE ")?.split_whitespace().next())
+        .collect();
+    if let Some(table) = rows.tables.keys().find(|t| !order.contains(t)) {
+        return Err(format!("{table}: not a table of schema.sql"));
+    }
+    for table in order {
         let Some(table_rows) = rows.tables.get(table) else {
             continue;
         };
-        let mut values: Vec<Vec<Value>> = table_rows
+        let values: Vec<Vec<Value>> = table_rows
             .iter()
             .map(|row| {
                 row.iter()
@@ -701,7 +685,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     .collect()
             })
             .collect();
-        values.sort_by(|a, b| key.iter().map(|&k| &a[k]).cmp(key.iter().map(|&k| &b[k])));
         let width = values[0].len();
         let tx = db.transaction().map_err(sql)?;
         {

@@ -108,8 +108,12 @@ pub fn name_key(column: &str) -> String {
     format!("n:{}", reg_core::fold_identity(column))
 }
 
-/// A reader config file, parsed with unknown keys refused.
-pub(crate) fn config<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, ReadError> {
+/// A TOML file (a reader config, the manifest, a ledger), parsed; the target type
+/// decides whether unknown keys are refused.
+///
+/// # Errors
+/// An unreadable file or invalid TOML, located at the file.
+pub fn config<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, ReadError> {
     let name = path.display().to_string();
     let text = std::fs::read_to_string(path).map_err(|e| error(&name, e.to_string()))?;
     toml::from_str(&text).map_err(|e| error(&name, e.to_string()))
