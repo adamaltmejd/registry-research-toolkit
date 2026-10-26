@@ -12,9 +12,10 @@
 //!   occurrence is timeless.
 //! - **Editions (T2).** Among a table's releases of one period and qualifier, the
 //!   primary is final, then unstated, then preliminary; two of the best edition are a
-//!   collision (F8), and the first by handle stays primary. An occurrence of a non-primary release whose
-//!   key and spelling the primary also documents is shadowed; one only a non-primary
-//!   release documents is used, in a `preliminary` segment. Editions that disagree on a
+//!   collision (F8), and the first by handle stays primary. An occurrence of a
+//!   non-primary release whose key the primary also documents is shadowed, whatever its
+//!   spelling; a key only a non-primary release documents is used, in a `preliminary`
+//!   segment. Editions that disagree on a
 //!   key's spellings or types are F7.
 //! - **Identity.** Occurrences with one source key are one variable, unless the key
 //!   covers two folded spellings in overlapping periods anywhere in the register, among
@@ -23,9 +24,9 @@
 //! - **Segments.** Per variable and table, maximal runs of one form. A run where the
 //!   variable's own occurrences disagree on label, type or value set, or where another
 //!   variable claims the same folded spelling, is ambiguous (F2).
-//! - **Gaps (T5).** In a table with releases, the days inside a variable's hull its
-//!   segments leave uncovered, by reason: documented without a column, a release without
-//!   the column, or no release; and the holes in the table's coverage.
+//! - **Gaps (T5).** In a table with releases, the holes in the table's coverage (no
+//!   release), and the days inside a variable's hull a release covers without the
+//!   variable's column: documented without a column, or not documented.
 //! - **Ids.** The ledger maps each public id to anchor occurrences; a variable no
 //!   anchor reaches gets a proposed id from its folded spelling.
 
@@ -523,28 +524,19 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     }
 
     // T2: shadowed occurrences, and editions that disagree (F7).
-    let primary_cells: BTreeSet<(usize, &str, String)> = resolved
+    // The keys each release documents with a column.
+    let primary_keys: BTreeSet<(usize, &str)> = resolved
         .iter()
         .filter(|r| r.status == "used" && !r.preliminary)
-        .filter_map(|r| {
-            Some((
-                r.release?,
-                r.occurrence.source_key.as_str(),
-                fold_identity(&r.occurrence.column),
-            ))
-        })
+        .filter_map(|r| Some((r.release?, r.occurrence.source_key.as_str())))
         .collect();
     let mut shadowed = Vec::new();
     for (i, r) in resolved.iter().enumerate() {
         let Some(&primary) = r.release.and_then(|x| primary_of.get(&x)) else {
             continue;
         };
-        let cell = (
-            primary,
-            r.occurrence.source_key.as_str(),
-            fold_identity(&r.occurrence.column),
-        );
-        if r.status == "used" && primary_cells.contains(&cell) {
+        if r.status == "used" && primary_keys.contains(&(primary, r.occurrence.source_key.as_str()))
+        {
             shadowed.push(i);
         }
     }
@@ -1032,8 +1024,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     })
 }
 
-/// T5 in the tables with placed releases: each variable's uncovered days inside its
-/// hull there, and the holes in the table's coverage.
+/// T5 in the tables with placed releases: the holes in the table's coverage (under a
+/// release with no columns, or no release), and each variable's days inside its hull there that a release
+/// covers without its column.
 fn gaps(
     tables: &[ResolvedTable],
     releases: &[ResolvedRelease],
@@ -1050,14 +1043,28 @@ fn gaps(
         }
     }
     let mut out = Vec::new();
-    for &t in delivered.keys() {
+    for (&t, releases) in &delivered {
         for pair in tables[t].spans.windows(2) {
-            out.push(Gap {
-                variable: None,
-                table: t,
-                period: (next_iso_day(&pair[0].1), prev_iso_day(&pair[1].0)),
-                reason: "no_release",
-            });
+            let hole = (next_iso_day(&pair[0].1), prev_iso_day(&pair[1].0));
+            let mut all = vec![hole.clone()];
+            all.extend(releases.iter().cloned());
+            out.extend(
+                runs(pieces(&all).into_iter().filter_map(|piece| {
+                    let reason = if releases.iter().any(|r| covers(r, &piece)) {
+                        "release_without_column"
+                    } else {
+                        "no_release"
+                    };
+                    covers(&hole, &piece).then_some((piece, reason))
+                }))
+                .into_iter()
+                .map(|(period, reason)| Gap {
+                    variable: None,
+                    table: t,
+                    period,
+                    reason,
+                }),
+            );
         }
     }
     let mut marked: BTreeMap<(usize, usize), Vec<Interval>> = BTreeMap::new();
@@ -1097,31 +1104,39 @@ fn gaps(
             all.extend(segments.iter().cloned());
             all.extend(delivered.iter().cloned());
             all.extend(marks.iter().cloned());
-            let mut runs: Vec<(Interval, &'static str)> = Vec::new();
-            for piece in pieces(&all) {
+            let runs = runs(pieces(&all).into_iter().filter_map(|piece| {
                 if !covers(&hull, &piece) || segments.iter().any(|s| covers(s, &piece)) {
-                    continue;
+                    return None;
                 }
-                let reason = if marks.iter().any(|m| covers(m, &piece)) {
-                    "documented_without_column"
+                // Days no release covers are the table's gap, not the variable's.
+                if marks.iter().any(|m| covers(m, &piece)) {
+                    Some((piece, "documented_without_column"))
                 } else if delivered.iter().any(|d| covers(d, &piece)) {
-                    "release_without_column"
+                    Some((piece, "release_without_column"))
                 } else {
-                    "no_release"
-                };
-                match runs.last_mut() {
-                    Some((p, r)) if *r == reason && next_iso_day(&p.1) == piece.0 => {
-                        p.1 = piece.1;
-                    }
-                    _ => runs.push((piece, reason)),
+                    None
                 }
-            }
+            }));
             out.extend(runs.into_iter().map(|(period, reason)| Gap {
                 variable: Some(v),
                 table: t,
                 period,
                 reason,
             }));
+        }
+    }
+    out
+}
+
+/// Ascending gap pieces joined into runs of one reason.
+fn runs(
+    pieces: impl IntoIterator<Item = (Interval, &'static str)>,
+) -> Vec<(Interval, &'static str)> {
+    let mut out: Vec<(Interval, &'static str)> = Vec::new();
+    for (piece, reason) in pieces {
+        match out.last_mut() {
+            Some((p, r)) if *r == reason && next_iso_day(&p.1) == piece.0 => p.1 = piece.1,
+            _ => out.push((piece, reason)),
         }
     }
     out

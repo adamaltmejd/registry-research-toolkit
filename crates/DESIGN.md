@@ -288,17 +288,22 @@ tracks the milestones. This section holds the design decisions that outlive the 
   the first by release handle stays primary, since the schema keeps one primary per
   period, and the twin is neither preferred nor preliminary, so its own columns stay
   `clear` and count in the split test. An occurrence of a non-primary release is
-  `shadowed` where the primary documents the same key and fold; otherwise it is used,
-  and a segment made only of worse-edition occurrences is `preliminary`. A non-primary
-  release whose spellings or types for a key differ from the primary's is F7. An
-  unparsed release (F9) leaves its occurrences `unplaced`.
+  `shadowed` where the primary documents the same key, under any spelling; otherwise it
+  is used, and a segment made only of worse-edition occurrences is `preliminary`. A
+  non-primary release whose spellings or types for a key differ from the primary's is
+  F7. An unparsed release (F9) leaves its occurrences `unplaced`.
 - **Gap markers.** A row documenting a key in a release without a column attaches to the
   key's variable when the key is one variable. A key that never has a column is no
   variable: one F5 notice per key.
-- **Gaps (T5)** are computed only in tables with a placed primary release: inside a
-  variable's hull in that table, an uncovered day is `documented_without_column` under a
-  marker, `release_without_column` under a primary release, else `no_release`; holes
-  between the table's spans are table gaps.
+- **Gaps (T5)** are computed only in tables with a placed primary release. A hole
+  between the table's spans is a table gap: `release_without_column` under a primary
+  release that delivers no column, else `no_release`. Inside a variable's hull in that
+  table, an uncovered day under a marker is `documented_without_column`, under a primary
+  release `release_without_column`; a day no release covers is the table's gap only,
+  since a stock table released on one reference day a year would otherwise give every
+  variable a gap per year.
+- **Unplaced wins.** A column-less row of an unparsed release is `unplaced`, not a gap
+  marker: with no period it marks no gap.
 - **SCB handles.** Source keys are `v<VarId>`, release handles `r<RegVerID>`, table
   handles the variant's name (unique per register in the export). A register's handle
   comes from `[registers]` in `curation/readers/scb.toml`, else `r<RegisterId>`,

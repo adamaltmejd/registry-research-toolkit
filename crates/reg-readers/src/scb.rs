@@ -161,17 +161,28 @@ pub fn read(
                 ),
             ));
         }
-        tables.entry((rid.clone(), vid)).or_insert_with(|| Table {
-            provider: provider.to_owned(),
-            register: handle.clone(),
-            table: table.clone(),
-            name: get(variant_title),
-            description: get(variant_description),
-            from: None,
-            to: None,
-            cadence: None,
-            locator: locator.clone(),
-        });
+        let stated = tables
+            .entry((rid.clone(), vid.clone()))
+            .or_insert_with(|| Table {
+                provider: provider.to_owned(),
+                register: handle.clone(),
+                table: table.clone(),
+                name: get(variant_title),
+                description: get(variant_description),
+                from: None,
+                to: None,
+                cadence: None,
+                locator: locator.clone(),
+            });
+        if stated.table != table {
+            return Err(error(
+                &input,
+                format!(
+                    "{}: variant {vid} of register {rid} is named {table:?} here and {:?} at {}",
+                    locator.at, stated.table, stated.locator.at
+                ),
+            ));
+        }
         let version = format!("r{}", field(version_id, "RegVerID")?);
         let release = releases.entry(version.clone()).or_insert_with(|| {
             let name = row[version_name].trim().to_owned();
@@ -209,39 +220,59 @@ pub fn read(
         }
         let key = format!("v{}", field(var_id, "VarId")?);
         let spelling = row[column].trim().to_owned();
-        match occurrences.entry((version.clone(), key.clone(), spelling.clone())) {
+        let literal = get(dtype);
+        let occurrence = Occurrence {
+            provider: provider.to_owned(),
+            register: handle,
+            table,
+            release: Some(version.clone()),
+            column: spelling.clone(),
+            source_key: key.clone(),
+            from: None,
+            to: None,
+            label: get(var_name),
+            definition: get(var_definition),
+            operational_definition: get(var_operational),
+            unit: get(unit),
+            dtype: literal.map(|t| config.types.get(&t).cloned().unwrap_or(t)),
+            // `-1` states no length.
+            length: get(length)
+                .and_then(|l| l.parse().ok())
+                .filter(|&l: &i64| l > 0),
+            valueset: None,
+            population_valuesets: Vec::new(),
+            coded: None,
+            code_system: None,
+            sensitive: None,
+            identifier: None,
+            locator,
+            also: Vec::new(),
+        };
+        match occurrences.entry((version, key, spelling)) {
             std::collections::btree_map::Entry::Occupied(mut o) => {
-                o.get_mut().also.push(locator);
+                // Another population's row: one occurrence, so the first row's text
+                // and type stand, and a row that differs is reported.
+                let first = o.get_mut();
+                let facts = |o: &Occurrence| {
+                    (
+                        o.label.clone(),
+                        o.definition.clone(),
+                        o.operational_definition.clone(),
+                        o.unit.clone(),
+                        o.dtype.clone(),
+                        o.length,
+                    )
+                };
+                if facts(first) != facts(&occurrence) {
+                    out.warnings.push(format!(
+                        "{}: {} differs from its other population's row at {}; the first stands",
+                        occurrence.locator.at, occurrence.column, first.locator.at
+                    ));
+                }
+                first.also.push(occurrence.locator);
             }
             std::collections::btree_map::Entry::Vacant(v) => {
-                let literal = get(dtype);
-                v.insert(Occurrence {
-                    provider: provider.to_owned(),
-                    register: handle,
-                    table,
-                    release: Some(version),
-                    column: spelling,
-                    source_key: key,
-                    from: None,
-                    to: None,
-                    label: get(var_name),
-                    definition: get(var_definition),
-                    operational_definition: get(var_operational),
-                    unit: get(unit),
-                    dtype: literal.map(|t| config.types.get(&t).cloned().unwrap_or(t)),
-                    // `-1` states no length.
-                    length: get(length)
-                        .and_then(|l| l.parse().ok())
-                        .filter(|&l: &i64| l > 0),
-                    valueset: None,
-                    population_valuesets: Vec::new(),
-                    coded: None,
-                    code_system: None,
-                    sensitive: None,
-                    identifier: None,
-                    locator,
-                    also: Vec::new(),
-                });
+                v.insert(occurrence);
             }
         }
     }
