@@ -312,7 +312,7 @@ pub fn read(
                 hashes.push((population, None));
                 continue;
             }
-            let valid: Vec<u32> = members
+            let mut valid: Vec<u32> = members
                 .iter()
                 .copied()
                 .filter(|&m| {
@@ -329,8 +329,11 @@ pub fn read(
                     })
                 })
                 .collect();
+            // Validity that leaves no item dates the metadata entry, not the codes
+            // (a 1996 survey's codes "valid from" 2008): the whole set stands.
             if valid.is_empty() && !members.is_empty() {
                 expired += 1;
+                valid = members.to_vec();
             }
             let set = sets.entry(valid.clone()).or_insert_with(|| {
                 if valid.is_empty() {
@@ -416,7 +419,7 @@ pub fn read(
     }
     if expired > 0 {
         out.warnings.push(format!(
-            "{vs_input}: {expired} rows name a value set with no item valid in their release's period; they have none"
+            "{vs_input}: {expired} rows name a value set with no item valid in their release's period; their whole set stands"
         ));
     }
     if !duplicated.is_empty() {
