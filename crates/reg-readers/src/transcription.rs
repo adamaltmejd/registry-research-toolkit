@@ -248,7 +248,7 @@ fn codes(
         let mut items = Vec::new();
         for (at, row) in rows(root, &path, CODES, out)? {
             items.push(Item {
-                code: required(&row, "code", &at)?,
+                code: unique(&items, required(&row, "code", &at)?, &at)?,
                 label: field(&row, "label"),
                 parent: None,
             });
@@ -274,22 +274,27 @@ fn codes(
                 ));
             };
             items.push(Item {
-                code,
+                code: unique(&items, code, at)?,
                 label: nonblank(label),
                 parent: None,
             });
         }
         (items, None, at.clone())
     };
-    let mut seen = std::collections::BTreeSet::new();
-    if let Some(dup) = items.iter().find(|i| !seen.insert(&i.code)) {
-        return Err(error(
-            &locator.input,
-            format!("{}: code {:?} is stated twice", at.at, dup.code),
-        ));
-    }
+
     let set = ValueSet::new(items, name, locator);
     let hash = set.hash.clone();
     records.push(Record::ValueSet(set));
     Ok(Some(hash))
+}
+
+/// `code`, refused when `items` already states it.
+fn unique(items: &[Item], code: String, at: &Locator) -> Result<String, ReadError> {
+    if items.iter().any(|i| i.code == code) {
+        return Err(error(
+            &at.input,
+            format!("{}: code {code:?} is stated twice", at.at),
+        ));
+    }
+    Ok(code)
 }
