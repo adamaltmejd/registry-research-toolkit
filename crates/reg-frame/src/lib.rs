@@ -10,6 +10,8 @@
 //! Frames serialize as canonical JSONL: one record per line, keys sorted, no floats,
 //! records sorted. Two pins of one input give two diffable frames.
 
+use std::collections::BTreeSet;
+
 use serde::Serialize;
 use sha2::{Digest, Sha256};
 
@@ -88,7 +90,8 @@ pub struct Release {
 }
 
 /// A value set an occurrence states for one of its release's populations, when its
-/// populations disagree (`population` indexes [`Release::populations`]).
+/// rows disagree (`population` indexes [`Release::populations`]). Rows of one
+/// population that name different sets give that population several, as alternatives.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub struct PopulationValueSet {
     pub population: usize,
@@ -134,6 +137,9 @@ pub struct Occurrence {
     pub locator: Locator,
     /// Other input rows stating the same occurrence, sorted.
     pub also: Vec<Locator>,
+    /// Fields on which those rows disagree, sorted; the first row's value stands as
+    /// provisional, and resolve reports a source conflict (F6).
+    pub conflicts: Vec<String>,
 }
 
 /// One code of a value set; `parent` is another item's code.
@@ -144,13 +150,13 @@ pub struct Item {
     pub parent: Option<String>,
 }
 
-/// A code list as stated, with the name the source gives it. Equal content is one
+/// A code list as stated, with the names the source gives it. Equal content is one
 /// value set: [`ValueSet::hash`] is its address.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub struct ValueSet {
     pub hash: String,
     pub items: Vec<Item>,
-    pub name: Option<String>,
+    pub names: BTreeSet<String>,
     pub locator: Locator,
 }
 
@@ -165,7 +171,7 @@ impl ValueSet {
         Self {
             hash,
             items,
-            name,
+            names: name.into_iter().collect(),
             locator,
         }
     }

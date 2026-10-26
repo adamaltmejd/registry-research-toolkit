@@ -352,7 +352,8 @@ CREATE TABLE occurrence_population_valueset (
   occurrence_id  INTEGER NOT NULL REFERENCES occurrence(id),
   population_ord INTEGER NOT NULL,        -- release_population.ord of the occurrence's release
   valueset_id    INTEGER NOT NULL REFERENCES valueset(id),
-  PRIMARY KEY (occurrence_id, population_ord)
+  -- several rows for one population are alternatives its source rows disagree on (F6)
+  PRIMARY KEY (occurrence_id, population_ord, valueset_id)
 ) STRICT, WITHOUT ROWID;
 
 -- Which input rows stated an occurrence (merged population rows give several).

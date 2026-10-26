@@ -466,6 +466,7 @@ impl Context<'_> {
                 identifier: identifier.map(|_| cell(row, identifier).is_some()),
                 locator: at,
                 also: Vec::new(),
+                conflicts: Vec::new(),
             }));
         }
         Ok(())

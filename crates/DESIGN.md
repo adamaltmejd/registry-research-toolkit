@@ -318,7 +318,10 @@ tracks the milestones. This section holds the design decisions that outlive the 
   `r<RegisterId>` through C: a register's public name is a D `bind` statement, not
   reader config, and ledgers live under the `r<RegisterId>` handle. Rows that differ
   only by population are one occurrence with every row as a locator; the release lists
-  its populations, with a reference day when one date is stated.
+  its populations, with a reference day when one date is stated. A label, definition,
+  unit or type the rows disagree on keeps the first row's as provisional and names the
+  field in the occurrence's `conflicts`, which resolve reports as F6 (source conflict),
+  once per variable.
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items
@@ -327,15 +330,19 @@ tracks the milestones. This section holds the design decisions that outlive the 
   and some item has an interval overlapping its placed release's period; then the items
   with such an interval are kept. Otherwise the whole set stands, since such dates
   record when an item entered SCB's metadata (a 1996 survey's codes "valid from" 2008);
-  a set left empty by its dates is counted in one warning. The value set is the content
-  of the items kept, so CVIDs with equal content are one value set. A code repeated
-  across levels keeps its first item, counted in one warning. A CVID whose every item
-  has version, level and code all equal to one of the config's `sentinels` (`Tal`,
-  `Beskrivande text`) marks the column as not coded when every row's CVID does;
-  otherwise a sentinel population simply has no value set. Population rows naming
-  different value sets give the occurrence one per population (F6 in resolve); rows of
-  one population naming different value sets keep the first row's, counted in one
-  warning.
+  a set left empty by its dates is counted in one warning. The condition that every item
+  be dated is measured, not cautious: keeping the undated items and filtering only the
+  dated ones gives the same 11,320 whole-set rows but changes 131,796 more, and in
+  59,473 of them it drops every dated item; in 38,690 of those, every dated item starts
+  after the release ends, the same entry-date pattern. The value set is the content of
+  the items kept, so CVIDs with equal content are one value set, named by every
+  `Värdemängdsversion` its items carry. A code repeated across levels keeps its first
+  item, counted in one warning. A CVID whose every item has version, level and code all
+  equal to one of the config's `uncoded` names (`Tal`, `Beskrivande text`) marks the
+  column as not coded when every row's CVID does; otherwise such a population simply has
+  no value set. Rows naming different value sets give the occurrence its sets per
+  population, and a population whose rows disagree gets each as an alternative; resolve
+  reports either as F6.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

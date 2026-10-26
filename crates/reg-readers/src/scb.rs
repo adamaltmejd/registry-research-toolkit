@@ -15,9 +15,11 @@
 //!   all dated keeps those valid in its release's period, unless that leaves none; any
 //!   other set stands whole.
 //!
-//! An occurrence whose populations name different value sets states them per
-//! population. A `CVID` holding only a sentinel (an item whose code, version and level
-//! are one of the config's `sentinels`) states that the column carries no codes.
+//! An occurrence whose rows name different value sets states them per population, as
+//! alternatives where one population's rows disagree; fields other rows disagree on are
+//! recorded as conflicts. A `CVID` holding only an uncoded marker (an item whose code,
+//! version and level are one of the config's `uncoded` names) states that the column
+//! carries no codes.
 //!
 //! Register handles are `r<RegisterId>`, release handles `r<RegVerID>`, table handles
 //! the variant's name and source keys `v<VarId>`. A register's public name is a curated
@@ -48,7 +50,7 @@ pub struct Config {
     pub types: BTreeMap<String, String>,
     /// Value-set versions that mark a column as carrying no codes (a number, free
     /// text) rather than listing any.
-    pub sentinels: BTreeSet<String>,
+    pub uncoded: BTreeSet<String>,
     pub names: Grammar,
 }
 
@@ -248,6 +250,7 @@ pub fn read(
             identifier: None,
             locator,
             also: Vec::new(),
+            conflicts: Vec::new(),
         };
         if let Some(c) = get(cvid) {
             let c = c
@@ -260,25 +263,26 @@ pub fn read(
         }
         match occurrences.entry((version, key, spelling)) {
             std::collections::btree_map::Entry::Occupied(mut o) => {
-                // Another population's row: one occurrence, so the first row's text
-                // and type stand, and a row that differs is reported.
+                // Another population's row: one occurrence. The first row's text and
+                // type stand as provisional, and fields a row disagrees on are recorded.
                 let first = o.get_mut();
-                let facts = |o: &Occurrence| {
+                let differs = [
+                    ("label", first.label != occurrence.label),
+                    ("definition", first.definition != occurrence.definition),
                     (
-                        o.label.clone(),
-                        o.definition.clone(),
-                        o.operational_definition.clone(),
-                        o.unit.clone(),
-                        o.dtype.clone(),
-                        o.length,
-                    )
-                };
-                if facts(first) != facts(&occurrence) {
-                    out.warnings.push(format!(
-                        "{}: {} differs from its other population's row at {}; the first stands",
-                        occurrence.locator.at, occurrence.column, first.locator.at
-                    ));
+                        "operational_definition",
+                        first.operational_definition != occurrence.operational_definition,
+                    ),
+                    ("unit", first.unit != occurrence.unit),
+                    ("dtype", first.dtype != occurrence.dtype),
+                    ("length", first.length != occurrence.length),
+                ];
+                for (field, differs) in differs {
+                    if differs && !first.conflicts.iter().any(|f| f == field) {
+                        first.conflicts.push(field.to_owned());
+                    }
                 }
+                first.conflicts.sort();
                 first.also.push(occurrence.locator);
             }
             std::collections::btree_map::Entry::Vacant(v) => {
@@ -295,20 +299,19 @@ pub fn read(
     let vs_input = format!("{name}/{VARDEMANGDER}");
     let mut sets: BTreeMap<Vec<u32>, Option<ValueSet>> = BTreeMap::new();
     let mut duplicated: BTreeSet<String> = BTreeSet::new();
-    let mut contested = 0;
     let mut expired = 0;
     for (k, rows) in &cvids {
         let release = &releases[&k.0];
         let period = release.from.as_ref().zip(release.to.as_ref());
         let mut hashes: Vec<(Option<usize>, Option<String>)> = Vec::new();
-        let mut sentinel = true;
+        let mut uncoded = true;
         for &(population, c) in rows {
             let members = lists.cvids.get(&c).map_or(&[][..], Vec::as_slice);
             let marks_no_codes = !members.is_empty()
                 && members
                     .iter()
-                    .all(|&m| lists.items[m as usize].sentinel(&config.sentinels));
-            sentinel &= marks_no_codes;
+                    .all(|&m| lists.items[m as usize].uncoded(&config.uncoded));
+            uncoded &= marks_no_codes;
             if marks_no_codes {
                 hashes.push((population, None));
                 continue;
@@ -356,14 +359,19 @@ pub fn read(
                     .collect();
                 let codes: BTreeSet<&str> = items.iter().map(|i| i.code.as_str()).collect();
                 let repeats = codes.len() < items.len();
-                let set = ValueSet::new(
+                let mut set = ValueSet::new(
                     items,
-                    Some(lists.items[valid[0] as usize].version.clone()),
+                    None,
                     Locator {
                         input: vs_input.clone(),
                         at: format!("CVID={c}"),
                     },
                 );
+                // Every item's Värdemängdsversion is a name of the set.
+                set.names = valid
+                    .iter()
+                    .map(|&m| lists.items[m as usize].version.clone())
+                    .collect();
                 if repeats {
                     duplicated.insert(set.hash.clone());
                 }
@@ -374,25 +382,18 @@ pub fn read(
         let o = occurrences
             .get_mut(k)
             .expect("every CVID row has its occurrence");
-        if sentinel {
+        if uncoded {
             o.coded = Some(false);
             continue;
         }
-        // Rows of one population may name several CVIDs; the first row's set stands.
-        let mut by_population: BTreeMap<Option<usize>, Option<String>> = BTreeMap::new();
-        let mut conflict = false;
-        for (population, hash) in hashes {
-            let first = by_population
-                .entry(population)
-                .or_insert_with(|| hash.clone());
-            conflict |= *first != hash;
-        }
-        contested += usize::from(conflict);
-        let distinct: BTreeSet<&Option<String>> = by_population.values().collect();
+        // Rows that name different sets give their populations alternatives (F6),
+        // a population with several rows possibly more than one.
+        let pairs: BTreeSet<(Option<usize>, Option<String>)> = hashes.into_iter().collect();
+        let distinct: BTreeSet<&Option<String>> = pairs.iter().map(|(_, h)| h).collect();
         if distinct.len() == 1 {
-            o.valueset = by_population.into_values().next().flatten();
+            o.valueset = pairs.into_iter().next().and_then(|(_, h)| h);
         } else {
-            for (population, hash) in by_population {
+            for (population, hash) in pairs {
                 match (population, hash) {
                     (Some(population), Some(valueset)) => {
                         o.population_valuesets.push(PopulationValueSet {
@@ -410,16 +411,18 @@ pub fn read(
             }
         }
     }
-    if contested > 0 {
-        out.warnings.push(format!(
-            "{vs_input}: {contested} occurrences name differing value sets for one population; the first row's stands"
-        ));
-    }
     // Index lists that differ can name equal content (equal codes and labels under
     // other ItemIds): one value set per hash.
     let mut by_hash: BTreeMap<String, ValueSet> = BTreeMap::new();
     for set in sets.into_values().flatten() {
-        by_hash.entry(set.hash.clone()).or_insert(set);
+        match by_hash.entry(set.hash.clone()) {
+            std::collections::btree_map::Entry::Occupied(mut o) => {
+                o.get_mut().names.extend(set.names);
+            }
+            std::collections::btree_map::Entry::Vacant(v) => {
+                v.insert(set);
+            }
+        }
     }
     if expired > 0 {
         out.warnings.push(format!(
@@ -528,8 +531,8 @@ struct ItemText {
 }
 
 impl ItemText {
-    fn sentinel(&self, sentinels: &BTreeSet<String>) -> bool {
-        self.code == self.version && self.code == self.level && sentinels.contains(&self.code)
+    fn uncoded(&self, names: &BTreeSet<String>) -> bool {
+        self.code == self.version && self.code == self.level && names.contains(&self.code)
     }
 }
 

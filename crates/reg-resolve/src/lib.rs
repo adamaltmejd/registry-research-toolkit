@@ -198,6 +198,8 @@ pub struct Report {
     pub ambiguous_pairs: usize,
     pub preliminary_segments: usize,
     pub population_conflict_keys: usize,
+    /// Keys whose merged source rows disagree on a field.
+    pub row_conflict_keys: usize,
     pub gaps: usize,
     pub keys_in_several_tables: usize,
     pub label_differs_across_tables: usize,
@@ -686,8 +688,26 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 subject: Subject::Variable(v),
                 period: None,
                 message: format!(
-                    "{} states a different value set per population",
+                    "{} states different value sets across its rows",
                     resolved[last].occurrence.column
+                ),
+            });
+        }
+        let conflicts: BTreeSet<&str> = members
+            .iter()
+            .flat_map(|&i| resolved[i].occurrence.conflicts.iter().map(String::as_str))
+            .collect();
+        if !conflicts.is_empty() {
+            report.row_conflict_keys += 1;
+            findings.push(Finding {
+                code: "F6:source-conflict",
+                severity: "review",
+                subject: Subject::Variable(v),
+                period: None,
+                message: format!(
+                    "{}: its source rows disagree on {}",
+                    resolved[last].occurrence.column,
+                    conflicts.into_iter().collect::<Vec<_>>().join(", ")
                 ),
             });
         }
@@ -1046,25 +1066,22 @@ fn cadence(releases: &[Interval]) -> Option<u32> {
 
 /// A cadence name's step in months; `None` for `day` and `irregular`.
 fn months(cadence: &str) -> Option<u32> {
-    match cadence {
-        "year" => Some(12),
-        "half" => Some(6),
-        "quarter" => Some(3),
-        "month" => Some(1),
-        _ => None,
-    }
+    CADENCES
+        .iter()
+        .find(|(n, _)| *n == cadence)
+        .map(|&(_, m)| m)
 }
 
 /// The cadence name of a step in months; a step no name fits is `irregular`.
 fn cadence_name(step: u32) -> &'static str {
-    match step {
-        12 => "year",
-        6 => "half",
-        3 => "quarter",
-        1 => "month",
-        _ => "irregular",
-    }
+    CADENCES
+        .iter()
+        .find(|&&(_, m)| m == step)
+        .map_or("irregular", |&(n, _)| n)
 }
+
+/// The named cadences and their steps in months.
+const CADENCES: [(&str, u32); 4] = [("year", 12), ("half", 6), ("quarter", 3), ("month", 1)];
 
 /// Each span widened to cover at least its cadence step from its start.
 fn stretch(step: Option<u32>, spans: Vec<Interval>) -> Vec<Interval> {
