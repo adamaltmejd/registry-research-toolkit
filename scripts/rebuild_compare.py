@@ -11,8 +11,9 @@ mapping, labels, value-set codes, flags and coverage, and puts each difference i
 class. Prints Markdown: a summary per class and register, then examples.
 
 SCB registers are `scb/r<RegisterId>` in the new catalog until D binds their names; the
-old catalog's are matched to them by the RegisterId of their slug pins in
-`reg_meta_build/curation/registers/scb/`.
+old catalog's are matched to them by the `native_id` of their register file in
+`reg_meta_build/curation/registers/scb/`. A register whose old catalog has only the
+implicit table and whose new catalog has one named table compares those two as one.
 """
 
 from __future__ import annotations
@@ -158,6 +159,15 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
     def add(cls: str, detail: str) -> None:
         diffs[cls].append((reg, detail))
 
+    # The old catalog left a one-table register's table unnamed; the new one may name it.
+    if old.tables == {""} and len(new.tables) == 1:
+        only = next(iter(new.tables))
+        new.tables = {""}
+        new.placed = defaultdict(
+            set,
+            {k: {"" if t == only else t for t in ts} for k, ts in new.placed.items()},
+        )
+
     for t in sorted(old.tables - new.tables):
         add("table only in old", t or "(implicit)")
     for t in sorted(new.tables - old.tables):
@@ -228,13 +238,14 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
 
 
 def scb_handles() -> dict[str, str]:
-    """`scb/<old slug>` -> `scb/r<RegisterId>`, from the RegisterId its pins are keyed by."""
+    """`scb/<old slug>` -> `scb/r<RegisterId>`, from the register's `native_id`."""
     out = {}
-    for path in sorted(PINS.glob("*.auto.toml")):
-        pins = tomllib.loads(path.read_text(encoding="utf-8")).get("variable", {})
-        ids = {key.split(".")[0] for key in pins if key.split(".")[0].isdigit()}
-        if len(ids) == 1:
-            out[f"scb/{path.name.removesuffix('.auto.toml')}"] = f"scb/r{ids.pop()}"
+    for path in sorted(PINS.glob("*.toml")):
+        if path.name.endswith(".auto.toml"):
+            continue
+        register = tomllib.loads(path.read_text(encoding="utf-8")).get("register", {})
+        if "native_id" in register:
+            out[f"scb/{register['slug']}"] = f"scb/r{register['native_id']}"
     return out
 
 
