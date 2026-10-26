@@ -24,8 +24,8 @@ mod validation;
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
 pub use grammar::{
-    Fqid, GrammarError, Period, PeriodToken, Term, is_slug, iso_day_number, next_iso_day,
-    period_token_for_bounds, prev_iso_day,
+    Fqid, GrammarError, Period, PeriodToken, Term, add_iso_months, is_slug, iso_day_number,
+    next_iso_day, period_token_for_bounds, prev_iso_day,
 };
 pub use interval::{Interval, gaps, intersect, merge, overlap, render};
 pub use structural::{q as quote, quoted_list, validate_structural};

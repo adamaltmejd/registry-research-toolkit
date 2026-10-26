@@ -337,7 +337,7 @@ CREATE TABLE occurrence (
   CHECK ((status = 'used') = (segment_id IS NOT NULL)),
   CHECK (status NOT IN ('withheld','unplaced') OR variable_id IS NULL),
   CHECK (status IN ('withheld','unplaced','gap_marker') OR variable_id IS NOT NULL),
-  CHECK ((status = 'gap_marker') = (spelling_id IS NULL))
+  CHECK (status = 'unplaced' OR (status = 'gap_marker') = (spelling_id IS NULL))
 ) STRICT;
 CREATE INDEX occurrence_segment  ON occurrence(segment_id) WHERE segment_id IS NOT NULL;
 CREATE INDEX occurrence_variable ON occurrence(variable_id, start);

@@ -441,12 +441,14 @@ impl Context<'_> {
                 provider: self.provider.to_owned(),
                 register: self.register.to_owned(),
                 table,
+                release: None,
                 column: column_name.clone(),
                 source_key: name_key(&column_name),
                 from: lo,
                 to: hi,
                 label: cell(row, label),
                 definition: cell(row, definition),
+                operational_definition: None,
                 unit: None,
                 dtype: cell(row, dtype).map(|t| {
                     self.config
@@ -457,10 +459,13 @@ impl Context<'_> {
                 }),
                 length: None,
                 valueset,
+                population_valuesets: Vec::new(),
+                coded: None,
                 code_system,
                 sensitive: None,
                 identifier: identifier.map(|_| cell(row, identifier).is_some()),
                 locator: at,
+                also: Vec::new(),
             }));
         }
         Ok(())

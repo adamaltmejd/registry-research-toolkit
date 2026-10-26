@@ -69,6 +69,16 @@ reader = "transcription"
 path = "catalog/source/transcriptions/umu"
 provider = "umu"
 
+# The SCB metadata export, byte-exact as received: a release asset of the inputs
+# repository, fetched with `gh release download scb-raw-2026-03` into `<assets>/`.
+[[input]]
+name = "scb-export"
+reader = "scb"
+release = "scb-raw-2026-03"
+path = "current-scb-inputs.zip"
+sha256 = "a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff"
+provider = "scb"
+
 [[input]]
 name = "scb-transcription"
 reader = "transcription"

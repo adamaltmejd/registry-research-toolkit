@@ -134,21 +134,26 @@ pub fn read(
                     provider: provider.to_owned(),
                     register: register.clone(),
                     table,
+                    release: None,
                     column: column.clone(),
                     source_key: name_key(&column),
                     from: date(&row, "from", &at)?,
                     to: date(&row, "to", &at)?,
                     label: field(&row, "label"),
                     definition: field(&row, "definition"),
+                    operational_definition: None,
                     unit: field(&row, "unit"),
                     dtype: field(&row, "data_type")
                         .map(|t| config.types.get(&t).cloned().unwrap_or(t)),
                     length: None,
                     valueset: valueset.clone(),
+                    population_valuesets: Vec::new(),
+                    coded: None,
                     code_system: field(&row, "code_system"),
                     sensitive: flag(&row, "sensitive", &at)?,
                     identifier: flag(&row, "identifier", &at)?,
                     locator: at.clone(),
+                    also: Vec::new(),
                 }));
             }
         }

@@ -281,6 +281,47 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **The fold** is `reg-core`'s `fold_identity` of the trimmed name; the v4 schema says
   NFC. The A inputs hold no string that NFC changes, so the question stays open for B.
 
+**Decisions taken in milestone B.**
+
+- **Editions.** Among a table's releases of one period and qualifier, the primary is
+  final, then unstated, then preliminary. Two of the best edition are a collision (F8):
+  the first by release handle stays primary, since the schema keeps one primary per
+  period, and the twin is neither preferred nor preliminary, so its own columns stay
+  `clear`. An occurrence of a non-primary release is `shadowed` where the primary
+  documents the same key, under any spelling; otherwise it is used, and a segment made
+  only of worse-edition occurrences is `preliminary`. The split test runs over used
+  occurrences after shadowing, so a preliminary and a final edition of one period never
+  split a key, while two worse editions spelling a key the primary lacks do. A
+  non-primary release whose spellings or types for a key differ from the primary's is
+  F7. An unparsed release (F9) leaves its occurrences `unplaced`.
+- **Gap markers.** A row documenting a key in a release without a column attaches to the
+  key's variable when the key is one variable. A key that never has a column is no
+  variable: one F5 notice per key.
+- **Gaps (T5)** are computed only in tables with a placed primary release. A table's
+  cadence is its stated one, else the greatest common step, in months, between its
+  primary releases' starts when each start is a whole number of months after the one
+  before on the same day (or month end); an inferred cadence is recorded on the table
+  (`irregular` for a step with no name). With a cadence, every column, release and
+  marker covers its whole step from its start, so a reference-day stock table released
+  yearly has no gap between deliveries and a gap is a missing step. Without one, gaps
+  are the holes between stated periods. A day between the table's used columns and
+  primary releases that no used column covers is a table gap: `release_without_column`
+  under a primary release that delivers no column, else `no_release`. Inside a
+  variable's hull in that table, an uncovered day under a marker is
+  `documented_without_column` and under a primary release `release_without_column`; a
+  day no release covers is stored once, as the table's gap. Reader contract: a
+  variable's gaps are its own plus its table's gaps inside its span.
+- **Unplaced wins.** A column-less row of an unparsed release is `unplaced`, not a gap
+  marker: with no period it marks no gap.
+- **SCB handles.** Source keys are `v<VarId>`, release handles `r<RegVerID>`, table
+  handles the variant's name (unique per register in the export). Register handles are
+  `r<RegisterId>` through C: a register's public name is a D `bind` statement, not
+  reader config, and ledgers live under the `r<RegisterId>` handle. Rows that differ
+  only by population are one occurrence with every row as a locator; the release lists
+  its populations, with a reference day when one date is stated.
+- **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
+  normalization step for the SCB export.
+
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
 against random full-register orders, with every difference classified.

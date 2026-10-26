@@ -2,9 +2,9 @@
 //! The emitter decides nothing. Row ids follow natural-key order, indexes come after
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
-//! Milestone A fills the identity, coverage, variable, segment, occurrence, value-set
-//! and finding tables; releases, gaps, classifications, documents, search and
-//! curation statements stay empty.
+//! It fills the identity, coverage, release, variable, segment, occurrence, gap,
+//! value-set and finding tables; classifications, documents, search and curation
+//! statements stay empty.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -182,9 +182,19 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let mut variable_keys = Vec::new();
     let mut segment_keys = Vec::new();
     let mut occurrence_keys = Vec::new();
+    let mut release_keys = Vec::new();
     for (ri, r) in catalog.registers.iter().enumerate() {
         for t in 0..r.tables.len() {
             table_keys.push((pid_of_table(r, t), (ri, t)));
+        }
+        for (x, release) in r.releases.iter().enumerate() {
+            release_keys.push((
+                (
+                    pid_of_table(r, release.table),
+                    release.release.release.clone(),
+                ),
+                (ri, x),
+            ));
         }
         for (v, variable) in r.variables.iter().enumerate() {
             variable_keys.push((pid_of_variable(r, v), (ri, v)));
@@ -204,7 +214,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             occurrence_keys.push((
                 (
                     pid_of_table(r, occ.table),
-                    start(&occ.period.0),
+                    occ.period.as_ref().map(|p| start(&p.0)),
                     reg_core::fold_identity(&x.column),
                     x.source_key.clone(),
                     x.label.clone(),
@@ -218,6 +228,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let variable_id = index(variable_keys, "variable ids")?;
     let segment_id = index(segment_keys, "segment keys")?;
     let occurrence_id = index(occurrence_keys, "occurrence keys")?;
+    let release_id = index(release_keys, "release keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
 
     for p in &catalog.providers {
@@ -243,6 +254,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         );
     }
 
+    let input_of = |locator: &reg_frame::Locator| {
+        catalog
+            .file_input
+            .get(&locator.input)
+            .copied()
+            .ok_or_else(|| format!("{}: no manifest input read this file", locator.input))
+    };
     let mut findings = Vec::new();
     for (ri, r) in catalog.registers.iter().enumerate() {
         let reg = &r.register;
@@ -328,6 +346,51 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             }
         }
 
+        for (x, release) in r.releases.iter().enumerate() {
+            let rid = release_id[&(ri, x)];
+            let rel = &release.release;
+            let period = rel.from.as_ref().zip(rel.to.as_ref());
+            rows.push(
+                "release",
+                vec![
+                    Cell::Int(rid),
+                    Cell::Int(table_id[&(ri, release.table)]),
+                    Cell::Str(
+                        if period.is_some() {
+                            "parsed"
+                        } else {
+                            "unparsed"
+                        }
+                        .into(),
+                    ),
+                    opt_int(period.map(|p| start(p.0))),
+                    opt_int(period.map(|p| end(p.1))),
+                    opt_str(rel.grain.as_ref().filter(|_| period.is_some())),
+                    Cell::Str(rel.edition.clone()),
+                    Cell::Str(rel.qualifier.clone().unwrap_or_default()),
+                    flag(release.primary),
+                    Cell::Text(rel.name.clone()),
+                    opt_text(rel.description.as_ref()),
+                    Cell::Null,
+                    Cell::Str(rel.release.clone()),
+                    Cell::Int(id(input_of(&rel.locator)?)),
+                    Cell::Str(format!("{}:{}", rel.locator.input, rel.locator.at)),
+                ],
+            );
+            for (ord, population) in rel.populations.iter().enumerate() {
+                rows.push(
+                    "release_population",
+                    vec![
+                        Cell::Int(rid),
+                        Cell::Int(count(ord)),
+                        Cell::Text(population.name.clone()),
+                        opt_text(population.definition.as_ref()),
+                        opt_int(population.day.as_deref().map(start)),
+                    ],
+                );
+            }
+        }
+
         for (v, variable) in r.variables.iter().enumerate() {
             let vid = variable_id[&(ri, v)];
             rows.push(
@@ -361,7 +424,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Int(end(&run.period.1)),
                         Cell::Text(run.label.clone()),
                         opt_text(run.definition.as_ref()),
-                        Cell::Null,
+                        opt_text(run.operational_definition.as_ref()),
                         opt_text(run.unit.as_ref()),
                     ],
                 );
@@ -399,14 +462,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Null,
                         Cell::Str(segment.role.into()),
                         Cell::Str("unknown".into()),
-                        Cell::Str(
-                            if segment.ambiguous {
-                                "ambiguous"
-                            } else {
-                                "clear"
-                            }
-                            .into(),
-                        ),
+                        Cell::Str(segment.state.into()),
                     ],
                 );
             }
@@ -421,14 +477,18 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 vec![
                     Cell::Int(oid),
                     Cell::Int(table_id[&(ri, occ.table)]),
-                    Cell::Null,
-                    Cell::Int(start(&occ.period.0)),
-                    Cell::Int(end(&occ.period.1)),
-                    Cell::Spelling(x.column.clone()),
+                    opt_int(occ.release.map(|x| release_id[&(ri, x)])),
+                    opt_int(occ.period.as_ref().map(|p| start(&p.0))),
+                    opt_int(occ.period.as_ref().map(|p| end(&p.1))),
+                    if x.column.is_empty() {
+                        Cell::Null
+                    } else {
+                        Cell::Spelling(x.column.clone())
+                    },
                     Cell::Str(x.source_key.clone()),
                     opt_text(x.label.as_ref()),
                     opt_text(x.definition.as_ref()),
-                    Cell::Null,
+                    opt_text(x.operational_definition.as_ref()),
                     opt_text(x.unit.as_ref()),
                     opt_str(x.dtype.as_ref()),
                     opt_int(x.length),
@@ -451,18 +511,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Int(if clamped { 1 << 16 } else { 0 }),
                 ],
             );
-            let input = *catalog
-                .file_input
-                .get(&x.locator.input)
-                .ok_or_else(|| format!("{}: no manifest input read this file", x.locator.input))?;
-            rows.push(
-                "occurrence_locator",
-                vec![
-                    Cell::Int(oid),
-                    Cell::Int(id(input)),
-                    Cell::Str(format!("{}:{}", x.locator.input, x.locator.at)),
-                ],
-            );
+            for locator in std::iter::once(&x.locator).chain(&x.also) {
+                rows.push(
+                    "occurrence_locator",
+                    vec![
+                        Cell::Int(oid),
+                        Cell::Int(id(input_of(locator)?)),
+                        Cell::Str(format!("{}:{}", locator.input, locator.at)),
+                    ],
+                );
+            }
+            for pv in &x.population_valuesets {
+                rows.push(
+                    "occurrence_population_valueset",
+                    vec![
+                        Cell::Int(oid),
+                        Cell::Int(count(pv.population)),
+                        Cell::Int(valueset_id[pv.valueset.as_str()]),
+                    ],
+                );
+            }
             if clamped {
                 let render = |p: &reg_core::Interval| reg_core::render(std::slice::from_ref(p));
                 rows.push(
@@ -474,15 +542,35 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Str("rule".into()),
                         Cell::Null,
                         Cell::Str("T1".into()),
-                        Cell::Str(render(&occ.period)),
+                        opt_str(occ.period.as_ref().map(render).as_ref()),
                         opt_str(occ.stated.as_ref().map(render).as_ref()),
                     ],
                 );
             }
         }
 
+        for gap in &r.gaps {
+            let (kind, subject) = match gap.variable {
+                Some(v) => ("variable", variable_id[&(ri, v)]),
+                None => ("table", table_id[&(ri, gap.table)]),
+            };
+            rows.push(
+                "gap",
+                vec![
+                    Cell::Str(kind.into()),
+                    Cell::Int(subject),
+                    Cell::Int(table_id[&(ri, gap.table)]),
+                    Cell::Int(start(&gap.period.0)),
+                    Cell::Int(end(&gap.period.1)),
+                    Cell::Str(gap.reason.into()),
+                ],
+            );
+        }
+
         for f in &r.findings {
             let (kind, subject) = match f.subject {
+                Subject::Register => ("register", register_row),
+                Subject::Release(x) => ("release", release_id[&(ri, x)]),
                 Subject::Variable(v) => ("variable", variable_id[&(ri, v)]),
                 Subject::Segment(v, s) => ("segment", segment_id[&(ri, v, s)]),
                 Subject::Occurrence(o) => ("occurrence", occurrence_id[&(ri, o)]),
