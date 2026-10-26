@@ -777,6 +777,16 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 } else {
                     "clear"
                 };
+                // Flags hold if any covering occurrence states them: under-flagging is the
+                // dangerous direction. An identifier is a row key whichever occurrence says so.
+                let flag = |f: fn(&Occurrence) -> Option<bool>| {
+                    covering
+                        .iter()
+                        .map(|&i| f(&resolved[i].occurrence))
+                        .max()
+                        .flatten()
+                };
+                let identifier = flag(|o| o.identifier);
                 let segment = Segment {
                     table: t,
                     period,
@@ -784,19 +794,13 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     dtype: agreed(|f| &f.1),
                     valueset: agreed(|f| &f.2),
                     coded: coded(o),
-                    // Flags hold if any covering occurrence states them: under-flagging is
-                    // the dangerous direction.
-                    sensitive: covering
-                        .iter()
-                        .map(|&i| resolved[i].occurrence.sensitive)
-                        .max()
-                        .flatten(),
-                    identifier: covering
-                        .iter()
-                        .map(|&i| resolved[i].occurrence.identifier)
-                        .max()
-                        .flatten(),
-                    role: role(o),
+                    sensitive: flag(|o| o.sensitive),
+                    identifier,
+                    role: if identifier == Some(true) {
+                        "row_key"
+                    } else {
+                        role(o)
+                    },
                     state,
                 };
                 let index = match runs.last_mut() {
