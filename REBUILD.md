@@ -141,6 +141,31 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   minutes, the resolve of all registers in under 60 s;
 - `scripts/rebuild_ledger.py` is deleted. B's SCB ledgers are its last run.
 
+**Outcome.** The SCB exit figures, from the full build and `scripts/rebuild_compare.py`
+against 0.64.0:
+
+- variables 52,851, against the dry run's 53,975. The difference reconciles exactly: 256
+  keys whose only deliveries have unparsed names, and 868 fewer split pieces;
+- split keys 4,423, against 4,863: the dry run took a delivery's year from the first
+  four characters of its name ("Läså", "Vårt"), which over-split;
+- ambiguous segments 3,597, against 2,590 cells: a different unit, in 551 (table,
+  column) groups against 491 pairs;
+- 46 unparsed delivery names (0.53%), and no release collision;
+- variables without an id 4,235, against 4,481, once ledger anchors name source keys;
+- the read, resolve and emit of the full export take 73 s with a 9.0 GB peak.
+
+The hand check found 65 uncurated keys, not 43, where today's build has more variables;
+the 43 was the dry run's pin-based estimate. None is a true wrong merge:
+
+- one needs a D `assign` (Prisindex 23614: `prodgrpkod` is three code systems);
+- in 28, one variable changes definition, classification or name over time, and stays
+  one variable with F1;
+- in 17, today's split is an artifact;
+- in 19, the gap is unplaced spellings in unparsed releases (IoT `2021VX`, FoB1985, UHR
+  "Läsåren", Öar 2013).
+
+The per-key list is in the PR that recorded it (rebuild B, PR 9).
+
 The full SCB read is a heavy run.
 
 ### C: link stage, published catalog, server switch
