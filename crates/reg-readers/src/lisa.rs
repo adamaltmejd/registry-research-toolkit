@@ -167,6 +167,7 @@ pub fn read(
                     identifier: None,
                     locator: at(entry.row),
                     also: Vec::new(),
+                    conflicts: Vec::new(),
                 }));
             }
         }
