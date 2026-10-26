@@ -1,0 +1,16 @@
+# Public ids of scb/r149 (today's scb/forsaljning-mineralgodsel), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"cd" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: Cd"]
+"ekol" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: ekol"]
+"k" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: K"]
+"kod" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: kod"]
+"kvant" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: kvant"]
+"lan" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: lan"]
+"leverantor" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: leverantor @ 2005-07-01"]
+"leverantorsnummer" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: levnr"]
+"n" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: N"]
+"p" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: P"]
+"produkt" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: produkt"]
+"s" = ["Försäljning av mineralgödsel för jord- och trädgårdsbruk: S"]

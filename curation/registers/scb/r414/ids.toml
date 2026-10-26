@@ -1,0 +1,7 @@
+# Public ids of scb/r414 (today's scb/sjalvforsorjning), from the slug pins at fe08cf2a9.
+[tables]
+"Självförsörjning 20-65 år" = "sjalvforsorjning-20-65-ar"
+
+[variables]
+"bsjalvf" = ["Självförsörjning 20-65 år: BSJALVF"]
+"eget-personnr" = ["Självförsörjning 20-65 år: PERSONNR"]

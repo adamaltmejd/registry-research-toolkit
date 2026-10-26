@@ -1,0 +1,16 @@
+# Public ids of scb/r216 (today's scb/fritidshusomraden), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"area-ha" = ["Fritidshusområden: AREA_HA"]
+"datatyp-for-geometri" = ["Fritidshusområden: SP_GEOMETRY"]
+"fritidshus" = ["Fritidshusområden: FRITIDSHUS"]
+"kommun" = ["Fritidshusområden: KOMMUN"]
+"kommunnamn" = ["Fritidshusområden: KOMMUNNAMN"]
+"lan" = ["Fritidshusområden: LAN"]
+"lannamn" = ["Fritidshusområden: LANNAMN"]
+"objectid" = ["Fritidshusområden: OBJECTID"]
+"registreringsar" = ["Fritidshusområden: AR"]
+"slutdatum" = ["Fritidshusområden: ValidTo"]
+"startdatum" = ["Fritidshusområden: ValidFrom"]
+"uuid" = ["Fritidshusområden: UUID"]

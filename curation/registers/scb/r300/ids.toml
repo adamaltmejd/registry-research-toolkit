@@ -1,0 +1,15 @@
+# Public ids of scb/r300 (today's scb/fordonsgas), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"antal-publika-tankstallen" = ["Fordonsgas: PUBANT"]
+"antal-tankstallen-bussar" = ["Fordonsgas: BUSSANT"]
+"ar" = ["Fordonsgas: AR"]
+"ejpub" = ["Fordonsgas: EjPUB"]
+"ejpubant" = ["Fordonsgas: EjPUBANT"]
+"gas-publika-tankstallen" = ["Fordonsgas: PUB"]
+"gas-till-bussar" = ["Fordonsgas: BUSS"]
+"knr" = ["Fordonsgas: KNR"]
+"kod" = ["Fordonsgas: KOD"]
+"kommun" = ["Fordonsgas: KOMMUN"]
+"manad" = ["Fordonsgas: MAN"]

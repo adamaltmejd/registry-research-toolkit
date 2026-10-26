@@ -1303,8 +1303,9 @@ fn assign_ids(
             return Err(format!("ledger id {id:?} is also a table id"));
         }
     }
-    // Anchors match the folded spellings of each table's placed columns.
-    let mut by_anchor: BTreeMap<(&str, String), BTreeSet<usize>> = BTreeMap::new();
+    // Anchors match the folded spellings of each table's placed columns; a dated anchor
+    // only the variables placed there on that day.
+    let mut by_anchor: BTreeMap<(&str, String), Vec<_>> = BTreeMap::new();
     for r in resolved {
         if let Some(v) = r.variable
             && !r.occurrence.column.is_empty()
@@ -1315,21 +1316,33 @@ fn assign_ids(
                     fold_identity(&r.occurrence.column),
                 ))
                 .or_default()
-                .insert(v);
+                .push((v, r.period.as_ref()));
         }
     }
     for (id, anchors) in &ledger.variables {
-        let targets: BTreeSet<usize> = anchors
-            .iter()
-            .flat_map(|anchor| {
-                let (table, spelling) = anchor.split_once(": ").unwrap_or(("", anchor));
+        let mut targets = BTreeSet::new();
+        for anchor in anchors {
+            let (anchor, day) = match anchor.rsplit_once(" @ ") {
+                Some((anchor, day)) if reg_core::iso_day_number(day.trim()).is_some() => {
+                    (anchor, Some(day.trim()))
+                }
+                Some(_) => return Err(format!("ledger id {id:?}: anchor {anchor:?} names no day")),
+                None => (anchor.as_str(), None),
+            };
+            let (table, spelling) = anchor.rsplit_once(": ").unwrap_or(("", anchor));
+            targets.extend(
                 by_anchor
                     .get(&(table.trim(), fold_identity(spelling.trim())))
                     .into_iter()
                     .flatten()
-                    .copied()
-            })
-            .collect();
+                    .filter(|(_, period)| {
+                        day.is_none_or(|d| {
+                            period.is_some_and(|p| p.0.as_str() <= d && d <= p.1.as_str())
+                        })
+                    })
+                    .map(|&(v, _)| v),
+            );
+        }
         if targets.len() > 1 {
             report.split_ids.push(id.clone());
         }

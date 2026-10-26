@@ -1,0 +1,9 @@
+# Public ids of scb/r285 (today's scb/nationalrakenskaper), from the slug pins at fe08cf2a9.
+[tables]
+"Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)" = "esspros"
+"Nationalräkenskaper" = "nationalrakenskaper"
+"Offentliga finanser och dess tillägg till EU:s konvergenskriterier" = "offentliga-finanser"
+"Offentliga förvaltningens budgetuppgifter och tillägg till EU:s konvergenskriterier" = "offentlig-forvaltning-budget"
+"Regionalräkenskaper" = "regionalrakenskaper"
+
+[variables]

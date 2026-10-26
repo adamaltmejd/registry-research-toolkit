@@ -1,0 +1,20 @@
+# Public ids of scb/r295 (today's scb/miljorakenskaper), from the slug pins at fe08cf2a9.
+[tables]
+"Lufträkenskaper" = "luftrakenskaper"
+"Miljömotiverade subventioner" = "miljomotiverade-subventioner"
+"Miljörelaterade skatter" = "miljorelaterade-skatter"
+"Miljösektorn" = "miljosektorn"
+
+[variables]
+"ae-fv-miljo" = ["Miljösektorn: ae_fv_miljo"]
+"ae-nettooms-miljo" = ["Miljösektorn: ae_nettooms_miljo"]
+"ae-pv-miljo" = ["Miljösektorn: ae_pv_miljo"]
+"ar" = ["Miljösektorn: ar"]
+"arbetsstallenummer-i-huvudsysslan" = ["Miljösektorn: cfarnr"]
+"exp-mikro-miljo" = ["Miljösektorn: exp_mikro_miljo"]
+"lan" = ["Miljösektorn: Lan"]
+"miljoomrade" = ["Miljösektorn: miljoomrade"]
+"nr-agg-2007" = ["Miljösektorn: NR_agg_2007"]
+"orgnr" = ["Miljösektorn: orgnr"]
+"sektortillhorighet" = ["Miljösektorn: Sektor"]
+"syss-mikro-miljo" = ["Miljösektorn: syss_mikro_miljo"]

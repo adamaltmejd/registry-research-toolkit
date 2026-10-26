@@ -1,0 +1,23 @@
+# Public ids of scb/r143 (today's scb/oha), from the slug pins at fe08cf2a9.
+[tables]
+"Outhyrda bostadslägenheter i allmännyttiga bostadsföretag" = "outhyrda-allmannyttiga"
+"Outhyrda bostadslägenheter i privatägda bostadsföretag" = "outhyrda-privatagda"
+
+[variables]
+"agarkategori" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Agarkategori"]
+"antal-bearbetade-svar" = ["Outhyrda bostadslägenheter i privatägda bostadsföretag: Asv @ 2006-01-01"]
+"antal-lagenheter" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Antal @ 2011-01-01"]
+"antal-per-lagenhetstyp" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: antal @ 2006-01-01"]
+"foretagsidentifikation" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Idnr"]
+"klassificering-av-lagenhetsbestandet" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: LghGrp"]
+"kommun" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Kommun"]
+"kommungruppering-regioner" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Region"]
+"lagenhetstyp" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: LghTyp"]
+"storan" = ["Outhyrda bostadslägenheter i privatägda bostadsföretag: Storan"]
+"stratum" = ["Outhyrda bostadslägenheter i privatägda bostadsföretag: Stratum"]
+"svarskod" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Svarskod"]
+"taxeringsenhet-id" = ["Outhyrda bostadslägenheter i privatägda bostadsföretag: IDnr @ 2006-01-01"]
+"taxeringsid" = ["Outhyrda bostadslägenheter i privatägda bostadsföretag: TaxId"]
+"undersokningsomgang" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: ArB"]
+"ursprunglig-byggnadsperiod" = ["Outhyrda bostadslägenheter i allmännyttiga bostadsföretag: Fardigar"]
+"ursprungligt-byggar" = ["Outhyrda bostadslägenheter i privatägda bostadsföretag: ByggAr"]

@@ -1,0 +1,10 @@
+# Public ids of scb/r319 (today's scb/byggproduktionsindex), from the slug pins at fe08cf2a9.
+[tables]
+
+[variables]
+"ar" = ["Byggproduktionsindex: AR"]
+"ctu-anl" = ["Byggproduktionsindex: CTU_ANL"]
+"ctu-byg" = ["Byggproduktionsindex: CTU_BYG"]
+"manad" = ["Byggproduktionsindex: MANAD"]
+"pim1-nr" = ["Byggproduktionsindex: PIM1_NR"]
+"whm-klp" = ["Byggproduktionsindex: WHm_KLP"]

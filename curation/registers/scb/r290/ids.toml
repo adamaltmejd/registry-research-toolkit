@@ -1,0 +1,15 @@
+# Public ids of scb/r290 (today's scb/kvartalsutfall), from the slug pins at fe08cf2a9.
+[tables]
+"Kvartalsutfall kommuner" = "kvartalsutfall-kommuner"
+"Kvartalsutfall regioner/landsting" = "kvartalsutfall-regioner"
+
+[variables]
+"belopp" = ["Kvartalsutfall kommuner: Belopp"]
+"berakningsperiod" = ["Kvartalsutfall kommuner: KvEnk"]
+"blankettyp" = ["Kvartalsutfall kommuner: BlkAvd"]
+"imputerad" = ["Kvartalsutfall regioner/landsting: Imputerad"]
+"kalenderar" = ["Kvartalsutfall kommuner: Ar"]
+"kommun" = ["Kvartalsutfall kommuner: Kommun"]
+"kvartal-period" = ["Kvartalsutfall kommuner: Kvartal"]
+"landsting" = ["Kvartalsutfall regioner/landsting: Landstingskod @ 2019-01-01"]
+"region" = ["Kvartalsutfall regioner/landsting: Landstingskod @ 2021-01-01"]

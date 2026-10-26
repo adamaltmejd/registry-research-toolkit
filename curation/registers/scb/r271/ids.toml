@@ -1,0 +1,16 @@
+# Public ids of scb/r271 (today's scb/namnstatistik), from the slug pins at fe08cf2a9.
+[tables]
+"Folkbokförda - namn" = "folkbokforda-namn"
+"Folkbokförda - personer" = "folkbokforda-personer"
+"Namngivna nyfödda" = "namngivna-nyfodda"
+
+[variables]
+"efternamn" = ["Folkbokförda - namn: Efternamn"]
+"fornamn" = ["Folkbokförda - namn: FNamn"]
+"forsamling" = ["Folkbokförda - personer: Forsamling"]
+"kommun" = ["Folkbokförda - personer: Kommun"]
+"kon" = ["Folkbokförda - personer: Kon"]
+"lan" = ["Folkbokförda - personer: Lan"]
+"personnr" = ["Folkbokförda - personer: PersonNr"]
+"tilltal" = ["Folkbokförda - personer: Tilltal"]
+"tilltalsnamn" = ["Folkbokförda - personer: Tilltalsnamn"]

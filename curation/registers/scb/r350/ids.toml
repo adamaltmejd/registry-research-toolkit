@@ -1,0 +1,11 @@
+# Public ids of scb/r350 (today's scb/gronytor-tatorter), from the slug pins at fe08cf2a9.
+[tables]
+"Förändringar grönytor" = "forandringar-gronytor"
+"Grönområden, hoplagda grönytor" = "gronomraden-hoplagda"
+"Markanvändning i tätorter" = "markanvandning-i-tatorter"
+
+[variables]
+"areascbm2" = ["Grönområden, hoplagda grönytor: AreaScbm2"]
+"datatyp-for-geometri" = ["Grönområden, hoplagda grönytor: SP_Geometry"]
+"tatortskod" = ["Grönområden, hoplagda grönytor: TATORTSKOD"]
+"uuid" = ["Grönområden, hoplagda grönytor: uuid"]

@@ -1,0 +1,7 @@
+# Public ids of scb/r253 (today's scb/rakenskapssammandrag), from the slug pins at fe08cf2a9.
+[tables]
+"Räkenskapssammandrag för kommuner och landsting" = "rakenskapssammandrag"
+"Räkenskapssammandrag för landsting" = "rakenskapssammandrag-landsting"
+
+[variables]
+"rad" = ["Räkenskapssammandrag för landsting: Rad"]

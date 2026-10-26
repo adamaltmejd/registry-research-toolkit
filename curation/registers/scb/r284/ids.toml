@@ -1,0 +1,17 @@
+# Public ids of scb/r284 (today's scb/natpriser-naturgas), from the slug pins at fe08cf2a9.
+[tables]
+"Leverantörsbyten" = "leverantorsbyten"
+"Nätpriser" = "natpriser"
+
+[variables]
+"d1" = ["Nätpriser: D1"]
+"d2" = ["Nätpriser: D2"]
+"d3" = ["Nätpriser: D3"]
+"husanl" = ["Leverantörsbyten: HusAnl"]
+"huskund" = ["Leverantörsbyten: HusKund"]
+"i1" = ["Nätpriser: I1"]
+"i2" = ["Nätpriser: I2"]
+"i3" = ["Nätpriser: I3"]
+"i4" = ["Nätpriser: I4"]
+"i5" = ["Nätpriser: I5"]
+"orgnr" = ["Nätpriser: orgnr"]

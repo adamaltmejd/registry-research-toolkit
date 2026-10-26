@@ -1,0 +1,16 @@
+# Public ids of scb/r244 (today's scb/folkomrostningar-valresultat), from the slug pins at fe08cf2a9.
+[tables]
+"Röstberättigade" = "rostberattigade"
+"Valresultat" = "valresultat"
+
+[variables]
+"antal-avgivna-roster" = ["Valresultat: antroster"]
+"fodelsedatum" = ["Valresultat: fodtal"]
+"kommunvalkrets-kod" = ["Valresultat: valkretskod"]
+"kon" = ["Röstberättigade: kon"]
+"ll" = ["Röstberättigade: ll"]
+"llkk" = ["Valresultat: LLkk"]
+"partikod" = ["Valresultat: partikod"]
+"personnr" = ["Röstberättigade: personnr"]
+"rostratt" = ["Röstberättigade: rostratt"]
+"valdistrikt" = ["Valresultat: llkkffdd"]
