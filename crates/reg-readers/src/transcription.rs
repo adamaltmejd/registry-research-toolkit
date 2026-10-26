@@ -154,6 +154,7 @@ pub fn read(
                     identifier: flag(&row, "identifier", &at)?,
                     locator: at.clone(),
                     also: Vec::new(),
+                    conflicts: Vec::new(),
                 }));
             }
         }

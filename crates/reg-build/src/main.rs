@@ -237,7 +237,7 @@ fn build(args: &Args) -> Result<(), String> {
                     let entry = valuesets
                         .entry(v.hash.clone())
                         .or_insert_with(|| (v.clone(), BTreeSet::new()));
-                    if let Some(name) = &v.name {
+                    for name in &v.names {
                         entry.1.insert((rank[i], name.clone()));
                     }
                     continue;

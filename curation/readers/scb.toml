@@ -1,5 +1,9 @@
 # The SCB export (crates/reg-readers/src/scb.rs).
 
+# Value-set versions that mark a column as carrying no codes: a CVID whose every item has
+# code, version and level all equal to one of these names.
+uncoded = ["Tal", "Beskrivande text"]
+
 # `Datatyp` → the frame's type. A literal missing here stays as stated.
 [types]
 int = "int"
