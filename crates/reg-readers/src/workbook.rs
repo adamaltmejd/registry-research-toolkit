@@ -532,7 +532,8 @@ impl Context<'_> {
             .collect();
         if items.is_empty() {
             self.warn(&format!(
-                "{}: {column} links {sheet:?}, which states codes only for other variables",
+                "{}: {column} links {sheet:?}, which states no codes for this variable in \
+                 {lo}..{hi}",
                 at.at
             ));
             return None;
