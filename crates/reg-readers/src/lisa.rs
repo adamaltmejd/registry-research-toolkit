@@ -4,8 +4,9 @@
 //!
 //! Each sheet has a header row (the first with a column alias in any cell) and then
 //! data rows: a column, its description, its years and, on some sheets, a sensitivity
-//! flag, each column found by its header alias. A row without a column or a label is a section heading or a note and is
-//! skipped (with a warning when it states years or sensitivity). A year cell holds
+//! flag, each column found by its header alias. A row without a column or a label is a
+//! section heading or a note and is skipped (with a warning when it states years or
+//! sensitivity). A year cell holds
 //! years and ranges (`1990-2024`, `2003-2008\n2013`); each range is one occurrence of
 //! the column. A sheet with no year column, or a blank year cell, leaves the bounds
 //! unstated. A blank-year row on a sheet with years that repeats a column of a sheet
@@ -140,8 +141,9 @@ pub fn read(
             }
             let periods = bounds(entry.years.as_deref()).unwrap_or_else(|| {
                 out.warnings.push(format!(
-                    "{}!A{}: years {:?} are not years or ranges; bounds left unstated",
+                    "{}!{}{}: years {:?} are not years or ranges; bounds left unstated",
                     sheet.name,
+                    sheet.column,
                     entry.row,
                     entry.years.clone().unwrap_or_default()
                 ));
@@ -226,13 +228,14 @@ fn sheet(
     if sensitive.is_none() && alias(Some(name.clone()), &config.sensitive_sheets) {
         return Err(error(rel, format!("sheet {name:?}: no sensitivity column")));
     }
+    let at_column = letter(first_col + column);
     let mut entries = Vec::new();
     for (i, row) in rows.iter().enumerate().skip(header + 1) {
         let at = i + offset;
         let (Some(column), Some(label)) = (cell(row, Some(column)), cell(row, label)) else {
             // Headings and notes state no years and no sensitivity.
             if cell(row, years).is_some() || cell(row, sensitive).is_some() {
-                warnings.push(format!("{name}!A{at}: a row with years or sensitivity but no column or label is skipped"));
+                warnings.push(format!("{name}!{at_column}{at}: a row with years or sensitivity but no column or label is skipped"));
             }
             continue;
         };
@@ -242,7 +245,7 @@ fn sheet(
             .and_then(|s| config.sensitive.get(s).copied());
         if let (Some(s), None) = (&stated, flag) {
             warnings.push(format!(
-                "{name}!A{at}: sensitivity {s:?} is not in lisa.toml"
+                "{name}!{at_column}{at}: sensitivity {s:?} is not in lisa.toml"
             ));
         }
         entries.push(Entry {
@@ -256,7 +259,7 @@ fn sheet(
     Ok(Sheet {
         title: rows.first().and_then(|r| cell(r, Some(0))),
         title_at: format!("{}{offset}", letter(first_col)),
-        column: letter(first_col + column),
+        column: at_column,
         years: years.is_some(),
         name,
         entries,
