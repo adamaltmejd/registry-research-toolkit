@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Dogfood"
+  short_description: "Log dogfooding findings and file issues at the end"
+  default_prompt: "Use $dogfood to log the maintainer's dogfooding findings and draft issues for review at wrap-up."
+policy:
+  allow_implicit_invocation: true
