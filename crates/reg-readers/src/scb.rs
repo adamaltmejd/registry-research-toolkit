@@ -293,8 +293,9 @@ pub fn read(
     let lists = members(&mut archive, name, &needed, &mut out)?;
     let vs_input = format!("{name}/{VARDEMANGDER}");
     let mut sets: BTreeMap<Vec<u32>, Option<ValueSet>> = BTreeMap::new();
-    let mut duplicated = 0;
+    let mut duplicated: BTreeSet<String> = BTreeSet::new();
     let mut contested = 0;
+    let mut expired = 0;
     for (k, rows) in &cvids {
         let release = &releases[&k.0];
         let period = release.from.as_ref().zip(release.to.as_ref());
@@ -315,15 +316,22 @@ pub fn read(
                 .iter()
                 .copied()
                 .filter(|&m| {
-                    let (from, to) = lists.items[m as usize]
-                        .id
-                        .and_then(|id| validity.get(&id))
-                        .map_or((None, None), |(f, t)| (f.as_deref(), t.as_deref()));
+                    // An item with no stated validity, or in an unplaced release, stays.
+                    let Some(stated) = lists.items[m as usize].id.and_then(|id| validity.get(&id))
+                    else {
+                        return true;
+                    };
                     period.is_none_or(|(lo, hi)| {
-                        from.is_none_or(|f| f <= hi.as_str()) && to.is_none_or(|t| t >= lo.as_str())
+                        stated.iter().any(|(from, to)| {
+                            from.as_deref().is_none_or(|f| f <= hi.as_str())
+                                && to.as_deref().is_none_or(|t| t >= lo.as_str())
+                        })
                     })
                 })
                 .collect();
+            if valid.is_empty() && !members.is_empty() {
+                expired += 1;
+            }
             let set = sets.entry(valid.clone()).or_insert_with(|| {
                 if valid.is_empty() {
                     return None;
@@ -340,17 +348,19 @@ pub fn read(
                     })
                     .collect();
                 let codes: BTreeSet<&str> = items.iter().map(|i| i.code.as_str()).collect();
-                if codes.len() < items.len() {
-                    duplicated += 1;
-                }
-                Some(ValueSet::new(
+                let repeats = codes.len() < items.len();
+                let set = ValueSet::new(
                     items,
                     Some(lists.items[valid[0] as usize].version.clone()),
                     Locator {
                         input: vs_input.clone(),
                         at: format!("CVID={c}"),
                     },
-                ))
+                );
+                if repeats {
+                    duplicated.insert(set.hash.clone());
+                }
+                Some(set)
             });
             hashes.push((population, set.as_ref().map(|s| s.hash.clone())));
         }
@@ -398,9 +408,21 @@ pub fn read(
             "{vs_input}: {contested} occurrences name differing value sets for one population; the first row's stands"
         ));
     }
-    if duplicated > 0 {
+    // Index lists that differ can name equal content (equal codes and labels under
+    // other ItemIds): one value set per hash.
+    let mut by_hash: BTreeMap<String, ValueSet> = BTreeMap::new();
+    for set in sets.into_values().flatten() {
+        by_hash.entry(set.hash.clone()).or_insert(set);
+    }
+    if expired > 0 {
         out.warnings.push(format!(
-            "{vs_input}: {duplicated} value sets repeat a code across levels; the first item of each code stands"
+            "{vs_input}: {expired} rows name a value set with no item valid in their release's period; they have none"
+        ));
+    }
+    if !duplicated.is_empty() {
+        out.warnings.push(format!(
+            "{vs_input}: {} value sets repeat a code across levels; the first item of each code stands",
+            duplicated.len()
         ));
     }
     out.files.push(vs_input);
@@ -411,7 +433,7 @@ pub fn read(
         .map(Record::Register)
         .chain(tables.into_values().map(Record::Table))
         .chain(releases.into_values().map(Record::Release))
-        .chain(sets.into_values().flatten().map(Record::ValueSet))
+        .chain(by_hash.into_values().map(Record::ValueSet))
         .chain(occurrences.into_values().map(Record::Occurrence))
         .collect();
     out.frame = Frame::new(records);
@@ -451,7 +473,7 @@ fn valid_dates(
     archive: &mut zip::ZipArchive<std::fs::File>,
     name: &str,
     out: &mut ReadOutput,
-) -> Result<BTreeMap<u64, Validity>, ReadError> {
+) -> Result<BTreeMap<u64, Vec<Validity>>, ReadError> {
     let input = format!("{name}/{VALID_DATES}");
     let member = archive
         .by_name(VALID_DATES)
@@ -469,25 +491,21 @@ fn valid_dates(
         row += 1;
         let id =
             number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemID")))?;
-        let day = |c: usize| {
-            let text = decode(&record[c]);
-            let text = text.trim();
-            (!text.is_empty()).then(|| text.to_owned())
-        };
+        let day = |c: usize| nonblank(&decode(&record[c]));
         let (lo, hi) = (day(from), day(to));
         let valid = |d: &Option<String>| {
             d.as_deref()
                 .is_none_or(|d| reg_core::iso_day_number(d).is_some())
         };
         if valid(&lo) && valid(&hi) {
-            dates.insert(id, (lo, hi));
+            dates.entry(id).or_insert_with(Vec::new).push((lo, hi));
         } else {
             unreadable += 1;
         }
     }
     if unreadable > 0 {
         out.warnings.push(format!(
-            "{input}: {unreadable} rows state a validity that is not an ISO day; those items are always valid"
+            "{input}: {unreadable} rows state a validity that is not an ISO day and are skipped; an item with no other row is always valid"
         ));
     }
     Ok(dates)
