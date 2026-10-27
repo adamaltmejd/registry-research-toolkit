@@ -170,7 +170,7 @@ impl Pair {
     }
 }
 
-fn schema_major(conn: &Connection, path: &str) -> Res<String> {
+fn schema_version(conn: &Connection, path: &str) -> Res<String> {
     let version: Option<String> = conn
         .query_row(
             "SELECT value FROM meta WHERE key = 'schema_version'",
@@ -178,8 +178,7 @@ fn schema_major(conn: &Connection, path: &str) -> Res<String> {
             |r| r.get(0),
         )
         .map_err(|e| format!("{path}: no meta.schema_version ({e})"))?;
-    let version = version.ok_or(format!("{path}: no meta.schema_version"))?;
-    Ok(version.split('.').next().unwrap_or_default().to_owned())
+    version.ok_or(format!("{path}: no meta.schema_version"))
 }
 
 /// The keys whose values differ, in key order; a side that lacks the key is `None`.
@@ -868,15 +867,14 @@ fn diff(args: &Args) -> Res<(String, bool)> {
         old: open(&args.old)?,
         new: open(&args.new)?,
     };
-    let (old_major, new_major) = (
-        schema_major(&pair.old, &args.old)?,
-        schema_major(&pair.new, &args.new)?,
-    );
-    if old_major != new_major {
-        return Err(format!(
-            "schema versions differ: {} is v{old_major}, {} is v{new_major}",
-            args.old, args.new
-        ));
+    let expected = reg_core::CATALOG_SCHEMA_VERSION.to_string();
+    for (conn, path) in [(&pair.old, &args.old), (&pair.new, &args.new)] {
+        let version = schema_version(conn, path)?;
+        if version != expected {
+            return Err(format!(
+                "{path}: schema version {version}, this build diffs {expected}"
+            ));
+        }
     }
     let (variables, hash_changes) = variables(&pair)?;
     let sections = [
