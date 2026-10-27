@@ -297,8 +297,10 @@ fn build(args: &Args) -> Result<(), String> {
     warnings.extend(doc_warnings);
     let linked = link::resolve(&resolved, &links, &docs)?;
     let link_unresolved = linked.warnings.len();
+    let succession_dropped = linked.succession_warnings.len();
     let doc_subject_unresolved = linked.doc_warnings.len();
     warnings.extend(linked.warnings);
+    warnings.extend(linked.succession_warnings);
     warnings.extend(linked.doc_warnings);
     for r in &resolved {
         report.insert(
@@ -374,6 +376,7 @@ fn build(args: &Args) -> Result<(), String> {
             "registers": report,
             "warnings": warnings,
             "link_unresolved": link_unresolved,
+            "succession_dropped": succession_dropped,
             "doc_subject_unresolved": doc_subject_unresolved,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;

@@ -79,6 +79,9 @@ pub struct Linked {
     pub notices: Vec<Notice>,
     /// One line per unresolved link or notice, in record order.
     pub warnings: Vec<String>,
+    /// One line per `continues` link dropped to keep the successions valid (same-day
+    /// successors, cycle-closing edges), in locator order.
+    pub succession_warnings: Vec<String>,
 }
 
 const LINK_KINDS: [&str; 2] = ["continues", "derived_from"];
@@ -178,7 +181,7 @@ pub fn resolve(
         }
     }
     linked.doc_links = doc_links.into_iter().collect();
-    successions(&mut relations, &mut linked.warnings);
+    successions(&mut relations, &mut linked.succession_warnings);
     linked.relations = relations
         .into_iter()
         .map(|((kind, subject, object, at), (_, note))| Relation {

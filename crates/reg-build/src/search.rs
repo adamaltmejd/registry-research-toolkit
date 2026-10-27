@@ -31,6 +31,8 @@ pub struct Ids<'a> {
 }
 
 /// How much of a document's text its search row carries; `doc_fts` holds the whole.
+// simplify: 2000 characters is a guess at what ranks a document well; measure search
+// quality on the real catalog and raise or drop the cap if long documents rank badly.
 const DOC_BODY_CHARS: usize = 2000;
 
 /// Every item, in `sort_key` order. The id of an item is its position, from 1.
@@ -157,7 +159,10 @@ fn code_items(catalog: &Catalog) -> Vec<Item> {
         .map(|(code, label)| {
             // U+001F cannot occur in either text. A missing label has no separator, so
             // its key differs from the empty label's.
-            let sort_key = label.map_or_else(|| code.to_owned(), |l| format!("{code}\u{1f}{l}"));
+            let sort_key = label.map_or_else(
+                || format!("code:{code}"),
+                |l| format!("code:{code}\u{1f}{l}"),
+            );
             Item {
                 kind: "code",
                 entity_id: None,

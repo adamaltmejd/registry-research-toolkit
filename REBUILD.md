@@ -254,6 +254,11 @@ The full SCB read is a heavy run.
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
   - LVM `besdatumn`: an `assign`, or a second ledger anchor.
 
+- **D's `link`/`reject` resolves the successions the link stage drops**: same-day
+  successors of one table and cycle-closing `continues` edges. Today each is dropped
+  with a warning (all same-day successors; the later-by-locator edge of a cycle); the
+  build report counts them as `succession_dropped`.
+
 - **Release builds refuse unplaced and split ledger ids** once D's curation exists;
   until then they are only counted in the build report.
 
