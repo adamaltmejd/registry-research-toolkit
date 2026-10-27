@@ -159,7 +159,9 @@ fn days(record: &Record) -> Result<(), String> {
             .chain(r.populations.iter().map(|p| &p.day))
             .collect(),
         Record::Occurrence(o) => vec![&o.from, &o.to],
-        Record::ValueSet(_) => vec![],
+        Record::ValueSet(_) | Record::Doc(_) => vec![],
+        Record::Link(l) => vec![&l.at],
+        Record::Notice(n) => vec![&n.at],
     };
     match stated
         .into_iter()

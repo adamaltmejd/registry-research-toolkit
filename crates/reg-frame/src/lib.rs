@@ -2,8 +2,9 @@
 //! (`crates/DESIGN.md`, "The catalog builder").
 //!
 //! A frame states registers, tables, stated deliveries (releases), documented columns
-//! (occurrences) and value sets, each with a locator back to its input. Nothing here names a provider or a file
-//! format: provider coordinates survive only as opaque strings (source keys, handles,
+//! (occurrences), value sets, and the links and notices the source states between and
+//! about them, each with a locator back to its input. Nothing here names a provider or a
+//! file format: provider coordinates survive only as opaque strings (source keys, handles,
 //! locators). Dates are inclusive ISO days, the convention of `reg-core`'s interval
 //! algebra; an absent bound is unstated, never invented.
 //!
@@ -200,6 +201,90 @@ impl ValueSet {
     }
 }
 
+/// One end of a source-stated link, in source coordinates: the link stage resolves it to a
+/// public id. `kind` is `register`, `table`, `release` or `variable`. Exactly one of `register`
+/// (a register handle) and `register_name` (a register *name* as the source writes it, matched
+/// by fold) is set. `table` is a table handle (table and release ends); `key` a release handle
+/// (release) or a source key (variable).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Endpoint {
+    pub kind: String,
+    pub provider: String,
+    pub register: Option<String>,
+    pub register_name: Option<String>,
+    pub table: Option<String>,
+    pub key: Option<String>,
+}
+
+/// A relation the source states: `continues` (the subject takes over from the object, from
+/// `at`) or `derived_from` (the subject is derived from the object).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Link {
+    /// Serialized as `relation`: the record tag owns `kind`.
+    #[serde(rename = "relation")]
+    pub kind: String,
+    pub subject: Endpoint,
+    pub object: Endpoint,
+    /// The first day the relation holds (inclusive ISO day), when stated.
+    pub at: Option<String>,
+    /// The source's own words about it.
+    pub note: Option<String>,
+    pub locator: Locator,
+}
+
+/// A notice the source states about one entity (a series break, an end): shown to users.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Notice {
+    pub subject: Endpoint,
+    pub at: Option<String>,
+    pub text: String,
+    pub locator: Locator,
+}
+
+/// One section of a parsed document.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocSection {
+    pub heading: Option<String>,
+    pub page: Option<u32>,
+    pub body: String,
+}
+
+/// What a document is about, as the source names it; `page` 0 is the whole document.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocSubject {
+    pub endpoint: Endpoint,
+    pub page: u32,
+}
+
+/// A document the source publishes about its registers: a parsed text or a PDF.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Doc {
+    /// SHA-256 (lowercase hex) of the original file's bytes.
+    pub hash: String,
+    /// `parsed` or `pdf`.
+    pub kind: String,
+    pub title: String,
+    pub licence: String,
+    /// The original file's size.
+    pub bytes: u64,
+    /// Where the original is published, when it has a URL of its own.
+    pub url: Option<String>,
+    /// `parsed` only, in order. Empty for `pdf`.
+    #[serde(default)]
+    pub sections: Vec<DocSection>,
+    /// `pdf` only: the bytes as lowercase hex ([`hex`]), so the frame stays JSONL.
+    pub content: Option<String>,
+    #[serde(default)]
+    pub subjects: Vec<DocSubject>,
+    pub locator: Locator,
+}
+
 /// One frame record.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
@@ -209,6 +294,9 @@ pub enum Record {
     Release(Release),
     ValueSet(ValueSet),
     Occurrence(Occurrence),
+    Link(Link),
+    Notice(Notice),
+    Doc(Doc),
 }
 
 /// A reader's whole output for one input: its records, sorted.
@@ -248,6 +336,25 @@ pub fn canonical_line<T: Serialize>(value: &T) -> String {
     let mut tree = serde_json::to_value(value).expect("frame records serialize");
     tree.sort_all_objects();
     tree.to_string()
+}
+
+/// The bytes of lowercase hex `text`, or `None` when it is not hex (odd length, a
+/// non-hex character, uppercase).
+#[must_use]
+pub fn unhex(text: &str) -> Option<Vec<u8>> {
+    let digit = |b: u8| match b {
+        b'0'..=b'9' => Some(b - b'0'),
+        b'a'..=b'f' => Some(b - b'a' + 10),
+        _ => None,
+    };
+    let bytes = text.as_bytes();
+    if !bytes.len().is_multiple_of(2) {
+        return None;
+    }
+    bytes
+        .chunks(2)
+        .map(|pair| Some((digit(pair[0])? << 4) | digit(pair[1])?))
+        .collect()
 }
 
 /// Lowercase hex of `bytes`.

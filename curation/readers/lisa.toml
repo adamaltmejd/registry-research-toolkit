@@ -11,6 +11,9 @@ column = ["kolumnnamn", "kolumnamn", "variabelnamn"]
 label = ["beskrivning", "variabel i klartext"]
 years = ["år", "årgång"]
 sensitive = ["känslig1"]
+# The register a column is derived from: a `derived_from` link, matched by name. Every
+# sheet of the 2026 list spells it this way; a sheet without it states none.
+source_register = ["grundregister"]
 
 # Sensitivity cells. "I vissa fall" (in some cases) is sensitive, as SCB's
 # KansligVariabelIbland is.

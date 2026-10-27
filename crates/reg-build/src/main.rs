@@ -14,14 +14,17 @@
 //! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).
 //! `read` writes each input's frame as `<name>.jsonl` and its warnings as
 //! `<name>.warnings` under `--out`. `build` resolves each register with its ledger
-//! `<curation>/registers/<provider>/<register>/ids.toml` and writes the catalog file to `--out`
+//! `<curation>/registers/<provider>/<register>/ids.toml`, matches the frames' links and
+//! notices across the resolved registers (`link.rs`), and writes the catalog file to `--out`
 //! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
 //! recorded in the file; `--release` refuses a variable without a ledger id. A refusal
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
 //! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
 
 mod diff;
+mod docs;
 mod emit;
+mod link;
 mod search;
 mod verify;
 
@@ -233,9 +236,21 @@ fn build(args: &Args) -> Result<(), String> {
 
     let mut registers: BTreeMap<(String, String), Vec<Record>> = BTreeMap::new();
     let mut valuesets = BTreeMap::new();
+    // Links and notices cross registers: the link stage reads them, not resolve. So do
+    // documents, which are merged by hash first.
+    let mut links = Vec::new();
+    let mut docs = Vec::new();
     for (i, output) in outputs.iter().enumerate() {
         for record in &output.frame.records {
             let key = match record {
+                Record::Link(_) | Record::Notice(_) => {
+                    links.push(record.clone());
+                    continue;
+                }
+                Record::Doc(d) => {
+                    docs.push(d.clone());
+                    continue;
+                }
                 Record::Register(r) => (r.provider.clone(), r.register.clone()),
                 Record::Table(t) => (t.provider.clone(), t.register.clone()),
                 Record::Release(r) => (r.provider.clone(), r.register.clone()),
@@ -278,6 +293,13 @@ fn build(args: &Args) -> Result<(), String> {
         }
         resolved.push(r);
     }
+    let (docs, doc_warnings) = docs::merge(docs)?;
+    warnings.extend(doc_warnings);
+    let linked = link::resolve(&resolved, &links, &docs)?;
+    let link_unresolved = linked.warnings.len();
+    let doc_subject_unresolved = linked.doc_warnings.len();
+    warnings.extend(linked.warnings);
+    warnings.extend(linked.doc_warnings);
     for r in &resolved {
         report.insert(
             format!("{}/{}", r.register.provider, r.register.register),
@@ -341,12 +363,18 @@ fn build(args: &Args) -> Result<(), String> {
         registers: resolved,
         valuesets,
         file_input,
+        relations: linked.relations,
+        notices: linked.notices,
+        docs,
+        doc_links: linked.doc_links,
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({
             "generation_id": generation_id,
             "registers": report,
             "warnings": warnings,
+            "link_unresolved": link_unresolved,
+            "doc_subject_unresolved": doc_subject_unresolved,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;

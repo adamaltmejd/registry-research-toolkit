@@ -184,3 +184,25 @@ period = "year"
 [[names.forms]]
 pattern = "utjämningsår {year}"
 period = "year"
+
+# `Timeseries.csv`: events on the entity `ID1` names. A row whose `Handelse` or `Entitet`
+# is not listed here is left out and counted. Read from the 2026-03 export: `Namn` is
+# always `ID1`'s name, and each `Ersätter` row has a mirror `Ersatt av` row.
+[timeseries.events]
+# A notice on `ID1`'s entity: "<Handelse>: <Beskrivning>".
+Tidsseriebrott = "notice"
+Avslutad = "notice"
+# A succession: `ID1` takes over from `ID2` (replaces), or `ID2` from `ID1` (replaced_by).
+"Ersätter" = "replaces"
+"Ersatt av" = "replaced_by"
+
+# `Entitet` → the endpoint kind (which fixes the id space: register = RegisterId, table =
+# RegVarID, release = RegVerID, variable = VarId) and what a succession between two of
+# them becomes: a `continues` link, or a notice on the newer one, since a release is
+# never a relation end. Not mapped: `AktuellVariabel` (its ids name no export entity),
+# `Population`, `PopContext` and `VS_Class` (the export gives them no id).
+[timeseries.entities]
+Register = { kind = "register", succession = "link" }
+RegisterVariant = { kind = "table", succession = "link" }
+RegisterVersion = { kind = "release", succession = "notice" }
+Variabel = { kind = "variable", succession = "link" }

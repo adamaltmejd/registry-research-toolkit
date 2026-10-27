@@ -1,0 +1,8 @@
+# The fixture's document sources: the original URL of a document, keyed by its
+# frontmatter `source` with one trailing `.md` stripped, and the markdown's licence.
+# `okand-kalla` is deliberately absent (a document with no original URL).
+licence = "CC BY 4.0"
+
+[sources."kon-bakgrund"]
+url = "https://example.invalid/kon-bakgrund.pdf"
+title = "Kön, bakgrund"
