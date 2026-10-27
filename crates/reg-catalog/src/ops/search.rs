@@ -177,11 +177,7 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
                 .ok_or_else(|| Error::invalid_parameter("type"))
         })
         .transpose()?;
-    let period = super::period(params, "period")?.map(|p| {
-        let (first, last) = p.iso_bounds();
-        let day = |iso: &str| reg_core::iso_day_number(iso).expect("a grammar period's day");
-        (day(&first), day(&last) + 1)
-    });
+    let period = super::days(params, "period")?;
     let limit = super::limit(params)?;
     let generation = server.catalog.generation();
     let context = cursor::context(params);

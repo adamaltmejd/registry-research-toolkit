@@ -185,15 +185,6 @@ fn scope(
     })
 }
 
-/// A request period as the half-open day numbers `[start, end)`; none when absent.
-fn bounds(params: &Params, name: &str) -> Result<Option<(i64, i64)>, Error> {
-    let day = |iso: &str| reg_core::iso_day_number(iso).expect("a grammar period's ISO bounds");
-    Ok(super::period(params, name)?.map(|p| {
-        let (first, last) = p.iso_bounds();
-        (day(&first), day(&last) + 1)
-    }))
-}
-
 /// One (table, variable, folded spelling) over the request: the fields are those of
 /// its latest segment inside the request.
 struct Line {
@@ -213,7 +204,7 @@ struct Line {
 }
 
 /// The lines of `tables` (of `variable` when given) over `[from, to)`, ordered by
-/// (table pid, variable pid, start, folded spelling).
+/// (table pid, variable pid, start, spelling).
 fn lines(
     conn: &Connection,
     tables: &[(i64, String)],
@@ -270,11 +261,11 @@ fn lines(
         }
     }
     out.sort_by(|a, b| {
-        (&a.table, &a.variable, a.start, &a.folded).cmp(&(
+        (&a.table, &a.variable, a.start, &a.spelling).cmp(&(
             &b.table,
             &b.variable,
             b.start,
-            &b.folded,
+            &b.spelling,
         ))
     });
     Ok(out)
@@ -302,12 +293,25 @@ impl Line {
 const SEPARATOR: char = '\u{1f}';
 
 /// A cursor's position: the key of the last line returned.
-fn position(text: &str) -> Result<(String, String, i64), Error> {
+fn position(text: &str) -> Result<(String, String, i64, String), Error> {
     let mut parts = text.split(SEPARATOR);
-    match (parts.next(), parts.next(), parts.next(), parts.next()) {
-        (Some(table), Some(variable), Some(start), None) => start
+    match (
+        parts.next(),
+        parts.next(),
+        parts.next(),
+        parts.next(),
+        parts.next(),
+    ) {
+        (Some(table), Some(variable), Some(start), Some(spelling), None) => start
             .parse()
-            .map(|start| (table.to_owned(), variable.to_owned(), start))
+            .map(|start| {
+                (
+                    table.to_owned(),
+                    variable.to_owned(),
+                    start,
+                    spelling.to_owned(),
+                )
+            })
             .map_err(|_| cursor::invalid("Cursor is malformed.")),
         _ => Err(cursor::invalid("Cursor is malformed.")),
     }
@@ -315,7 +319,7 @@ fn position(text: &str) -> Result<(String, String, i64), Error> {
 
 fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let limit = super::limit(params)?;
-    let request = bounds(params, "period")?.unwrap_or((i64::MIN, i64::MAX));
+    let request = super::days(params, "period")?.unwrap_or((i64::MIN, i64::MAX));
     // The cursor is checked before the ref: a cursor from another generation is stale
     // whatever its ref now resolves to.
     let context = cursor::context(params);
@@ -340,10 +344,16 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let mut rest: Vec<Line> = lines(&conn, &scope.tables, scope.variable, request)?
         .into_iter()
         .filter(|l| {
-            after.as_ref().is_none_or(|(table, variable, start)| {
-                (l.table.as_str(), l.variable.as_str(), l.start)
-                    > (table.as_str(), variable.as_str(), *start)
-            })
+            after
+                .as_ref()
+                .is_none_or(|(table, variable, start, spelling)| {
+                    (
+                        l.table.as_str(),
+                        l.variable.as_str(),
+                        l.start,
+                        l.spelling.as_str(),
+                    ) > (table.as_str(), variable.as_str(), *start, spelling.as_str())
+                })
         })
         .take(limit + 1)
         .collect();
@@ -355,8 +365,8 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
             &context,
             offset + rest.len(),
             &format!(
-                "{}{SEPARATOR}{}{SEPARATOR}{}",
-                last.table, last.variable, last.start
+                "{}{SEPARATOR}{}{SEPARATOR}{}{SEPARATOR}{}",
+                last.table, last.variable, last.start, last.spelling
             ),
         )
     });
@@ -418,8 +428,8 @@ fn changes(conn: &Connection, from: &Line, to: &Line) -> Result<Vec<DiffChange>,
 }
 
 fn diff(server: &Server, params: &Params) -> Result<Value, Error> {
-    let from = bounds(params, "from")?.expect("a required parameter");
-    let to = bounds(params, "to")?.expect("a required parameter");
+    let from = super::days(params, "from")?.expect("a required parameter");
+    let to = super::days(params, "to")?.expect("a required parameter");
     let conn = server.catalog.connect()?;
     let scope = scope(
         &conn,

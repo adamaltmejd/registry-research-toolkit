@@ -413,6 +413,23 @@ pub fn period(params: &Params, name: &str) -> Result<Option<reg_core::Period>, E
         .transpose()
 }
 
+/// A request period as half-open day numbers `[first, last + 1)`; none when absent.
+///
+/// # Panics
+///
+/// If the period grammar produces bounds that are not ISO days.
+///
+/// # Errors
+///
+/// `invalid_period` when the value is not in the grammar.
+pub fn days(params: &Params, name: &str) -> Result<Option<(i64, i64)>, Error> {
+    let day = |iso: &str| reg_core::iso_day_number(iso).expect("a grammar period's ISO bounds");
+    Ok(period(params, name)?.map(|p| {
+        let (first, last) = p.iso_bounds();
+        (day(&first), day(&last) + 1)
+    }))
+}
+
 /// A boolean parameter, `true` or `false` (default false).
 ///
 /// # Errors
