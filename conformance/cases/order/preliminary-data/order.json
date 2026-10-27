@@ -1,0 +1,49 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/pre",
+      "table": "demo/pre",
+      "variable": "demo/pre/mat",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Mat",
+      "type": "decimal",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [],
+  "clips": [],
+  "findings": [
+    {
+      "level": "warning",
+      "code": "preliminary_data",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/pre/mat in demo/pre over [2020-01-01, 2021-01-01) is preliminary data: no final release covers it",
+      "source": "s",
+      "variable": "demo/pre/mat",
+      "table": "demo/pre",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

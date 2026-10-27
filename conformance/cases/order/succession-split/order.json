@@ -1,0 +1,52 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/suc",
+      "table": "demo/suc/gammal",
+      "variable": "demo/suc/ink",
+      "display_name": null,
+      "period": {
+        "start": "2016-01-01",
+        "end": "2018-01-01"
+      },
+      "spelling": "Ink",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    },
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/suc",
+      "table": "demo/suc/ny",
+      "variable": "demo/suc/ink",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "spelling": "Ink",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [],
+  "clips": [],
+  "findings": []
+}

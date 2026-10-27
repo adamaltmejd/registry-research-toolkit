@@ -1,0 +1,64 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/ark",
+      "table": "demo/ark",
+      "variable": "demo/ark/belopp",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Belopp",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/ark",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/ark/nyckel",
+          "spelling": "Nyckel"
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "warning",
+      "code": "preliminary_data",
+      "path": "/sources/0",
+      "message": "Row key demo/ark/nyckel in demo/ark over [2020-01-01, 2021-01-01) is preliminary data: no final release covers it",
+      "source": "s",
+      "variable": "demo/ark/nyckel",
+      "table": "demo/ark",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

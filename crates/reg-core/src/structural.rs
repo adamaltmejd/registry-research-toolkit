@@ -24,19 +24,12 @@
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken};
-use crate::project::{ColumnType, Edition, IdSubtype, NumericSubtype};
+use crate::project::{ColumnType, IdSubtype, NumericSubtype};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
 const PROJECT_OPTIONAL: [&str; 2] = ["panels", "window"];
-const SOURCE_KEYS: [&str; 6] = [
-    "name",
-    "table",
-    "period",
-    "edition",
-    "qualifier",
-    "bindings",
-];
+const SOURCE_KEYS: [&str; 4] = ["name", "table", "period", "bindings"];
 const BINDING_KEYS: [&str; 8] = [
     "variable",
     "type",
@@ -537,7 +530,6 @@ fn check_source<'a>(
     if let Some(period) = required(source, "period", base, "source 'period'", issues) {
         check_period(period, format!("{base}/period"), issues);
     }
-    check_edition_and_qualifier(source, base, issues);
 
     let Some(bindings) = required(source, "bindings", base, "source 'bindings'", issues) else {
         return;
@@ -584,39 +576,6 @@ fn check_source<'a>(
             None => display_names.push((dn, path)),
         }
     }
-}
-
-/// The optional source fields: `edition` from its enum, `qualifier` a string, neither
-/// `null` when present.
-fn check_edition_and_qualifier(source: &Map<String, Value>, base: &str, issues: &mut Issues) {
-    for field in ["edition", "qualifier"] {
-        if source.get(field) == Some(&Value::Null) {
-            issues.error(
-                "invalid_field_type",
-                format!("{base}/{field}"),
-                format!("source '{field}' must not be null when present"),
-            );
-        }
-    }
-    match get(source, "edition") {
-        None => {}
-        Some(Value::String(s)) if Edition::parse(s).is_some() => {}
-        Some(Value::String(s)) => issues.error(
-            "invalid_enum_value",
-            format!("{base}/edition"),
-            format!(
-                "edition must be one of {}; got {}",
-                allowed(Edition::ALL.iter().map(|v| v.as_str())),
-                q(s)
-            ),
-        ),
-        Some(_) => issues.error(
-            "invalid_field_type",
-            format!("{base}/edition"),
-            "edition must be a string".into(),
-        ),
-    }
-    optional_string(source, "qualifier", base, "source 'qualifier'", issues);
 }
 
 fn check_binding(

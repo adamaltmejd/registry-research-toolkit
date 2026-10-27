@@ -36,7 +36,9 @@ mod ledger;
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{Interval, fold_identity, intersect, merge, next_iso_day, prev_iso_day};
+use reg_core::{
+    Form, Interval, fold_identity, intersect, label_key, merge, next_iso_day, prev_iso_day,
+};
 use reg_frame::{
     Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table, ValueSet,
 };
@@ -746,25 +748,19 @@ pub fn resolve(
                         conflicts.insert(name.to_owned());
                     }
                 }
+                let (length, length_conflict) = reg_core::agreed_length(
+                    covering.iter().map(|&i| resolved[i].occurrence.length),
+                );
+                if length_conflict {
+                    conflicts.insert("length".to_owned());
+                }
                 let segment = Segment {
                     table: t,
                     period,
                     spelling: o.column.clone(),
-                    dtype: agreed(|f| &f.1),
-                    length: {
-                        let lengths: BTreeSet<i64> = covering
-                            .iter()
-                            .filter_map(|&i| resolved[i].occurrence.length)
-                            .collect();
-                        if lengths.len() > 1 {
-                            conflicts.insert("length".to_owned());
-                        }
-                        match lengths.into_iter().collect::<Vec<_>>()[..] {
-                            [n] => Some(n),
-                            _ => None,
-                        }
-                    },
-                    valueset: agreed(|f| &f.2),
+                    dtype: agreed(|f| &f.dtype),
+                    length,
+                    valueset: agreed(|f| &f.valueset),
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
@@ -1086,18 +1082,16 @@ fn order(r: &ResolvedOccurrence) -> (&Option<Interval>, &Locator) {
     (&r.period, &r.occurrence.locator)
 }
 
-type Form = (Option<String>, Option<String>, Option<String>);
-
 /// Per key, the (fold, type) pairs a release documents.
 type Forms<'a> = BTreeMap<&'a str, BTreeSet<(String, Option<&'a str>)>>;
 
 /// What two overlapping occurrences of one variable must agree on.
 fn form(r: &ResolvedOccurrence) -> Form {
     let o = &r.occurrence;
-    (
-        o.label.as_deref().map(label_key),
-        o.dtype.clone(),
-        o.valueset.clone(),
+    Form::new(
+        o.label.as_deref(),
+        o.dtype.as_deref(),
+        o.valueset.as_deref(),
     )
 }
 
@@ -1122,11 +1116,6 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             b.identifier,
             b.role,
         )
-}
-
-/// Labels compare case- and spacing-insensitively.
-fn label_key(label: &str) -> String {
-    reg_core::fold_identity(&label.split_whitespace().collect::<Vec<_>>().join(" "))
 }
 
 pub(crate) fn covers(p: &Interval, piece: &Interval) -> bool {

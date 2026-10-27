@@ -1,42 +1,84 @@
 {
-  "clips": [
-    {
-      "ordered_period": "2018..2019-02-28",
-      "requested_period": "2017..2019-02-28",
-      "source": "source",
-      "variable": "scb/example/kon"
-    }
-  ],
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
   "entries": [
     {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Kon",
-        "variable": "scb/example/kon",
-        "variant": "annual"
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/imp",
+      "table": "demo/imp",
+      "variable": "demo/imp/kon",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2019-03-01"
       },
-      "physical": {
-        "column": "Kon",
-        "edition": "2018..2019-02-28",
-        "file": "scb_example_annual",
-        "table": ""
+      "spelling": "Kon",
+      "type": "char",
+      "length": 1,
+      "value_set": {
+        "hash": "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81",
+        "n_items": 2
       },
-      "requested_period": "2018..2019-02-28",
-      "source": "source"
+      "classification": null
     }
   ],
-  "extract_format": "dta",
-  "provenance": {
-    "artifact_kind": "catalog",
-    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
-    "catalog_schema_version": "12.3.0",
-    "mode": "global_fallback",
-    "project_hash": "81239bc341fef120a6496950581ccdb90838e74eb9cd9cab6964bc31f5f7e1eb",
-    "project_name": "Reader case",
-    "project_reg_meta_version": "5.1.0",
-    "project_schema_version": "4.0.0",
-    "steward": "global"
-  },
-  "version": 3
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/imp",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2019-03-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/imp/lopnr",
+          "spelling": "Lopnr"
+        }
+      ]
+    }
+  ],
+  "clips": [
+    {
+      "source": "s",
+      "variable": "demo/imp/kon",
+      "requested": [
+        {
+          "start": "2017-01-01",
+          "end": "2019-03-01"
+        }
+      ],
+      "ordered": [
+        {
+          "start": "2018-01-01",
+          "end": "2019-03-01"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "level": "info",
+      "code": "period_clipped",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/imp/kon is not available over [2017-01-01, 2018-01-01); that part is not ordered",
+      "source": "s",
+      "variable": "demo/imp/kon",
+      "table": "demo/imp",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
 }

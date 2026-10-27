@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "project_empty",
+      "path": "/sources",
+      "message": "The project has no sources, so there is nothing to order."
+    }
+  ]
+}

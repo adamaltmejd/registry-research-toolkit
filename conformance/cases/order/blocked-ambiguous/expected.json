@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "ambiguous_window",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/amb/del cannot be placed on one form in demo/amb over [2019-01-01, 2020-01-01); the window needs curation",
+      "source": "s",
+      "variable": "demo/amb/del",
+      "table": "demo/amb",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-01-01"
+      }
+    }
+  ]
+}

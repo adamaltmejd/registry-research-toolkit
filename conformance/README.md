@@ -40,22 +40,23 @@ return in milestone E, written over the new builder.
 
 Each case directory has `request.json` and, except for an order case that orders,
 `expected.json`. JSON pointer projections define the compared public result; errors also
-pin the status and located findings. In an order case the manifest download's bytes
-compare with the case's committed `order.json` (provenance included; authoring it is a
-content decision, see `test_order.py`), `order`'s `data` with that document, and a
-blocked case's `order_blocked` findings on both routes with its `expected.json`. An
-`api` step's body is `body` (JSON), a `content` string sent verbatim (encoded with its
-optional `encoding`) or `nested_arrays: N`, an object nesting N arrays deep. No volatile
-fields are removed from the comparisons. Keys and lists retain their order. An HTTP
-response oracle may also pin raw bytes: `media_type` (the content type without
-parameters), `headers` (exact values by lower-case name) and `bytes` (a file in the case
-directory compared byte for byte). Where ties have no contract order, a step's `members`
-(`steps`, `pointer`, `equals`) joins `pointer` over those steps (this one or earlier)
-and requires no repeats and exactly the `equals` set.
+pin the status and located findings. In an order case `order`'s `data` compares with the
+case's committed `order.json` (authoring it is a content decision, see `test_order.py`),
+less its two volatile fields: `catalog.generation_id`, checked against the artifact's
+`meta`, and `project.project_hash`, checked as 64 hex digits. A blocked case's
+`order_blocked` findings compare with its `expected.json`, and `validate` must agree
+with `order` on both. An `api` step's body is `body` (JSON), a `content` string sent
+verbatim (encoded with its optional `encoding`) or `nested_arrays: N`, an object nesting
+N arrays deep. No other volatile fields are removed from the comparisons. Keys and lists
+retain their order. An HTTP response oracle may also pin raw bytes: `media_type` (the
+content type without parameters), `headers` (exact values by lower-case name) and
+`bytes` (a file in the case directory compared byte for byte). Where ties have no
+contract order, a step's `members` (`steps`, `pointer`, `equals`) joins `pointer` over
+those steps (this one or earlier) and requires no repeats and exactly the `equals` set.
 
   | Surface directory | Boundary and request interpretation                               |
   | ----------------- | ----------------------------------------------------------------- |
-  | order             | HTTP order and download, `order.json` bytes, blocked findings     |
+  | order             | HTTP order and validate, `order.json`, blocked findings           |
   | api               | HTTP request sequence and status/pointer oracle, startup refusals |
   | mcp               | The `tools/list` golden                                           |
   | folds, grammar    | Corpora for the fold and the identifier grammars                  |

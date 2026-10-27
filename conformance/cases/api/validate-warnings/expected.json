@@ -1,0 +1,108 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": true,
+      "/data/issues/*/code": [
+        "identifier",
+        "variable_sensitive",
+        "edition_disagreement",
+        "period_clipped",
+        "variable_replaced",
+        "form_change",
+        "coverage_end_unstated",
+        "table_succession_undated",
+        "period_clipped",
+        "variable_replaced"
+      ],
+      "/data/issues/*/level": [
+        "info",
+        "warning",
+        "warning",
+        "info",
+        "warning",
+        "info",
+        "info",
+        "info",
+        "info",
+        "warning"
+      ],
+      "/data/issues/*/path": [
+        "/sources/0/bindings/0",
+        "/sources/0/bindings/1",
+        "/sources/1/bindings/0",
+        "/sources/2/bindings/0",
+        "/sources/2/bindings/0",
+        "/sources/3/bindings/0",
+        "/sources/4/bindings/0",
+        "/sources/5",
+        "/sources/5/bindings/0",
+        "/sources/6/bindings/0"
+      ],
+      "/data/issues/*/source": [
+        "flags",
+        "flags",
+        "editions",
+        "replaced",
+        "replaced",
+        "forms",
+        "open",
+        "undated",
+        "undated",
+        "replaced-undated"
+      ],
+      "/data/issues/*/variable": [
+        "demo/imp/lopnr",
+        "demo/imp/kansl",
+        "demo/pre/mat",
+        "demo/rep/gammal",
+        "demo/rep/gammal",
+        "demo/nam/belopptot",
+        "demo/opn/y",
+        null,
+        "demo/und/ink",
+        "demo/rep/ny"
+      ],
+      "/data/issues/*/table": [
+        "demo/imp",
+        "demo/imp",
+        "demo/pre",
+        "demo/rep",
+        "demo/rep",
+        "demo/nam/a",
+        "demo/opn",
+        "demo/und/ett",
+        "demo/und/ett",
+        "demo/rep"
+      ],
+      "/data/issues/*/period": [
+        {"start": "2020-01-01", "end": "2021-01-01"},
+        {"start": "2020-01-01", "end": "2021-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"},
+        {"start": "2018-01-01", "end": "2021-01-01"},
+        {"start": "2018-01-01", "end": "2021-01-01"},
+        {"start": "2018-01-01", "end": "2021-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"},
+        {"start": "2018-01-01", "end": "2020-01-01"},
+        {"start": "2018-01-01", "end": "2020-01-01"},
+        null
+      ],
+      "/data/issues/*/successor_fqid": [
+        null,
+        null,
+        null,
+        null,
+        "demo/rep/ny",
+        null,
+        null,
+        "demo/und/tva",
+        null,
+        "demo/rep/nyast"
+      ]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "verbose"}}
+  }
+]

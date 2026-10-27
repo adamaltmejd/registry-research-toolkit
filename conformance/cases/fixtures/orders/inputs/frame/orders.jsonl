@@ -1,0 +1,131 @@
+{"kind":"register","provider":"demo","register":"imp","name":"Implicitregistret"}
+{"kind":"value_set","items":[{"code":"1","label":"Man"},{"code":"2","label":"Kvinna"}],"names":["kon"]}
+{"kind":"release","provider":"demo","register":"imp","table":"","release":"i2018","name":"Imp 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"imp","table":"","release":"i2019","name":"Imp 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"imp","table":"","release":"i2020","name":"Imp 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2018","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2019","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2020","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2018","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2019","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2020","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2018","column":"Kon","source_key":"k3","label":"Kön","dtype":"char","length":1,"valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2019","column":"Kon","source_key":"k3","label":"Kön","dtype":"char","length":1,"valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2020","column":"Kon","source_key":"k3","label":"Kön","dtype":"char","length":1,"valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2018","column":"Kansl","source_key":"k4","label":"Känslig uppgift","dtype":"int","sensitive":false}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2019","column":"Kansl","source_key":"k4","label":"Känslig uppgift","dtype":"int","sensitive":false}
+{"kind":"occurrence","provider":"demo","register":"imp","table":"","release":"i2020","column":"Kansl","source_key":"k4","label":"Känslig uppgift","dtype":"int","sensitive":true}
+{"kind":"register","provider":"demo","register":"nam","name":"Namngivna tabeller"}
+{"kind":"table","provider":"demo","register":"nam","table":"a","name":"Tabell A"}
+{"kind":"table","provider":"demo","register":"nam","table":"b","name":"Tabell B"}
+{"kind":"release","provider":"demo","register":"nam","table":"a","release":"a2018","name":"A 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"nam","table":"a","release":"a2019","name":"A 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"nam","table":"a","release":"a2020","name":"A 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"nam","table":"b","release":"b2020","name":"B 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2018","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2019","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2020","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2018","column":"Belopp","source_key":"k2","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2019","column":"Belopp","source_key":"k2","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2020","column":"BeloppTot","source_key":"k2","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2018","column":"Flagga","source_key":"k3","label":"Flagga","dtype":"int","sensitive":false}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2019","column":"Flagga","source_key":"k3","label":"Flagga","dtype":"int","sensitive":false}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"a","release":"a2020","column":"Flagga","source_key":"k3","label":"Flagga","dtype":"int","sensitive":true}
+{"kind":"occurrence","provider":"demo","register":"nam","table":"b","release":"b2020","column":"Annan","source_key":"k4","label":"Annan","dtype":"int"}
+{"kind":"register","provider":"demo","register":"amb","name":"Tvetydiga registret"}
+{"kind":"release","provider":"demo","register":"amb","table":"","release":"m2018","name":"Amb 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"amb","table":"","release":"m2019","name":"Amb 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2018","column":"Del","source_key":"k1","label":"Del","dtype":"int","length":2}
+{"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2019","column":"Del","source_key":"k1","label":"Del","dtype":"int","length":3}
+{"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2019","column":"Del","source_key":"k2","label":"Delsumma","dtype":"int","length":3}
+{"kind":"register","provider":"demo","register":"pre","name":"Preliminära registret"}
+{"kind":"release","provider":"demo","register":"pre","table":"","release":"p2019","name":"Pre 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"pre","table":"","release":"p2019p","name":"Pre 2019 preliminär","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"preliminary"}
+{"kind":"release","provider":"demo","register":"pre","table":"","release":"p2020","name":"Pre 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"pre","table":"","release":"p2020p","name":"Pre 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"pre","table":"","release":"p2019","column":"Mat","source_key":"k1","label":"Mätvärde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"pre","table":"","release":"p2019p","column":"Mat","source_key":"k1","label":"Mätvärde","dtype":"decimal"}
+{"kind":"occurrence","provider":"demo","register":"pre","table":"","release":"p2020p","column":"Mat","source_key":"k1","label":"Mätvärde","dtype":"decimal"}
+{"kind":"occurrence","provider":"demo","register":"pre","table":"","release":"p2019","column":"Ar","source_key":"k2","label":"År","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"pre","table":"","release":"p2020","column":"Ar","source_key":"k2","label":"År","dtype":"int"}
+{"kind":"register","provider":"demo","register":"suc","name":"Successionsregistret"}
+{"kind":"table","provider":"demo","register":"suc","table":"gammal","name":"Gammal tabell"}
+{"kind":"table","provider":"demo","register":"suc","table":"ny","name":"Ny tabell"}
+{"kind":"release","provider":"demo","register":"suc","table":"gammal","release":"g2015","name":"Gammal 2015","from":"2015-01-01","to":"2015-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"suc","table":"gammal","release":"g2016","name":"Gammal 2016","from":"2016-01-01","to":"2016-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"suc","table":"gammal","release":"g2017","name":"Gammal 2017","from":"2017-01-01","to":"2017-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"suc","table":"ny","release":"n2018","name":"Ny 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"suc","table":"ny","release":"n2019","name":"Ny 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"suc","table":"ny","release":"n2020","name":"Ny 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"gammal","release":"g2015","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"gammal","release":"g2016","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"gammal","release":"g2017","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"gammal","release":"g2017","column":"Bara","source_key":"k9","label":"Bara gammal","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"ny","release":"n2018","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"ny","release":"n2019","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"suc","table":"ny","release":"n2020","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"link","relation":"continues","subject":{"kind":"table","provider":"demo","register":"suc","table":"ny"},"object":{"kind":"table","provider":"demo","register":"suc","table":"gammal"},"at":"2018-01-01"}
+{"kind":"register","provider":"demo","register":"und","name":"Odaterade successionen"}
+{"kind":"table","provider":"demo","register":"und","table":"ett","name":"Tabell ett"}
+{"kind":"table","provider":"demo","register":"und","table":"tva","name":"Tabell två"}
+{"kind":"release","provider":"demo","register":"und","table":"ett","release":"e2015","name":"Ett 2015","from":"2015-01-01","to":"2015-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"und","table":"ett","release":"e2016","name":"Ett 2016","from":"2016-01-01","to":"2016-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"und","table":"ett","release":"e2017","name":"Ett 2017","from":"2017-01-01","to":"2017-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"und","table":"tva","release":"t2018","name":"Två 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"und","table":"tva","release":"t2019","name":"Två 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"und","table":"tva","release":"t2020","name":"Två 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"und","table":"ett","release":"e2015","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"und","table":"ett","release":"e2016","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"und","table":"ett","release":"e2017","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"und","table":"tva","release":"t2018","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"und","table":"tva","release":"t2019","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"und","table":"tva","release":"t2020","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"link","relation":"continues","subject":{"kind":"table","provider":"demo","register":"und","table":"tva"},"object":{"kind":"table","provider":"demo","register":"und","table":"ett"}}
+{"kind":"register","provider":"demo","register":"opn","name":"Öppna registret"}
+{"kind":"occurrence","provider":"demo","register":"opn","table":"","column":"Y","source_key":"k1","label":"Värde","dtype":"int","from":"2018-01-01"}
+{"kind":"register","provider":"demo","register":"tid","name":"Tidlösa registret"}
+{"kind":"occurrence","provider":"demo","register":"tid","table":"","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":2}
+{"kind":"register","provider":"demo","register":"rep","name":"Ersättningsregistret"}
+{"kind":"release","provider":"demo","register":"rep","table":"","release":"r2015","name":"Rep 2015","from":"2015-01-01","to":"2015-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rep","table":"","release":"r2016","name":"Rep 2016","from":"2016-01-01","to":"2016-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rep","table":"","release":"r2017","name":"Rep 2017","from":"2017-01-01","to":"2017-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rep","table":"","release":"r2018","name":"Rep 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rep","table":"","release":"r2019","name":"Rep 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rep","table":"","release":"r2020","name":"Rep 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2015","column":"Gammal","source_key":"k1","label":"Gammal kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2016","column":"Gammal","source_key":"k1","label":"Gammal kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2017","column":"Gammal","source_key":"k1","label":"Gammal kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2018","column":"Ny","source_key":"k2","label":"Ny kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2019","column":"Ny","source_key":"k2","label":"Ny kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2020","column":"Ny","source_key":"k2","label":"Ny kod","dtype":"int"}
+{"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"rep","key":"k2"},"object":{"kind":"variable","provider":"demo","register":"rep","key":"k1"},"at":"2018-01-01","note":"Ny ersätter Gammal från 2018."}
+{"kind":"register","provider":"demo","register":"gap","name":"Glappregistret"}
+{"kind":"release","provider":"demo","register":"gap","table":"","release":"x2015","name":"Gap 2015","from":"2015-01-01","to":"2015-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"gap","table":"","release":"x2016","name":"Gap 2016","from":"2016-01-01","to":"2016-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"gap","table":"","release":"x2018","name":"Gap 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"gap","table":"","release":"x2015","column":"X","source_key":"k1","label":"X","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"gap","table":"","release":"x2016","column":"X","source_key":"k1","label":"X","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"gap","table":"","release":"x2018","column":"X","source_key":"k1","label":"X","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2020","column":"Nyast","source_key":"k3","label":"Nyaste kod","dtype":"int"}
+{"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"rep","key":"k3"},"object":{"kind":"variable","provider":"demo","register":"rep","key":"k2"}}
+{"kind":"register","provider":"demo","register":"len","name":"Längdregistret"}
+{"kind":"release","provider":"demo","register":"len","table":"","release":"l2019","name":"Len 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"len","table":"","release":"l2019h","name":"Len 2019H2","from":"2019-07-01","to":"2019-12-31","grain":"half","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"len","table":"","release":"l2019","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":2}
+{"kind":"occurrence","provider":"demo","register":"len","table":"","release":"l2019h","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":3}
+{"kind":"register","provider":"demo","register":"eda","name":"Hel utgåva"}
+{"kind":"release","provider":"demo","register":"eda","table":"","release":"a2019","name":"Eda 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"eda","table":"","release":"a2019h","name":"Eda 2019H2","from":"2019-07-01","to":"2019-12-31","grain":"half","edition":"final"}
+{"kind":"release","provider":"demo","register":"eda","table":"","release":"a2020p","name":"Eda 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019h","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
+{"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2020p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"register","provider":"demo","register":"ark","name":"Radnyckelregistret"}
+{"kind":"release","provider":"demo","register":"ark","table":"","release":"r2019","name":"Ark 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Id","source_key":"k2","label":"Idnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
+{"kind":"release","provider":"demo","register":"ark","table":"","release":"r2020","name":"Ark 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"ark","table":"","release":"r2020p","name":"Ark 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2020","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2020p","column":"Nyckel","source_key":"k4","label":"Nyckel","dtype":"int","identifier":true}

@@ -1,0 +1,80 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/und",
+      "table": "demo/und/ett",
+      "variable": "demo/und/ink",
+      "display_name": null,
+      "period": {
+        "start": "2016-01-01",
+        "end": "2018-01-01"
+      },
+      "spelling": "Ink",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [],
+  "clips": [
+    {
+      "source": "s",
+      "variable": "demo/und/ink",
+      "requested": [
+        {
+          "start": "2016-01-01",
+          "end": "2020-01-01"
+        }
+      ],
+      "ordered": [
+        {
+          "start": "2016-01-01",
+          "end": "2018-01-01"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "level": "info",
+      "code": "table_succession_undated",
+      "path": "/sources/0",
+      "message": "demo/und/ett is continued by demo/und/tva on no stated day, so [2018-01-01, 2020-01-01) is not followed into demo/und/tva",
+      "source": "s",
+      "variable": null,
+      "table": "demo/und/ett",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "successor_fqid": "demo/und/tva"
+    },
+    {
+      "level": "info",
+      "code": "period_clipped",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/und/ink is not available over [2018-01-01, 2020-01-01); that part is not ordered",
+      "source": "s",
+      "variable": "demo/und/ink",
+      "table": "demo/und/ett",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

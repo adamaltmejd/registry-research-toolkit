@@ -746,6 +746,132 @@
         }
       }
     },
+    "/api/project/order": {
+      "post": {
+        "description": "The logical order of a project_data.json document: per binding, each window's table, period, spelling and form, with the availability clips, the row keys and the non-blocking findings; or `order_blocked` with every finding.",
+        "operationId": "order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A project_data.json document"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LogicalOrder"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/project/validate": {
+      "post": {
+        "description": "Validate a project_data.json document: its structural issues, then the order check's findings at their levels. A 200 even when the project is invalid; `ok` is true exactly when `order` returns a logical order.",
+        "operationId": "validate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A project_data.json document"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Validation"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/resolve": {
       "get": {
         "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
@@ -1968,6 +2094,80 @@
           }
         }
       },
+      "Issue": {
+        "type": "object",
+        "description": "`shape.Issue`: a project issue or an order finding, located in the project.",
+        "required": [
+          "level",
+          "code",
+          "path",
+          "message",
+          "source",
+          "variable",
+          "table",
+          "period",
+          "successor_fqid"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "level": {
+            "$ref": "#/components/schemas/IssueLevel"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "description": "An RFC 6901 pointer into the project; empty for the whole document."
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The project source's name."
+          },
+          "successor_fqid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The successor a `variable_replaced` finding names, or the successor table of an\nundated succession (`table_succession_undated`)."
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "IssueLevel": {
+        "type": "string",
+        "enum": [
+          "error",
+          "warning",
+          "info"
+        ]
+      },
       "Locator": {
         "type": "object",
         "required": [
@@ -1980,6 +2180,54 @@
           },
           "locator": {
             "type": "string"
+          }
+        }
+      },
+      "LogicalOrder": {
+        "type": "object",
+        "description": "`shape.LogicalOrder` (crates/DESIGN.md, \"The logical order\").",
+        "required": [
+          "catalog",
+          "project",
+          "entries",
+          "row_keys",
+          "clips",
+          "findings"
+        ],
+        "properties": {
+          "catalog": {
+            "$ref": "#/components/schemas/OrderCatalog"
+          },
+          "clips": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderClip"
+            },
+            "description": "Every availability clip, also when nothing blocks."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderEntry"
+            },
+            "description": "Per source, per binding in declaration order, then by period start."
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            },
+            "description": "The non-blocking findings (level `warning` or `info`)."
+          },
+          "project": {
+            "$ref": "#/components/schemas/OrderProject"
+          },
+          "row_keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderRowKeys"
+            },
+            "description": "Per source, then by period start."
           }
         }
       },
@@ -2056,6 +2304,213 @@
           },
           "status": {
             "type": "string"
+          }
+        }
+      },
+      "OrderCatalog": {
+        "type": "object",
+        "description": "The catalog generation an order was checked against (`meta`).",
+        "required": [
+          "generation_id",
+          "catalog_version",
+          "schema_version"
+        ],
+        "properties": {
+          "catalog_version": {
+            "type": "string"
+          },
+          "generation_id": {
+            "type": "string"
+          },
+          "schema_version": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderClip": {
+        "type": "object",
+        "description": "An availability clip of one binding.",
+        "required": [
+          "source",
+          "variable",
+          "requested",
+          "ordered"
+        ],
+        "properties": {
+          "ordered": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          },
+          "requested": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          },
+          "source": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderEntry": {
+        "type": "object",
+        "description": "One merged segment of one binding in one table.",
+        "required": [
+          "source",
+          "binding",
+          "provider",
+          "register",
+          "table",
+          "variable",
+          "display_name",
+          "period",
+          "spelling",
+          "type",
+          "length",
+          "value_set",
+          "classification"
+        ],
+        "properties": {
+          "binding": {
+            "type": "integer",
+            "description": "The binding's index in the source.",
+            "minimum": 0
+          },
+          "classification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A class version's public id."
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "As the binding states it."
+          },
+          "length": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "The clipped request over the merged segment; `{start: null, end: null}` for a\ntimeless table."
+          },
+          "provider": {
+            "type": "string"
+          },
+          "register": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "description": "The project source's name."
+          },
+          "spelling": {
+            "type": "string",
+            "description": "The merged segment's exact spelling."
+          },
+          "table": {
+            "type": "string",
+            "description": "The table that serves the window."
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value_set": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OrderValueSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "variable": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderProject": {
+        "type": "object",
+        "description": "The project an order was checked for.",
+        "required": [
+          "name",
+          "schema_version",
+          "reg_meta_version",
+          "project_hash"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "project_hash": {
+            "type": "string",
+            "description": "`reg_core::project::project_hash` of the document."
+          },
+          "reg_meta_version": {
+            "type": "string"
+          },
+          "schema_version": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderRowKeys": {
+        "type": "object",
+        "description": "A serving table's row-key columns over a period.",
+        "required": [
+          "source",
+          "table",
+          "period",
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RowKeyColumn"
+            }
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "source": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderValueSet": {
+        "type": "object",
+        "description": "An entry's value set by its content hash.",
+        "required": [
+          "hash",
+          "n_items"
+        ],
+        "properties": {
+          "hash": {
+            "type": "string"
+          },
+          "n_items": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -2265,14 +2720,6 @@
         },
         "additionalProperties": false
       },
-      "ProjectEdition": {
-        "type": "string",
-        "enum": [
-          "final",
-          "unstated",
-          "preliminary"
-        ]
-      },
       "ProjectIdSubtype": {
         "type": "string",
         "enum": [
@@ -2370,19 +2817,11 @@
               "$ref": "#/components/schemas/ProjectBinding"
             }
           },
-          "edition": {
-            "$ref": "#/components/schemas/ProjectEdition",
-            "description": "The release of the table asked for; absent asks for the primary edition."
-          },
           "name": {
             "type": "string"
           },
           "period": {
             "$ref": "#/components/schemas/ProjectSourcePeriod"
-          },
-          "qualifier": {
-            "type": "string",
-            "description": "The delivery qualifier asked for; absent asks for every qualifier."
           },
           "table": {
             "type": "string",
@@ -2621,6 +3060,22 @@
           "register": {
             "type": "string",
             "description": "The register's fqid."
+          }
+        }
+      },
+      "RowKeyColumn": {
+        "type": "object",
+        "description": "A row-key column: its variable and the spelling it is delivered under.",
+        "required": [
+          "variable",
+          "spelling"
+        ],
+        "properties": {
+          "spelling": {
+            "type": "string"
+          },
+          "variable": {
+            "type": "string"
           }
         }
       },
@@ -3600,6 +4055,25 @@
               "null"
             ],
             "description": "A value set's hash."
+          }
+        }
+      },
+      "Validation": {
+        "type": "object",
+        "description": "`validate`'s result: `ok` exactly when no issue is an `error`.",
+        "required": [
+          "ok",
+          "issues"
+        ],
+        "properties": {
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            }
+          },
+          "ok": {
+            "type": "boolean"
           }
         }
       },

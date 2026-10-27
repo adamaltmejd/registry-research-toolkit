@@ -147,10 +147,6 @@ str_enum!(
     /// The storage of a `numeric` column.
     NumericSubtype { Integer = "integer", Double = "double" }
 );
-str_enum!(
-    /// Which release of a table a source asks for where more than one exists.
-    Edition { Final = "final", Unstated = "unstated", Preliminary = "preliminary" }
-);
 
 /// The top-level `project_data.json` document.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -222,14 +218,6 @@ pub struct Source {
     /// else `<provider>/<register>/<table>`.
     pub table: String,
     pub period: SourcePeriod,
-    /// The release of the table asked for; absent asks for the primary edition.
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub edition: Option<Edition>,
-    /// The delivery qualifier asked for; absent asks for every qualifier.
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub qualifier: Option<String>,
     pub bindings: Vec<Binding>,
 }
 
@@ -424,6 +412,16 @@ impl SourcePeriod {
     ///
     /// # Errors
     ///
+    /// As [`Self::items`].
+    pub fn intervals(&self) -> Result<Option<Vec<Interval>>, String> {
+        Ok(self.items()?.map(merge))
+    }
+
+    /// The days of each period item, in document order and unmerged; `None` for
+    /// `"_default"`.
+    ///
+    /// # Errors
+    ///
     /// A scalar `{from, to}` whose start is after its end, which the structural
     /// validator accepts (it checks inversion in lists only): the reason the period
     /// is not orderable.
@@ -432,7 +430,7 @@ impl SourcePeriod {
     ///
     /// On an endpoint outside the period grammar, which the structural validator
     /// refuses, so a [`ProjectData`] never holds one.
-    pub fn intervals(&self) -> Result<Option<Vec<Interval>>, String> {
+    pub fn items(&self) -> Result<Option<Vec<Interval>>, String> {
         let segments = match self {
             Self::Segment(PeriodSegment::Value(PeriodValue::Token(t))) if t == "_default" => {
                 return Ok(None);
@@ -461,7 +459,7 @@ impl SourcePeriod {
                 }
             });
         }
-        Ok(Some(merge(days)))
+        Ok(Some(days))
     }
 }
 

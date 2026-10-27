@@ -1,0 +1,70 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues/*/code": [
+        "table_is_register",
+        "variable_not_in_table",
+        "outside_availability",
+        "ambiguous_window",
+        "period_default_on_dated_table",
+        "period_on_timeless_table",
+        "period_not_orderable",
+        "outside_availability"
+      ],
+      "/data/issues/*/level": ["error", "error", "error", "error", "error", "error", "error", "error"],
+      "/data/issues/*/path": [
+        "/sources/0/table",
+        "/sources/1/bindings/0",
+        "/sources/2/bindings/0",
+        "/sources/3/bindings/0",
+        "/sources/4/period",
+        "/sources/5/period",
+        "/sources/6/period",
+        "/sources/7/bindings/0"
+      ],
+      "/data/issues/*/source": [
+        "register",
+        "not-in-table",
+        "outside",
+        "ambiguous",
+        "default",
+        "timeless",
+        "inverted",
+        "chain"
+      ],
+      "/data/issues/*/variable": [
+        null,
+        "demo/nam/annan",
+        "demo/imp/ink",
+        "demo/amb/del",
+        null,
+        null,
+        null,
+        "demo/suc/bara"
+      ],
+      "/data/issues/*/table": [
+        null,
+        "demo/nam/a",
+        "demo/imp",
+        "demo/amb",
+        "demo/imp",
+        "demo/tid",
+        "demo/imp",
+        "demo/suc/gammal"
+      ],
+      "/data/issues/*/period": [
+        null,
+        null,
+        {"start": "2010-01-01", "end": "2011-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"},
+        null,
+        null,
+        null,
+        {"start": "2019-01-01", "end": "2020-01-01"}
+      ],
+      "/data/issues/*/successor_fqid": [null, null, null, null, null, null, null, null]
+    }
+  }
+]

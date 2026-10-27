@@ -1,0 +1,12 @@
+# The order-check fixture: one register per concern of the order check (r-order-check).
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"

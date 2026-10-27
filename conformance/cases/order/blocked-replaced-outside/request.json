@@ -1,0 +1,22 @@
+{
+  "note": "`rep/ny` continues `rep/gammal` from 2018-01-01, and `gammal` is available 2015-2017. Requesting `gammal` for 2019 is outside its availability and names a replaced variable: both `outside_availability` and `variable_replaced` (successor demo/rep/ny) must be reported. Fails if the replacement finding is lost when the window is also outside availability (pre-fix only `outside_availability` came back). Oracle: the fixture's JSONL (the `continues` link) and logical-order.md §3.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/rep",
+        "period": 2019,
+        "bindings": [
+          {
+            "variable": "demo/rep/gammal",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,19 +1,17 @@
 {
-  "note": "Twin of `validate/malformed-duplicate-key`: fails if a body with a duplicate key at any depth is not refused with `malformed_request` before any validation runs.",
-  "kind": "catalog",
-  "fixture": "semantic",
+  "note": "Fails if a body with a duplicate key, at the top level or inside a binding, is not refused with `malformed_request` before any validation runs.",
   "requests": [
     {
       "operation": "validate",
       "method": "POST",
       "path": "/api/project/validate",
-      "content": "{\"schema_version\": \"4.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
+      "content": "{\"schema_version\": \"5.0.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\"}]}]}"
     },
     {
       "operation": "validate",
       "method": "POST",
       "path": "/api/project/validate",
-      "content": "{\"schema_version\": \"4.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"Synthetic semantic\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\", \"type\": \"numeric\"}]}]}"
+      "content": "{\"schema_version\": \"5.0.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"Order case\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\", \"type\": \"numeric\"}]}]}"
     }
   ]
 }

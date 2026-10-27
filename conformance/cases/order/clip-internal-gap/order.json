@@ -1,76 +1,88 @@
 {
-  "clips": [
-    {
-      "ordered_period": "2010..2012,2016..2018",
-      "requested_period": "2010..2018",
-      "source": "range",
-      "variable": "scb/example/avbrott"
-    }
-  ],
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
   "entries": [
     {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Avbrott",
-        "variable": "scb/example/avbrott",
-        "variant": "annual"
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/gap",
+      "table": "demo/gap",
+      "variable": "demo/gap/x",
+      "display_name": null,
+      "period": {
+        "start": "2015-01-01",
+        "end": "2017-01-01"
       },
-      "physical": {
-        "column": "Avbrott",
-        "edition": "2010..2012,2016..2018",
-        "file": "scb_example_annual",
-        "table": ""
-      },
-      "requested_period": "2010..2012,2016..2018",
-      "source": "range"
+      "spelling": "X",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
     },
     {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Avbrott",
-        "variable": "scb/example/avbrott",
-        "variant": "annual"
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/gap",
+      "table": "demo/gap",
+      "variable": "demo/gap/x",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
       },
-      "physical": {
-        "column": "Avbrott",
-        "edition": "2016..2018",
-        "file": "scb_example_annual",
-        "table": ""
-      },
-      "requested_period": "2016..2018",
-      "source": "tail"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Avbrott",
-        "variable": "scb/example/avbrott",
-        "variant": "annual"
-      },
-      "physical": {
-        "column": "Avbrott",
-        "edition": "2010..2012,2016..2018",
-        "file": "scb_example_annual",
-        "table": ""
-      },
-      "requested_period": "2010..2012,2016..2018",
-      "source": "list"
+      "spelling": "X",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
     }
   ],
-  "extract_format": "dta",
-  "provenance": {
-    "artifact_kind": "catalog",
-    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
-    "catalog_schema_version": "12.3.0",
-    "mode": "global_fallback",
-    "project_hash": "87fb8c1f22c6990ba29089894a538db42f6b74daa908975d7161018de764502e",
-    "project_name": "Reader case",
-    "project_reg_meta_version": "5.1.0",
-    "project_schema_version": "4.0.0",
-    "steward": "global"
-  },
-  "version": 3
+  "row_keys": [],
+  "clips": [
+    {
+      "source": "s",
+      "variable": "demo/gap/x",
+      "requested": [
+        {
+          "start": "2015-01-01",
+          "end": "2019-01-01"
+        }
+      ],
+      "ordered": [
+        {
+          "start": "2015-01-01",
+          "end": "2017-01-01"
+        },
+        {
+          "start": "2018-01-01",
+          "end": "2019-01-01"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "level": "info",
+      "code": "period_clipped",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/gap/x is not available over [2017-01-01, 2018-01-01); that part is not ordered",
+      "source": "s",
+      "variable": "demo/gap/x",
+      "table": "demo/gap",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
 }

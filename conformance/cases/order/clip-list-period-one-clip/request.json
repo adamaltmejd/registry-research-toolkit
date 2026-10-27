@@ -1,62 +1,23 @@
 {
-  "note": "kon is delivered from 2018. A list period is one request: each binding gets one clip over the whole list, naming every delivered segment (2018; 2018..2019,2021..2022), and a segment kon misses entirely is dropped from it. Moved from `api/validate-list-period-one-clip` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
-  "fixture": "semantic",
-  "artifact": "catalog",
+  "note": "A list period `[2016, 2019, 2020]` on `imp` (from 2018) is the requested days 2016 and 2019-2020 (reg-core merges the adjacent years). Fails if the binding stops giving one clip whose `requested` lists every requested piece and whose `ordered` holds only 2019-2020, if 2017-2018 is ordered or clipped (they were never requested), or if the clip stops being reported once as `period_clipped` over 2016. Oracle: the fixture's JSONL, `reg_core::merge` and logical-order.md §1.",
+  "fixture": "orders",
   "project": {
-    "schema_version": "4.0.0",
-    "steward": "global",
-    "reg_meta_version": "5.1.0",
-    "name": "Reader case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
     "sources": [
       {
-        "name": "segment",
-        "register_variant": "scb/example/annual",
+        "name": "s",
+        "table": "demo/imp",
         "period": [
-          {
-            "from": 2010,
-            "to": 2012
-          },
-          2018
-        ],
-        "bindings": [
-          {
-            "variable": "scb/example/kon",
-            "type": "categorical"
-          }
-        ]
-      },
-      {
-        "name": "adjacent",
-        "register_variant": "scb/example/annual",
-        "period": [
-          2015,
           2016,
-          2018
+          2019,
+          2020
         ],
         "bindings": [
           {
-            "variable": "scb/example/kon",
-            "type": "categorical"
-          }
-        ]
-      },
-      {
-        "name": "partial",
-        "register_variant": "scb/example/annual",
-        "period": [
-          {
-            "from": 2017,
-            "to": 2019
-          },
-          {
-            "from": 2021,
-            "to": 2022
-          }
-        ],
-        "bindings": [
-          {
-            "variable": "scb/example/kon",
-            "type": "categorical"
+            "variable": "demo/imp/ink",
+            "type": "numeric"
           }
         ]
       }

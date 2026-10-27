@@ -22,12 +22,12 @@ the `register-metadata-search` skill.
    footer); ask if unknown. It is not `meta.catalog_version`, which is a different
    thing. Never write these from memory.
 2. Find each variable with `search` and `show`, then `segments` for the table that
-   delivers it over the study period. A source is a `table`, a `period`, and optionally
-   an `edition` (`final`, `unstated` or `preliminary`) and a `qualifier`. `table` is the
-   table's public id, `<provider>/<register>/<table>`, or `<provider>/<register>` for a
-   register with only its implicit table. A binding names a variable by FQID and has a
-   `type`, one of `id`, `categorical`, `numeric`, `date`, `datetime`, `opaque`. A panel
-   lists source names.
+   delivers it over the study period. A source is a `table` and a `period`. `table` is
+   the table's public id, `<provider>/<register>/<table>`, or `<provider>/<register>`
+   for a register with only its implicit table. A binding names a variable by FQID and
+   has a `type`, one of `id`, `categorical`, `numeric`, `date`, `datetime`, `opaque`. A
+   panel lists source names. A source cannot select an edition or a qualifier; final
+   data is served over preliminary where both exist.
 3. Write periods in the document's own grammar, which is not the `period` argument of
    the read tools: `{"from": 2015, "to": 2019}` is a range, `[2015, 2019]` is two
    separate years, `2019` is one year. A range string such as `"2015..2019"` is refused
@@ -43,10 +43,10 @@ the `register-metadata-search` skill.
    and stop: the server reads one version exactly.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the
-   spelling delivered. Ambiguous windows and preliminary windows without a named
-   `edition` block it: the call fails with `order_blocked` and lists every issue, and
-   `validate` lists the same issues. There are no physical files yet; give the user the
-   logical order and the project file. Answer what will be delivered from the order, not
-   from the document.
+   spelling delivered. Ambiguous windows block it: the call fails with `order_blocked`
+   and lists every issue, and `validate` lists the same issues. A window only a
+   preliminary release covers does not block; it is warned (`preliminary_data`), so tell
+   the user. There are no physical files yet; give the user the logical order and the
+   project file. Answer what will be delivered from the order, not from the document.
 3. For what a variable means or how it changed, use `show`, `segments` and `values` over
    the project's period.

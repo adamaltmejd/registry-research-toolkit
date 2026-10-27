@@ -1,0 +1,34 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/tid",
+      "table": "demo/tid",
+      "variable": "demo/tid/kod",
+      "display_name": null,
+      "period": {
+        "start": null,
+        "end": null
+      },
+      "spelling": "Kod",
+      "type": "char",
+      "length": 2,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [],
+  "clips": [],
+  "findings": []
+}

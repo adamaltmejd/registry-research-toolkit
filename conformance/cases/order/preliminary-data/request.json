@@ -1,0 +1,22 @@
+{
+  "note": "`pre` has a final 2020 release without `Mat` and a preliminary 2020 release that documents it (decimal), so 2020 is covered by a preliminary release only. The order is clear, not blocked: one entry over 2020 and one `preliminary_data` warning naming the period (final data is preferred wherever it exists, so there is nothing to select). Fails if the window blocks as an error, if the warning is missing or not located at the binding with the 2020 period, or if the entry is not served from the preliminary release. Oracle: the fixture's JSONL, reg-resolve's T2 rules and logical-order.md §3.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/pre",
+        "period": 2020,
+        "bindings": [
+          {
+            "variable": "demo/pre/mat",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

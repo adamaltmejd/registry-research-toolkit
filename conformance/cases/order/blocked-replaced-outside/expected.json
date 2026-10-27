@@ -1,0 +1,31 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "outside_availability",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/rep/gammal is not available over [2019-01-01, 2020-01-01).",
+      "source": "s",
+      "variable": "demo/rep/gammal",
+      "table": "demo/rep",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-01-01"
+      }
+    },
+    {
+      "level": "warning",
+      "code": "variable_replaced",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/rep/gammal is continued by demo/rep/ny from 2018-01-01: Ny ersätter Gammal från 2018.",
+      "source": "s",
+      "variable": "demo/rep/gammal",
+      "table": "demo/rep",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-01-01"
+      },
+      "successor_fqid": "demo/rep/ny"
+    }
+  ]
+}

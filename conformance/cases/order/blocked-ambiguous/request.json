@@ -1,0 +1,25 @@
+{
+  "note": "Two variables claim the column `Del` in `amb` in 2019 (F2 rival claimants), so `Del`'s 2019 segment is ambiguous; its 2018 segment (another length) is clear. Fails if ordering 2018..2019 stops being `order_blocked` with exactly one `ambiguous_window` over 2019, or reports the clear 2018 too. Oracle: the fixture's JSONL, reg-resolve's F2 rule and logical-order.md §2.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/amb",
+        "period": {
+          "from": 2018,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/amb/del",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}
