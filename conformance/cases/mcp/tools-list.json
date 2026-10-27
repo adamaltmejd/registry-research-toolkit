@@ -629,6 +629,232 @@
     }
   },
   {
+    "name": "graph",
+    "description": "The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage.",
+    "inputSchema": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "continues",
+            "equivalent",
+            "derived_from",
+            "label_of"
+          ],
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ref"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Graph": {
+          "description": "`shape.Graph`: the focus, its nodes and the relations between them.",
+          "properties": {
+            "edges": {
+              "items": {
+                "$ref": "#/$defs/GraphEdge"
+              },
+              "type": "array"
+            },
+            "focus": {
+              "description": "The ref's fqid.",
+              "type": "string"
+            },
+            "nodes": {
+              "items": {
+                "$ref": "#/$defs/GraphNode"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "focus",
+            "nodes",
+            "edges"
+          ],
+          "type": "object"
+        },
+        "GraphEdge": {
+          "properties": {
+            "at": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Period",
+                  "description": "From the day a succession takes over; `null` when the source states no day."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "caveat": {
+              "description": "The source's own words about the relation.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "from": {
+              "description": "The subject's fqid.",
+              "type": "string"
+            },
+            "kind": {
+              "description": "`continues`, `equivalent`, `derived_from` or `label_of`.",
+              "type": "string"
+            },
+            "prov": {
+              "description": "`source`, `curated` or `rule`.",
+              "type": "string"
+            },
+            "to": {
+              "description": "The object's fqid.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "to",
+            "at",
+            "prov",
+            "caveat"
+          ],
+          "type": "object"
+        },
+        "GraphNode": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "kind": {
+              "description": "`variable`, `table`, `register` or `class_version`.",
+              "type": "string"
+            },
+            "name": {
+              "description": "A register's or table's name, a variable's or class version's label.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "kind",
+            "name"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Period": {
+          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "properties": {
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Graph"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "resolve",
     "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
     "inputSchema": {

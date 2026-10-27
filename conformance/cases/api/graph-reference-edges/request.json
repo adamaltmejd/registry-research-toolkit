@@ -1,6 +1,8 @@
 {
-  "note": "The variable's succession chain joins its graph through an edition outside the default scope: fails if graph drops a chain edition that is not live in scope.",
+  "note": "The lineage view: graph with kind=derived_from on variable Belopp, from fixtures/relations (the link names its object by register name, `Källregistret`, which the link stage resolves to kalla; reg-build link.rs). One edge from the variable to the register, a register node carrying the register's display name. Step 1 narrows by `continues` on the same variable: no edge and only the focus node, so `kind` narrows edges and not only the answer's label. Fails if a derived_from edge to a register is dropped or its node is typed as a variable or a table, if the register node's name is its handle, or if `kind` is ignored.",
+  "fixture": "relations",
   "requests": [
-    {"operation": "graph", "path": "/api/graph/scb/example/value"}
+    {"operation": "graph", "path": "/api/graph/demo/rel/belopp", "query": {"kind": "derived_from"}},
+    {"operation": "graph", "path": "/api/graph/demo/rel/belopp", "query": {"kind": "continues"}}
   ]
 }

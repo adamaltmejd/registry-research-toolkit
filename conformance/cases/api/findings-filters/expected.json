@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": ["S0:source-notice", "F1:label-drift", "F2:ambiguous"],
+      "/data/*/subject/kind": ["variable", "variable", "segment"],
+      "/data/2/subject/fqid": "demo/rel/inkomst"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": ["F1:label-drift"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": ["S0:source-notice", "F2:ambiguous"],
+      "/data/1/period": {"start": "2015-01-01", "end": "2018-01-01"}
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": ["F9:unparsed-delivery", "F7:edition-disagreement"],
+      "/data/*/subject/table": ["demo/rel/ny", "demo/rel/ny"]
+    }
+  }
+]

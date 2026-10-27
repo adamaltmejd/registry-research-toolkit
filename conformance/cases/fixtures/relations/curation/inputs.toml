@@ -1,0 +1,14 @@
+# The conformance relations fixture: one provider, two registers. `rel` has two named
+# tables, a table succession, a variable succession, a derived-from link, a notice and
+# the findings a reader page shows; `kalla` is the register `rel` derives from.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"
