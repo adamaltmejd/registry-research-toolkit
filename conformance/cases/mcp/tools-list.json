@@ -629,6 +629,778 @@
     }
   },
   {
+    "name": "segments",
+    "description": "A variable's segments: its maximal runs of one form per table, in time order, each with its spelling, type, value set, flags and state. With `evidence`, each segment's source occurrences and the rule overrides that changed them.",
+    "inputSchema": {
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "boolean"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "period": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "value_set_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ref"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Locator": {
+          "properties": {
+            "input": {
+              "type": "string"
+            },
+            "locator": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "input",
+            "locator"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Occurrence": {
+          "description": "One occurrence behind a segment (`shape.Segment.evidence`).",
+          "properties": {
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "locators": {
+              "items": {
+                "$ref": "#/$defs/Locator"
+              },
+              "type": "array"
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/Override"
+              },
+              "type": "array"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "release": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Release"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source_key": {
+              "type": "string"
+            },
+            "spelling": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "release",
+            "period",
+            "spelling",
+            "label",
+            "source_key",
+            "status",
+            "locators",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "Override": {
+          "description": "A non-source winner over one field of an occurrence.",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "prov": {
+              "type": "string"
+            },
+            "rule": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "statement": {
+              "description": "`{file, line}` of a curated statement; always `null` in C.",
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "field",
+            "value",
+            "prov",
+            "statement",
+            "rule",
+            "source_value"
+          ],
+          "type": "object"
+        },
+        "Period": {
+          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "properties": {
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        },
+        "Population": {
+          "description": "One population a release states (`shape.Release.populations`).",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "ref_day": {
+              "description": "The ISO day the population is stated for.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "definition",
+            "ref_day"
+          ],
+          "type": "object"
+        },
+        "Release": {
+          "description": "`shape.Release`: a delivery of a table.",
+          "properties": {
+            "edition": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "parse_state": {
+              "type": "string"
+            },
+            "period": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Period",
+                  "description": "`null` when the release is unparsed."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "populations": {
+              "items": {
+                "$ref": "#/$defs/Population"
+              },
+              "type": "array"
+            },
+            "primary": {
+              "description": "`null` when the release is unparsed.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "qualifier": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "period",
+            "edition",
+            "qualifier",
+            "primary",
+            "parse_state",
+            "populations"
+          ],
+          "type": "object"
+        },
+        "Segment": {
+          "description": "`shape.Segment`.",
+          "properties": {
+            "classification": {
+              "description": "A classification version's ref.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "coded": {
+              "type": "string"
+            },
+            "evidence": {
+              "description": "Present only when `evidence` is asked for.",
+              "items": {
+                "$ref": "#/$defs/Occurrence"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "format": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "id_kind": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "identifier": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "length": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "role": {
+              "type": "string"
+            },
+            "sensitive": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "spelling": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "table": {
+              "description": "The table's fqid.",
+              "type": "string"
+            },
+            "temporality": {
+              "type": "string"
+            },
+            "type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "value_set": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ValueSetRef",
+                  "description": "`null` when the segment has no value set."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "table",
+            "period",
+            "spelling",
+            "type",
+            "length",
+            "format",
+            "value_set",
+            "classification",
+            "coded",
+            "sensitive",
+            "identifier",
+            "id_kind",
+            "role",
+            "temporality",
+            "state"
+          ],
+          "type": "object"
+        },
+        "SegmentPage": {
+          "description": "`Page<Segment>`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/Segment"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor"
+          ],
+          "type": "object"
+        },
+        "ValueSetRef": {
+          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+          "properties": {
+            "classification": {
+              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "hash": {
+              "type": "string"
+            },
+            "hierarchical": {
+              "type": "boolean"
+            },
+            "n_items": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "names": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "hash",
+            "n_items",
+            "hierarchical",
+            "names",
+            "classification"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/SegmentPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "values",
+    "description": "A value set's items, by its hash or by a classification version's ref, with a hierarchical set paged one level at a time by `parent` and searched flat by `q`; or, given a `code` and optionally its `label`, the value sets that hold that pair. The blank code is an item like any other.",
+    "inputSchema": {
+      "properties": {
+        "classification": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "cursor": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "parent": {
+          "type": "string"
+        },
+        "q": {
+          "type": "string"
+        },
+        "value_set": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "ValueItem": {
+          "description": "`shape.ValueItem`.",
+          "properties": {
+            "child_count": {
+              "description": "`null` for a flat set.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "code": {
+              "description": "May be `\"\"`: a real item.",
+              "type": "string"
+            },
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "level": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "parent": {
+              "description": "The parent's code.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sentinel": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "code",
+            "label",
+            "level",
+            "parent",
+            "sentinel",
+            "child_count"
+          ],
+          "type": "object"
+        },
+        "ValueItemsPage": {
+          "description": "`Page<ValueItem>` plus the value set and `total`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/ValueItem"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "total": {
+              "description": "The items matching `q` in the whole set; the set's size without `q`.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "value_set": {
+              "$ref": "#/$defs/ValueSetRef"
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor",
+            "value_set",
+            "total"
+          ],
+          "type": "object"
+        },
+        "ValueSetRef": {
+          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+          "properties": {
+            "classification": {
+              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "hash": {
+              "type": "string"
+            },
+            "hierarchical": {
+              "type": "boolean"
+            },
+            "n_items": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "names": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "hash",
+            "n_items",
+            "hierarchical",
+            "names",
+            "classification"
+          ],
+          "type": "object"
+        },
+        "ValueSetsPage": {
+          "description": "`Page<ValueSetRef>`, ordered by hash.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/ValueSetRef"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ValueItemsPage"
+                },
+                {
+                  "$ref": "#/$defs/ValueSetsPage"
+                }
+              ]
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "graph",
     "description": "The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage.",
     "inputSchema": {
