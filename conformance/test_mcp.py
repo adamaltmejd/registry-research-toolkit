@@ -67,8 +67,8 @@ EQUIVALENCE = {
     "docs_get": ("docs-get", "docs-unavailable"),
     "docs_related": ("docs-related", "docs-related-ambiguous", "docs-unavailable"),
     # r-order-check
-    "validate": (),
-    "order": (),
+    "validate": ("validate-blocking", "validate-warnings"),
+    "order": ("order-errors",),
 }
 READER = {"fixture": "base"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
@@ -302,12 +302,10 @@ def test_burst_is_rate_limited(server_cmd, tmp_path):
         assert response.status_code == 429
         assert response.headers["retry-after"] == "1"
         assert response.json()["error"]["fields"] == {"retry_after_seconds": 1}
-        # simplify: the shared bucket is checked again once `validate` is served.
-        if "validate" not in PARKED["operations"]:
-            validate = client.post("/api/project/validate", json={})
-            assert validate.status_code == 429
-            assert validate.headers["retry-after"] == "1"
-            assert validate.json()["error"]["code"] == "rate_limited"
+        validate = client.post("/api/project/validate", json={})
+        assert validate.status_code == 429
+        assert validate.headers["retry-after"] == "1"
+        assert validate.json()["error"]["code"] == "rate_limited"
         assert client.get("/api/context").status_code == 200
         response = drain(lambda n: f"2001:db8::{n + 1:x}", "edge-secret")
         assert response.status_code == 429

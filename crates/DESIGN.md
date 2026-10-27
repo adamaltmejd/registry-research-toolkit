@@ -945,10 +945,10 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 `period_on_timeless_table` and `period_not_orderable`. Warnings and infos do not:
 `classification_version_ambiguous`, `edition_disagreement`, `variable_sensitive`,
 `variable_replaced`, `panel_row_keys_differ`, `period_clipped`, `form_change`,
-`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
-source, binding or panel and whose `source`, `variable`, `table` and `period` say what
-it is about (`null` for a whole-project finding). The conditions are the order check's
-to state in its own tests; the rules that shape them:
+`table_succession_undated`, `identifier` and `coverage_end_unstated`. Each is an `Issue`
+whose `path` points at the source, binding or panel and whose `source`, `variable`,
+`table` and `period` say what it is about (`null` for a whole-project finding). The
+conditions are the order check's to state in its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
@@ -963,6 +963,9 @@ to state in its own tests; the rules that shape them:
   call.
 - A request partly outside availability is a clip (`period_clipped`), never silent and
   never an error. Only availability empty across the whole request blocks.
+- A table succession with no `at` is not followed: the check returns
+  `table_succession_undated` naming the successor and clips the rest. No day is inferred
+  from coverage (v4 §2.1); D's `link … at` supplies the day.
 
 ### A clear order
 
@@ -1065,8 +1068,7 @@ The validate operation runs the supported-version decision, then the structural
 validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), and concatenates their issues with
 the order check's findings ("The logical order"). A failing project is a result, not an
 error. A structural failure skips the catalog layer, so a rejected document costs no
-catalog read. Until the order check lands (`r-order-check`), `validate` returns the
-structural layer alone.
+catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
 
 ### Project document 5.0.0
 

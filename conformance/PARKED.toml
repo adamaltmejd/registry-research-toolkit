@@ -14,8 +14,6 @@ operations = [
     "search_facets",
     # r-docs
     # r-order-check
-    "order",
-    "validate",
 ]
 
 # Case directories under conformance/cases/, relative ("api/states-basic").
@@ -67,28 +65,4 @@ cases = [
     "api/search-untyped-ranking",
     # r-docs
     # r-order-check
-    "api/order-errors",
-    "api/validate-blocking",
-    "api/validate-malformed-deep-nesting",
-    "api/validate-malformed-duplicate-key",
-    "api/validate-malformed-invalid-json",
-    "api/validate-malformed-non-object",
-    "api/validate-malformed-non-utf8",
-    "api/validate-malformed-utf8-bom",
-    "api/validate-panel-unknown-kinds",
-    "api/validate-payload-too-large",
-    "api/validate-references-resolve",
-    "api/validate-unsupported-schema-version",
-    "api/validate-warnings",
-    "order/blocked-ambiguous",
-    "order/clip-internal-gap",
-    "order/clip-list-period-one-clip",
-    "order/clip-month-end-snap",
-    "order/clip-range-availability-clip",
-    "order/edition-preliminary",
-    "order/form-change-merge",
-    "order/open-ended",
-    "order/succession-split",
-    "order/succession-undated",
-    "order/timeless-default",
 ]
