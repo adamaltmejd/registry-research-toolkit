@@ -30,6 +30,7 @@ from collections import Counter, defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import date, timedelta
+from functools import partial
 from itertools import zip_longest
 from pathlib import Path
 from urllib.error import HTTPError
@@ -675,6 +676,378 @@ def row_differences(old, new):
         yield from zip_longest(*groups[key])
 
 
+CLASSES = {
+    "blocked window": "intended",
+    "preliminary data": "intended",
+    "old blocked": "intended",
+    "clipped period": "intended",
+    "spelling": "intended",
+    "representation only": "intended",
+    "table split or merge": "defect",
+    "missing in new": "defect",
+    "missing in old": "defect",
+    "other": "defect",
+}
+
+
+def map_order_variables(old, new):
+    """Rewrite only bijective spelling matches between IDs exclusive to either side."""
+    variables, spellings = [], []
+    for rows in (old, new):
+        ids, names = defaultdict(set), defaultdict(set)
+        for table, variable, _, _, spelling in rows:
+            ids[table].add(variable)
+            names[(table, fold(spelling))].add(variable)
+        variables.append(ids)
+        spellings.append(names)
+    forward, reverse = defaultdict(set), defaultdict(set)
+    for table, spelling in sorted(spellings[0].keys() & spellings[1].keys()):
+        left = spellings[0][table, spelling] - variables[1][table]
+        right = spellings[1][table, spelling] - variables[0][table]
+        for old_id in left:
+            for new_id in right:
+                forward[table, old_id].add(new_id)
+                reverse[table, new_id].add(old_id)
+    mapping = {}
+    for (table, old_id), matches in sorted(forward.items()):
+        if len(matches) == 1:
+            new_id = next(iter(matches))
+            if len(reverse[table, new_id]) == 1:
+                mapping[table, old_id] = new_id
+    rewritten = defaultdict(set)
+    for (table, variable, lo, hi, spelling), sources in old.items():
+        rewritten[
+            table, mapping.get((table, variable), variable), lo, hi, spelling
+        ] |= sources
+    return dict(rewritten), [
+        {"table": table, "old": old_id, "new": new_id}
+        for (table, old_id), new_id in mapping.items()
+    ]
+
+
+def period_days(period):
+    epoch = date(1970, 1, 1)
+    return tuple(
+        (date.fromisoformat(value) - epoch).days if value else sentinel
+        for value, sentinel in ((period["start"], -719162), (period["end"], 2932897))
+    )
+
+
+def uncovered(span, coverage):
+    """The half-open pieces of span not covered by coverage."""
+    start, end = span
+    out = []
+    for lo, hi in sorted(coverage):
+        if hi <= start or lo >= end:
+            continue
+        if lo > start:
+            out.append((start, lo))
+        start = max(start, hi)
+    if start < end:
+        out.append((start, end))
+    return out
+
+
+def row_days(row):
+    return period_days({"start": row[2], "end": row[3]})
+
+
+def order_findings(body):
+    fields = body.get("error", {}).get("fields", {})
+    return body.get("data", {}).get(
+        "findings", fields.get("findings", fields.get("issues", []))
+    )
+
+
+def finding_periods(body, code, row, tables, sources):
+    spans = []
+    for issue in order_findings(body):
+        table = tables.get(
+            issue.get("table"), (issue.get("table") or "").rsplit("/", 1)[-1]
+        )
+        if (
+            issue["code"] == code
+            and (
+                issue.get("variable") == row[1]
+                or (
+                    code == "table_succession_undated" and issue.get("variable") is None
+                )
+            )
+            and table == row[0]
+            and issue.get("source") in sources
+            and issue.get("period") is not None
+        ):
+            spans.append(period_days(issue["period"]))
+    return spans
+
+
+def placement_explanations(rows):
+    # Reuse registers' class, projecting away metadata unrelated to placement.
+    views = [View(), View()]
+    for view, side in zip(views, rows, strict=True):
+        for table, variable, _, _, spelling in side:
+            view.tables.add(table)
+            view.columns[fold(spelling)].add(variable)
+            view.placed[fold(spelling), variable].add(table)
+            view.labels[variable], view.years[variable] = "", (0, 0)
+    diffs = defaultdict(list)
+    compare("", *views, {}, set(), diffs)
+    return views, {detail for _, detail in diffs["column in other tables"]}
+
+
+def latest_spelling(db, row, tables):
+    # The emitted segment is the resolver's latest used-occurrence winner; do not
+    # invent another edition tie-break here. It must cover the whole compared row.
+    lo, hi = row_days(row)
+    spans = []
+    for tid, start, end, spelling, state in db.execute(
+        "SELECT t.pid, s.start, s.end, sp.exact, s.state FROM segment s"
+        " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
+        " JOIN spelling sp ON sp.id = s.spelling_id"
+        " WHERE v.pid = ? AND s.start < ? AND s.end > ?",
+        (row[1], hi, lo),
+    ):
+        if tables.get(tid, tid.rsplit("/", 1)[-1]) == row[0]:
+            if spelling != row[4] or state == "ambiguous":
+                return False
+            spans.append((start, end))
+    return not uncovered((lo, hi), spans)
+
+
+def curated_old_row(db, register, row, tables, mappings):
+    original = next(
+        (m["old"] for m in mappings if m["table"] == row[0] and m["new"] == row[1]),
+        row[1],
+    )
+    spans = []
+    for relation in ("variable_state", "variable_alias_window"):
+        for slug, lo, hi in db.execute(
+            f"SELECT t.slug, s.valid_from, s.valid_to FROM {relation} s"
+            " JOIN variable v USING (variable_id) JOIN register r USING (register_id)"
+            " JOIN provider p USING (provider_id)"
+            " JOIN register_variant t ON t.register_variant_id = s.register_variant_id"
+            " WHERE p.slug || '/' || r.slug = ? AND v.slug = ?"
+            " AND s.delivery_column_name = ?"
+            " AND (s.provenance LIKE 'curated:%' OR s.provenance LIKE 'errata:%')",
+            (register, original.rsplit("/", 1)[-1], row[4]),
+        ):
+            if tables.get(f"{register}/{slug}") == row[0]:
+                spans.extend(
+                    period_days({"start": a, "end": b})
+                    for a, b in old_periods(f"{lo}..{hi}" if lo else "_default")
+                )
+    return not uncovered(row_days(row), spans)
+
+
+def classify_difference(
+    record, old=None, new=None, *, rows, bodies, tables, dbs, mappings, placements
+):
+    def result(cls, reason, owner=None, review=None):
+        classified = record | {
+            "class": cls,
+            "owner": owner or CLASSES[cls],
+            "reason": reason,
+        }
+        if review:
+            classified["review"] = review
+        return classified
+
+    issues = [
+        [
+            i
+            for found in record.get("blocking_issues", {}).get(side, {}).values()
+            for i in found
+        ]
+        for side in ("old", "new")
+    ]
+    if record["kind"] == "register_only":
+        return result("missing in old", "The sampled register has no old counterpart.")
+    if record["kind"] == "refusal":
+        if (
+            rows[0]
+            and issues[1]
+            and all(i["code"] == "ambiguous_window" for i in issues[1])
+        ):
+            return result(
+                "blocked window",
+                "The new order refuses ambiguous windows; old entries exist.",
+            )
+        if rows[1] and issues[0]:
+            return result(
+                "old blocked",
+                "The old order refused; the new order delivers entries.",
+                review="Operator: determine whether the old refusal was a bug.",
+            )
+        return result(
+            "other",
+            "No delivered counterpart proves the refusal's cause.",
+            review="Operator: inspect both refusal responses.",
+        )
+    if old and issues[1] and all(i["code"] == "ambiguous_window" for i in issues[1]):
+        return result(
+            "blocked window",
+            "Ambiguity blocks this source and suppresses its entire order.",
+        )
+    if new and (old is None or (old[:2] == new[:2] and old[4] == new[4])):
+        previous = [row_days(r) for r in rows[0] if r[:2] == new[:2]]
+        added = uncovered(row_days(new), previous)
+        preliminary = finding_periods(
+            bodies[1], "preliminary_data", new, tables[1], record["sources"]["new"]
+        )
+        # An unrelated spelling or removed period is not explained by new preliminary coverage.
+        removed = uncovered(row_days(old), [row_days(new)]) if old else []
+        same_spelling = [
+            row_days(r) for r in rows[0] if r[:2] == new[:2] and r[4] == new[4]
+        ]
+        changed = uncovered(row_days(new), same_spelling)
+        if (
+            added
+            and not removed
+            and all(not uncovered(span, preliminary) for span in added)
+            and all(not uncovered(span, added) for span in changed)
+        ):
+            return result(
+                "preliminary data",
+                "Only warned preliminary windows add coverage absent from the old order.",
+            )
+    if new and issues[0]:
+        return result(
+            "old blocked",
+            "The old source refused; the new order delivers this row.",
+            review="Operator: determine whether the old refusal was a bug.",
+        )
+    if old and (new is None or (old[:2] == new[:2] and old[4] == new[4])):
+        removed = uncovered(row_days(old), [row_days(new)] if new else [])
+        added = uncovered(row_days(new), [row_days(old)]) if new else []
+        clips = finding_periods(
+            bodies[1], "period_clipped", old, tables[1], record["sources"]["new"]
+        )
+        clips += finding_periods(
+            bodies[1],
+            "table_succession_undated",
+            old,
+            tables[1],
+            record["sources"]["new"],
+        )
+        if (
+            removed
+            and not added
+            and all(not uncovered(span, clips) for span in removed)
+        ):
+            return result(
+                "clipped period", "New clipping findings account for every removed day."
+            )
+    if (
+        old
+        and new
+        and old[:4] == new[:4]
+        and old[4] != new[4]
+        and latest_spelling(dbs[1], new, tables[1])
+    ):
+        return result(
+            "spelling",
+            "The old binding pins its state representation; the new segment uses the resolver's latest used-occurrence spelling.",
+        )
+    if old and new is None:
+        alternatives = {r[4] for r in rows[0] if r[:4] == old[:4]}
+        retained = {r[4] for r in rows[1] if r[:4] == old[:4]}
+        if len(alternatives) > 1 and retained and retained <= alternatives:
+            return result(
+                "representation only",
+                "The old order delivers parallel representations; the new order retains one of them.",
+            )
+    row = old or new
+    if row is None:
+        raise ValueError("a row difference must have an old or new row")
+    other_rows = rows[1] if old else rows[0]
+    if (old is None or new is None) and any(
+        r[0] != row[0] and r[1:] == row[1:] for r in other_rows
+    ):
+        views, explanations = placements
+        key = fold(row[4]), row[1]
+        detail = f"{key[0]}: {sorted(views[0].placed[key])} -> {sorted(views[1].placed[key])}"
+        explained = detail in explanations
+        return result(
+            "table split or merge",
+            "registers: column in other tables: " + detail
+            if explained
+            else "An identical row moves tables without a registers placement explanation.",
+            owner="intended" if explained else "defect",
+            review=None
+            if explained
+            else "Operator: the moved row has no registers placement explanation.",
+        )
+    if new is None:
+        curated = curated_old_row(dbs[0], record["register"], old, tables[0], mappings)
+        return result(
+            "missing in new",
+            "Old curated provenance covers this row."
+            if curated
+            else "No rule explains the old-only row.",
+            owner="curation (D)" if curated else "defect",
+        )
+    if old is None:
+        return result("missing in old", "No rule explains the new-only row.")
+    return result(
+        "other",
+        "The remaining period/spelling change is unexplained.",
+        review="Operator: inspect the retained response and catalog evidence.",
+    )
+
+
+def classification_summary(records, mappings):
+    summary = [
+        "",
+        "## Variable ID mapping",
+        "",
+        f"Mapped variables: {len(mappings)} (register/table/old ID/new ID pairs, before row comparison).",
+    ]
+    summary += [
+        f"- `{m['register']}` / `{m['table'] or '(implicit)'}`: `{m['old']}` → `{m['new']}`"
+        for m in mappings[:5]
+    ]
+    summary += [
+        "",
+        "## Classes",
+        "",
+        "Precedence: blocked window, preliminary data, old blocked, clipped period, spelling, representation only, table split or merge, missing, other.",
+        "Refusal records are counted separately from affected rows. Old refusals and unexplained differences require Operator review.",
+        "",
+        "| class | rows | refusals | register-only records | registers | owner |",
+        "|---|---:|---:|---:|---:|---|",
+    ]
+    for cls, default_owner in CLASSES.items():
+        found = [r for r in records if r["class"] == cls]
+        counts = Counter(r["kind"] for r in found)
+        owners = "; ".join(sorted({r["owner"] for r in found})) or default_owner
+        summary.append(
+            f"| {cls} | {counts['row']} | {counts['refusal']} | {counts['register_only']} | "
+            f"{len({r['register'] for r in found})} | {owners} |"
+        )
+    for cls in CLASSES:
+        found = [r for r in records if r["class"] == cls]
+        if not found:
+            continue
+        summary += ["", f"### {cls}", ""]
+        for record in found[:5]:
+            old, new = record.get("old"), record.get("new")
+            if record["kind"] == "row":
+                row = old or new
+                summary.append(
+                    f"- `{record['register']}` / `{row['table'] or '(implicit)'}` / `{row['variable']}`; "
+                    f"period {old['period'] if old else None} → {new['period'] if new else None}; "
+                    f"spelling {old['spelling'] if old else None!r} → {new['spelling'] if new else None!r}. "
+                    f"{record['reason']}"
+                )
+            else:
+                summary.append(
+                    f"- `{record['register']}`: {record['kind']}. {record['reason']}"
+                )
+            if record.get("review"):
+                summary.append(f"  {record['review']}")
+    return summary
+
+
 def orders(args) -> int:
     with (
         closing(
@@ -721,10 +1094,11 @@ def orders(args) -> int:
             "| register | rows old | rows new | equal | differing | blocked old | blocked new | result |",
             "|---|---:|---:|---:|---:|---:|---:|---|",
         ]
-        adjustments = []
+        adjustments, mappings, classified_records = [], [], []
         with (args.out / "diff.jsonl").open("w") as output:
 
             def emit(record):
+                classified_records.append(record)
                 output.write(
                     json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n"
                 )
@@ -737,6 +1111,9 @@ def orders(args) -> int:
                             "kind": "register_only",
                             "old": None,
                             "new": reg,
+                            "class": "missing in old",
+                            "owner": "defect",
+                            "reason": "The sampled register has no old counterpart.",
                         }
                     )
                     summary.append(f"| {reg} | 0 | 0 | 0 | 0 | 0 | 0 | only in new |")
@@ -755,7 +1132,7 @@ def orders(args) -> int:
                     )
                     adjustments.extend({"side": side, **bound} for bound in bounds)
                 tables = table_names(*projects)
-                results, blockers, rows, row_sources = [], [], [], []
+                results, blockers, row_sources, bodies = [], [], [], []
                 for i, (side, url) in enumerate(
                     zip(("old", "new"), (args.old_url, args.new_url), strict=True)
                 ):
@@ -775,41 +1152,66 @@ def orders(args) -> int:
                     )
                     blockers.append(blocking_issues(body, projects[i]))
                     row_sources.append(order_rows(body, tables[i], old=i == 0))
-                    rows.append(set(row_sources[-1]))
+                    bodies.append(body)
+                row_sources[0], mapped = map_order_variables(*row_sources)
+                mappings.extend({"register": reg, **m} for m in mapped)
+                rows = [set(side) for side in row_sources]
+                placements = placement_explanations(rows)
+
+                classified = partial(
+                    classify_difference,
+                    rows=rows,
+                    bodies=bodies,
+                    tables=tables,
+                    dbs=(old_db, new_db),
+                    mappings=mapped,
+                    placements=placements,
+                )
+
                 evidence = {
                     "register": reg,
                     "results": dict(zip(("old", "new"), results, strict=True)),
                     "blocking_issues": dict(zip(("old", "new"), blockers, strict=True)),
                 }
                 if any(r["error_code"] for r in results):
-                    emit(evidence | {"kind": "refusal"})
+                    emit(classified(evidence | {"kind": "refusal"}))
                 differences = list(row_differences(*rows))
                 for old, new in differences:
                     table = (old or new)[0]
-                    source_issues = {}
+                    source_issues, source_names = {}, {}
                     for i, side in enumerate(("old", "new")):
                         # A refused side has no entries; locate its corresponding
                         # source by table. Successful successions name their source.
-                        sources = {
-                            s["name"]
-                            for s in projects[i]["sources"]
-                            if tables[i][s["register_variant" if i == 0 else "table"]]
-                            == table
-                        }
-                        sources |= row_sources[i].get((old, new)[i], set())
+                        sources = row_sources[i].get(
+                            (old, new)[i],
+                            {
+                                s["name"]
+                                for s in projects[i]["sources"]
+                                if tables[i][
+                                    s["register_variant" if i == 0 else "table"]
+                                ]
+                                == table
+                            },
+                        )
+                        source_names[side] = sorted(sources)
                         source_issues[side] = {
                             source: issues
                             for source, issues in blockers[i].items()
                             if source is None or source in sources
                         }
                     emit(
-                        evidence
-                        | {
-                            "kind": "row",
-                            "old": row_value(old),
-                            "new": row_value(new),
-                            "blocking_issues": source_issues,
-                        }
+                        classified(
+                            evidence
+                            | {
+                                "kind": "row",
+                                "old": row_value(old),
+                                "new": row_value(new),
+                                "blocking_issues": source_issues,
+                                "sources": source_names,
+                            },
+                            old,
+                            new,
+                        )
                     )
                 blocked_counts = [
                     len(p["sources"]) if None in b else len(b)
@@ -824,6 +1226,8 @@ def orders(args) -> int:
                     )
                     + " |"
                 )
+        summary += classification_summary(classified_records, mappings)
+        write_json(args.out / "variable-map.json", mappings)
         summary += ["", "## Request bound adjustments", ""]
         summary.extend(
             f"- {a['side']} `{a['source']}`: {a['catalog']} → {a['requested']}"
