@@ -16,6 +16,8 @@ pub struct Item {
     pub valueset_id: Option<i64>,
     /// The code of a `code` row.
     pub code: Option<String>,
+    /// The item's position in its value set, of a `code` row.
+    pub ord: Option<i64>,
     pub sort_key: String,
     pub name: String,
     pub label: String,
@@ -47,6 +49,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             span: Some((emit::start(&r.coverage.0), emit::end(&r.coverage.1))),
             valueset_id: None,
             code: None,
+            ord: None,
             sort_key: reg_pid.clone(),
             name: reg_pid,
             label: reg.name.clone().unwrap_or_default(),
@@ -65,6 +68,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 span: Some(emit::hull(&table.spans)),
                 valueset_id: None,
                 code: None,
+                ord: None,
                 sort_key: pid.clone(),
                 name: pid,
                 label: table.table.name.clone().unwrap_or_default(),
@@ -100,6 +104,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 span: Some((emit::start(&variable.hull.0), emit::end(&variable.hull.1))),
                 valueset_id: None,
                 code: None,
+                ord: None,
                 sort_key: pid,
                 name,
                 label: labels.join("\n"),
@@ -107,8 +112,17 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             });
         }
     }
-    // A value set no segment references (only shadowed or ambiguous occurrences do) gets
-    // no code rows (plan decision C-10).
+    code_items(catalog, ids, &mut items);
+    items.sort_by(|a, b| a.sort_key.cmp(&b.sort_key));
+    if let Some(w) = items.windows(2).find(|w| w[0].sort_key == w[1].sort_key) {
+        return Err(format!("duplicate search key: {:?}", w[0].sort_key));
+    }
+    Ok(items)
+}
+
+/// One row per item of each value set some segment references. A value set only
+/// shadowed or ambiguous occurrences reference gets no code rows (plan decision C-10).
+fn code_items(catalog: &Catalog, ids: &Ids, items: &mut Vec<Item>) {
     let referenced: BTreeSet<&str> = catalog
         .registers
         .iter()
@@ -118,7 +132,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
         .collect();
     for hash in referenced {
         let (set, _) = &catalog.valuesets[hash];
-        for item in &set.items {
+        for (ord, item) in set.items.iter().enumerate() {
             items.push(Item {
                 kind: "code",
                 entity_id: None,
@@ -126,6 +140,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 span: None,
                 valueset_id: Some(ids.valueset[hash]),
                 code: Some(item.code.clone()),
+                ord: Some(emit::count(ord)),
                 sort_key: format!("vs:{hash}#{}", item.code),
                 // A blank code is a real item: it is reached through its label.
                 name: item.code.clone(),
@@ -134,9 +149,4 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             });
         }
     }
-    items.sort_by(|a, b| a.sort_key.cmp(&b.sort_key));
-    if let Some(w) = items.windows(2).find(|w| w[0].sort_key == w[1].sort_key) {
-        return Err(format!("duplicate search key: {:?}", w[0].sort_key));
-    }
-    Ok(items)
 }

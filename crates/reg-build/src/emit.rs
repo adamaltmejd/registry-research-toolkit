@@ -694,6 +694,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 item.code
                     .as_ref()
                     .map_or(Cell::Null, |c| Cell::Text(c.clone())),
+                opt_int(item.ord),
                 opt_int(item.register_id),
                 opt_int(item.span.map(|s| s.0)),
                 opt_int(item.span.map(|s| s.1)),
@@ -877,6 +878,6 @@ fn id(index: usize) -> i64 {
     count(index) + 1
 }
 
-fn count(n: usize) -> i64 {
+pub(crate) fn count(n: usize) -> i64 {
     i64::try_from(n).expect("row counts fit in i64")
 }
