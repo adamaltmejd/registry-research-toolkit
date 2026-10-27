@@ -10,10 +10,8 @@ mod coded;
 mod coverage;
 mod cursor;
 mod docs;
-mod family;
 mod graph;
 mod lineage;
-mod order;
 mod refs;
 mod resolve;
 mod schema;
@@ -316,10 +314,7 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
 
 /// Every registered download.
 pub fn downloads() -> impl Iterator<Item = &'static Download> {
-    slice_3a::DOWNLOADS
-        .iter()
-        .chain(slice_3b::DOWNLOADS)
-        .chain(slice_3e::DOWNLOADS)
+    slice_3a::DOWNLOADS.iter().chain(slice_3b::DOWNLOADS)
 }
 
 /// Every MCP tool with its operations, in registration order.
@@ -617,11 +612,9 @@ pub fn openapi(version: &str) -> OpenApi {
     let mut components = Components::new();
     component::<Meta>(&mut components);
     component::<Error>(&mut components);
-    // Referenced by no operation (the validate and order bodies stay free objects,
-    // and `order_blocked`'s fields an open object): published so the SPA's types
-    // are generated, not hand-written.
+    // Referenced by no operation (the validate body stays a free object): published
+    // so the SPA's types are generated, not hand-written.
     component::<reg_core::project::ProjectData>(&mut components);
-    component::<order::Blocking>(&mut components);
     let mut paths = PathsBuilder::new();
     for op in all() {
         for route in op.paths {

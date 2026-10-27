@@ -46,13 +46,12 @@ directory compared byte for byte). Where ties have no contract order, a step's `
 (`steps`, `pointer`, `equals`) joins `pointer` over those steps (this one or earlier)
 and requires no repeats and exactly the `equals` set.
 
-  | Surface directory | Boundary and request interpretation                                   |
-  | ----------------- | --------------------------------------------------------------------- |
-  | order             | HTTP order and download, `order.json` bytes, blocked findings         |
-  | api               | HTTP request sequence and status/pointer oracle, startup refusals     |
-  | artifact_sample   | Sampled order entries/clips and search contracts on a readable source |
-  | reader            | Readable sources, not independently executed cases                    |
-  | fixtures          | HTTP readable sources, not independently executed cases               |
+  | Surface directory | Boundary and request interpretation                               |
+  | ----------------- | ----------------------------------------------------------------- |
+  | order             | HTTP order and download, `order.json` bytes, blocked findings     |
+  | api               | HTTP request sequence and status/pointer oracle, startup refusals |
+  | reader            | Readable sources, not independently executed cases                |
+  | fixtures          | HTTP readable sources, not independently executed cases           |
 
 ## Out-of-process runner
 
