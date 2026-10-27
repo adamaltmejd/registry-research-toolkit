@@ -748,24 +748,18 @@ pub fn resolve(
                         conflicts.insert(name.to_owned());
                     }
                 }
+                let (length, length_conflict) = reg_core::agreed_length(
+                    covering.iter().map(|&i| resolved[i].occurrence.length),
+                );
+                if length_conflict {
+                    conflicts.insert("length".to_owned());
+                }
                 let segment = Segment {
                     table: t,
                     period,
                     spelling: o.column.clone(),
                     dtype: agreed(|f| &f.dtype),
-                    length: {
-                        let lengths: BTreeSet<i64> = covering
-                            .iter()
-                            .filter_map(|&i| resolved[i].occurrence.length)
-                            .collect();
-                        if lengths.len() > 1 {
-                            conflicts.insert("length".to_owned());
-                        }
-                        match lengths.into_iter().collect::<Vec<_>>()[..] {
-                            [n] => Some(n),
-                            _ => None,
-                        }
-                    },
+                    length,
                     valueset: agreed(|f| &f.valueset),
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),

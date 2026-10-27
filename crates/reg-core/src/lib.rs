@@ -128,6 +128,19 @@ impl Form {
     }
 }
 
+/// The length covering occurrences state, and whether they conflict: the one length when
+/// every stating occurrence agrees, else `None`; the flag is set when two differ.
+#[must_use]
+pub fn agreed_length(lengths: impl IntoIterator<Item = Option<i64>>) -> (Option<i64>, bool) {
+    let stated: std::collections::BTreeSet<i64> = lengths.into_iter().flatten().collect();
+    let mut all = stated.iter();
+    match (all.next(), all.next()) {
+        (Some(&n), None) => (Some(n), false),
+        (_, Some(_)) => (None, true),
+        _ => (None, false),
+    }
+}
+
 /// Passes of [`fold_search`]: two change any string at most (NFKD can emit a capital
 /// the first case fold could not see: U+1D2C MODIFIER LETTER CAPITAL A -> "A" -> "a");
 /// the third confirms. Each pass maps characters independently, so the bound the

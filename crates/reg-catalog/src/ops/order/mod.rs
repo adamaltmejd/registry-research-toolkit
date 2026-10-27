@@ -337,6 +337,20 @@ pub fn check(
     for (index, panel) in project.panels.iter().enumerate() {
         findings.extend(rows::panel(&conn, index, panel, &members)?);
     }
+    if project.sources.is_empty() {
+        // A valid draft, but nothing to order (reg-core DESIGN.md, "An empty project").
+        findings.push(Issue {
+            level: IssueLevel::Error,
+            code: "project_empty".to_owned(),
+            path: "/sources".to_owned(),
+            message: "The project has no sources, so there is nothing to order.".to_owned(),
+            source: None,
+            variable: None,
+            table: None,
+            period: None,
+            successor_fqid: None,
+        });
+    }
     if findings.iter().any(Issue::blocks) {
         return Ok(Err(findings));
     }

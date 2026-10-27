@@ -194,6 +194,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
                 span(scope.server, &requested)
             ),
         ));
+        outcome.findings.extend(replaced(&at)?);
         return Ok(outcome);
     }
     let removed = gaps(scope.requested, ordered.clone());
@@ -364,6 +365,9 @@ const SELECTED: &str = "r.table_id = ?1 AND r.start IS NOT NULL
     AND (?2 IS NULL OR r.edition = ?2) AND (?3 IS NULL OR r.qualifier = ?3)
     AND (?2 IS NOT NULL OR r.is_primary = 1)";
 
+/// A set of days and the change a piece takes inside it.
+type Mark = (Vec<Interval>, fn(&mut Piece));
+
 /// The pieces serving table `k`'s selected releases give the variable inside `windows`,
 /// from one pass over their used and shadowed occurrences. Ambiguity is decided from
 /// those occurrences alone, never from the segments (built over every delivery), with
@@ -458,14 +462,20 @@ fn selected(
                 .collect(),
         )
     };
-    let marks: [(_, fn(&mut Piece)); 3] = [
+    // The occurrences' own spans cut a piece where the covering set changes, so each part
+    // takes a length from exactly the occurrences covering it (reg-core's fold).
+    let mut marks: Vec<Mark> = vec![
         (merge(ambiguous), |p| "ambiguous".clone_into(&mut p.state)),
         (flagged(|p| p.sensitive), |p| p.sensitive = true),
         (flagged(|p| p.identifier), |p| p.identifier = true),
     ];
+    marks.extend(
+        own.iter()
+            .map(|(_, p)| (vec![p.days.clone()], (|_| {}) as fn(&mut Piece))),
+    );
     let mut pieces = Vec::new();
     let mut taken: Vec<Interval> = Vec::new();
-    for (_, row) in own {
+    for (_, row) in &own {
         for days in gaps(std::slice::from_ref(&row.days), taken.clone()) {
             taken.push(days.clone());
             let mut parts = vec![Piece {
@@ -488,6 +498,14 @@ fn selected(
                         inside.into_iter().chain(outside).collect::<Vec<_>>()
                     })
                     .collect();
+            }
+            for part in &mut parts {
+                part.length = reg_core::agreed_length(
+                    own.iter()
+                        .filter(|(_, r)| intersect(&r.days, &part.days).is_some())
+                        .map(|(_, r)| r.length),
+                )
+                .0;
             }
             pieces.extend(parts);
         }

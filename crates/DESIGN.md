@@ -942,13 +942,14 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 **Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
 `variable_not_in_table`, `outside_availability`, `ambiguous_window`,
 `preliminary_without_edition`, `edition_not_found`, `period_default_on_dated_table`,
-`period_on_timeless_table` and `period_not_orderable`. Warnings and infos do not:
-`classification_version_ambiguous`, `edition_disagreement`, `variable_sensitive`,
-`variable_replaced`, `panel_row_keys_differ`, `period_clipped`, `form_change`,
-`table_succession_undated`, `identifier` and `coverage_end_unstated`. Each is an `Issue`
-whose `path` points at the source, binding or panel and whose `source`, `variable`,
-`table` and `period` say what it is about (`null` for a whole-project finding). The
-conditions are the order check's to state in its own tests; the rules that shape them:
+`period_on_timeless_table`, `period_not_orderable` and `project_empty` (no sources; a
+whole-project finding). Warnings and infos do not: `classification_version_ambiguous`,
+`edition_disagreement`, `variable_sensitive`, `variable_replaced`,
+`panel_row_keys_differ`, `period_clipped`, `form_change`, `table_succession_undated`,
+`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
+source, binding or panel and whose `source`, `variable`, `table` and `period` say what
+it is about (`null` for a whole-project finding). The conditions are the order check's
+to state in its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
