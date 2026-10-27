@@ -2,23 +2,22 @@
   {
     "status": 422,
     "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "q"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
       "/error/code": "invalid_ref",
-      "/error/fields/ref": "scb/Example"
+      "/error/fields/ref": "demo/dok/t"
     }
   },
   {
     "status": 404,
     "json": {
       "/error/code": "not_found",
-      "/error/fields/ref": "scb/nothing"
+      "/error/fields/ref": "demo/nope"
     }
-  },
-  {
-    "status": 422,
-    "json": {
-      "/error/code": "invalid_parameter",
-      "/error/fields/parameter": "q"
-    }
-  },
-  {"status": 422, "json": {"/error/code": "invalid_cursor"}}
+  }
 ]

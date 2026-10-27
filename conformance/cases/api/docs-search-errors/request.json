@@ -1,29 +1,23 @@
 {
-  "note": "Fails if docs_search stops validating its register ref (form, existence) or its query, or accepts a malformed cursor.",
-  "fixture": "reader",
-  "docs": "docs",
+  "note": "Fails if docs_search accepts a query over 200 characters, accepts a register ref that is a table, or answers anything but not_found for a well-formed register ref no entity has.",
+  "fixture": "documents",
   "requests": [
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"q": "kon", "register": "scb/Example"}
-    },
-    {
-      "operation": "docs_search",
-      "path": "/api/docs/search",
-      "query": {"q": "kon", "register": "scb/nothing"}
-    },
-    {
-      "operation": "docs_search",
-      "path": "/api/docs/search",
       "query": {
-        "q": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "q": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       }
     },
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"q": "kon", "cursor": "not-a-cursor"}
+      "query": {"register": "demo/dok/t"}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"register": "demo/nope"}
     }
   ]
 }

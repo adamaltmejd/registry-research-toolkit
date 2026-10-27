@@ -1,9 +1,14 @@
 {
-  "fixture": "reader",
-  "docs": "docs",
+  "note": "Fails if excerpt is cut at 500 bytes instead of 500 characters (the fixture's byte 500 falls inside the second letter of the 72nd token, so a byte cut splits it or ends before the space), or if a pdf's excerpt is not empty or its body not null.",
+  "fixture": "documents",
   "requests": [
-    {"operation": "docs_get", "path": "/api/docs/doc/Kort"},
-    {"operation": "docs_get", "path": "/api/docs/doc/LoneInk"},
-    {"operation": "docs_get", "path": "/api/docs/doc/Tabell"}
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f"
+    },
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9"
+    }
   ]
 }

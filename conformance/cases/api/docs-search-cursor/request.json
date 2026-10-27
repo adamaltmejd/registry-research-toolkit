@@ -1,40 +1,34 @@
 {
-  "note": "Fails if a docs cursor outlives its catalog generation or its docs generation (a docs-only rebuild beside the same catalog), or continues another query.",
-  "fixture": "reader",
-  "docs": "docs",
-  "artifacts": {
-    "regenerated": {
-      "identity": {
-        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-      }
-    },
-    "redocumented": {"docs": "docs-revised"}
-  },
+  "note": "Fails if offset paging of a search without q repeats or skips a document across pages, ends without next_cursor null, or if a cursor continues a request with another register instead of answering invalid_cursor, or if a cursor for a q holding a dot fails to continue it.",
+  "fixture": "documents",
   "requests": [
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"q": "KÖN", "limit": 1}
+      "query": {"limit": 1}
     },
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"q": "KÖN", "limit": 1},
-      "artifact": "regenerated",
+      "query": {"limit": 1},
       "cursor_from": [0, "/data/next_cursor"]
     },
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"q": "KÖN", "limit": 1},
-      "artifact": "redocumented",
+      "query": {"limit": 1, "register": "demo/dok"},
       "cursor_from": [0, "/data/next_cursor"]
     },
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"q": "kontant", "limit": 1},
-      "cursor_from": [0, "/data/next_cursor"]
+      "query": {"q": "i.", "limit": 1}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "i.", "limit": 1},
+      "cursor_from": [3, "/data/next_cursor"]
     }
   ]
 }

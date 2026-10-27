@@ -3,53 +3,34 @@
     "status": 200,
     "headers": {"cache-control": "public, max-age=86400, must-revalidate"},
     "json": {
-      "/data": {
-        "register": "example",
-        "variable": "Kon",
-        "filename": "Kon.md",
-        "display_name": "Kön",
-        "tags": ["type/variable", "topic/demography"],
-        "source": null,
-        "source_url": null,
-        "source_title": null,
-        "excerpt": "Könstillhörighet för individen.",
-        "body": "**Kön Kon**\n\nKönstillhörighet för individen.\n"
-      },
-      "/meta/scope": "holdings"
+      "/data/doc": "630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f",
+      "/data/title": "Registerbeskrivning",
+      "/data/kind": "parsed",
+      "/data/licence": "CC BY 4.0",
+      "/data/url": "https://example.org/registerbeskrivning",
+      "/data/bytes": 778,
+      "/data/subjects": [
+        {"kind": "register", "fqid": "demo/dok", "page": 0},
+        {"kind": "variable", "fqid": "demo/dok/beteckning", "page": 2}
+      ],
+      "/data/body": "åä00 åä01 åä02 åä03 åä04 åä05 åä06 åä07 åä08 åä09 åä10 åä11 åä12 åä13 åä14 åä15 åä16 åä17 åä18 åä19 åä20 åä21 åä22 åä23 åä24 åä25 åä26 åä27 åä28 åä29 åä30 åä31 åä32 åä33 åä34 åä35 åä36 åä37 åä38 åä39 åä40 åä41 åä42 åä43 åä44 åä45 åä46 åä47 åä48 åä49 åä50 åä51 åä52 åä53 åä54 åä55 åä56 åä57 åä58 åä59 åä60 åä61 åä62 åä63 åä64 åä65 åä66 åä67 åä68 åä69 åä70 åä71 åä72 åä73 åä74 åä75 åä76 åä77 åä78 åä79 åä80 åä81 åä82 åä83 åä84 åä85 åä86 åä87 åä88 åä89 åä90 åä91 åä92 åä93 åä94 åä95 åä96 åä97 åä98 åä99\n\nBeteckningen anges som pilgrimsfalk i varje post.\n\nLingonris växer i skogen."
+    },
+    "keys": {
+      "/data": ["body", "bytes", "doc", "excerpt", "kind", "licence", "subjects", "title", "url"]
     }
   },
   {
-    "status": 200,
+    "status": 422,
     "json": {
-      "/data/filename": "Sysselsattning.md",
-      "/data/variable": "SyssStat"
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/filename": "Tabell.md"
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "doc"
     }
   },
   {
     "status": 404,
     "json": {
       "/error/code": "not_found",
-      "/error/fields/ref": "DoesNotExist"
-    }
-  },
-  {
-    "status": 422,
-    "json": {
-      "/error/code": "invalid_parameter",
-      "/error/fields/parameter": "identifier"
-    }
-  },
-  {
-    "status": 422,
-    "json": {
-      "/error/code": "invalid_parameter",
-      "/error/fields/parameter": "ref"
+      "/error/fields/ref": "0000000000000000000000000000000000000000000000000000000000000000"
     }
   }
 ]

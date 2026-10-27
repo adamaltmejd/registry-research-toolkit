@@ -3,15 +3,11 @@
     "status": 409,
     "json": {
       "/error/code": "ambiguous_ref",
-      "/error/fields/ref": "band fixture",
+      "/error/fields/ref": "t",
       "/error/fields/candidates": [
-        {"fqid": "scb/bands", "kind": "register", "name": "Band fixture"},
-        {"fqid": "sos/bands", "kind": "register", "name": "Band fixture"}
+        {"fqid": "demo/dok/t", "kind": "table", "name": "Huvudtabell"},
+        {"fqid": "demo/utan/t", "kind": "table", "name": "Huvudtabell"}
       ]
     }
-  },
-  {
-    "status": 200,
-    "json": {"/data/*/filename": ["Bands.pdf"]}
   }
 ]

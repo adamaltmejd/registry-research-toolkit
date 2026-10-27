@@ -9,11 +9,16 @@ pub fn invalid(message: &str) -> Error {
 }
 
 /// A cursor is the hex of `generation.context.offset.position`: the generation it
-/// was issued on, the request it continues (`context`), where the next page starts
-/// and the position of the row before it.
+/// was issued on, the request it continues (`context`, itself hex, since a query
+/// text may hold a `.`), where the next page starts and the position of the row
+/// before it (last, so it may hold a `.`).
 #[must_use]
 pub fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
-    hex(format!("{generation}.{context}.{offset}.{position}").as_bytes())
+    hex(format!(
+        "{generation}.{}.{offset}.{position}",
+        hex(context.as_bytes())
+    )
+    .as_bytes())
 }
 
 /// The cursor's offset (1 to `depth`) and position.
@@ -52,7 +57,7 @@ pub fn decode(
             vec![generation.into()],
         ));
     }
-    if issued_for != context {
+    if issued_for != hex(context.as_bytes()) {
         return Err(invalid("Cursor was issued for other parameters."));
     }
     let offset = offset

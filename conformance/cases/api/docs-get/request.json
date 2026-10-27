@@ -1,20 +1,18 @@
 {
-  "fixture": "reader",
-  "docs": "docs",
+  "note": "Fails if docs_get drops or renames a field of the document (title, kind, licence, url, bytes), lists its subjects other than as the document's links in (kind, fqid, page) order, builds body other than as the sections joined by a blank line, omits excerpt, answers a malformed hash other than invalid_parameter, or an unknown hash other than not_found.",
+  "fixture": "documents",
   "requests": [
-    {"operation": "docs_get", "path": "/api/docs/doc/kon"},
-    {"operation": "docs_get", "path": "/api/docs/doc/Sysselsattning"},
-    {"operation": "docs_get", "path": "/api/docs/doc/tabell.md"},
-    {"operation": "docs_get", "path": "/api/docs/doc/DoesNotExist"},
     {
       "operation": "docs_get",
-      "path": "/api/docs/doc/Kon",
-      "query": {"identifier": "Kort"}
+      "path": "/api/docs/doc/630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f"
     },
     {
       "operation": "docs_get",
-      "path": "/api/docs/doc/Kon",
-      "query": {"ref": "scb/example"}
+      "path": "/api/docs/doc/not-a-hash"
+    },
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/0000000000000000000000000000000000000000000000000000000000000000"
     }
   ]
 }

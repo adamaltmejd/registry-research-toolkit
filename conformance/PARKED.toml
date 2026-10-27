@@ -13,9 +13,6 @@ operations = [
     "search",
     "search_facets",
     # r-docs
-    "docs_get",
-    "docs_related",
-    "docs_search",
     # r-order-check
     "order",
     "validate",
@@ -69,16 +66,6 @@ cases = [
     "api/search-untyped-pages",
     "api/search-untyped-ranking",
     # r-docs
-    "api/docs-download",
-    "api/docs-excerpt",
-    "api/docs-get",
-    "api/docs-related",
-    "api/docs-related-ambiguous",
-    "api/docs-search",
-    "api/docs-search-ambiguous",
-    "api/docs-search-cursor",
-    "api/docs-search-errors",
-    "api/docs-unavailable",
     # r-order-check
     "api/order-alias-month-annual-fallback",
     "api/order-errors",

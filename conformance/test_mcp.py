@@ -57,9 +57,15 @@ EQUIVALENCE = {
     # r-search
     "search": (),
     # r-docs
-    "docs_search": (),
-    "docs_get": (),
-    "docs_related": (),
+    "docs_search": (
+        "docs-search",
+        "docs-search-errors",
+        "docs-search-cursor",
+        "docs-search-ambiguous",
+        "docs-unavailable",
+    ),
+    "docs_get": ("docs-get", "docs-unavailable"),
+    "docs_related": ("docs-related", "docs-related-ambiguous", "docs-unavailable"),
     # r-order-check
     "validate": (),
     "order": (),
@@ -200,13 +206,11 @@ def test_tool_of_several_needs_an_operation(http_servers):
     # Fails when a tool of several operations answers a call that names none of them
     # (it would have to guess one), or one that omits its operation's required
     # parameter, with anything but `invalid_parameter` naming the parameter.
-    if "docs_get" in PARKED["operations"]:
-        pytest.skip("parked: the docs tool is not served (PARKED.toml)")
     client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     for arguments, parameter in (
         ({"identifier": "Kon"}, "operation"),
         ({"operation": "search", "q": "Kon"}, "operation"),
-        ({"operation": "docs_get"}, "identifier"),
+        ({"operation": "docs_get"}, "doc"),
     ):
         is_error, document = call(client, "docs", arguments)
         assert is_error
