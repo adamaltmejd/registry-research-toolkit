@@ -3170,13 +3170,6 @@
                 "null"
               ]
             },
-            "edition": {
-              "description": "Only when the source names one.",
-              "type": [
-                "string",
-                "null"
-              ]
-            },
             "length": {
               "format": "int64",
               "type": [
@@ -3190,13 +3183,6 @@
             },
             "provider": {
               "type": "string"
-            },
-            "qualifier": {
-              "description": "Only when the source names one.",
-              "type": [
-                "string",
-                "null"
-              ]
             },
             "register": {
               "type": "string"

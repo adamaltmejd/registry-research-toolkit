@@ -25,8 +25,7 @@
       "type": "char",
       "length": null,
       "value_set": null,
-      "classification": null,
-      "edition": "final"
+      "classification": null
     }
   ],
   "row_keys": [],

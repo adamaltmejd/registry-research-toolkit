@@ -1,13 +1,10 @@
-//! One binding of a source: its ids, then the request over the variable's stored
-//! segments in the serving tables (the primary segments, or a named edition's or
-//! qualifier's selection segments, as the builder stores them). The request minus the
-//! segments is the clip; the rest, split by merged form, is the binding's entries; the
+//! One binding of a source: its ids, then the request over the variable's primary
+//! segments in the serving tables. The request minus the segments is the clip; the rest, split by merged form, is the binding's entries; the
 //! window findings come from the segments the entries cover.
 
-use reg_core::project::Edition;
 use reg_core::project::{Binding, Source};
 use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
-use rusqlite::{Connection, OptionalExtension, Row};
+use rusqlite::{Connection, Row};
 
 use super::{
     Issue, OrderClip, OrderEntry, OrderValueSet, Serving, day, interval, iso_day, period, refused,
@@ -47,8 +44,7 @@ pub(super) struct Variable {
     pinned: bool,
 }
 
-/// One served piece of the request: part of a stored segment (primary or selection)
-/// inside the requested days.
+/// One served piece of the request: part of a primary segment inside the requested days.
 #[derive(Clone)]
 struct Piece {
     /// The index of its serving table.
@@ -279,15 +275,12 @@ impl Located<'_> {
     }
 }
 
-/// Whether the variable has a segment or a selection segment anywhere in the succession
-/// chain; one there but not on the requested days is `outside_availability`, not
-/// `variable_not_in_table`.
+/// Whether the variable has a segment anywhere in the succession chain; one there but not
+/// on the requested days is `outside_availability`, not `variable_not_in_table`.
 fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
     for &table in scope.chain {
         let hit: bool = scope.conn.query_row(
-            "SELECT EXISTS (SELECT 1 FROM segment WHERE variable_id = ?1 AND table_id = ?2)
-                 OR EXISTS (SELECT 1 FROM selection_segment
-                            WHERE variable_id = ?1 AND table_id = ?2)",
+            "SELECT EXISTS (SELECT 1 FROM segment WHERE variable_id = ?1 AND table_id = ?2)",
             [variable, table],
             |row| row.get(0),
         )?;
@@ -298,98 +291,26 @@ fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
     Ok(false)
 }
 
-/// The pieces serving table `k` gives the variable over its requested days. With an
-/// edition or a qualifier, each day takes the first layer whose window holds it
-/// (crates/DESIGN.md "Selections"): the source's own selection, over the days a release
-/// of that edition and qualifier covers; then, with both named, the qualifier's
-/// selection over its releases; then, with no qualifier, the primary segments. Nothing
-/// is served outside a named qualifier's releases.
+/// The pieces serving table `k` gives the variable over its requested days: the primary
+/// segments, clipped to them.
 fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     let s = &scope.serving[k];
-    let edition = scope.source.edition.map(Edition::as_str);
-    let qualifier = scope.source.qualifier.as_deref();
-    if edition.is_none() && qualifier.is_none() {
-        return stored(scope, k, variable, None, &s.requested);
-    }
-    let mut layers = vec![(edition, qualifier)];
-    if edition.is_some() && qualifier.is_some() {
-        layers.push((None, qualifier));
-    }
-    let mut pieces = Vec::new();
-    let mut remaining = s.requested.clone();
-    for key in layers {
-        let releases: Vec<(i64, i64)> = scope
-            .conn
-            .prepare(
-                "SELECT start, end FROM release WHERE table_id = ?1 AND start IS NOT NULL
-                   AND (?2 IS NULL OR edition = ?2) AND (?3 IS NULL OR qualifier = ?3)",
-            )?
-            .query_map(rusqlite::params![s.table.id, key.0, key.1], |row| {
-                Ok((row.get(0)?, row.get(1)?))
-            })?
-            .collect::<rusqlite::Result<_>>()?;
-        let window = overlap(
-            &remaining,
-            &merge(releases.iter().map(|r| interval(r.0, r.1)).collect()),
-        );
-        if window.is_empty() {
-            continue;
-        }
-        pieces.extend(stored(scope, k, variable, Some(key), &window)?);
-        remaining = gaps(&remaining, window);
-    }
-    if qualifier.is_none() && !remaining.is_empty() {
-        pieces.extend(stored(scope, k, variable, None, &remaining)?);
-    }
-    Ok(pieces)
-}
-
-/// The stored rows serving table `k` gives the variable inside `window`, clipped to it:
-/// those of the selection `key` (edition, qualifier) names, or the primary segments
-/// without a key or where the selection is the same as the primary. A key no selection
-/// has gives none.
-fn stored(
-    scope: &Scope,
-    k: usize,
-    variable: i64,
-    key: Option<(Option<&str>, Option<&str>)>,
-    window: &[Interval],
-) -> Result<Vec<Piece>, Error> {
-    let s = &scope.serving[k];
-    let mut from = ("segment", "table_id", s.table.id);
-    if let Some((edition, qualifier)) = key {
-        let selection: Option<(i64, bool)> = scope
-            .conn
-            .query_row(
-                "SELECT id, same_as_primary FROM selection
-                 WHERE table_id = ?1 AND edition IS ?2 AND qualifier IS ?3",
-                rusqlite::params![s.table.id, edition, qualifier],
-                |row| Ok((row.get(0)?, row.get(1)?)),
-            )
-            .optional()?;
-        match selection {
-            None => return Ok(Vec::new()),
-            Some((_, true)) => {}
-            Some((id, false)) => from = ("selection_segment", "selection_id", id),
-        }
-    }
-    let (rows_of, column, id) = from;
     let rows: Vec<Piece> = scope
         .conn
         .prepare(&format!(
             "SELECT x.start, x.end, {FORM}, x.state, x.end = ?3
-             FROM {rows_of} x JOIN spelling sp ON sp.id = x.spelling_id
-             WHERE x.variable_id = ?1 AND x.{column} = ?2
+             FROM segment x JOIN spelling sp ON sp.id = x.spelling_id
+             WHERE x.variable_id = ?1 AND x.table_id = ?2
              ORDER BY x.start"
         ))?
         .query_map(
-            rusqlite::params![variable, id, scope.server.open.1],
+            rusqlite::params![variable, s.table.id, scope.server.open.1],
             |row| piece(k, row),
         )?
         .collect::<rusqlite::Result<_>>()?;
     let mut pieces = Vec::new();
     for row in rows {
-        for days in overlap(std::slice::from_ref(&row.days), window) {
+        for days in overlap(std::slice::from_ref(&row.days), &s.requested) {
             pieces.push(Piece {
                 days,
                 ..row.clone()
@@ -399,7 +320,7 @@ fn stored(
     Ok(pieces)
 }
 
-/// A stored segment row: `start, end`, the [`FORM`] columns, `state` and `open`.
+/// A segment row: `start, end`, the [`FORM`] columns, `state` and `open`.
 fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
     Ok(Piece {
         serving,
@@ -416,9 +337,9 @@ fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
     })
 }
 
-/// The window findings: the two blocking kinds (an ambiguous piece; a preliminary one
-/// unless the source names exactly `"edition": "preliminary"`) and the flags and open
-/// ends, one per run of adjacent pieces in one table.
+/// The window findings: the blocking kind (an ambiguous piece) and the warnings, flags
+/// and open ends, one per run of adjacent pieces in one table. A preliminary piece is one
+/// only a preliminary release covers (final wins where both exist); it orders, warned.
 fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
     let scope = at.scope;
     let pid = &at.variable.pid;
@@ -439,19 +360,12 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
             format!("{pid} cannot be placed on one form in {t} over {p}; the window needs curation")
         },
     );
-    if scope.source.edition != Some(Edition::Preliminary) {
-        each(
-            &|p| p.state == "preliminary",
-            IssueLevel::Error,
-            "preliminary_without_edition",
-            &|t, p| {
-                format!(
-                    "{pid} in {t} over {p} has only a preliminary edition; name it with \
-                     \"edition\": \"preliminary\""
-                )
-            },
-        );
-    }
+    each(
+        &|p| p.state == "preliminary",
+        IssueLevel::Warning,
+        "preliminary_data",
+        &|t, p| format!("{pid} in {t} over {p} is preliminary data: no final release covers it"),
+    );
     each(
         &|p| p.sensitive,
         IssueLevel::Warning,
@@ -664,8 +578,6 @@ fn entries(
                     )
                 })
                 .transpose()?,
-            edition: scope.source.edition.map(|e| e.as_str().to_owned()),
-            qualifier: scope.source.qualifier.clone(),
         });
     }
     Ok((entries, change))

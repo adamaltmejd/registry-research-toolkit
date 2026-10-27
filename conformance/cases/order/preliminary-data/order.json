@@ -18,15 +18,14 @@
       "variable": "demo/pre/mat",
       "display_name": null,
       "period": {
-        "start": "2019-01-01",
+        "start": "2020-01-01",
         "end": "2021-01-01"
       },
       "spelling": "Mat",
       "type": "decimal",
       "length": null,
       "value_set": null,
-      "classification": null,
-      "edition": "preliminary"
+      "classification": null
     }
   ],
   "row_keys": [],
@@ -34,15 +33,15 @@
   "findings": [
     {
       "level": "warning",
-      "code": "edition_disagreement",
+      "code": "preliminary_data",
       "path": "/sources/0/bindings/0",
-      "message": "editions of demo/pre disagree on demo/pre/mat over [2019-01-01, 2020-01-01)",
+      "message": "demo/pre/mat in demo/pre over [2020-01-01, 2021-01-01) is preliminary data: no final release covers it",
       "source": "s",
       "variable": "demo/pre/mat",
       "table": "demo/pre",
       "period": {
-        "start": "2019-01-01",
-        "end": "2020-01-01"
+        "start": "2020-01-01",
+        "end": "2021-01-01"
       },
       "successor_fqid": null
     }

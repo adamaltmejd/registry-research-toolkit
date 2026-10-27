@@ -106,58 +106,6 @@
 {"kind":"occurrence","provider":"demo","register":"gap","table":"","release":"x2015","column":"X","source_key":"k1","label":"X","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"gap","table":"","release":"x2016","column":"X","source_key":"k1","label":"X","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"gap","table":"","release":"x2018","column":"X","source_key":"k1","label":"X","dtype":"int"}
-{"kind":"register","provider":"demo","register":"edt","name":"Utgåveregistret"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2018","name":"Utg 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2018p","name":"Utg 2018 preliminär","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"preliminary"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2019","name":"Utg 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2020","name":"Utg 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"unstated"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2020p","name":"Utg 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2018","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2018p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2018p","column":"W","source_key":"k1","label":"Värde","dtype":"decimal"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2019","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2020p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2021","name":"Utg 2021","from":"2021-01-01","to":"2021-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2021p","name":"Utg 2021 preliminär","from":"2021-01-01","to":"2021-12-31","grain":"year","edition":"preliminary"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2021","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2021p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2021p","column":"V","source_key":"k6","label":"Värde ny","dtype":"int"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2022","name":"Utg 2022","from":"2022-01-01","to":"2022-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2022p","name":"Utg 2022 preliminär","from":"2022-01-01","to":"2022-12-31","grain":"year","edition":"preliminary"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2022h","name":"Utg 2022H1","from":"2022-01-01","to":"2022-06-30","grain":"half","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2022hp","name":"Utg 2022H1 preliminär","from":"2022-01-01","to":"2022-06-30","grain":"half","edition":"preliminary"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2022","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2022p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2022h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2022hp","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2023","name":"Utg 2023","from":"2023-01-01","to":"2023-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2023p","name":"Utg 2023 preliminär","from":"2023-01-01","to":"2023-12-31","grain":"year","edition":"preliminary"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2023h","name":"Utg 2023H1","from":"2023-01-01","to":"2023-06-30","grain":"half","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2023hp","name":"Utg 2023H1 preliminär","from":"2023-01-01","to":"2023-06-30","grain":"half","edition":"preliminary"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023p","column":"V","source_key":"k1","label":"Värde","dtype":"int","sensitive":true}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023hp","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024","name":"Utg 2024","from":"2024-01-01","to":"2024-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024p","name":"Utg 2024 preliminär","from":"2024-01-01","to":"2024-12-31","grain":"year","edition":"preliminary"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024h","name":"Utg 2024H1","from":"2024-01-01","to":"2024-06-30","grain":"half","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024hp","name":"Utg 2024H1 preliminär","from":"2024-01-01","to":"2024-06-30","grain":"half","edition":"preliminary"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024hp","column":"V","source_key":"k1","label":"Antal","dtype":"int"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025","name":"Utg 2025","from":"2025-01-01","to":"2025-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025p","name":"Utg 2025 preliminär","from":"2025-01-01","to":"2025-12-31","grain":"year","edition":"preliminary"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025h","name":"Utg 2025H1","from":"2025-01-01","to":"2025-06-30","grain":"half","edition":"final"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025hp","name":"Utg 2025H1 preliminär","from":"2025-01-01","to":"2025-06-30","grain":"half","edition":"preliminary"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025hp","column":"v","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2026a","name":"Utg 2026 A","from":"2026-01-01","to":"2026-12-31","grain":"year","edition":"final","qualifier":"A"}
-{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2026b","name":"Utg 2026 B","from":"2026-01-01","to":"2026-12-31","grain":"year","edition":"final","qualifier":"B"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2026a","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2026b","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
 {"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2020","column":"Nyast","source_key":"k3","label":"Nyaste kod","dtype":"int"}
 {"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"rep","key":"k3"},"object":{"kind":"variable","provider":"demo","register":"rep","key":"k2"}}
 {"kind":"register","provider":"demo","register":"len","name":"Längdregistret"}
@@ -172,19 +120,3 @@
 {"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019h","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
 {"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2020p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"register","provider":"demo","register":"edq","name":"Kvalificerat utgåveregister"}
-{"kind":"release","provider":"demo","register":"edq","table":"","release":"q2019a","name":"Edq 2019 A","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final","qualifier":"A"}
-{"kind":"release","provider":"demo","register":"edq","table":"","release":"q2020a","name":"Edq 2020 A","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"unstated","qualifier":"A"}
-{"kind":"release","provider":"demo","register":"edq","table":"","release":"q2020b","name":"Edq 2020 B","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"unstated","qualifier":"B"}
-{"kind":"occurrence","provider":"demo","register":"edq","table":"","release":"q2019a","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edq","table":"","release":"q2020a","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edq","table":"","release":"q2020b","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
-{"kind":"register","provider":"demo","register":"edm","name":"Utgåvemedlemskap"}
-{"kind":"table","provider":"demo","register":"edm","table":"a","name":"Tabell A"}
-{"kind":"table","provider":"demo","register":"edm","table":"b","name":"Tabell B"}
-{"kind":"release","provider":"demo","register":"edm","table":"a","release":"a2019","name":"Edm A 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
-{"kind":"release","provider":"demo","register":"edm","table":"a","release":"a2019p","name":"Edm A 2019 preliminär","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"preliminary"}
-{"kind":"release","provider":"demo","register":"edm","table":"b","release":"b2019","name":"Edm B 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
-{"kind":"occurrence","provider":"demo","register":"edm","table":"a","release":"a2019","column":"X","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edm","table":"a","release":"a2019p","column":"Y","source_key":"k1","label":"Värde","dtype":"int"}
-{"kind":"occurrence","provider":"demo","register":"edm","table":"b","release":"b2019","column":"Y","source_key":"k1","label":"Värde","dtype":"int"}

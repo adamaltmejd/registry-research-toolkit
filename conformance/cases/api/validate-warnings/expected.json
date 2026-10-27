@@ -13,7 +13,6 @@
         "coverage_end_unstated",
         "table_succession_undated",
         "period_clipped",
-        "variable_sensitive",
         "variable_replaced"
       ],
       "/data/issues/*/level": [
@@ -26,7 +25,6 @@
         "info",
         "info",
         "info",
-        "warning",
         "warning"
       ],
       "/data/issues/*/path": [
@@ -39,8 +37,7 @@
         "/sources/4/bindings/0",
         "/sources/5",
         "/sources/5/bindings/0",
-        "/sources/6/bindings/0",
-        "/sources/7/bindings/0"
+        "/sources/6/bindings/0"
       ],
       "/data/issues/*/source": [
         "flags",
@@ -52,7 +49,6 @@
         "open",
         "undated",
         "undated",
-        "release-flags",
         "replaced-undated"
       ],
       "/data/issues/*/variable": [
@@ -65,7 +61,6 @@
         "demo/opn/y",
         null,
         "demo/und/ink",
-        "demo/edt/v",
         "demo/rep/ny"
       ],
       "/data/issues/*/table": [
@@ -78,7 +73,6 @@
         "demo/opn",
         "demo/und/ett",
         "demo/und/ett",
-        "demo/edt",
         "demo/rep"
       ],
       "/data/issues/*/period": [
@@ -91,7 +85,6 @@
         {"start": "2019-01-01", "end": "2020-01-01"},
         {"start": "2018-01-01", "end": "2020-01-01"},
         {"start": "2018-01-01", "end": "2020-01-01"},
-        {"start": "2023-01-01", "end": "2024-01-01"},
         null
       ],
       "/data/issues/*/successor_fqid": [
@@ -103,7 +96,6 @@
         null,
         null,
         "demo/und/tva",
-        null,
         null,
         "demo/rep/nyast"
       ]

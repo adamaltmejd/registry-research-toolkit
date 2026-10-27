@@ -19,12 +19,9 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   `window: {"from": <year>, "to": <year>}` is the study period the SPA uses as an
   authoring default, and the semantic layer measures a source period against it; absent
   means the full history.
-- **`edition` and `qualifier`** are optional source fields, not suffixes of the period
-  grammar: `edition` (`final`, `unstated` or `preliminary`) selects, wherever a release
-  of that edition exists in the period, that release, and the primary edition serves
-  elsewhere; `qualifier` selects deliveries by their qualifier, and absent means every
-  qualifier. A preliminary release is orderable only by naming its edition. Both are
-  checked against the catalog by the order check, not here.
+- **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
+  deferred until curation; the primary segments serve every order (final over
+  preliminary), and the closed source object refuses a document that carries either.
 - **A panel is a named grouping of sources** with a comment: its members are source
   names. The keys a panel needs come from the catalog (a table's row-key segments), not
   from the document.
@@ -151,8 +148,8 @@ codes are additive.
   | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `invalid_root`                         | The root is not an object.                                                                                                                                                                                                                                                                                          |
   | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                             |
-  | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null, a non-string `qualifier`, a `null` `edition`). An int is a JSON integer that fits `i64`.                                                                                                                                                    |
-  | `invalid_enum_value`                   | `type`, `id_subtype`, `numeric_subtype` or `edition` is outside its allowed set.                                                                                                                                                                                                                                    |
+  | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                  |
+  | `invalid_enum_value`                   | `type`, `id_subtype` or `numeric_subtype` is outside its allowed set.                                                                                                                                                                                                                                               |
   | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `extract_format`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.0.0).                                                                                                                                |
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `classification` is not `class/<family>/<version>`, or a `table` is not `<provider>/<register>[/<table>]`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                       |
   | `fqid_table_mismatch`                  | A binding's provider and register differ from its source's `table`. The table lives once, on the source.                                                                                                                                                                                                            |

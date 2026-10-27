@@ -147,10 +147,6 @@ str_enum!(
     /// The storage of a `numeric` column.
     NumericSubtype { Integer = "integer", Double = "double" }
 );
-str_enum!(
-    /// Which release of a table a source asks for where more than one exists.
-    Edition { Final = "final", Unstated = "unstated", Preliminary = "preliminary" }
-);
 
 /// The top-level `project_data.json` document.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -222,14 +218,6 @@ pub struct Source {
     /// else `<provider>/<register>/<table>`.
     pub table: String,
     pub period: SourcePeriod,
-    /// The release of the table asked for; absent asks for the primary edition.
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub edition: Option<Edition>,
-    /// The delivery qualifier asked for; absent asks for every qualifier.
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub qualifier: Option<String>,
     pub bindings: Vec<Binding>,
 }
 

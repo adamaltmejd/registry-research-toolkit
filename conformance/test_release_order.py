@@ -118,12 +118,11 @@ def census(db_path):
                     s_hi = s_hi if end is None else min(s_hi, end)
                     if s_lo < s_hi:
                         segments.append((serving_pid, v, s_lo, s_hi, state, exact))
-            # No edition is named, so an ambiguous or preliminary segment blocks, and
-            # so does a bound variable with no segment over the period.
+            # An ambiguous segment blocks, and so does a bound variable with no segment
+            # over the period; a preliminary segment orders with a warning.
             covered = {s[1] for s in segments}
             blocked = any(
-                s[1] in variables and s[4] in ("ambiguous", "preliminary")
-                for s in segments
+                s[1] in variables and s[4] == "ambiguous" for s in segments
             ) or any(v not in covered for v in variables)
             spans = [
                 (t, v, s_lo, s_hi, exact) for t, v, s_lo, s_hi, _, exact in segments

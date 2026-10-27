@@ -271,8 +271,6 @@ CREATE TABLE corr_map (
 -- spelling per (variable, table) at a time. spelling_id = exact spelling of the latest
 -- primary occurrence.
 -- Form fields are NULL where the state is 'ambiguous' and the claimants disagree.
--- These are the primary segments; a named edition's or qualifier's live apart, in
--- selection_segment.
 CREATE TABLE segment (
   id               INTEGER PRIMARY KEY,
   variable_id      INTEGER NOT NULL REFERENCES variable(id),
@@ -300,48 +298,6 @@ CREATE INDEX segment_table    ON segment(table_id, start);
 CREATE INDEX segment_fold     ON segment(fold_id);
 CREATE INDEX segment_valueset ON segment(valueset_id, variable_id) WHERE valueset_id IS NOT NULL;
 CREATE INDEX segment_class    ON segment(class_version_id, variable_id) WHERE class_version_id IS NOT NULL;
-
--- Selections (crates/DESIGN.md "Selections"): the releases of one table that a source's
--- `edition` and `qualifier` name. NULL edition: none named (the primary of the
--- releases). NULL qualifier: none named (every qualifier); '' names the unqualified
--- releases. same_as_primary = 1: the selection's occurrences are exactly the table's
--- primary ones, so `segment` serves it and it has no rows here.
-CREATE TABLE selection (
-  id              INTEGER PRIMARY KEY,
-  table_id        INTEGER NOT NULL REFERENCES tbl(id),
-  edition         TEXT CHECK (edition IN ('final','unstated','preliminary')),
-  qualifier       TEXT,
-  same_as_primary INTEGER NOT NULL CHECK (same_as_primary IN (0,1)),
-  CHECK (edition IS NOT NULL OR qualifier IS NOT NULL),
-  UNIQUE (table_id, edition, qualifier)
-) STRICT;
-
--- A selection's segments: segment's columns, built by the same rules over the
--- selection's occurrences alone.
-CREATE TABLE selection_segment (
-  selection_id     INTEGER NOT NULL REFERENCES selection(id),
-  variable_id      INTEGER NOT NULL REFERENCES variable(id),
-  table_id         INTEGER NOT NULL REFERENCES tbl(id),   -- = the selection's
-  fold_id          INTEGER NOT NULL REFERENCES name_fold(id),
-  start            INTEGER NOT NULL,
-  end              INTEGER NOT NULL,
-  spelling_id      INTEGER NOT NULL REFERENCES spelling(id),
-  dtype            TEXT,
-  length           INTEGER,
-  format           TEXT,
-  valueset_id      INTEGER REFERENCES valueset(id),
-  class_version_id INTEGER REFERENCES class_version(id),
-  coded            TEXT NOT NULL CHECK (coded IN ('yes','no','unknown')),
-  sensitive        INTEGER CHECK (sensitive IN (0,1)),
-  identifier       INTEGER CHECK (identifier IN (0,1)),
-  id_kind_id       INTEGER REFERENCES id_kind(id),
-  role             TEXT NOT NULL CHECK (role IN ('row_key','time_start','time_stop','time_point','measure','code','label')),
-  temporality      TEXT NOT NULL CHECK (temporality IN ('fixed','status','accumulated','event','unknown')),
-  state            TEXT NOT NULL CHECK (state IN ('clear','ambiguous','preliminary')),
-  CHECK (start < end),
-  PRIMARY KEY (selection_id, variable_id, start)
-) STRICT, WITHOUT ROWID;
-CREATE INDEX selection_segment_variable ON selection_segment(variable_id, table_id);
 
 -- Occurrences: one column as documented in one period. The atom; evidence.
 -- override_mask bits: 0 spelling, 1 dtype, 2 length, 3 format, 4 valueset,

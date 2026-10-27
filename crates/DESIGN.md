@@ -505,11 +505,10 @@ spelling and type. A D `set` states those.
 - `vs_item_code` exists only for that lookup (about 90-100 MB). Packing items into one
   BLOB per value set (schema §5.2, about −65 MB on `vs_item`) is the lever if size
   matters.
-- **Edition and qualifier.** They are source fields of a project, not the period suffix
-  (`2011:prelim`) of v4 §7. The field form leaves the period grammar unchanged, and its
-  rule ("that edition where a release of it exists, the primary elsewhere") covers a
-  mixed final and preliminary request. Links and URLs that need an edition later use the
-  same field form.
+- **Edition and qualifier are not part of a request.** The primary segments serve every
+  order (final over preliminary); the builder stores no selection segments. Naming an
+  edition or a qualifier is deferred until curation, so the periods grammar and the
+  source stay without them until a use is shown.
 - **Implicit tables are not in `ident`.** A 2-part ref resolves through `ident` to the
   register. Where a table is expected, the table is `tbl WHERE pid = ?`, and the
   implicit table has the register's pid. A 2-part table value naming a register with
@@ -664,8 +663,7 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
   succession (`continues` between tables) each day goes to the table whose `at_start`
   window holds it, so one binding can give entries in two tables. Adjacent segments
   merge when their spelling, type and value set agree (design §4.6), so a flag-only
-  boundary does not split an entry. `edition` and `qualifier` appear only when the
-  source names them.
+  boundary does not split an entry.
 - **`row_keys`** are the table's segments with role `row_key` over the period. A row key
   that no binding orders still appears there; it is not an entry. This is where a panel
   gets its keys, since the document names none.
@@ -674,22 +672,23 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 **Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
 `variable_not_in_table`, `outside_availability`, `ambiguous_window`,
-`preliminary_without_edition`, `edition_not_found`, `period_default_on_dated_table`,
-`period_on_timeless_table`, `period_not_orderable` and `project_empty` (no sources; a
-whole-project finding). Warnings and infos do not: `classification_version_ambiguous`,
-`edition_disagreement`, `variable_sensitive`, `variable_replaced`,
-`panel_row_keys_differ`, `period_clipped`, `form_change`, `table_succession_undated`,
-`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
-source, binding or panel and whose `source`, `variable`, `table` and `period` say what
-it is about (`null` for a whole-project finding). The conditions are the order check's
-to state in its own tests; the rules that shape them:
+`period_default_on_dated_table`, `period_on_timeless_table`, `period_not_orderable` and
+`project_empty` (no sources; a whole-project finding). Warnings and infos do not:
+`classification_version_ambiguous`, `preliminary_data` (a window only a preliminary
+release covers; final wins where both exist), `edition_disagreement`,
+`variable_sensitive`, `variable_replaced`, `panel_row_keys_differ`, `period_clipped`,
+`form_change`, `table_succession_undated`, `identifier` and `coverage_end_unstated`.
+Each is an `Issue` whose `path` points at the source, binding or panel and whose
+`source`, `variable`, `table` and `period` say what it is about (`null` for a
+whole-project finding). The conditions are the order check's to state in its own tests;
+the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
 - `variable_replaced` reports an incoming `continues` edge and never follows it.
-- Design §9 blocks only the two window kinds (`ambiguous`, and a preliminary segment
-  without its edition), so a class-version ambiguity the binding does not pin is a
-  warning.
+- Design §9 blocks only the `ambiguous` window kind. A preliminary segment orders with a
+  warning (selecting an edition is deferred until curation), and a class-version
+  ambiguity the binding does not pin is a warning.
 - Variables are register-scoped, so members of different registers never share a row-key
   variable. `panel_row_keys_differ` compares the row-key segments' identifier kinds
   (`segment.id_kind_id`, the full kind, pseudonymised form included) and warns only when
@@ -765,26 +764,21 @@ Catalog (illustrative): in `scb/lisa/individ`, two variables claim the folded sp
 `kommun` over 2019, so both segments are `ambiguous` there. `scb/lisa/dispink` for 2020
 is delivered only by a `preliminary` release.
 
-Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`, no
-`edition`.
+Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
 
 ```json
 {
   "error": {
     "code": "order_blocked",
     "class": "order_blocked",
-    "message": "the order is blocked by 2 findings",
-    "remediation": "Narrow the period around the blocked windows, or name the edition; an ambiguous window needs curation.",
+    "message": "the order is blocked by 1 finding",
+    "remediation": "Narrow the period around the blocked windows; an ambiguous window needs curation.",
     "fields": {
       "findings": [
         {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
          "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
          "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
-         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null},
-        {"level": "error", "code": "preliminary_without_edition", "path": "/sources/0/bindings/1",
-         "message": "scb/lisa/dispink over [2020-01-01, 2021-01-01) has only a preliminary edition; name it with \"edition\": \"preliminary\"",
-         "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
-         "period": {"start": "2020-01-01", "end": "2021-01-01"}, "successor_fqid": null}
+         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null}
       ]
     }
   },
@@ -792,9 +786,9 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`, no
 }
 ```
 
-With `"edition": "preliminary"` on the source, the second finding goes and the 2020
-entry carries `"edition": "preliminary"`. The first stays until curation resolves the
-ambiguity; narrowing the period to 2018 alone also clears it.
+The 2020 window of `dispink` does not block: it orders, with the warning
+`preliminary_data` (no final release covers it). The finding stays until curation
+resolves the ambiguity; narrowing the period to 2018 alone also clears it.
 
 ## Project semantic validation
 
@@ -821,17 +815,11 @@ Top level:
 
 Source:
 
-  | Field              | 5.0.0                                               | Why                                                                                                                                                          |
-  | ------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-  | `register_variant` | replaced by `table`: a table's public id            | v4 has tables, not variants (design §2.2). A 2-part id names a register with one implicit table; for a register with named tables it is `table_is_register`. |
-  | `period`           | same grammar                                        | `_default` now means "a timeless table" (design §2.1), checked against the catalog (`period_default_on_dated_table`).                                        |
-  | `edition`          | new, optional: `final`, `unstated` or `preliminary` | Design §4.3 T2: a `preliminary` segment is orderable only by naming its edition.                                                                             |
-  | `qualifier`        | new, optional string                                | Schema §2.3 and T3: releases with different qualifiers are distinct deliveries. Absent means every qualifier.                                                |
-
-`edition` selects, in every window of the source's period where a release of that
-edition exists, that release's occurrences. Elsewhere the primary edition serves. Naming
-an edition that no release of the serving tables has over a period item is
-`edition_not_found` for that item.
+  | Field                  | 5.0.0                                    | Why                                                                                                                                                                                                    |
+  | ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `register_variant`     | replaced by `table`: a table's public id | v4 has tables, not variants (design §2.2). A 2-part id names a register with one implicit table; for a register with named tables it is `table_is_register`.                                           |
+  | `period`               | same grammar                             | `_default` now means "a timeless table" (design §2.1), checked against the catalog (`period_default_on_dated_table`).                                                                                  |
+  | `edition`, `qualifier` | removed                                  | Selecting an edition or a qualifier is deferred until curation; the primary segments serve every order (final over preliminary). A preliminary-only window orders with the `preliminary_data` warning. |
 
 Binding and panel:
 
@@ -853,15 +841,15 @@ Structural rules (`reg-core`, the document alone). Removed with their fields:
 `literal_time_key_duplicate`, `entity_key_unknown_column`, `time_key_unknown_column` and
 the key `invalid_field_type` rules. Changed:
 
-  | Rule                                                         | 5.0.0                                                                                                                                                           |
-  | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field`                                                                                                           |
-  | source keys                                                  | `table`; optional `edition` (`invalid_enum_value`) and `qualifier` (`invalid_field_type` if not a string); an explicit `null` of either is `invalid_field_type` |
-  | `invalid_fqid` on the source                                 | `table` is a 2- or 3-part public id, provider not `class`                                                                                                       |
-  | `fqid_table_mismatch` (was `fqid_register_variant_mismatch`) | the binding's `<provider>/<register>` equals the table's first two parts                                                                                        |
-  | `invalid_period` for `_default`                              | gone from the structural layer; the catalog rule `period_default_on_dated_table`                                                                                |
-  | binding keys                                                 | `classification`, `class/<family>/<version>` (3 segments); `representation` is `unexpected_field`                                                               |
-  | panel keys                                                   | `panel_id`, `members` (strings), `comment`                                                                                                                      |
+  | Rule                                                         | 5.0.0                                                                                             |
+  | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field`                                             |
+  | source keys                                                  | `name`, `table`, `period`, `bindings`; `edition` and `qualifier` are `unexpected_field`           |
+  | `invalid_fqid` on the source                                 | `table` is a 2- or 3-part public id, provider not `class`                                         |
+  | `fqid_table_mismatch` (was `fqid_register_variant_mismatch`) | the binding's `<provider>/<register>` equals the table's first two parts                          |
+  | `invalid_period` for `_default`                              | gone from the structural layer; the catalog rule `period_default_on_dated_table`                  |
+  | binding keys                                                 | `classification`, `class/<family>/<version>` (3 segments); `representation` is `unexpected_field` |
+  | panel keys                                                   | `panel_id`, `members` (strings), `comment`                                                        |
 
 Everything else is unchanged: `invalid_root`, `missing_required_field`,
 `invalid_field_type`, `invalid_window`, `duplicate_source_name`, `empty_bindings`,
@@ -871,11 +859,10 @@ Everything else is unchanged: `invalid_root`, `missing_required_field`,
 
 Catalog rules are the order check's, listed in "The logical order": `fqid_unresolved`
 (also for an unknown table or classification), `retired_ref`,
-`period_default_on_dated_table`, `period_on_timeless_table`, `edition_not_found`,
-`variable_not_in_table`, `table_is_register` and the warning `panel_row_keys_differ`.
-`steward_mismatch`, `fqid_outside_steward_catalog`, the `representation_*` codes,
-`value_set_missing` and `binding_state_drifts_within_period` go; the last becomes the
-`form_change` notice.
+`period_default_on_dated_table`, `period_on_timeless_table`, `variable_not_in_table`,
+`table_is_register` and the warning `panel_row_keys_differ`. `steward_mismatch`,
+`fqid_outside_steward_catalog`, the `representation_*` codes, `value_set_missing` and
+`binding_state_drifts_within_period` go; the last becomes the `form_change` notice.
 
 ## Search
 

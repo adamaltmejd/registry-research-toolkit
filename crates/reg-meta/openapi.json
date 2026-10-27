@@ -2395,13 +2395,6 @@
             ],
             "description": "As the binding states it."
           },
-          "edition": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Only when the source names one."
-          },
           "length": {
             "type": [
               "integer",
@@ -2415,13 +2408,6 @@
           },
           "provider": {
             "type": "string"
-          },
-          "qualifier": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Only when the source names one."
           },
           "register": {
             "type": "string"
@@ -2734,14 +2720,6 @@
         },
         "additionalProperties": false
       },
-      "ProjectEdition": {
-        "type": "string",
-        "enum": [
-          "final",
-          "unstated",
-          "preliminary"
-        ]
-      },
       "ProjectIdSubtype": {
         "type": "string",
         "enum": [
@@ -2839,19 +2817,11 @@
               "$ref": "#/components/schemas/ProjectBinding"
             }
           },
-          "edition": {
-            "$ref": "#/components/schemas/ProjectEdition",
-            "description": "The release of the table asked for; absent asks for the primary edition."
-          },
           "name": {
             "type": "string"
           },
           "period": {
             "$ref": "#/components/schemas/ProjectSourcePeriod"
-          },
-          "qualifier": {
-            "type": "string",
-            "description": "The delivery qualifier asked for; absent asks for every qualifier."
           },
           "table": {
             "type": "string",

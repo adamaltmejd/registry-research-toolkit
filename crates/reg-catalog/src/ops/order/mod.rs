@@ -12,7 +12,7 @@
 //!
 //! Findings are ordered per source, then per binding (the source's own findings first),
 //! then by code and period start; panel findings come last. A finding's `path` is the
-//! field it is about (`/sources/0/table`, `/sources/0/period`, `/sources/0/edition`,
+//! field it is about (`/sources/0/table`, `/sources/0/period`,
 //! `/sources/0/bindings/1/variable`, `/sources/0/bindings/1/classification`), the
 //! binding for a window finding (`/sources/0/bindings/1`), the source for an undated
 //! succession and the panel for a panel finding.
@@ -24,7 +24,7 @@ use std::collections::BTreeSet;
 
 use reg_core::project::{ProjectData, Source};
 use reg_core::{Interval, IssueLevel, ValidationIssue, merge, overlap};
-use rusqlite::{Connection, OptionalExtension};
+use rusqlite::Connection;
 use serde::Serialize;
 use utoipa::ToSchema;
 
@@ -232,12 +232,6 @@ pub struct OrderEntry {
     /// A class version's public id.
     #[schema(required = true)]
     classification: Option<String>,
-    /// Only when the source names one.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    edition: Option<String>,
-    /// Only when the source names one.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    qualifier: Option<String>,
 }
 
 /// An entry's value set by its content hash.
@@ -445,11 +439,6 @@ fn check_source(
         finding.table = Some(continued);
         finding.period = Some(period(server, &past));
         finding.successor_fqid = Some(successor);
-        own.push(finding);
-    }
-    for (path, days, message) in editions(server, conn, index, source, &serving, &items)? {
-        let mut finding = located(issue(IssueLevel::Error, "edition_not_found", path, message));
-        finding.period = Some(period(server, &days));
         own.push(finding);
     }
     own.sort_by_key(Issue::key);
@@ -669,72 +658,6 @@ fn serving(
         }
     }
     Ok((serving, gone, ids))
-}
-
-/// `edition_not_found` per source period item: the named edition, or qualifier, has no
-/// release of a table serving the item that overlaps it (`(path, item, message)`).
-fn editions(
-    server: &Server,
-    conn: &Connection,
-    index: usize,
-    source: &Source,
-    serving: &[Serving],
-    items: &[Interval],
-) -> Result<Vec<(String, Interval, String)>, Error> {
-    let mut found = Vec::new();
-    let table = serving.first().map_or("", |s| s.table.pid.as_str());
-    let exists =
-        |edition: Option<&str>, qualifier: Option<&str>, item: &Interval| -> Result<bool, Error> {
-            for s in serving {
-                for (lo, hi) in &overlap(&s.requested, std::slice::from_ref(item)) {
-                    let hit: Option<i64> = conn
-                        .query_row(
-                            "SELECT 1 FROM release WHERE table_id = ?1
-                           AND (?2 IS NULL OR edition = ?2) AND (?3 IS NULL OR qualifier = ?3)
-                           AND start IS NOT NULL AND start <= ?4 AND end > ?5 LIMIT 1",
-                            rusqlite::params![s.table.id, edition, qualifier, day(hi), day(lo)],
-                            |row| row.get(0),
-                        )
-                        .optional()?;
-                    if hit.is_some() {
-                        return Ok(true);
-                    }
-                }
-            }
-            Ok(false)
-        };
-    for item in items {
-        if let Some(edition) = source.edition
-            && !exists(Some(edition.as_str()), source.qualifier.as_deref(), item)?
-        {
-            let within = source
-                .qualifier
-                .as_ref()
-                .map_or_else(String::new, |q| format!(" with qualifier {q:?}"));
-            found.push((
-                format!("/sources/{index}/edition"),
-                item.clone(),
-                format!(
-                    "{table} has no {} release{within} over {}.",
-                    edition.as_str(),
-                    span(server, item)
-                ),
-            ));
-        }
-        if let Some(qualifier) = &source.qualifier
-            && !exists(None, Some(qualifier), item)?
-        {
-            found.push((
-                format!("/sources/{index}/qualifier"),
-                item.clone(),
-                format!(
-                    "{table} has no release with qualifier {qualifier:?} over {}.",
-                    span(server, item)
-                ),
-            ));
-        }
-    }
-    Ok(found)
 }
 
 /// The day number of an ISO day.
