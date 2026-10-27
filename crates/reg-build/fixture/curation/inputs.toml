@@ -53,3 +53,16 @@ register = "lisa-workbook"
 name = "frame"
 reader = "frame"
 path = "frame"
+
+[[input]]
+name = "docs-markdown"
+reader = "docs"
+path = "docs/markdown"
+provider = "demo"
+register = "lisa-workbook"
+
+[[input]]
+name = "docs-related"
+reader = "docs"
+path = "docs/related"
+provider = "demo"

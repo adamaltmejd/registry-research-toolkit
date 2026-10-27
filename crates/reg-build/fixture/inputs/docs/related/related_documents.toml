@@ -1,0 +1,10 @@
+# The fixture's document list: one file pinned by hash and size, about register `hush`.
+
+[[register.hush.document]]
+title = "Handbok för hushållsregistret"
+filename = "handbok.pdf"
+source_url = "https://example.invalid/"
+license = "CC BY 4.0"
+fetched = "2026-10-27"
+sha256 = "4672f1b235c213c9f0ab13b22ac459a394eb9db5f955e0644c4f35da247dfbcf"
+byte_size = 55

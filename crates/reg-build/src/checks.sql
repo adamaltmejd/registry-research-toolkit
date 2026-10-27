@@ -84,3 +84,10 @@ SELECT column1 FROM (VALUES ('schema_version'),('generation_id'),('catalog_versi
   ('builder_version'),('sqlite_version'),('open_start'),('open_end'),
   ('curation_digest'),('period_grammar'),('delivery_name_grammar'))
 EXCEPT SELECT key FROM meta;
+
+-- a stored pdf is the size its row states (verify.rs re-hashes it)
+SELECT id FROM doc WHERE kind = 'pdf' AND bytes <> length(content);
+
+-- every document has its search row
+SELECT d.id FROM doc d WHERE NOT EXISTS (
+  SELECT 1 FROM search_item s WHERE s.kind = 'document' AND s.entity_id = d.id);

@@ -22,6 +22,7 @@
 //! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
 
 mod diff;
+mod docs;
 mod emit;
 mod link;
 mod search;
@@ -235,7 +236,8 @@ fn build(args: &Args) -> Result<(), String> {
 
     let mut registers: BTreeMap<(String, String), Vec<Record>> = BTreeMap::new();
     let mut valuesets = BTreeMap::new();
-    // Links and notices cross registers: the link stage reads them, not resolve.
+    // Links and notices cross registers: the link stage reads them, not resolve. So do
+    // documents, which are merged by hash first.
     let mut links = Vec::new();
     let mut docs = Vec::new();
     for (i, output) in outputs.iter().enumerate() {
@@ -291,9 +293,13 @@ fn build(args: &Args) -> Result<(), String> {
         }
         resolved.push(r);
     }
-    let linked = link::resolve(&resolved, &links)?;
+    let (docs, doc_warnings) = docs::merge(docs)?;
+    warnings.extend(doc_warnings);
+    let linked = link::resolve(&resolved, &links, &docs)?;
     let link_unresolved = linked.warnings.len();
+    let doc_subject_unresolved = linked.doc_warnings.len();
     warnings.extend(linked.warnings);
+    warnings.extend(linked.doc_warnings);
     for r in &resolved {
         report.insert(
             format!("{}/{}", r.register.provider, r.register.register),
@@ -359,6 +365,8 @@ fn build(args: &Args) -> Result<(), String> {
         file_input,
         relations: linked.relations,
         notices: linked.notices,
+        docs,
+        doc_links: linked.doc_links,
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({
@@ -366,6 +374,7 @@ fn build(args: &Args) -> Result<(), String> {
             "registers": report,
             "warnings": warnings,
             "link_unresolved": link_unresolved,
+            "doc_subject_unresolved": doc_subject_unresolved,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;

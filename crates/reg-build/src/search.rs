@@ -26,7 +26,12 @@ pub struct Ids<'a> {
     pub register: &'a BTreeMap<String, i64>,
     pub table: &'a BTreeMap<(usize, usize), i64>,
     pub variable: &'a BTreeMap<(usize, usize), i64>,
+    /// A document's id → the register of its first resolved subject.
+    pub doc_register: &'a BTreeMap<i64, i64>,
 }
+
+/// How much of a document's text its search row carries; `doc_fts` holds the whole.
+const DOC_BODY_CHARS: usize = 2000;
 
 /// Every item, in `sort_key` order. The id of an item is its position, from 1.
 ///
@@ -103,6 +108,22 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
         }
     }
     items.extend(code_items(catalog));
+    for (d, document) in catalog.docs.iter().enumerate() {
+        let doc = &document.doc;
+        let doc_id = emit::count(d) + 1;
+        let text: Vec<&str> = doc.sections.iter().map(|s| s.body.as_str()).collect();
+        items.push(Item {
+            kind: "document",
+            entity_id: Some(doc_id),
+            register_id: ids.doc_register.get(&doc_id).copied(),
+            span: None,
+            pair: None,
+            sort_key: format!("doc:{}", doc.hash),
+            name: String::new(),
+            label: doc.title.clone(),
+            body: text.join("\n").chars().take(DOC_BODY_CHARS).collect(),
+        });
+    }
     items.sort_by(|a, b| a.sort_key.cmp(&b.sort_key));
     if let Some(w) = items.windows(2).find(|w| w[0].sort_key == w[1].sort_key) {
         return Err(format!("duplicate search key: {:?}", w[0].sort_key));

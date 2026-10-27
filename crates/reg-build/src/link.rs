@@ -8,6 +8,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_frame::{Endpoint, Locator, Record};
 use reg_resolve::Resolved;
 
+use crate::docs::Document;
+
 /// A matched endpoint, by index into the resolved registers and their entities.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Entity {
@@ -55,8 +57,22 @@ pub struct Notice {
     pub text: String,
 }
 
+/// One resolved document subject: the document's index in the merged list and the
+/// entity it is about (`page` 0 is the whole document).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct DocLink {
+    pub doc: usize,
+    pub subject: Entity,
+    pub page: u32,
+}
+
 #[derive(Default)]
 pub struct Linked {
+    /// Distinct, sorted.
+    pub doc_links: Vec<DocLink>,
+    /// One line per document subject that matched nothing or could not be a document's,
+    /// in document order.
+    pub doc_warnings: Vec<String>,
     /// Distinct by (kind, subject, object, at), sorted by it.
     pub relations: Vec<Relation>,
     /// Distinct, sorted.
@@ -68,13 +84,18 @@ pub struct Linked {
 const LINK_KINDS: [&str; 2] = ["continues", "derived_from"];
 const ENDPOINT_KINDS: [&str; 4] = ["register", "table", "release", "variable"];
 
-/// Match every link and notice of `records` against `registers`.
+/// Match every link and notice of `records`, and every subject of `docs`, against
+/// `registers`.
 ///
 /// # Errors
 /// A record the stage cannot read: an unknown link or endpoint kind, an endpoint without
 /// exactly one of `register` and `register_name` or without the handle its kind needs,
 /// or an `at` that is not an ISO day.
-pub fn resolve(registers: &[Resolved], records: &[Record]) -> Result<Linked, String> {
+pub fn resolve(
+    registers: &[Resolved],
+    records: &[Record],
+    docs: &[Document],
+) -> Result<Linked, String> {
     let index = Index::new(registers);
     let mut linked = Linked::default();
     let mut relations: BTreeMap<(&'static str, Entity, Entity, Option<String>), _> =
@@ -130,6 +151,33 @@ pub fn resolve(registers: &[Resolved], records: &[Record]) -> Result<Linked, Str
             _ => {}
         }
     }
+    let mut doc_links = BTreeSet::new();
+    for (d, document) in docs.iter().enumerate() {
+        let doc = &document.doc;
+        for s in &doc.subjects {
+            let located = |m: String| format!("{}:{}: {m}", doc.locator.input, doc.locator.at);
+            check(&s.endpoint).map_err(located)?;
+            let entities = index.entities(&s.endpoint).and_then(|entities| {
+                // `doc_link` holds registers, tables and variables.
+                if entities.iter().any(|e| matches!(e, Entity::Release(..))) {
+                    Err("a release-kind document subject".to_owned())
+                } else {
+                    Ok(entities)
+                }
+            });
+            match entities {
+                Ok(entities) => {
+                    doc_links.extend(entities.into_iter().map(|subject| DocLink {
+                        doc: d,
+                        subject,
+                        page: s.page,
+                    }));
+                }
+                Err(reason) => linked.doc_warnings.push(warning(&doc.locator, &reason)),
+            }
+        }
+    }
+    linked.doc_links = doc_links.into_iter().collect();
     successions(&mut relations, &mut linked.warnings);
     linked.relations = relations
         .into_iter()
