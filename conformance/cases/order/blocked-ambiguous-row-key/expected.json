@@ -1,0 +1,30 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "ambiguous_window",
+      "path": "/sources/0",
+      "message": "Row key demo/ark/id cannot be placed on one form in demo/ark over [2019-01-01, 2020-01-01); the window needs curation",
+      "source": "s",
+      "variable": "demo/ark/id",
+      "table": "demo/ark",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-01-01"
+      }
+    },
+    {
+      "level": "error",
+      "code": "ambiguous_window",
+      "path": "/sources/0",
+      "message": "Row key demo/ark/id-2 cannot be placed on one form in demo/ark over [2019-01-01, 2020-01-01); the window needs curation",
+      "source": "s",
+      "variable": "demo/ark/id-2",
+      "table": "demo/ark",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-01-01"
+      }
+    }
+  ]
+}

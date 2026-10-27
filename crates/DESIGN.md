@@ -666,7 +666,9 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
   boundary does not split an entry.
 - **`row_keys`** are the table's segments with role `row_key` over the period. A row key
   that no binding orders still appears there; it is not an entry. This is where a panel
-  gets its keys, since the document names none.
+  gets its keys, since the document names none. Since every order carries its row keys,
+  an ambiguous row-key segment over the period blocks (`ambiguous_window`, located at
+  the source) even when no binding names it.
 - A blocked order is `order_blocked`, with every finding at once and nothing partial;
   the blocking ones have level `error`.
 

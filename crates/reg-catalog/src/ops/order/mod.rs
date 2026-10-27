@@ -462,7 +462,17 @@ fn check_source(
         checked.entries.extend(outcome.entries);
         checked.clips.extend(outcome.clip);
     }
-    checked.row_keys = rows::row_keys(server, conn, source, &serving)?;
+    let (row_keys, mut keyed) = rows::row_keys(server, conn, index, source, &serving)?;
+    // A bound row key already has its binding's `ambiguous_window` in that table.
+    keyed.retain(|k| {
+        !checked
+            .findings
+            .iter()
+            .any(|f| (&f.code, &f.variable, &f.table) == (&k.code, &k.variable, &k.table))
+    });
+    keyed.sort_by_key(Issue::key);
+    checked.findings.extend(keyed);
+    checked.row_keys = row_keys;
     checked.served = Some(serving);
     Ok(checked)
 }

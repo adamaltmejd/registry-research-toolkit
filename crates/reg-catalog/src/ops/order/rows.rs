@@ -16,35 +16,69 @@ type Columns = BTreeSet<(String, String)>;
 
 /// A source's row keys: per serving table, the requested days cut where its row-key
 /// columns change, each piece with the columns over it (sorted by variable and
-/// spelling); days without a row-key column are left out.
+/// spelling); days without a row-key column are left out. Row keys join the order
+/// unbound, so an ambiguous row-key segment inside the requested days is an
+/// `ambiguous_window` here, located at the source.
 pub(super) fn row_keys(
     server: &Server,
     conn: &Connection,
+    index: usize,
     source: &Source,
     serving: &[Serving],
-) -> Result<Vec<OrderRowKeys>, Error> {
+) -> Result<(Vec<OrderRowKeys>, Vec<Issue>), Error> {
     let mut query = conn.prepare(
-        "SELECT v.pid, sp.exact, s.start, s.end
+        "SELECT v.pid, sp.exact, s.start, s.end, s.state
          FROM segment s JOIN variable v ON v.id = s.variable_id
            JOIN spelling sp ON sp.id = s.spelling_id
          WHERE s.table_id = ? AND s.role = 'row_key'
          ORDER BY v.pid, sp.exact, s.start",
     )?;
     let mut out = Vec::new();
+    let mut findings = Vec::new();
     for s in serving {
-        let rows: Vec<(String, String, i64, i64)> = query
+        let rows: Vec<(String, String, i64, i64, String)> = query
             .query_map([s.table.id], |row| {
-                Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                ))
             })?
             .collect::<rusqlite::Result<_>>()?;
         // Day-number pieces `[start, end)` of each column inside the requested days.
         let mut pieces = Vec::new();
-        for (variable, spelling, start, end) in rows {
+        for (variable, spelling, start, end, state) in rows {
             for (lo, hi) in &s.requested {
                 let (lo, hi) = (start.max(day(lo)), end.min(day(hi) + 1));
-                if lo < hi {
-                    pieces.push((lo, hi, (variable.clone(), spelling.clone())));
+                if lo >= hi {
+                    continue;
                 }
+                if state == "ambiguous" {
+                    let period = server.period(lo, hi);
+                    let over = format!(
+                        "[{}, {})",
+                        period.start.as_deref().unwrap_or("open"),
+                        period.end.as_deref().unwrap_or("open")
+                    );
+                    findings.push(Issue {
+                        level: IssueLevel::Error,
+                        code: "ambiguous_window".to_owned(),
+                        path: format!("/sources/{index}"),
+                        message: format!(
+                            "Row key {variable} cannot be placed on one form in {} over {}; \
+                             the window needs curation",
+                            s.table.pid, over
+                        ),
+                        source: Some(source.name.clone()),
+                        variable: Some(variable.clone()),
+                        table: Some(s.table.pid.clone()),
+                        period: Some(period),
+                        successor_fqid: None,
+                    });
+                }
+                pieces.push((lo, hi, (variable.clone(), spelling.clone())));
             }
         }
         let cuts: BTreeSet<i64> = pieces.iter().flat_map(|(lo, hi, _)| [*lo, *hi]).collect();
@@ -77,7 +111,7 @@ pub(super) fn row_keys(
             }
         }));
     }
-    Ok(out)
+    Ok((out, findings))
 }
 
 /// `panel_row_keys_differ`: every member's row-key segments over its requested days

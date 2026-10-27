@@ -120,3 +120,8 @@
 {"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019h","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
 {"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2020p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"register","provider":"demo","register":"ark","name":"Radnyckelregistret"}
+{"kind":"release","provider":"demo","register":"ark","table":"","release":"r2019","name":"Ark 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Id","source_key":"k2","label":"Idnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}

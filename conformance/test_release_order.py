@@ -101,14 +101,18 @@ def census(db_path):
                     (table_id, MAX_BINDINGS),
                 )
             ]
+            # A table whose occurrences all sit in unparsed releases has no segment, so
+            # no variable to bind: its project is refused structurally (`empty_bindings`).
+            if not variables:
+                continue
             segments = []
             for serving_id, serving_pid, w_lo, w_hi in serving(db, table_id):
                 bounds = [b for b in (lo, w_lo) if b is not None]
                 start = max(bounds) if bounds else None
                 bounds = [b for b in (hi, w_hi) if b is not None]
                 end = min(bounds) if bounds else None
-                for v, s_lo, s_hi, state, exact in db.execute(
-                    "SELECT v.pid, s.start, s.end, s.state, sp.exact FROM segment s"
+                for v, s_lo, s_hi, state, exact, role in db.execute(
+                    "SELECT v.pid, s.start, s.end, s.state, sp.exact, s.role FROM segment s"
                     " JOIN variable v ON v.id = s.variable_id"
                     " JOIN spelling sp ON sp.id = s.spelling_id"
                     " WHERE s.table_id = ?",
@@ -117,15 +121,19 @@ def census(db_path):
                     s_lo = s_lo if start is None else max(s_lo, start)
                     s_hi = s_hi if end is None else min(s_hi, end)
                     if s_lo < s_hi:
-                        segments.append((serving_pid, v, s_lo, s_hi, state, exact))
-            # An ambiguous segment blocks, and so does a bound variable with no segment
-            # over the period; a preliminary segment orders with a warning.
+                        segments.append(
+                            (serving_pid, v, s_lo, s_hi, state, exact, role)
+                        )
+            # An ambiguous segment of a bound variable or of a row key (row keys join
+            # every order) blocks, and so does a bound variable with no segment over the
+            # period; a preliminary segment orders with a warning.
             covered = {s[1] for s in segments}
             blocked = any(
-                s[1] in variables and s[4] == "ambiguous" for s in segments
+                s[4] == "ambiguous" and (s[1] in variables or s[6] == "row_key")
+                for s in segments
             ) or any(v not in covered for v in variables)
             spans = [
-                (t, v, s_lo, s_hi, exact) for t, v, s_lo, s_hi, _, exact in segments
+                (t, v, s_lo, s_hi, exact) for t, v, s_lo, s_hi, _, exact, _ in segments
             ]
             tables.append((pid, period, variables, blocked, spans))
         (open_start,) = db.execute(
