@@ -100,6 +100,7 @@ fn param_schema(ty: &str) -> Value {
 #[test]
 fn openapi_matches_operations_toml() {
     let parked_ops = parked("operations");
+    let parked_downloads = parked("downloads");
     let table = spec("operations.toml");
     assert_eq!(table["contract_version"].as_str(), Some(CONTRACT_VERSION));
     let rows: BTreeMap<&str, &toml::Table> = table["operation"]
@@ -159,8 +160,8 @@ fn openapi_matches_operations_toml() {
                 });
                 (name, params)
             } else {
-                // A download the table does not list is a parked operation's old form.
                 let Some(download) = downloads.get(route.as_str()) else {
+                    assert!(parked_downloads.contains(&route), "{route} unlisted");
                     continue;
                 };
                 let media_type = download["media_type"].as_str().unwrap();

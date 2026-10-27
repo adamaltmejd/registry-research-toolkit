@@ -429,7 +429,7 @@ period = "Period | null"
 successor_fqid = "string | null; the successor a `variable_replaced` finding names"
 
 [shape.LogicalOrder]
-note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples."
+note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples (a clear and a blocked order)."
 
 [shape.DocHit]
 doc = "string; doc.hash"

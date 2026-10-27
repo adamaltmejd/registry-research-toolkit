@@ -756,19 +756,18 @@ Builder accounting such as "temporally unassessed" range editions is not a warni
 ## Read scope and artifact admission
 
 A server or MCP process serves one artifact, chosen at start with `--db DIR` (the file
-is `DIR/reg_meta.db`). `--catalog NAME` names the expected catalog: `global` requires
-the `catalog` kind, any other name a steward artifact whose manifest `steward` equals
-it. Admission requires a compatible schema, a publishable kind (`catalog` or `steward`),
-complete status, a `generation_id` and, for a steward, a slug steward id. Anything else
-fails before serving, with no fallback. The file is opened read-only and `immutable=1`:
-published files are replaced by rename, never changed in place. The docs database beside
-it is optional; only docs operations need it.
+is `DIR/reg_meta.db`). Admission is exact: a supported schema version, every required
+manifest key present and a `generation_id` of 64 hex digits. Anything else, a missing
+key or a malformed `generation_id` included, is `schema_incompatible` (`schema_version`
+is the file's value, or `null`), and the process fails before serving, with no fallback.
+The file is opened read-only and `immutable=1`: published files are replaced by rename,
+never changed in place. The docs database beside it is optional; only docs operations
+need it.
 
 **Three layers.** `reference` is everything in the catalog; `holdings` is what the
-steward holds; a project is what one user has: a `project_data.json` against a steward
-(`steward: <id>`, ordered from its holdings) or against the global catalog
-(`steward: global`, a `global_fallback` manifest describing data the researcher already
-holds; nothing orders it). The project layer is the user's file: the server stores none,
+steward holds; a project is what one user has: a `project_data.json`, ordered from the
+holdings or, with a `global_fallback` manifest, describing data the researcher already
+holds (nothing orders it). The project layer is the user's file: the server stores none,
 and checks one only when it is posted to validate or order (the SPA runs the structural
 layer client-side first). Validation and order answer for the catalog that serves them,
 so a project is checked on its own steward's server: another catalog's answer differs
@@ -887,6 +886,101 @@ to state in its own tests; the rules that shape them:
   call.
 - A request partly outside availability is a clip (`period_clipped`), never silent and
   never an error. Only availability empty across the whole request blocks.
+
+### A clear order
+
+Catalog (illustrative): table `scb/lisa/individ` with yearly spans 2003 onward. Variable
+`scb/lisa/dispink` has two segments: `DispInk` over `[2003-01-01, 2004-01-01)`, then
+`DispInk04` from 2004, both `int`. Variable `scb/lisa/sun2000niva` starts in 2004.
+`scb/lisa/lopnr` is the row key throughout.
+
+Request: source `lisa`, table `scb/lisa/individ`, period `2003..2006`, binding `dispink`
+and `sun2000niva`.
+
+```json
+{
+  "data": {
+    "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
+    "project": {"name": "income-panel", "schema_version": "5.0.0",
+                "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
+    "entries": [
+      {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
+       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "period": {"start": "2003-01-01", "end": "2004-01-01"},
+       "spelling": "DispInk", "type": "int", "length": 8, "value_set": null,
+       "classification": null},
+      {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
+       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "period": {"start": "2004-01-01", "end": "2007-01-01"},
+       "spelling": "DispInk04", "type": "int", "length": 8, "value_set": null,
+       "classification": null},
+      {"source": "lisa", "binding": 1, "provider": "scb", "register": "scb/lisa",
+       "table": "scb/lisa/individ", "variable": "scb/lisa/sun2000niva", "display_name": null,
+       "period": {"start": "2004-01-01", "end": "2007-01-01"},
+       "spelling": "Sun2000niva", "type": "char", "length": 3,
+       "value_set": {"hash": "c41e…", "n_items": 31}, "classification": null}
+    ],
+    "row_keys": [
+      {"source": "lisa", "table": "scb/lisa/individ",
+       "period": {"start": "2003-01-01", "end": "2007-01-01"},
+       "columns": [{"variable": "scb/lisa/lopnr", "spelling": "LopNr"}]}
+    ],
+    "clips": [
+      {"source": "lisa", "variable": "scb/lisa/sun2000niva",
+       "requested": [{"start": "2003-01-01", "end": "2007-01-01"}],
+       "ordered": [{"start": "2004-01-01", "end": "2007-01-01"}]}
+    ],
+    "findings": [
+      {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
+       "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
+       "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
+       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null},
+      {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
+       "message": "scb/lisa/dispink changes form at 2004-01-01 (DispInk -> DispInk04)",
+       "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
+       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
+    ]
+  },
+  "meta": {"contract_version": "5.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+}
+```
+
+### A blocked order
+
+Catalog (illustrative): in `scb/lisa/individ`, two variables claim the folded spelling
+`kommun` over 2019, so both segments are `ambiguous` there. `scb/lisa/dispink` for 2020
+is delivered only by a `preliminary` release.
+
+Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`, no
+`edition`.
+
+```json
+{
+  "error": {
+    "code": "order_blocked",
+    "class": "order_blocked",
+    "message": "the order is blocked by 2 findings",
+    "remediation": "Narrow the period around the blocked windows, or name the edition; an ambiguous window needs curation.",
+    "fields": {
+      "findings": [
+        {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
+         "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
+         "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
+         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null},
+        {"level": "error", "code": "preliminary_without_edition", "path": "/sources/0/bindings/1",
+         "message": "scb/lisa/dispink over [2020-01-01, 2021-01-01) has only a preliminary edition; name it with \"edition\": \"preliminary\"",
+         "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
+         "period": {"start": "2020-01-01", "end": "2021-01-01"}, "successor_fqid": null}
+      ]
+    }
+  },
+  "meta": {"contract_version": "5.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+}
+```
+
+With `"edition": "preliminary"` on the source, the second finding goes and the 2020
+entry carries `"edition": "preliminary"`. The first stays until curation resolves the
+ambiguity; narrowing the period to 2018 alone also clears it.
 
 ## Project semantic validation
 

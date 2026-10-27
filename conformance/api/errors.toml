@@ -167,4 +167,7 @@ class = "unavailable"
 surface = "startup"
 exit = 10
 fields = ["schema_version", "supported"]
+note = """Admission is exact. A missing required manifest key, or a `generation_id` that is \
+not 64 hex, is also `schema_incompatible`, with `schema_version` set to the file's value \
+or `null`."""
 

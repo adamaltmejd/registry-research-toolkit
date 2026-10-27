@@ -253,6 +253,10 @@ pub struct Binding {
     #[serde(default)]
     pub datetime_format: Option<String>,
     /// A classification version's public id `class/<family>/<version>`.
+    #[cfg_attr(
+        feature = "openapi",
+        schema(pattern = "^class/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$")
+    )]
     #[serde(default)]
     pub classification: Option<String>,
 }

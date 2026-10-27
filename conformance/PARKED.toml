@@ -27,6 +27,9 @@ operations = [
     "warnings",
 ]
 
+# Download routes the server serves that the table's `[[download]]` does not list.
+downloads = ["GET /api/steward/logo.svg", "GET /api/docs/file/{ref}/{filename}"]
+
 # Error codes the server still has and errors.toml no longer lists.
 codes = ["catalog_mismatch", "catalog_unpublishable", "doc_schema_incompatible", "scope_unavailable"]
 

@@ -50,7 +50,8 @@
             "string",
             "null"
           ],
-          "description": "A classification version's public id `class/<family>/<version>`."
+          "description": "A classification version's public id `class/<family>/<version>`.",
+          "pattern": "^class/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$"
         },
         "date_format": {
           "type": [
