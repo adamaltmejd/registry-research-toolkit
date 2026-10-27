@@ -1198,46 +1198,20 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   admission or a probe fails) and fly.toml's `/api/context` HTTP check (flyctl reports
   failure if it never passes). Rollback: `flyctl releases --image` lists history;
   `flyctl deploy --image <old>` restores in seconds.
-- **Pending-schema-bump guard (#448)**: when the Rust server's schema gates (`SCHEMA` in
-  `crates/reg-catalog/src/lib.rs`, `DOC_SCHEMA` in `docs.rs`) are AHEAD of the latest
-  released `reg_meta/v*` asset (same major, higher minor), the image would refuse to
-  boot on the behind-schema asset and fail its deploy — for a state that is expected
-  (the owed reg_meta release ships the matching asset). A standalone `schema-guard` job
-  compares the gates against the builder's `SCHEMA_VERSION` / `DOC_SCHEMA_VERSION` at
-  the released tag (`git show <tag>:reg_meta_build/…`) via the pure
-  `scripts/schema_pending_bump.py` helper, which returns a three-way verdict (`break` /
-  `pending` / `compatible`). On a detected code-ahead `pending` bump (with both assets
-  present) it publishes a `pending_bump=true` job output that defers the bake + deploy
-  with a GREEN `build-image` and a `::notice::`. The guard is its **own** job (not a
-  step inside `build-image`) so **every** deploy path can consult it — `build-image`,
-  `deploy`, AND `edge-deploy` all gate on `needs.schema-guard.result == 'success'` (and
-  on `pending_bump`); it runs whenever the image OR edge filter matches (or on
-  dispatch), so an edge-only push still gets a verdict even though `build-image` is
-  skipped. Once the owed release ships, the **build** self-clears on the next
-  image-affecting main push (the bake now passes), and the **deploy** is self-clearing
-  on release too: publishing the owed `reg_meta/v*` release auto-dispatches
-  `container-build.yml` (via `publish_reg_meta.yml`'s `deploy-image` job, after the
-  release's CI passes), which re-resolves the now-current asset and deploys — no manual
-  `workflow_dispatch` needed. During a pending-bump window a later **edge-only** main
-  push now correctly waits too: `schema-guard` ran (the edge filter matched), so
-  `edge-deploy` sees `pending_bump == true` and holds its SPA/cache-gen ship alongside
-  the origin, rather than going live against the still-pre-bump origin. The guard
-  green-neutralizes **only** the safe code-ahead case; on a genuine **major break** — or
-  a `pending` release that is ALSO **missing** a `.zst` asset (a #343 invariant
-  violation: its digest resolves empty) — `schema-guard` **fails red (exits non-zero)**
-  rather than emitting `pending_bump=false`. Because all three deploy jobs gate on
-  `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks build-image +
-  deploy + edge-deploy — closing the edge-only hole where a skipped bake left nothing to
-  fail (pre-fix the break surfaced only in the bake on image pushes, so an edge-only
-  push shipped a new SPA/cache generation against a still-stuck origin). An explicit
-  `workflow_dispatch` `reg_meta_tag` pin is never neutralized: a deliberate pin of a
-  specific (possibly older) release has no owed release coming, so anything but
-  `compatible` fails the guard red — the bake reads no schema, and the image would only
-  refuse at boot on Fly. The comparison rule is unit-tested because CI can't reach the
-  code-ahead branch on a normal commit (main's schema usually equals the latest
-  release); its source of truth is `reg-catalog`'s schema gates. Trade-off: during the
-  bump window the Dockerfile bake isn't exercised (a build-only PR goes green-skipped),
-  re-exercised once the release lands.
+- **Schema guard**: a standalone `schema-guard` job compares `CATALOG_SCHEMA_VERSION`
+  (`crates/reg-core/src/lib.rs`) with the same constant at the newest `reg_meta/v*` tag
+  (`git show <tag>:crates/reg-core/src/lib.rs`). Two outcomes: equal passes; different,
+  or absent at the tag (every release before the v4 switch), fails red with both values
+  and "publish the switch release first". There is no pending outcome and no
+  pass-through, so between the merge of a schema change and its release every main push
+  is red here and nothing deploys (fail closed; the server would refuse to boot on the
+  mismatched asset anyway). The guard is its **own** job so every deploy path consults
+  it: `build-image`, `deploy` and `edge-deploy` all gate on
+  `needs.schema-guard.result == 'success'`, including an edge-only push that has no bake
+  to fail. Publishing the release auto-dispatches `container-build.yml`
+  (`publish_reg_meta.yml`'s `deploy-image` job), which then passes and deploys. A
+  `workflow_dispatch` `reg_meta_tag` pin follows the same rule. SWECOV has no deploy job
+  until milestone E.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) that copies nothing from the build context, so its cache key is
   the base image and its build args (tag, flavor, digests) — app-code edits reuse the
