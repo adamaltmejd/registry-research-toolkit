@@ -1,12 +1,12 @@
 name: CI
 
 on:
-  # react-port: the React port's integration branch; its stacked
+  # rebuild-c: milestone C's integration branch; its stacked
   # PRs need CI until it merges into main.
   push:
-    branches: [main, react-port]
+    branches: [main, rebuild-c]
   pull_request:
-    branches: [main, react-port]
+    branches: [main, rebuild-c]
   workflow_call:
   # Manual re-fire (#326): GitHub occasionally drops a push event (hit on the
   # #317 rollout — container-build.yml got the event, ci.yml didn't), and the
