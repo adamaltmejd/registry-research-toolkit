@@ -9,7 +9,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, fts, refs};
-use crate::{Code, Error, hex};
+use crate::{Code, Error};
 
 /// The `type` values: a `search_item.kind` each.
 const TYPES: &[&str] = &[
@@ -166,16 +166,6 @@ fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
     Ok(entity.id)
 }
 
-/// The cursor context: every parameter but `cursor` and `limit`, sorted by name. Hex,
-/// because `cursor::decode` splits on `.`, which a `q` may hold.
-fn context(params: &Params) -> String {
-    let pairs: Vec<String> = ["period", "q", "register", "type"]
-        .into_iter()
-        .filter_map(|name| params.get(name).map(|value| format!("{name}={value}")))
-        .collect();
-    hex(pairs.join("&").as_bytes())
-}
-
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
     let expression = fts::query(params["q"])?;
     let kind = params
@@ -194,7 +184,7 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
     });
     let limit = super::limit(params)?;
     let generation = server.catalog.generation();
-    let context = context(params);
+    let context = cursor::context(params);
     let offset = params
         .get("cursor")
         .map(|c| cursor::decode(c, generation, &context, DEPTH))

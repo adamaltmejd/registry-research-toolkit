@@ -277,7 +277,8 @@ pub struct DocSubject {
 pub struct Doc {
     /// SHA-256 (lowercase hex) of the original file's bytes.
     pub hash: String,
-    /// `parsed` or `pdf`.
+    /// `parsed` or `pdf`. Serialized as `doc_kind`: the record tag owns `kind`.
+    #[serde(rename = "doc_kind")]
     pub kind: String,
     pub title: String,
     pub licence: String,

@@ -171,6 +171,416 @@
         }
       }
     },
+    "/api/coverage/{ref}": {
+      "get": {
+        "description": "The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases; for a variable also the periods of each delivered column name.",
+        "operationId": "coverage",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Coverage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/diff/{ref}": {
+      "get": {
+        "description": "A table's or a register's schema at two periods, joined on variable: what was added, removed or changed (spelling, type, length, value set). A rename is a changed spelling.",
+        "operationId": "diff",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Diff"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/docs/doc/{doc}": {
+      "get": {
+        "description": "A document by its content hash: its metadata, the entities it is about, a 500-character excerpt and, for a parsed document, its full text.",
+        "operationId": "docs_get",
+        "parameters": [
+          {
+            "name": "doc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DocDetail"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/docs/file/{doc}": {
+      "get": {
+        "description": "The bytes of a PDF document by its content hash, shown inline.",
+        "parameters": [
+          {
+            "name": "doc",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The raw bytes",
+            "content": {
+              "application/pdf": {}
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/docs/related/{ref}": {
+      "get": {
+        "description": "The documents linked to a register, table, variable or classification family, one row per link; a register also takes the documents of its tables and variables.",
+        "operationId": "docs_related",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RelatedDocument"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/docs/search": {
+      "get": {
+        "description": "Search the documents the catalog holds, by the words of their sections; without `q`, list them by title. `register` narrows to the documents linked to a register, its tables or its variables.",
+        "operationId": "docs_search",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DocPage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/findings/{ref}": {
       "get": {
         "description": "The review items and notices on a register, a table or a variable (its segments and occurrences included), optionally narrowed to a period, a table or a rule code.",
@@ -376,6 +786,102 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Resolved"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/schema/{ref}": {
+      "get": {
+        "description": "The columns of a table, a register's tables or one variable's tables over a period: one line per variable and delivered spelling, with its type, length, value set and role.",
+        "operationId": "schema",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SchemaPage"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -887,6 +1393,394 @@
           },
           "sizes": {
             "$ref": "#/components/schemas/Sizes"
+          }
+        }
+      },
+      "Coverage": {
+        "type": "object",
+        "description": "`shape.Coverage`.",
+        "required": [
+          "fqid",
+          "kind",
+          "period",
+          "tables",
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/CoverageColumn"
+            },
+            "description": "A variable's folded spellings with the periods each was delivered under;\n`null` for a register or a table."
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "The entity's hull."
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoverageTable"
+            }
+          }
+        }
+      },
+      "CoverageColumn": {
+        "type": "object",
+        "required": [
+          "spelling",
+          "spans"
+        ],
+        "properties": {
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          },
+          "spelling": {
+            "type": "string"
+          }
+        }
+      },
+      "CoverageGap": {
+        "type": "object",
+        "required": [
+          "period",
+          "reason"
+        ],
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "CoverageTable": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "spans",
+          "gaps",
+          "releases"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoverageGap"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Release"
+            },
+            "description": "Empty for a variable ref: releases belong to tables."
+          },
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            }
+          }
+        }
+      },
+      "Diff": {
+        "type": "object",
+        "description": "`shape.Diff`.",
+        "required": [
+          "fqid",
+          "from",
+          "to",
+          "tables"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string",
+            "description": "The request's `from`."
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiffTable"
+            }
+          },
+          "to": {
+            "type": "string",
+            "description": "The request's `to`."
+          }
+        }
+      },
+      "DiffChange": {
+        "type": "object",
+        "description": "One field that differs between the two periods: `spelling`, `type`, `length` or\n`value_set`.",
+        "required": [
+          "field",
+          "from",
+          "to"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "from": {},
+          "to": {}
+        }
+      },
+      "DiffChanged": {
+        "type": "object",
+        "required": [
+          "variable",
+          "changes"
+        ],
+        "properties": {
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiffChange"
+            }
+          },
+          "variable": {
+            "type": "string"
+          }
+        }
+      },
+      "DiffSummary": {
+        "type": "object",
+        "required": [
+          "added",
+          "removed",
+          "changed",
+          "unchanged"
+        ],
+        "properties": {
+          "added": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "changed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "removed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unchanged": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "DiffTable": {
+        "type": "object",
+        "required": [
+          "table",
+          "added",
+          "removed",
+          "changed",
+          "summary"
+        ],
+        "properties": {
+          "added": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SchemaLine"
+            }
+          },
+          "changed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiffChanged"
+            }
+          },
+          "removed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SchemaLine"
+            }
+          },
+          "summary": {
+            "$ref": "#/components/schemas/DiffSummary"
+          },
+          "table": {
+            "type": "string"
+          }
+        }
+      },
+      "DocDetail": {
+        "type": "object",
+        "description": "`shape.DocDetail`.",
+        "required": [
+          "doc",
+          "title",
+          "kind",
+          "licence",
+          "url",
+          "bytes",
+          "subjects",
+          "excerpt",
+          "body"
+        ],
+        "properties": {
+          "body": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The sections joined by a blank line; `null` for a pdf."
+          },
+          "bytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "doc": {
+            "type": "string"
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "licence": {
+            "type": "string"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocSubject"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "DocHit": {
+        "type": "object",
+        "description": "`shape.DocHit`.",
+        "required": [
+          "doc",
+          "title",
+          "kind",
+          "heading",
+          "page",
+          "snippet"
+        ],
+        "properties": {
+          "doc": {
+            "type": "string"
+          },
+          "heading": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "type": "string"
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "snippet": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "DocPage": {
+        "type": "object",
+        "description": "`docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`.",
+        "required": [
+          "items",
+          "next_cursor",
+          "total",
+          "register_ingested"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocHit"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "register_ingested": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether `register` has any linked document; `null` without `register`."
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DocSubject": {
+        "type": "object",
+        "description": "One entity a document is about (`shape.DocDetail.subjects`).",
+        "required": [
+          "kind",
+          "fqid",
+          "page"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -1571,6 +2465,48 @@
           }
         }
       },
+      "RelatedDocument": {
+        "type": "object",
+        "description": "`shape.RelatedDocument`.",
+        "required": [
+          "doc",
+          "title",
+          "kind",
+          "licence",
+          "url",
+          "bytes",
+          "page"
+        ],
+        "properties": {
+          "bytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "doc": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "licence": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64",
+            "description": "0 = the whole document."
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Release": {
         "type": "object",
         "description": "`shape.Release`: a delivery of a table.",
@@ -1685,6 +2621,92 @@
           "register": {
             "type": "string",
             "description": "The register's fqid."
+          }
+        }
+      },
+      "SchemaLine": {
+        "type": "object",
+        "description": "`shape.SchemaLine`: one variable's delivery under one folded spelling in one table.",
+        "required": [
+          "table",
+          "variable",
+          "name",
+          "spelling",
+          "type",
+          "length",
+          "value_set",
+          "role",
+          "state",
+          "period"
+        ],
+        "properties": {
+          "length": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "description": "The variable's label."
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "The line's segments merged, clipped to the request."
+          },
+          "role": {
+            "type": "string"
+          },
+          "spelling": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value_set": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ValueSetRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "variable": {
+            "type": "string"
+          }
+        }
+      },
+      "SchemaPage": {
+        "type": "object",
+        "description": "`Page<SchemaLine>`.",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SchemaLine"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },

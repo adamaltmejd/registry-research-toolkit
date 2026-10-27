@@ -2011,6 +2011,727 @@
     }
   },
   {
+    "name": "coverage",
+    "description": "The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases; for a variable also the periods of each delivered column name.",
+    "inputSchema": {
+      "properties": {
+        "ref": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ref"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Coverage": {
+          "description": "`shape.Coverage`.",
+          "properties": {
+            "columns": {
+              "description": "A variable's folded spellings with the periods each was delivered under;\n`null` for a register or a table.",
+              "items": {
+                "$ref": "#/$defs/CoverageColumn"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period",
+              "description": "The entity's hull."
+            },
+            "tables": {
+              "items": {
+                "$ref": "#/$defs/CoverageTable"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "kind",
+            "period",
+            "tables",
+            "columns"
+          ],
+          "type": "object"
+        },
+        "CoverageColumn": {
+          "properties": {
+            "spans": {
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
+            },
+            "spelling": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "spelling",
+            "spans"
+          ],
+          "type": "object"
+        },
+        "CoverageGap": {
+          "properties": {
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "period",
+            "reason"
+          ],
+          "type": "object"
+        },
+        "CoverageTable": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "gaps": {
+              "items": {
+                "$ref": "#/$defs/CoverageGap"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            },
+            "releases": {
+              "description": "Empty for a variable ref: releases belong to tables.",
+              "items": {
+                "$ref": "#/$defs/Release"
+              },
+              "type": "array"
+            },
+            "spans": {
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "spans",
+            "gaps",
+            "releases"
+          ],
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Period": {
+          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "properties": {
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        },
+        "Population": {
+          "description": "One population a release states (`shape.Release.populations`).",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "ref_day": {
+              "description": "The ISO day the population is stated for.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "definition",
+            "ref_day"
+          ],
+          "type": "object"
+        },
+        "Release": {
+          "description": "`shape.Release`: a delivery of a table.",
+          "properties": {
+            "edition": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "parse_state": {
+              "type": "string"
+            },
+            "period": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Period",
+                  "description": "`null` when the release is unparsed."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "populations": {
+              "items": {
+                "$ref": "#/$defs/Population"
+              },
+              "type": "array"
+            },
+            "primary": {
+              "description": "`null` when the release is unparsed.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "qualifier": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "period",
+            "edition",
+            "qualifier",
+            "primary",
+            "parse_state",
+            "populations"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Coverage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "schema",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, table?, limit?, cursor?): The columns of a table, a register's tables or one variable's tables over a period: one line per variable and delivered spelling, with its type, length, value set and role.\n- `diff` (ref, from, to, table?): A table's or a register's schema at two periods, joined on variable: what was added, removed or changed (spelling, type, length, value set). A rename is a changed spelling.",
+    "inputSchema": {
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "operation": {
+          "enum": [
+            "schema",
+            "diff"
+          ],
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Diff": {
+          "description": "`shape.Diff`.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "from": {
+              "description": "The request's `from`.",
+              "type": "string"
+            },
+            "tables": {
+              "items": {
+                "$ref": "#/$defs/DiffTable"
+              },
+              "type": "array"
+            },
+            "to": {
+              "description": "The request's `to`.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "from",
+            "to",
+            "tables"
+          ],
+          "type": "object"
+        },
+        "DiffChange": {
+          "description": "One field that differs between the two periods: `spelling`, `type`, `length` or\n`value_set`.",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "from": {},
+            "to": {}
+          },
+          "required": [
+            "field",
+            "from",
+            "to"
+          ],
+          "type": "object"
+        },
+        "DiffChanged": {
+          "properties": {
+            "changes": {
+              "items": {
+                "$ref": "#/$defs/DiffChange"
+              },
+              "type": "array"
+            },
+            "variable": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "variable",
+            "changes"
+          ],
+          "type": "object"
+        },
+        "DiffSummary": {
+          "properties": {
+            "added": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "changed": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "removed": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "unchanged": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "added",
+            "removed",
+            "changed",
+            "unchanged"
+          ],
+          "type": "object"
+        },
+        "DiffTable": {
+          "properties": {
+            "added": {
+              "items": {
+                "$ref": "#/$defs/SchemaLine"
+              },
+              "type": "array"
+            },
+            "changed": {
+              "items": {
+                "$ref": "#/$defs/DiffChanged"
+              },
+              "type": "array"
+            },
+            "removed": {
+              "items": {
+                "$ref": "#/$defs/SchemaLine"
+              },
+              "type": "array"
+            },
+            "summary": {
+              "$ref": "#/$defs/DiffSummary"
+            },
+            "table": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "table",
+            "added",
+            "removed",
+            "changed",
+            "summary"
+          ],
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Period": {
+          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "properties": {
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        },
+        "SchemaLine": {
+          "description": "`shape.SchemaLine`: one variable's delivery under one folded spelling in one table.",
+          "properties": {
+            "length": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "name": {
+              "description": "The variable's label.",
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period",
+              "description": "The line's segments merged, clipped to the request."
+            },
+            "role": {
+              "type": "string"
+            },
+            "spelling": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "table": {
+              "type": "string"
+            },
+            "type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "value_set": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ValueSetRef"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "variable": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "table",
+            "variable",
+            "name",
+            "spelling",
+            "type",
+            "length",
+            "value_set",
+            "role",
+            "state",
+            "period"
+          ],
+          "type": "object"
+        },
+        "SchemaPage": {
+          "description": "`Page<SchemaLine>`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/SchemaLine"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor"
+          ],
+          "type": "object"
+        },
+        "ValueSetRef": {
+          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+          "properties": {
+            "classification": {
+              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "hash": {
+              "type": "string"
+            },
+            "hierarchical": {
+              "type": "boolean"
+            },
+            "n_items": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "names": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "hash",
+            "n_items",
+            "hierarchical",
+            "names",
+            "classification"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/SchemaPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Diff"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "resolve",
     "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
     "inputSchema": {
@@ -2153,6 +2874,360 @@
           "properties": {
             "data": {
               "$ref": "#/$defs/Resolved"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "docs",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_search` (q?, register?, limit?, cursor?): Search the documents the catalog holds, by the words of their sections; without `q`, list them by title. `register` narrows to the documents linked to a register, its tables or its variables.\n- `docs_get` (doc): A document by its content hash: its metadata, the entities it is about, a 500-character excerpt and, for a parsed document, its full text.\n- `docs_related` (ref): The documents linked to a register, table, variable or classification family, one row per link; a register also takes the documents of its tables and variables.",
+    "inputSchema": {
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "doc": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "operation": {
+          "enum": [
+            "docs_search",
+            "docs_get",
+            "docs_related"
+          ],
+          "type": "string"
+        },
+        "q": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "DocDetail": {
+          "description": "`shape.DocDetail`.",
+          "properties": {
+            "body": {
+              "description": "The sections joined by a blank line; `null` for a pdf.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "bytes": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "doc": {
+              "type": "string"
+            },
+            "excerpt": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "string"
+            },
+            "subjects": {
+              "items": {
+                "$ref": "#/$defs/DocSubject"
+              },
+              "type": "array"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "licence",
+            "url",
+            "bytes",
+            "subjects",
+            "excerpt",
+            "body"
+          ],
+          "type": "object"
+        },
+        "DocHit": {
+          "description": "`shape.DocHit`.",
+          "properties": {
+            "doc": {
+              "type": "string"
+            },
+            "heading": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "kind": {
+              "type": "string"
+            },
+            "page": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "snippet": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "heading",
+            "page",
+            "snippet"
+          ],
+          "type": "object"
+        },
+        "DocPage": {
+          "description": "`docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/DocHit"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_ingested": {
+              "description": "Whether `register` has any linked document; `null` without `register`.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "total": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor",
+            "total",
+            "register_ingested"
+          ],
+          "type": "object"
+        },
+        "DocSubject": {
+          "description": "One entity a document is about (`shape.DocDetail.subjects`).",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "page": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "kind",
+            "fqid",
+            "page"
+          ],
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "RelatedDocument": {
+          "description": "`shape.RelatedDocument`.",
+          "properties": {
+            "bytes": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "doc": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "string"
+            },
+            "page": {
+              "description": "0 = the whole document.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "licence",
+            "url",
+            "bytes",
+            "page"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/DocPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/DocDetail"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/$defs/RelatedDocument"
+              },
+              "type": "array"
             },
             "meta": {
               "$ref": "#/$defs/Meta"

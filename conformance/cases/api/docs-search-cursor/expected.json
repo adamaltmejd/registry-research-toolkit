@@ -1,6 +1,25 @@
 [
-  {"status": 200, "json": {"/data/items/*/filename": ["Kon.md"]}},
-  {"status": 409, "json": {"/error/code": "stale_cursor"}},
-  {"status": 409, "json": {"/error/code": "stale_cursor"}},
-  {"status": 422, "json": {"/error/code": "invalid_cursor"}}
+  {
+    "status": 200,
+    "json": {"/data/items/*/title": ["Bilaga"], "/data/total": 2}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/title": ["Registerbeskrivning"],
+      "/data/next_cursor": null,
+      "/data/total": 2
+    },
+    "members": {
+      "steps": [0, 1],
+      "pointer": "/data/items/*/doc",
+      "equals": [
+        "ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9",
+        "630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f"
+      ]
+    }
+  },
+  {"status": 422, "json": {"/error/code": "invalid_cursor"}},
+  {"status": 200},
+  {"status": 200}
 ]

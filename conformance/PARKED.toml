@@ -7,16 +7,10 @@
 operations = [
     # r-show
     # r-schema
-    "coverage",
-    "diff",
-    "schema",
     # r-segments-values
     # r-findings-graph
     # r-search
     # r-docs
-    "docs_get",
-    "docs_related",
-    "docs_search",
     # r-order-check
     "order",
     "validate",
@@ -26,24 +20,10 @@ operations = [
 cases = [
     # r-show
     # r-schema
-    "api/coverage-register",
-    "api/coverage-variable",
-    "api/diff-register",
-    "api/schema-paging",
     # r-segments-values
     # r-findings-graph
     # r-search
     # r-docs
-    "api/docs-download",
-    "api/docs-excerpt",
-    "api/docs-get",
-    "api/docs-related",
-    "api/docs-related-ambiguous",
-    "api/docs-search",
-    "api/docs-search-ambiguous",
-    "api/docs-search-cursor",
-    "api/docs-search-errors",
-    "api/docs-unavailable",
     # r-order-check
     "api/order-alias-month-annual-fallback",
     "api/order-errors",

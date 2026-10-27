@@ -5,42 +5,37 @@
     "json": {
       "/data/items": [
         {
-          "register": "example",
-          "variable": "Kon",
-          "filename": "Kon.md",
-          "display_name": "Kön",
-          "tags": ["type/variable", "topic/demography"],
-          "snippet": "**Könstillhörighet** för individen.",
-          "source": null,
-          "source_url": null,
-          "source_title": null
+          "doc": "630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f",
+          "title": "Registerbeskrivning",
+          "kind": "parsed",
+          "heading": "Variabler",
+          "page": 2,
+          "snippet": "Beteckningen anges som pilgrimsfalk i varje post."
         }
       ],
+      "/data/next_cursor": null,
+      "/data/total": 1,
+      "/data/register_ingested": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/title": ["Bilaga", "Registerbeskrivning"],
+      "/data/items/*/kind": ["pdf", "parsed"],
+      "/data/items/*/heading": [null, null],
+      "/data/items/*/page": [null, null],
+      "/data/items/*/snippet": [null, null],
+      "/data/next_cursor": null,
       "/data/total": 2,
-      "/data/register_ingested": false
+      "/data/register_ingested": null
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/filename": ["LoneInk.md"],
-      "/data/next_cursor": null,
-      "/data/total": 2
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/filename": [
-        "Kon.md",
-        "Kort.md",
-        "LoneInk.md",
-        "Sysselsattning.md",
-        "Tabell.md"
-      ],
-      "/data/items/*/snippet": [null, null, null, null, null],
-      "/data/next_cursor": null,
-      "/data/total": 5,
+      "/data/items/*/title": ["Bilaga", "Registerbeskrivning"],
+      "/data/total": 2,
       "/data/register_ingested": true
     }
   },
@@ -48,17 +43,9 @@
     "status": 200,
     "json": {
       "/data/items": [],
+      "/data/next_cursor": null,
       "/data/total": 0,
-      "/data/register_ingested": false,
-      "/meta/scope": "reference"
+      "/data/register_ingested": false
     }
-  },
-  {
-    "status": 200,
-    "json": {"/data/items": [], "/data/next_cursor": null, "/data/total": 0}
-  },
-  {
-    "status": 200,
-    "json": {"/data/items": [], "/data/total": 0, "/data/register_ingested": true}
   }
 ]

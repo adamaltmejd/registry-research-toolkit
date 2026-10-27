@@ -9,7 +9,6 @@ use serde_json::Value;
 use utoipa::ToSchema;
 use utoipa::openapi::{OneOfBuilder, RefOr, Schema};
 
-use super::segments::cursor_context;
 use super::shape::{self, ValueSetRef};
 use super::{
     Cache, Components, Operation, Param, Params, Server, Type, component, cursor, hash, limit, refs,
@@ -169,7 +168,7 @@ fn position(server: &Server, params: &Params) -> Result<Option<String>, Error> {
             cursor::decode(
                 token,
                 server.catalog.generation(),
-                &cursor_context(params),
+                &cursor::context(params),
                 usize::MAX,
             )
             .map(|(_, position)| position)
@@ -291,7 +290,7 @@ fn content(
         page.truncate(limit);
         cursor::encode(
             server.catalog.generation(),
-            &cursor_context(params),
+            &cursor::context(params),
             limit,
             &page[limit - 1].to_string(),
         )
@@ -366,7 +365,7 @@ fn pair(server: &Server, conn: &Connection, params: &Params, code: &str) -> Resu
         page.truncate(limit);
         cursor::encode(
             server.catalog.generation(),
-            &cursor_context(params),
+            &cursor::context(params),
             limit,
             &page[limit - 1].0,
         )

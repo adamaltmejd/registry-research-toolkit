@@ -1,7 +1,25 @@
 //! Cursors: opaque, bound to the catalog generation and to the request they continue
 //! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
+use super::Params;
 use crate::{Code, Error, hex};
+
+/// The cursor context of a request: every parameter but `cursor` and `limit`, sorted
+/// by name, as `name=<hex of the value>` joined by `&`. Hex, because a free-text
+/// value may hold `&` or `=`, which would let two requests share a context.
+pub(super) fn context(params: &Params) -> String {
+    params
+        .values
+        .iter()
+        .filter(|(name, _)| !matches!(**name, "cursor" | "limit"))
+        .flat_map(|(name, values)| {
+            values
+                .iter()
+                .map(move |value| format!("{name}={}", hex(value.as_bytes())))
+        })
+        .collect::<Vec<_>>()
+        .join("&")
+}
 
 #[must_use]
 pub fn invalid(message: &str) -> Error {
@@ -9,11 +27,16 @@ pub fn invalid(message: &str) -> Error {
 }
 
 /// A cursor is the hex of `generation.context.offset.position`: the generation it
-/// was issued on, the request it continues (`context`), where the next page starts
-/// and the position of the row before it.
+/// was issued on, the request it continues (`context`, itself hex, since a query
+/// text may hold a `.`), where the next page starts and the position of the row
+/// before it (last, so it may hold a `.`).
 #[must_use]
 pub fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
-    hex(format!("{generation}.{context}.{offset}.{position}").as_bytes())
+    hex(format!(
+        "{generation}.{}.{offset}.{position}",
+        hex(context.as_bytes())
+    )
+    .as_bytes())
 }
 
 /// The cursor's offset (1 to `depth`) and position.
@@ -52,7 +75,7 @@ pub fn decode(
             vec![generation.into()],
         ));
     }
-    if issued_for != context {
+    if issued_for != hex(context.as_bytes()) {
         return Err(invalid("Cursor was issued for other parameters."));
     }
     let offset = offset

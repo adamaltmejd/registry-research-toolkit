@@ -3,15 +3,11 @@
     "status": 409,
     "json": {
       "/error/code": "ambiguous_ref",
-      "/error/fields/ref": "band fixture"
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items": [],
-      "/data/total": 0,
-      "/data/register_ingested": false
+      "/error/fields/ref": "t",
+      "/error/fields/candidates": [
+        {"fqid": "demo/dok/t", "kind": "table", "name": "Huvudtabell"},
+        {"fqid": "demo/utan/t", "kind": "table", "name": "Huvudtabell"}
+      ]
     }
   }
 ]
