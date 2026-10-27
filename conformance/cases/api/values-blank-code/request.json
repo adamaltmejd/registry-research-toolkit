@@ -1,0 +1,19 @@
+{
+  "note": "The blank-code case. Fails if the code \"\" stops being an item like any other: listed first (items are in `ord` order, the value set's codes sorted bytewise, so \"\" < \"1\" < \"2\": `reg-frame/src/lib.rs` line 193, `vs_item.ord` is the index in that order), counted in `total` and `n_items`, found by `q`, or found by the pair (code \"\", label) mode, which lists both value sets that hold it (svar18 and svar20) ordered by hash. Only `valueset_id IS NULL` means no value set. The hashes are the SHA-256 of the canonical item list, recomputed independently of the build.",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"period": "2018"}},
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query_from": {"value_set": [0, "/data/items/0/value_set/hash"]}
+    },
+    {"operation": "values", "path": "/api/values", "query": {"code": "", "label": "Uppgift saknas"}},
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {"q": "saknas"},
+      "query_from": {"value_set": [0, "/data/items/0/value_set/hash"]}
+    }
+  ]
+}

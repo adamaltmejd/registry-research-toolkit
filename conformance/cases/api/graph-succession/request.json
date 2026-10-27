@@ -1,18 +1,8 @@
 {
-  "note": "Succession through graph on the show fixture. A live variable that splits draws both branches (today's variable_chain follows the first successor only, a rust-only fix) and its representation edge; one classification chain (icd-9 to icd-10) reads alike through show, graph, the family graph and search's succession fold. The last request is a diamond (d-start splits, both branches rejoin at d-end): it fails if graph adds only edges into an edition from editions placed before it, dropping d-right to d-end. Fails if graph follows one branch of a split, drops a representation edge's columns, or reads the classification chain from another anchor.",
-  "fixture": "show",
-  "kind": "catalog",
+  "note": "Succession through graph, from fixtures/relations (links in relations.jsonl; reg-build link.rs keeps `at` as the day the successor takes over and the link's `note` as the edge caveat, emit.rs relation rows). Step 0: table ny continues gammal from 2018-01-01, an open-ended dated edge with no caveat; the nodes are both tables, the focus included, ordered by fqid. Step 1: variable Inkomst, reached as the object of the Inkomst2 link, answers the incoming edge with the source's note as its caveat and `at: null` (the link states no day); the derived_from edge on Belopp is not on this graph. Fails if a table edge loses its day or its open end (`end` must be null, not the open sentinel), if an incoming edge is dropped because the ref is its object, if an undated edge renders a period, or if the caveat is not the link's note.",
+  "fixture": "relations",
   "requests": [
-    {"operation": "graph", "path": "/api/graph/scb/beta/fodland"},
-    {"operation": "show", "path": "/api/catalog/class/icd-9"},
-    {"operation": "graph", "path": "/api/graph/class/icd-9"},
-    {"operation": "graph", "path": "/api/graph/group/class/icd"},
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {"q": "Diagnoses edition", "type": "classification"}
-    },
-    {"operation": "graph", "path": "/api/graph/scb/alpha"},
-    {"operation": "graph", "path": "/api/graph/scb/beta/d-start"}
+    {"operation": "graph", "path": "/api/graph/demo/rel/ny"},
+    {"operation": "graph", "path": "/api/graph/demo/rel/inkomst"}
   ]
 }

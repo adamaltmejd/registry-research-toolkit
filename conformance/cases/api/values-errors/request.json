@@ -1,0 +1,31 @@
+{
+  "note": "Fails if the mode rules loosen: no mode, two modes (the later one in the order value_set, classification, code is named), `label` without `code`, a malformed hash and `q` beside `code` are each a located 422 invalid_parameter; an absent value set is a 404 `not_found` carrying the hash; `classification` takes only a class version, so a variable's pid is `invalid_ref` (no class versions exist until D), and a bare name two entities share is `ambiguous_ref` and a malformed `cursor` `invalid_cursor` (the last two steps; the MCP equivalence test requires each operation's cases to reach every declared code the fixtures can produce).",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "values", "path": "/api/values"},
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {"value_set": "15f9ccc559ffc8f0476ac053ea0b093ee522ac8328a527b5c8ed1b595d832316", "code": "1"}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {"value_set": "15f9ccc559ffc8f0476ac053ea0b093ee522ac8328a527b5c8ed1b595d832316", "label": "x"}
+    },
+    {"operation": "values", "path": "/api/values", "query": {"value_set": "ABC"}},
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {"value_set": "0000000000000000000000000000000000000000000000000000000000000000"}
+    },
+    {"operation": "values", "path": "/api/values", "query": {"classification": "demo/sg/svar"}},
+    {"operation": "values", "path": "/api/values", "query": {"code": "1", "q": "x"}},
+    {"operation": "values", "path": "/api/values", "query": {"classification": "svar"}},
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {"value_set": "15f9ccc559ffc8f0476ac053ea0b093ee522ac8328a527b5c8ed1b595d832316", "cursor": "zz"}
+    }
+  ]
+}

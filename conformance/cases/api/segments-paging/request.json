@@ -1,0 +1,13 @@
+{
+  "note": "Fails if keyset paging on (start, table pid) repeats or skips a segment across the page boundary (limit 1 over Svar's two segments), or if the last page carries a cursor.",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"limit": 1}},
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sg/svar",
+      "query": {"limit": 1},
+      "cursor_from": [0, "/data/next_cursor"]
+    }
+  ]
+}

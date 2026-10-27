@@ -1,0 +1,20 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/period": [{"start": "2020-01-01", "end": "2022-01-01"}],
+      "/data/items/*/value_set/names": [["svar20"]]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/period": [{"start": "2018-01-01", "end": "2020-01-01"}],
+      "/data/items/*/value_set/names": [["svar18"]]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [], "/data/next_cursor": null}
+  }
+]

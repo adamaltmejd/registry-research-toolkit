@@ -1,0 +1,41 @@
+[
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/sg"}
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "table_is_register",
+      "/error/fields/ref": "demo/sg",
+      "/error/fields/tables": ["demo/sg/r", "demo/sg/t"]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "svar",
+      "/error/fields/candidates": [
+        {"fqid": "demo/sg/svar", "kind": "variable", "name": "Svar"},
+        {"fqid": "demo/sg2/svar", "kind": "variable", "name": "Svar"}
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_period", "/error/fields/parameter": "period"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_cursor"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
+  }
+]

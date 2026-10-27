@@ -171,6 +171,171 @@
         }
       }
     },
+    "/api/findings/{ref}": {
+      "get": {
+        "description": "The review items and notices on a register, a table or a variable (its segments and occurrences included), optionally narrowed to a period, a table or a rule code.",
+        "operationId": "findings",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/graph/{ref}": {
+      "get": {
+        "description": "The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage.",
+        "operationId": "graph",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "continues",
+                "equivalent",
+                "derived_from",
+                "label_of"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Graph"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/resolve": {
       "get": {
         "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
@@ -211,6 +376,254 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Resolved"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/segments/{ref}": {
+      "get": {
+        "description": "A variable's segments: its maximal runs of one form per table, in time order, each with its spelling, type, value set, flags and state. With `evidence`, each segment's source occurrences and the rule overrides that changed them.",
+        "operationId": "segments",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value_set_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "evidence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SegmentPage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/values": {
+      "get": {
+        "description": "A value set's items, by its hash or by a classification version's ref, with a hierarchical set paged one level at a time by `parent` and searched flat by `q`; or, given a `code` and optionally its `label`, the value sets that hold that pair. The blank code is an item like any other.",
+        "operationId": "values",
+        "parameters": [
+          {
+            "name": "value_set",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          {
+            "name": "classification",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/ValueItemsPage"
+                        },
+                        {
+                          "$ref": "#/components/schemas/ValueSetsPage"
+                        }
+                      ]
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -313,6 +726,161 @@
           }
         }
       },
+      "Finding": {
+        "type": "object",
+        "description": "`shape.Finding`.",
+        "required": [
+          "code",
+          "severity",
+          "subject",
+          "period",
+          "message",
+          "caveat"
+        ],
+        "properties": {
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "An acked statement's caveat."
+          },
+          "code": {
+            "type": "string",
+            "description": "A rule code and its sub-kind, `F7:edition-disagreement`."
+          },
+          "message": {
+            "type": "string"
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "description": "`review` or `notice`."
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Subject"
+          }
+        }
+      },
+      "Graph": {
+        "type": "object",
+        "description": "`shape.Graph`: the focus, its nodes and the relations between them.",
+        "required": [
+          "focus",
+          "nodes",
+          "edges"
+        ],
+        "properties": {
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphEdge"
+            }
+          },
+          "focus": {
+            "type": "string",
+            "description": "The ref's fqid."
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphNode"
+            }
+          }
+        }
+      },
+      "GraphEdge": {
+        "type": "object",
+        "required": [
+          "kind",
+          "from",
+          "to",
+          "at",
+          "prov",
+          "caveat"
+        ],
+        "properties": {
+          "at": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period",
+                "description": "From the day a succession takes over; `null` when the source states no day."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The source's own words about the relation."
+          },
+          "from": {
+            "type": "string",
+            "description": "The subject's fqid."
+          },
+          "kind": {
+            "type": "string",
+            "description": "`continues`, `equivalent`, `derived_from` or `label_of`."
+          },
+          "prov": {
+            "type": "string",
+            "description": "`source`, `curated` or `rule`."
+          },
+          "to": {
+            "type": "string",
+            "description": "The object's fqid."
+          }
+        }
+      },
+      "GraphNode": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "kind",
+          "name"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "description": "`variable`, `table`, `register` or `class_version`."
+          },
+          "name": {
+            "type": "string",
+            "description": "A register's or table's name, a variable's or class version's label."
+          }
+        }
+      },
+      "Locator": {
+        "type": "object",
+        "required": [
+          "input",
+          "locator"
+        ],
+        "properties": {
+          "input": {
+            "type": "string"
+          },
+          "locator": {
+            "type": "string"
+          }
+        }
+      },
       "Meta": {
         "type": "object",
         "description": "The response `meta` (`shape.Meta`).",
@@ -330,6 +898,107 @@
           },
           "generation": {
             "type": "string"
+          }
+        }
+      },
+      "Occurrence": {
+        "type": "object",
+        "description": "One occurrence behind a segment (`shape.Segment.evidence`).",
+        "required": [
+          "release",
+          "period",
+          "spelling",
+          "label",
+          "source_key",
+          "status",
+          "locators",
+          "overrides"
+        ],
+        "properties": {
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "locators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Locator"
+            }
+          },
+          "overrides": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Override"
+            }
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "release": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Release"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_key": {
+            "type": "string"
+          },
+          "spelling": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "Override": {
+        "type": "object",
+        "description": "A non-source winner over one field of an occurrence.",
+        "required": [
+          "field",
+          "value",
+          "prov",
+          "statement",
+          "rule",
+          "source_value"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "prov": {
+            "type": "string"
+          },
+          "rule": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "statement": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "`{file, line}` of a curated statement; always `null` in C."
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -767,6 +1436,138 @@
           "register": {
             "type": "string",
             "description": "The register's fqid."
+          }
+        }
+      },
+      "Segment": {
+        "type": "object",
+        "description": "`shape.Segment`.",
+        "required": [
+          "table",
+          "period",
+          "spelling",
+          "type",
+          "length",
+          "format",
+          "value_set",
+          "classification",
+          "coded",
+          "sensitive",
+          "identifier",
+          "id_kind",
+          "role",
+          "temporality",
+          "state"
+        ],
+        "properties": {
+          "classification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A classification version's ref."
+          },
+          "coded": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Occurrence"
+            },
+            "description": "Present only when `evidence` is asked for."
+          },
+          "format": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id_kind": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "identifier": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "length": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "role": {
+            "type": "string"
+          },
+          "sensitive": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "spelling": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string",
+            "description": "The table's fqid."
+          },
+          "temporality": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value_set": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ValueSetRef",
+                "description": "`null` when the segment has no value set."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "SegmentPage": {
+        "type": "object",
+        "description": "`Page<Segment>`.",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -1226,6 +2027,207 @@
           "variables": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "Subject": {
+        "type": "object",
+        "description": "`shape.Subject`: what a finding is about, by natural key.",
+        "required": [
+          "kind",
+          "fqid",
+          "table",
+          "period",
+          "release",
+          "spelling",
+          "value_set"
+        ],
+        "properties": {
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The register, table or variable; for a segment or an occurrence, its variable."
+          },
+          "kind": {
+            "type": "string",
+            "description": "`register`, `table`, `release`, `variable`, `segment`, `occurrence` or\n`valueset`."
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period",
+                "description": "The release's, segment's or occurrence's period; `null` when unplaced."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A release's literal delivery name."
+          },
+          "spelling": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "An occurrence's exact spelling."
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The table of a release, segment or occurrence."
+          },
+          "value_set": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A value set's hash."
+          }
+        }
+      },
+      "ValueItem": {
+        "type": "object",
+        "description": "`shape.ValueItem`.",
+        "required": [
+          "code",
+          "label",
+          "level",
+          "parent",
+          "sentinel",
+          "child_count"
+        ],
+        "properties": {
+          "child_count": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "`null` for a flat set."
+          },
+          "code": {
+            "type": "string",
+            "description": "May be `\"\"`: a real item."
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "level": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "parent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The parent's code."
+          },
+          "sentinel": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ValueItemsPage": {
+        "type": "object",
+        "description": "`Page<ValueItem>` plus the value set and `total`.",
+        "required": [
+          "items",
+          "next_cursor",
+          "value_set",
+          "total"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValueItem"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The items matching `q` in the whole set; the set's size without `q`."
+          },
+          "value_set": {
+            "$ref": "#/components/schemas/ValueSetRef"
+          }
+        }
+      },
+      "ValueSetRef": {
+        "type": "object",
+        "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+        "required": [
+          "hash",
+          "n_items",
+          "hierarchical",
+          "names",
+          "classification"
+        ],
+        "properties": {
+          "classification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The curated classification version's ref; `null` until a version is curated."
+          },
+          "hash": {
+            "type": "string"
+          },
+          "hierarchical": {
+            "type": "boolean"
+          },
+          "n_items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ValueSetsPage": {
+        "type": "object",
+        "description": "`Page<ValueSetRef>`, ordered by hash.",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValueSetRef"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       }

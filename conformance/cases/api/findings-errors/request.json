@@ -1,0 +1,11 @@
+{
+  "note": "findings refusals, from fixtures/relations. A provider ref is a ref of a kind findings does not take (invalid_ref); a register with named tables is not a table (table_is_register lists gammal and ny); an unknown ref is not_found; a malformed period is invalid_period naming the parameter; the bare name `lopnr` is shared by a variable of rel and one of kalla (ambiguous_ref lists both by fqid). Fails if a provider ref answers a list, if `table` takes a register with named tables, if a bad period is ignored, or if a shared bare name picks one entity.",
+  "fixture": "relations",
+  "requests": [
+    {"operation": "findings", "path": "/api/findings/demo"},
+    {"operation": "findings", "path": "/api/findings/demo/rel", "query": {"table": "demo/rel"}},
+    {"operation": "findings", "path": "/api/findings/demo/nope"},
+    {"operation": "findings", "path": "/api/findings/demo/rel", "query": {"period": "x"}},
+    {"operation": "findings", "path": "/api/findings/lopnr"}
+  ]
+}

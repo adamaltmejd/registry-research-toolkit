@@ -1,0 +1,20 @@
+{"kind":"register","provider":"demo","register":"sg","name":"Segmentregistret"}
+{"kind":"table","provider":"demo","register":"sg","table":"t","name":"Tabell T","from":"2018-01-01","to":"2021-12-31"}
+{"kind":"table","provider":"demo","register":"sg","table":"r","name":"Tabell R"}
+{"kind":"register","provider":"demo","register":"sg2","name":"Segmentregistret två"}
+{"kind":"table","provider":"demo","register":"sg2","table":"","name":"Segmentregistret två"}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej"},{"code":"","label":"Uppgift saknas"}],"names":["svar18"]}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej"},{"code":"3","label":"Vet ej"},{"code":"","label":"Uppgift saknas"}],"names":["svar20"]}
+{"kind":"value_set","items":[{"code":"A","label":"Jordbruk"},{"code":"A1","label":"Skog","parent":"A"},{"code":"A2","label":"Fiske","parent":"A"},{"code":"B","label":"Industri"}],"names":["bransch"]}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"t","column":"Svar","source_key":"k1","label":"Svar","from":"2018-01-01","to":"2019-12-31","valueset":"svar18"}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"t","column":"Svar","source_key":"k1","label":"Svar","from":"2020-01-01","to":"2021-12-31","valueset":"svar20"}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"t","column":"Kanslig","source_key":"k2","label":"Känslig","from":"2018-01-01","to":"2019-12-31","sensitive":false}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"t","column":"Kanslig","source_key":"k2","label":"Känslig","from":"2020-01-01","to":"2021-12-31","sensitive":true}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"t","column":"Tidig","source_key":"k3","label":"Tidig","from":"2010-01-01","to":"2021-12-31"}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"t","column":"Bransch","source_key":"k4","label":"Bransch","from":"2018-01-01","to":"2021-12-31","valueset":"bransch"}
+{"kind":"release","provider":"demo","register":"sg","table":"r","release":"r2020","name":"R 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"sg","table":"r","release":"r2021","name":"R 2021","from":"2021-01-01","to":"2021-12-31","grain":"year","edition":"preliminary"}
+{"kind":"release","provider":"demo","register":"sg","table":"r","release":"r2021f","name":"R 2021 slutlig","from":"2021-01-01","to":"2021-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"r","release":"r2020","column":"Prel","source_key":"k5","label":"Prel"}
+{"kind":"occurrence","provider":"demo","register":"sg","table":"r","release":"r2021","column":"Prel","source_key":"k5","label":"Prel"}
+{"kind":"occurrence","provider":"demo","register":"sg2","table":"","column":"Svar","source_key":"k1","label":"Svar","from":"2018-01-01","to":"2019-12-31"}

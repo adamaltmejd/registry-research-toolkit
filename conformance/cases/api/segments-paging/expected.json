@@ -1,0 +1,15 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/items/*/period/start": ["2018-01-01"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/period/start": ["2020-01-01"], "/data/next_cursor": null},
+    "members": {
+      "steps": [0, 1],
+      "pointer": "/data/items/*/period/start",
+      "equals": ["2018-01-01", "2020-01-01"]
+    }
+  }
+]

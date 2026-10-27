@@ -1,0 +1,7 @@
+{
+  "note": "Fails if a column only a non-primary (preliminary) delivery documents stops being its own `preliminary` segment, or merges into the final 2020 run. Prel is documented in final r2020 and in preliminary r2021, which sits beside a final r2021 that lacks the column; the fixture adds that final 2021 release because a lone preliminary release is its own primary and resolves `clear`.",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg/prel"}
+  ]
+}
