@@ -5,7 +5,9 @@
 
 use reg_core::project::Edition;
 use reg_core::project::{Binding, Source};
-use reg_core::{Interval, IssueLevel, gaps, intersect, merge, next_iso_day, overlap};
+use reg_core::{
+    Form, Interval, IssueLevel, fold_identity, gaps, intersect, merge, next_iso_day, overlap,
+};
 use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
@@ -363,17 +365,20 @@ const SELECTED: &str = "r.table_id = ?1 AND r.start IS NOT NULL
     AND (?2 IS NOT NULL OR r.is_primary = 1)";
 
 /// The pieces serving table `k`'s selected releases give the variable inside `windows`,
-/// from one pass over their used and shadowed occurrences. Those occurrences have no
-/// segment, so the builder's segment rules (crates/DESIGN.md "Time" and "Identity",
-/// reg-resolve's segments and F2, v4 §4.3-4.6) are applied here before a form is picked:
-/// - a day another variable claims the variable's folded spelling on is ambiguous;
-/// - a day the variable's occurrences give in different forms (spelling, type, value
-///   set) is ambiguous, across releases too: overlapping deliveries of different
-///   periods have no preference;
+/// from one pass over their used and shadowed occurrences. Ambiguity is decided from
+/// those occurrences alone, never from the segments (built over every delivery), with
+/// the builder's predicates from reg-core (crates/DESIGN.md "Time" and "Identity",
+/// reg-resolve's segments and F2):
+/// - a day another variable claims the variable's [`reg_core::fold_identity`] spelling
+///   on is ambiguous;
+/// - a day the variable's occurrences give in more than one [`reg_core::Form`] (label
+///   by `label_key`, type, value set; not spelling) is ambiguous, across releases too:
+///   overlapping deliveries of different periods have no preference;
 /// - sensitivity and identifier are OR-ed over every occurrence covering a day.
 ///
 /// Each day then takes its form from the first occurrence covering it, by release
 /// (start, end, id), then occurrence (start, end, id).
+#[allow(clippy::too_many_lines)]
 fn selected(
     scope: &Scope,
     k: usize,
@@ -382,15 +387,15 @@ fn selected(
 ) -> Result<Vec<Piece>, Error> {
     let s = &scope.serving[k];
     let edition = scope.source.edition.map(reg_core::project::Edition::as_str);
-    let rows: Vec<(i64, i64, Piece)> = scope
+    let rows: Vec<(i64, Form, Piece)> = scope
         .conn
         .prepare(&format!(
-            "SELECT x.start, x.end, {FORM},
-                    CASE WHEN g.state = 'ambiguous' THEN 'ambiguous' ELSE 'clear' END,
-                    x.end = ?4, x.variable_id, sp.fold_id
+            "SELECT x.start, x.end, {FORM}, 'clear', x.end = ?4, x.variable_id, l.body,
+                    vs.hash
              FROM occurrence x JOIN release r ON r.id = x.release_id
                JOIN spelling sp ON sp.id = x.spelling_id
-               LEFT JOIN segment g ON g.id = x.segment_id
+               LEFT JOIN text l ON l.id = x.label_text
+               LEFT JOIN valueset vs ON vs.id = x.valueset_id
              WHERE {SELECTED} AND x.status IN ('used', 'shadowed')
                AND (x.variable_id = ?5 OR sp.fold_id IN (
                  SELECT s2.fold_id FROM occurrence o2 JOIN spelling s2 ON s2.id = o2.spelling_id
@@ -405,35 +410,44 @@ fn selected(
                 scope.server.open.1,
                 variable
             ],
-            |row| Ok((row.get(11)?, row.get(12)?, piece(k, row)?)),
+            |row| {
+                let piece = piece(k, row)?;
+                let label: Option<String> = row.get(12)?;
+                let valueset: Option<String> = row.get(13)?;
+                let form = Form::new(
+                    label.as_deref(),
+                    piece.dtype.as_deref(),
+                    valueset.as_deref(),
+                );
+                Ok((row.get(11)?, form, piece))
+            },
         )?
         .collect::<rusqlite::Result<_>>()?;
-    let mut own: Vec<(i64, Piece)> = Vec::new();
-    let mut rivals: Vec<(i64, Interval)> = Vec::new();
-    for (owner, fold, row) in rows {
+    let mut own: Vec<(Form, Piece)> = Vec::new();
+    let mut rivals: Vec<(String, Interval)> = Vec::new();
+    for (owner, form, row) in rows {
         for days in overlap(std::slice::from_ref(&row.days), windows) {
             if owner == variable {
                 own.push((
-                    fold,
+                    form.clone(),
                     Piece {
                         days,
                         ..row.clone()
                     },
                 ));
             } else {
-                rivals.push((fold, days));
+                rivals.push((fold_identity(&row.spelling), days));
             }
         }
     }
     let mut ambiguous = Vec::new();
-    for (i, (fold, a)) in own.iter().enumerate() {
+    for (i, (form, a)) in own.iter().enumerate() {
         let forms = own[i + 1..]
             .iter()
-            .filter(|(_, b)| {
-                (&a.spelling, &a.dtype, a.valueset) != (&b.spelling, &b.dtype, b.valueset)
-            })
+            .filter(|(f, _)| f != form)
             .map(|(_, b)| &b.days);
-        let claims = rivals.iter().filter(|(f, _)| f == fold).map(|(_, d)| d);
+        let fold = fold_identity(&a.spelling);
+        let claims = rivals.iter().filter(|(f, _)| *f == fold).map(|(_, d)| d);
         ambiguous.extend(forms.chain(claims).filter_map(|d| intersect(&a.days, d)));
     }
     let flagged = |test: fn(&Piece) -> bool| {

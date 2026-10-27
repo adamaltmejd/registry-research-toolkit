@@ -99,6 +99,35 @@ pub fn fold_identity(s: &str) -> String {
     s.to_lowercase()
 }
 
+/// A label's comparison key: case- and spacing-insensitive ([`fold_identity`] over the
+/// whitespace-normalised label).
+#[must_use]
+pub fn label_key(label: &str) -> String {
+    fold_identity(&label.split_whitespace().collect::<Vec<_>>().join(" "))
+}
+
+/// What two overlapping occurrences of one variable must agree on (crates/DESIGN.md
+/// "Time"): more than one distinct form over a day makes it ambiguous. The spelling is
+/// not part of it; the label compares by [`label_key`].
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Form {
+    pub label: Option<String>,
+    pub dtype: Option<String>,
+    pub valueset: Option<String>,
+}
+
+impl Form {
+    /// The form of an occurrence's raw label, type and value set.
+    #[must_use]
+    pub fn new(label: Option<&str>, dtype: Option<&str>, valueset: Option<&str>) -> Self {
+        Self {
+            label: label.map(label_key),
+            dtype: dtype.map(str::to_owned),
+            valueset: valueset.map(str::to_owned),
+        }
+    }
+}
+
 /// Passes of [`fold_search`]: two change any string at most (NFKD can emit a capital
 /// the first case fold could not see: U+1D2C MODIFIER LETTER CAPITAL A -> "A" -> "a");
 /// the third confirms. Each pass maps characters independently, so the bound the

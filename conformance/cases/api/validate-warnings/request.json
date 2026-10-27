@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a clear project stops being `ok: true` with exactly these non-blocking findings, at their levels and located paths, in source, then binding (source-level first), then code order: `identifier` (`imp` Lopnr) and `variable_sensitive` (`imp` Kansl is sensitive from 2020); `edition_disagreement` (the preliminary 2019 release of `pre` types `Mat` decimal, the final one int: reg-resolve's F7 on that release); `period_clipped` and `variable_replaced` (`rep` Gammal ends 2017; `Ny` continues it from 2018, named in `successor_fqid` and never followed); `form_change` (`nam/a` spells the variable `Belopp`, then `BeloppTot` from 2020); `coverage_end_unstated` (`opn`'s only column has no stated end); `table_succession_undated` and `period_clipped` (`und/tva` continues `und/ett` with no `at`, so the request past `ett`'s coverage end is clipped, not followed); `variable_sensitive` over all of 2023 (`edt`'s preliminary 2023 release flags `V` sensitive, the earlier-sorting preliminary 2023H1 one does not: flags are OR-ed over every selected occurrence, never dropped by first-wins); `variable_replaced` with no period (`rep`'s `Nyast` continues `Ny` with no `at`: reported with the date unstated, never inferred or followed). Oracle: the fixture's JSONL, reg-resolve's rules and logical-order.md §3. The second step fails if an unknown query parameter stops being `invalid_parameter` naming it (the error the MCP equivalence test requires `validate`'s cases to reach).",
+  "note": "Fails if a clear project stops being `ok: true` with exactly these non-blocking findings, at their levels and located paths, in source, then binding (source-level first), then code order: `identifier` (`imp` Lopnr) and `variable_sensitive` (`imp` Kansl is sensitive from 2020); `edition_disagreement` (the preliminary 2019 release of `pre` types `Mat` decimal, the final one int: reg-resolve's F7 on that release); `period_clipped` and `variable_replaced` (`rep` Gammal ends 2017; `Ny` continues it from 2018, named in `successor_fqid` and never followed); `form_change` (`nam/a` spells the variable `Belopp`, then `BeloppTot` from 2020); `coverage_end_unstated` (`opn`'s only column has no stated end); `table_succession_undated` and `period_clipped` (`und/tva` continues `und/ett` with no `at`, so the request past `ett`'s coverage end is clipped, not followed); `variable_sensitive` over all of 2023 (`edt`'s preliminary 2023 release flags `V` sensitive, the earlier-sorting preliminary 2023H1 one does not: flags are OR-ed over every selected occurrence, never dropped by first-wins); `variable_replaced` with no period (`rep`'s `Nyast` continues `Ny` with no `at`: reported with the date unstated, never inferred or followed); `form_change` and no `ambiguous_window` over 2025 (`edt`'s preliminary 2025H1 release spells `V` as `v`: spelling is not part of reg-core's `Form`, so the case difference picks `v` then `V`, it does not block); nothing for `qualifier: A` over 2026 (`edt`'s final 2026 releases `A` int and `B` decimal make the segment ambiguous, but only `A` is selected: the selected-release pass never reads the segment state). Oracle: the fixture's JSONL, reg-resolve's rules and logical-order.md §3. The second step fails if an unknown query parameter stops being `invalid_parameter` naming it (the error the MCP equivalence test requires `validate`'s cases to reach).",
   "fixture": "orders",
   "requests": [
     {
@@ -62,6 +62,20 @@
             "table": "demo/rep",
             "period": 2019,
             "bindings": [{"variable": "demo/rep/ny", "type": "numeric"}]
+          },
+          {
+            "name": "release-case",
+            "table": "demo/edt",
+            "period": 2025,
+            "edition": "preliminary",
+            "bindings": [{"variable": "demo/edt/v", "type": "numeric"}]
+          },
+          {
+            "name": "release-qualifier",
+            "table": "demo/edt",
+            "period": 2026,
+            "qualifier": "A",
+            "bindings": [{"variable": "demo/edt/v", "type": "numeric"}]
           }
         ]
       }

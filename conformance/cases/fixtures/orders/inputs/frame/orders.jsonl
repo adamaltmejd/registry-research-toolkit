@@ -138,5 +138,25 @@
 {"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023p","column":"V","source_key":"k1","label":"Värde","dtype":"int","sensitive":true}
 {"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2023hp","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024","name":"Utg 2024","from":"2024-01-01","to":"2024-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024p","name":"Utg 2024 preliminär","from":"2024-01-01","to":"2024-12-31","grain":"year","edition":"preliminary"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024h","name":"Utg 2024H1","from":"2024-01-01","to":"2024-06-30","grain":"half","edition":"final"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2024hp","name":"Utg 2024H1 preliminär","from":"2024-01-01","to":"2024-06-30","grain":"half","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2024hp","column":"V","source_key":"k1","label":"Antal","dtype":"int"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025","name":"Utg 2025","from":"2025-01-01","to":"2025-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025p","name":"Utg 2025 preliminär","from":"2025-01-01","to":"2025-12-31","grain":"year","edition":"preliminary"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025h","name":"Utg 2025H1","from":"2025-01-01","to":"2025-06-30","grain":"half","edition":"final"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2025hp","name":"Utg 2025H1 preliminär","from":"2025-01-01","to":"2025-06-30","grain":"half","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025h","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2025hp","column":"v","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2026a","name":"Utg 2026 A","from":"2026-01-01","to":"2026-12-31","grain":"year","edition":"final","qualifier":"A"}
+{"kind":"release","provider":"demo","register":"edt","table":"","release":"u2026b","name":"Utg 2026 B","from":"2026-01-01","to":"2026-12-31","grain":"year","edition":"final","qualifier":"B"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2026a","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2026b","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
 {"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2020","column":"Nyast","source_key":"k3","label":"Nyaste kod","dtype":"int"}
 {"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"rep","key":"k3"},"object":{"kind":"variable","provider":"demo","register":"rep","key":"k2"}}
