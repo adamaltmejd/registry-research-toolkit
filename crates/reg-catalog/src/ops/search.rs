@@ -132,15 +132,17 @@ pub struct RegisterFacets {
     registers: Vec<RegisterFacet>,
 }
 
-/// One register's matched variables; `name` and `variables` only where the mode lists
-/// them (rule 7).
+/// One register's matched variables. `name` and `variables` are present only in the
+/// modes that list them, never `null`.
 #[derive(Serialize, ToSchema)]
 pub struct RegisterFacet {
     fqid: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
     name: Option<String>,
     variable_matches: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
     variables: Option<Vec<FacetVariable>>,
 }
 

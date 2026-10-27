@@ -13,8 +13,6 @@ operations = [
     # r-segments-values
     # r-findings-graph
     # r-search
-    "search",
-    "search_facets",
     # r-docs
     "docs_get",
     "docs_related",
@@ -35,24 +33,6 @@ cases = [
     # r-segments-values
     # r-findings-graph
     # r-search
-    "api/cursor-stale",
-    "api/edge-cache-param",
-    "api/invalid-parameters",
-    "api/search-all-types",
-    "api/search-arm-filters",
-    "api/search-code-owners",
-    "api/search-code-shape",
-    "api/search-default-limit",
-    "api/search-no-token",
-    "api/search-paging",
-    "api/search-period",
-    "api/search-punctuation-label",
-    "api/search-ranking-order",
-    "api/search-register",
-    "api/search-register-facets",
-    "api/search-register-name",
-    "api/search-spellings",
-    "api/search-untyped-pages",
     # r-docs
     "api/docs-download",
     "api/docs-excerpt",
