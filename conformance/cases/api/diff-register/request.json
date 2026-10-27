@@ -1,10 +1,13 @@
 {
-  "note": "A register's diff between 2017 and 2020 (table a has no 2019 release): Yrke is added, Ort removed, Alder changed in type (int to char), and Lan changed in spelling (Lan to LanKod: a rename is never added plus removed); Id and Kon are unchanged. Table b, delivered only in 2020, has both its variables added. A variable ref, a malformed period and a register passed as `table` are refused with their codes. Fails if a rename shows as added plus removed, a change names the wrong field or values, the summary miscounts, a table is missing or out of pid order, or a refusal changes code.",
+  "note": "A register's diff between 2017 and 2020 (table a has no 2019 release): Yrke is added, Ort removed, Alder changed in type (int to char), and Lan changed in spelling (Lan to LanKod: a rename is never added plus removed); Id and Kon are unchanged. Table b, delivered only in 2020, has both its variables added. A variable ref, a malformed period and a register passed as `table`, an unknown ref, the bare name kon (two registers) and a missing `to` are refused with their codes. Fails if a rename shows as added plus removed, a change names the wrong field or values, the summary miscounts, a table is missing or out of pid order, or a refusal changes code.",
   "fixture": "spans",
   "requests": [
     {"operation": "diff", "path": "/api/diff/demo/sp", "query": {"from": "2017", "to": "2020"}},
     {"operation": "diff", "path": "/api/diff/demo/sp/id", "query": {"from": "2017", "to": "2020"}},
     {"operation": "diff", "path": "/api/diff/demo/sp", "query": {"from": "bad", "to": "2020"}},
-    {"operation": "diff", "path": "/api/diff/demo/sp", "query": {"from": "2017", "to": "2020", "table": "demo/sp"}}
+    {"operation": "diff", "path": "/api/diff/demo/sp", "query": {"from": "2017", "to": "2020", "table": "demo/sp"}},
+    {"operation": "diff", "path": "/api/diff/demo/nope", "query": {"from": "2017", "to": "2020"}},
+    {"operation": "diff", "path": "/api/diff/kon", "query": {"from": "2017", "to": "2020"}},
+    {"operation": "diff", "path": "/api/diff/demo/sp", "query": {"from": "2017"}}
   ]
 }

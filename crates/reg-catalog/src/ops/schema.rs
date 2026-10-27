@@ -328,14 +328,8 @@ fn position(text: &str) -> Result<(String, String, i64), Error> {
 fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let limit = super::limit(params)?;
     let request = bounds(params, "period")?.unwrap_or((i64::MIN, i64::MAX));
-    let conn = server.catalog.connect()?;
-    let scope = scope(
-        &conn,
-        params["ref"],
-        params.get("table").copied(),
-        true,
-        "schema",
-    )?;
+    // The cursor is checked before the ref: a cursor from another generation is stale
+    // whatever its ref now resolves to.
     let context = context(params);
     let (offset, after) = match params.get("cursor") {
         Some(token) => {
@@ -345,6 +339,14 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
         }
         None => (0, None),
     };
+    let conn = server.catalog.connect()?;
+    let scope = scope(
+        &conn,
+        params["ref"],
+        params.get("table").copied(),
+        true,
+        "schema",
+    )?;
     // simplify: every line of the ref is built, then paged in memory; page in SQL if a
     // register's lines pass a few thousand.
     let mut rest: Vec<Line> = lines(&conn, &scope.tables, scope.variable, request)?

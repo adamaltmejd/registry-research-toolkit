@@ -76,5 +76,10 @@
       "/data/items/*/role": ["row_key"],
       "/data/next_cursor": null
     }
+  },
+  {
+    "status": 409,
+    "json": {"/error/code": "stale_cursor"},
+    "keys": {"/error/fields": ["generation"]}
   }
 ]

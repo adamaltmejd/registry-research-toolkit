@@ -1,11 +1,13 @@
 {
-  "note": "Schema lines of a register over five pages of two, with the boundaries inside one table (a|a), between a variable's two folded spellings (lankod: Lan, then LanKod) and across tables (a|b). A line is one (table, variable, folded spelling): Alder is one line though it has two segments (type from its latest, char), LanKod is two (Lan, LanKod), Id is two because it is in both tables; a line's period runs from its first start to its last end, across the 2019 gap. Fails if a page repeats or skips a line, lines merge across spellings or split across segments, a period or type is not the group's, or the last page carries a cursor.",
+  "note": "Schema lines of a register over five pages of two, with the boundaries inside one table (a|a), between a variable's two folded spellings (lankod: Lan, then LanKod) and across tables (a|b). A line is one (table, variable, folded spelling): Alder is one line though it has two segments (type from its latest, char), LanKod is two (Lan, LanKod), Id is two because it is in both tables; a line's period runs from its first start to its last end, across the 2019 gap. A cursor sent to another catalog generation (the base artifact) is stale_cursor, whatever its ref. Fails if a page repeats or skips a line, lines merge across spellings or split across segments, a period or type is not the group's, or the last page carries a cursor.",
   "fixture": "spans",
+  "artifacts": {"other": {"fixture": "base"}},
   "requests": [
     {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}},
     {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [0, "/data/next_cursor"]},
     {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [1, "/data/next_cursor"]},
     {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [2, "/data/next_cursor"]},
-    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [3, "/data/next_cursor"]}
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [3, "/data/next_cursor"]},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "artifact": "other", "cursor_from": [0, "/data/next_cursor"]}
   ]
 }

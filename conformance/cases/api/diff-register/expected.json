@@ -66,5 +66,20 @@
       "/error/fields/ref": "demo/sp",
       "/error/fields/tables": ["demo/sp/a", "demo/sp/b"]
     }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/candidates/*/fqid": ["demo/sp/kon", "demo/sp2/kon"]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "to"}
   }
 ]

@@ -1,10 +1,12 @@
 {
-  "note": "A variable's coverage per table and per column. Kon is in table a in 2017 and 2020 only, so its merged segments are two spans and the 2018 release that lacks it is a release_without_column gap (2019 has no release, so it is the table's gap, not the variable's); a variable has no releases. Lankod is delivered as Lan then LanKod under one variable: two columns with their own spans, and spans that do not touch stay apart. The bare name kon is ambiguous across the two registers; an unknown ref is not found. Fails if spans merge across a gap, the variable gap is lost or extended over 2019, a column is merged with its renamed spelling, or the refusals change code.",
+  "note": "A variable's coverage per table and per column. Kon is in table a in 2017 and 2020 only, so its merged segments are two spans and the 2018 release that lacks it is a release_without_column gap (2019 has no release, so it is the table's gap, not the variable's); a variable has no releases. Lankod is delivered as Lan then LanKod under one variable: two columns with their own spans, and spans that do not touch stay apart. The bare name kon is ambiguous across the two registers; an unknown ref is not found, a malformed ref is invalid_ref and an unknown parameter invalid_parameter. Fails if spans merge across a gap, the variable gap is lost or extended over 2019, a column is merged with its renamed spelling, or the refusals change code.",
   "fixture": "spans",
   "requests": [
     {"operation": "coverage", "path": "/api/coverage/demo/sp/kon"},
     {"operation": "coverage", "path": "/api/coverage/demo/sp/lankod"},
     {"operation": "coverage", "path": "/api/coverage/kon"},
-    {"operation": "coverage", "path": "/api/coverage/demo/nope"}
+    {"operation": "coverage", "path": "/api/coverage/demo/nope"},
+    {"operation": "coverage", "path": "/api/coverage/demo/a/b/c"},
+    {"operation": "coverage", "path": "/api/coverage/demo/sp/kon", "query": {"limit": 1}}
   ]
 }
