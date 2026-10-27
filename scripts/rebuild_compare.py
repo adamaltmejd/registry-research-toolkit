@@ -898,7 +898,7 @@ def order_findings(body):
     )
 
 
-def finding_periods(body, code, row, tables, sources):
+def finding_periods(body, code, row, tables, sources, *, variables=()):
     spans = []
     for issue in order_findings(body):
         table = tables.get(
@@ -908,6 +908,7 @@ def finding_periods(body, code, row, tables, sources):
             issue["code"] == code
             and (
                 issue.get("variable") == row[1]
+                or issue.get("variable") in variables
                 or (
                     code == "table_succession_undated" and issue.get("variable") is None
                 )
@@ -1138,6 +1139,7 @@ def classify_difference(
     placements,
     curation,
     unplaced,
+    correspondences=(),
 ):
     def result(cls, reason, owner=None, review=None):
         classified = record | {
@@ -1183,6 +1185,20 @@ def classify_difference(
             review="Operator: inspect both refusal responses.",
         )
     alignment = record.get("alignment") or {}
+    # Direct table-scoped identity matches explain findings and retained
+    # representations without rewriting either side's evidence or inferring transitive IDs.
+    new_ids = (
+        (
+            {old[1]}
+            | {
+                new_id
+                for table, old_id, new_id in correspondences
+                if table == old[0] and old_id == old[1]
+            }
+        )
+        if old
+        else set()
+    )
     family = old_curation(old or new, curation, family_only=True)
     if family and not alignment.get("equal_coverage", True):
         return result(
@@ -1246,7 +1262,9 @@ def classify_difference(
                 "preliminary data",
                 "Only warned preliminary windows add coverage absent from the old order.",
             )
-    if old and (new is None or (old[:2] == new[:2] and old[4] == new[4])):
+    if old and (
+        new is None or (old[0] == new[0] and new[1] in new_ids and old[4] == new[4])
+    ):
         removed = uncovered(
             row_days(old),
             [
@@ -1268,7 +1286,12 @@ def classify_difference(
             else []
         )
         clips = finding_periods(
-            bodies[1], "period_clipped", old, tables[1], record["sources"]["new"]
+            bodies[1],
+            "period_clipped",
+            old,
+            tables[1],
+            record["sources"]["new"],
+            variables=new_ids,
         )
         clips += finding_periods(
             bodies[1],
@@ -1276,6 +1299,7 @@ def classify_difference(
             old,
             tables[1],
             record["sources"]["new"],
+            variables=new_ids,
         )
         if (
             removed
@@ -1314,7 +1338,11 @@ def classify_difference(
         )
     if old and new is None:
         alternatives = {r[4] for r in rows[0] if r[:4] == old[:4]}
-        retained = {r[4] for r in rows[1] if r[:4] == old[:4]}
+        retained = {
+            r[4]
+            for r in rows[1]
+            if r[0] == old[0] and r[1] in new_ids and r[2:4] == old[2:4]
+        }
         if len(alternatives) > 1 and retained and retained <= alternatives:
             return result(
                 "representation only",
@@ -1545,6 +1573,22 @@ def orders(args) -> int:
                     reg, [view[reg] for view in catalog_views], tables
                 )
 
+                differences = list(row_differences(*rows, new_db, tables[1]))
+                mapped = sorted(
+                    {
+                        (old[0], old[1], new[1])
+                        for old, new, alignment in differences
+                        if old
+                        and new
+                        and old[1] != new[1]
+                        and alignment
+                        and alignment["supported"]
+                    }
+                )
+                mappings.extend(
+                    {"register": reg, "table": t, "old": o, "new": n}
+                    for t, o, n in mapped
+                )
                 classified = partial(
                     classify_difference,
                     rows=rows,
@@ -1554,6 +1598,7 @@ def orders(args) -> int:
                     curation=curation_evidence(old_db, reg, tables[0]),
                     unplaced=unplaced_columns(new_db, reg, tables[1]),
                     placements=placements,
+                    correspondences=mapped,
                 )
 
                 evidence = {
@@ -1563,18 +1608,6 @@ def orders(args) -> int:
                 }
                 if any(r["error_code"] for r in results):
                     emit(classified(evidence | {"kind": "refusal"}))
-                differences = list(row_differences(*rows, new_db, tables[1]))
-                mapped = sorted(
-                    {
-                        (old[0], old[1], new[1])
-                        for old, new, _ in differences
-                        if old and new and old[1] != new[1]
-                    }
-                )
-                mappings.extend(
-                    {"register": reg, "table": t, "old": o, "new": n}
-                    for t, o, n in mapped
-                )
                 for old, new, alignment in differences:
                     table = (old or new)[0]
                     source_names = {}
