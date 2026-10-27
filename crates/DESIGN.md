@@ -217,8 +217,10 @@ spelling and type. A D `set` states those.
 - Each register has one optional `curation.toml` beside its `ids.toml`, containing
   `[[statement]]` tables. One file gives duplicate detection and review a single
   register-local boundary without a file-order precedence rule. Statements have no
-  hand-written ids: identity is SHA-256 of normalized typed content (including evidence
-  and caveat), excluding the file and line.
+  hand-written ids. Register-local lock keys hash normalized typed content (including
+  evidence and caveat), excluding file and line. Published statement identities and
+  asserted source handles hash provider, register and that content key, so identical
+  statements in different registers retain separate authoring locations.
 - The pure model and address grammar live in `reg-frame`, shared by readers and resolve;
   `reg-frame` uses `reg-core` for periods and folds. The TOML loader stays in
   `reg-readers`, so no new crate or reader dependency is needed in resolve.
@@ -233,9 +235,11 @@ spelling and type. A D `set` states those.
 - Application binds register handles first, then table handles and occurrence rows, then
   asserts source-shaped facts. Each phase checks selectors and locks against an
   immutable snapshot before applying accepted statements. Refused statements contribute
-  no facts. Bind premises include the moved subtree, so source changes affecting a merge
-  or priority cannot escape review. Later selectors see the bound frame plus assertions,
-  while each assertion's redundancy check sees the bound source without that assertion.
+  no facts. Bind premises include the moved subtree and the destination and parent facts
+  used by merging, priority and coverage decisions. Those dependencies are evidence,
+  never extra rows selected for rewriting. Later selectors see the bound frame plus
+  assertions, while each assertion's redundancy check sees the bound source without that
+  assertion.
 - A bind's numeric priority ranks its source against unbound sources at zero. Higher
   wins per field and period; equal-priority occurrence disagreements retain F6 evidence.
   Ordinary dated rows can be split by scope. A scope cannot bisect a stated release;
@@ -254,9 +258,11 @@ spelling and type. A D `set` states those.
   tables: normalized hash, file/line, evidence, caveat, winning values and losing source
   values. Moved rows retain their source locators. Asserted rows have statement
   provenance instead of invented input rows; asserted releases use `curated` parse
-  state. Statement paths are relative to the curation root, independent of the
-  invocation directory or whether that root is passed as an absolute path. No catalog
-  schema change is needed.
+  state. Resolution finalizes each field's owner, winning value and losing evidence
+  after all coordinate moves; emission writes those decisions without selecting claims.
+  Statement paths are relative to the curation root, independent of the invocation
+  directory or whether that root is passed as an absolute path. No catalog schema change
+  is needed.
 - `curation.lock` is generated canonical JSON (via `reg-frame::canonical_line`), with
   `version = 1` and a `statements` object keyed by normalized statement identity. Each
   premise stores sorted `subjects` and `objects`: source locators and the source values

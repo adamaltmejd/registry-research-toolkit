@@ -33,6 +33,7 @@
 //!   anchor reaches gets a proposed id from its folded spelling.
 
 pub mod curation;
+pub mod provenance;
 
 mod f1;
 mod gaps;

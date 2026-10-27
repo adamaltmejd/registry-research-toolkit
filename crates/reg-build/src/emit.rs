@@ -10,6 +10,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use reg_frame::ValueSet;
+use reg_resolve::provenance::{FinalValue, Origin, Subject as ProvenanceSubject};
 use reg_resolve::{Resolved, Subject};
 
 use crate::docs::Document;
@@ -44,68 +45,6 @@ pub struct StatementRow {
     pub caveat: Option<String>,
 }
 
-pub struct CuratedValue {
-    pub kind: String,
-    pub locator: reg_frame::Locator,
-    pub provider: Option<String>,
-    pub register: Option<String>,
-    pub table: Option<String>,
-    pub release: Option<String>,
-    pub period: Option<reg_core::Interval>,
-    pub field: String,
-    pub value: Option<String>,
-    pub source_value: Option<String>,
-    pub statement: String,
-}
-
-impl CuratedValue {
-    fn matches(
-        &self,
-        kind: &str,
-        _locator: &reg_frame::Locator,
-        provider: Option<&str>,
-        register: Option<&str>,
-        table: Option<&str>,
-        period: Option<&reg_core::Interval>,
-    ) -> bool {
-        self.kind == kind
-            && self.provider.as_deref().is_none_or(|p| Some(p) == provider)
-            && self.register.as_deref().is_none_or(|r| Some(r) == register)
-            && self.table.as_deref().is_none_or(|t| Some(t) == table)
-            && self
-                .period
-                .as_ref()
-                .is_none_or(|p| period.is_some_and(|other| reg_core::intersect(p, other).is_some()))
-    }
-}
-
-fn override_bit(field: &str) -> i64 {
-    [
-        "spelling",
-        "type",
-        "length",
-        "format",
-        "value_set",
-        "classification",
-        "coded",
-        "sensitive",
-        "identifier",
-        "id_kind",
-        "role",
-        "temporality",
-        "label",
-        "definition",
-        "operational_definition",
-        "unit",
-        "period",
-        "table",
-        "variable",
-    ]
-    .iter()
-    .position(|name| *name == field)
-    .map_or(0, |bit| 1 << bit)
-}
-
 /// Everything the file holds, linked.
 pub struct Catalog {
     pub meta: BTreeMap<&'static str, String>,
@@ -124,7 +63,7 @@ pub struct Catalog {
     pub docs: Vec<Document>,
     pub doc_links: Vec<link::DocLink>,
     pub statements: Vec<StatementRow>,
-    pub overrides: Vec<CuratedValue>,
+    pub provenance: reg_resolve::provenance::Finalized,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
 }
 
@@ -220,68 +159,49 @@ impl Rows {
     }
 }
 
-fn curated_rows(
+fn write_provenance(
     rows: &mut Rows,
-    values: &[&CuratedValue],
-    kind: &str,
-    subject: i64,
+    subject: &ProvenanceSubject,
+    subject_id: i64,
+    values: &BTreeMap<&ProvenanceSubject, Vec<&FinalValue>>,
     statements: &BTreeMap<&str, i64>,
-    current: &serde_json::Value,
-    period: Option<&reg_core::Interval>,
-) -> Result<i64, String> {
-    let mut winners = BTreeMap::<&str, (&CuratedValue, Option<String>)>::new();
-    for value in values {
-        let field = match value.field.as_str() {
-            "type" => "dtype",
-            "spelling" => "column",
-            "value_set" => "valueset",
-            field => field,
+) -> Result<(), String> {
+    let kind = match subject {
+        ProvenanceSubject::Register(_) => "register",
+        ProvenanceSubject::Table(..) => "table",
+        ProvenanceSubject::Release(..) => "release",
+        ProvenanceSubject::Occurrence(..) => "occurrence",
+        ProvenanceSubject::ValueSet(_) => "valueset",
+        ProvenanceSubject::ClassVersion(..) => "class_version",
+    };
+    for value in values.get(subject).into_iter().flatten() {
+        let (prov, statement, rule) = match &value.origin {
+            Origin::Curated(hash) => (
+                "curated",
+                Some(
+                    *statements
+                        .get(hash.as_str())
+                        .ok_or_else(|| format!("unknown curation statement {hash}"))?,
+                ),
+                None,
+            ),
+            Origin::Rule(code) => ("rule", None, Some(*code)),
         };
-        let final_value = if field == "period" {
-            period.map(|p| serde_json::to_string(p).expect("period serializes"))
-        } else if let Some(v) = current.get(field) {
-            match v {
-                serde_json::Value::Null => None,
-                serde_json::Value::String(s) => Some(s.clone()),
-                v => Some(v.to_string()),
-            }
-        } else {
-            value.value.clone()
-        };
-        // Binds may repartition an already bound row or combine several sources.
-        // Keep only claims for the final winner; equal claims share one stable owner.
-        if field != "period" && final_value != value.value {
-            continue;
-        }
-        let entry = winners
-            .entry(&value.field)
-            .or_insert((value, final_value.clone()));
-        if (&value.statement, &value.locator) < (&entry.0.statement, &entry.0.locator) {
-            *entry = (value, final_value);
-        }
-    }
-    let mask = winners
-        .keys()
-        .fold(0, |mask, field| mask | override_bit(field));
-    for (value, final_value) in winners.values() {
-        let statement = statements
-            .get(value.statement.as_str())
-            .ok_or_else(|| format!("unknown curation statement {}", value.statement))?;
         rows.push(
             "override",
             vec![
                 Cell::Str(kind.into()),
-                Cell::Int(subject),
+                Cell::Int(subject_id),
                 Cell::Str(value.field.clone()),
-                Cell::Str("curated".into()),
-                Cell::Int(*statement),
-                Cell::Null,
-                opt_str(final_value.as_ref()),
+                Cell::Str(prov.into()),
+                opt_int(statement),
+                rule.map_or(Cell::Null, |code| Cell::Str(code.into())),
+                opt_str(value.value.as_ref()),
                 opt_str(value.source_value.as_ref()),
             ],
         );
     }
-    Ok(mask)
+    Ok(())
 }
 
 /// Write `catalog` to `out`: build a scratch file next to it, compact it into a staged
@@ -314,20 +234,10 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let mut rows = Rows::default();
     let sql = |e: rusqlite::Error| e.to_string();
     let statement_id = sorted_ids(catalog.statements.iter().map(|s| s.hash.as_str()));
-    let mut overrides_by_locator = BTreeMap::<_, Vec<_>>::new();
-    let mut overrides_by_coordinates = BTreeMap::<_, Vec<_>>::new();
-    for value in &catalog.overrides {
-        overrides_by_locator
-            .entry((value.kind.as_str(), &value.locator))
-            .or_default()
-            .push(value);
-        overrides_by_coordinates
-            .entry((
-                value.kind.as_str(),
-                value.provider.as_deref(),
-                value.register.as_deref(),
-                value.table.as_deref(),
-            ))
+    let mut provenance_by_subject = BTreeMap::<_, Vec<_>>::new();
+    for value in &catalog.provenance.values {
+        provenance_by_subject
+            .entry(&value.subject)
             .or_default()
             .push(value);
     }
@@ -468,35 +378,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         let reg = &r.register;
         let reg_pid = pid_of_register(r);
         let register_row = register_id[&reg_pid];
-        let register_values: Vec<_> = overrides_by_coordinates
-            .get(&(
-                "register",
-                Some(reg.provider.as_str()),
-                Some(reg.register.as_str()),
-                None,
-            ))
-            .into_iter()
-            .flatten()
-            .copied()
-            .filter(|v| {
-                v.matches(
-                    "register",
-                    &reg.locator,
-                    Some(&reg.provider),
-                    Some(&reg.register),
-                    None,
-                    Some(&r.coverage),
-                )
-            })
-            .collect();
-        curated_rows(
+        write_provenance(
             &mut rows,
-            &register_values,
-            "register",
+            &ProvenanceSubject::Register(ri),
             register_row,
+            &provenance_by_subject,
             &statement_id,
-            &serde_json::to_value(reg).expect("register serializes"),
-            Some(&r.coverage),
         )?;
         let pid = *provider_id
             .get(reg.provider.as_str())
@@ -526,46 +413,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
         for (t, table) in r.tables.iter().enumerate() {
             let tid = table_id[&(ri, t)];
-            let source = &table.table;
-            let period = (
-                source
-                    .from
-                    .clone()
-                    .unwrap_or_else(|| reg_frame::OPEN_START.into()),
-                source
-                    .to
-                    .clone()
-                    .unwrap_or_else(|| reg_frame::OPEN_END.into()),
-            );
-            let values: Vec<_> = overrides_by_coordinates
-                .get(&(
-                    "table",
-                    Some(source.provider.as_str()),
-                    Some(source.register.as_str()),
-                    Some(source.table.as_str()),
-                ))
-                .into_iter()
-                .flatten()
-                .copied()
-                .filter(|v| {
-                    v.matches(
-                        "table",
-                        &source.locator,
-                        Some(&source.provider),
-                        Some(&source.register),
-                        Some(&source.table),
-                        Some(&period),
-                    )
-                })
-                .collect();
-            curated_rows(
+            write_provenance(
                 &mut rows,
-                &values,
-                "table",
+                &ProvenanceSubject::Table(ri, t),
                 tid,
+                &provenance_by_subject,
                 &statement_id,
-                &serde_json::to_value(source).expect("table serializes"),
-                Some(&period),
             )?;
             let (lo, hi) = hull(&table.spans);
             rows.push(
@@ -618,37 +471,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             let rid = release_id[&(ri, x)];
             let rel = &release.release;
             let period = rel.from.as_ref().zip(rel.to.as_ref());
-            let span = period.map(|(a, b)| (a.clone(), b.clone()));
-            let values: Vec<_> = overrides_by_coordinates
-                .get(&(
-                    "release",
-                    Some(rel.provider.as_str()),
-                    Some(rel.register.as_str()),
-                    Some(rel.table.as_str()),
-                ))
-                .into_iter()
-                .flatten()
-                .copied()
-                .filter(|v| {
-                    v.release.as_deref() == Some(rel.release.as_str())
-                        && v.matches(
-                            "release",
-                            &rel.locator,
-                            Some(&rel.provider),
-                            Some(&rel.register),
-                            Some(&rel.table),
-                            span.as_ref(),
-                        )
-                })
-                .collect();
-            curated_rows(
+            write_provenance(
                 &mut rows,
-                &values,
-                "release",
+                &ProvenanceSubject::Release(ri, x),
                 rid,
+                &provenance_by_subject,
                 &statement_id,
-                &serde_json::to_value(rel).expect("release serializes"),
-                span.as_ref(),
             )?;
             let asserted = curated_locators.contains(&rel.locator);
             rows.push(
@@ -782,32 +610,19 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         for (o, occ) in r.occurrences.iter().enumerate() {
             let oid = occurrence_id[&(ri, o)];
             let x = &occ.occurrence;
-            let clamped = occ.stated.is_some() && occ.status == "used";
-            let values: Vec<_> = std::iter::once(&x.locator)
-                .chain(&x.also)
-                .filter_map(|at| overrides_by_locator.get(&("occurrence", at)))
-                .flatten()
-                .copied()
-                .filter(|v| {
-                    v.matches(
-                        "occurrence",
-                        &x.locator,
-                        Some(&x.provider),
-                        Some(&x.register),
-                        Some(&x.table),
-                        occ.period.as_ref(),
-                    )
-                })
-                .collect();
-            let curated_mask = curated_rows(
+            write_provenance(
                 &mut rows,
-                &values,
-                "occurrence",
+                &ProvenanceSubject::Occurrence(ri, o),
                 oid,
+                &provenance_by_subject,
                 &statement_id,
-                &serde_json::to_value(x).expect("occurrence serializes"),
-                occ.period.as_ref(),
             )?;
+            let override_mask = catalog
+                .provenance
+                .occurrence_masks
+                .get(&(ri, o))
+                .copied()
+                .unwrap_or_default();
             rows.push(
                 "occurrence",
                 vec![
@@ -844,7 +659,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                             .map(|(v, s)| segment_id[&(ri, v, s)]),
                     ),
                     Cell::Str(occ.status.into()),
-                    Cell::Int(curated_mask | if clamped { 1 << 16 } else { 0 }),
+                    Cell::Int(override_mask),
                 ],
             );
             for locator in std::iter::once(&x.locator).chain(&x.also) {
@@ -867,22 +682,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Int(oid),
                         Cell::Int(count(pv.population)),
                         Cell::Int(valueset_id[pv.valueset.as_str()]),
-                    ],
-                );
-            }
-            if clamped && curated_mask & (1 << 16) == 0 {
-                let render = |p: &reg_core::Interval| reg_core::render(std::slice::from_ref(p));
-                rows.push(
-                    "override",
-                    vec![
-                        Cell::Str("occurrence".into()),
-                        Cell::Int(oid),
-                        Cell::Str("period".into()),
-                        Cell::Str("rule".into()),
-                        Cell::Null,
-                        Cell::Str("T1".into()),
-                        opt_str(occ.period.as_ref().map(render).as_ref()),
-                        opt_str(occ.stated.as_ref().map(render).as_ref()),
                     ],
                 );
             }
@@ -1022,21 +821,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
     for (hash, (set, names)) in &catalog.valuesets {
         let vid = valueset_id[hash.as_str()];
-        let values: Vec<_> = overrides_by_locator
-            .get(&("valueset", &set.locator))
-            .into_iter()
-            .flatten()
-            .copied()
-            .filter(|v| v.matches("valueset", &set.locator, None, None, None, None))
-            .collect();
-        curated_rows(
+        write_provenance(
             &mut rows,
-            &values,
-            "valueset",
+            &ProvenanceSubject::ValueSet(hash.clone()),
             vid,
+            &provenance_by_subject,
             &statement_id,
-            &serde_json::to_value(set).expect("value set serializes"),
-            None,
         )?;
         let ord: BTreeMap<&str, usize> = set
             .items
@@ -1159,30 +949,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Int(*vid),
             ],
         );
-        let values: Vec<_> = overrides_by_locator
-            .get(&("class_version", &class.locator))
-            .into_iter()
-            .flatten()
-            .copied()
-            .filter(|v| {
-                v.matches(
-                    "class_version",
-                    &class.locator,
-                    None,
-                    None,
-                    None,
-                    Some(&class.period),
-                )
-            })
-            .collect();
-        curated_rows(
+        write_provenance(
             &mut rows,
-            &values,
-            "class_version",
+            &ProvenanceSubject::ClassVersion(class.family.clone(), class.version.clone()),
             cid,
+            &provenance_by_subject,
             &statement_id,
-            &serde_json::json!({"family":class.family,"version":class.version,"valueset":class.valueset}),
-            Some(&class.period),
         )?;
     }
 

@@ -162,7 +162,11 @@ fn scoped(mut value: Value, period: &Interval, original: &Interval) -> Value {
     value
 }
 
-fn table_handle(records: &[Record], ledger: &Ledger, slug: &str) -> Result<String, String> {
+pub(super) fn table_handle(
+    records: &[Record],
+    ledger: &Ledger,
+    slug: &str,
+) -> Result<String, String> {
     let candidates: BTreeSet<_> = records
         .iter()
         .filter_map(|r| match r {
@@ -197,6 +201,16 @@ fn table_handle(records: &[Record], ledger: &Ledger, slug: &str) -> Result<Strin
         0 => Ok(slug.into()),
         1 => Ok(candidates.into_iter().next().expect("one handle")),
         _ => Err(format!("ambiguous table slug {slug:?}")),
+    }
+}
+
+fn frame_guard_field(field: GuardField) -> &'static str {
+    match field {
+        GuardField::Label => "label",
+        GuardField::Type => "dtype",
+        GuardField::Unit => "unit",
+        GuardField::Key => "source_key",
+        GuardField::Release => "release",
     }
 }
 
@@ -321,6 +335,20 @@ pub fn apply(
                 if !selected {
                     output.push(record.clone());
                     continue;
+                }
+                if subject.is_some()
+                    && !value["release"].is_null()
+                    && records.iter().any(|r| {
+                        matches!(r, Record::Release(r)
+                        if value["provider"] == r.provider && value["register"] == r.register
+                            && value["table"] == r.table && value["release"] == r.release
+                            && (r.from.is_none() || r.to.is_none()))
+                    })
+                {
+                    return Err(
+                        "bind cannot move rows from an unplaced release; set its period first"
+                            .into(),
+                    );
                 }
                 let original = span(&value, records);
                 let spans = scope.as_ref().map_or_else(
@@ -505,23 +533,42 @@ pub fn apply(
                             "identifier",
                         ],
                     )?;
-                    let mut value = json!({"kind":"occurrence","provider":register.provider,"register":register.register,"table":table,"release":null,"column":if spellings[0] == "<none>" { "" } else { &spellings[0] },"source_key":format!("stmt:{}",statement.identity()),"from":null,"to":null,"label":null,"definition":null,"operational_definition":null,"unit":null,"dtype":null,"length":null,"valueset":null,"population_valuesets":[],"coded":null,"code_system":null,"sensitive":null,"identifier":null,"locator":at,"also":[],"conflicts":[]});
+                    let mut value = json!({"kind":"occurrence","provider":register.provider,"register":register.register,"table":table,"release":null,"column":if spellings[0] == "<none>" { "" } else { &spellings[0] },"source_key":format!("stmt:{}",statement.scoped_identity(&register.provider, &register.register)),"from":null,"to":null,"label":null,"definition":null,"operational_definition":null,"unit":null,"dtype":null,"length":null,"valueset":null,"population_valuesets":[],"coded":null,"code_system":null,"sensitive":null,"identifier":null,"locator":at,"also":[],"conflicts":[]});
                     for guard in guards {
                         if guard.comparison != Comparison::Equal {
                             return Err(
                                 "assert occurrence cannot invent a prefix-guard value".into()
                             );
                         }
-                        let field = match guard.field {
-                            GuardField::Label => "label",
-                            GuardField::Type => "dtype",
-                            GuardField::Unit => "unit",
-                            GuardField::Key => "source_key",
-                            GuardField::Release => "release",
-                        };
+                        let field = frame_guard_field(guard.field);
                         value[field] = json!(guard.value);
                     }
                     fill_fields(&mut value, fields)?;
+                    let column = text(&value, "column").unwrap_or_default();
+                    let spelling = if spellings[0] == "<none>" {
+                        ""
+                    } else {
+                        &spellings[0]
+                    };
+                    if reg_core::fold_identity(column) != spelling {
+                        return Err("assert occurrence spelling differs from its subject".into());
+                    }
+                    for guard in guards {
+                        let field = frame_guard_field(guard.field);
+                        if text(&value, field) != Some(guard.value.as_str()) {
+                            return Err(
+                                "assert occurrence fact contradicts its subject guard".into()
+                            );
+                        }
+                    }
+                    if let Some(scope) = &scope
+                        && !value["from"].is_null()
+                        && !reg_core::gaps(&[span(&value, records)], scope.clone()).is_empty()
+                    {
+                        return Err(
+                            "assert occurrence period lies outside its subject scope".into()
+                        );
+                    }
                     if let Some(hash) = text(&value, "valueset")
                         && !records
                             .iter()
@@ -751,6 +798,51 @@ pub fn apply(
     Ok(out)
 }
 
+fn bound_endpoint(
+    records: &[Record],
+    endpoint: &reg_frame::Endpoint,
+    source: &str,
+    field: &str,
+) -> bool {
+    (field != "table" || endpoint.table.as_deref() == Some(source))
+        && records.iter().any(|record| match record {
+            Record::Register(register) if field == "table" || register.register == source => {
+                register.provider == endpoint.provider
+                    && (endpoint.register.as_deref() == Some(register.register.as_str())
+                        || endpoint
+                            .register_name
+                            .as_ref()
+                            .zip(register.name.as_ref())
+                            .is_some_and(|(a, b)| {
+                                reg_core::fold_identity(a) == reg_core::fold_identity(b)
+                            }))
+            }
+            _ => false,
+        })
+}
+
+pub(super) fn binding_references<'a>(
+    records: &'a [Record],
+    source: &str,
+    field: &str,
+) -> Vec<&'a Record> {
+    records
+        .iter()
+        .filter(|record| match record {
+            Record::Link(link) => {
+                bound_endpoint(records, &link.subject, source, field)
+                    || bound_endpoint(records, &link.object, source, field)
+            }
+            Record::Notice(notice) => bound_endpoint(records, &notice.subject, source, field),
+            Record::Doc(doc) => doc
+                .subjects
+                .iter()
+                .any(|subject| bound_endpoint(records, &subject.endpoint, source, field)),
+            _ => false,
+        })
+        .collect()
+}
+
 fn rebind_endpoints(
     output: &mut [Record],
     records: &[Record],
@@ -759,30 +851,8 @@ fn rebind_endpoints(
     target: &str,
     scope: Option<&[Interval]>,
 ) -> Result<(), String> {
-    let source_registers = records
-        .iter()
-        .filter_map(|r| match r {
-            Record::Register(r) if field == "table" || r.register == source => Some(r),
-            _ => None,
-        })
-        .collect::<Vec<_>>();
-    let matches_register = |endpoint: &reg_frame::Endpoint| {
-        source_registers.iter().any(|r| {
-            r.provider == endpoint.provider
-                && (endpoint.register.as_deref() == Some(r.register.as_str())
-                    || endpoint
-                        .register_name
-                        .as_ref()
-                        .zip(r.name.as_ref())
-                        .is_some_and(|(a, b)| {
-                            reg_core::fold_identity(a) == reg_core::fold_identity(b)
-                        }))
-        })
-    };
     let update = |endpoint: &mut reg_frame::Endpoint, at: Option<&str>| -> Result<(), String> {
-        if !matches_register(endpoint)
-            || (field == "table" && endpoint.table.as_deref() != Some(source))
-        {
+        if !bound_endpoint(records, endpoint, source, field) {
             return Ok(());
         }
         if let Some(scope) = scope {
@@ -966,9 +1036,9 @@ fn attach_valueset(
     Ok(())
 }
 
-// Partition only competing documented occurrences. This leaves unrelated source
-// rows untouched and makes source priority a per-period decision, not a hull-wide
-// choice that could discard the other source's non-overlapping coverage.
+// Compare moved rows only with destination rows. Editions already within one
+// source keep their release precedence; only cross-source overlap needs partitioning
+// to make source priority a per-period decision.
 #[allow(clippy::too_many_lines)]
 fn partition_overlaps(
     output: &mut Vec<Record>,
@@ -989,9 +1059,15 @@ fn partition_overlaps(
             reg_core::fold_identity(&o.column),
         )
     };
-    let mut groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
-    for record in &all {
+    let mut existing_groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
+    let mut moved_groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
+    for (index, record) in all.iter().enumerate() {
         if let Record::Occurrence(o) = record {
+            let groups = if index < output.len() {
+                &mut existing_groups
+            } else {
+                &mut moved_groups
+            };
             groups.entry(coordinate(o)).or_default().push(record);
         }
     }
@@ -1024,9 +1100,9 @@ fn partition_overlaps(
         spans_by_source
             .get(&source_key(&value, &locator(&value)))
             .cloned()
-            .unwrap_or_else(|| span(&value, &all))
     };
     let partition = |records: &[Record],
+                     rivals_by_coordinate: &BTreeMap<_, Vec<_>>,
                      changes: &mut Vec<Change>|
      -> Result<Vec<Record>, String> {
         let mut result = Vec::new();
@@ -1035,8 +1111,24 @@ fn partition_overlaps(
                 result.push(record.clone());
                 continue;
             };
-            let original = cached_span(record);
-            let rivals = groups.get(&coordinate(o)).into_iter().flatten().copied().filter(|r| matches!(r,Record::Occurrence(other) if other.locator != o.locator || other.from != o.from || other.to != o.to)).filter_map(|r|intersect(&original,&cached_span(r)).map(|p|(r,p))).collect::<Vec<_>>();
+            let Some(original) = cached_span(record) else {
+                // An unplaced release states no interval to split or compare. A
+                // handle bind preserves it; inventing register-wide dates here
+                // would promote its occurrences into orderable source facts.
+                result.push(record.clone());
+                continue;
+            };
+            let rivals = rivals_by_coordinate
+                .get(&coordinate(o))
+                .into_iter()
+                .flatten()
+                .copied()
+                .filter_map(|r| {
+                    cached_span(r)
+                        .and_then(|period| intersect(&original, &period))
+                        .map(|p| (r, p))
+                })
+                .collect::<Vec<_>>();
             if rivals.is_empty() {
                 result.push(record.clone());
                 continue;
@@ -1094,8 +1186,8 @@ fn partition_overlaps(
         }
         Ok(result)
     };
-    *output = partition(output, changes)?;
-    *moved = partition(moved, changes)?;
+    *output = partition(output, &moved_groups, changes)?;
+    *moved = partition(moved, &existing_groups, changes)?;
     Ok(())
 }
 

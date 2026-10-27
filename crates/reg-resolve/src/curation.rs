@@ -841,6 +841,281 @@ pub fn reference(
     Ok(premise(&matches, &view, &fields))
 }
 
+/// Extra source facts consumed while applying a bind/assert. Keep these out of
+/// `subjects`: they are evidence, never additional rows selected for rewriting.
+#[allow(clippy::too_many_lines)]
+fn application_dependencies(
+    records: &[Record],
+    ledger: &Ledger,
+    statement: &Statement,
+    selected: &[Match],
+    view: &[Source],
+) -> Result<Vec<SourcePremise>, String> {
+    let mut needed = BTreeSet::new();
+    let mut contexts = BTreeSet::new();
+    let mut hashes = BTreeSet::new();
+    let coordinate = |source: &Source, register: &str, table: Option<&str>| {
+        let kind = source.text("kind").unwrap_or_default();
+        (
+            kind.to_owned(),
+            source.text("provider").unwrap_or_default().to_owned(),
+            register.to_owned(),
+            table.map(str::to_owned),
+            if kind == "release" {
+                source.text("release").map(str::to_owned)
+            } else {
+                None
+            },
+            if kind == "occurrence" {
+                source.text("key").map(str::to_owned)
+            } else {
+                None
+            },
+            if kind == "occurrence" {
+                source.text("spelling").map(fold_identity)
+            } else {
+                None
+            },
+        )
+    };
+    let mut coordinates = BTreeMap::<_, Vec<usize>>::new();
+    let mut table_occurrences = BTreeMap::<_, Vec<usize>>::new();
+    let mut sets = BTreeMap::<_, Vec<usize>>::new();
+    for (index, source) in view.iter().enumerate() {
+        if let Some(register) = source.text("register") {
+            coordinates
+                .entry(coordinate(source, register, source.text("table")))
+                .or_default()
+                .push(index);
+            if source.text("kind") == Some("occurrence") {
+                table_occurrences
+                    .entry((
+                        source.text("provider").unwrap_or_default().to_owned(),
+                        register.to_owned(),
+                        source.text("table").map(str::to_owned),
+                    ))
+                    .or_default()
+                    .push(index);
+            }
+        } else if source.text("kind") == Some("value_set")
+            && let Some(hash) = source.text("hash")
+        {
+            sets.entry(hash).or_default().push(index);
+        }
+    }
+    let context = |s: &Source| {
+        s.text("provider").zip(s.text("register")).map(|(p, r)| {
+            (
+                p.to_owned(),
+                r.to_owned(),
+                s.text("table").map(str::to_owned),
+                s.text("release").map(str::to_owned),
+            )
+        })
+    };
+    for matched in selected {
+        if let Some(c) = context(&view[matched.source]) {
+            contexts.insert(c);
+        }
+    }
+    match statement {
+        Statement::Bind { target, .. } => {
+            let (field, destination) = match target {
+                BindTarget::Register { id } => ("register", id.clone()),
+                BindTarget::Table { id } => ("table", apply::table_handle(records, ledger, id)?),
+            };
+            for matched in selected {
+                let source = &view[matched.source];
+                let Some((provider, register, table, release)) = context(source) else {
+                    continue;
+                };
+                let target_register = if field == "register" {
+                    destination.clone()
+                } else {
+                    register
+                };
+                let target_table = if field == "table" {
+                    Some(destination.clone())
+                } else {
+                    table
+                };
+                contexts.insert((
+                    provider.clone(),
+                    target_register.clone(),
+                    target_table.clone(),
+                    release.clone(),
+                ));
+                for index in coordinates
+                    .get(&coordinate(
+                        source,
+                        &target_register,
+                        target_table.as_deref(),
+                    ))
+                    .into_iter()
+                    .flatten()
+                    .copied()
+                {
+                    let candidate = &view[index];
+                    if source.text("kind") == Some("occurrence")
+                        && candidate.period.as_ref().is_some_and(|p| {
+                            !matched
+                                .spans
+                                .iter()
+                                .any(|scope| intersect(p, scope).is_some())
+                        })
+                    {
+                        continue;
+                    }
+                    needed.insert(index);
+                    if let Some(c) = context(candidate) {
+                        contexts.insert(c);
+                    }
+                }
+            }
+        }
+        Statement::Assert { subject, fact, .. } => {
+            if let Some(register) = records.iter().find_map(|r| match r {
+                Record::Register(r) => Some(r),
+                _ => None,
+            }) {
+                let table = match subject {
+                    Address::Occurrence { table, .. }
+                    | Address::Release { table, .. }
+                    | Address::Table(table) => Some(apply::table_handle(records, ledger, table)?),
+                    Address::Variable(_) => None,
+                };
+                let release = match subject {
+                    Address::Release { handle, .. } => Some(handle.clone()),
+                    Address::Occurrence { guards, .. } => guards
+                        .iter()
+                        .find(|g| g.field == GuardField::Release)
+                        .map(|g| g.value.clone()),
+                    _ => None,
+                };
+                contexts.insert((
+                    register.provider.clone(),
+                    register.register.clone(),
+                    table,
+                    release,
+                ));
+            }
+            if let AssertFact::Occurrence { fields } = fact
+                && let Some(hash) = &fields.value_set
+            {
+                hashes.insert(hash.clone());
+            }
+        }
+        _ => return Ok(Vec::new()),
+    }
+    for (provider, register, table, release) in &contexts {
+        let key = |kind: &str, table: Option<String>, release: Option<String>| {
+            (
+                kind.to_owned(),
+                provider.clone(),
+                register.clone(),
+                table,
+                release,
+                None,
+                None,
+            )
+        };
+        needed.extend(
+            coordinates
+                .get(&key("register", None, None))
+                .into_iter()
+                .flatten()
+                .copied(),
+        );
+        let table_rows = coordinates.get(&key("table", table.clone(), None));
+        needed.extend(table_rows.into_iter().flatten().copied());
+        if table.is_some() && table_rows.is_none() {
+            needed.extend(
+                table_occurrences
+                    .get(&(provider.clone(), register.clone(), table.clone()))
+                    .into_iter()
+                    .flatten()
+                    .copied(),
+            );
+        }
+        if release.is_some() {
+            needed.extend(
+                coordinates
+                    .get(&key("release", table.clone(), release.clone()))
+                    .into_iter()
+                    .flatten()
+                    .copied(),
+            );
+        }
+    }
+    for index in selected
+        .iter()
+        .map(|m| m.source)
+        .chain(needed.iter().copied())
+    {
+        let source = &view[index];
+        if let Some(hash) = source.text("value_set") {
+            hashes.insert(hash.to_owned());
+        }
+        if let Some(populations) = source
+            .fields
+            .get("population_valuesets")
+            .and_then(Value::as_array)
+        {
+            hashes.extend(
+                populations
+                    .iter()
+                    .filter_map(|p| p.get("valueset").and_then(Value::as_str))
+                    .map(str::to_owned),
+            );
+        }
+    }
+    for hash in &hashes {
+        needed.extend(sets.get(hash.as_str()).into_iter().flatten().copied());
+    }
+    let matches = needed
+        .into_iter()
+        .map(|source| Match {
+            source,
+            spans: Vec::new(),
+        })
+        .collect::<Vec<_>>();
+    let fields = matches
+        .iter()
+        .flat_map(|m| view[m.source].fields.keys().cloned())
+        .collect();
+    let mut dependencies = premise(&matches, view, &fields);
+    if let Statement::Bind {
+        source: Some(handle),
+        target,
+        ..
+    } = statement
+    {
+        let field = match target {
+            BindTarget::Register { .. } => "register",
+            BindTarget::Table { .. } => "table",
+        };
+        for record in apply::binding_references(records, handle, field) {
+            let Value::Object(value) =
+                serde_json::to_value(record).expect("frame record serializes")
+            else {
+                unreachable!("frame object")
+            };
+            let mut fields = value.into_iter().collect::<BTreeMap<_, _>>();
+            // The hash identifies document bytes/sections; only metadata and its
+            // endpoint list decide reference rebinding.
+            if matches!(record, Record::Doc(_)) {
+                fields.remove("content");
+                fields.remove("sections");
+            }
+            let locator = serde_json::from_value(fields["locator"].clone()).expect("frame locator");
+            dependencies.push(SourcePremise { locator, fields });
+        }
+    }
+    dependencies.sort_by_cached_key(reg_frame::canonical_line);
+    dependencies.dedup();
+    Ok(dependencies)
+}
+
 /// Compute premises in statement order. This function performs no IO and applies no
 /// statements. The caller supplies the immutable view for the current application
 /// phase; ordinary selectors see the bound frame plus asserted facts.
@@ -1053,7 +1328,7 @@ pub fn resolve(
                         })?
                 }
             } else {
-                Vec::new()
+                application_dependencies(records, ledger, statement, &matches, &view)?
             };
             Ok(ResolvedStatement {
                 premise: Premise {

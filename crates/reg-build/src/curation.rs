@@ -19,6 +19,33 @@ fn location(statement: &LocatedStatement) -> String {
     format!("{}:{}", statement.path.display(), statement.line)
 }
 
+/// Locks live inside a register; published statements and cross-register processing
+/// need that same scope in their identity, independent of file paths and line numbers.
+fn publication_identity(statement: &LocatedStatement) -> String {
+    statement
+        .statement
+        .scoped_identity(&statement.provider, &statement.register)
+}
+
+fn application_statement(
+    statement: &LocatedStatement,
+    ledger: &reg_resolve::Ledger,
+    register: &str,
+) -> reg_frame::statement::Statement {
+    let mut content = statement.statement.clone();
+    if let reg_frame::statement::Statement::Bind {
+        target: reg_frame::statement::BindTarget::Register { id },
+        ..
+    } = &mut content
+        && ledger.public.as_deref() == Some(id.as_str())
+    {
+        // Catalog ids and source coordinates have distinct namespaces. Use the
+        // owning raw handle for both premise evaluation and application.
+        register.clone_into(id);
+    }
+    content
+}
+
 fn belongs(record: &Record, provider: &str, register: &str) -> bool {
     let coordinates = match record {
         Record::Register(r) => (&r.provider, &r.register),
@@ -162,7 +189,7 @@ pub(super) struct Applied {
     pub records: Vec<Record>,
     pub findings: Vec<String>,
     pub statements: Vec<crate::emit::StatementRow>,
-    pub overrides: Vec<crate::emit::CuratedValue>,
+    pub overrides: Vec<reg_resolve::provenance::Claim>,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
 }
 
@@ -228,28 +255,6 @@ fn checked_premise(
             Err(format!("premise-changed:\n  {}", diff.join("\n  ")))
         }
         Some(_) => Ok(()),
-    }
-}
-
-fn remap(
-    values: &mut [crate::emit::CuratedValue],
-    changes: &[reg_resolve::curation::apply::Change],
-) {
-    for change in changes {
-        if !matches!(change.field.as_str(), "table" | "register") {
-            continue;
-        }
-        for value in values
-            .iter_mut()
-            .filter(|v| v.kind == change.kind && v.locator == change.locator)
-        {
-            if change.field == "table" && value.table == change.source_value {
-                value.table.clone_from(&change.value);
-            }
-            if change.field == "register" && value.register == change.source_value {
-                value.register.clone_from(&change.value);
-            }
-        }
     }
 }
 
@@ -357,7 +362,11 @@ fn run_selected(
                 })
                 .cloned()
                 .collect::<Vec<_>>();
-            let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
+            let content = group
+                .iter()
+                .map(|s| application_statement(s, ledger, register))
+                .collect::<Vec<_>>();
+            let content = content.iter().collect::<Vec<_>>();
             let references = references(root, &records, &group, &result.classifications)?;
             let evaluations =
                 reg_resolve::curation::resolve(&source, ledger, &content, &references);
@@ -451,17 +460,7 @@ fn run_selected(
                 input: file.clone(),
                 at: format!("line={}", statement.line),
             };
-            let mut content = statement.statement.clone();
-            if let reg_frame::statement::Statement::Bind {
-                target: reg_frame::statement::BindTarget::Register { id },
-                ..
-            } = &mut content
-                && ledger.public.as_deref() == Some(id.as_str())
-            {
-                // The statement names the catalog id; frame coordinates and the
-                // owning ledger directory keep the source handle.
-                id.clone_from(register);
-            }
+            let content = application_statement(statement, ledger, register);
             let applied = match reg_resolve::curation::apply::apply(
                 &source,
                 ledger,
@@ -484,7 +483,7 @@ fn run_selected(
                     let retained = statements
                         .iter()
                         .copied()
-                        .filter(|s| s.identity != statement.identity)
+                        .filter(|s| publication_identity(s) != publication_identity(statement))
                         .collect::<Vec<_>>();
                     let mut rerun =
                         run_selected(root, &retained, outputs, record, registers, release)?;
@@ -502,11 +501,11 @@ fn run_selected(
             if stage < 3 {
                 // Follow earlier winners through later coordinate moves. Their
                 // statement and losing source value remain the original evidence.
-                remap(&mut result.overrides, &applied.changes);
+                reg_resolve::provenance::remap(&mut result.overrides, &applied.changes, &source);
                 let value =
                     serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
                 result.statements.push(crate::emit::StatementRow {
-                    hash: statement.identity.clone(),
+                    hash: publication_identity(statement),
                     kind: value["kind"].as_str().expect("statement kind").into(),
                     file,
                     line: statement.line,
@@ -517,7 +516,7 @@ fn run_selected(
                     caveat: value["caveat"].as_str().map(str::to_owned),
                 });
                 result.overrides.extend(applied.changes.iter().map(|c| {
-                    crate::emit::CuratedValue {
+                    reg_resolve::provenance::Claim {
                         kind: c.kind.clone(),
                         locator: c.locator.clone(),
                         provider: c.provider.clone(),
@@ -528,7 +527,7 @@ fn run_selected(
                         field: c.field.clone(),
                         value: c.value.clone(),
                         source_value: c.source_value.clone(),
-                        statement: statement.identity.clone(),
+                        statement: publication_identity(statement),
                     }
                 }));
                 result
@@ -544,7 +543,7 @@ fn run_selected(
     let indices = evaluated
         .iter()
         .enumerate()
-        .map(|(i, (s, _))| (s.identity.as_str(), i))
+        .map(|(i, (s, _))| (publication_identity(s), i))
         .collect::<BTreeMap<_, _>>();
     let claims = result
         .overrides
@@ -567,8 +566,8 @@ fn run_selected(
         .collect::<Vec<_>>();
     for (a, b) in reg_resolve::curation::applied_conflicts(&resolved, &claims) {
         let (left, right) = (evaluated[a].0, evaluated[b].0);
-        conflicts.insert(left.identity.clone());
-        conflicts.insert(right.identity.clone());
+        conflicts.insert(publication_identity(left));
+        conflicts.insert(publication_identity(right));
         refusals.push(format!(
             "{}: curation-overlap: overlapping overrides with {}",
             location(left),
@@ -596,7 +595,7 @@ fn run_selected(
         let retained = statements
             .iter()
             .copied()
-            .filter(|s| !conflicts.contains(&s.identity))
+            .filter(|s| !conflicts.contains(&publication_identity(s)))
             .collect::<Vec<_>>();
         let mut rerun = run_selected(root, &retained, outputs, record, registers, release)?;
         rerun.findings.extend(

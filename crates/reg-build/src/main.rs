@@ -424,6 +424,12 @@ fn build(args: &Args) -> Result<(), String> {
     for &i in &order {
         sorted_inputs.push(by_index[i].take().expect("each input once"));
     }
+    let provenance = reg_resolve::provenance::finalize(
+        &resolved,
+        &valuesets.values().map(|(set, _)| set).collect::<Vec<_>>(),
+        &applied.classifications,
+        &applied.overrides,
+    );
     let catalog = emit::Catalog {
         meta,
         inputs: sorted_inputs,
@@ -436,7 +442,7 @@ fn build(args: &Args) -> Result<(), String> {
         docs,
         doc_links: linked.doc_links,
         statements: applied.statements,
-        overrides: applied.overrides,
+        provenance,
         classifications: applied.classifications,
     };
     if let Some(path) = &args.report {

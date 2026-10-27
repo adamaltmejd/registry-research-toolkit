@@ -227,6 +227,17 @@ impl Statement {
         Ok(())
     }
 
+    /// Publication and synthetic source identities include the owning register.
+    /// Local premise locks still use [`Self::identity`] within their register file.
+    #[must_use]
+    pub fn scoped_identity(&self, provider: &str, register: &str) -> String {
+        crate::hex(&Sha256::digest(crate::canonical_line(&(
+            provider,
+            register,
+            self.identity(),
+        ))))
+    }
+
     /// SHA-256 of normalized typed content, independent of TOML order and layout.
     ///
     /// # Panics
