@@ -34,6 +34,7 @@ from functools import partial
 from itertools import zip_longest
 from pathlib import Path
 from urllib.error import HTTPError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 EXAMPLES = 8
@@ -385,7 +386,7 @@ def request_json(url: str, project=None, destination: Path | None = None):
     if "data" not in body and "error" not in body:
         raise ValueError(f"{url}: HTTP {status} is not an API result")
     if project is None and (status != 200 or "error" in body):
-        raise ValueError(f"{url}: context failed: HTTP {status}, {body}")
+        raise ValueError(f"{url}: request failed: HTTP {status}, {body}")
     return status, body
 
 
@@ -490,7 +491,33 @@ def new_project(db, register: str, version: str, adjustments: list):
     }
 
 
-def old_project(db, register: str, version: str, adjustments: list):
+def old_states(url, variable, variant, period, evidence):
+    query = {"variant": variant, "scope": "reference", "limit": 200}
+    if period != "_default":
+        query["period"] = f"{period['from']}..{period['to']}"
+    found = []
+    while True:
+        _, body = request_json(
+            url.rstrip("/") + f"/api/states/{variable}?" + urlencode(query),
+            destination=evidence / f"{len(found):04}.json",
+        )
+        found.extend(body["data"]["items"])
+        # 0.64.0 silently stops paging at depth 1000, even with unseen states.
+        if len(found) >= 1000:
+            raise ValueError(
+                f"{variable} ({variant}): old states reached the 1000-item cap; completeness is unknown"
+            )
+        cursor = body["data"]["next_cursor"]
+        if cursor is None:
+            return [
+                state
+                for state in found
+                if period != "_default" or state["period_scope"] == "year_independent"
+            ]
+        query["cursor"] = cursor
+
+
+def old_project(db, register: str, version: str, adjustments: list, *, url, evidence):
     sources = []
     for tid, slug in db.execute(
         "SELECT t.register_variant_id, t.slug FROM register_variant t"
@@ -500,36 +527,50 @@ def old_project(db, register: str, version: str, adjustments: list):
     ):
         states = list(
             db.execute(
-                "SELECT v.slug, s.delivery_column_name, s.data_type, v.is_identifier,"
-                " s.value_set_id, s.valid_from, s.valid_to FROM variable_state s"
+                "SELECT v.slug, s.valid_from, s.valid_to FROM variable_state s"
                 " JOIN variable v USING (variable_id) WHERE s.register_variant_id = ?"
                 " ORDER BY v.slug, s.valid_from, s.delivery_column_name",
                 (tid,),
             )
         )
-        bindings = {}
-        for var, spelling, dtype, identifier, vs, _, _ in states:
-            bindings.setdefault(
-                (var, spelling),
-                {
-                    "variable": f"{register}/{var}",
-                    "representation": spelling,
-                    "type": binding_type(dtype, identifier, vs is not None),
-                },
+        dated = [(lo, hi) for _, lo, hi in states if lo is not None]
+        period = (
+            project_period(
+                min(lo for lo, _ in dated),
+                max(hi for _, hi in dated),
+                f"{register}/{slug}",
+                adjustments,
             )
-        dated = [(lo, hi) for *_, lo, hi in states if lo is not None]
+            if dated
+            else "_default"
+        )
+        bindings = {}
+        for var in sorted({var for var, _, _ in states}):
+            variable = f"{register}/{var}"
+            representations = old_states(
+                url, variable, slug, period, evidence / register / slug / var
+            )
+            if not representations:
+                # Keep unavailable variables in the request for the order to refuse.
+                bindings[variable, None] = {"variable": variable, "type": "opaque"}
+            for state in representations:
+                spelling = state["delivery_column_name"]
+                binding = {
+                    "variable": variable,
+                    "type": binding_type(
+                        state["data_type"],
+                        state["is_identifier"],
+                        state["value_set_id"] is not None,
+                    ),
+                }
+                if spelling is not None:
+                    binding["representation"] = spelling
+                bindings.setdefault((variable, spelling), binding)
         sources.append(
             {
                 "name": f"source-{len(sources)}",
                 "register_variant": f"{register}/{slug}",
-                "period": project_period(
-                    min(lo for lo, _ in dated),
-                    max(hi for _, hi in dated),
-                    f"{register}/{slug}",
-                    adjustments,
-                )
-                if dated
-                else "_default",
+                "period": period,
                 "bindings": list(bindings.values()),
             }
         )
@@ -1139,7 +1180,14 @@ def orders(args) -> int:
                 projects = []
                 for side, build, db, context in zip(
                     ("old", "new"),
-                    (old_project, new_project),
+                    (
+                        partial(
+                            old_project,
+                            url=args.old_url,
+                            evidence=args.out / "metadata",
+                        ),
+                        new_project,
+                    ),
                     (old_db, new_db),
                     contexts,
                     strict=True,
