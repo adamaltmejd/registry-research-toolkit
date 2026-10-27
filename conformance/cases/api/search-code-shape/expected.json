@@ -2,37 +2,14 @@
   {
     "status": 200,
     "json": {
-      "/data/items/*/code": [
-        "ZQX9"
+      "/data/items": [
+        {
+          "type": "code",
+          "code": "",
+          "label": "Uppgift saknas",
+          "value_set_count": 1
+        }
       ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": [
-        "ZQX9"
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": [
-        "Q71"
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": []
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": []
     }
   }
 ]

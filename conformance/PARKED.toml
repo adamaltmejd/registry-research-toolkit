@@ -69,10 +69,12 @@ cases = [
     "api/search-pin-unresolved",
     "api/search-pin-untyped",
     "api/search-punctuation-label",
+    "api/search-ranking-order",
     "api/search-reference-paging",
     "api/search-register",
     "api/search-register-facets",
     "api/search-register-name",
+    "api/search-spellings",
     "api/search-untyped-pages",
     "api/search-untyped-ranking",
     # r-docs

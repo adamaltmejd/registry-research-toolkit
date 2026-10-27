@@ -1,0 +1,21 @@
+# The search fixture (crates/DESIGN.md "Search"): three registers whose rows are laid
+# out so each ranking case's order follows from the rules by hand. Handles and column
+# spellings are never query words, so a query hits only the column a case names.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"
+
+[[input]]
+name = "docs"
+reader = "markdown"
+path = "docs"
+provider = "demo"
+register = "hc"
