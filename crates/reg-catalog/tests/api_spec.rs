@@ -32,7 +32,6 @@ fn parked(list: &str) -> BTreeSet<String> {
 /// Fails when a code is added to, dropped from or changed in one side only.
 #[test]
 fn error_enum_equals_errors_toml() {
-    let parked_codes = parked("codes");
     let table = spec("errors.toml");
     let expected: BTreeMap<String, Value> = table["code"]
         .as_array()
@@ -54,7 +53,6 @@ fn error_enum_equals_errors_toml() {
         .collect();
     let actual: BTreeMap<String, Value> = Code::ALL
         .iter()
-        .filter(|code| !parked_codes.contains(code.spec().name))
         .map(|code| {
             let s = code.spec();
             let some = |n: i64| (n != 0).then_some(n);

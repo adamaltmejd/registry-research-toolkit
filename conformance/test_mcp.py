@@ -336,12 +336,7 @@ def test_stdio_session(request, http_servers):
         {"method": "tools/list"},
         {"method": "tools/call", "params": {"name": "search", "arguments": arguments}},
     ]
-    argv = [
-        word.replace("{db}", env["REG_META_DB"]).replace(
-            "{catalog}", env["REG_WEBAPP_STEWARD"]
-        )
-        for word in shlex.split(template)
-    ]
+    argv = [word.replace("{db}", env["REG_META_DB"]) for word in shlex.split(template)]
     # Fails when a client that disconnects before `initialize` makes `reg-meta mcp`
     # panic (exit 101, #1326) instead of exiting cleanly.
     closed = subprocess.run(

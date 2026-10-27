@@ -61,7 +61,7 @@ def select_json(value, path):
 
 def artifact_env(path):
     """The environment the app needs to serve the artifact at `path`."""
-    return {"REG_META_DB": str(path.parent), "REG_WEBAPP_STEWARD": "global"}
+    return {"REG_META_DB": str(path.parent)}
 
 
 def fixture_source(request):
@@ -130,27 +130,31 @@ def case_clients(request, servers):
 
 def assert_startup_refusal(request, refusal, servers, tmp_path):
     """The server refuses the case's artifact: it prints the error document on
-    stderr and exits with the code's `exit` status in `api/errors.toml`. The
-    `manifest` overrides are written to the private copy's `meta` table;
-    `serve.db: "absent"` serves an empty directory instead of an artifact."""
-    if request["serve"].get("db") == "absent":
+    stderr and exits with the code's `exit` status in `api/errors.toml`, with the
+    oracle's `fields` when it gives them. The `manifest` overrides are written to the
+    private copy's `meta` table, a `null` deleting the key; `serve.db: "absent"`
+    serves an empty directory instead of an artifact."""
+    if request.get("serve", {}).get("db") == "absent":
         (tmp_path / "absent").mkdir()
-        _assert_refused(
-            servers, tmp_path / "absent", request["serve"]["catalog"], refusal
-        )
+        _assert_refused(servers, tmp_path / "absent", refusal)
         return
     path = build_reader_artifact(tmp_path / "catalog", fixture_source(request))
+    manifest = request.get("manifest", {})
     with closing(sqlite3.connect(path)) as conn, conn:
         conn.executemany(
-            "INSERT OR REPLACE INTO meta VALUES (?, ?)",
-            request.get("manifest", {}).items(),
+            "DELETE FROM meta WHERE key = ?",
+            [(key,) for key, value in manifest.items() if value is None],
         )
-    _assert_refused(servers, path.parent, request["serve"]["catalog"], refusal)
+        conn.executemany(
+            "INSERT OR REPLACE INTO meta VALUES (?, ?)",
+            [(key, value) for key, value in manifest.items() if value is not None],
+        )
+    _assert_refused(servers, path.parent, refusal)
 
 
-def _assert_refused(servers, db, catalog, refusal):
+def _assert_refused(servers, db, refusal):
     completed = subprocess.run(
-        servers.argv(db, catalog, 0),
+        servers.argv(db, 0),
         cwd=CASES.parents[1],
         stdin=subprocess.DEVNULL,
         capture_output=True,
@@ -160,6 +164,8 @@ def _assert_refused(servers, db, catalog, refusal):
     )
     document = json.loads(completed.stderr.strip().splitlines()[-1])
     assert document["code"] == refusal["code"], completed.stderr
+    if "fields" in refusal:
+        assert document["fields"] == refusal["fields"], completed.stderr
     assert completed.returncode == EXIT_STATUS[refusal["code"]]
 
 
@@ -243,10 +249,8 @@ class ServerPool:
     """One server process per artifact, started from a `--server-cmd` template.
 
     The template is split like a shell command line, and `{db}` (the artifact
-    directory), `{catalog}` (`global` or the artifact's steward) and `{port}` (0:
-    the server picks a port and prints it) are substituted in each word. The
-    process also gets
-    `artifact_env`, runs in its own process group (so stopping it also stops
+    directory) and `{port}` (0: the server picks a port and prints it) are
+    substituted in each word. The process also gets `artifact_env`, runs in its own process group (so stopping it also stops
     what `uv run` launched) and logs to `log_dir`."""
 
     def __init__(self, template, log_dir):
@@ -254,11 +258,9 @@ class ServerPool:
         self.log_dir = log_dir
         self.servers = {}
 
-    def argv(self, db, catalog, port):
+    def argv(self, db, port):
         return [
-            word.replace("{db}", str(db))
-            .replace("{catalog}", catalog)
-            .replace("{port}", str(port))
+            word.replace("{db}", str(db)).replace("{port}", str(port))
             for word in self.template
         ]
 
@@ -284,7 +286,7 @@ class ServerPool:
 
     def start(self, env):
         log = self.log_dir / f"server-{len(self.servers)}.log"
-        argv = self.argv(env["REG_META_DB"], env["REG_WEBAPP_STEWARD"], 0)
+        argv = self.argv(env["REG_META_DB"], 0)
         with log.open("wb") as output:
             process = subprocess.Popen(
                 argv,

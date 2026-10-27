@@ -65,10 +65,10 @@ and requires no repeats and exactly the `equals` set.
 ## Out-of-process runner
 
 `--server-cmd` runs the HTTP surfaces above over a real socket. It is a command
-template: `{db}` (the artifact directory), `{catalog}` (`global`) and `{port}` are
-substituted in each word; `{port}` is 0, so the kernel picks a free port. The runner
-starts one server per cached artifact from the repository root, with `REG_META_DB` and
-`REG_WEBAPP_STEWARD` in its environment, reads the bound port from the
+template: `{db}` (the artifact directory) and `{port}` are substituted in each word;
+`{port}` is 0, so the kernel picks a free port. The runner starts one server per cached
+artifact from the repository root, with `REG_META_DB` in its environment, reads the
+bound port from the
 `listening on ADDR:PORT` line `reg-meta serve` prints on stderr, and waits until
 `GET /openapi.json` answers on it (120 s at most). Two listeners cannot share a port, so
 parallel workers never reach each other's servers. It reuses the server for every case
@@ -85,7 +85,7 @@ operation. The server builds each tool's schemas from its OpenAPI entry, so a sc
 change shows as a reviewed diff of that file. The body cap and the rate limit on `/mcp`
 answer with their error documents, and the drained bucket also refuses the address's
 project POSTs while its reads pass; the burst runs on a server of its own. `--mcp-cmd`
-is a command template (`{db}`, `{catalog}`) for one stdio session: initialize, list the
+is a command template (`{db}`) for one stdio session: initialize, list the
 tools and call `search`. Without `--mcp-cmd` the stdio session skips.
 
 ## Fixtures and the fixture cache
@@ -139,11 +139,11 @@ served by the Rust server. They use the HTTP case shape above, with these additi
 - `fixture` names a directory under `cases/fixtures` (default `base`).
 - `artifacts` maps a name to a second artifact for the case (it may name its own
   `fixture`); a step with `artifact: <name>` is sent to it.
-- A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
-  which are written to `meta` of a private copy after the build (or
-  `serve.db: "absent"`, which serves an empty directory instead), and expects
-  `{"startup_error": {"code": ...}}`: the template, run with `{catalog}` set to that
-  name, prints the error document as the last line of stderr and exits with the code's
+- A startup case sets optional `manifest` overrides, which are written to `meta` of a
+  private copy after the build (a `null` deletes the key), or `serve.db: "absent"`,
+  which serves an empty directory instead, and expects
+  `{"startup_error": {"code": ..., "fields": ...}}` (`fields` optional): the template
+  prints the error document as the last line of stderr and exits with the code's
   `exit` status in `api/errors.toml`, without listening.
 - A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`, and one with
   `if_none_match` sends that literal header.

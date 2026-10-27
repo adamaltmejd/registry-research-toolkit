@@ -126,7 +126,7 @@ impl Limits {
 
     /// `err` as `{error, meta}` with its status.
     fn refuse(&self, err: Error) -> Response {
-        let answer = Answer::new(&self.server, self.server.catalog.default_scope(), Err(err));
+        let answer = Answer::new(&self.server, Err(err));
         (answer.status, crate::json(answer.body.to_string())).into_response()
     }
 }

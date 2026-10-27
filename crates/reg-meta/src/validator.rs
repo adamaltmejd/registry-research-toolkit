@@ -3,15 +3,14 @@
 //! runs, so a revalidation does no DB work and no serialization
 //! (`reg_webapp/DESIGN.md`, "`ETag` / `Cache-Control`").
 //!
-//! A response is a pure function of the server binary, the admitted catalog and docs
-//! databases, the steward branding and the request URL, and none of them changes for
-//! the process's lifetime. So the `ETag` is derived from a boot-time token over the
-//! first four and the request's path and query, not from the body. The token hashes
-//! the files' bytes, not their identity fields: a catalog's `generation_id` does not
-//! cover its import date, nor the docs `generation` its related documents, and both
-//! reach responses. The image hashes them when it is built and hands the digest over
-//! in [`CONTENT_DIGEST_ENV`]: on Fly's throttled rootfs (about 8 MiB/s cold) hashing
-//! the catalog at boot would outlast the entrypoint's readiness deadline.
+//! A response is a pure function of the server binary, the admitted catalog and the
+//! request URL, and none of them changes for the process's lifetime. So the `ETag` is
+//! derived from a boot-time token over the first two and the request's path and
+//! query, not from the body. The token hashes the files' bytes, not their identity
+//! fields: a catalog's `generation_id` does not cover `catalog_version`, which reaches
+//! responses. The image hashes them when it is built and hands the digest over in
+//! [`CONTENT_DIGEST_ENV`]: on Fly's throttled rootfs (about 8 MiB/s cold) hashing the
+//! catalog at boot would outlast the entrypoint's readiness deadline.
 
 use std::fs::File;
 use std::io::Read;
@@ -28,12 +27,12 @@ use sha2::{Digest, Sha256};
 
 use crate::{EDGE_VERSION_PARAM, VERSION};
 
-/// The SHA-256 the image computed over the served binary and databases
+/// The SHA-256 the image computed over the served binary and database
 /// (`reg_webapp/Dockerfile`); unset, `serve` hashes them itself at boot.
 const CONTENT_DIGEST_ENV: &str = "REG_META_CONTENT_DIGEST";
 
 pub struct Validators {
-    /// The `ETag`'s readable head: the server version, catalog and generation.
+    /// The `ETag`'s readable head: the server version and the generation.
     head: String,
     /// The SHA-256 of everything a response depends on besides its request.
     token: [u8; 32],
@@ -63,29 +62,11 @@ impl Validators {
             let mut files = Sha256::new();
             files.update(file_digest(&exe));
             files.update(file_digest(server.catalog.path()));
-            if let Some(docs) = &server.docs {
-                files.update(file_digest(docs.path()));
-            }
             files.finalize().to_vec()
         };
-        let steward = serde_json::to_string(&server.steward).expect("Steward serializes");
-        // The logo is not in the steward's JSON but is a response of its own.
-        let logo = server
-            .steward
-            .as_ref()
-            .map_or(&[][..], |s| s.logo.as_slice());
-        let mut token = Sha256::new();
-        for part in [content.as_slice(), steward.as_bytes(), logo] {
-            token.update((part.len() as u64).to_le_bytes());
-            token.update(part);
-        }
         Arc::new(Self {
-            head: format!(
-                "{VERSION}-{}-{}",
-                server.catalog.name(),
-                server.catalog.generation()
-            ),
-            token: token.finalize().into(),
+            head: format!("{VERSION}-{}", server.catalog.generation()),
+            token: Sha256::digest(&content).into(),
         })
     }
 

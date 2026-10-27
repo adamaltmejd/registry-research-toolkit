@@ -1,0 +1,12 @@
+{
+  "note": "Fails if the server admits a catalog whose meta lacks a required key (here generation_id).",
+  "manifest": {
+    "generation_id": null
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}
