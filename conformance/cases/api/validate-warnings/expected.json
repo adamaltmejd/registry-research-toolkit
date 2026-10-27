@@ -14,8 +14,7 @@
         "table_succession_undated",
         "period_clipped",
         "variable_sensitive",
-        "variable_replaced",
-        "form_change"
+        "variable_replaced"
       ],
       "/data/issues/*/level": [
         "info",
@@ -28,8 +27,7 @@
         "info",
         "info",
         "warning",
-        "warning",
-        "info"
+        "warning"
       ],
       "/data/issues/*/path": [
         "/sources/0/bindings/0",
@@ -42,8 +40,7 @@
         "/sources/5",
         "/sources/5/bindings/0",
         "/sources/6/bindings/0",
-        "/sources/7/bindings/0",
-        "/sources/8/bindings/0"
+        "/sources/7/bindings/0"
       ],
       "/data/issues/*/source": [
         "flags",
@@ -56,8 +53,7 @@
         "undated",
         "undated",
         "release-flags",
-        "replaced-undated",
-        "release-case"
+        "replaced-undated"
       ],
       "/data/issues/*/variable": [
         "demo/imp/lopnr",
@@ -70,8 +66,7 @@
         null,
         "demo/und/ink",
         "demo/edt/v",
-        "demo/rep/ny",
-        "demo/edt/v"
+        "demo/rep/ny"
       ],
       "/data/issues/*/table": [
         "demo/imp",
@@ -84,8 +79,7 @@
         "demo/und/ett",
         "demo/und/ett",
         "demo/edt",
-        "demo/rep",
-        "demo/edt"
+        "demo/rep"
       ],
       "/data/issues/*/period": [
         {"start": "2020-01-01", "end": "2021-01-01"},
@@ -98,8 +92,7 @@
         {"start": "2018-01-01", "end": "2020-01-01"},
         {"start": "2018-01-01", "end": "2020-01-01"},
         {"start": "2023-01-01", "end": "2024-01-01"},
-        null,
-        {"start": "2025-01-01", "end": "2026-01-01"}
+        null
       ],
       "/data/issues/*/successor_fqid": [
         null,
@@ -112,8 +105,7 @@
         "demo/und/tva",
         null,
         null,
-        "demo/rep/nyast",
-        null
+        "demo/rep/nyast"
       ]
     }
   },

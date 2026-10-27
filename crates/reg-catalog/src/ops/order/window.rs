@@ -381,7 +381,9 @@ type Mark = (Vec<Interval>, fn(&mut Piece));
 /// - sensitivity and identifier are OR-ed over every occurrence covering a day.
 ///
 /// Each day then takes its form from the first occurrence covering it, by release
-/// (start, end, id), then occurrence (start, end, id).
+/// (start, end, id), then occurrence (start, end, id). Its spelling is the builder's: the
+/// latest covering occurrence's (later start, then end, then locator; the lowest of an
+/// occurrence's locators stands for its primary one).
 #[allow(clippy::too_many_lines)]
 fn selected(
     scope: &Scope,
@@ -391,11 +393,12 @@ fn selected(
 ) -> Result<Vec<Piece>, Error> {
     let s = &scope.serving[k];
     let edition = scope.source.edition.map(reg_core::project::Edition::as_str);
-    let rows: Vec<(i64, Form, Piece)> = scope
+    let rows: Vec<(i64, Form, Piece, String)> = scope
         .conn
         .prepare(&format!(
             "SELECT x.start, x.end, {FORM}, 'clear', x.end = ?4, x.variable_id, l.body,
-                    vs.hash
+                    vs.hash, (SELECT MIN(ol.locator) FROM occurrence_locator ol
+                              WHERE ol.occurrence_id = x.id)
              FROM occurrence x JOIN release r ON r.id = x.release_id
                JOIN spelling sp ON sp.id = x.spelling_id
                LEFT JOIN text l ON l.id = x.label_text
@@ -423,15 +426,19 @@ fn selected(
                     piece.dtype.as_deref(),
                     valueset.as_deref(),
                 );
-                Ok((row.get(11)?, form, piece))
+                Ok((row.get(11)?, form, piece, row.get(14)?))
             },
         )?
         .collect::<rusqlite::Result<_>>()?;
     let mut own: Vec<(Form, Piece)> = Vec::new();
+    // Per own piece, its occurrence's whole span and locator: "latest" is decided on the
+    // occurrence, not on the part a window leaves of it.
+    let mut latest: Vec<((Interval, String), String)> = Vec::new();
     let mut rivals: Vec<(String, Interval)> = Vec::new();
-    for (owner, form, row) in rows {
+    for (owner, form, row, locator) in rows {
         for days in overlap(std::slice::from_ref(&row.days), windows) {
             if owner == variable {
+                latest.push(((row.days.clone(), locator.clone()), row.spelling.clone()));
                 own.push((
                     form.clone(),
                     Piece {
@@ -500,12 +507,13 @@ fn selected(
                     .collect();
             }
             for part in &mut parts {
-                part.length = reg_core::agreed_length(
-                    own.iter()
-                        .filter(|(_, r)| intersect(&r.days, &part.days).is_some())
-                        .map(|(_, r)| r.length),
-                )
-                .0;
+                let covering: Vec<usize> = (0..own.len())
+                    .filter(|&i| intersect(&own[i].1.days, &part.days).is_some())
+                    .collect();
+                part.length = reg_core::agreed_length(covering.iter().map(|&i| own[i].1.length)).0;
+                if let Some(&top) = covering.iter().max_by_key(|&&i| &latest[i].0) {
+                    part.spelling.clone_from(&latest[top].1);
+                }
             }
             pieces.extend(parts);
         }
