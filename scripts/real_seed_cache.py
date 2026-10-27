@@ -681,7 +681,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 def lock_sha256(name: str) -> str:
     """The lock file `name` (one of `VERSIONED_LOCKS`) as every key holds it: without
     the workspace members' own versions, and for `uv.lock` only the builder's runtime
-    closure (`keyed_cache.uv_lock_sha256`, shared with the G1 cache).
+    closure (`keyed_cache.uv_lock_sha256`).
 
     A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
     the builder's fingerprint normalizes), and nothing a build loads or records reads

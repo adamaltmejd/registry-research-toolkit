@@ -85,7 +85,7 @@ EQUIVALENCE = {
     "validate": ("validate-unavailable-everywhere", "validate-scope-rejected"),
     "order": ("order-gap-clipped", "order-errors", "order-scope-rejected"),
 }
-READER = {"fixture": "reader"}
+READER = {"fixture": "base"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
 TOOLS = json.loads((CASES / "mcp/tools-list.json").read_text())
 OPERATIONS = {
@@ -165,7 +165,7 @@ def test_tool_matches_http(http_servers, operation):
     for name in EQUIVALENCE[operation]:
         case = CASES / "api" / name
         request = json.loads((case / "request.json").read_text())
-        steps, clients = request["requests"], case_clients(request, case, http_servers)
+        steps, clients = request["requests"], case_clients(request, http_servers)
         http = run_http_requests(steps, clients)
         documents = {}
         for index, step in enumerate(steps):
@@ -208,7 +208,7 @@ def test_tool_of_several_needs_an_operation(http_servers):
     # Fails when a tool of several operations answers a call that names none of them
     # (it would have to guess one), or one that omits its operation's required
     # parameter, with anything but `invalid_parameter` naming the parameter.
-    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     for arguments, parameter in (
         ({"identifier": "Kon"}, "operation"),
         ({"operation": "search", "q": "Kon"}, "operation"),
@@ -226,7 +226,7 @@ def test_array_argument_only_for_an_array_parameter(http_servers):
     # accepts an empty array for one that is (`columns: []`), instead of refusing
     # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
     # empty array, so these have no `api` twin.
-    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     for tool, arguments, parameter in (
         ("resolve", {"register": [], "columns": ["Value"]}, "register"),
         ("resolve", {"columns": []}, "columns"),
@@ -241,7 +241,7 @@ def test_array_argument_only_for_an_array_parameter(http_servers):
 def test_tools_list_matches_golden(http_servers):
     # Fails when a tool, its description or a schema changes without updating
     # `cases/mcp/tools-list.json`, or a tool name drifts from `operations.toml`.
-    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     served = {
         operation.get("operationId")
         for item in client.get("/openapi.json").json()["paths"].values()
@@ -261,13 +261,13 @@ def test_tools_list_matches_golden(http_servers):
 def test_body_over_the_cap_is_payload_too_large(http_servers):
     # Fails when `/mcp` stops capping bodies at 1 MiB (today's write-body cap) or
     # answers the cap with anything but the error document.
-    client = http_servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     response = client.post("/mcp", content=b" " * (1024 * 1024 + 1), headers=HEADERS)
     assert response.status_code == 413
     assert response.json()["error"]["fields"] == {"limit_bytes": 1024 * 1024}
 
 
-def test_burst_is_rate_limited(request, tmp_path):
+def test_burst_is_rate_limited(server_cmd, tmp_path):
     # Fails when `/mcp` stops limiting a client's burst, answers it without the error
     # document, stops sharing the client's bucket with the project POSTs (one token
     # bucket per client, `crates/reg-meta/src/limit.rs`) or limits a read, keys a
@@ -278,9 +278,8 @@ def test_burst_is_rate_limited(request, tmp_path):
     # would share one bucket). A server of its own: a drained bucket would
     # refuse the other MCP cases from this address. It runs at the production default:
     # the suite's template raises `--write-limit` so its own cases are not refused.
-    template = request.config.getoption("--server-cmd")
-    pool = ServerPool(re.sub(r" --write-limit \S+", "", template), tmp_path)
-    env = artifact_env(cached_case_artifact(READER), "steward")
+    pool = ServerPool(re.sub(r" --write-limit \S+", "", server_cmd), tmp_path)
+    env = artifact_env(cached_case_artifact(READER))
     try:
         client = pool.client(env | {"REG_META_EDGE_TOKEN": "edge-secret"})
 
@@ -321,7 +320,7 @@ def test_stdio_session(request, http_servers):
     template = request.config.getoption("--mcp-cmd")
     if template is None:
         pytest.skip("the stdio session runs against --mcp-cmd")
-    env = artifact_env(cached_case_artifact(READER), "steward")
+    env = artifact_env(cached_case_artifact(READER))
     arguments = {"q": "Value", "type": "variable", "limit": 1}
     expected = http_servers.client(env).get("/api/search", params=arguments)
     messages = [

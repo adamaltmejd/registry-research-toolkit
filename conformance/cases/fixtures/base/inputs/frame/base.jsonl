@@ -1,0 +1,11 @@
+{"kind":"register","provider":"demo","register":"reg","name":"Demoregistret"}
+{"kind":"table","provider":"demo","register":"reg","table":"t","name":"Huvudtabell"}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej"},{"code":"","label":"Uppgift saknas"}],"names":["janej"]}
+{"kind":"release","provider":"demo","register":"reg","table":"t","release":"r2019","name":"Registret 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"reg","table":"t","release":"r2020","name":"Registret 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"reg","table":"t","release":"r2019","column":"Svar","source_key":"k1","label":"Svar","valueset":"janej"}
+{"kind":"occurrence","provider":"demo","register":"reg","table":"t","release":"r2020","column":"Svar","source_key":"k1","label":"Svar","valueset":"janej"}
+{"kind":"occurrence","provider":"demo","register":"reg","table":"t","release":"r2019","column":"Belopp","source_key":"k2","label":"Belopp"}
+{"kind":"occurrence","provider":"demo","register":"reg","table":"t","release":"r2020","column":"Belopp","source_key":"k2","label":"Belopp"}
+{"kind":"occurrence","provider":"demo","register":"reg","table":"t","release":"r2019","column":"Inkomst","source_key":"k3","label":"Inkomst före skatt"}
+{"kind":"occurrence","provider":"demo","register":"reg","table":"t","release":"r2020","column":"Inkomst","source_key":"k3","label":"Inkomst efter skatt"}

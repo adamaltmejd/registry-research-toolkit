@@ -19,7 +19,7 @@ from contextlib import closing, suppress
 from pathlib import Path
 
 import httpx2
-from reg_meta_build.errors import RegMetaError
+from reader_artifacts import build_reader_artifact, cached_reader_artifact
 
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
@@ -59,65 +59,29 @@ def select_json(value, path):
     return walk(value, parts)
 
 
-def artifact_env(path, kind):
+def artifact_env(path):
     """The environment the app needs to serve the artifact at `path`."""
-    return {
-        "REG_META_DB": str(path.parent),
-        "REG_WEBAPP_STEWARD": "swecov" if kind == "steward" else "global",
-        "REG_WEBAPP_STEWARDS_DIR": str(CASES.parents[1] / "reg_webapp/stewards"),
-    }
+    return {"REG_META_DB": str(path.parent), "REG_WEBAPP_STEWARD": "global"}
 
 
 def fixture_source(request):
-    """A case's fixture: a source directory under `cases/fixtures`, else a name
-    `reader_artifacts` resolves (`reader`, `reader/<case>`, a builder holdings case)."""
-    fixture = request.get("fixture", "compiled")
-    local = CASES / "fixtures" / fixture
-    return local if local.is_dir() else fixture
+    """A case's fixture: a directory name under `cases/fixtures` (default `base`)."""
+    return request.get("fixture", "base")
 
 
-def docs_source(request):
-    """The readable docs source a case's `docs` key names, or None (no docs DB)."""
-    return CASES / "fixtures" / request["docs"] if "docs" in request else None
-
-
-def cached_case_artifact(request, case=None, identity=None):
-    """A case's cached, read-only artifact. A `search_pins` key names a pins file
-    in the `case` directory that the build stores; fixtures have no pins
-    otherwise. A `docs` key names a docs source whose database is built beside
-    the catalog. `identity` overrides apply over the fixed import date (an
-    `artifacts` entry's other generation)."""
-    from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
-
-    return cached_reader_artifact(
-        fixture_source(request),
-        request.get("kind", "steward"),
-        identity_overrides={"import_date": FIXTURE_IMPORT_DATE, **(identity or {})},
-        search_pins=case / request["search_pins"] if "search_pins" in request else None,
-        docs=docs_source(request),
-    )
+def cached_case_artifact(request):
+    """A case's cached, read-only artifact, built by `reg-build` from its fixture."""
+    return cached_reader_artifact(fixture_source(request))
 
 
 def assert_http_case(case, tmp_path, servers):
-    """Run a case against `servers` (a `ServerPool`).
-
-    An expected `build_error` (`code`, `message`) is the artifact build's refusal;
-    the case sends no requests."""
+    """Run a case against `servers` (a `ServerPool`)."""
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     if "startup_error" in expected:
         assert_startup_refusal(request, expected["startup_error"], servers, tmp_path)
         return
-    if "build_error" in expected:
-        try:
-            cached_case_artifact(request, case)
-        except RegMetaError as exc:
-            assert {"code": exc.code, "message": exc.message} == expected["build_error"]
-            return
-        raise AssertionError("the artifact build was expected to fail")
-    responses = run_http_requests(
-        request["requests"], case_clients(request, case, servers)
-    )
+    responses = run_http_requests(request["requests"], case_clients(request, servers))
     for response, oracle in zip(responses, expected, strict=True):
         assert response["status"] == oracle["status"]
         if "location" in oracle:
@@ -153,58 +117,34 @@ def assert_members(responses, members):
     assert set(rows) == set(members["equals"]), rows
 
 
-def case_clients(request, case, servers):
+def case_clients(request, servers):
     """The `servers` clients of a case: its artifact's under `None`, each
-    `artifacts` entry's under its name. An entry overrides the identity
-    (`identity`), the docs source (`docs`) or both."""
-    kind = request.get("kind", "steward")
+    `artifacts` entry's under its name. An entry may name its own `fixture`."""
     clients = {
-        name: servers.client(
-            artifact_env(
-                cached_case_artifact(
-                    {**request, **({"docs": spec["docs"]} if "docs" in spec else {})},
-                    case,
-                    spec.get("identity"),
-                ),
-                kind,
-            )
-        )
+        name: servers.client(artifact_env(cached_case_artifact({**request, **spec})))
         for name, spec in request.get("artifacts", {}).items()
     }
-    clients[None] = servers.client(
-        artifact_env(cached_case_artifact(request, case), kind)
-    )
+    clients[None] = servers.client(artifact_env(cached_case_artifact(request)))
     return clients
 
 
 def assert_startup_refusal(request, refusal, servers, tmp_path):
     """The server refuses the case's artifact: it prints the error document on
     stderr and exits with the code's `exit` status in `api/errors.toml`. The
-    `manifest` and `doc_meta` overrides are written to the private copies;
+    `manifest` overrides are written to the private copy's `meta` table;
     `serve.db: "absent"` serves an empty directory instead of an artifact."""
-    from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
-
     if request["serve"].get("db") == "absent":
         (tmp_path / "absent").mkdir()
         _assert_refused(
             servers, tmp_path / "absent", request["serve"]["catalog"], refusal
         )
         return
-    path = build_reader_artifact(
-        tmp_path / "catalog",
-        fixture_source(request),
-        request.get("kind", "steward"),
-        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
-        docs=docs_source(request),
-    )
-    overrides = [("reg_meta.db", "import_manifest", request.get("manifest", {}))]
-    if "doc_meta" in request:
-        overrides.append(("reg_meta_docs.db", "doc_meta", request["doc_meta"]))
-    for filename, table, values in overrides:
-        with closing(sqlite3.connect(path.parent / filename)) as conn, conn:
-            conn.executemany(
-                f"INSERT OR REPLACE INTO {table} VALUES (?, ?)", values.items()
-            )
+    path = build_reader_artifact(tmp_path / "catalog", fixture_source(request))
+    with closing(sqlite3.connect(path)) as conn, conn:
+        conn.executemany(
+            "INSERT OR REPLACE INTO meta VALUES (?, ?)",
+            request.get("manifest", {}).items(),
+        )
     _assert_refused(servers, path.parent, request["serve"]["catalog"], refusal)
 
 

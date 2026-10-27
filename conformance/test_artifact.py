@@ -1,33 +1,29 @@
-"""Tier 3 admission of a selected artifact (`--artifact-dir`).
+"""Tier 3 admission of a selected artifact (`--artifact-dir`): `reg-build verify`.
 
-Failure messages deliberately omit real binding and physical identifiers.
+Failure messages carry only the first line of the verifier's stderr.
 """
 
 from __future__ import annotations
 
+import subprocess
+
 import pytest
-from artifact_requests import require
-from reg_meta_build.db import get_manifest, open_db
-from reg_meta_build.validate import validate_built_db
+from reader_artifacts import REG_BUILD, REPO
 
 
-def test_selected_artifact_passes_the_build_validator(artifact_dir, request):
-    """SQLite integrity, then `validate_built_db`, the one structural authority:
-    foreign keys, manifest identity and the holdings accounting included. It runs
-    in the mode each published asset is built in: a catalog with the real-corpus
-    floors, a steward artifact with the minted-id band for steward providers.
-    The curation `slug_dir` is build input that no asset ships, so the
-    entity-key curation gate stays with the build. Synthetic artifacts pass the
-    validator when they are built, so only a selected one is checked here."""
+def test_selected_artifact_passes_reg_build_verify(artifact_dir, request):
+    """`reg-build verify`, the one structural authority over a catalog file. Synthetic
+    artifacts are verified when `reg-build build` writes them, so only a selected one
+    is checked here."""
     if request.config.getoption("--artifact-dir") is None:
-        pytest.skip("synthetic artifacts are validated when they are built")
-    db = artifact_dir / "reg_meta.db"
-    with open_db(db) as conn:
-        require(
-            [r[0] for r in conn.execute("PRAGMA integrity_check")] == ["ok"],
-            "SQLite integrity check failed",
-        )
-        kind = get_manifest(conn)["catalog_artifact_kind"]
-    result = validate_built_db(db, corpus=kind == "catalog", flavored=kind == "steward")
-    # Counts only: the report can name private physical identifiers.
-    require(result.passed, f"{len(result.failures)} build validator checks failed")
+        pytest.skip("synthetic artifacts are verified when they are built")
+    verified = subprocess.run(
+        [REG_BUILD, "verify", artifact_dir / "reg_meta.db"],
+        cwd=REPO,
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    first = (verified.stderr.splitlines() or [""])[0]
+    assert verified.returncode == 0, f"reg-build verify failed: {first}"

@@ -9,7 +9,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
-from reader_artifacts import cached_reader_artifact
+from _reader_artifacts import cached_reader_artifact
 from reg_meta_build.derive import derive
 
 CASE = Path(__file__).parent / "cases/derive/succession-chains"

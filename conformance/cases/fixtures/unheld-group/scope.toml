@@ -1,6 +1,0 @@
-census_sha256 = "fedfc2404a856c3ff39b9c13f4b71cbf9614cb4da9a517f34ce5079f199a6ca2"
-[[retain_unknown]]
-table = "Undated"
-register = "scb/example"
-reason = "No established calendar edition."
-rows_sha256 = "c0f60fbb0a04c4ccd0287697998f007cf71bc83dda9a8b918ac3a3b62f0fdffa"

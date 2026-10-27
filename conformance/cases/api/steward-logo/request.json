@@ -1,8 +1,0 @@
-{
-  "note": "Fails if the logo route stops serving the steward's own logo.svg as an SVG, or drops the sandbox that keeps a directly opened SVG from running script.",
-  "fixture": "reader",
-  "kind": "catalog",
-  "requests": [
-    {"operation": "context", "path": "/api/steward/logo.svg"}
-  ]
-}

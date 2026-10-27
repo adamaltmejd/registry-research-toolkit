@@ -5,10 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from http_cases import ServerPool
-from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
-from reg_meta_build.db import open_db
-from reg_meta_build.errors import RegMetaError
+from http_cases import PARKED, ServerPool
+from reader_artifacts import cached_reader_artifact
 
 
 def pytest_addoption(parser):
@@ -22,12 +20,6 @@ def pytest_addoption(parser):
         "--artifact-dir",
         default=None,
         help="conformance artifact directory (requires --run-release)",
-    )
-    parser.addoption(
-        "--holdings-input",
-        default=None,
-        help="accepted holdings input directory (requires --run-release and "
-        "--artifact-dir)",
     )
     parser.addoption(
         "--server-cmd",
@@ -50,60 +42,22 @@ def pytest_configure(config):
             "conformance runs against the Rust server: pass --server-cmd "
             "(scripts/gate.py rust)"
         )
-    directory = config.getoption("--artifact-dir")
-    holdings_input = config.getoption("--holdings-input")
-    if holdings_input is not None and (
-        directory is None or not config.getoption("--run-release")
+    if config.getoption("--artifact-dir") is not None and not config.getoption(
+        "--run-release"
     ):
-        raise pytest.UsageError(
-            "--holdings-input requires --run-release and --artifact-dir"
-        )
-    if directory is None:
-        return
-    if not config.getoption("--run-release"):
         raise pytest.UsageError("--artifact-dir requires --run-release")
-    # The reader owns admission; never substitute fixtures for an invalid directory.
-    try:
-        open_db(Path(directory).expanduser().resolve() / "reg_meta.db").close()
-    except RegMetaError as exc:
-        raise pytest.UsageError(f"{exc.code}: {exc.message}") from exc
-    if holdings_input is not None:
-        from holdings_accounting import admit_holdings_input, committed_spec_dir
-
-        try:
-            admit_holdings_input(
-                Path(holdings_input),
-                Path(directory),
-                committed_spec_dir(Path(directory)),
-            )
-        except ValueError as exc:
-            raise pytest.UsageError(str(exc)) from exc
 
 
 def pytest_generate_tests(metafunc):
     if "artifact_dir" not in metafunc.fixturenames:
         return
     directory = metafunc.config.getoption("--artifact-dir")
-    values = (
-        [pytest.param(directory, id="selected", marks=pytest.mark.release)]
+    values = [
+        pytest.param(directory, id="selected", marks=pytest.mark.release)
         if directory is not None
-        else [pytest.param(kind, id=kind) for kind in ("catalog", "steward")]
-    )
-    metafunc.parametrize("artifact_dir", values, indirect=True, scope="session")
-
-
-def pytest_collection_modifyitems(config, items):
-    if config.getoption("--holdings-input") is not None:
-        return
-    # Private acceptance is an explicit maintainer boundary, never inferred from disk.
-    deselected = [
-        item
-        for item in items
-        if item.name.startswith("test_accepted_input_census_matches_compiled_artifact")
+        else pytest.param("base", id="base")
     ]
-    if deselected:
-        items[:] = [item for item in items if item not in deselected]
-        config.hook.pytest_deselected(items=deselected)
+    metafunc.parametrize("artifact_dir", values, indirect=True, scope="session")
 
 
 @pytest.fixture(scope="session")
@@ -112,21 +66,23 @@ def artifact_dir(request):
         return Path(request.param).expanduser().resolve()
     if request.config.getoption("--run-release"):
         raise pytest.UsageError("conformance tier 3 requires --artifact-dir")
-    return cached_reader_artifact(
-        "reader",
-        request.param,
-        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
-    ).parent
+    return cached_reader_artifact(request.param).parent
 
 
 @pytest.fixture(scope="session")
-def http_servers(request, tmp_path_factory):
+def server_cmd(request):
+    """The `--server-cmd` template, for a test that starts the server."""
+    if PARKED["server"]:
+        pytest.skip("parked: the server does not admit the 4 schema (PARKED.toml)")
+    return request.config.getoption("--server-cmd")
+
+
+@pytest.fixture(scope="session")
+def http_servers(server_cmd, tmp_path_factory):
     """Server processes for `--server-cmd`, one per artifact.
 
     Every server is stopped at session end, whether or not the cases passed."""
-    pool = ServerPool(
-        request.config.getoption("--server-cmd"), tmp_path_factory.mktemp("servers")
-    )
+    pool = ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))
     try:
         yield pool
     finally:

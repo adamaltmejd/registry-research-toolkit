@@ -205,9 +205,9 @@ step reads, so a resolution change reuses the preparation; the module docstring 
 the fields. The invariant is that a key leaving out a real input would return stale
 output silently, so every key errs generous, a hit re-checks what it returns, only
 completed runs are stored, and `build --verify` reruns uncached and compares bytes. The
-digest, staging and eviction helpers it shares with the G1 derive cache and the
-synthetic fixture cache live in `scripts/keyed_cache.py`. The builder persists its
-resolve phase, so the cache reuses a resolved bundle and reruns only materialization.
+digest, staging and eviction helpers it shares with the conformance fixture cache live
+in `scripts/keyed_cache.py`. The builder persists its resolve phase, so the cache reuses
+a resolved bundle and reruns only materialization.
 
 ### Catalog artifact identity and read scope
 
@@ -384,20 +384,18 @@ suites are run by hand, not by the gate or CI.
   | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
-Three verification gates cut across the tiers. They are named G0–G2 so they are not
-confused with the tiers; `conformance/README.md` ("Verification gates") has the G1
-procedure and the pin.
+One verification gate cuts across the tiers. It is named G0 so it is not confused with
+the tiers. G1 and G2 (the byte-for-byte differential harness against the previous
+release) are retired on the rebuild branch: they cannot compare across the schema break,
+and each release is checked by `reg-build diff` against the previous one.
 
-  | Gate | What runs                                                                                                                                  | Budget                           | When                                |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ----------------------------------- |
-  | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and the touched packages) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change                        |
-  | G1   | `scripts/gate.py g1`: derive on the pinned real artifacts, then the pinned release's server against the checkout's, as raw bytes           | under 5 min warm                 | reader and derive changes, releases |
-  | G2   | G1 with the release's own fresh databases as candidates (`--candidate`), no derive                                                         | about 1 h                        | maintainer, at releases             |
+  | Gate | What runs                                                                                                                                  | Budget                           | When         |
+  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ------------ |
+  | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and the touched packages) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change |
 
 `crates/` takes 10 s of G0's 60 s, so any change touching the runtime fits it;
-conformance runs in `rust`, with its own 30 s row. G1 and G2 run on real artifacts in
-tier 3 and are not package budgets. A slow gate is a defect to fix, not a reason to skip
-it.
+conformance runs in `rust`, with its own 30 s row. A slow gate is a defect to fix, not a
+reason to skip it.
 
 ### Reader and builder tracks
 
@@ -405,21 +403,18 @@ The reader (`crates/`) and the builder (`reg_meta_build`) ship on different cade
 These rules keep them coupled only through released artifacts.
 
 1. **Reader work develops against the pinned release.** G0 and the `rust` step run on
-   synthetic fixtures; G1 runs against the latest release asset. Reader work needs no
-   real-seed build. A reader-only change deploys on push to main: `container-build.yml`
-   bakes the newest release's assets.
-2. **Derived tables and schema.** A derived-table change is proved through G1, which
-   derives on the pinned asset, with no build. It ships only with the next release,
-   because deploys bake released databases without deriving. Core-DDL changes the reader
-   needs are batched into the next builder content release. The reader gate (`SCHEMA` in
-   `crates/reg-catalog/src/lib.rs`) never runs ahead of a released asset outside that
-   batch.
-3. **`reg-core` edits** invalidate the builder's prepare, build and resolve keys and the
-   G1 derive cache. Batch them just before a planned real-seed build. A prepare-key miss
-   never forces a re-prepare: an accepted prepared root can be reused.
+   synthetic fixtures. Reader work needs no real-seed build. A reader-only change
+   deploys on push to main: `container-build.yml` bakes the newest release's assets.
+2. **Derived tables and schema.** A derived-table change ships only with the next
+   release, because deploys bake released databases without deriving. Core-DDL changes
+   the reader needs are batched into the next builder content release. The reader gate
+   (`SCHEMA` in `crates/reg-catalog/src/lib.rs`) never runs ahead of a released asset
+   outside that batch.
+3. **`reg-core` edits** invalidate the builder's prepare, build and resolve keys. Batch
+   them just before a planned real-seed build. A prepare-key miss never forces a
+   re-prepare: an accepted prepared root can be reused.
 4. **Releases follow builder batches**, derive-only changes included, not reader
-   changes. Each release runs G2 (G1 on the release's fresh databases) before
-   publishing, and re-pins G1 after.
+   changes.
 
 ### Conformance suite
 
