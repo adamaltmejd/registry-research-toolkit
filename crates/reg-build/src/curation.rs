@@ -195,12 +195,16 @@ pub(super) struct Applied {
 }
 
 fn phase(statement: &reg_frame::statement::Statement) -> u8 {
-    use reg_frame::statement::Statement;
+    use reg_frame::statement::{AssertFact, Statement};
     match statement {
-        Statement::Set { fields, .. } if fields.table.is_some() => 0,
-        Statement::Assert { .. } => 1,
-        Statement::Set { fields, .. } if fields.variable.is_some() => 2,
-        _ => 3,
+        Statement::Assert {
+            fact: AssertFact::Table { .. } | AssertFact::Release { .. },
+            ..
+        } => 0,
+        Statement::Set { fields, .. } if fields.table.is_some() => 1,
+        Statement::Assert { .. } => 2,
+        Statement::Set { fields, .. } if fields.variable.is_some() => 3,
+        _ => 4,
     }
 }
 
@@ -264,7 +268,7 @@ pub(super) fn run(
     )
 }
 
-/// Move whole occurrences, then add asserted facts. Each phase
+/// Declare parents, move whole occurrences, then add remaining facts. Each phase
 /// evaluates an immutable snapshot before applying accepted statements. Other kinds
 /// see only that resulting source view. `record` is explicit review acceptance.
 #[allow(clippy::too_many_lines)]
@@ -316,7 +320,7 @@ fn run_selected(
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
-    for stage in 0..4 {
+    for stage in 0..5 {
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
         let mut accepted = Vec::new();
@@ -404,7 +408,7 @@ fn run_selected(
             };
             (dependency, publication_identity(s))
         });
-        if stage == 1 {
+        if stage == 2 {
             // Code lists are definitions consumed by occurrence assertions. Their
             // subject attachment follows occurrences, including newly asserted ones.
             for (statement, ..) in &accepted {
