@@ -4,6 +4,9 @@
     "json": {
       "/data/items/*/fqid": [
         "demo/ha/tv"
+      ],
+      "/data/items/*/type": [
+        "table"
       ]
     }
   },
@@ -12,6 +15,9 @@
     "json": {
       "/data/items/*/fqid": [
         "demo/ha/va"
+      ],
+      "/data/items/*/type": [
+        "variable"
       ]
     }
   },
@@ -20,6 +26,9 @@
     "json": {
       "/data/items/*/fqid": [
         "demo/ha/vb"
+      ],
+      "/data/items/*/type": [
+        "variable"
       ]
     }
   },
@@ -29,7 +38,10 @@
       "/data/items/*/fqid": [
         "demo/ha/vc"
       ],
-      "/data/next_cursor": null
+      "/data/next_cursor": null,
+      "/data/items/*/type": [
+        "variable"
+      ]
     },
     "members": {
       "steps": [

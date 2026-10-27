@@ -23,7 +23,7 @@ from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
-from http_cases import CASES, artifact_env, cached_case_artifact, is_parked
+from http_cases import CASES, artifact_env, cached_case_artifact
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -47,8 +47,6 @@ def test_logical_order_or_located_finding(case: Path, http_servers) -> None:
     # (entries, clips, row keys, findings, their order or messages), when it does
     # not name the served generation, when a blocked order stops refusing with
     # these located findings, or when `validate` disagrees with `order`.
-    if is_parked(case):
-        pytest.skip("parked: conformance/PARKED.toml")
     request = json.loads((case / "request.json").read_text())
     path = cached_case_artifact({"fixture": request["fixture"]})
     client = http_servers.client(artifact_env(path))

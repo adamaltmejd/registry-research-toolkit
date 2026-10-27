@@ -19,9 +19,10 @@ the `register-metadata-search` skill.
 ## Drafting a project
 
 1. Set the document's `schema_version` to `"5.0.0"`. Set `reg_meta_version` (required)
-   to the version the user's reg-meta reports (`reg-meta --version`); ask if unknown. It
-   is not `meta.catalog_version`, which is a different thing. Never write these from
-   memory.
+   to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
+   from a catalog tool response and format its release version `X.Y.Z` as that tag. If
+   it is not a release version (for example, `dev`), ask which catalog release to use.
+   Never infer it from the local executable or from memory.
 2. Find each variable with `search` and `show`, then `segments` for the table that
    delivers it over the study period. A source is a `table` and a `period`. `table` is
    the table's public id, `<provider>/<register>/<table>`, or `<provider>/<register>`

@@ -19,22 +19,12 @@ template raises the server's write limit (`--write-limit`); the burst case in
 
 The `rust` step runs the whole suite on the synthetic `base` artifact. The `release`
 step runs only the checks on exactly the selected artifact
-(`-m release --run-release --artifact-dir=…`): `reg-build verify` on it. Both flags are
-required for tier 3. Use the equals form for `--artifact-dir`: pytest discovers roots
-before loading custom options, and a space-separated external directory can select that
-directory's checkout configuration.
+(`-m release --run-release --artifact-dir=…`). Both flags are required for tier 3. Use
+the equals form for `--artifact-dir`: pytest discovers roots before loading custom
+options, and a space-separated external directory can select that directory's checkout
+configuration.
 
-## Parked cases
-
-`PARKED.toml` lists what the server does not yet serve per the 5.0.0 contract: the
-operations, downloads and error codes, and the case directories whose port is still to
-come. A parked case is skipped. The server flag skips every test that starts a server
-while its admission still reads the old catalog schema. Each R PR removes the entries it
-ports and rewrites their cases over the new fixtures; the last one deletes the file and
-the code that reads it. The parked count is the measure of what is left.
-
-Holdings and steward cases are not parked: they left the corpus (git holds them) and
-return in milestone E, written over the new builder.
+Holdings and steward cases return in milestone E, written over the new builder.
 
 ## Case contract
 
@@ -101,11 +91,10 @@ target/debug/reg-build build --inputs <fixture>/inputs --curation <fixture>/cura
 
 and never runs cargo itself: `scripts/gate.py rust` builds the workspace first. `build`
 verifies what it writes (`reg-build verify`), so a synthetic artifact is checked when it
-is built. `fixtures/base` is the one fixture that builds today: one provider (`demo`),
-one register with one table, two yearly releases, three variables (one with a value set
-whose third item has the blank code) and a label that differs between the years. A
-fixture without `curation/inputs.toml` is an old-builder source (a `catalog.json` tree);
-no case builds one, and the op PRs port the fixtures their cases use.
+is built. `fixtures/base` has one provider (`demo`), one register with one table, two
+yearly releases, three variables (one with a value set whose third item has the blank
+code) and a label that differs between the years. A fixture without
+`curation/inputs.toml` is refused by this harness.
 
 Every artifact is built once into a cache: `$REG_FIXTURE_CACHE`, else
 `registry-research-toolkit-fixtures` in the system temp directory (writable inside agent
@@ -120,10 +109,10 @@ after its last lookup. Deleting the directory between runs is safe. CI sets no
 `uv run python conformance/fixture_cache.py base` builds one entry and prints its path
 for consumers outside pytest.
 
-`cases/reader` and the remaining old-form directories under `cases/fixtures` are sources
-of the old builder (`reg_meta_build`), whose tests still build artifacts from them
-through `reg_meta_build/tests/_reader_artifacts.py` until milestone F deletes the
-builder. Nothing in this suite builds them.
+`cases/reader/fixture` and `cases/reader/classification-editions` are sources of the old
+builder (`reg_meta_build`), whose tests still build artifacts from them through
+`reg_meta_build/tests/_reader_artifacts.py` until milestone F deletes the builder.
+Nothing in this suite builds them.
 
 ## API cases
 
@@ -160,8 +149,10 @@ served by the Rust server. They use the HTTP case shape above, with these additi
 the one structural authority over a catalog file, and fails on a non-zero exit printing
 only the first line of its stderr. Synthetic artifacts are verified when they are built.
 The `release` step runs it on the `base` fixture's artifact; a release runs it on the
-artifact it ships. The checks that sample search and order answers against the artifact
-(release tier) return with `r-search` and `r-order-check`, written over the new schema.
+artifact it ships. The release search checks sample each indexed kind and traverse
+paging to the depth cap when the artifact has enough hits. The release order check
+compares sampled whole-table projects with an independent artifact census and checks
+HTTP/MCP agreement. Both compare repeated responses as raw bytes.
 
 ## Verification gates
 

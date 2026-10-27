@@ -13,22 +13,6 @@ fn spec(name: &str) -> toml::Table {
     std::fs::read_to_string(&path).unwrap().parse().unwrap()
 }
 
-/// A list of `conformance/PARKED.toml`: what the server does not yet serve per the
-/// contract, which the comparisons below leave out on both sides.
-fn parked(list: &str) -> BTreeSet<String> {
-    let path = format!(
-        "{}/../../conformance/PARKED.toml",
-        env!("CARGO_MANIFEST_DIR")
-    );
-    let table: toml::Table = std::fs::read_to_string(path).unwrap().parse().unwrap();
-    table[list]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|name| name.as_str().unwrap().to_owned())
-        .collect()
-}
-
 /// Fails when a code is added to, dropped from or changed in one side only.
 #[test]
 fn error_enum_equals_errors_toml() {
@@ -96,7 +80,6 @@ fn param_schema(ty: &str) -> Value {
 /// on either side, or when a route of the table is not served.
 #[test]
 fn openapi_matches_operations_toml() {
-    let parked_ops = parked("operations");
     let table = spec("operations.toml");
     assert_eq!(table["contract_version"].as_str(), Some(CONTRACT_VERSION));
     let rows: BTreeMap<&str, &toml::Table> = table["operation"]
@@ -126,9 +109,6 @@ fn openapi_matches_operations_toml() {
                 // A route without some of its operation's path parameters carries
                 // the name with `_without_` and them (`show_without_ref`).
                 let name = id.split("_without_").next().unwrap();
-                if parked_ops.contains(name) {
-                    continue;
-                }
                 let row = rows
                     .get(name)
                     .unwrap_or_else(|| panic!("{name} is not in the table"));
@@ -167,9 +147,6 @@ fn openapi_matches_operations_toml() {
                     "{route}"
                 );
                 let name = download["operation"].as_str().unwrap();
-                if parked_ops.contains(name) {
-                    continue;
-                }
                 (name, expected_params(rows[name]))
             };
             for placeholder in path.split('/').filter_map(|s| s.strip_prefix('{')) {
@@ -198,26 +175,19 @@ fn openapi_matches_operations_toml() {
             served.insert(route);
         }
     }
-    let table_routes = unparked_routes(&rows, &downloads, &parked_ops);
+    let table_routes = table_routes(&rows, &downloads);
     assert_eq!(served, table_routes);
 }
 
-/// The routes of the table's operations and downloads that are not parked.
-fn unparked_routes(
+/// The routes of every operation and download in the table.
+fn table_routes(
     rows: &BTreeMap<&str, &toml::Table>,
     downloads: &BTreeMap<&str, &toml::Table>,
-    parked_ops: &BTreeSet<String>,
 ) -> BTreeSet<String> {
-    rows.iter()
-        .filter(|(name, _)| !parked_ops.contains(**name))
-        .flat_map(|(_, row)| row["http"].as_array().unwrap())
+    rows.values()
+        .flat_map(|row| row["http"].as_array().unwrap())
         .map(|route| route.as_str().unwrap().to_owned())
-        .chain(
-            downloads
-                .iter()
-                .filter(|(_, row)| !parked_ops.contains(row["operation"].as_str().unwrap()))
-                .map(|(&route, _)| route.to_owned()),
-        )
+        .chain(downloads.iter().map(|(&route, _)| route.to_owned()))
         .collect()
 }
 

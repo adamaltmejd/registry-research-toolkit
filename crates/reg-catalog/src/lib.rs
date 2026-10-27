@@ -9,7 +9,6 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
-use rusqlite::functions::FunctionFlags;
 use rusqlite::{Connection, OpenFlags};
 use serde_json::Value;
 
@@ -117,17 +116,13 @@ impl Catalog {
         self.meta("generation_id")
     }
 
-    /// A fresh read-only connection with the `reg-core` folds as SQL functions
-    /// (`fold_search`, `fold_identity`, `fts_term`) and `ln`; the server opens one per
-    /// request.
+    /// A fresh read-only connection; the server opens one per request.
     ///
     /// # Errors
     ///
     /// `catalog_unavailable` when the admitted file cannot be opened.
     pub fn connect(&self) -> Result<Connection, Error> {
-        connect(&self.path, self.mmap_size)
-            .and_then(with_folds)
-            .map_err(|err| unavailable(&self.path, &err))
+        connect(&self.path, self.mmap_size).map_err(|err| unavailable(&self.path, &err))
     }
 }
 
@@ -179,32 +174,6 @@ fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
             | OpenFlags::SQLITE_OPEN_NO_MUTEX,
     )?;
     conn.pragma_update(None, "mmap_size", mmap_size)?;
-    Ok(conn)
-}
-
-/// Register the folds. Each maps SQL NULL to NULL; `fts_term(text, term)` is
-/// today's `py_fts_term`: some search term of `text` starts with `term`.
-fn with_folds(conn: Connection) -> rusqlite::Result<Connection> {
-    let flags = FunctionFlags::SQLITE_UTF8 | FunctionFlags::SQLITE_DETERMINISTIC;
-    let unary = |name: &str, fold: fn(&str) -> String| {
-        conn.create_scalar_function(name, 1, flags, move |ctx| {
-            Ok(ctx.get::<Option<String>>(0)?.map(|s| fold(&s)))
-        })
-    };
-    // SQLite's math `ln`, which the bundled build omits; the code arm ranks by it.
-    conn.create_scalar_function("ln", 1, flags, |ctx| {
-        Ok(ctx.get::<Option<f64>>(0)?.map(f64::ln))
-    })?;
-    unary("fold_search", reg_core::fold_search)?;
-    unary("fold_identity", reg_core::fold_identity)?;
-    conn.create_scalar_function("fts_term", 2, flags, |ctx| {
-        let (text, term) = (ctx.get::<Option<String>>(0)?, ctx.get::<String>(1)?);
-        Ok(text.is_some_and(|text| {
-            reg_core::fts_terms(&text)
-                .iter()
-                .any(|token| token.starts_with(&term))
-        }))
-    })?;
     Ok(conn)
 }
 

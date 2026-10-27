@@ -163,7 +163,8 @@ def test_sampled_whole_table_orders_agree_with_census(artifact_dir, http_servers
     """Fails when `validate` or `order` blocks a table the census finds orderable
     (or orders one it finds blocked: an ambiguous or preliminary window let through),
     when an entry's spelling is not the one the artifact holds at the entry's start,
-    or when the MCP `order` tool answers a different document than HTTP."""
+    when repeated orders serialize different bytes, or when the MCP `order` tool
+    answers a different document than HTTP."""
     db_path = artifact_dir / "reg_meta.db"
     tables, open_start = census(db_path)
     assert tables, "the artifact has no table to sample"
@@ -182,6 +183,9 @@ def test_sampled_whole_table_orders_agree_with_census(artifact_dir, http_servers
             f"{pid}: order {ordered.status_code}, census blocked={blocked}"
         )
         if not blocked:
+            assert (
+                ordered.content == client.post("/api/project/order", json=body).content
+            ), f"{pid}: repeated order bytes differ"
             entries = ordered.json()["data"]["entries"]
             for number, entry in enumerate(entries):
                 start = entry["period"]["start"]

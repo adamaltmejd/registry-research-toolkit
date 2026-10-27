@@ -8,8 +8,9 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-The SPA is archived on `archive/reg-webapp-spa` and returns in milestone E, rewritten on
-the v5 API from that archive and `claude/rebuild-s-shell-search`.
+The SPA is deleted from this checkout and archived on `archive/reg-webapp-spa`.
+Milestone E rewrites it on the v5 API from that archive and
+`claude/rebuild-s-shell-search`.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
@@ -19,10 +20,9 @@ SQL reader. Holdings, scope and steward branding return in milestone E.
 
 The data is public-ish registry metadata; there is **no server-side user-private state**
 (project files belong to clients, never to the server). "Auth" here is really cost
-protection, on two axes: read GETs are edge-cacheable + ETag-revalidated (cheap), and
-the actual-work POSTs carry an origin-side body-size cap + per-client rate limit (Cost
-protection, below). Real auth is a v2+ concern, layered on only if a steward ever needs
-private data.
+protection: read GETs support ETag revalidation, and POSTs carry an origin-side
+body-size cap and per-client rate limit (Cost protection, below). Real auth is a v2+
+concern, layered on only if a steward ever needs private data.
 
 ## Layout
 
@@ -47,131 +47,22 @@ version must exactly equal `reg_core::CATALOG_SCHEMA_VERSION`. The `api` admissi
 corpus pins the refusals. The webapp ships no DDL or schema-version authority;
 `reg-build verify` owns published artifact invariants.
 
-## Catalog reads (the Rust server)
+## Catalog operations (the Rust server)
 
-`reg-meta serve` answers `show` (`GET /api/catalog` for the root,
-`GET /api/catalog/{ref}` for other nodes) and its facets `states`, `warnings`, `values`,
-`graph` and `lineage`. Every response is `{data, meta}`; an error is
-`{error: {code, message, fields}, meta}`. Ref and period grammars, cursors and located
-errors live in `crates/reg-catalog`. The contract is `conformance/api/operations.toml`
-with its snapshot `crates/reg-meta/openapi.json`.
+`reg-build` writes the immutable catalog; `reg-meta serve` reads it through
+`reg-catalog`. The Python builder remains for its existing release and steward paths
+until milestone F. It does not write the catalog served by the current global server.
 
-## Global catalog search (the Rust server)
+`conformance/api/operations.toml` defines the complete operation surface, parameters,
+response shapes and error codes. `crates/reg-meta/openapi.json` is its server snapshot.
+Catalog operations expose nodes, segments, findings, coverage, schemas, relationships
+and content-addressed value sets. Search ranks FTS hits across registers, tables,
+variables, classifications, codes and documents. Pins and synonyms arrive with curation
+in milestone D. Holdings and physical orders arrive in milestone E.
 
-`GET /api/search` is answered by the Rust server (`reg-meta serve`, the `search`
-operation in `conformance/api/operations.toml`): one ranked list per call, as
-`{data: {items, next_cursor}, meta}`. With `type` the list is one arm's hits
-(`register`, `variable`, `classification`, `classification_code`, `register_value`), its
-curated pins first; without it, every arm's hits ranked together, grouped variable
-members hidden. Ranking, curated pins (`reg_meta_build/curation/search_pins.toml`, read
-from the catalog's `search_pin` table), concept-group folding, input limits and cursors
-live in `crates/reg-catalog`. Maintainers measure relevance with the repository's
-`scripts/run_search_eval.py` (`scripts/search_eval.toml`, #393 item 10) against a
-running `reg-meta serve`.
-
-## Docs library (the Rust server's `docs` operations)
-
-`/api/docs/*` (#354/#742) is served by the Rust server. The operations
-(`conformance/api/operations.toml`) read documentation from the single `reg_meta.db`
-catalog, each answering `{data, meta}`:
-
-- `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
-  entries matching every word, best first, with an FTS `snippet`; without `q`, every
-  entry by filename. `register` is a register ref (FQID or bare name); the page carries
-  `total` and `register_ingested` (whether that register has docs). It absorbs the old
-  `/api/docs/for-variable` hook (`q` = the variable's name). The index holds
-  `fold_search` text (folded by the docs build), and snippets come from the stored body,
-  so they keep case and diacritics.
-- `docs_get` (`GET /api/docs/doc/{identifier}`): metadata, source pointer, a BOUNDED
-  `excerpt` and the full markdown `body` for agents.
-- `docs_related` (`GET /api/docs/related/{register ref}`) and its download
-  (`GET /api/docs/file/{register ref}/{filename}`): the curated #739/#742 rehost
-  surface, PDF bytes served verbatim with `Content-Type: application/pdf`, an inline
-  filename disposition, and JSON metadata carrying `source_url`, `license`, `fetched`,
-  `sha256` and `byte_size`.
-
-`source` is the SCB source-document identifier; `source_url` is the resolved SCB PDF
-link (populated at doc-DB build from the curated `doc_sources.toml` map, #372), null
-when the source is uncurated; `source_title` is the publication title. Coverage is
-LISA-only today.
-
-- **Embedded docs**: documentation is part of the admitted catalog; there is no optional
-  docs database or separate schema gate.
-- **Caching**: the Rust server's cache tier for the docs operations is a day
-  (`public, max-age=86400, must-revalidate`): doc-library content is rebuild-stable.
-
-## Coverage aggregates (#351)
-
-The catalog listing nodes carry a `coverage` object so a browse row shows its
-study-window span without resolving every state:
-
-- **Register children** (a register's `show`): per-variable `coverage` — `coverage_from`
-  (min `valid_from`), `coverage_to` (max finite `valid_to`; null when `open_ended`),
-  `open_ended`, `state_count` (>1 in a window = a break worth surfacing).
-- **Provider children** (a provider's `show`): per-register `coverage` —
-  `variable_count` (slugged variables) + the span over all their states.
-
-In holdings scope, the reader computes coverage over mapped source variants and
-canonical representations before aggregation. A partial-column hold cannot inherit the
-whole variable's coverage. Unnamed coverage stays separate from named columns.
-
-Members on a register-scoped concept group's own page carry per-column coverage too, but
-a missing per-column key is a known curated member with no `variable_state` row, not
-absent enrichment. Those members carry the zero-state coverage shape
-(`state_count == 0`, null bounds, not open-ended) instead of `coverage = None`, so
-downstream period lenses can distinguish "never delivered" from "unknown".
-
-**Where coverage is computed.** Reference-scope variable, column and register coverage
-are grouped reads over `variable_state` in the Rust reader
-(`crates/reg-catalog/src/ops/show/browse.rs`), behind the ETag/edge cache. The covering
-index `idx_variable_state_coverage` on
-`variable_state(variable_id, valid_from, valid_to)` (#371) lets the grouped MIN/MAX span
-scan be satisfied index-only. Holdings coverage folds the compiled deliveries below.
-
-- **Open-ended sentinel**: `coverage_to` is None + `open_ended` True when the latest
-  window is the `9999-12-31` DDL sentinel ("ongoing"); a stateless variable is
-  `state_count == 0` with both bounds None (distinct from open-ended). The sentinel is
-  `9999-12-31`.
-- **Cadence DEFERRED**: #351 also lists a per-register "cadence", but reg_meta has no
-  cadence attribute and no clean derivation (a modal period-grain is fuzzy for
-  mixed-grain registers), and no UI consumes it yet. The load-bearing study-window
-  signal is span + counts; cadence is a follow-up (a defined source or a build-time
-  field) — not shipped here.
-
-### Per-variable deliveries (Y-82)
-
-A register-child also carries `deliveries`: the `(variant, delivery column)` pairs that
-deliver the variable, each with its own `VariableCoverage` window and — since Y-104 —
-its disjoint `windows`. It answers the two questions the coverage span can't: *which
-variant delivers this?* and *what column name does a researcher know it by?* (LISA's
-`forvink-ers` is `ForvErs` on paper).
-
-The deliveries are compiled at build, not computed per request: `reg-meta-build derive`
-(`reg_meta_build/src/reg_meta_build/derive/browse.py`) writes one `browse_delivery` row
-per delivery and scope, with its windows in `delivery_window`, and the validator checks
-both against a recomputation. The reader lists the rows of the requested scope.
-
-- **Windows, not a span (Y-104)**: 7,295 of the corpus's 77,843 delivery groups (9.4%)
-  do not tile contiguously, so a MIN/MAX span would assert an unbroken delivery for one
-  group in eleven. Each delivery carries its disjoint windows; `coverage` is the span
-  over them, which is what a browse row prints.
-- `column` is None for a state SCB named no delivery column for. The variant still
-  delivers the variable, so the row is kept. Variants with a NULL slug are excluded (an
-  unslugged variant isn't addressable).
-- **Alias-backed columns (Y-93)**: `variable_state` names only the state's own column,
-  so a monthly family (`LonFinkJan` … `LonFinkDec`) or a #945 co-delivered spelling
-  would be absent from the listing. The derive adds every column of the alias history
-  with the coverage it is delivered over: a windowed column over its windows, which
-  replace the base state's claim where the two name the same column; a column with no
-  window over the variant's states. This is the "delivered under" view, not the
-  resolver's: a browse row names columns rather than promising a resolution, so it keeps
-  an alias window no state contains. Columns are identified case-insensitively
-  (`py_lower`), so an alias that only re-spells a listed column is that one delivery.
-- **Steward semantics**: the shared reader limits deliveries to mapped variants and
-  canonical representations in holdings scope. Discovery unions held mappings across
-  variants; each returned delivery retains its own variant and windows. Reference scope
-  returns the catalog's delivery evidence. `deliveries` defaults to `[]` and is
-  populated only in the register listing payload.
+Documentation lives in the same admitted catalog. The docs operations search document
+sections, return a document by content hash, list linked documents and serve embedded
+PDF bytes. There is no separate docs database or schema gate.
 
 ## Context and catalog sizes (the Rust server)
 
@@ -183,7 +74,7 @@ identical to the server's rendered document.
 
 The Rust server sets the reads' ETags and `Cache-Control` (tiers in
 `crates/reg-catalog`, validators in `crates/reg-meta/src/validator.rs`); a POST answer
-(`validate`, `order`, the manifest download) carries no validator.
+(`validate`, `order`) carries no validator.
 
 **Early revalidation (#1453).** App code and the compiled catalog DB are immutable for a
 process lifetime; changing either replaces the process. At startup the server derives
@@ -192,80 +83,37 @@ not identity fields: `generation_id` does not cover `catalog_version`, which rea
 responses. The image hashes the binary and database when it is built (`Dockerfile`,
 passed in as `REG_META_CONTENT_DIGEST` by the entrypoint): hashing the catalog at boot
 on the throttled rootfs would outlast the entrypoint's 60 s readiness deadline. Without
-the variable (local runs, the conformance suite) the server hashes them at boot. Loose
-delivery inventory is not an HTTP input. A GET read's strong ETag is that token plus the
-request's path and query, without `__edge_v`, so read scope (a parameter or the
-catalog's default) is part of it. A tower layer in front of every GET operation and
-download (a route layer, so another method keeps its 405) answers a matching
-`If-None-Match` with a 304 before the route runs, so a revalidation does no DB work and
-no body serialization. `If-None-Match: *` still runs the route, since it matches only a
-representation that exists. Only a 200 carries the ETag and tier.
+the variable (local runs, the conformance suite) the server hashes them at boot. A GET
+read's strong ETag is that token plus the request's path and query. A tower layer in
+front of every GET operation and download (a route layer, so another method keeps its 405)
+answers a matching `If-None-Match` with a 304 before the route runs, so a revalidation
+does no DB work and no body serialization. `If-None-Match: *` still runs the route,
+since it matches only a representation that exists. Only a 200 carries the ETag and
+tier.
 
-Browser and shared-cache freshness are separate concerns. Keep a short browser window
-where prompt redeploy visibility matters, but let the Cloudflare cache retain immutable,
-deploy-generation-keyed catalog/search responses for substantially longer without
-synchronous origin revalidation at every browser expiry. A warm search must be served
-without route execution. This complements rather than masks the bounded cold-query work:
-arbitrary first-time queries still have to meet the origin budget. #1135's bounded SQL
-path meets it, so no second in-process response cache is warranted.
-
-- **The Rust server's tiers**: `/api/context` revalidates always (`no-cache`) so clients
-  see the current deploy version and date. Catalog and search reads use `max-age=60`
-  because both embed the #322 concept-group folds, which can change at the same browser
-  URL on redeploy, and `s-maxage=86400` for the edge, whose key carries the deploy
-  generation (#318), so a warm search is not revalidated at the origin every minute.
-  `must-revalidate` stays, so no cache serves them stale (it and `s-maxage` both rule
-  out `stale-while-revalidate`). `public` keeps the CF edge cacheable (the #220 probe
-  survives). `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable
-  and a sub-day-stale list is acceptable there; the ETag still guarantees correctness on
-  revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
-  `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
-  orthogonal to caching policy), so the per-route policy needs no edge change.
-- The **edge** side (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a
-  deploy/maintainer concern and not backend code.
+The server owns each read operation's cache tier. Context revalidates always; catalog
+and search reads use a short browser lifetime and a longer shared-cache lifetime;
+document reads use a day. The global edge forwards only MCP, so these HTTP read cache
+headers apply to direct API clients. Origin cache headers do not establish that a public
+edge served a response from cache.
 
 ## Production performance budgets
 
-Search cache-miss origin p95 must stay under 500 ms; a warm edge hit must not execute
-the origin. Catalog reads target p95 under 200 ms and project validation/order under 1 s.
-Measurements at the origin remain separate from edge-cache evidence.
+Search origin p95 must stay under 500 ms. Catalog reads target p95 under 200 ms and
+project validation/order under 1 s. Measurements at the origin remain separate from edge
+evidence.
 
-## Compiled artifact identity and read scope
+## Compiled artifact identity
 
 Boot opens the single `reg_meta.db` artifact and admits its metadata against
 `reg_core::CATALOG_SCHEMA_VERSION` by exact equality. Published catalog invariants
 belong to `reg-build verify`. The runtime loads no steward branding or delivery
 inventory; steward artifacts and their deployment return in milestone E.
 
-The Rust server's reads (the catalog pages' `show` and facets, `context`, `search`)
-accept `?scope=holdings|reference`. Catalog artifacts default to reference and reject
-holdings; steward artifacts default to holdings and allow reference. Scope is applied
-inside the shared reader before hydration, grouping, ranking, counts, or pagination. The
-adapter consumes scoped pages directly. Finite curated pins are admitted through
-`Catalog.exists` before ranking and pagination. Cursors bind both scope and the full
-artifact generation. Project endpoints reject any `scope` query parameter with a located
-422; browse scope cannot override the selected artifact's orderability.
-
-Provider and register discovery requires a mapped binding. Variable discovery unions
-mappings across source variants; states and deliveries retain their actual mapped
-variant and canonical representation. Concept-group membership and inherited tags are
-scoped by that same representation rule. Register and variable warnings are admitted
-with their subjects. A live unheld browse subject returns 404.
-
-Classifications, codes, value-set contents, same-as links, succession relationships,
-graph edges, and lineage remain reference evidence. The browse subject is scoped; a
-reference neighbor does not grant holdings or orderability. Hydrated graph states use
-the scoped reader; unheld neighboring variables remain thin with no selectable states.
-
-The Rust server's `context` reports schema version, catalog version and the `reg_meta`
-version; its `meta` carries the full generation and the effective scope. Its optional
-`period_span` is computed from compiled physical `holding_period` MIN/MAX bounds of
-known tables with an explicit mapping, then capped at the catalog import year. It is a
-coarse UI slider bound, never a coverage or validity check. Catalog artifacts and
-holdings without dated periods return null.
-
-The Docker image contains one catalog DB and the server binary. It has no steward
-branding input. SWECOV's delivery pipeline returns in milestone E.
+The Rust server's `context` reports schema version, catalog version, server version and
+catalog sizes. Every JSON response's `meta` carries contract version, catalog version
+and generation. Context's optional `period_span` is the hull of the catalog's register
+periods; it is null when the catalog has no registers.
 
 ## OpenAPI snapshot (the drift gate)
 
@@ -275,16 +123,9 @@ rendered document. `scripts/gate.py regen` refreshes the snapshot.
 
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 
-The origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a
-Cloudflare zone in front. The deciding factor was the edge-cache contract: the origin
-ETag/`Cache-Control` machinery (above) and the #220 FQID round-trip gate assume a
-classic URL-addressed origin behind Cloudflare's zone cache. Cloudflare's own Containers
-product routes all traffic through a Worker via a Durable Object binding — zone Cache
-Rules never see those responses — so the shipped ETag design would need re-implementing
-in Worker code against a per-colo-only cache. Fly is also \~5x cheaper for this shape
-and officially documents the Cloudflare-in-front topology
-(`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
-plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
+The container runs on Fly.io behind Cloudflare. The immutable SQLite artifact and server
+binary are baked into a plain Docker image; `fly.toml` and the deploy job supply the
+platform-specific configuration.
 
 The global catalog has no public website (maintainer, 2026-10-20, #1709): it is not what
 SWECOV offers, so it is not published under swecov.se. Agents use its hosted MCP (no
@@ -352,11 +193,11 @@ milestone E.
   counts as everything changed. Dispatching HEAD's run from the skipped job was
   rejected: it needs `actions: write`, which the workflow does not hold. Two gates guard
   a bad image: the entrypoint smoke gate (it probes `context`, `search`, docs search and
-  `/mcp` with `curl`, each carrying `__edge_v`, and the container exits non-zero before
-  ever serving when artifact admission or a probe fails) and fly.toml's `/api/context`
-  HTTP check (flyctl reports failure if it never passes). The docs probe searches `lisa`
-  and requires a `doc` field in a hit. Rollback: `flyctl releases --image` lists
-  history; `flyctl deploy --image <old>` restores in seconds.
+  `/mcp` with `curl`, and the container exits non-zero before ever serving when artifact
+  admission or a probe fails) and fly.toml's `/api/context` HTTP check (flyctl reports
+  failure if it never passes). The docs probe searches `lisa` and requires a `doc` field
+  in a hit. Rollback: `flyctl releases --image` lists history;
+  `flyctl deploy --image <old>` restores in seconds.
 - **Schema guard**: a standalone `schema-guard` job compares `CATALOG_SCHEMA_VERSION`
   (`crates/reg-core/src/lib.rs`) with the same constant at the newest `reg_meta/v*` tag
   (`git show <tag>:crates/reg-core/src/lib.rs`). Two outcomes: equal passes; different,
@@ -397,103 +238,46 @@ milestone E.
 - **Edge worker** (`reg_webapp/edge/`, Workers free plan): `wrangler.jsonc`
   (`reg-webapp-global-edge`, `reg-meta.vqv.uk/*`) has no assets binding. It forwards
   `/mcp` to the origin with the edge token and answers anything else with a `no-store` 404.
-  Only the global worker deploys until E. Cloudflare downgrades a strong origin ETag to
-  weak (`W/`) when compression applies; weak comparison is correct for GET revalidation.
-- **Edge cache generations (#318)**: the worker stamps a per-deploy `DEPLOY_VERSION`
-  (wrangler var; CI passes the commit SHA, `-<run_id>`-suffixed on dispatch so same-SHA
-  data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
-  param. The zone cache key is the full URL, so each deploy orphans all prior `/api/*`
-  cache entries — fresh payloads immediately after deploy, while the per-route TTL still
-  bounds origin traffic *within* a generation (24h, `s-maxage` for catalog + search and
-  `max-age` for doc-library). This is the free-plan substitute for `cf.cacheKey`
-  (Enterprise-only) and needs no purge credentials. Origin-side the param is inert:
-  `reg-meta serve` drops it before validating the query (it rejects every other unknown
-  parameter) and before deriving the ETag. Consequence: `edge-deploy` runs on
-  **image-affecting** pushes too, not just edge paths — an origin deploy that changes
-  API payloads must still ship a new cache generation. The global `edge-deploy` job
-  deploys the MCP-only worker on matching pushes and checks first that the token can see
-  zone vqv.uk (`CLOUDFLARE_API_TOKEN` repo secret). It needs the global origin deploy
-  and runs the public `/mcp` smoke afterward. SWECOV's deploy jobs return in milestone
-  E; its running deployment remains untouched.
-- **Zone rules (dashboard, free plan, zone swecov.se)**: a Cache Rule making `/api/*` on
-  the hostname cache-eligible (Cloudflare never caches extensionless API paths by
-  default, even with `Cache-Control: public` — without the rule every read is
-  `cf-cache-status: DYNAMIC`), and the free plan's one WAF rate-limiting rule (path-only
-  match — free-tier rate limiting can't match hostname; 100 req/10s/IP → block,
-  burst-verified to 429).
-- **#220 gate: PASSED (2026-06-11)** — 20 slash-bearing FQID paths (3-segment bindings,
-  `/states` suffixes, `/variants`) round-trip the edge cache byte-identical to origin,
-  MISS→HIT per URL, ETag→body mapping consistent, and conditional GETs answer 304 from
-  the edge (`CF-Cache-Status: HIT`, no origin traffic). The path-based FQID surface
-  stands; no query-string fallback needed before publishing the OpenAPI.
-- **V1 performance-probe extension (pending, #1455)** — add a representative
-  `/api/search` MISS→HIT + `Age`/`CF-Cache-Status` assertion and prove its warm
-  conditional request performs no origin route work. The original #220 path gate remains
-  unchanged.
+  Only the global worker deploys until E.
+
+The global `edge-deploy` job checks that the Cloudflare token can see zone vqv.uk,
+deploys the MCP-only worker after the origin deploy, then runs the public MCP smoke.
+SWECOV's deploy jobs return in milestone E; its running deployment remains untouched.
 
 ## Why CI uses a fixture DB, not a real asset
 
-Backend tests build artifacts in temporary directories and point the app at them with
-`REG_META_DB`; they do not fetch released DB assets. Compiled stewardship cases load
-readable logical JSON, inventory TOML, policies, and census CSV through the real builder
-and compiler. HTTP requests and expected status/body projections live in the owning JSON
-corpora. Boot cases vary manifest admission and deployment identity; catalog,
-validation, scope, and cache cases assert their public boundaries. No runtime index
-fixtures or release-marked inventory reconciliation suite remains.
-
-Older catalog-only fixtures continue to serve unrelated route tests. Real pinned
-artifacts are checked separately for order parity, latency, and rendered evidence;
-synthetic success is not a real-corpus or deployment claim.
+Conformance builds synthetic catalogs from readable source contracts with `reg-build`
+and runs the Rust server against them. HTTP requests and expected status/body
+projections live in the owning JSON corpora. Admission, catalog, project and cache cases
+assert their public boundaries. Real-artifact checks run separately; synthetic success
+is not a real-corpus or deployment claim.
 
 ## Project operations (the Rust server)
 
-Clients POST the whole serialized draft, a raw object, to two operations of the `order`
-MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed strictly
-(`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at any
-depth, `serde_json`'s depth limit); anything else is `malformed_request` (400) before
-the operation runs. Unknown keys survive the parse, so `validate` reports each as
-`unexpected_field`. Neither operation takes a `scope`: a project is read in the
-artifact's own identity, and a `scope` parameter is `invalid_parameter`.
+Clients POST a project document to `/api/project/validate` or `/api/project/order`, the
+two operations of the `order` MCP tool. The body is parsed strictly: one UTF-8 JSON
+object, no byte-order mark or duplicate keys, within the JSON depth limit. Malformed
+bodies are refused before the operation runs. Unknown project fields are reported by
+structural validation.
 
-- **`POST /api/project/validate`** answers `{data: {ok, issues}, meta}`. A project that
-  FAILS validation is a successful answer — **200 with `ok: false`** and every issue in
-  emission order (supported version → structural → semantic). A non-2xx is a refused
-  request (`malformed_request`, `payload_too_large`, `rate_limited`).
-- **`POST /api/project/order`** answers `{data: manifest, meta}`;
-  **`POST /api/project/order/manifest`** serves the same manifest as the exact manifest
-  bytes, an attachment named `order_<slug>_<YYYY-MM-DD>.json`: the project name folded
-  to ASCII lowercase (å→a, é→e), other runs `-`, at most 60 characters, then the
-  server's UTC date. The server owns the `Content-Disposition` filename. Anything that
-  is not an order is a 422 on both routes, never a partial manifest: `project_invalid`
-  for a document `validate` rejects structurally (its issues in `fields.issues`),
-  `order_blocked` when any finding leaves part of the request undeliverable (every
-  finding in `fields.findings`, each with its stable `code` and its `source` /
-  `variable` / `period` coordinates). Fail-closed is a contract, so the findings ship as
-  data, pinned by `conformance/cases/api/order-errors`.
-
-The order pipeline and its findings are `ops/order.rs` (see `crates/DESIGN.md` → Order
-manifest): steward holdings on a steward artifact, canonical columns on the global one.
-
-## Semantic validation
-
-The semantic layer, its rules and its issue codes are `ops/validate.rs`
-(`crates/DESIGN.md` → Project semantic validation). G1 compares its results between the
-pinned release's server and the checkout's, over derived copies of the release artifacts
-(`conformance/differential/`).
+Validation returns `200` with `{ok, issues}`, including for an invalid project. Order
+returns a logical order or a located `422`: `project_invalid` for structural errors,
+`order_blocked` for blocking findings. A blocked order returns every finding, never a
+partial order. The logical order check and semantic findings live in `reg-catalog`;
+`crates/DESIGN.md` documents their rules. Physical files and the manifest download
+return with holdings in milestone E.
 
 ## Cost protection (`crates/reg-meta/src/limit.rs`)
 
-Every POST (the project operations and the manifest download) and `/mcp` sit behind the
-same two origin-side guards; GET reads are not limited (they have the cheaper edge-cache
-
-+ ETag axis). Cloudflare fronts production with its own edge budgets; these catch direct
-  origin hits that bypass the edge.
+Every project POST and `/mcp` sit behind the same two origin-side guards; GET reads are
+not limited. Cloudflare fronts production with its own edge budgets; these catch direct
+origin hits that bypass the edge.
 
 - **Rate limit** — one in-memory token bucket per client address, shared by `/mcp` and
   the POSTs: 60 tokens, refilled one a second, then `rate_limited` (429,
   `Retry-After: 1`). `serve --write-limit N` changes the 60, for verification runs (the
-  conformance suite, release admission, G1) that replay many projects from one address;
-  a deployment keeps the default. The client is the edge's `CF-Connecting-IP` when the
+  conformance suite and release admission) that replay many projects from one address; a
+  deployment keeps the default. The client is the edge's `CF-Connecting-IP` when the
   request carries the edge token (`REG_META_EDGE_TOKEN`), otherwise the peer, and an
   IPv6 address counts as its /64. **Address-only** by design: a session token would
   bucket per browser (helpful behind NAT) but adds a fingerprinting surface for
@@ -505,34 +289,10 @@ same two origin-side guards; GET reads are not limited (they have the cheaper ed
   (axum's `DefaultBodyLimit`), never trusting `Content-Length`. 1 MiB is far above any
   plausible `project_data.json`.
 
-## API surface
-
-The Rust server (`reg-meta serve`; contract `conformance/api/operations.toml`, snapshot
-`crates/reg-meta/openapi.json`) answers every `/api` route. This table is the
-orientation map. Read GETs are edge-cacheable, write POSTs are not.
-
-  | Method | Path                                 | Server | Purpose                                                                                                                   |
-  | ------ | ------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                       | Rust   | `context`: branding, build info, period span, catalog sizes.                                                              |
-  | GET    | `/api/search`                        | Rust   | `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                      |
-  | GET    | `/api/catalog`, `/api/catalog/{ref}` | Rust   | `show`: the root, or any node by ref (`kind`-tagged).                                                                     |
-  | GET    | `/api/states/{ref}`                  | Rust   | A variable's states, cursor-paged; `period`, `variant`, `value_set_version` narrow.                                       |
-  | GET    | `/api/warnings/{ref}`                | Rust   | A register's or variable's data warnings; `period`, `variant`, `representation`, `unassigned_only` filter.                |
-  | GET    | `/api/values/{ref}`                  | Rust   | A classification's codes, or a variable state's value set (`state=`), cursor-paged; `q` filters, `total`.                 |
-  | GET    | `/api/graph/{ref}`                   | Rust   | The relationship graph of a variable, classification or group, succession included.                                       |
-  | GET    | `/api/lineage/{ref}`                 | Rust   | A variable's lineage edges, lineage warnings and source registers.                                                        |
-  | GET    | `/api/docs/search`                   | Rust   | `docs_search`: docs matching `q` (or every doc), optional `?register=`, `{items, next_cursor, total, register_ingested}`. |
-  | GET    | `/api/docs/doc/{identifier}`         | Rust   | `docs_get`: one doc by variable/filename — metadata, source pointer, excerpt, body.                                       |
-  | GET    | `/api/docs/related/{ref}`            | Rust   | `docs_related`: metadata of the register's rehosted source PDFs.                                                          |
-  | GET    | `/api/docs/file/{ref}/{filename}`    | Rust   | One rehosted source PDF's bytes.                                                                                          |
-  | POST   | `/api/project/validate`              | Rust   | `validate`: 200 + `ok` + issues, an invalid project included.                                                             |
-  | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
-  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact bytes, an attachment named `order_<slug>_<date>.json` as a download.                       |
-
 ## Input-validation gates (security boundary)
 
 Hostile input on the catalog and docs reads (a malformed ref, a traversal-shaped path, a
-bad period, variant or query) is refused by the Rust server with a located error; the
+bad period, table or query) is refused by the Rust server with a located error; the
 grammars and refusals are pinned in `conformance/cases/api`. A project body is parsed
-strictly (`ops/body.rs`, Project operations above), and a `scope` parameter on a project
-operation is refused as `invalid_parameter`.
+strictly before validation or order checking. Unknown query parameters are refused as
+`invalid_parameter`.
