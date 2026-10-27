@@ -1,36 +1,20 @@
-//! The operation set. Each slice registers its operations in its own file
-//! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
-//! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
-//! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
-//! cursors (`cursor.rs`). An operation or download with a [`Type::Project`] parameter
-//! is a POST that takes it as the JSON body; every other is a GET.
+//! The operation set. Each operation registers itself in its own file (`context.rs`,
+//! ...), and both transports are generated from the registrations: the HTTP routes and
+//! `/openapi.json` here and in `reg-meta`, and the MCP tools in `reg-meta`. Shared
+//! request pieces live in their own modules: refs (`refs.rs`) and cursors
+//! (`cursor.rs`). An operation or download with a [`Type::Project`] parameter is a POST
+//! that takes it as the JSON body; every other is a GET.
 
 pub mod body;
-mod coded;
-mod coverage;
+pub mod context;
+#[expect(dead_code, reason = "wave 4's paging operations are its callers")]
 mod cursor;
-mod docs;
-mod graph;
-mod lineage;
+#[expect(dead_code, reason = "wave 4's operations are its callers")]
 mod refs;
-mod resolve;
-mod schema;
-mod search;
-mod show;
-pub mod slice_3a;
-pub mod slice_3b;
-pub mod slice_3c;
-pub mod slice_3d;
-pub mod slice_3e;
-mod states;
-mod validate;
-mod values;
-mod warnings;
 
 use std::collections::BTreeMap;
-use std::path::Path;
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
 use utoipa::openapi::path::{OperationBuilder, ParameterBuilder, ParameterIn};
@@ -41,87 +25,79 @@ use utoipa::openapi::{
     OpenApi, OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
 };
 
-use crate::{CONTRACT_VERSION, Catalog, Code, Docs, Error, Scope};
+use crate::{CONTRACT_VERSION, Catalog, Code, Error};
 
-/// What a running server answers from: the admitted catalog and its docs database
-/// (when present), its steward branding (`serve` only: `mcp` loads none, so `show`'s
-/// root omits the branding there) and the server's version (`reg_meta_version`).
+/// What a running server answers from: the admitted catalog, the `context` computed
+/// when it was admitted and the server's version (`reg_meta_version`).
 pub struct Server {
     pub catalog: Catalog,
-    pub docs: Option<Docs>,
-    pub steward: Option<Steward>,
+    context: context::Context,
     pub version: &'static str,
 }
 
-/// Deployment branding, `reg_webapp/stewards/<catalog>/steward.json`.
-#[derive(Clone, Serialize, Deserialize, ToSchema)]
-pub struct Steward {
-    pub id: String,
-    pub name: String,
-    pub long_name: String,
-    /// What the deployment is for, one or two plain sentences shown under the name on
-    /// the landing page; absent where the name says enough.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    /// How a researcher hands a project to this steward for ordering, plain text shown
-    /// beside the downloads; absent when the deployment takes no orders.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub order_instructions: Option<String>,
-    /// The steward's logo, `stewards/<catalog>/logo.svg`: the compact top bar's mark
-    /// and the SPA's favicon, served as its own download, not in the JSON.
-    #[serde(skip)]
-    pub logo: Vec<u8>,
-}
-
-impl Steward {
-    /// Load the branding of catalog `name` from `stewards/<name>/steward.json` and
-    /// its logo from `stewards/<name>/logo.svg`.
+impl Server {
+    /// Serve `catalog`, computing what is answered from memory.
     ///
     /// # Errors
     ///
-    /// `invalid_parameter` (`stewards`) when `steward.json` is missing, malformed or
-    /// names another id, or the logo is missing or empty.
-    pub fn load(stewards: &Path, name: &str) -> Result<Self, Error> {
-        let path = stewards.join(name).join("steward.json");
-        let mut steward: Self = std::fs::read(&path)
-            .map_err(|err| err.to_string())
-            .and_then(|bytes| serde_json::from_slice(&bytes).map_err(|err| err.to_string()))
-            .map_err(|err| {
+    /// `internal_error` when `open_start` or `open_end` is not a day number, or the
+    /// `context` queries fail.
+    pub fn new(catalog: Catalog, version: &'static str) -> Result<Self, Error> {
+        let day = |key: &str| {
+            catalog.meta(key).parse::<i64>().map_err(|_| {
                 Error::new(
-                    Code::InvalidParameter,
-                    format!(
-                        "No steward branding for {name:?} at {}: {err}",
-                        path.display()
-                    ),
-                    vec!["stewards".into()],
+                    Code::InternalError,
+                    format!("meta {key} is not a day number: {:?}", catalog.meta(key)),
+                    vec![],
                 )
-            })?;
-        if steward.id != name {
-            return Err(Error::new(
-                Code::InvalidParameter,
-                format!("{}: id {:?} is not {name:?}", path.display(), steward.id),
-                vec!["stewards".into()],
-            ));
-        }
-        let logo = stewards.join(name).join("logo.svg");
-        steward.logo = std::fs::read(&logo)
-            .map_err(|err| err.to_string())
-            .and_then(|bytes| {
-                if bytes.is_empty() {
-                    Err("the file is empty".to_owned())
-                } else {
-                    Ok(bytes)
-                }
             })
-            .map_err(|err| {
-                Error::new(
-                    Code::InvalidParameter,
-                    format!("No steward logo for {name:?} at {}: {err}", logo.display()),
-                    vec!["stewards".into()],
-                )
-            })?;
-        Ok(steward)
+        };
+        // simplify: parsed here for `context` only; hold them on `Server` once a
+        // request-time operation renders a `Period`.
+        let open = (day("open_start")?, day("open_end")?);
+        let context = context::Context::load(&catalog, open, version)?;
+        Ok(Self {
+            catalog,
+            context,
+            version,
+        })
     }
+}
+
+/// `shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct Period {
+    #[schema(required = true)]
+    start: Option<String>,
+    #[schema(required = true)]
+    end: Option<String>,
+}
+
+impl Period {
+    /// The period of the day numbers `[start, end)`; an end equal to its `open`
+    /// sentinel (`meta` `open_start`, `open_end`) is `null`.
+    #[must_use]
+    pub(crate) fn new(open: (i64, i64), start: i64, end: i64) -> Self {
+        Self {
+            start: (start != open.0).then(|| iso_day(start)),
+            end: (end != open.1).then(|| iso_day(end)),
+        }
+    }
+}
+
+/// The ISO date of a catalog day number (days from 1970-01-01): the inverse of
+/// `reg_core::iso_day_number`, Howard Hinnant's `civil_from_days`.
+fn iso_day(day: i64) -> String {
+    let z = day + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z - era * 146_097;
+    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = yoe + era * 400 + i64::from(m <= 2);
+    format!("{y:04}-{m:02}-{d:02}")
 }
 
 /// A parameter: a query parameter, or a path parameter when the route names it as
@@ -156,18 +132,14 @@ impl Param {
 #[derive(Clone, Copy)]
 pub enum Type {
     String,
-    /// A FQID or a bare name: a name matched case-insensitively (`fold_identity`); a
-    /// slug resolves only where it is also the name.
+    /// A public id, or a bare name matched on its folded last segment (`refs.rs`).
     Ref,
     /// The FQID/project period grammar.
     Period,
-    Scope,
     Limit,
     /// An opaque `next_cursor`.
     Cursor,
     Boolean,
-    /// A storage id, spelled as the decimal string results carry (ids pass 2^53).
-    StorageId,
     Enum(&'static [&'static str]),
     /// `string[]`: up to [`MAX_ITEMS`] strings, repeated keys over HTTP and a JSON
     /// array over MCP.
@@ -200,8 +172,8 @@ impl Cache {
 }
 
 type Components = Vec<(String, RefOr<Schema>)>;
-/// An operation's validated parameters, `scope` excluded: each parameter's values in
-/// request order, one unless it is a [`Type::Strings`].
+/// An operation's validated parameters: each parameter's values in request order, one
+/// unless it is a [`Type::Strings`].
 #[derive(Default)]
 pub struct Params<'a> {
     values: BTreeMap<&'a str, Vec<&'a str>>,
@@ -231,7 +203,7 @@ impl<'a> std::ops::Index<&str> for Params<'a> {
 }
 
 /// The function that answers a route.
-pub type Run<T> = fn(&Server, Scope, &Params) -> Result<T, Error>;
+pub type Run<T> = fn(&Server, &Params) -> Result<T, Error>;
 
 /// One operation: its name, routes and MCP tool (`operations.toml`), the description
 /// both transports publish, its parameters, its `Cache-Control` tier, the function
@@ -304,17 +276,12 @@ impl Operation {
 
 /// Every registered operation.
 pub fn all() -> impl Iterator<Item = &'static Operation> {
-    slice_3a::OPERATIONS
-        .iter()
-        .chain(slice_3b::OPERATIONS)
-        .chain(slice_3c::OPERATIONS)
-        .chain(slice_3d::OPERATIONS)
-        .chain(slice_3e::OPERATIONS)
+    context::OPERATIONS.iter()
 }
 
 /// Every registered download.
 pub fn downloads() -> impl Iterator<Item = &'static Download> {
-    slice_3a::DOWNLOADS.iter().chain(slice_3b::DOWNLOADS)
+    std::iter::empty()
 }
 
 /// Every MCP tool with its operations, in registration order.
@@ -331,48 +298,42 @@ pub fn tools() -> Vec<(&'static str, Vec<&'static Operation>)> {
     tools
 }
 
-/// Answer a route's request parameters (path and query) with `run`, returning the
-/// effective scope (the artifact's default when the request's scope is not usable)
-/// with the result.
+/// Answer a route's request parameters (path and query) with `run`.
+///
+/// # Errors
+///
+/// `invalid_parameter` for an unknown, repeated or missing parameter; else `run`'s.
 pub fn call<T>(
     server: &Server,
     declared: &[&Param],
     run: Run<T>,
     query: &[(String, String)],
-) -> (Scope, Result<T, Error>) {
-    let mut scope = server.catalog.default_scope();
-    let result = (|| {
-        let mut params = Params::default();
-        for (name, value) in query {
-            // Unknown and repeated parameters are errors, never ignored; a repeat is
-            // an array's next value.
-            let Some(param) = declared.iter().find(|p| p.name == name) else {
-                return Err(Error::invalid_parameter(name));
-            };
-            let values = params.values.entry(param.name).or_default();
-            values.push(value.as_str());
-            let most = if matches!(param.ty, Type::Strings) {
-                MAX_ITEMS
-            } else {
-                1
-            };
-            if values.len() > most {
-                return Err(Error::invalid_parameter(name));
-            }
+) -> Result<T, Error> {
+    let mut params = Params::default();
+    for (name, value) in query {
+        // Unknown and repeated parameters are errors, never ignored; a repeat is an
+        // array's next value.
+        let Some(param) = declared.iter().find(|p| p.name == name) else {
+            return Err(Error::invalid_parameter(name));
+        };
+        let values = params.values.entry(param.name).or_default();
+        values.push(value.as_str());
+        let most = if matches!(param.ty, Type::Strings) {
+            MAX_ITEMS
+        } else {
+            1
+        };
+        if values.len() > most {
+            return Err(Error::invalid_parameter(name));
         }
-        if let Some(missing) = declared
-            .iter()
-            .find(|p| p.required && !params.values.contains_key(p.name))
-        {
-            return Err(Error::invalid_parameter(missing.name));
-        }
-        if declared.iter().any(|p| p.name == "scope") {
-            let requested = params.values.remove("scope").map(|values| values[0]);
-            scope = server.catalog.scope(requested)?;
-        }
-        run(server, scope, &params)
-    })();
-    (scope, result)
+    }
+    if let Some(missing) = declared
+        .iter()
+        .find(|p| p.required && !params.values.contains_key(p.name))
+    {
+        return Err(Error::invalid_parameter(missing.name));
+    }
+    run(server, &params)
 }
 
 /// A page's `limit` when unset, and its largest accepted value (`Type::Limit`).
@@ -382,6 +343,7 @@ const MAX_LIMIT: usize = 200;
 const MAX_ITEMS: usize = 200;
 
 /// `limit` (`operations.toml`): 1 to [`MAX_LIMIT`], default [`DEFAULT_LIMIT`].
+#[expect(dead_code, reason = "wave 4's paging operations are its callers")]
 pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
     params.get("limit").map_or(Ok(DEFAULT_LIMIT), |v| {
         v.parse()
@@ -393,6 +355,7 @@ pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
 
 /// The period parameter `name`, in the FQID/project period grammar; a refusal
 /// names `name`.
+#[expect(dead_code, reason = "wave 4's operations are its callers")]
 pub(crate) fn period(params: &Params, name: &str) -> Result<Option<reg_core::Period>, Error> {
     params
         .get(name)
@@ -408,64 +371,8 @@ pub(crate) fn period(params: &Params, name: &str) -> Result<Option<reg_core::Per
         .transpose()
 }
 
-/// `variant`: a register variant's slug, or `_default` (today's
-/// `validate_slug(allow_default=True)`).
-pub(crate) fn variant<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
-    match params.get("variant").copied() {
-        Some(v) if v != "_default" && !reg_core::is_slug(v) => {
-            Err(Error::invalid_parameter("variant"))
-        }
-        v => Ok(v),
-    }
-}
-
-/// `value_set_version`: a free-text label, so only sanity-checked as today's
-/// `parse_value_set_version`: not blank, at most 200 characters, no C0, DEL or C1
-/// control characters.
-pub(crate) fn value_set_version<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
-    match params.get("value_set_version").copied() {
-        Some(v)
-            if reg_core::py_strip(v).is_empty()
-                || v.chars().count() > 200
-                || v.chars()
-                    .any(|c| c < ' ' || ('\u{7f}'..='\u{9f}').contains(&c)) =>
-        {
-            Err(Error::invalid_parameter("value_set_version"))
-        }
-        v => Ok(v),
-    }
-}
-
-/// The longest `q` (today's `QUERY_MAX_LEN`).
-const MAX_QUERY_CHARS: usize = 200;
-/// `Type::StorageId`'s pattern.
-const STORAGE_ID: &str = "^-?[0-9]+$";
-
-/// `q`: at most [`MAX_QUERY_CHARS`] characters and no NUL; absent is empty.
-pub(crate) fn q<'a>(params: &Params<'a>) -> Result<&'a str, Error> {
-    let q = params.get("q").copied().unwrap_or_default();
-    if q.contains('\0') || q.chars().count() > MAX_QUERY_CHARS {
-        return Err(Error::invalid_parameter("q"));
-    }
-    Ok(q)
-}
-
-/// The storage-id parameter `name`: an optional sign and decimal digits that fit
-/// an `i64`.
-pub(crate) fn storage_id(params: &Params, name: &str) -> Result<Option<i64>, Error> {
-    params
-        .get(name)
-        .map(|v| {
-            let digits = v.strip_prefix('-').unwrap_or(v);
-            (!digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit()))
-                .then(|| v.parse().ok())
-                .flatten()
-                .ok_or_else(|| Error::invalid_parameter(name))
-        })
-        .transpose()
-}
-
 /// A boolean parameter, `true` or `false` (default false).
+#[expect(dead_code, reason = "wave 4's operations are its callers")]
 pub(crate) fn flag(params: &Params, name: &str) -> Result<bool, Error> {
     match params.get(name).copied() {
         None | Some("false") => Ok(false),
@@ -479,16 +386,16 @@ pub(crate) fn flag(params: &Params, name: &str) -> Result<bool, Error> {
 pub struct Meta {
     pub contract_version: &'static str,
     pub generation: String,
-    pub scope: Scope,
+    pub catalog_version: String,
 }
 
 impl Meta {
     #[must_use]
-    pub fn new(catalog: &Catalog, scope: Scope) -> Self {
+    pub fn new(catalog: &Catalog) -> Self {
         Self {
             contract_version: CONTRACT_VERSION,
             generation: catalog.generation().to_owned(),
-            scope,
+            catalog_version: catalog.meta("catalog_version").to_owned(),
         }
     }
 }
@@ -500,15 +407,13 @@ fn component<T: ToSchema>(components: &mut Components) -> RefOr<Schema> {
     Ref::from_schema_name(T::name()).into()
 }
 
-fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
+fn param_schema(ty: Type) -> RefOr<Schema> {
     let string = || ObjectBuilder::new().schema_type(Json::String);
     match ty {
-        Type::Scope => component::<Scope>(components),
         // A ref, a period and a cursor are strings in their grammars.
         Type::String | Type::Ref | Type::Period | Type::Cursor => string().into(),
         Type::Enum(members) => string().enum_values(Some(members.iter().copied())).into(),
         Type::Boolean => ObjectBuilder::new().schema_type(Json::Boolean).into(),
-        Type::StorageId => string().pattern(Some(STORAGE_ID)).into(),
         Type::Strings => ArrayBuilder::new()
             .items(string())
             .max_items(Some(MAX_ITEMS))
@@ -527,16 +432,11 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
 
 /// `route`'s parameters as `OpenAPI` parameters: in the path when the route names
 /// them, else in the query; a body parameter as the request body.
-fn parameters(
-    mut operation: OperationBuilder,
-    route: &str,
-    params: &[&Param],
-    components: &mut Components,
-) -> OperationBuilder {
+fn parameters(mut operation: OperationBuilder, route: &str, params: &[&Param]) -> OperationBuilder {
     for param in params {
         if matches!(param.ty, Type::Project) {
             let body = ContentBuilder::new()
-                .schema(Some(param_schema(param.ty, components)))
+                .schema(Some(param_schema(param.ty)))
                 .build();
             operation = operation.request_body(Some(
                 RequestBodyBuilder::new()
@@ -560,7 +460,7 @@ fn parameters(
                 } else {
                     Required::False
                 })
-                .schema(Some(param_schema(param.ty, components))),
+                .schema(Some(param_schema(param.ty))),
         );
     }
     operation
@@ -621,7 +521,7 @@ pub fn openapi(version: &str) -> OpenApi {
             let operation = OperationBuilder::new()
                 .operation_id(Some(operation_id(op, route)))
                 .description(Some(op.description));
-            let operation = parameters(operation, route, &op.route_params(route), &mut components);
+            let operation = parameters(operation, route, &op.route_params(route));
             let data = (op.result)(&mut components);
             let operation = operation
                 .response("200", envelope("data", data).description("Success"))
@@ -638,7 +538,7 @@ pub fn openapi(version: &str) -> OpenApi {
     for download in downloads() {
         let operation = OperationBuilder::new().description(Some(download.description));
         let params: Vec<&Param> = download.params.iter().collect();
-        let operation = parameters(operation, download.path, &params, &mut components);
+        let operation = parameters(operation, download.path, &params);
         let bytes = ResponseBuilder::new()
             .description("The raw bytes")
             .content(download.media_type, ContentBuilder::new().build());
@@ -669,4 +569,19 @@ pub fn openapi(version: &str) -> OpenApi {
                 .build(),
         ))
         .build()
+}
+
+#[cfg(test)]
+mod tests {
+    /// Fails when a result period's ISO day drifts from the day number the builder
+    /// wrote (`reg_core::iso_day_number`): an off-by-one at a leap day, a century or
+    /// before 1970, which the `context` case's two January firsts do not reach.
+    #[test]
+    fn iso_day_inverts_iso_day_number() {
+        let first = reg_core::iso_day_number("1600-01-01").unwrap();
+        let last = reg_core::iso_day_number("2400-12-31").unwrap();
+        for day in first..=last {
+            assert_eq!(reg_core::iso_day_number(&super::iso_day(day)), Some(day));
+        }
+    }
 }

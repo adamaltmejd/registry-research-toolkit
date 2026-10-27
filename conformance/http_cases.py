@@ -100,6 +100,9 @@ def assert_http_case(case, tmp_path, servers):
             projection,
             oracle.get("json", {}),
         )
+        # An object's exact key set, for values no oracle can spell (a generation).
+        for pointer, keys in oracle.get("keys", {}).items():
+            assert sorted(select_json(response["body"], pointer)) == keys, pointer
         if "members" in oracle:
             assert_members(responses, oracle["members"])
 

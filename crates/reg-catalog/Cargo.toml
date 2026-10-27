@@ -9,7 +9,6 @@ reg-core = { path = "../reg-core", features = ["openapi"] }
 rusqlite = { version = "0.41.0", features = ["bundled", "functions"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
-sha2 = "0.11.1"
 utoipa = "6.0.0"
 
 [lints]

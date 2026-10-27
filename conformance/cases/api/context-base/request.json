@@ -1,0 +1,7 @@
+{
+  "note": "Fails if context's counts or span drift from base.jsonl (one provider, one register with one table, three variables, two yearly releases 2019 and 2020: the half-open hull [2019-01-01, 2021-01-01)), if it stops reading the v4 meta, or if a revalidation stops answering 304. Also the admitted twin of the admission cases: base carries schema_version 4 exactly.",
+  "requests": [
+    {"operation": "context", "path": "/api/context"},
+    {"operation": "context", "path": "/api/context", "etag_from": 0}
+  ]
+}

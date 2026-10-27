@@ -64,7 +64,10 @@ impl Catalog {
             Error::new(
                 Code::SchemaIncompatible,
                 format!("{} is not an admissible catalog: {reason}", path.display()),
-                vec![version.map_or(Value::Null, Value::from), supported.as_str().into()],
+                vec![
+                    version.map_or(Value::Null, Value::from),
+                    supported.as_str().into(),
+                ],
             )
         };
         let meta = read_meta(&path, mmap_size)
@@ -80,7 +83,11 @@ impl Catalog {
             return Err(refuse(version, format!("meta has no {key:?}")));
         }
         let generation = &meta["generation_id"];
-        if generation.len() != 64 || !generation.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) {
+        if generation.len() != 64
+            || !generation
+                .bytes()
+                .all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
+        {
             return Err(refuse(
                 version,
                 format!("generation_id {generation:?} is not 64 lowercase hex digits"),
