@@ -460,8 +460,12 @@ tracks the milestones. This section holds the design decisions that outlive the 
   `relation`, since the record tag owns `kind`.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
-- Code search rows: one row per distinct (code, label) pair, deferred to a follow-up PR
-  (C-10 ruling, measured 1.48 GB at one row per item).
+- `search_item` code rows are (code, label) pairs, not (value set, item): `code_text`,
+  `label_text`, no `valueset_id`. The value sets of a pair come from `vs_item_code`
+  (C-10 ruling: one row per item measured 1.48 GB).
+- `vs_item_code` exists only for that lookup (about 90-100 MB). Packing items into one
+  BLOB per value set (schema §5.2, about −65 MB on `vs_item`) is the lever if size
+  matters.
 - **Search keeps diacritics.** The new catalog's `search` index holds the text as
   written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
   `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
