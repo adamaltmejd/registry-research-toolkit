@@ -1,5 +1,5 @@
 {
-  "note": "Fails if offset paging of a search without q repeats or skips a document across pages, ends without next_cursor null, or if a cursor continues a request with another register instead of answering invalid_cursor.",
+  "note": "Fails if offset paging of a search without q repeats or skips a document across pages, ends without next_cursor null, or if a cursor continues a request with another register instead of answering invalid_cursor, or if a cursor for a q holding a dot fails to continue it.",
   "fixture": "documents",
   "requests": [
     {
@@ -18,6 +18,17 @@
       "path": "/api/docs/search",
       "query": {"limit": 1, "register": "demo/dok"},
       "cursor_from": [0, "/data/next_cursor"]
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "i.", "limit": 1}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "i.", "limit": 1},
+      "cursor_from": [3, "/data/next_cursor"]
     }
   ]
 }

@@ -19,5 +19,7 @@
       ]
     }
   },
-  {"status": 422, "json": {"/error/code": "invalid_cursor"}}
+  {"status": 422, "json": {"/error/code": "invalid_cursor"}},
+  {"status": 200},
+  {"status": 200}
 ]
