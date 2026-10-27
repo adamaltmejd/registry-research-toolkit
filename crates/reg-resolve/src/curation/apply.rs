@@ -77,37 +77,15 @@ fn rendered(value: &Value) -> Option<String> {
     }
 }
 
-fn span(value: &Value, records: &[Record]) -> Interval {
-    if text(value, "kind") == Some("occurrence") {
-        let parent = if let Some(release) = text(value, "release") {
-            records.iter().find_map(|r| {
-                let v = tree(r);
-                (text(&v, "kind") == Some("release")
-                    && v["provider"] == value["provider"]
-                    && v["register"] == value["register"]
-                    && v["table"] == value["table"]
-                    && text(&v, "release") == Some(release))
-                .then_some(v)
-            })
-        } else {
-            records.iter().find_map(|r| {
-                let v = tree(r);
-                (text(&v, "kind") == Some("table")
-                    && v["provider"] == value["provider"]
-                    && v["register"] == value["register"]
-                    && v["table"] == value["table"])
-                    .then_some(v)
-            })
-        };
-        if let Some(parent) = parent {
-            let mut merged = parent;
-            for field in ["from", "to"] {
-                if !value[field].is_null() {
-                    merged[field] = value[field].clone();
-                }
-            }
-            return span(&merged, records);
-        }
+fn span(
+    value: &Value,
+    records: &[Record],
+    context: &crate::OccurrenceContext<'_>,
+) -> Result<Interval, String> {
+    if let Record::Occurrence(row) = decode(value.clone())? {
+        return Ok(context
+            .period(&row)
+            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())));
     }
     let register = records.iter().find_map(|r| match r {
         Record::Register(r)
@@ -117,7 +95,7 @@ fn span(value: &Value, records: &[Record]) -> Interval {
         }
         _ => None,
     });
-    (
+    Ok((
         text(value, "from")
             .or_else(|| register.and_then(|r| r.from.as_deref()))
             .unwrap_or(OPEN_START)
@@ -126,7 +104,7 @@ fn span(value: &Value, records: &[Record]) -> Interval {
             .or_else(|| register.and_then(|r| r.to.as_deref()))
             .unwrap_or(OPEN_END)
             .into(),
-    )
+    ))
 }
 
 fn matches_occurrence(
@@ -316,7 +294,7 @@ pub fn apply(
                 if !selected {
                     continue;
                 }
-                let period = span(&value, records);
+                let period = span(&value, records, &context)?;
                 if let Some(target_handle) = &target_handle
                     && row.table != *target_handle
                 {
@@ -335,7 +313,7 @@ pub fn apply(
                                 _ => None,
                             })
                             .ok_or("set table occurrence names an unknown release")?;
-                        if release.from.is_none() || release.to.is_none() {
+                        if crate::placed(release).is_none() {
                             return Err(
                                 "set table cannot detach an unplaced release; set its period first"
                                     .into(),
@@ -380,7 +358,7 @@ pub fn apply(
                             &moved,
                             "period",
                             &json!(period),
-                            &json!(span(&value, records)),
+                            &json!(span(&value, records, &context)?),
                             Some(period.clone()),
                         )?);
                     }
@@ -493,7 +471,8 @@ pub fn apply(
                     }
                     if let Some(scope) = &scope
                         && !value["from"].is_null()
-                        && !reg_core::gaps(&[span(&value, records)], scope.clone()).is_empty()
+                        && !reg_core::gaps(&[span(&value, records, &context)?], scope.clone())
+                            .is_empty()
                     {
                         return Err(
                             "assert occurrence period lies outside its subject scope".into()
@@ -509,19 +488,7 @@ pub fn apply(
                     value
                 }
                 AssertFact::Release { name, period } => {
-                    if !records.iter().any(|r| match r {
-                        Record::Table(t) => {
-                            t.provider == register.provider
-                                && t.register == register.register
-                                && t.table == table
-                        }
-                        Record::Occurrence(o) => {
-                            o.provider == register.provider
-                                && o.register == register.register
-                                && o.table == table
-                        }
-                        _ => false,
-                    }) {
+                    if !table_handles(records).any(|handle| handle == table) {
                         return Err(
                             "assert release requires an existing table; assert the table first"
                                 .into(),
@@ -593,14 +560,13 @@ pub fn apply(
             } else {
                 None
             };
-            let spans = own_scope.unwrap_or_else(|| vec![span(&value, records)]);
+            let spans = match own_scope {
+                Some(spans) => spans,
+                None => vec![span(&value, records, &context)?],
+            };
             for p in spans {
                 if text(&value, "kind") == Some("occurrence") {
-                    if !records.iter().any(|r| match r {
-                        Record::Table(t) => t.table == table,
-                        Record::Occurrence(o) => o.table == table,
-                        _ => false,
-                    }) {
+                    if !table_handles(records).any(|handle| handle == table) {
                         return Err(
                             "assert occurrence requires an existing table; assert the table first"
                                 .into(),
@@ -624,13 +590,15 @@ pub fn apply(
                                 _ => None,
                             })
                             .ok_or("assert occurrence names an unknown release")?;
-                        let release_period = release
-                            .from
-                            .as_ref()
-                            .zip(release.to.as_ref())
-                            .map(|(from, to)| (from.clone(), to.clone()));
+                        let release_period = crate::placed(release);
                         if (scope.is_some() || !value["from"].is_null() || !value["to"].is_null())
-                            && release_period.as_ref() != Some(&p)
+                            && (release_period.as_ref() != Some(&p)
+                                || text(&value, "from").is_some_and(|from| {
+                                    release_period.as_ref().is_none_or(|p| from != p.0)
+                                })
+                                || text(&value, "to").is_some_and(|to| {
+                                    release_period.as_ref().is_none_or(|p| to != p.1)
+                                }))
                         {
                             return Err(
                                 "assert occurrence period differs from its source release".into()
@@ -809,7 +777,7 @@ fn attach_valueset(
             continue;
         };
         let value = tree(record);
-        let original = span(&value, &out.records);
+        let original = span(&value, &out.records, &context)?;
         let matches = selected
             .iter()
             .filter(|m| {
