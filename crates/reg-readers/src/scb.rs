@@ -405,7 +405,7 @@ pub fn read(
                             .and_then(|id| validity.get(&id))
                             .map_or(&[][..], Vec::as_slice);
                         let ends: Option<Vec<&str>> =
-                            intervals.iter().map(|(_, to)| to.as_deref()).collect();
+                            intervals.iter().map(Option::as_deref).collect();
                         ends.and_then(|ends| ends.into_iter().max())
                             .is_none_or(|latest| latest >= lo.as_str())
                     })
@@ -913,9 +913,8 @@ fn timeseries(
     Ok(records)
 }
 
-/// An item's validity, unstated where blank: `ValidFrom` as exported, `ValidTo` an
-/// inclusive ISO day.
-type Validity = (Option<String>, Option<String>);
+/// An item's validity end, unstated where blank: an inclusive ISO day.
+type Validity = Option<String>;
 
 /// An occurrence's rows: each one's population (an index into its release's) and CVID.
 type Rows = Vec<(Option<usize>, u64)>;
@@ -953,7 +952,7 @@ fn valid_dates(
         .by_name(VALID_DATES)
         .map_err(|e| error(&input, e.to_string()))?;
     let (mut reader, col) = open(member, &input)?;
-    let (item, from, to) = (col("ItemID")?, col("ValidFrom")?, col("ValidTo")?);
+    let (item, to) = (col("ItemID")?, col("ValidTo")?);
     let mut dates = BTreeMap::new();
     let mut unreadable = 0;
     let mut record = ::csv::ByteRecord::new();
@@ -965,14 +964,12 @@ fn valid_dates(
         row += 1;
         let id =
             number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemID")))?;
-        let day = |c: usize| nonblank(&decode(&record[c]));
-        let (lo, hi) = (day(from), day(to));
-        // ValidFrom is never compared, so only ValidTo has to be an ISO day.
+        let hi = nonblank(&decode(&record[to]));
         if hi
             .as_deref()
             .is_none_or(|d| reg_core::iso_day_number(d).is_some())
         {
-            dates.entry(id).or_insert_with(Vec::new).push((lo, hi));
+            dates.entry(id).or_insert_with(Vec::new).push(hi);
         } else {
             unreadable += 1;
         }

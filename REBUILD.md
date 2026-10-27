@@ -268,7 +268,10 @@ The full SCB read is a heavy run.
         the end-of-validity rule are "expected: validity end stated by the source"
         (bucket a). 524 of them are the sentinel `0`, superseded by the open-ended `.`.
         A marker row beside a coded row in one population is not a second value set
-        (c-marker-rows), which clears the F6 on `riksdagsvalkrets-kod`.
+        (c-marker-rows), which clears the F6 on `riksdagsvalkrets-kod`. After #1975 the
+        F6 'states different value sets across its rows' findings fell from 53 to 43;
+        the remaining ones spot-checked are real disagreements (e.g. `scb/aku/syssokt8`:
+        one population names two sets where 0 = 'Nej' vs 'Ej svar').
   - B3: when `reg-catalog` is rewritten, slim the resolve `Report`
     (`crates/reg-resolve/src/lib.rs`, 26 counters) to what the catalog cannot answer:
     the ledger lists and `split_keys`. The comparison script derives the rest with SQL;
@@ -316,6 +319,10 @@ The full SCB read is a heavy run.
 - the maintainer approves the switch release.
 
 ### D: curation carry-over
+
+- **F1 `domain-change` rule**: it is not emitted when only the classification version
+  differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
+  with V1, or every version bump fires a domain-change.
 
 - **A one-shot converter** turns today's 17,299 entries into the six statement kinds,
   reading the new frames. It is deleted at F. For the 1,819 identity partitions the dry
