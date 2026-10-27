@@ -52,12 +52,13 @@ jobs:
       - run: uv sync --frozen
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
-      # process (its only run). `release`: the release-admission checks
-      # on the synthetic steward artifact. Commands: scripts/gate.py.
-      - run: uv run --no-project scripts/gate.py crates rust release
+      # process (its only run). The builder leg below owns `release`.
+      # Commands: scripts/gate.py.
+      - run: uv run --no-project scripts/gate.py crates rust
 
-  # One leg per root `testpaths` entry (pyproject.toml); keep the two lists in
-  # step. `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
+  # The legacy builder moves out of local G0, but stays mandatory here until F.
+  # Its leg also owns synthetic release admission (not duplicated in `rust`).
+  # `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
   # setup included: a leg over it is a test-audit finding, not a reason to
   # raise the number.
   test:
@@ -70,10 +71,12 @@ jobs:
         include:
           - suite: reg_meta_build
             budget: 6
+            command: uv run --no-project scripts/gate.py release
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
           - suite: scripts/tests
             budget: 2
+            command: uv run python -m pytest scripts/tests -n auto
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.2
@@ -83,6 +86,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.3
       - run: uv sync --frozen
-      - run: uv run python -m pytest "${{ matrix.suite }}" -n auto
+      - run: ${{ matrix.command }}
         env:
           HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
