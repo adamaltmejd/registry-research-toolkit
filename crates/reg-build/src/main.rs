@@ -19,6 +19,7 @@
 //! prints the error on stderr and exits 1.
 
 mod emit;
+mod search;
 mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
