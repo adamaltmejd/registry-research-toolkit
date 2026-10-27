@@ -107,7 +107,18 @@ fn valuesets(db: &Connection) -> Result<(), String> {
 /// permanent (schema v4 §4.3).
 fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     let fail = |what: String| format!("previous release: {what}");
-    let uri = format!("file:{}?mode=ro", previous.display());
+    // `#`, `?` and `%` are URI syntax: encode every byte but unreserved ones and `/`.
+    let encoded: String = previous
+        .to_string_lossy()
+        .bytes()
+        .map(|b| match b {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'.' | b'_' | b'~' | b'/' => {
+                char::from(b).to_string()
+            }
+            _ => format!("%{b:02X}"),
+        })
+        .collect();
+    let uri = format!("file:{encoded}?mode=ro");
     db.execute("ATTACH DATABASE ?1 AS prev", [uri])
         .map_err(|e| fail(format!("{}: {e}", previous.display())))?;
     let version = |schema: &str| -> Result<Option<String>, String> {
