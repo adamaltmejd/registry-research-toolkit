@@ -30,24 +30,18 @@
 //! - **Ids.** The ledger maps each public id to anchor occurrences; a variable no
 //!   anchor reaches gets a proposed id from its folded spelling.
 
+mod gaps;
+mod ledger;
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{Interval, fold_identity, intersect, merge, next_iso_day, prev_iso_day};
 use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
-/// A register's `ids.toml`: public ids of its tables and variables. An anchor is
-/// `<table>: <spelling>`, or a bare spelling for the implicit table, matched by fold.
-/// Where several source keys share the spelling in that table, `# <source key>` names
-/// one and `@ <day>` one day (`<table>: <spelling> # <key> @ <day>`).
-#[derive(Debug, Default, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Ledger {
-    #[serde(default)]
-    pub tables: BTreeMap<String, String>,
-    #[serde(default)]
-    pub variables: BTreeMap<String, Vec<String>>,
-}
+use gaps::gaps;
+pub use ledger::Ledger;
+use ledger::assign_ids;
 
 #[derive(Debug)]
 pub struct Resolved {
@@ -177,35 +171,7 @@ pub struct Finding {
 /// The register's line in the build report.
 #[derive(Debug, Default, Serialize)]
 pub struct Report {
-    pub tables: usize,
-    /// Named tables only occurrences cite; the implicit table is not one.
-    pub implied_tables: usize,
-    pub timeless_tables: usize,
-    pub releases: usize,
-    pub unparsed_releases: usize,
-    pub release_collisions: usize,
-    pub edition_disagreements: usize,
-    pub occurrences: usize,
-    pub clamped: usize,
-    pub rejected: usize,
-    pub shadowed: usize,
-    pub unplaced: usize,
-    pub gap_markers: usize,
-    /// Keys documented only without a column: not variables.
-    pub keys_without_column: usize,
-    pub withheld_variables: usize,
-    pub variables: usize,
     pub split_keys: usize,
-    pub ambiguous_segments: usize,
-    pub ambiguous_pairs: usize,
-    pub preliminary_segments: usize,
-    pub valueset_conflict_keys: usize,
-    /// Keys whose merged source rows disagree on a field.
-    pub row_conflict_keys: usize,
-    pub gaps: usize,
-    pub keys_in_several_tables: usize,
-    pub label_differs_across_tables: usize,
-    pub case_variants: usize,
     pub unminted: Vec<String>,
     pub unplaced_ids: Vec<String>,
     pub merged_ids: Vec<String>,
@@ -286,21 +252,16 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     let mut table_index = BTreeMap::new();
     for handle in handles {
         let mut table = stated.get(handle).map_or_else(
-            || {
-                if !handle.is_empty() {
-                    report.implied_tables += 1;
-                }
-                Table {
-                    provider: register.provider.clone(),
-                    register: register.register.clone(),
-                    table: handle.to_owned(),
-                    name: None,
-                    description: None,
-                    from: None,
-                    to: None,
-                    cadence: None,
-                    locator: register.locator.clone(),
-                }
+            || Table {
+                provider: register.provider.clone(),
+                register: register.register.clone(),
+                table: handle.to_owned(),
+                name: None,
+                description: None,
+                from: None,
+                to: None,
+                cadence: None,
+                locator: register.locator.clone(),
             },
             |t| (*t).clone(),
         );
@@ -347,7 +308,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             primary: None,
         });
     }
-    report.releases = releases.len();
     let rank = |edition: &str| match edition {
         "final" => 0,
         "unstated" => 1,
@@ -361,7 +321,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 .or_default()
                 .push(i);
         } else {
-            report.unparsed_releases += 1;
             findings.push(Finding {
                 code: "F9:unparsed-delivery",
                 severity: "review",
@@ -393,7 +352,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             }
             primary_of.insert(i, primary);
             if rank(&releases[i].release.edition) == rank(&releases[primary].release.edition) {
-                report.release_collisions += 1;
                 findings.push(Finding {
                     code: "F8:release-collision",
                     severity: "review",
@@ -459,7 +417,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             status: "used",
         };
         if unplaced {
-            report.unplaced += 1;
             entry.status = "unplaced";
             resolved.push(entry);
             continue;
@@ -495,15 +452,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 }
             };
         if gap_marker {
-            report.gap_markers += 1;
             entry.period = Some(period);
             entry.status = "gap_marker";
         } else {
-            match (status, &stated_period) {
-                ("rejected", _) => report.rejected += 1,
-                (_, Some(_)) => report.clamped += 1,
-                _ => {}
-            }
             entry.period = Some(period);
             entry.stated = stated_period;
             entry.status = status;
@@ -544,7 +495,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             shadowed.push(i);
         }
     }
-    report.shadowed = shadowed.len();
     for i in shadowed {
         resolved[i].status = "shadowed";
     }
@@ -580,7 +530,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             .map(|(key, _)| *key)
             .collect();
         if !differ.is_empty() {
-            report.edition_disagreements += 1;
             findings.push(Finding {
                 code: "F7:edition-disagreement",
                 severity: "review",
@@ -649,7 +598,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     variable_keys.retain(|_, members| {
         let keep = members.iter().any(|&i| resolved[i].status == "used");
         if !keep {
-            report.withheld_variables += 1;
             for &i in members.iter() {
                 resolved[i].status = "withheld";
             }
@@ -666,24 +614,20 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         }
 
         let last = latest(&resolved, members).expect("a variable has an occurrence");
+        let spellings: BTreeSet<String> = members
+            .iter()
+            .map(|&i| resolved[i].occurrence.column.clone())
+            .collect();
         let used: Vec<usize> = members
             .iter()
             .copied()
             .filter(|&i| resolved[i].status == "used")
             .collect();
-        let spellings: BTreeSet<String> = members
-            .iter()
-            .map(|&i| resolved[i].occurrence.column.clone())
-            .collect();
-        if spellings.len() > 1 {
-            report.case_variants += 1;
-        }
         if members
             .iter()
             .any(|&i| !resolved[i].occurrence.population_valuesets.is_empty())
             && population_keys.insert(key.clone())
         {
-            report.valueset_conflict_keys += 1;
             findings.push(Finding {
                 code: "F6:source-conflict",
                 severity: "review",
@@ -703,13 +647,11 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             .collect();
         let tables_used: BTreeSet<usize> = members.iter().map(|&i| resolved[i].table).collect();
         if tables_used.len() > 1 {
-            report.keys_in_several_tables += 1;
             let labels: BTreeSet<String> = members
                 .iter()
                 .filter_map(|&i| resolved[i].occurrence.label.as_deref().map(label_key))
                 .collect();
             if labels.len() > 1 {
-                report.label_differs_across_tables += 1;
                 findings.push(Finding {
                     code: "F1:label-differs",
                     severity: "review",
@@ -822,19 +764,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     resolved[i].segment = Some(segments.len() + index);
                 }
             }
-            // Pairs of the variable's own occurrences that disagree where they overlap.
-            for (a, &x) in own.iter().enumerate() {
-                for &y in &own[a + 1..] {
-                    let overlap = intersect(span(&resolved[x]), span(&resolved[y])).is_some();
-                    if overlap && form(&resolved[x]) != form(&resolved[y]) {
-                        report.ambiguous_pairs += 1;
-                    }
-                }
-            }
             segments.extend(runs);
         }
         if !conflicts.is_empty() {
-            report.row_conflict_keys += 1;
             findings.push(Finding {
                 code: "F6:source-conflict",
                 severity: "review",
@@ -954,26 +886,20 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     for (v, variable) in variables.iter().enumerate() {
         let segments = &variable.segments;
         for (s, segment) in segments.iter().enumerate() {
-            match segment.state {
-                "ambiguous" => {
-                    report.ambiguous_segments += 1;
-                    findings.push(Finding {
-                        code: "F2:ambiguous",
-                        severity: "review",
-                        subject: Subject::Segment(v, s),
-                        period: Some(segment.period.clone()),
-                        message: format!(
-                            "{} cannot be placed on one variable form here",
-                            segment.spelling
-                        ),
-                    });
-                }
-                "preliminary" => report.preliminary_segments += 1,
-                _ => {}
+            if segment.state == "ambiguous" {
+                findings.push(Finding {
+                    code: "F2:ambiguous",
+                    severity: "review",
+                    subject: Subject::Segment(v, s),
+                    period: Some(segment.period.clone()),
+                    message: format!(
+                        "{} cannot be placed on one variable form here",
+                        segment.spelling
+                    ),
+                });
             }
         }
     }
-    report.variables = variables.len();
 
     // Gap markers: on their key's variable when the key is one variable. A key
     // documented only without a column is no variable (F5).
@@ -1010,7 +936,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     for (i, v) in marker_variable {
         resolved[i].variable = Some(v);
     }
-    report.keys_without_column = markers.len();
     for (key, label) in markers {
         findings.push(Finding {
             code: "F5:documented-without-column",
@@ -1042,13 +967,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     }
 
     let gaps = gaps(&mut tables, &releases, &variables, &resolved);
-    report.gaps = gaps.len();
 
     assign_ids(&mut variables, &resolved, &tables, ledger, &mut report)?;
 
-    report.tables = tables.len();
-    report.timeless_tables = tables.iter().filter(|t| t.timeless).count();
-    report.occurrences = resolved.len();
     let dated: Vec<&Interval> = tables
         .iter()
         .filter(|t| !t.timeless)
@@ -1072,355 +993,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         findings,
         report,
     })
-}
-
-/// A table's cadence in months: the greatest common step between its primary releases'
-/// starts, when every start is a whole number of months after the one before on the
-/// same day of the month (or month end). `None` with fewer than two starts.
-fn cadence(releases: &[Interval]) -> Option<u32> {
-    let starts: BTreeSet<&str> = releases.iter().map(|r| r.0.as_str()).collect();
-    let month = |s: &str| -> Option<u32> {
-        Some(s.get(..4)?.parse::<u32>().ok()? * 12 + s.get(5..7)?.parse::<u32>().ok()?)
-    };
-    let mut step: Option<u32> = None;
-    for (a, b) in starts.iter().zip(starts.iter().skip(1)) {
-        let months = month(b)? - month(a)?;
-        if months == 0 || reg_core::add_iso_months(a, months).as_deref() != Some(*b) {
-            return None;
-        }
-        step = Some(step.map_or(months, |g| gcd(g, months)));
-    }
-    step
-}
-
-/// A cadence name's step in months; `None` for `day` and `irregular`.
-fn months(cadence: &str) -> Option<u32> {
-    CADENCES
-        .iter()
-        .find(|(n, _)| *n == cadence)
-        .map(|&(_, m)| m)
-}
-
-/// The cadence name of a step in months; a step no name fits is `irregular`.
-fn cadence_name(step: u32) -> &'static str {
-    CADENCES
-        .iter()
-        .find(|&&(_, m)| m == step)
-        .map_or("irregular", |&(n, _)| n)
-}
-
-/// The named cadences and their steps in months.
-const CADENCES: [(&str, u32); 4] = [("year", 12), ("half", 6), ("quarter", 3), ("month", 1)];
-
-/// Each span widened to cover at least its cadence step from its start.
-fn stretch(step: Option<u32>, spans: Vec<Interval>) -> Vec<Interval> {
-    let Some(step) = step else {
-        return spans;
-    };
-    spans
-        .into_iter()
-        .map(|(from, to)| {
-            let end = reg_core::add_iso_months(&from, step)
-                .map_or_else(|| to.clone(), |next| reg_core::prev_iso_day(&next));
-            let to = to.max(end);
-            (from, to)
-        })
-        .collect()
-}
-
-fn gcd(a: u32, b: u32) -> u32 {
-    if b == 0 { a } else { gcd(b, a % b) }
-}
-
-/// The smallest interval holding every one of `spans`.
-fn hull(spans: &[Interval]) -> Option<Interval> {
-    let from = spans.iter().map(|s| &s.0).min()?;
-    let to = spans.iter().map(|s| &s.1).max()?;
-    Some((from.clone(), to.clone()))
-}
-
-/// T5 in the tables with placed releases: the days between a table's used columns and
-/// primary releases that no used column covers (under a release with no columns, or no
-/// release), and each variable's days inside its hull there that a release covers
-/// without its column. Where the table has a cadence, every column, release and marker
-/// covers its whole cadence step, so a gap is a missing step.
-#[allow(clippy::too_many_lines)]
-fn gaps(
-    tables: &mut [ResolvedTable],
-    releases: &[ResolvedRelease],
-    variables: &[Variable],
-    resolved: &[ResolvedOccurrence],
-) -> Vec<Gap> {
-    let mut delivered: BTreeMap<usize, Vec<Interval>> = BTreeMap::new();
-    for r in releases {
-        if r.primary == Some(true) {
-            delivered
-                .entry(r.table)
-                .or_default()
-                .extend(placed(&r.release));
-        }
-    }
-    // A stated cadence stands; otherwise the inferred one is recorded on the table.
-    let steps: BTreeMap<usize, u32> = delivered
-        .iter()
-        .filter_map(|(&t, r)| {
-            let step = if let Some(stated) = tables[t].table.cadence.as_deref() {
-                months(stated)?
-            } else {
-                let step = cadence(r)?;
-                tables[t].table.cadence = Some(cadence_name(step).to_owned());
-                step
-            };
-            Some((t, step))
-        })
-        .collect();
-    let stretch = |t: usize, spans: Vec<Interval>| stretch(steps.get(&t).copied(), spans);
-    let delivered: BTreeMap<usize, Vec<Interval>> = delivered
-        .into_iter()
-        .map(|(t, r)| (t, stretch(t, r)))
-        .collect();
-    let mut out = Vec::new();
-    for (&t, releases) in &delivered {
-        // The table's days between its used columns and primary releases that no used
-        // column covers. The hull is theirs, not the table's bound: a bound may be open on
-        // a side, while a placed release is bounded.
-        let covered = stretch(
-            t,
-            resolved
-                .iter()
-                .filter(|r| r.table == t && r.status == "used")
-                .map(|r| span(r).clone())
-                .collect(),
-        );
-        let Some(hull) = hull(&[covered.as_slice(), releases].concat()) else {
-            continue;
-        };
-        let mut all = vec![hull.clone()];
-        all.extend(covered.iter().cloned());
-        all.extend(releases.iter().cloned());
-        let holes = runs(pieces(&all).into_iter().filter_map(|piece| {
-            if !covers(&hull, &piece) || covered.iter().any(|c| covers(c, &piece)) {
-                return None;
-            }
-            let reason = if releases.iter().any(|r| covers(r, &piece)) {
-                "release_without_column"
-            } else {
-                "no_release"
-            };
-            Some((piece, reason))
-        }));
-        out.extend(holes.into_iter().map(|(period, reason)| Gap {
-            variable: None,
-            table: t,
-            period,
-            reason,
-        }));
-    }
-    let mut marked: BTreeMap<(usize, usize), Vec<Interval>> = BTreeMap::new();
-    for r in resolved {
-        if r.status == "gap_marker"
-            && let (Some(v), Some(p)) = (r.variable, &r.period)
-        {
-            marked.entry((v, r.table)).or_default().push(p.clone());
-        }
-    }
-    for (v, variable) in variables.iter().enumerate() {
-        let in_tables: BTreeSet<usize> = variable.segments.iter().map(|s| s.table).collect();
-        for t in in_tables {
-            let Some(delivered) = delivered.get(&t) else {
-                continue;
-            };
-            let segments = stretch(
-                t,
-                variable
-                    .segments
-                    .iter()
-                    .filter(|s| s.table == t)
-                    .map(|s| s.period.clone())
-                    .collect(),
-            );
-            let hull = hull(&segments).expect("a segment");
-            let marks = stretch(t, marked.get(&(v, t)).cloned().unwrap_or_default());
-            let mut all = vec![hull.clone()];
-            all.extend(segments.iter().cloned());
-            all.extend(delivered.iter().cloned());
-            all.extend(marks.iter().cloned());
-            let runs = runs(pieces(&all).into_iter().filter_map(|piece| {
-                if !covers(&hull, &piece) || segments.iter().any(|s| covers(s, &piece)) {
-                    return None;
-                }
-                // Days no release covers are the table's gap, not the variable's.
-                if marks.iter().any(|m| covers(m, &piece)) {
-                    Some((piece, "documented_without_column"))
-                } else if delivered.iter().any(|d| covers(d, &piece)) {
-                    Some((piece, "release_without_column"))
-                } else {
-                    None
-                }
-            }));
-            out.extend(runs.into_iter().map(|(period, reason)| Gap {
-                variable: Some(v),
-                table: t,
-                period,
-                reason,
-            }));
-        }
-    }
-    out
-}
-
-/// Ascending gap pieces joined into runs of one reason.
-fn runs(
-    pieces: impl IntoIterator<Item = (Interval, &'static str)>,
-) -> Vec<(Interval, &'static str)> {
-    let mut out: Vec<(Interval, &'static str)> = Vec::new();
-    for (piece, reason) in pieces {
-        match out.last_mut() {
-            Some((p, r)) if *r == reason && next_iso_day(&p.1) == piece.0 => p.1 = piece.1,
-            _ => out.push((piece, reason)),
-        }
-    }
-    out
-}
-
-/// A ledger anchor, parsed: table, folded spelling, source key and day.
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
-struct Anchor<'a> {
-    table: &'a str,
-    spelling: String,
-    key: Option<&'a str>,
-    day: Option<&'a str>,
-}
-
-impl<'a> Anchor<'a> {
-    /// `None` when its `@` part is not a day.
-    fn parse(text: &'a str) -> Option<Self> {
-        let (rest, day) = match text.rsplit_once(" @ ") {
-            Some((rest, day)) => {
-                let day = day.trim();
-                reg_core::iso_day_number(day)?;
-                (rest, Some(day))
-            }
-            None => (text, None),
-        };
-        let (rest, key) = match rest.rsplit_once(" # ") {
-            Some((rest, key)) => (rest, Some(key.trim())),
-            None => (rest, None),
-        };
-        let (table, spelling) = rest.rsplit_once(": ").unwrap_or(("", rest));
-        Some(Self {
-            table: table.trim(),
-            spelling: fold_identity(spelling.trim()),
-            key,
-            day,
-        })
-    }
-}
-
-/// Ledger ids onto variables by anchor; proposed ids for the rest.
-fn assign_ids(
-    variables: &mut [Variable],
-    resolved: &[ResolvedOccurrence],
-    tables: &[ResolvedTable],
-    ledger: &Ledger,
-    report: &mut Report,
-) -> Result<(), String> {
-    // Tables and variables share the register's namespace, and a ledger id stays
-    // reserved even where it anchors nothing.
-    let table_ids: BTreeSet<String> = tables.iter().filter_map(|t| t.slug.clone()).collect();
-    for id in table_ids.iter().chain(ledger.variables.keys()) {
-        if !reg_core::is_slug(id) {
-            return Err(format!("id {id:?} is not a slug"));
-        }
-    }
-    let mut taken = table_ids.clone();
-    for id in ledger.variables.keys() {
-        if !taken.insert(id.clone()) {
-            return Err(format!("ledger id {id:?} is also a table id"));
-        }
-    }
-    // Anchors match the folded spellings of each table's placed columns; a keyed anchor
-    // only that source key's variables, a dated one only those placed there that day.
-    // A spelling's source keys count every occurrence, placed or not.
-    let mut by_anchor: BTreeMap<(&str, String), Vec<_>> = BTreeMap::new();
-    let mut keys: BTreeMap<(&str, String), BTreeSet<&str>> = BTreeMap::new();
-    for r in resolved.iter().filter(|r| !r.occurrence.column.is_empty()) {
-        let at = (
-            tables[r.table].table.table.as_str(),
-            fold_identity(&r.occurrence.column),
-        );
-        keys.entry(at.clone())
-            .or_default()
-            .insert(r.occurrence.source_key.as_str());
-        if let Some(v) = r.variable {
-            by_anchor.entry(at).or_default().push((
-                v,
-                r.period.as_ref(),
-                r.occurrence.source_key.as_str(),
-            ));
-        }
-    }
-    // Two ids on one anchor would leave the id to key order: refused, as is a key where
-    // the spelling has only one.
-    let mut anchored: BTreeMap<Anchor, &str> = BTreeMap::new();
-    for (id, anchors) in &ledger.variables {
-        let mut targets = BTreeSet::new();
-        for text in anchors {
-            let anchor = Anchor::parse(text)
-                .ok_or_else(|| format!("ledger id {id:?}: anchor {text:?} names no day"))?;
-            let (key, day) = (anchor.key, anchor.day);
-            let at = (anchor.table, anchor.spelling.clone());
-            let placed = by_anchor.get(&at).map_or(&[][..], Vec::as_slice);
-            let shared = keys.get(&at).is_some_and(|k| k.len() > 1);
-            if let Some(other) = anchored.insert(anchor, id) {
-                return Err(format!(
-                    "ledger-anchor-shared: ledger ids {other:?} and {id:?} both anchor {text:?}"
-                ));
-            }
-            if key.is_some() && !shared {
-                return Err(format!(
-                    "ledger-anchor-key-unneeded: ledger id {id:?}: anchor {text:?} names a source key where one key has the spelling"
-                ));
-            }
-            targets.extend(
-                placed
-                    .iter()
-                    .filter(|&&(_, period, k)| {
-                        key.is_none_or(|key| key == k)
-                            && day.is_none_or(|d| {
-                                period.is_some_and(|p| p.0.as_str() <= d && d <= p.1.as_str())
-                            })
-                    })
-                    .map(|&(v, _, _)| v),
-            );
-        }
-        if targets.len() > 1 {
-            report.split_ids.push(id.clone());
-        }
-        let Some(&target) = targets.iter().find(|&&v| !variables[v].pinned) else {
-            if targets.is_empty() {
-                report.unplaced_ids.push(id.clone());
-            } else {
-                report.merged_ids.push(id.clone());
-            }
-            continue;
-        };
-        variables[target].slug.clone_from(id);
-        variables[target].pinned = true;
-    }
-    for v in variables.iter_mut().filter(|v| !v.pinned) {
-        let base = slugify(&v.fold);
-        let mut slug = base.clone();
-        let mut n = 2;
-        while taken.contains(&slug) || !reg_core::is_slug(&slug) {
-            slug = format!("{base}-{n}");
-            n += 1;
-        }
-        report.unminted.push(slug.clone());
-        taken.insert(slug.clone());
-        v.slug = slug;
-    }
-    Ok(())
 }
 
 /// The default coded state: `no` when the source says the column carries no codes,
@@ -1450,12 +1022,12 @@ pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
 }
 
 /// A placed release's period.
-fn placed(r: &Release) -> Option<Interval> {
+pub(crate) fn placed(r: &Release) -> Option<Interval> {
     Some((r.from.clone()?, r.to.clone()?))
 }
 
 /// The period of an occurrence that is placed.
-fn span(r: &ResolvedOccurrence) -> &Interval {
+pub(crate) fn span(r: &ResolvedOccurrence) -> &Interval {
     r.period.as_ref().expect("a placed occurrence")
 }
 
@@ -1513,14 +1085,14 @@ fn label_key(label: &str) -> String {
     reg_core::fold_identity(&label.split_whitespace().collect::<Vec<_>>().join(" "))
 }
 
-fn covers(p: &Interval, piece: &Interval) -> bool {
+pub(crate) fn covers(p: &Interval, piece: &Interval) -> bool {
     p.0 <= piece.0 && piece.1 <= p.1
 }
 
 /// The elementary partition of `intervals`: the ascending pieces between every start
 /// and every day after an end, each inside or outside every interval, keeping those
 /// inside at least one.
-fn pieces(intervals: &[Interval]) -> Vec<Interval> {
+pub(crate) fn pieces(intervals: &[Interval]) -> Vec<Interval> {
     let cuts: BTreeSet<String> = intervals
         .iter()
         .flat_map(|(lo, hi)| {
