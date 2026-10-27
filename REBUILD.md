@@ -264,6 +264,11 @@ The full SCB read is a heavy run.
         stay. The guards' removal adds one large class, 646 ended codes that are right
         by the rule, most of them a legacy missing-value sentinel. It is reported to the
         tracker, not ruled here. The per-case table is in the PR that recorded it;
+      - Ruling (tracker, drift-review-b2-recheck §2): the 646 codes newly dropped under
+        the end-of-validity rule are "expected: validity end stated by the source"
+        (bucket a). 524 of them are the sentinel `0`, superseded by the open-ended `.`.
+        A marker row beside a coded row in one population is not a second value set
+        (c-marker-rows), which clears the F6 on `riksdagsvalkrets-kod`.
   - B3: when `reg-catalog` is rewritten, slim the resolve `Report`
     (`crates/reg-resolve/src/lib.rs`, 26 counters) to what the catalog cannot answer:
     the ledger lists and `split_keys`. The comparison script derives the rest with SQL;
