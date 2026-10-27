@@ -17,6 +17,7 @@
 //! prints the error on stderr and exits 1.
 
 mod emit;
+mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
